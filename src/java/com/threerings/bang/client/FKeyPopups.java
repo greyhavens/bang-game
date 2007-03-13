@@ -270,6 +270,7 @@ public class FKeyPopups
         buttons.add(new BButton(_msgs.get("m.cancel"), buglist, "cancel"));
         // disable the submit button until a description is entered
         new EnablingValidator(descrip, submit);
+        bug.setModal(true);
         return bug;
     }
 
@@ -286,6 +287,7 @@ public class FKeyPopups
         window.add(new BScrollPane(new BLabel(buf.toString(), "debug_log")));
         window.add(makeDismiss(window), GroupLayout.FIXED);
         window.setPreferredSize(new Dimension(1000, 700));
+        window.setModal(true);
         return window;
     }
 
@@ -320,6 +322,7 @@ public class FKeyPopups
         }
         window.add(new BScrollPane(history));
         window.add(makeDismiss(window), GroupLayout.FIXED);
+        window.setModal(true);
         return window;
     }
 

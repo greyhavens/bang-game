@@ -342,6 +342,9 @@ public class BangClient extends BasicClient
         // register our global key bindings
         _functionPopup = new FKeyPopups(_ctx);
 
+        // setup our modal shade color
+        _ctx.getRootNode().setModalShade(BangUI.MODAL_SHADE);
+
         // create and display the logon view; which we do by hand instead of
         // using setMainView() because we don't want to start the resource
         // resolution until we're faded in

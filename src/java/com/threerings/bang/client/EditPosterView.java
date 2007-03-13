@@ -51,6 +51,7 @@ public class EditPosterView extends BContainer
         }
 
         BWindow popup = new BWindow(ctx.getStyleSheet(), new BorderLayout());
+        popup.setModal(true);
         popup.setStyleClass("poster_edit_popup");
         popup.add(new EditPosterView(ctx, handle, popup), BorderLayout.CENTER);
         client.displayPopup(popup, true);

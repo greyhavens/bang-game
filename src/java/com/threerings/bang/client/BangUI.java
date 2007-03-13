@@ -36,6 +36,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.WaveData;
 
 import com.jme.image.Image;
+import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BDecoratedWindow;
@@ -102,6 +103,9 @@ public class BangUI
 
     /** The default layer for BPopupMenus. */
     public static final int POPUP_MENU_LAYER = 5;
+
+    /** The color of the shade behind modal windows. */
+    public static final ColorRGBA MODAL_SHADE = new ColorRGBA(0f, 0f, 0f, 0.5f);
 
     /** A font used to render counters in the game. */
     public static Font COUNTER_FONT;

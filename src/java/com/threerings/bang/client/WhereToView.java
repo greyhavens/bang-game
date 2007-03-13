@@ -63,6 +63,7 @@ public class WhereToView extends SteelWindow
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
         PlayerObject self = _ctx.getUserObject();
 
+        setModal(true);
         _contents.setStyleClass("padded");
         BContainer horiz = new BContainer(GroupLayout.makeHStretch().setGap(25));
         _contents.add(horiz);
