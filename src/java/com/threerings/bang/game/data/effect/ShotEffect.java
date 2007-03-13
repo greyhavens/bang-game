@@ -31,10 +31,10 @@ public class ShotEffect extends Effect
 
     /** Indicates that the target was damaged by a ballistic shot. */
     public static final String EXPLODED = "exploded";
-    
+
     /** Indicates that the target was damaged by a ballistic shot. */
     public static final String ROCKET_BURST = "rocket_burst";
-    
+
     /** We also rotate the shooter, thereby affecting it. */
     public static final String ROTATED = "rotated";
 
@@ -266,9 +266,12 @@ public class ShotEffect extends Effect
      */
     public void preapply (BangObject bangobj, Observer obs)
     {
-        // rotate the shooter to face the target
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
-        reportEffect(obs, shooter, ROTATED);
+
+        // rotate the shooter to face the target if this not collateral damage
+        if (type != COLLATERAL_DAMAGE) {
+            reportEffect(obs, shooter, ROTATED);
+        }
 
         // update the shooter's last acted if necessary
         if (shooter != null && shooterLastActed != -1 &&
