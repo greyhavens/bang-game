@@ -189,8 +189,8 @@ public class HomesteadDelegate extends ScenarioDelegate
 
     protected void checkClaimedHomestead (BangObject bangobj, Unit claimer)
     {
-        // only big shots can claim homesteads
-        if (claimer.getConfig().rank != UnitConfig.Rank.BIGSHOT) {
+        // only living big shots can claim homesteads
+        if (claimer.getConfig().rank != UnitConfig.Rank.BIGSHOT || !claimer.isAlive()) {
             return;
         }
 

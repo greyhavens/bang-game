@@ -41,7 +41,7 @@ public class Cow extends Piece
     {
         // if we were spooked by a big shot, become owned by that player
         int owner = -1;
-        if (spooker instanceof Unit && !herd) {
+        if (spooker instanceof Unit && !herd && spooker.isAlive()) {
             Unit unit = (Unit)spooker;
             if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT &&
                     bangobj.board.canCross(spooker.x, spooker.y, x, y)) {
@@ -78,13 +78,13 @@ public class Cow extends Piece
             ((Unit)mover).getConfig().rank == UnitConfig.Rank.BIGSHOT) ?
                 +1 : -1;
     }
-    
+
     @Override // documentation inherited
     public boolean getFenceBlocksGoal ()
     {
         return true;
     }
-    
+
     @Override // documentation inherited
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
