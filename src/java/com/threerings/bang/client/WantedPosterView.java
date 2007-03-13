@@ -16,6 +16,7 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.layout.BLayoutManager;
@@ -30,6 +31,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.avatar.client.BuckleView;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.gang.data.GangCodes;
@@ -184,10 +186,10 @@ public class WantedPosterView extends BContainer
     {
         removeAll();
 
-        add(buildWantedLabel(), new Rectangle(310, 560, 320, 125));
-        add(buildRankingsView(), new Rectangle(340, 250, 280, 260));
-        add(buildAvatarView(), new Rectangle(56, 264, 244, 300));
-        add(buildStatementView(), new Rectangle(50, 220, 250, 35));
+        add(buildWantedLabel(), new Rectangle(310, 602, 320, 70));
+        add(buildGangRankingsView(), new Rectangle(316, 210, 300, 400));
+        add(buildAvatarView(), new Rectangle(56, 296, 244, 300));
+        add(buildStatementView(), new Rectangle(52, 255, 250, 35));
         add(buildBadgeView(), new Point(57, 33));
     }
 
@@ -200,23 +202,52 @@ public class WantedPosterView extends BContainer
         handle.setFit(BLabel.Fit.SCALE);
         box.add(handle);
 
-        if (_poster.gang != null) {
-            String gang = _ctx.xlate(BangCodes.BANG_MSGS,
-                MessageBundle.compose(
-                    "m.poster_gang",
-                    MessageBundle.qualify(
-                        GangCodes.GANG_MSGS, GangCodes.XLATE_RANKS[_poster.rank]),
-                    MessageBundle.taint(_poster.gang)));
-            box.add(BangUI.createGangLabel(_poster.gang, gang, "poster_gang"));
-        }
-
         return box;
+    }
+
+    protected BComponent buildGangRankingsView ()
+    {
+        BContainer cont = GroupLayout.makeVBox(GroupLayout.TOP);
+        ((GroupLayout)cont.getLayoutManager()).setGap(0);
+
+        cont.add(new Spacer(1, 5));
+        if (_poster.gang != null) {
+            cont.add(buildGangView());
+        }
+        cont.add(buildRankingsView());
+
+        return cont;
+    }
+
+    protected BComponent buildGangView ()
+    {
+        BContainer cont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)cont.getLayoutManager()).setGap(15);
+
+        BuckleView bview = new BuckleView(_ctx, 3);
+        bview.setBuckle(_poster.buckle);
+        cont.add(bview);
+
+        String gang = _ctx.xlate(BangCodes.BANG_MSGS,
+            MessageBundle.compose(
+                "m.poster_gang",
+                MessageBundle.qualify(
+                    GangCodes.GANG_MSGS, GangCodes.XLATE_RANKS[_poster.rank]),
+                MessageBundle.taint(_poster.gang)));
+        cont.add(BangUI.createGangLabel(_poster.gang, gang, "poster_gang"));
+
+        return cont;
     }
 
     protected BComponent buildRankingsView ()
     {
+        BContainer cont = GroupLayout.makeVBox(GroupLayout.TOP);
+        cont.add(new Spacer(1, 5));
+        cont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/wanted/notorious_deeds.png"))));
+
         BContainer box = new BContainer(new TableLayout(2, 2, 10));
         box.setStyleClass("poster_rankings_box");
+        cont.add(box);
 
         Integer oaRank = _poster.rankings.get(ScenarioInfo.OVERALL_IDENT);
         if (oaRank != null) {
@@ -241,7 +272,7 @@ public class WantedPosterView extends BContainer
             addRankRow(box, _ctx.xlate(GameCodes.GAME_MSGS, info.getName()),
                        row.getValue().intValue());
         }
-        return box;
+        return cont;
     }
 
     protected void addRankRow (BContainer box, String name, int rank)

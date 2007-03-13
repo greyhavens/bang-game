@@ -892,6 +892,8 @@ poster_handle {
 
 poster_gang {
   font: "Dom Casual" plain 20;
+  color: #4a2805;
+  size: 170 -1;
 }
 
 poster_avatar {
@@ -2177,9 +2179,8 @@ gang_info_founded {
 }
 
 gang_info_notoriety {
-  font: "Dom Casual" plain 28;
+  font: "Dom Casual" plain 22;
   color: #4C2602;
-  size: 166 -1;
   text-align: center;
 }
 

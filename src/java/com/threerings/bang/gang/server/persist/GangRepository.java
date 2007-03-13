@@ -108,35 +108,42 @@ public class GangRepository extends JORARepository
      * record could be found.
      *
      * @param all if true, load the member entries and the rest of the gang's data and store it in
-     * the gang record
+     * the gang record; if false, only load what's necessary to populate a member's wanted poster
      */
     public GangRecord loadGang (int gangId, boolean all)
         throws PersistenceException
     {
         GangRecord grec = loadByExample(_gtable, new GangRecord(gangId), _gangIdMask);
-        if (grec != null && all) {
-            grec.members = loadGangMembers(gangId);
-
-            // load the coin count
-            grec.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
-                grec.getCoinAccount());
-
-            // load the gang inventory
-            grec.inventory = BangServer.itemrepo.loadItems(gangId, true);
-
-            // load the outfit
-            ArrayList<GangOutfitRecord> recs = loadAll(_otable, "where GANG_ID = " + gangId);
-            grec.outfit = new OutfitArticle[recs.size()];
-            for (int ii = 0; ii < grec.outfit.length; ii++) {
-                GangOutfitRecord rec = recs.get(ii);
-                grec.outfit[ii] = new OutfitArticle(rec.article, rec.zations);
-            }
-
-            // load the senior leader's avatar
-            GangMemberEntry leader = GangUtil.getSeniorLeader(grec.members);
-            grec.avatar = (leader == null) ?
-                null : BangServer.lookrepo.loadSnapshot(leader.playerId);
+        if (grec == null) {
+            return null;
         }
+
+        // load the gang inventory
+        grec.inventory = BangServer.itemrepo.loadItems(gangId, true);
+        if (!all) {
+            return grec;
+        }
+
+        // load the members
+        grec.members = loadGangMembers(gangId);
+
+        // load the coin count
+        grec.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
+            grec.getCoinAccount());
+
+        // load the outfit
+        ArrayList<GangOutfitRecord> recs = loadAll(_otable, "where GANG_ID = " + gangId);
+        grec.outfit = new OutfitArticle[recs.size()];
+        for (int ii = 0; ii < grec.outfit.length; ii++) {
+            GangOutfitRecord rec = recs.get(ii);
+            grec.outfit[ii] = new OutfitArticle(rec.article, rec.zations);
+        }
+
+        // load the senior leader's avatar
+        GangMemberEntry leader = GangUtil.getSeniorLeader(grec.members);
+        grec.avatar = (leader == null) ?
+            null : BangServer.lookrepo.loadSnapshot(leader.playerId);
+
         return grec;
     }
 

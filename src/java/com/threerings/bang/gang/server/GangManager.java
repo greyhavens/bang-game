@@ -136,6 +136,7 @@ public class GangManager
             GangObject gangobj = requireGang(player.gangId).getGangObject();
             info.gang = gangobj.name;
             info.rank = getPosterRank(player.gangRank);
+            info.buckle = gangobj.getBuckleInfo();
         } catch (InvocationException e) {
             // a warning will have already been logged
         }
@@ -150,8 +151,11 @@ public class GangManager
         BangServer.refuseDObjThread(); // safety first
         GangMemberRecord mrec = _gangrepo.loadMember(player.playerId);
         if (mrec != null) {
-            info.gang = _gangrepo.loadGang(mrec.gangId, false).getName();
+            GangRecord grec = _gangrepo.loadGang(mrec.gangId, false);
+            info.gang = grec.getName();
             info.rank = getPosterRank(mrec.rank);
+            info.buckle = GangUtil.getBuckleInfo(
+                grec.getBuckle(), new DSet<Item>(grec.inventory));
         }
     }
 

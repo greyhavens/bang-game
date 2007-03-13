@@ -95,7 +95,10 @@ public class GangInfoView extends BContainer
         bcont.add(new Spacer(40, 1));
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
-        String msg = "m.notoriety." + gangobj.notoriety;
+        String msg = "m.weight_class." + gangobj.getWeightClass();
+        ncont.add(new BLabel(_ctx.xlate(GangCodes.GANG_MSGS, msg), "gang_notoriety"));
+        ncont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/diamond.png"))));
+        msg = "m.notoriety." + gangobj.notoriety;
         ncont.add(_ranking = new BLabel("\"" + _ctx.xlate(GangCodes.GANG_MSGS, msg) + "\"",
             "gang_notoriety"));
         rcont.add(ncont, GroupLayout.FIXED);

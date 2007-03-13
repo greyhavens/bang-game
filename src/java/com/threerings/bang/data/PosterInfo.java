@@ -20,10 +20,13 @@ public class PosterInfo extends SimpleStreamableObject
 
     /** The name of the player's gang, or <code>null</code> for none. */
     public Handle gang;
-    
+
     /** The player's rank in the gang. */
     public byte rank;
-    
+
+    /** The player's gang buckle. */
+    public BuckleInfo buckle;
+
     /** This poster's player's avatar */
     public AvatarInfo avatar;
 

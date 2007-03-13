@@ -135,8 +135,13 @@ public class GangInfoDialog extends BWindow
         bcont.add(scont);
         bcont.add(new Spacer(55, 1));
 
-        scont.add(new BLabel("\"" + msgs.get("m.notoriety." + info.notoriety) + "\"",
+        BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ncont.add(new BLabel(msgs.get("m.weight_class." + info.weightClass),
             "gang_info_notoriety"));
+        ncont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/diamond.png"))));
+        ncont.add(new BLabel("\"" + msgs.get("m.notoriety." + info.notoriety) + "\"",
+            "gang_info_notoriety"));
+        scont.add(ncont);
         scont.add(createLabel("underline_short"));
 
         scont.add(new Spacer(1, 8));

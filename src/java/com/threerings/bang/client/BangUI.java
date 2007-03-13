@@ -134,6 +134,9 @@ public class BangUI
     /** An icon used to indicate a quantity of scrip. */
     public static BIcon scripIcon;
 
+    /** An icon used to indicate a quantity of aces. */
+    public static BIcon acesIcon;
+
     /** A left arrow icon. */
     public static BIcon leftArrow;
 
@@ -195,6 +198,7 @@ public class BangUI
 
         scripIcon = new ImageIcon(ctx.loadImage("ui/icons/scrip.png"));
         coinIcon = new ImageIcon(ctx.loadImage("ui/icons/coins.png"));
+        acesIcon = new ImageIcon(ctx.loadImage("ui/icons/aces.png"));
 
         leftArrow = new ImageIcon(ctx.loadImage("ui/icons/left_arrow.png"));
         rightArrow = new ImageIcon(ctx.loadImage("ui/icons/right_arrow.png"));
