@@ -704,15 +704,15 @@
 
   <!-- signs and install the Getdown applet jar file -->
   <target name="applet" depends="prepare">
-    <property name="client.base" value="${deploy.dir}/client/pages"/>
-    <mkdir dir="${client.base}/incl"/>
-    <mkdir dir="${client.base}/client"/>
+    <property name="applet.base" value="${deploy.dir}/applet/pages"/>
+    <mkdir dir="${applet.base}/incl"/>
+    <mkdir dir="${applet.base}/client"/>
     <property file="${cert_dir}/certificate.properties"/>
 
     <!-- copy the applet jar file into place and sign it -->
-    <copy file="projects/tools/lib/java/getdown-retro-pro.jar" todir="${client.base}/client"/>
+    <copy file="projects/tools/lib/java/getdown-retro-pro.jar" todir="${applet.base}/client"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
-      <fileset dir="${client.base}/client" includes="getdown-retro-pro.jar"/>
+      <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
     </signjar>
 
     <!-- generate our signed applet tags -->
@@ -726,7 +726,7 @@
     <appsign keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}"
              keypass="${sign.keypass}" appbase="${root_url}/client" appname="${client_ident}"
              imgpath="/client/background.png" file="pages/incl/launch_open.html.in"
-             tofile="${client.base}/incl/launch_open.html"/>
+             tofile="${applet.base}/incl/launch_open.html"/>
   </target>
 
   <!-- a target for rebuilding everything -->
@@ -956,6 +956,9 @@
     <antcall target="prepare-extra">
       <param name="extra.type" value="client"/>
       <param name="pkg.name.override" value="bang-client-${version}"/>
+    </antcall>
+    <antcall target="prepare-extra">
+      <param name="extra.type" value="applet"/>
     </antcall>
     <!-- the production client package needs to update the client/getdown.txt symlink -->
     <antcall target="maintainer-scripts">

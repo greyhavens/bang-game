@@ -15,6 +15,7 @@
 
     Depends     bang-pages
     Depends     bang-installer (= @VERSION@)
+    Depends     bang-applet (= @VERSION@)
     Depends     bang-client-current (= @VERSION@)
     Depends     office-webapp (= @VERSION@)
 </Package>
