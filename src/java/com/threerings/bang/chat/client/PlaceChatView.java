@@ -146,8 +146,10 @@ public class PlaceChatView extends TabbedChatView
         // make sure we're showing, otherwise we don't want to intercept system messages
         } else if ((isShowing() || isPlaceChatViewType) && msg instanceof SystemMessage) {
             SystemMessage smsg = (SystemMessage)msg;
-            if (isPlaceChatViewType || SystemMessage.FEEDBACK == smsg.attentionLevel) {
-                ((ChatTab)_pane.getSelectedTab()).appendSystem(msg);
+            BComponent ctab = _pane.getSelectedTab();
+            if ((isPlaceChatViewType || SystemMessage.FEEDBACK == smsg.attentionLevel) &&
+                    ctab instanceof ChatTab) {
+                ((ChatTab)ctab).appendSystem(msg);
                 return true;
             }
         }
