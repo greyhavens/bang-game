@@ -59,12 +59,12 @@ while (<>) {
             $newsess++;
         }
 
-    } elsif (/game_ended t:(\d+) s:(\S+) ts:(\d+) r:(\S+) (.*)/) {
+    } elsif (/game_ended t:(\d+) (g:SALOON)? s:(\S+) ts:(\d+) r:(\S+) (.*)/) {
         my $gsecs = $1;
-        my $tsize = $3;
-        my $rated = $4;
-        my $info = $5;
-        my @scens = split(/,/, $2);
+        my $tsize = $4;
+        my $rated = $5;
+        my $info = $6;
+        my @scens = split(/,/, $3);
         my $rcount = scalar @scens;
         my $rtype = ($rated eq "true") ? "rated" : "unrated";
 
@@ -142,6 +142,27 @@ while (<>) {
             # track total rounds played for all (human) players in all games
             $rounds{$type} += $rcount;
         }
+
+    } elsif (/game_ended t:(\d+) g:PRACTICE s:(\S+) (.*)/) {
+        my $gsecs = $1;
+        my $unit = $2;
+        my $info = $3;
+        # TODO: log anything for practice games?
+
+    } elsif (/game_ended t:(\d+) g:BOUNTY bid:(\S+) gid:(\S+) (.*)/) {
+        my $gsecs = $1;
+        my $bounty = $2;
+        my $game = $3;
+        my $info = $4;
+        # TODO: log anything for bounty games?
+
+    } elsif (/game_ended t:(\d+) g:TUTORIAL s:(\S+) (.*)/) {
+        my $gsecs = $1;
+        my $tutorial = $2;
+        my $info = $3;
+        $games{"tutorial"}++;
+        $time{"tutorial"} += $gsecs;
+        $bytut{$tutorial}++;
     }
 }
 
