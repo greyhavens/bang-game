@@ -9,6 +9,10 @@
     <part name="plain" starter="true"/>
     <part name="swirls"/>
     <part name="tris"/>
+    <part name="bullzeye"/>
+    <part name="checker"/>
+    <part name="swirls2"/>
+    <part name="swirls3"/>
   </class>
 
   <!-- buckle borders -->
@@ -16,6 +20,12 @@
     <part name="frill_rect"/>
     <part name="rope_oval" starter="true"/>
     <part name="rope_shape"/>
+    <part name="four_corners"/>
+    <part name="four_corners_studs"/>
+    <part name="round_2_gears"/>
+    <part name="round_2_studs"/>
+    <part name="round_10_studs"/>
+    <part name="scrolls"/>
   </class>
 
   <!-- buckle icons -->
@@ -23,5 +33,18 @@
     <part name="bull_head"/>
     <part name="bull_skull"/>
     <part name="star_small"/>
+    <part name="chamber"/>
+    <part name="counter"/>
+    <part name="gear_fat"/>
+    <part name="hole_bullet"/>
+    <part name="hole_key"/>
+    <part name="screw_double"/>
+    <part name="screw_single"/>
+    <part name="star_nubs"/>
+    <part name="suit_club"/>
+    <part name="suit_heart"/>
+    <part name="suit_spade"/>
+    <part name="suit_diamond"/>
+    <part name="washer"/>
   </class>
 </parts>
