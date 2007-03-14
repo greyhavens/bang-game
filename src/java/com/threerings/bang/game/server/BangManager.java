@@ -2548,15 +2548,35 @@ public class BangManager extends GameManager
         try {
             StringBuffer buf = new StringBuffer((awards == null) ? "game_cancelled" : "game_ended");
             buf.append(" t:").append(gameSecs);
-            buf.append(" s:");
-            for (int ii = 0; ii < _bconfig.rounds.size(); ii++) {
-                if (ii > 0) {
-                    buf.append(",");
+
+            buf.append(" g:").append(_bconfig.type);
+            switch (_bconfig.type) {
+            case TUTORIAL:
+                buf.append(" tut:").append(_bconfig.getScenario(0));
+                break;
+
+            case PRACTICE:
+                buf.append(" u:").append(_bconfig.getScenario(0));
+                break;
+
+            case SALOON:
+                buf.append(" s:");
+                for (int ii = 0; ii < _bconfig.rounds.size(); ii++) {
+                    if (ii > 0) {
+                        buf.append(",");
+                    }
+                    buf.append(_bconfig.getScenario(ii));
                 }
-                buf.append(_bconfig.getScenario(ii));
+                buf.append(" ts:").append(getTeamSize());
+                buf.append(" r:").append(_bconfig.rated);
+                break;
+
+            case BOUNTY:
+                buf.append(" bid:").append(_bounty.ident);
+                buf.append(" gid:").append(_bangobj.bountyGameId);
+                break;
             }
-            buf.append(" ts:").append(getTeamSize());
-            buf.append(" r:").append(_bconfig.rated);
+
             buf.append(" ");
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 if (ii > 0) {
