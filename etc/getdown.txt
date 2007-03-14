@@ -17,6 +17,10 @@ ui.progress_text = FFFFFF
 ui.status = 57, 245, 373, 68
 ui.status_text = FFFFFF
 
+# Instrument the download process
+tracking_url = @tracking_url@
+tracking_percents = 5, 25, 50, 75
+
 # These all go into the classpath
 code = code/config.jar
 code = code/bang-config.jar

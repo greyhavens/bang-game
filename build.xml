@@ -550,6 +550,7 @@
       <filterset>
         <filter token="appbase_line" value="appbase = ${root_url}/client"/>
         <filter token="version_line" value=""/>
+        <filter token="tracking_url" value="${root_url}/tracking/"/>
         <filter token="auxgroups_line" value="auxgroups = indian_post, boom_town"/>
       </filterset>
     </copy>
@@ -586,6 +587,14 @@
     <exec executable="${basedir}/bin/update_board_summary" failonerror="true">
       <arg value="${pages.out}/boards.html"/>
     </exec>
+  </target>
+
+  <!-- builds the development client getdown distribution and copies it into -->
+  <!-- the local document tree for developer testing -->
+  <target name="localclient" depends="devclient">
+    <copy todir="pages">
+      <fileset dir="${deploy.dir}/client/pages" includes="client/**"/>
+    </copy>
   </target>
 
   <!-- builds the production client getdown distribution -->
