@@ -117,36 +117,39 @@ if ($dry_run) {
 my $date = $datedir;
 $date =~ s:/:-:g;
 
-# run our simple stat summarizer
-$cmd = "$root/bin/summarize_stats $histlogdir/server_$node.log > /tmp/bangstats.tmp";
-if ($dry_run) {
-    print("$cmd\n");
-} else {
-    system_warn("nice -n 20 $cmd");
-}
-
-# run our performance stat summarizer
-$cmd = "$root/bin/summarize_perf $histlogdir/perf_$node.log > $statsdir/perf_$node.html";
-if ($dry_run) {
-    print("$cmd\n");
-    print("mv *.png *.dat $statsdir\n");
-} else {
-    system_warn("nice -n 20 $cmd");
-    # move the generated graphs into the right directory
-    system_warn("mv *.png *.dat $statsdir");
-}
-
 my $host = `hostname`;
 chomp($host);
 
-# send the stats email
-if (!$dry_run) {
-    send_mail($stats_email, $stats_email,
-              "$host: Bang nightly stats", "/tmp/bangstats.tmp");
-    unlink("/tmp/bangstats.tmp");
+# if we're on a production server...
+if ($host =~ /^bang\d+/) {
+    # run our simple stat summarizer
+    $cmd = "$root/bin/summarize_stats $histlogdir/server_$node.log > /tmp/bangstats.tmp";
+    if ($dry_run) {
+        print("$cmd\n");
+    } else {
+        system_warn("nice -n 20 $cmd");
+    }
+
+    # run our performance stat summarizer
+    $cmd = "$root/bin/summarize_perf $histlogdir/perf_$node.log > $statsdir/perf_$node.html";
+    if ($dry_run) {
+        print("$cmd\n");
+        print("mv *.png *.dat $statsdir\n");
+    } else {
+        system_warn("nice -n 20 $cmd");
+        # move the generated graphs into the right directory
+        system_warn("mv *.png *.dat $statsdir");
+    }
+
+    # send the stats email
+    if (!$dry_run) {
+        send_mail($stats_email, $stats_email,
+                  "$host: Bang nightly stats", "/tmp/bangstats.tmp");
+        unlink("/tmp/bangstats.tmp");
+    }
 }
 
-# report music purchases over the last five days
+# if we're on bang1, report music purchases over the last five days
 if ($host eq "bang1.luna.threerings.net") {
     my $query = "select DATE(TIME) as SUMDATE, -SUM(COINS) from COIN_HISTORY " .
         "where TIME >= DATE_SUB(CURDATE(), INTERVAL 5 DAY) and TYPE = 109 group by SUMDATE;";
