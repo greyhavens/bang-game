@@ -729,7 +729,7 @@ public class GangHandler
                         MessageBundle.compose(
                             "m.donation_entry",
                             MessageBundle.taint(handle),
-                            getMoneyDesc(scrip, coins)));
+                            GangUtil.getMoneyDesc(scrip, coins, 0)));
                     return null;
                 } catch (PersistenceException e) {
                     return INTERNAL_ERROR;
@@ -942,8 +942,8 @@ public class GangHandler
 
     // documentation inherited from interface GangPeerProvider
     public void buyGangGood (
-        ClientObject caller, final Handle handle, final String type, final Object[] args,
-        final boolean admin, final InvocationService.ConfirmListener listener)
+        ClientObject caller, Handle handle, String type, Object[] args,
+        boolean admin, InvocationService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure it comes from this server or a peer
@@ -953,7 +953,8 @@ public class GangHandler
         verifyIsLeader(handle);
 
         // create and start up the provider
-        GangGoodProvider provider = BangServer.hideoutmgr.getGoodProvider(this, admin, type, args);
+        GangGoodProvider provider = BangServer.hideoutmgr.getGoodProvider(
+            this, handle, admin, type, args);
         provider.setListener(listener);
         provider.start();
     }
@@ -991,7 +992,7 @@ public class GangHandler
                         MessageBundle.compose(
                             "m.outfit_entry",
                             MessageBundle.taint(handle),
-                            getMoneyDesc(scripCost, coinCost),
+                            GangUtil.getMoneyDesc(scripCost, coinCost, 0),
                             MessageBundle.tcompose("m.member_count", _memberCount),
                             MessageBundle.tcompose("m.articles", _items.size())));
                 return null;
@@ -1628,28 +1629,6 @@ public class GangHandler
             }
         }
         return modified;
-    }
-
-    /**
-     * Returns a translatable string describing the identified amounts (at least one of which must
-     * be nonzero).
-     */
-    protected static String getMoneyDesc (int scrip, int coins)
-    {
-        String sdesc = null, cdesc = null;
-        if (scrip > 0) {
-            sdesc = MessageBundle.tcompose("m.scrip", String.valueOf(scrip));
-            if (coins == 0) {
-                return sdesc;
-            }
-        }
-        if (coins > 0) {
-            cdesc = MessageBundle.tcompose("m.coins", coins);
-            if (scrip == 0) {
-                return cdesc;
-            }
-        }
-        return MessageBundle.compose("m.times_2", cdesc, sdesc);
     }
 
     /** The id of our gang. */

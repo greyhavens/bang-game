@@ -9,6 +9,7 @@ import java.util.HashMap;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -58,12 +59,12 @@ public class GangGoodsCatalog
      * specified gang. Returns null if no provider is registered for the good in question.
      */
     public GangGoodProvider getProvider (
-        GangObject gang, boolean admin, GangGood good, Object[] args)
+        GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
         throws InvocationException
     {
         ProviderFactory factory = _providers.get(good);
         if (factory != null) {
-            return factory.createProvider(gang, admin, good, args);
+            return factory.createProvider(gang, handle, admin, good, args);
         }
         return null;
     }
@@ -80,17 +81,17 @@ public class GangGoodsCatalog
     /** Used to create a {@link Provider} for a particular {@link GangGood}. */
     protected abstract class ProviderFactory {
         public abstract GangGoodProvider createProvider (
-            GangObject gang, boolean admin, GangGood good, Object[] args)
+            GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
             throws InvocationException;
     }
 
     /** Used for {@link BucklePartGood}s. */
     protected class BucklePartProviderFactory extends ProviderFactory {
         public GangGoodProvider createProvider (
-            GangObject gang, boolean admin, GangGood good, Object[] args)
+            GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
             throws InvocationException
         {
-            return new GangItemProvider(gang, admin, good, args) {
+            return new GangItemProvider(gang, handle, admin, good, args) {
                 protected Item createItem () throws InvocationException {
                     BucklePartGood pgood = (BucklePartGood)_good;
                     BucklePartCatalog.Part part = _alogic.getBucklePartCatalog().getPart(

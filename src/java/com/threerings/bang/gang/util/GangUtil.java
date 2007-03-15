@@ -10,6 +10,7 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.QuickSort;
 
 import com.threerings.presents.dobj.DSet;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
@@ -115,6 +116,29 @@ public class GangUtil
             }
         }
         return new BuckleInfo(print);
+    }
+
+    /**
+     * Returns a translatable string describing the identified amounts.
+     */
+    public static String getMoneyDesc (int scrip, int coins, int aces)
+    {
+        ArrayList<String> descs = new ArrayList<String>();
+        if (scrip > 0 || (scrip == 0 && coins == 0 && aces == 0)) {
+            descs.add(MessageBundle.tcompose("m.scrip", String.valueOf(scrip)));
+        }
+        if (coins > 0) {
+            descs.add(MessageBundle.tcompose("m.coins", coins));
+        }
+        if (aces > 0) {
+            descs.add(MessageBundle.tcompose("m.aces", aces));
+        }
+        int ndescs = descs.size();
+        if (ndescs == 1) {
+            return descs.get(0);
+        } else {
+            return MessageBundle.compose("m.times_" + ndescs, descs.toArray(new String[ndescs]));
+        }
     }
 
     /** Sorts active members before inactive, then by decreasing seniority. */

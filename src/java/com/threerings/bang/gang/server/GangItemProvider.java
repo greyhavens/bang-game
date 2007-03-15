@@ -6,6 +6,7 @@ package com.threerings.bang.gang.server;
 import com.samskivert.io.PersistenceException;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.server.BangServer;
 
@@ -17,10 +18,11 @@ import com.threerings.bang.gang.data.GangObject;
  */
 public class GangItemProvider extends GangGoodProvider
 {
-    public GangItemProvider (GangObject gang, boolean admin, GangGood good, Object[] args)
+    public GangItemProvider (
+        GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
         throws InvocationException
     {
-        super(gang, admin, good, args);
+        super(gang, handle, admin, good, args);
         _item = createItem();
         if (!_item.allowsDuplicates() && gang.holdsEquivalentItem(_item)) {
             throw new InvocationException("m.already_owned");
@@ -33,7 +35,11 @@ public class GangItemProvider extends GangGoodProvider
     {
         // we check here as well as on the dobj thread because another server may have
         // created the item
-        return (BangServer.itemrepo.insertItem(_item) ? null : "m.already_owned");
+        if (BangServer.itemrepo.insertItem(_item)) {
+            return super.persistentAction();
+        } else {
+            return "m.already_owned";
+        }
     }
 
     @Override // documentation inherited
@@ -41,6 +47,7 @@ public class GangItemProvider extends GangGoodProvider
         throws PersistenceException
     {
         BangServer.itemrepo.deleteItem(_item, "item_provider_rollback");
+        super.rollbackPersistentAction();
     }
 
     @Override // documentation inherited

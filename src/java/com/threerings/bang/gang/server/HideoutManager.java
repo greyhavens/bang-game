@@ -106,29 +106,30 @@ public class HideoutManager extends MatchHostManager
      * gang.
      */
     public GangGoodProvider getGoodProvider (
-        GangHandler gang, boolean admin, String type, Object[] args)
+        GangHandler gang, Handle handle, boolean admin, String type, Object[] args)
         throws InvocationException
     {
         // make sure we sell the good in question
         GangGood good = (GangGood)_hobj.goods.get(type);
         if (good == null) {
             log.warning("Requested to buy unknown good [gang=" + gang +
-                        ", type=" + type + "].");
+                        ", handle=" + handle + ", type=" + type + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         // validate that the client can buy this good
         if (!good.isAvailable(gang.getGangObject())) {
             log.warning("Requested to buy unavailable good [gang=" + gang +
-                        ", good=" + good + "].");
+                        ", handle=" + handle + ", good=" + good + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         // create the appropriate provider and return it
-        GangGoodProvider provider = _goods.getProvider(gang.getGangObject(), admin, good, args);
+        GangGoodProvider provider = _goods.getProvider(
+            gang.getGangObject(), handle, admin, good, args);
         if (provider == null) {
             log.warning("Unable to find provider for good [gang=" + gang +
-                        ", good=" + good + "].");
+                        ", handle=" + handle + ", good=" + good + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
         return provider;
