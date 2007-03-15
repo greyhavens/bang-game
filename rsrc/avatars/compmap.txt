@@ -1,4 +1,4 @@
-561
+570
 buckle/background := bullzeye := 539
 buckle/background := checker := 540
 buckle/background := fountain := 532
@@ -17,15 +17,23 @@ buckle/border := round_10_studs := 545
 buckle/border := round_2_gears := 546
 buckle/border := round_2_studs := 547
 buckle/border := scrolls := 548
+buckle/icon := banner := 562
+buckle/icon := boot := 563
 buckle/icon := bull_head := 530
 buckle/icon := bull_skull := 538
+buckle/icon := bullet := 564
 buckle/icon := chamber := 549
+buckle/icon := cloud := 565
 buckle/icon := counter := 550
 buckle/icon := gear_fat := 551
 buckle/icon := hole_bullet := 552
 buckle/icon := hole_key := 553
+buckle/icon := iron_plate := 566
+buckle/icon := lasso := 567
+buckle/icon := rabbit := 568
 buckle/icon := screw_double := 554
 buckle/icon := screw_single := 555
+buckle/icon := snake := 569
 buckle/icon := star_nubs := 556
 buckle/icon := star_small := 531
 buckle/icon := suit_club := 557
@@ -33,6 +41,7 @@ buckle/icon := suit_diamond := 558
 buckle/icon := suit_heart := 559
 buckle/icon := suit_spade := 560
 buckle/icon := washer := 561
+buckle/icon := watch := 570
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := dogsoldier := 503
