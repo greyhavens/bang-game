@@ -46,5 +46,14 @@
     <part name="suit_spade" coins="5" aces="500"/>
     <part name="suit_diamond" coins="5" aces="500"/>
     <part name="washer" coins="1" aces="50"/>
+    <part name="banner" coins="1" aces="100"/>
+    <part name="boot" coins="2" aces="300"/>
+    <part name="bullet" coins="2" aces="300"/>
+    <part name="cloud" coins="2" aces="200"/>
+    <part name="iron_plate" coins="2" aces="300"/>
+    <part name="lasso" coins="1" aces="200"/>
+    <part name="rabbit" coins="2" aces="300"/>
+    <part name="snake" coins="2" aces="300"/>
+    <part name="watch" coins="2" aces="300"/>
   </class>
 </parts>
