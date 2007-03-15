@@ -196,16 +196,19 @@ public class OOOAuthenticator extends BangAuthenticator
         // logging in from a tainted machine
         int vc = _authrep.validateUser(OOOUser.BANGHOWDY_SITE_ID, user, creds.ident, prec == null);
         switch (vc) {
-            // various error conditions
-            case OOOUserRepository.ACCOUNT_BANNED:
-               rdata.code = BANNED;
-               return;
-            case OOOUserRepository.DEADBEAT:
-               rdata.code = DEADBEAT;
-               return;
-            case OOOUserRepository.NEW_ACCOUNT_TAINTED:
-               rdata.code = MACHINE_TAINTED;
-               return;
+        case OOOUserRepository.ACCOUNT_BANNED:
+            log.info("Rejecting banned account [who=" + username + "].");
+            rdata.code = BANNED;
+            return;
+        case OOOUserRepository.DEADBEAT:
+            log.info("Rejecting deadbeat account [who=" + username + "].");
+            rdata.code = DEADBEAT;
+            return;
+        case OOOUserRepository.NEW_ACCOUNT_TAINTED:
+            log.info("Rejecting tainted machine [who=" + username +
+                     ", ident=" + creds.ident + "].");
+            rdata.code = MACHINE_TAINTED;
+            return;
         }
 
         // check whether we're restricting non-insider login
