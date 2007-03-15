@@ -49,6 +49,13 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case GangPeerMarshaller.BUY_GANG_GOOD:
+            ((GangPeerProvider)provider).buyGangGood(
+                source,
+                (Handle)args[0], (String)args[1], (Object[])args[2], ((Boolean)args[3]).booleanValue(), (InvocationService.ConfirmListener)args[4]
+            );
+            return;
+
         case GangPeerMarshaller.CHANGE_MEMBER_RANK:
             ((GangPeerProvider)provider).changeMemberRank(
                 source,

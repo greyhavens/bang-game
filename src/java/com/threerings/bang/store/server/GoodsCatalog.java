@@ -62,7 +62,7 @@ public class GoodsCatalog
      */
     public GoodsCatalog (AvatarLogic alogic)
     {
-        _alogic= alogic;
+        _alogic = alogic;
 
         // register our packs of cards
         ProviderFactory pf = new CardProviderFactory();

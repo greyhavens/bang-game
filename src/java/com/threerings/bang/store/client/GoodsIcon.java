@@ -5,20 +5,14 @@ package com.threerings.bang.store.client;
 
 import java.util.ArrayList;
 
-import com.jmex.bui.BImage;
-import com.jmex.bui.icon.ImageIcon;
+import com.threerings.presents.dobj.DObject;
 
-import com.threerings.media.image.ColorPository.ColorRecord;
-import com.threerings.media.image.Colorization;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
-
-import com.threerings.bang.avatar.util.AvatarLogic;
-import com.threerings.bang.avatar.util.ColorConstraints;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardTripletGood;
@@ -30,11 +24,12 @@ import com.threerings.bang.store.data.Good;
 public class GoodsIcon extends PaletteIcon
 {
     /** Contains our randomly selected color ids for colorized goods. */
-    public int[] colorIds;
+    public int[] colorIds = new int[3];
 
-    public GoodsIcon (BangContext ctx, Good good)
+    public GoodsIcon (BangContext ctx, DObject entity, Good good)
     {
         _ctx = ctx;
+        _entity = entity;
         setGood(good);
     }
 
@@ -47,37 +42,11 @@ public class GoodsIcon extends PaletteIcon
     {
         _good = good;
 
-        BImage image;
-        if (_good instanceof ArticleGood) {
-            AvatarLogic al = _ctx.getAvatarLogic();
-            ColorRecord[] crecs = al.pickRandomColors(
-                al.getArticleCatalog().getArticle(_good.getType()), _ctx.getUserObject());
-            colorIds = new int[3];
-            Colorization[] zations = new Colorization[crecs.length];
-            for (int ii = 0; ii < crecs.length; ii++) {
-                ColorRecord crec = crecs[ii];
-                if (crec == null) {
-                    continue;
-                }
-                // skip skin, which some article goods use
-                if (AvatarLogic.SKIN.equals(crec.cclass.name)) {
-                    continue;
-                }
-                int cidx = AvatarLogic.getColorIndex(crec.cclass.name);
-                colorIds[cidx] = crec.colorId;
-                zations[ii] = crec.getColorization();
-            }
-            image = _ctx.getImageCache().createColorizedBImage(
-                good.getIconPath(), zations, true);
-        } else {
-            image = _ctx.loadImage(good.getIconPath());
-        }
-
         if (_good instanceof CardTripletGood) {
             setFitted(true);
         }
 
-        setIcon(new ImageIcon(image));
+        setIcon(_good.createIcon(_ctx, _entity, colorIds));
         setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
         String msg = MessageBundle.compose(
             "m.goods_icon", good.getName(), good.getToolTip());
@@ -85,5 +54,6 @@ public class GoodsIcon extends PaletteIcon
     }
 
     protected BangContext _ctx;
+    protected DObject _entity;
     protected Good _good;
 }

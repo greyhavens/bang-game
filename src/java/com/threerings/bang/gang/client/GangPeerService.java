@@ -83,4 +83,11 @@ public interface GangPeerService extends InvocationService
     public void processOutfits (
         Client client, Handle handle, OutfitArticle[] outfit, boolean buy,
         boolean admin, ResultListener listener);
+
+    /**
+     * Purchases a good for the gang.
+     */
+    public void buyGangGood (
+        Client client, Handle handle, String type, Object[] args, boolean admin,
+        ConfirmListener listener);
 }

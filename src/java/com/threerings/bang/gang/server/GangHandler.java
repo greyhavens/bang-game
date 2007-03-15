@@ -940,6 +940,24 @@ public class GangHandler
         });
     }
 
+    // documentation inherited from interface GangPeerProvider
+    public void buyGangGood (
+        ClientObject caller, final Handle handle, final String type, final Object[] args,
+        final boolean admin, final InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure it comes from this server or a peer
+        verifyLocalOrPeer(caller);
+
+        // make sure it comes from a leader
+        verifyIsLeader(handle);
+
+        // create and start up the provider
+        GangGoodProvider provider = BangServer.hideoutmgr.getGoodProvider(this, admin, type, args);
+        provider.setListener(listener);
+        provider.start();
+    }
+
     /**
      * Having determined which gang members need parts of the outfit and computed the cost,
      * uses fund from the gang's coffers to buy the outfits.

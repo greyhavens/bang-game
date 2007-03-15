@@ -33,6 +33,8 @@ public class MoneyLabel extends BContainer
         _coins.setIconTextGap(gap);
         _coins.setStyleClass("money_label");
         _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.coin_tip"));
+
+        setMoney(0, 0, false);
     }
 
     /**

@@ -193,6 +193,19 @@ public class GangObject extends DObject
         return GangUtil.getSeniorLeader(members);
     }
 
+    /**
+     * Returns true if the gang holds an item that is equivalent in content to the one specified.
+     */
+    public boolean holdsEquivalentItem (Item item)
+    {
+        for (Item oitem : inventory) {
+            if (item.isEquivalent(oitem)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // documentation inherited from interface SpeakObject
     public void applyToListeners (SpeakObject.ListenerOp op)
     {

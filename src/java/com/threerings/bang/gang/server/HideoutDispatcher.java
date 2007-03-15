@@ -49,6 +49,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             );
             return;
 
+        case HideoutMarshaller.BUY_GANG_GOOD:
+            ((HideoutProvider)provider).buyGangGood(
+                source,
+                (String)args[0], (Object[])args[1], (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
         case HideoutMarshaller.BUY_OUTFITS:
             ((HideoutProvider)provider).buyOutfits(
                 source,

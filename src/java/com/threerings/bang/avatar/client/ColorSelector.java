@@ -47,7 +47,7 @@ public class ColorSelector extends BComponent
     {
         this(ctx, colorClass, ctx.getUserObject(), listener);
     }
-    
+
     public ColorSelector (
         BangContext ctx, String colorClass, DObject entity, ActionListener listener)
     {
@@ -61,7 +61,13 @@ public class ColorSelector extends BComponent
                 entity);
 
         int dy = 0; // HAIR
-        if (colorClass.endsWith("_s")) {
+        if (colorClass.equals("buckle_p")) {
+            dy = 96;
+        } else if (colorClass.equals("buckle_back_p")) {
+            dy = 144;
+        } else if (colorClass.equals("buckle_back_s")) {
+            dy = 120;
+        } else if (colorClass.endsWith("_s")) {
             dy = 24;
         } else if (colorClass.endsWith("_t")) {
             dy = 48;

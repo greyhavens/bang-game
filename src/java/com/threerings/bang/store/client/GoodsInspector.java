@@ -36,15 +36,14 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.ColorSelector;
-import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardTripletGood;
 import com.threerings.bang.store.data.Good;
+import com.threerings.bang.store.data.GoodsObject;
 import com.threerings.bang.store.data.SongGood;
 import com.threerings.bang.store.data.StoreCodes;
-import com.threerings.bang.store.data.StoreObject;
 
 /**
  * Displays detailed information on a particular good.
@@ -52,11 +51,11 @@ import com.threerings.bang.store.data.StoreObject;
 public class GoodsInspector extends BContainer
     implements IconPalette.Inspector, ActionListener
 {
-    public GoodsInspector (BangContext ctx, StoreView parent)
+    public GoodsInspector (BangContext ctx, GoodsPalette palette)
     {
         super(new AbsoluteLayout());
         _ctx = ctx;
-        _parent = parent;
+        _palette = palette;
 
         add(_icon = new BLabel(""), new Rectangle(0, 0, 136, 156));
         add(_title = new BLabel("", "medium_title"), new Rectangle(190, 115, 300, 40));
@@ -66,8 +65,7 @@ public class GoodsInspector extends BContainer
         // we'll add these later
         _ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
         _ccont.add(new BLabel(_ctx.xlate(StoreCodes.STORE_MSGS, "m.price"), "table_data"));
-        _ccont.add(_cost = new MoneyLabel(_ctx));
-        _cost.setMoney(0, 0, false);
+        _ccont.add(_cost = createCostLabel());
         _buy = new BButton(_ctx.xlate(StoreCodes.STORE_MSGS, "m.buy"), this, "buy");
         _buy.setStyleClass("big_button");
     }
@@ -75,9 +73,9 @@ public class GoodsInspector extends BContainer
     /**
      * Gives us access to our store object when it is available.
      */
-    public void init (StoreObject stobj)
+    public void init (GoodsObject goodsobj)
     {
-        _stobj = stobj;
+        _goodsobj = goodsobj;
     }
 
     // documentation inherited from interface IconPalette.Inspector
@@ -100,14 +98,11 @@ public class GoodsInspector extends BContainer
         _good = _gicon.getGood();
         _title.setText(_ctx.xlate(BangCodes.GOODS_MSGS, _good.getName()));
         _descrip.setText(_ctx.xlate(BangCodes.GOODS_MSGS, _good.getTip()));
-        _cost.setMoney(_good.getScripCost(), _good.getCoinCost(), false);
-        _srcimg = _ctx.getImageCache().getBufferedImage(_good.getIconPath());
+        updateCostLabel();
 
-        // do some special jockeying to handle colorizations for articles
-        if (_good instanceof ArticleGood) {
-            ArticleCatalog.Article article =
-                _ctx.getAvatarLogic().getArticleCatalog().getArticle(_good.getType());
-            String[] cclasses = _ctx.getAvatarLogic().getColorizationClasses(article);
+        // do some special jockeying to handle colorizations
+        String[] cclasses = _good.getColorizationClasses(_ctx);
+        if (cclasses != null && cclasses.length > 0) {
             _args[0] = _args[1] = _args[2] = Integer.valueOf(0);
 
             // grab whatever random colorizations we were using for the icon and start with those
@@ -123,7 +118,8 @@ public class GoodsInspector extends BContainer
 
                 // primary, secondary and tertiary colors have to go into the appropriate index
                 int index = AvatarLogic.getColorIndex(cclass);
-                ColorSelector colorsel = new ColorSelector(_ctx, cclass, _colorpal);
+                ColorSelector colorsel = new ColorSelector(
+                    _ctx, cclass, _palette.getColorEntity(), _colorpal);
                 colorsel.setSelectedColorId(colorIds[index]);
                 colorsel.setProperty("index", Integer.valueOf(index));
                 add(_colorsel[index] = colorsel, CS_SPOTS[index]);
@@ -141,7 +137,7 @@ public class GoodsInspector extends BContainer
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        if (_good == null || _stobj == null) {
+        if (_good == null || _goodsobj == null) {
             return;
         }
 
@@ -157,7 +153,7 @@ public class GoodsInspector extends BContainer
                     _descrip.setText(_ctx.xlate(StoreCodes.STORE_MSGS, cause));
                 }
             };
-            _stobj.service.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
+            _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
 
         } else if ("try".equals(action)) {
             _try.setEnabled(false);
@@ -169,6 +165,16 @@ public class GoodsInspector extends BContainer
             _ctx.getBangClient().displayPopup(new SongDownloadView(_ctx, song), true,
                                               SongDownloadView.PREF_WIDTH);
         }
+    }
+
+    protected MoneyLabel createCostLabel ()
+    {
+        return new MoneyLabel(_ctx);
+    }
+
+    protected void updateCostLabel ()
+    {
+        _cost.setMoney(_good.getScripCost(), _good.getCoinCost(), false);
     }
 
     protected void boughtGood ()
@@ -197,7 +203,7 @@ public class GoodsInspector extends BContainer
             msg += "_song";
         }
 
-        _parent.goodPurchased();
+        _palette.reinitGoods(true);
         _descrip.setText(_ctx.xlate(StoreCodes.STORE_MSGS, msg));
         BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
     }
@@ -258,13 +264,7 @@ public class GoodsInspector extends BContainer
 
     protected void updateImage ()
     {
-        BImage image;
-        if (_zations != null) {
-            image = new BImage(ImageUtil.recolorImage(_srcimg, _zations));
-        } else {
-            image = new BImage(_srcimg);
-        }
-        _icon.setIcon(new ImageIcon(image));
+        _icon.setIcon(_good.createIcon(_ctx, _zations));
     }
 
     protected ActionListener _colorpal = new ActionListener() {
@@ -280,17 +280,16 @@ public class GoodsInspector extends BContainer
     };
 
     protected BangContext _ctx;
-    protected StoreObject _stobj;
+    protected GoodsObject _goodsobj;
     protected Good _good;
     protected GoodsIcon _gicon;
-    
+
     protected BLabel _icon, _title, _descrip;
     protected BButton _buy, _try, _download;
     protected BContainer _ccont, _dcont;
     protected MoneyLabel _cost;
 
-    protected BufferedImage _srcimg;
-    protected StoreView _parent;
+    protected GoodsPalette _palette;
     protected ColorSelector[] _colorsel = new ColorSelector[3];
 
     protected Object[] _args = new Object[3];

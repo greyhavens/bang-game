@@ -9,12 +9,14 @@ import java.util.Iterator;
 
 import com.samskivert.util.ListUtil;
 
+import com.threerings.presents.dobj.DObject;
+
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.store.data.Good;
-import com.threerings.bang.store.data.StoreObject;
+import com.threerings.bang.store.data.GoodsObject;
 
 /**
  * Displays a palette of purchasable goods.
@@ -27,16 +29,16 @@ public class GoodsPalette extends IconPalette
         public boolean isValid (Good good);
     }
 
-    public GoodsPalette (BangContext ctx, GoodsInspector inspector)
+    public GoodsPalette (BangContext ctx, int columns, int rows)
     {
-        super(inspector, 6, 3, GoodsIcon.ICON_SIZE, 1);
+        super(null, columns, rows, GoodsIcon.ICON_SIZE, 1);
         _ctx = ctx;
         // setAllowsEmptySelection(false);
     }
 
-    public void init (StoreObject stobj)
+    public void init (GoodsObject goodsobj)
     {
-        _stobj = stobj;
+        _goodsobj = goodsobj;
         if (_filter != null) {
             reinitGoods(false);
         }
@@ -45,7 +47,7 @@ public class GoodsPalette extends IconPalette
     public void setFilter (Filter filter)
     {
         _filter = filter;
-        if (_stobj != null) {
+        if (_goodsobj != null) {
             reinitGoods(false);
         }
     }
@@ -59,9 +61,8 @@ public class GoodsPalette extends IconPalette
         // filter out all matching goods
         ArrayList<Good> filtered = new ArrayList<Good>();
         PlayerObject self = _ctx.getUserObject();
-        for (Good good : _stobj.goods) {
-            if ((_filter == null || _filter.isValid(good)) &&
-                good.isAvailable(self)) {
+        for (Good good : _goodsobj.getGoods()) {
+            if ((_filter == null || _filter.isValid(good)) && isAvailable(good)) {
                 filtered.add(good);
             }
         }
@@ -70,7 +71,7 @@ public class GoodsPalette extends IconPalette
         Good[] goods = filtered.toArray(new Good[filtered.size()]);
         Arrays.sort(goods);
         for (int ii = 0; ii < goods.length; ii++) {
-            addIcon(new GoodsIcon(_ctx, goods[ii]));
+            addIcon(new GoodsIcon(_ctx, getColorEntity(), goods[ii]));
         }
 
         // reselect the previously selected good if specified and it's still
@@ -100,11 +101,23 @@ public class GoodsPalette extends IconPalette
         }
     }
 
-    public void shutdown ()
+    /**
+     * Determines whether the specified good is available for purchase.
+     */
+    protected boolean isAvailable (Good good)
     {
+        return good.isAvailable(_ctx.getUserObject());
+    }
+
+    /**
+     * Returns the entity to use in determining which colors are available.
+     */
+    protected DObject getColorEntity ()
+    {
+        return _ctx.getUserObject();
     }
 
     protected BangContext _ctx;
-    protected StoreObject _stobj;
+    protected GoodsObject _goodsobj;
     protected Filter _filter;
 }

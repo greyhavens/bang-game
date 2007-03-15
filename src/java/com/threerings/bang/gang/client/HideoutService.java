@@ -100,4 +100,9 @@ public interface HideoutService extends InvocationService
      * total number of articles purchased.
      */
     public void buyOutfits (Client client, OutfitArticle[] outfit, ResultListener listener);
+
+    /**
+     * Purchases a gang good with the specified arguments.
+     */
+    public void buyGangGood (Client client, String type, Object[] args, ConfirmListener listener);
 }

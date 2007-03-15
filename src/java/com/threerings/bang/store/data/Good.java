@@ -3,8 +3,15 @@
 
 package com.threerings.bang.store.data;
 
+import java.awt.image.BufferedImage;
+
+import com.jmex.bui.BImage;
+import com.jmex.bui.icon.ImageIcon;
+
 import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.io.SimpleStreamableObject;
+import com.threerings.media.image.Colorization;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.DSet;
@@ -12,6 +19,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.util.BangContext;
 
 /**
  * Represents a particular good that can be purchased from the general store.
@@ -33,12 +41,46 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
+     * Creates the initial icon for this good.  By default, returns an icon containing the image
+     * located at {@link #getIconPath}, but subclasses can override to customize the icon.
+     *
+     * @param entity the entity to use in determining which colors are available.
+     * @param colorIds if the good is colorizable, this (three element) array will be populated
+     * with the color ids of the random colors chosen for the icon.
+     */
+    public ImageIcon createIcon (BangContext ctx, DObject entity, int[] colorIds)
+    {
+        return createIcon(ctx, null);
+    }
+
+    /**
+     * Creates a customized icon for this good.  By default, returns an icon containing the image
+     * located at {@link #getIconPath}, modified with the supplied colorizations.
+     */
+    public ImageIcon createIcon (BangContext ctx, Colorization[] zations)
+    {
+        BImage img = (zations == null) ?
+            ctx.loadImage(getIconPath()) :
+            ctx.getImageCache().createColorizedBImage(getIconPath(), zations, true);
+        return new ImageIcon(img);
+    }
+
+    /**
      * Returns the filename of the icon associated with this good. The default is based on the type
      * of the good, but this can be overridden by specialized goods.
      */
     public String getIconPath ()
     {
         return "goods/" + _type + ".png";
+    }
+
+    /**
+     * Returns the names of the colorization classes used by this good, or <code>null</code> for
+     * none.
+     */
+    public String[] getColorizationClasses (BangContext ctx)
+    {
+        return null;
     }
 
     /**

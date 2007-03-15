@@ -75,11 +75,29 @@ public class BuckleView extends BaseAvatarView
             log.warning("Buckle part not listed in catalog [part=" + part + "].");
         }
         Colorization[] zations = ctx.getAvatarLogic().decodeColorizations(fqComponentId, colors);
+        return getPartImage(
+            ctx, ccomp, zations, AvatarLogic.BUCKLE_WIDTH / 2, AvatarLogic.BUCKLE_HEIGHT / 2);
+    }
+
+    /**
+     * Gets an image of the part depicted by the given component, scaled to the specified
+     * dimensions, optionally applying a set of colorizations.
+     */
+    public static BufferedImage getPartImage (
+        BasicContext ctx, CharacterComponent ccomp, Colorization[] zations, int width, int height)
+    {
+        ActionFrames af = ccomp.getFrames("static", null);
         if (zations != null) {
             af = af.cloneColorized(zations);
         }
-        return HALVE_OP.filter(renderFrame(
-            ctx, af, AvatarLogic.BUCKLE_WIDTH, AvatarLogic.BUCKLE_HEIGHT), null);
+        AffineTransformOp op = new AffineTransformOp(
+            AffineTransform.getScaleInstance(
+                (double)width / AvatarLogic.BUCKLE_WIDTH,
+                (double)height / AvatarLogic.BUCKLE_HEIGHT),
+            AffineTransformOp.TYPE_BILINEAR);
+        return op.filter(
+            renderFrame(ctx, af, AvatarLogic.BUCKLE_WIDTH, AvatarLogic.BUCKLE_HEIGHT),
+            null);
     }
 
     /**
@@ -102,7 +120,4 @@ public class BuckleView extends BaseAvatarView
     {
         setAvatar(buckle);
     }
-
-    protected static final AffineTransformOp HALVE_OP = new AffineTransformOp(
-        AffineTransform.getScaleInstance(0.5, 0.5), AffineTransformOp.TYPE_BILINEAR);
 }

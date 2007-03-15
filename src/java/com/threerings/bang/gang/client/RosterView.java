@@ -118,7 +118,8 @@ public class RosterView extends BContainer
             _ctx.getBangClient().displayPopup(
                 new OutfitDialog(_ctx, _hideoutobj, _gangobj), true, 500);
         } else if (action.equals("purchase_items")) {
-
+            _ctx.getBangClient().displayPopup(
+                new GangStoreDialog(_ctx, _hideoutobj, _gangobj), true, 500);
         } else if (action.equals("invite")) {
             _ctx.getBangClient().displayPopup(new InviteMemberDialog(_ctx, _status), true, 400);
         } else if (action.equals("history")) {

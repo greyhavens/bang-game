@@ -4,11 +4,11 @@
 <parts>
   <!-- buckle backgrounds -->
   <class name="background">
-    <part name="fountain"/>
-    <part name="oval"/>
-    <part name="plain" starter="true"/>
-    <part name="swirls"/>
-    <part name="tris"/>
+    <part name="fountain" coins="2" aces="100"/>
+    <part name="oval" coins="4" aces="300"/>
+    <part name="plain" coins="1" aces="50" starter="true"/>
+    <part name="swirls" coins="2" aces="100"/>
+    <part name="tris" coins="3" aces="200"/>
     <part name="bullzeye"/>
     <part name="checker"/>
     <part name="swirls2"/>
@@ -17,9 +17,9 @@
 
   <!-- buckle borders -->
   <class name="border">
-    <part name="frill_rect"/>
-    <part name="rope_oval" starter="true"/>
-    <part name="rope_shape"/>
+    <part name="frill_rect" coins="2" aces="150"/>
+    <part name="rope_oval" coins="1" aces="50" starter="true"/>
+    <part name="rope_shape" coins="3" aces="200"/>
     <part name="four_corners"/>
     <part name="four_corners_studs"/>
     <part name="round_2_gears"/>
@@ -30,9 +30,9 @@
 
   <!-- buckle icons -->
   <class name="icon">
-    <part name="bull_head"/>
-    <part name="bull_skull"/>
-    <part name="star_small"/>
+    <part name="bull_head" coins="4" aces="350"/>
+    <part name="bull_skull" coins="5" aces="500"/>
+    <part name="star_small" coins="2" aces="100"/>
     <part name="chamber"/>
     <part name="counter"/>
     <part name="gear_fat"/>

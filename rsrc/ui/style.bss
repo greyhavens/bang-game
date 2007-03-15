@@ -2168,6 +2168,51 @@ outfit_total_price {
   effect-color: #6C5237;
 }
 
+// Gang store dialog styles
+
+gang_store_dialog {
+  background: image "ui/window/border_wood.png" framexy;
+  padding: 30 22 30 22;
+}
+
+gang_store_goods {
+  background: image "ui/window/border_ornate_darker.png" framexy;
+  padding: 8;
+}
+
+gang_store_icon_left {
+  padding: 5 10 4 5;
+}
+
+gang_store_scroll {
+  font: "Dom Casual" plain 14;
+  color: #442801;
+  background: image "ui/hideout/short_scroll.png" centerxy;
+  text-align: center;
+  vertical-align: top;
+}
+
+gang_store_tabs_left {
+  background: image "ui/hideout/store_tabs_left_back.png" centerxy;
+}
+
+gang_store_icon_right {
+  padding: 16 5 4 10;
+}
+
+gang_store_tabs_right {
+  background: image "ui/hideout/store_tabs_right_back.png" centerxy;
+}
+
+gang_store_good {
+  background: image "ui/hideout/outfit_article_background.png" centerxy;
+  text-align: center;
+}
+
+gang_store_controls {
+   padding: 30 5 10 50;
+}
+
 // Gang info dialog styles
 
 gang_info_dialog {

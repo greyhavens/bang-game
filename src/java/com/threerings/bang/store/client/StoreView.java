@@ -43,11 +43,10 @@ public class StoreView extends ShopView
 
         add(new WalletLabel(_ctx, true), new Rectangle(43, 82, 150, 40));
 
-        _inspector = new GoodsInspector(_ctx, this);
-        add(_inspector, new Rectangle(272, 9, 500, 151));
+        add(_goods = new GoodsPalette(_ctx, 6, 3), new Rectangle(181, 140, 817, 495));
 
-        add(_goods = new GoodsPalette(_ctx, _inspector),
-            new Rectangle(181, 140, 817, 495));
+        add(_inspector = new GoodsInspector(_ctx, _goods), new Rectangle(272, 9, 500, 151));
+        _goods.setInspector(_inspector);
 
         add(new GoodsTabs(ctx, _goods), new Rectangle(48, 167, 133, 360));
         add(createHelpButton(), new Point(805, 25));
@@ -82,14 +81,6 @@ public class StoreView extends ShopView
     protected Point getShopkeepNameLocation ()
     {
         return new Point(24, 516);
-    }
-
-    /**
-     * Called by the palette when a good has been purchased.
-     */
-    protected void goodPurchased ()
-    {
-        _goods.reinitGoods(true);
     }
 
     protected GoodsPalette _goods;

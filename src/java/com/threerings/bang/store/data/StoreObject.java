@@ -3,6 +3,8 @@
 
 package com.threerings.bang.store.data;
 
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -11,6 +13,7 @@ import com.threerings.crowd.data.PlaceObject;
  * Contains distributed data for the General Store.
  */
 public class StoreObject extends PlaceObject
+    implements GoodsObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
@@ -25,6 +28,19 @@ public class StoreObject extends PlaceObject
 
     /** The goods available for sale in this store. */
     public DSet<Good> goods;
+
+    // documentation inherited from interface GoodsObject
+    public DSet<Good> getGoods ()
+    {
+        return goods;
+    }
+
+    // documentation inherited from interface GoodsObject
+    public void buyGood (
+        Client client, String type, Object[] args, InvocationService.ConfirmListener cl)
+    {
+        service.buyGood(client, type, args, cl);
+    }
 
     // AUTO-GENERATED: METHODS START
     /**

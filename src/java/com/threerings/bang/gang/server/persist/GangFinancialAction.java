@@ -40,7 +40,7 @@ public abstract class GangFinancialAction extends FinancialAction
             _gang.setCoins(_gang.coins - _coinCost);
             _gang.setAces(_gang.aces - _aceCost);
         } finally {
-            _user.commitTransaction();
+            _gang.commitTransaction();
         }
     }
 
@@ -53,7 +53,7 @@ public abstract class GangFinancialAction extends FinancialAction
             _gang.setCoins(_gang.coins + _coinCost);
             _gang.setAces(_gang.aces + _aceCost);
         } finally {
-            _user.commitTransaction();
+            _gang.commitTransaction();
         }
     }
 

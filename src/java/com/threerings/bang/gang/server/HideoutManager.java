@@ -34,10 +34,13 @@ import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.server.Match;
 import com.threerings.bang.saloon.server.MatchHostManager;
 
+import com.threerings.bang.store.data.Good;
+
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutMarshaller;
@@ -95,6 +98,39 @@ public class HideoutManager extends MatchHostManager
         if (_hobj != null) {
             _hobj.removeFromGangs(name);
         }
+    }
+
+    /**
+     * Attempts to create a {@link GangGoodProvider} to purchase a good for the specified
+     * gang.
+     */
+    public GangGoodProvider getGoodProvider (
+        GangHandler gang, boolean admin, String type, Object[] args)
+        throws InvocationException
+    {
+        // make sure we sell the good in question
+        GangGood good = (GangGood)_hobj.goods.get(type);
+        if (good == null) {
+            log.warning("Requested to buy unknown good [gang=" + gang +
+                        ", type=" + type + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // validate that the client can buy this good
+        if (!good.isAvailable(gang.getGangObject())) {
+            log.warning("Requested to buy unavailable good [gang=" + gang +
+                        ", good=" + good + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // create the appropriate provider and return it
+        GangGoodProvider provider = _goods.getProvider(gang.getGangObject(), admin, good, args);
+        if (provider == null) {
+            log.warning("Unable to find provider for good [gang=" + gang +
+                        ", good=" + good + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        return provider;
     }
 
     // documentation inherited from interface HideoutProvider
@@ -285,6 +321,19 @@ public class HideoutManager extends MatchHostManager
             null, user.handle, outfit, true, user.tokens.isAdmin(), listener);
     }
 
+    // documentation inherited from interface HideoutProvider
+    public void buyGangGood (ClientObject caller, String type, Object[] args,
+                             HideoutService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).buyGangGood(
+            null, user.handle, type, args, user.tokens.isAdmin(), listener);
+    }
+
     @Override // from ShopManager
     protected String getIdent ()
     {
@@ -298,6 +347,15 @@ public class HideoutManager extends MatchHostManager
     }
 
     @Override // from PlaceManager
+    protected void didInit ()
+    {
+        super.didInit();
+
+        // create our goods catalog
+        _goods = new GangGoodsCatalog(BangServer.alogic);
+    }
+
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();
@@ -306,6 +364,7 @@ public class HideoutManager extends MatchHostManager
         _hobj = (HideoutObject)_plobj;
         _hobj.setService((HideoutMarshaller)
                          BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this)));
+        _hobj.setGoods(new DSet<Good>(_goods.getGoods()));
 
         // load up the gangs for the directory
         BangServer.gangmgr.loadGangs(new ResultListener<ArrayList<GangEntry>>() {
@@ -416,6 +475,7 @@ public class HideoutManager extends MatchHostManager
         });
     }
 
+    protected GangGoodsCatalog _goods;
     protected HideoutObject _hobj;
     protected Interval _rankval;
 

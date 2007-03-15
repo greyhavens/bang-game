@@ -62,6 +62,15 @@ public class BucklePartCatalog
         /** The name of this particular part. */
         public String name;
 
+        /** The cost of the part in scrip. */
+        public int scrip;
+
+        /** The cost of the part in coins. */
+        public int coins;
+
+        /** The cost of the part in aces. */
+        public int aces;
+
         /** The colorization classes used by this part. */
         public String[] colors;
 

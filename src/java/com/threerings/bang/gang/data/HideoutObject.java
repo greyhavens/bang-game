@@ -3,14 +3,20 @@
 
 package com.threerings.bang.gang.data;
 
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.PlaceObject;
+
+import com.threerings.bang.store.data.Good;
+import com.threerings.bang.store.data.GoodsObject;
 
 /**
  * Contains distributed data for the Hideout.
  */
 public class HideoutObject extends PlaceObject
+    implements GoodsObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
@@ -21,6 +27,9 @@ public class HideoutObject extends PlaceObject
 
     /** The field name of the <code>topRanked</code> field. */
     public static final String TOP_RANKED = "topRanked";
+
+    /** The field name of the <code>goods</code> field. */
+    public static final String GOODS = "goods";
     // AUTO-GENERATED: FIELDS END
 
     /** The means by which the client makes requests to the server. */
@@ -28,10 +37,26 @@ public class HideoutObject extends PlaceObject
 
     /** Information concerning all active gangs, for the directory. */
     public DSet<GangEntry> gangs = new DSet<GangEntry>();
-    
+
     /** List of top-ranked gangs for various criteria. */
     public DSet<TopRankedGangList> topRanked = new DSet<TopRankedGangList>();
-    
+
+    /** Gang goods available for sale. */
+    public DSet<Good> goods;
+
+    // documentation inherited from interface GoodsObject
+    public DSet<Good> getGoods ()
+    {
+        return goods;
+    }
+
+    // documentation inherited from interface GoodsObject
+    public void buyGood (
+        Client client, String type, Object[] args, InvocationService.ConfirmListener cl)
+    {
+        service.buyGangGood(client, type, args, cl);
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>service</code> field be set to the
@@ -143,6 +168,54 @@ public class HideoutObject extends PlaceObject
         @SuppressWarnings("unchecked") DSet<com.threerings.bang.gang.data.TopRankedGangList> clone =
             (value == null) ? null : value.typedClone();
         this.topRanked = clone;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>goods</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToGoods (Good elem)
+    {
+        requestEntryAdd(GOODS, goods, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>goods</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromGoods (Comparable key)
+    {
+        requestEntryRemove(GOODS, goods, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>goods</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateGoods (Good elem)
+    {
+        requestEntryUpdate(GOODS, goods, elem);
+    }
+
+    /**
+     * Requests that the <code>goods</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setGoods (DSet<com.threerings.bang.store.data.Good> value)
+    {
+        requestAttributeChange(GOODS, value, this.goods);
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.store.data.Good> clone =
+            (value == null) ? null : value.typedClone();
+        this.goods = clone;
     }
     // AUTO-GENERATED: METHODS END
 }
