@@ -2157,8 +2157,18 @@ outfit_item {
   text-align: center;
 }
 
+outfit_tip {
+  font: "Helvetica" plain 14;
+  color: #F7E17E;
+  vertical-align: top;
+}
+
+outfit_tip_steps {
+  padding: 0 60 0 20;
+}
+
 outfit_controls {
-   padding: 30 5 5 20;
+  padding: 30 5 5 20;
 }
 
 outfit_total_price {
