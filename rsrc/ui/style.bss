@@ -1866,6 +1866,7 @@ directory_letter {
   font: "Old Town" plain 28;
   color: #896D35;
   padding: 0 2 0 3;
+  text-align: center;
 }
 
 directory_letter:selected {

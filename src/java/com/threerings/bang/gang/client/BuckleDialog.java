@@ -42,6 +42,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.HackyTabs;
 import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.MultiIconButton;
 import com.threerings.bang.client.bui.RequestButton;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
@@ -224,13 +225,11 @@ public class BuckleDialog extends BDecoratedWindow
     protected BContainer createArrowButton (String action, final int dx, final int dy)
     {
         String pref = "ui/icons/small_" + action + "_arrow";
-        final ImageIcon eicon = new ImageIcon(_ctx.loadImage(pref + ".png"));
-        final ImageIcon dicon = new ImageIcon(_ctx.loadImage(pref + "_disable.png"));
 
-        BButton arrow = new BButton(eicon, this, action) {
+        MultiIconButton arrow = new MultiIconButton(
+            new ImageIcon(_ctx.loadImage(pref + ".png")), this, action) {
             protected void stateDidChange () {
                 super.stateDidChange();
-                setIcon(_enabled ? eicon : dicon);
                 // schedule an interval to move it repeatedly on extended press
                 if (_armed && _pressed) {
                     _interval.schedule(INITIAL_ARROW_DELAY, REPEAT_ARROW_DELAY);
@@ -248,6 +247,7 @@ public class BuckleDialog extends BDecoratedWindow
                 }
             };
         };
+        arrow.setIcon(new ImageIcon(_ctx.loadImage(pref + "_disable.png")), BComponent.DISABLED);
         arrow.setStyleClass("small_arrow_button");
         BContainer cont = GroupLayout.makeHBox(GroupLayout.CENTER);
         cont.add(arrow);

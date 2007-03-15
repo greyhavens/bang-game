@@ -3,15 +3,19 @@
 
 package com.threerings.bang.gang.client;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BToggleButton;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -19,6 +23,7 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.MultiIconButton;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.NameFactory;
@@ -40,10 +45,12 @@ public class DirectoryView extends BContainer
 
         setStyleClass("directory_view");
 
-        // add the letter buttons
+        // add the letters and arrows
         GroupLayout glay = GroupLayout.makeHoriz(GroupLayout.CENTER);
         glay.setGap(0);
         BContainer bcont = new BContainer(glay);
+        bcont.add(_left = createArrowButton("left"));
+        bcont.add(new Spacer(6, 1));
         char[] letters = NameFactory.getValidator().getValidLetters();
         _lbuttons = new BToggleButton[letters.length];
         for (int ii = 0; ii < letters.length; ii++) {
@@ -55,10 +62,13 @@ public class DirectoryView extends BContainer
                     }
                 }
             };
+            _lbuttons[ii].setPreferredSize(new Dimension(14, -1));
             _lbuttons[ii].setStyleClass("directory_letter");
             _lbuttons[ii].addListener(this);
             bcont.add(_lbuttons[ii]);
         }
+        bcont.add(new Spacer(6, 1));
+        bcont.add(_right = createArrowButton("right"));
         add(bcont, GroupLayout.FIXED);
 
         // add the group entry container
@@ -73,17 +83,13 @@ public class DirectoryView extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         Object src = event.getSource();
-        int pidx = -1;
-        for (int ii = 0; ii < _lbuttons.length; ii++) {
-            BToggleButton button = _lbuttons[ii];
-            if (button == src) {
-                pidx = ii;
-            } else if (button != src && button.isSelected()) {
-                button.setSelected(false);
-                button.setText(StringUtil.toUSLowerCase(button.getText()));
-            }
+        if (src == _left) {
+            showPage(_pidx - 1);
+        } else if (src == _right) {
+            showPage(_pidx + 1);
+        } else {
+            showPage(ListUtil.indexOf(_lbuttons, src));
         }
-        showPage(pidx);
     }
 
     @Override // documentation inherited
@@ -101,19 +107,40 @@ public class DirectoryView extends BContainer
         _hideoutobj.removeListener(_dirlist);
     }
 
+    protected BButton createArrowButton (String action)
+    {
+        String pref = "ui/icons/small_" + action + "_arrow";
+        MultiIconButton button = new MultiIconButton(
+            new ImageIcon(_ctx.loadImage(pref + ".png")), this, action);
+        button.setIcon(new ImageIcon(_ctx.loadImage(pref + "_disable.png")), BButton.DISABLED);
+        button.setStyleClass("small_arrow_button");
+        return button;
+    }
+
     protected void showPage (int pidx)
     {
-        BToggleButton button = _lbuttons[pidx];
-        button.setSelected(true);
-        String lstr = button.getAction();
-        button.setText(StringUtil.toUSUpperCase(lstr));
+        String sstr = null;
+        for (int ii = 0; ii < _lbuttons.length; ii++) {
+            BToggleButton lbutton = _lbuttons[ii];
+            String lstr = lbutton.getAction();
+            if (ii == pidx) {
+                lbutton.setSelected(true);
+                lbutton.setText(StringUtil.toUSUpperCase(sstr = lstr));
+            } else {
+                lbutton.setSelected(false);
+                lbutton.setText(lstr);
+            }
+        }
+
+        _left.setEnabled(pidx > 0);
+        _right.setEnabled(pidx < _lbuttons.length - 1);
 
         _pidx = pidx;
         _gcont.removeAll();
         for (GangEntry gang : _hideoutobj.gangs) {
             final Handle name = gang.name;
             String nstr = name.toString();
-            if (StringUtil.toUSLowerCase(nstr).startsWith(lstr)) {
+            if (StringUtil.toUSLowerCase(nstr).startsWith(sstr)) {
                 _gcont.add(BangUI.createGangLabel(name, nstr, "directory_entry"));
             }
         }
@@ -122,6 +149,7 @@ public class DirectoryView extends BContainer
     protected BangContext _ctx;
     protected HideoutObject _hideoutobj;
 
+    protected BButton _left, _right;
     protected BToggleButton[] _lbuttons;
     protected BContainer _gcont;
 
