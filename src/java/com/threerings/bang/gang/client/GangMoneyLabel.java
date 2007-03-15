@@ -17,9 +17,10 @@ import com.threerings.bang.gang.data.HideoutCodes;
  */
 public class GangMoneyLabel extends MoneyLabel
 {
-    public GangMoneyLabel (BangContext ctx)
+    public GangMoneyLabel (BangContext ctx, boolean hideUnused)
     {
         super(ctx, false);
+        _hideUnused = hideUnused;
 
         add(_aces = new BLabel(BangUI.acesIcon), BorderLayout.EAST);
         _aces.setIconTextGap(5);
@@ -36,6 +37,11 @@ public class GangMoneyLabel extends MoneyLabel
     {
         super.setMoney(scrip, coins, animate);
         _aces.setText(String.valueOf(aces));
+        if (_hideUnused) {
+            _scrip.setVisible(scrip > 0);
+            _coins.setVisible(coins > 0);
+            _aces.setVisible(aces > 0);
+        }
     }
 
     @Override // from MoneyLabel
@@ -46,4 +52,5 @@ public class GangMoneyLabel extends MoneyLabel
     }
 
     protected BLabel _aces;
+    protected boolean _hideUnused;
 }

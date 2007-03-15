@@ -305,5 +305,7 @@ public class ColorConstraints
         preds.put("aqua", new Normal());
         preds.put("violet", new Normal());
         preds.put("purple", new Normal());
+        preds.put("black", new Normal());
+        preds.put("grey", new Normal());
     }
 }

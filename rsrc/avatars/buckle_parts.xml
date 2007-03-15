@@ -5,14 +5,14 @@
   <!-- buckle backgrounds -->
   <class name="background">
     <part name="fountain" coins="2" aces="100"/>
-    <part name="oval" coins="4" aces="300"/>
+    <part name="oval" coins="4" aces="450"/>
     <part name="plain" coins="1" aces="50" starter="true"/>
     <part name="swirls" coins="2" aces="100"/>
-    <part name="tris" coins="3" aces="200"/>
-    <part name="bullzeye"/>
-    <part name="checker"/>
-    <part name="swirls2"/>
-    <part name="swirls3"/>
+    <part name="tris" coins="5" aces="400"/>
+    <part name="bullzeye" coins="6" aces="600"/>
+    <part name="checker" coins="4" aces="400"/>
+    <part name="swirls2" coins="3" aces="300"/>
+    <part name="swirls3" coins="3" aces="250"/>
   </class>
 
   <!-- buckle borders -->
@@ -20,12 +20,12 @@
     <part name="frill_rect" coins="2" aces="150"/>
     <part name="rope_oval" coins="1" aces="50" starter="true"/>
     <part name="rope_shape" coins="3" aces="200"/>
-    <part name="four_corners"/>
-    <part name="four_corners_studs"/>
-    <part name="round_2_gears"/>
-    <part name="round_2_studs"/>
-    <part name="round_10_studs"/>
-    <part name="scrolls"/>
+    <part name="four_corners" coins="4" aces="500"/>
+    <part name="four_corners_studs" coins="5" aces="500"/>
+    <part name="round_2_gears" coins="6" aces="600"/>
+    <part name="round_2_studs" coins="4" aces="500"/>
+    <part name="round_10_studs" coins="5" aces="550"/>
+    <part name="scrolls" coins="6" aces="550"/>
   </class>
 
   <!-- buckle icons -->
@@ -33,18 +33,18 @@
     <part name="bull_head" coins="4" aces="350"/>
     <part name="bull_skull" coins="5" aces="500"/>
     <part name="star_small" coins="2" aces="100"/>
-    <part name="chamber"/>
-    <part name="counter"/>
-    <part name="gear_fat"/>
-    <part name="hole_bullet"/>
-    <part name="hole_key"/>
-    <part name="screw_double"/>
-    <part name="screw_single"/>
-    <part name="star_nubs"/>
-    <part name="suit_club"/>
-    <part name="suit_heart"/>
-    <part name="suit_spade"/>
-    <part name="suit_diamond"/>
-    <part name="washer"/>
+    <part name="chamber" coins="6" aces="550"/>
+    <part name="counter" coins="5" aces="450"/>
+    <part name="gear_fat" coins="6" aces="500"/>
+    <part name="hole_bullet" coins="4" aces="300"/>
+    <part name="hole_key" coins="5" aces="450"/>
+    <part name="screw_double" coins="2" aces="100"/>
+    <part name="screw_single" coins="1" aces="75"/>
+    <part name="star_nubs" coins="6" aces="600"/>
+    <part name="suit_club" coins="5" aces="500"/>
+    <part name="suit_heart" coins="5" aces="500"/>
+    <part name="suit_spade" coins="5" aces="500"/>
+    <part name="suit_diamond" coins="5" aces="500"/>
+    <part name="washer" coins="1" aces="50"/>
   </class>
 </parts>

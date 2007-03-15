@@ -18,7 +18,7 @@ public class CofferLabel extends GangMoneyLabel
 {
     public CofferLabel (BangContext ctx, GangObject gangobj)
     {
-        super(ctx);
+        super(ctx, false);
         _gangobj = gangobj;
 
         setStyleClass("gang_coffers");

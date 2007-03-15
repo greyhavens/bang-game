@@ -58,9 +58,10 @@ public class GoodsInspector extends BContainer
         _palette = palette;
 
         add(_icon = new BLabel(""), new Rectangle(0, 0, 136, 156));
-        add(_title = new BLabel("", "medium_title"), new Rectangle(190, 115, 300, 40));
+        int offset = getControlGapOffset();
+        add(_title = new BLabel("", "medium_title"), new Rectangle(190 + offset, 115, 300, 40));
         _title.setFit(BLabel.Fit.SCALE);
-        add(_descrip = new BLabel("", "goods_descrip"), new Rectangle(190, 55, 400, 60));
+        add(_descrip = new BLabel("", "goods_descrip"), new Rectangle(190 + offset, 55, 400, 60));
 
         // we'll add these later
         _ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
@@ -220,10 +221,11 @@ public class GoodsInspector extends BContainer
         safeRemove(_download);
         removeColors();
 
+        int offset = getControlGapOffset();
         switch (_mode = mode) {
         case BUY:
-            add(_ccont, new Rectangle(200, 15, 200, 25));
-            add(_buy, new Point(400, 10));
+            add(_ccont, new Rectangle(200 + offset, 15, 200, 25));
+            add(_buy, new Point(400 + offset, 10));
             break;
 
         case TRY:
@@ -231,7 +233,7 @@ public class GoodsInspector extends BContainer
                 _try = new BButton(_ctx.xlate(StoreCodes.STORE_MSGS, "m.try"), this, "try");
                 _try.setStyleClass("big_button");
             }
-            add(_try, new Point(300, 10));
+            add(_try, new Point(300 + offset, 10));
             break;
 
         case DOWNLOAD:
@@ -239,9 +241,14 @@ public class GoodsInspector extends BContainer
                 _download = new BButton(
                     _ctx.xlate(StoreCodes.STORE_MSGS, "m.download"), this, "download");
             }
-            add(_download, new Point(300, 10));
+            add(_download, new Point(300 + offset, 10));
             break;
         }
+    }
+
+    protected int getControlGapOffset ()
+    {
+        return 0;
     }
 
     protected void removeColors ()

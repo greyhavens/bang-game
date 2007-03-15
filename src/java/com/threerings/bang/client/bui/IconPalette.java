@@ -160,7 +160,7 @@ public class IconPalette extends BContainer
     {
         return _bcont;
     }
-    
+
     /**
      * Adds an icon to this palette. Do not add icons directly with {@link #add}.
      */
@@ -199,7 +199,7 @@ public class IconPalette extends BContainer
         icon.setSelected(false);
         icon.setPalette(null);
         _icons.remove(idx);
-        
+
         if (isAdded()) {
             // update the current page of icons if necessary
             int psize = _rows * _cols,
@@ -437,7 +437,7 @@ public class IconPalette extends BContainer
 
         // and pop the first one off the list if necessary
         while (_selections.size() > _selectable) {
-            _selections.remove(0).setSelected(false);
+            _selections.get(0).setSelected(false);
         }
 
         // inform our inspector that this icon was selected

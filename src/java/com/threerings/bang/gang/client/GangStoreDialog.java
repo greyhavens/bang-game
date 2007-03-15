@@ -14,6 +14,7 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Rectangle;
 
 import com.threerings.presents.dobj.DObject;
 
@@ -140,8 +141,11 @@ public class GangStoreDialog extends BDecoratedWindow
         ccont.add(_inspector = new GoodsInspector(ctx, _palette) { {
                 _icon.setStyleClass("gang_store_good");
             }
+            protected int getControlGapOffset () {
+                return 10;
+            }
             protected MoneyLabel createCostLabel () {
-                return new GangMoneyLabel(_ctx);
+                return new GangMoneyLabel(_ctx, true);
             }
             protected void updateCostLabel () {
                 GangGood good = (GangGood)_good;
