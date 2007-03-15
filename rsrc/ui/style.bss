@@ -1944,6 +1944,14 @@ play_view {
   padding: 0 5 3 0;
 }
 
+play_tip {
+  font: "Helvetica" plain 12;
+  color: #4C2602;
+  text-align: center;
+  vertical-align: center;
+  padding: 5 40 0 40;
+}
+
 hideout_match_view {
   size: 440 255;
   padding: 0 10 20 10;

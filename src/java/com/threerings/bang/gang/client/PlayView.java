@@ -5,6 +5,9 @@ package com.threerings.bang.gang.client;
 
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
+import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
@@ -38,7 +41,12 @@ public class PlayView extends BContainer
 
         setStyleClass("play_view");
 
-        add(_crview = new CriterionView(ctx) {
+        add(_crview = new CriterionView(ctx) { {
+                BContainer cont = GroupLayout.makeVBox(GroupLayout.TOP);
+                add(cont, BorderLayout.NORTH);
+                cont.add(new BLabel(_msgs.get("m.game_tip"), "play_tip"));
+                cont.add(new Spacer(1, -20));
+            }
             protected void addRankedControl (MessageBundle msgs, BContainer table) {
                 table.add(BangUI.createLabel(_msgs, "m.game_mode", "match_label"));
                 table.add(_ranked = new BComboBox(xlate(_msgs, GAME_MODE)));
