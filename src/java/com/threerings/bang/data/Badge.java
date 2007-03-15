@@ -78,7 +78,7 @@ public class Badge extends Item
         },
         UNITS_KILLED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 500;
+                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 5000;
             }
         },
         UNITS_KILLED_4 {
