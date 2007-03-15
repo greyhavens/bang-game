@@ -21,9 +21,6 @@
     <fileset dir="${base.dir}/dist/lib" includes="**/*.jar"/>
   </path>
 
-  <taskdef name="jarbundler" classpathref="classpath"
-    classname="com.loomcom.ant.tasks.jarbundler.JarBundler"/>
-
   <!-- clean the build -->
   <target name="clean">
      <delete dir="${deploy.dir}"/>
@@ -33,6 +30,9 @@
   <target name="app">
     <mkdir dir="${deploy.dir}"/>
     <copy file="${basedir}/../data/getdown-pro.jar" todir="${deploy.dir}"/>
+
+    <taskdef name="jarbundler" classpathref="classpath"
+      classname="com.loomcom.ant.tasks.jarbundler.JarBundler"/>
 
     <jarbundler dir="${deploy.dir}" name="${client_title}" 
       mainclass="com.threerings.getdown.launcher.Getdown" 
