@@ -19,6 +19,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangNodeObject;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
@@ -144,6 +145,11 @@ public class HideoutManager extends MatchHostManager
             log.warning("Player tried to form a gang when already in one " +
                 "[who=" + user.who() + ", gangId=" + user.gangId + "].");
             throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // make sure they have the cowpoke badge
+        if (!(user.tokens.isAdmin() || user.holdsBadge(Badge.Type.GAMES_PLAYED_2))) {
+            throw new InvocationException("m.missing_badge");
         }
 
         // make sure the suffix is in the approved set
