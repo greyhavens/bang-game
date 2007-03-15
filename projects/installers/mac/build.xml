@@ -1,5 +1,5 @@
 <!-- project build configuration -->
-<project name="Bang Mac Installer" default="client" basedir=".">
+<project name="Bang Mac Installer" default="devclient" basedir=".">
 
   <!-- load up our configuration information -->
   <property name="deploy.dir" value="dist"/>
@@ -10,11 +10,10 @@
   <property name="jdir" value="Contents/Resources/Java"/>
   <property name="client.base" value="${base.dir}/${deploy.dir}/client/pages/client"/>
 
-  <property name="app.name" value="${client_title}.app"/>
-  <property name="ds_store" value="client_DS_Store"/>
+  <property name="base.name" value="Bang Howdy"/>
   <property name="img.dir" value="${deploy.dir}/imgSrc"/>
-  <property name="tmp.dmg" value="${deploy.dir}/${client_title} TMP"/>
-  <property name="rw.dmg" value="${deploy.dir}/${client_title} RW"/>
+  <property name="tmp.dmg" value="${deploy.dir}/${base.name} TMP"/>
+  <property name="rw.dmg" value="${deploy.dir}/${base.name} RW"/>
 
   <!-- declare our classpath -->
   <path id="classpath">
@@ -34,7 +33,7 @@
     <taskdef name="jarbundler" classpathref="classpath"
       classname="com.loomcom.ant.tasks.jarbundler.JarBundler"/>
 
-    <jarbundler dir="${deploy.dir}" name="${client_title}" 
+    <jarbundler dir="${deploy.dir}" name="${app_base.name}" 
       mainclass="com.threerings.getdown.launcher.Getdown" 
       workingdirectory="$APP_PACKAGE/Contents/Resources/Java"
       jars="${basedir}/${deploy.dir}/getdown-pro.jar"
@@ -90,7 +89,7 @@
       <arg line="0"/>
       <arg line="-J"/>
       <arg line="-V"/>
-      <arg line="'${client_title}'"/>
+      <arg line="'${base.name}'"/>
       <arg line="-o"/>
       <arg line="'${deploy.dir}/bang-install.dmg'"/>
       <arg file="${img.dir}"/>
@@ -116,21 +115,24 @@
     </copy>
   </target>
 
-  <target name="client" depends="app,image"/>
-
-  <target name="client_full">
-    <antcall target="app"/>
-    <antcall target="makefull">
-      <param name="client_dir" value="${client.base}/${version}"/>
-    </antcall>
-    <antcall target="image"/>
+  <target name="devprops">
+    <property name="bclient_ident" value="devclient"/>
+    <property name="client_dir" value="${client.base}"/>
+    <property name="ds_store" value="devclient_DS_Store"/>
+    <property name="app.name" value="Dev ${base.name}.app"/>
+    <property name="app_base.name" value="Dev ${base.name}"/>
   </target>
-
-  <target name="devclient_full">
-    <antcall target="app"/>
-    <antcall target="makefull">
-      <param name="client_dir" value="${client.base}"/>
-    </antcall>
-    <antcall target="image"/>
+  <target name="devclient" depends="devprops,app,image"/>
+  <target name="devclient_full" depends="devprops,app,makefull,image"/>
+ 
+  <target name="props">
+    <property name="bclient_ident" value="${client_ident}"/>
+    <property name="client_dir" value="${client.base}/${version}"/>
+    <property name="ds_store" value="client_DS_Store"/>
+    <property name="app.name" value="${base.name}.app"/>
+    <property name="app_base.name" value="${base.name}"/>
   </target>
+  <target name="client" depends="props,app,image"/>
+  <target name="client_full" depends="props,app,makefull,image"/>
+
 </project>

@@ -7,6 +7,13 @@
   <property name="install.dir" value="${base.dir}/${deploy.dir}/installer/pages"/>
   <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
 
+  <!-- we want some tasks from ant-contrib -->
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <pathelement location="${basedir}/../tools/lib/java/ant-contrib.jar"/>
+    </classpath>
+  </taskdef>
+
   <target name="prepare">
     <copy todir="data" file="${base.dir}/projects/tools/lib/java/getdown-pro.jar"/>
     <mkdir dir="${deploy.dir}"/>
@@ -26,13 +33,27 @@
       </filterset>
     </copy>
 
+    <!-- windows installer -->
     <exec dir="${deploy.dir}" executable="makensis" failonerror="true">
       <arg line="-V2"/>
       <arg line="bang-installer.nsi"/>
     </exec>
 
+    <!-- mac installer -->
     <ant target="client" dir="linux" inheritAll="no"/>
-    <ant target="client" dir="mac" inheritAll="no"/>
+    <if><equals arg1="${client_ident}" arg2="client"/>
+      <then>
+        <ant target="client" dir="mac" inheritAll="no"/>
+      </then>
+    <elseif><equals arg1="${client_ident}" arg2="devclient"/>
+      <then>
+        <ant target="devclient" dir="mac" inheritAll="no"/>
+      </then>
+    </elseif></if>
+
+    <!-- linux installer -->
+    <ant target="client" dir="linux" inheritAll="no"/>
+
     <copy todir="${install.dir}/client/">
       <fileset dir="${deploy.dir}" includes="bang-install.exe"/>
       <fileset dir="${deploy.dir}" includes="bang-install.bin"/>
