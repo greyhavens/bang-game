@@ -41,11 +41,11 @@
 
     <!-- mac installer -->
     <ant target="client" dir="linux" inheritAll="no"/>
-    <if><equals arg1="${client_ident}" arg2="client"/>
+    <if><equals arg1="${client_ident}" arg2="bang"/>
       <then>
         <ant target="client" dir="mac" inheritAll="no"/>
       </then>
-    <elseif><equals arg1="${client_ident}" arg2="devclient"/>
+    <elseif><equals arg1="${client_ident}" arg2="bang_dev"/>
       <then>
         <ant target="devclient" dir="mac" inheritAll="no"/>
       </then>
