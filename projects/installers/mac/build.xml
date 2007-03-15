@@ -1,18 +1,20 @@
 <!-- project build configuration -->
-<project name="Bang Mac Installer" default="devclient" basedir=".">
+<project name="Bang Mac Installer" default="client" basedir=".">
 
   <!-- load up our configuration information -->
+  <property name="deploy.dir" value="dist"/>
   <property name="base.dir" value="../../.."/>
-  <property file="${base.dir}/deployment.properties"/>
-  <property file="${base.dir}/build.properties"/>
-  <property name="web.home" value="${web_dir}/pages"/>
+  <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
+  <!-- needed for ${version} -->
+  <property file="${base.dir}/${deploy.dir}/build.properties"/>
   <property name="jdir" value="Contents/Resources/Java"/>
+  <property name="client.base" value="${base.dir}/${deploy.dir}/client/pages/client"/>
 
-  <property name="base.name" value="Bang Howdy"/>
-  <property name="inst.dir" value="dist"/>
-  <property name="img.dir" value="${inst.dir}/imgSrc"/>
-  <property name="tmp.dmg" value="${inst.dir}/${base.name} TMP"/>
-  <property name="rw.dmg" value="${inst.dir}/${base.name} RW"/>
+  <property name="app.name" value="${client_title}.app"/>
+  <property name="ds_store" value="client_DS_Store"/>
+  <property name="img.dir" value="${deploy.dir}/imgSrc"/>
+  <property name="tmp.dmg" value="${deploy.dir}/${client_title} TMP"/>
+  <property name="rw.dmg" value="${deploy.dir}/${client_title} RW"/>
 
   <!-- declare our classpath -->
   <path id="classpath">
@@ -24,18 +26,18 @@
 
   <!-- clean the build -->
   <target name="clean">
-     <delete dir="${inst.dir}"/>
+     <delete dir="${deploy.dir}"/>
   </target>
 
   <!-- creates the macintosh application directory -->
   <target name="app">
-    <mkdir dir="${inst.dir}"/>
-    <copy file="../data/getdown-pro.jar" todir="${inst.dir}"/>
+    <mkdir dir="${deploy.dir}"/>
+    <copy file="${basedir}/../data/getdown-pro.jar" todir="${deploy.dir}"/>
 
-    <jarbundler dir="${inst.dir}" name="${app_base.name}" 
+    <jarbundler dir="${deploy.dir}" name="${client_title}" 
       mainclass="com.threerings.getdown.launcher.Getdown" 
       workingdirectory="$APP_PACKAGE/Contents/Resources/Java"
-      jars="${inst.dir}/getdown-pro.jar"
+      jars="${basedir}/${deploy.dir}/getdown-pro.jar"
       vmoptions="-Dappdir=."
       version="1.0"
       jvmversion="1.5+"
@@ -43,14 +45,14 @@
       icon="desktop.icns"
       stubfile="JavaApplicationStub"/>
 
-    <copy todir="${inst.dir}/${app.name}/${jdir}/">
+    <copy todir="${deploy.dir}/${app.name}/${jdir}/">
       <fileset dir="../${default_locale}">
         <include name="background.png"/>
         <include name="progress.png"/>
       </fileset>
     </copy>
 
-    <echo file="${inst.dir}/${app.name}/${jdir}/getdown.txt"
+    <echo file="${deploy.dir}/${app.name}/${jdir}/getdown.txt"
       message="appbase = ${root_url}/${bclient_ident}/${line.separator}"/>
 
     <!-- Prepare for imaging -->
@@ -59,7 +61,7 @@
     <copy todir="${img.dir}/.background/" file="banner.png"/>
 
     <copy todir="${img.dir}/">
-       <fileset dir="${inst.dir}">
+       <fileset dir="${deploy.dir}">
          <include name="${app.name}/**"/>
        </fileset>
     </copy>
@@ -88,24 +90,24 @@
       <arg line="0"/>
       <arg line="-J"/>
       <arg line="-V"/>
-      <arg line="'${base.name}'"/>
+      <arg line="'${client_title}'"/>
       <arg line="-o"/>
-      <arg line="'${inst.dir}/bang-install.dmg'"/>
+      <arg line="'${deploy.dir}/bang-install.dmg'"/>
       <arg file="${img.dir}"/>
     </exec>
   </target> 
 
   <!-- do the additional bits to make the full application -->
   <target name="makefull">
-    <mkdir dir="${inst.dir}/${app.name}/${jdir}/code"/>
-    <copy todir="${inst.dir}/${app.name}/${jdir}/code"> 
-          <fileset dir="${web.home}/${bclient_ident}/${client_dir}/code"/>
+    <mkdir dir="${deploy.dir}/${app.name}/${jdir}/code"/>
+    <copy todir="${deploy.dir}/${app.name}/${jdir}/code"> 
+          <fileset dir="${client_dir}/code"/>
     </copy>
-    <copy todir="${inst.dir}/${app.name}/${jdir}/rsrc">
-      <fileset dir="${web.home}/${bclient_ident}/${client_dir}/rsrc"/>
+    <copy todir="${deploy.dir}/${app.name}/${jdir}/rsrc">
+      <fileset dir="${client_dir}/rsrc"/>
     </copy>
-    <copy overwrite="true" todir="${inst.dir}/${app.name}/${jdir}/">
-        <fileset dir="${web.home}/${bclient_ident}/${client_dir}">
+    <copy overwrite="true" todir="${deploy.dir}/${app.name}/${jdir}/">
+        <fileset dir="${client_dir}">
           <include name="getdown.txt"/>
           <include name="digest.txt"/>
           <include name="background.png"/>
@@ -114,35 +116,21 @@
     </copy>
   </target>
 
-  <!-- creates the devclient app -->
-  <target name="devprops">
-    <property name="bclient_ident" value="devclient"/>
-    <property name="client_dir" value="client"/>
-    <property name="ds_store" value="devclient_DS_Store"/>
-    <property name="app.name" value="Dev ${base.name}.app"/>
-    <property name="app_base.name" value="Dev ${base.name}"/>
-  </target>
-  <target name="devclient" depends="devprops,app,image"/>
-  <target name="devclient_full" depends="devprops,app,makefull,image"/>
+  <target name="client" depends="app,image"/>
 
-  <!-- creates the client app -->
-  <target name="props">
-    <property name="bclient_ident" value="${client_ident}"/>
-    <property name="client_dir" value="${version}"/>
-    <property name="ds_store" value="client_DS_Store"/>
-    <property name="app.name" value="${base.name}.app"/>
-    <property name="app_base.name" value="${base.name}"/>
+  <target name="client_full">
+    <antcall target="app"/>
+    <antcall target="makefull">
+      <param name="client_dir" value="${client.base}/${version}"/>
+    </antcall>
+    <antcall target="image"/>
   </target>
-  <target name="client" depends="props,app,image"/>
-  <target name="client_full" depends="props,app,makefull,image"/>
 
-  <!-- creates the tclient installer -->
-  <target name="tprops">
-    <property name="bclient_ident" value="${client_ident}"/>
-    <property name="client_dir" value="${version}"/>
-    <property name="ds_store" value="tclient_DS_Store"/>
-    <property name="app.name" value="${base.name} Test.app"/>
-    <property name="app_base.name" value="${base.name} Test"/>
+  <target name="devclient_full">
+    <antcall target="app"/>
+    <antcall target="makefull">
+      <param name="client_dir" value="${client.base}"/>
+    </antcall>
+    <antcall target="image"/>
   </target>
-  <target name="tclient" depends="tprops,app"/>
 </project>

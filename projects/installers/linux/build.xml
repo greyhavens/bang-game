@@ -1,5 +1,5 @@
 <!-- project build configuration -->
-<project name="Bang Linux Installer" default="devclient" basedir=".">
+<project name="Bang Linux Installer" default="client" basedir=".">
 
   <!-- load up our configuration information -->
   <property name="base.dir" value="${basedir}/../../.."/>
