@@ -13,6 +13,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.client.BuckleView;
 import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
@@ -125,6 +126,12 @@ public class BucklePart extends Item
             (opart = (BucklePart)other)._class.equals(_class) &&
             opart._name.equals(_name) &&
             Arrays.equals(opart._components, _components);
+    }
+
+    @Override // documentation inherited
+    public boolean allowsDuplicates ()
+    {
+        return AvatarLogic.BUCKLE_PARTS[AvatarLogic.getPartIndex(_class)].isMultiple();
     }
 
     @Override // documentation inherited

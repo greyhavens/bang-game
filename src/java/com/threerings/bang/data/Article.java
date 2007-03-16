@@ -164,8 +164,9 @@ public class Article extends Item
     @Override // documentation inherited
     public String getTooltip (PlayerObject user)
     {
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS,
-            "m.article_tip" + (isWearable(user) ? "" : "_unwearable"));
+        String suffix = (_gangId == 0) ? "" :
+            (isWearable(user) ? "_uniform" : "_unwearable");
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.article_tip" + suffix);
     }
 
     @Override // documentation inherited
