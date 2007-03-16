@@ -30,6 +30,8 @@
     <mkdir dir="${deploy.dir}"/>
     <copy file="${basedir}/../data/getdown-pro.jar" todir="${deploy.dir}"/>
 
+    <!-- be sure the app base directory is empty -->
+    <delete dir="${deploy.dir}/${app.name}"/>
     <taskdef name="jarbundler" classpathref="classpath"
       classname="com.loomcom.ant.tasks.jarbundler.JarBundler"/>
 
