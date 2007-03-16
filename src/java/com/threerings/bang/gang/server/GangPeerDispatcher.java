@@ -63,8 +63,8 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
-        case GangPeerMarshaller.GRANT_NOTORIETY:
-            ((GangPeerProvider)provider).grantNotoriety(
+        case GangPeerMarshaller.GRANT_ACES:
+            ((GangPeerProvider)provider).grantAces(
                 source,
                 (Handle)args[0], ((Integer)args[1]).intValue()
             );

@@ -51,7 +51,7 @@ public class AwardView extends BContainer
         boolean isCoop =
             bangobj.roundId == 1 && bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP;
 
-        BContainer econt = new BContainer(new BorderLayout(0, 15));
+        BContainer econt = new BContainer(new BorderLayout(0, award.acesEarned > 0 ? 5 : 15));
         econt.setStyleClass("endgame_border");
         add(econt);
 
@@ -63,7 +63,19 @@ public class AwardView extends BContainer
         _table = new BContainer(new TableLayout(isBounty ? 3 : 7, 5, 5));
         // we need to center this verticaly
         BContainer vbox = GroupLayout.makeVBox(GroupLayout.CENTER);
+        ((GroupLayout)vbox.getLayoutManager()).setGap(0);
         vbox.add(_table);
+        if (award.acesEarned > 0) {
+            vbox.add(_aces = GroupLayout.makeHBox(GroupLayout.CENTER));
+            _aces.add(new BLabel(msgs.get("m.endgame_aces_pre"), "endgame_text"));
+            _aces.add(new Spacer(-2, 1));
+            _aces.add(new BLabel(BangUI.acesIcon));
+            _aces.add(new BLabel(String.valueOf(award.acesEarned), "endgame_smallcash"));
+            _aces.add(new BLabel(msgs.get("m.endgame_aces_post"), "endgame_text"));
+            if (animate) {
+                _aces.setAlpha(0f);
+            }
+        }
         econt.add(vbox, BorderLayout.CENTER);
 
         txt = isBounty ? msgs.get("m.bover_reward") : (isCoop ?
@@ -195,6 +207,9 @@ public class AwardView extends BContainer
                     _scrip.setText(_cfmt.format(user.scrip));
                     BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
                     _done = true;
+                    if (_aces != null) {
+                        _aces.setAlpha(1f);
+                    }
                     if (_item != null) {
                         schedule(POST_ANIM_DELAY);
                     }
@@ -220,7 +235,7 @@ public class AwardView extends BContainer
 
     protected BContainer _table;
     protected BLabel _scrip;
-    protected BContainer _item;
+    protected BContainer _item, _aces;
     protected NumberFormat _cfmt = NumberFormat.getInstance();
 
     protected static final long PRE_ANIM_DELAY = 1000L;

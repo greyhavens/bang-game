@@ -19,9 +19,9 @@ import com.threerings.bang.gang.data.OutfitArticle;
 public interface GangPeerService extends InvocationService
 {
     /**
-     * Grants notoriety points to a player and his gang.
+     * Grants aces to a player's gang.
      */
-    public void grantNotoriety (Client client, Handle handle, int points);
+    public void grantAces (Client client, Handle handle, int aces);
 
     /**
      * Sets the avatar of the gang's senior leader.

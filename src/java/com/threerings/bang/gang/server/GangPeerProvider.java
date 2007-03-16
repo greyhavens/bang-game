@@ -38,9 +38,9 @@ public interface GangPeerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
-     * Handles a {@link GangPeerService#grantNotoriety} request.
+     * Handles a {@link GangPeerService#grantAces} request.
      */
-    public void grantNotoriety (ClientObject caller, Handle arg1, int arg2);
+    public void grantAces (ClientObject caller, Handle arg1, int arg2);
 
     /**
      * Handles a {@link GangPeerService#handleInviteResponse} request.

@@ -206,8 +206,8 @@ public class BangConfig extends GameConfig
     /** Whether units respawn in this game. */
     public boolean respawnUnits = true;
 
-    /** Whether or not to grant notoriety to the players' gangs for this game. */
-    public boolean grantNotoriety;
+    /** Whether or not to grant aces to the players' gangs for this game. */
+    public boolean grantAces;
 
     /** The configuration of each round of the game. */
     public ArrayList<Round> rounds = new ArrayList<Round>();

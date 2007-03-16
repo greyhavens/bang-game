@@ -62,13 +62,13 @@ public class GangPeerMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #grantNotoriety} requests. */
-    public static final int GRANT_NOTORIETY = 4;
+    /** The method id used to dispatch {@link #grantAces} requests. */
+    public static final int GRANT_ACES = 4;
 
     // from interface GangPeerService
-    public void grantNotoriety (Client arg1, Handle arg2, int arg3)
+    public void grantAces (Client arg1, Handle arg2, int arg3)
     {
-        sendRequest(arg1, GRANT_NOTORIETY, new Object[] {
+        sendRequest(arg1, GRANT_ACES, new Object[] {
             arg2, Integer.valueOf(arg3)
         });
     }

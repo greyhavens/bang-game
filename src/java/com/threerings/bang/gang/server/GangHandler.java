@@ -422,8 +422,7 @@ public class GangHandler
     }
 
     // documentation inherited from interface GangPeerProvider
-    public void grantNotoriety (
-        ClientObject caller, final Handle handle, final int points)
+    public void grantAces (ClientObject caller, final Handle handle, final int aces)
     {
         // make sure it comes from this server or a peer
         GangMemberEntry member = null;
@@ -434,17 +433,14 @@ public class GangHandler
             return;
         }
 
-        // grant an ace for each notoriety point
-        final int aces = points;
-
         // update the database
         final GangMemberEntry entry = member;
         BangServer.invoker.postUnit(new RepositoryUnit() {
             public void invokePersist ()
                 throws PersistenceException {
-                // grant an ace for each notoriety point
+                // notoriety points are simply accumulated aces
                 BangServer.gangrepo.grantAces(_gangId, aces);
-                BangServer.gangrepo.addNotoriety(_gangId, entry.playerId, points);
+                BangServer.gangrepo.addNotoriety(_gangId, entry.playerId, aces);
             }
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(handle);
@@ -452,9 +448,9 @@ public class GangHandler
                 try {
                     _gangobj.setAces(_gangobj.aces + aces);
                     _gangobj.setNotoriety(GangUtil.getNotorietyLevel(
-                        _gangobj.getWeightClass(), (_notoriety += points)));
+                        _gangobj.getWeightClass(), (_notoriety += aces)));
                     if (member != null) {
-                        member.notoriety += points;
+                        member.notoriety += aces;
                         _gangobj.updateMembers(member);
                     }
                 } finally {
@@ -462,8 +458,8 @@ public class GangHandler
                 }
             }
             public void handleFailure (Exception cause) {
-                log.warning("Failed to grant notoriety [gang=" + GangHandler.this + ", handle=" +
-                    handle + ", points=" + points + ", error=" + cause + "].");
+                log.warning("Failed to grant aces [gang=" + GangHandler.this + ", handle=" +
+                    handle + ", aces=" + aces + ", error=" + cause + "].");
             }
         });
     }

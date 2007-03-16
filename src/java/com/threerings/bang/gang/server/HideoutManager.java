@@ -434,10 +434,10 @@ public class HideoutManager extends MatchHostManager
                 return super.join(player, criterion);
             }
             public BangConfig createConfig () {
-                // grant notoriety for rated (competition) games
+                // grant aces for rated (competition) games
                 BangConfig config = super.createConfig();
                 if (config.rated) {
-                    config.grantNotoriety = true;
+                    config.grantAces = true;
                 }
                 return config;
             }

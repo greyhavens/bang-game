@@ -84,6 +84,7 @@ public class GameOverViewTest extends TestApp
 //             }
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
+            bangobj.awards[ii].acesEarned = 5;
             bangobj.playerInfo[ii] = new BangObject.PlayerInfo();
             bangobj.playerInfo[ii].avatar = BangAI.getAvatar(RandomUtil.getInt(100) > 50);
         }

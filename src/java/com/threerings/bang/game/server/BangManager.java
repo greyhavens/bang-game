@@ -1911,9 +1911,13 @@ public class BangManager extends GameManager
                         computeEarnings(ii) * _bconfig.duration.getAdjustment());
                 }
 
-                // for now, award one notoriety point for every twenty scrip
-                if (_bconfig.grantNotoriety && prec.gangId > 0) {
-                    award.notorietyEarned = award.cashEarned / 20;
+                // for now, award one notoriety point for every twenty scrip (with a possibility of
+                // rounding that depends on the player's purse)
+                if (_bconfig.grantAces && prec.gangId > 0) {
+                    float faces = award.cashEarned / 20f;
+                    float prob = (prec.user.getPurse().getPurseBonus() - 1f);
+                    award.acesEarned = (RandomUtil.getFloat(1f) < prob) ?
+                        Math.round(faces) : (int)faces;
                 }
             }
 
@@ -2626,11 +2630,11 @@ public class BangManager extends GameManager
     {
         // award notoriety through the gang manager
         for (Award award : awards) {
-            if (award.notorietyEarned > 0) {
+            if (award.acesEarned > 0) {
                 PlayerRecord prec = _precords[award.pidx];
                 try {
-                    BangServer.gangmgr.requireGangPeerProvider(prec.gangId).grantNotoriety(
-                        null, prec.user.handle, award.notorietyEarned);
+                    BangServer.gangmgr.requireGangPeerProvider(prec.gangId).grantAces(
+                        null, prec.user.handle, award.acesEarned);
                 } catch (InvocationException e) {
                     // a warning will have been logged by GangManager
                 }
