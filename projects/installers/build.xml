@@ -19,11 +19,8 @@
     <mkdir dir="${deploy.dir}"/>
   </target>
 
-  <target name="nsis">
-  </target>
-
-  <!-- builds and installs the production installers -->
-  <target name="client" depends="prepare">
+  <!-- builds the Windows NSIS-based installer -->
+  <target name="windows">
     <copy tofile="${deploy.dir}/bang-installer.nsi" overwrite="true" encoding="UTF-8">
       <fileset dir="${default_locale}" includes="bang-installer.nsi.in"/>
       <filterset>
@@ -33,27 +30,35 @@
       </filterset>
     </copy>
 
-    <!-- windows installer -->
     <exec dir="${deploy.dir}" executable="makensis" failonerror="true">
       <arg line="-V2"/>
       <arg line="bang-installer.nsi"/>
     </exec>
+  </target>
 
+  <!-- builds and installs the production installers -->
+  <target name="client" depends="prepare">
+    <!-- windows installer -->
+    <antcall target="windows"/>
     <!-- mac installer -->
-    <ant target="client" dir="linux" inheritAll="no"/>
-    <if><equals arg1="${client_ident}" arg2="bang"/>
-      <then>
-        <ant target="client" dir="mac" inheritAll="no"/>
-      </then>
-    <elseif><equals arg1="${client_ident}" arg2="bang_dev"/>
-      <then>
-        <ant target="devclient" dir="mac" inheritAll="no"/>
-      </then>
-    </elseif></if>
-
+    <ant target="client" dir="mac" inheritAll="no"/>
     <!-- linux installer -->
     <ant target="client" dir="linux" inheritAll="no"/>
+    <copy todir="${install.dir}/client/">
+      <fileset dir="${deploy.dir}" includes="bang-install.exe"/>
+      <fileset dir="${deploy.dir}" includes="bang-install.bin"/>
+      <fileset dir="mac/${deploy.dir}" includes="bang-install.dmg"/>
+    </copy>
+  </target>
 
+  <!-- builds and installs the development installers -->
+  <target name="devclient" depends="prepare">
+    <!-- windows installer -->
+    <antcall target="windows"/>
+    <!-- mac installer -->
+    <ant target="devclient" dir="mac" inheritAll="no"/>
+    <!-- linux installer -->
+    <ant target="client" dir="linux" inheritAll="no"/>
     <copy todir="${install.dir}/client/">
       <fileset dir="${deploy.dir}" includes="bang-install.exe"/>
       <fileset dir="${deploy.dir}" includes="bang-install.bin"/>

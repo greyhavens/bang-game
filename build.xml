@@ -903,7 +903,7 @@
     <if><equals arg1="${props.dist}" arg2="devel"/>
       <then>
         <antcall target="devclient"/>
-        <ant dir="projects/installers" target="client"/>
+        <ant dir="projects/installers" target="devclient"/>
         <antcall target="applet"/>
       </then>
     <elseif>
