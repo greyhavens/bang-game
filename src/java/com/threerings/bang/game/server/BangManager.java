@@ -199,6 +199,11 @@ public class BangManager extends GameManager
 
         /** A snapshot of the in-game stats at the end of this round. */
         public StatSet[] stats;
+
+        public boolean wasCoop ()
+        {
+            return (scenario != null && scenario.getInfo().getTeams() == ScenarioInfo.Teams.COOP);
+        }
     }
 
     /**
@@ -1690,15 +1695,16 @@ public class BangManager extends GameManager
             Arrays.sort(ranks);
             short rank = 0;
             boolean coop = (_bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP);
+            int[] scores = _bangobj.perRoundPoints[_activeRoundId];
             if (coop) {
-                int avgscore = (IntListUtil.sum(_bangobj.points) / _bangobj.points.length);
+                int avgscore = getAverageScore(scores);
                 rank = (short)(BangObject.COOP_RANK + BangServer.ratingmgr.getPercentile(
                                    _bangobj.scenario.getIdent(), ranks.length, avgscore, false));
             }
-            int high = _bangobj.perRoundPoints[_activeRoundId][ranks[0].pidx];
+            int high = scores[ranks[0].pidx];
             for (int ii = 0; ii < ranks.length; ii++) {
                 if (!coop) {
-                    int points = _bangobj.perRoundPoints[_activeRoundId][ranks[ii].pidx];
+                    int points = scores[ranks[ii].pidx];
                     if (points < high) {
                         rank = (short)ii;
                         high = points;
@@ -1848,18 +1854,33 @@ public class BangManager extends GameManager
         // update ratings if appropriate
         if (_bconfig.rated && !_bconfig.getScenario(0).equals(TutorialInfo.IDENT) &&
             gameSecs >= MIN_RATED_DURATION) {
-            // update each player's per-scenario ratings
+            int[] fpoints = _bangobj.getFilteredPoints();
+
+            // update each player's per-scenario ratings, subtracting from the total any points
+            // earned in coop rounds
             for (int ii = 0; ii < _bconfig.getRounds(); ii++) {
-                computeRatings(_bconfig.getScenario(ii), _bangobj.perRoundPoints[ii]);
+                int[] rpoints = _bangobj.perRoundPoints[ii];
+                computeRatings(_bconfig.getScenario(ii), rpoints);
+                if (_rounds[ii].wasCoop()) {
+                    for (int jj = 0; jj < fpoints.length; jj++) {
+                        fpoints[jj] = Math.max(0, fpoints[jj] - Math.max(0, rpoints[jj]));
+                    }
+                }
             }
 
             // update each player's overall rating
-            computeRatings(ScenarioInfo.OVERALL_IDENT, _bangobj.getFilteredPoints());
+            computeRatings(ScenarioInfo.OVERALL_IDENT, fpoints);
         }
 
         // these will track awarded cash and badges
         Award[] awards = new Award[getPlayerSlots()];
         _tickets = new FreeTicket[getPlayerSlots()];
+
+        // see if all rounds played were coop
+        boolean allRoundsCoop = true;
+        for (RoundRecord round : _rounds) {
+            allRoundsCoop &= (round.scenario == null || round.wasCoop());
+        }
 
         // record various statistics
         for (int ii = 0; ii < awards.length; ii++) {
@@ -1924,7 +1945,7 @@ public class BangManager extends GameManager
             // if this was a rated game, persist various stats and potentially award a badge
             if (_bconfig.rated) {
                 try {
-                    recordStats(prec.user, ii, award, gameSecs/60);
+                    recordStats(prec.user, ii, award, gameSecs/60, allRoundsCoop);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Failed to record stats [who=" + _bangobj.players[ii] +
                             ", idx=" + ii + ", award=" + award + "].", t);
@@ -2384,7 +2405,7 @@ public class BangManager extends GameManager
         boolean coop = (!scenario.equals(ScenarioInfo.OVERALL_IDENT) &&
                         ScenarioInfo.getScenarioInfo(scenario).getTeams() ==
                         ScenarioInfo.Teams.COOP);
-        int avgscore = coop ? (IntListUtil.sum(scores) / scores.length) : 0;
+        int avgscore = coop ? getAverageScore(scores) : 0;
 
         // filter AIs from the scores; the ratings computations below will ignore players whose
         // score is set to zero
@@ -2427,20 +2448,23 @@ public class BangManager extends GameManager
      * Records game stats to the player's persistent stats and potentially awards them a
      * badge. This is only called for rated (matched) games.
      */
-    protected void recordStats (final PlayerObject user, int pidx, Award award, int gameMins)
+    protected void recordStats (
+        final PlayerObject user, int pidx, Award award, int gameMins, boolean allRoundsCoop)
     {
         // if this player has logged off...
         if (!user.isActive()) {
             // ...we won't update any of their cumulative stats, but we need to wipe their
             // consecutive wins stat
-            BangServer.invoker.postUnit(new Invoker.Unit() {
-                public boolean invoke () {
-                    Stat stat = Stat.Type.CONSEC_WINS.newStat();
-                    stat.setModified(true);
-                    BangServer.statrepo.writeModified(user.playerId, new Stat[] { stat });
-                    return false;
-                }
-            });
+            if (!allRoundsCoop) {
+                BangServer.invoker.postUnit(new Invoker.Unit() {
+                    public boolean invoke () {
+                        Stat stat = Stat.Type.CONSEC_WINS.newStat();
+                        stat.setModified(true);
+                        BangServer.statrepo.writeModified(user.playerId, new Stat[] { stat });
+                        return false;
+                    }
+                });
+            }
             return;
         }
 
@@ -2453,20 +2477,23 @@ public class BangManager extends GameManager
                 user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
                 user.stats.incrementStat(Stat.Type.SESSION_GAMES_PLAYED, 1);
                 user.stats.incrementStat(Stat.Type.GAME_TIME, gameMins);
-                // increment consecutive wins for 1st place only
-                if (award.rank == 0) {
-                    user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
-                    user.stats.incrementStat(Stat.Type.CONSEC_WINS, 1);
-                    // note this win for all the big shots they used
-                    noteUnitsUsed(_bigshots, Stat.Type.BIGSHOT_WINS, pidx);
-                } else {
-                    user.stats.setStat(Stat.Type.CONSEC_WINS, 0);
-                }
-                // increment consecutive losses for 4th place only
-                if (award.rank == 3) {
-                    user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 1);
-                } else {
-                    user.stats.setStat(Stat.Type.CONSEC_LOSSES, 0);
+                // cooperative games don't affect wins/losses
+                if (!allRoundsCoop) {
+                    // increment consecutive wins for 1st place only
+                    if (award.rank == 0) {
+                        user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
+                        user.stats.incrementStat(Stat.Type.CONSEC_WINS, 1);
+                        // note this win for all the big shots they used
+                        noteUnitsUsed(_bigshots, Stat.Type.BIGSHOT_WINS, pidx);
+                    } else {
+                        user.stats.setStat(Stat.Type.CONSEC_WINS, 0);
+                    }
+                    // increment consecutive losses for 4th place only
+                    if (award.rank == 3) {
+                        user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 1);
+                    } else {
+                        user.stats.setStat(Stat.Type.CONSEC_LOSSES, 0);
+                    }
                 }
             }
 
@@ -2801,6 +2828,21 @@ public class BangManager extends GameManager
             }
         }
         return false;
+    }
+
+    /**
+     * Computes the average of all non-negative scores.
+     */
+    protected static int getAverageScore (int[] scores)
+    {
+        int sum = 0, count = 0;
+        for (int score : scores) {
+            if (score >= 0) {
+                sum += score;
+                count++;
+            }
+        }
+        return (count == 0) ? 0 : (sum / count);
     }
 
     /** Used to track advance orders. */
