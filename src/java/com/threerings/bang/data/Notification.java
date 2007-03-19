@@ -32,16 +32,16 @@ public abstract class Notification
 
     /** A commonly used response indicating acceptance (of an invitation, e.g.) */
     public static final int ACCEPT = 0;
-    
+
     /** A commonly used response indicating rejection. */
     public static final int REJECT = 1;
-    
+
     /** On the server, the handler that will receive the player's response. */
     public transient ResponseHandler handler;
-    
+
     /** Set on the client when the user has responded to the notification. */
     public transient boolean responded;
-    
+
     /**
      * Creates a new notification on the server.
      */
@@ -49,14 +49,14 @@ public abstract class Notification
     {
         this.handler = handler;
     }
-    
+
     /**
      * No-arg constructor for deserialization.
      */
     public Notification ()
     {
     }
-    
+
     /**
      * Returns the source of the notification, if it originated from a player.
      */
@@ -64,7 +64,7 @@ public abstract class Notification
     {
         return null;
     }
-    
+
     /**
      * Returns the bundle to use to translate the notification messages.
      */
@@ -72,12 +72,21 @@ public abstract class Notification
     {
         return BangCodes.BANG_MSGS;
     }
-    
+
+    /**
+     * Returns the translatable title of the notification, or <code>null</code> for
+     * none.
+     */
+    public String getTitle ()
+    {
+        return null;
+    }
+
     /**
      * Returns the translatable text of the notification.
      */
     public abstract String getText ();
-    
+
     /**
      * Returns the translatable options available to respond to the
      * notification.
@@ -86,7 +95,7 @@ public abstract class Notification
     {
         return new String[] { "m.ok" };
     }
-    
+
     /**
      * Returns the index of the response to use when automatically denying
      * notifications from muted sources.
@@ -95,7 +104,7 @@ public abstract class Notification
     {
         return REJECT;
     }
-    
+
     @Override // documentation inherited
     public String toString ()
     {

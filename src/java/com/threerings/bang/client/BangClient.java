@@ -1106,8 +1106,8 @@ public class BangClient extends BasicClient
         }
 
         OptionDialog.showConfirmDialog(
-            _ctx, notification.getBundle(), notification.getText(), buttons,
-            new OptionDialog.ResponseReceiver() {
+            _ctx, notification.getBundle(), notification.getTitle(), notification.getText(),
+            buttons, new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 if (button >= notification.getResponses().length) { // ignore the pesky bugger
                     _ctx.getMuteDirector().setMuted(source, true);

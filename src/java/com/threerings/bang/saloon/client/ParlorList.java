@@ -27,6 +27,7 @@ import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.ParlorInfo;
@@ -220,10 +221,13 @@ public class ParlorList extends BContainer
     protected int getWeight (ParlorInfo info)
     {
         int weight = info.occupants;
-        if (_ctx.getUserObject().handle.equals(info.creator)) {
+        PlayerObject user = _ctx.getUserObject();
+        if (user.handle.equals(info.creator)) {
             weight += 2000;
-        } else if (_ctx.getUserObject().pardners.containsKey(info.creator)) {
+        } else if (user.pardners.containsKey(info.creator)) {
             weight += 1000;
+        } else if (info.type == ParlorInfo.Type.RECRUITING) {
+            weight += ((user.gangId <= 0 || user.canRecruit()) ? +750 : -750);
         } else if (info.type == ParlorInfo.Type.SOCIAL) {
             weight += 500;
         } else if (info.type == ParlorInfo.Type.NORMAL) {

@@ -25,6 +25,7 @@ import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.avatar.server.BarberManager;
@@ -408,6 +409,14 @@ public class HideoutManager extends MatchHostManager
             _rankval.cancel();
             _rankval = null;
         }
+    }
+
+    @Override // from ShopManager
+    protected boolean checkShopEnabled (PlayerObject user)
+    {
+        // TEMP: only admins can access the Hideout in ITP
+        return super.checkShopEnabled(user) &&
+            (ServerConfig.townIndex == 0 || user.tokens.isAdmin());
     }
 
     @Override // from MatchHostManager

@@ -120,8 +120,6 @@ public class RosterView extends BContainer
         } else if (action.equals("purchase_items")) {
             _ctx.getBangClient().displayPopup(
                 new GangStoreDialog(_ctx, _hideoutobj, _gangobj), true, 500);
-        } else if (action.equals("invite")) {
-            _ctx.getBangClient().displayPopup(new InviteMemberDialog(_ctx, _status), true, 400);
         } else if (action.equals("history")) {
             _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), false, 500);
         } else if (action.equals("leave")) {
@@ -189,20 +187,15 @@ public class RosterView extends BContainer
 
         // populate the button panel
         if (_ctx.getUserObject().gangRank == LEADER_RANK) {
-            _bcont.add(_options = createCompactButton("options"));
+            _bcont.add(_options = createButton("options"));
         }
-        if (_ctx.getUserObject().canRecruit()) {
-            _bcont.add(createCompactButton("invite"));
-        }
-        _bcont.add(createCompactButton("history"));
-        _bcont.add(createCompactButton("leave"));
+        _bcont.add(createButton("history"));
+        _bcont.add(createButton("leave"));
     }
 
-    protected BButton createCompactButton (String action)
+    protected BButton createButton (String action)
     {
-        BButton button = new BButton(_msgs.get("m." + action), this, action);
-        button.setStyleClass("compact_button");
-        return button;
+        return new BButton(_msgs.get("m." + action), this, action);
     }
 
     @Override // documentation inherited

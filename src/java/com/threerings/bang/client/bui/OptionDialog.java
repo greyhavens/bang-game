@@ -81,7 +81,22 @@ public class OptionDialog extends BDecoratedWindow
     public static void showConfirmDialog (BangContext ctx, String bundle, String text,
                                           String[] buttons, ResponseReceiver receiver)
     {
-        OptionDialog dialog = new OptionDialog(ctx, bundle, text, buttons, receiver);
+        showConfirmDialog(ctx, bundle, null, text, buttons, receiver);
+    }
+
+    /**
+     * Shows a confirmation dialog with the given text and buttons with the provided labels.
+     *
+     * @param bundle the bundle to to use in translating the text
+     * @param title the title of the dialog
+     * @param text the text to display in the center of the dialog
+     * @param buttons the labels for the buttons in the dialog
+     * @param receiver a receiver to notify with the result
+     */
+    public static void showConfirmDialog (BangContext ctx, String bundle, String title,
+                                          String text, String[] buttons, ResponseReceiver receiver)
+    {
+        OptionDialog dialog = new OptionDialog(ctx, bundle, title, text, buttons, receiver);
         ctx.getBangClient().displayPopup(dialog, true, 400, true);
     }
 
@@ -120,9 +135,15 @@ public class OptionDialog extends BDecoratedWindow
     }
 
     protected OptionDialog (BangContext ctx, String bundle, String text,
-        String[] buttons, ResponseReceiver receiver)
+                            String[] buttons, ResponseReceiver receiver)
     {
-        super(ctx.getStyleSheet(), null);
+        this(ctx, bundle, null, text, buttons, receiver);
+    }
+
+    protected OptionDialog (BangContext ctx, String bundle, String title, String text,
+                            String[] buttons, ResponseReceiver receiver)
+    {
+        super(ctx.getStyleSheet(), (title == null) ? null : ctx.xlate(bundle, title));
         ((GroupLayout)getLayoutManager()).setGap(20);
         setModal(true);
         _ctx = ctx;

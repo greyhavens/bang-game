@@ -136,8 +136,8 @@ public class PlayerPopupMenu extends BPopupMenu
             addMenuItem(new BMenuItem(msgs.get("m.pm_invite_pardner"), "invite_pardner"));
         }
 
-        // add gang-related items
-        if (shouldShowGangInvite()) {
+        // add invitation option if they're either present or a pardner
+        if (shouldShowGangInvite() && (isPresent || entry != null)) {
             addMenuItem(new BMenuItem(_ctx.xlate(BangCodes.BANG_MSGS, "m.pm_invite_member"),
                 "invite_member"));
         }

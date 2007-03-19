@@ -36,22 +36,20 @@ public class HistoryDialog extends BDecoratedWindow
 {
     public HistoryDialog (BangContext ctx, HideoutObject hideoutobj)
     {
-        super(ctx.getStyleSheet(), null);
+        super(ctx.getStyleSheet(), ctx.xlate(HIDEOUT_MSGS, "t.history_dialog"));
         setModal(true);
         _ctx = ctx;
         _hideoutobj = hideoutobj;
-        
-        ((GroupLayout)getLayoutManager()).setOffAxisPolicy(GroupLayout.STRETCH);
-        
+
         GroupLayout glay = GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
         _econt = new BContainer(glay);
         _econt.setStyleClass("history_view");
         add(_econt, GroupLayout.FIXED);
-        
+
         _econt.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, "m.loading_history")));
         _econt.add(new Spacer(1, 1));
-        
+
         BContainer acont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
         ((GroupLayout)acont.getLayoutManager()).setGap(40);
         acont.add(_back = new BButton("", this, "back"));
@@ -59,17 +57,17 @@ public class HistoryDialog extends BDecoratedWindow
         acont.add(_forward = new BButton("", this, "forward"));
         _forward.setStyleClass("fwd_button");
         add(acont, GroupLayout.FIXED);
- 
+
         add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
-               
+
         BContainer bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
         bcont.add(new BButton(ctx.xlate(HIDEOUT_MSGS, "m.dismiss"), this, "dismiss"));
         add(bcont, GroupLayout.FIXED);
-        
+
         // hide the dialog until we hear back from the server
         setVisible(false);
     }
-    
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
@@ -82,18 +80,18 @@ public class HistoryDialog extends BDecoratedWindow
             _ctx.getBangClient().clearPopup(this, true);
         }
     }
-    
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();
         pack();
         center();
-        
-        // fetch the first batch of entries    
+
+        // fetch the first batch of entries
         fetchEntries(0);
     }
-    
+
     /**
      * Fetches the entries starting at the specified offset.
      */
@@ -126,7 +124,7 @@ public class HistoryDialog extends BDecoratedWindow
             }
         });
     }
-    
+
     /**
      * Shows the dialog if it's not already showing.
      */
@@ -138,7 +136,7 @@ public class HistoryDialog extends BDecoratedWindow
         setVisible(true);
         _ctx.getBangClient().animatePopup(this, 500);
     }
-    
+
     /**
      * Populates the UI with the retrieved history entries.
      */
@@ -156,12 +154,12 @@ public class HistoryDialog extends BDecoratedWindow
         }
         _entries = entries;
         _offset = offset;
-        
+
         GroupLayout glay = GroupLayout.makeHoriz(
             GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.NONE);
         glay.setGap(10);
         glay.setOffAxisJustification(GroupLayout.TOP);
-        
+
         _econt.removeAll();
         for (HistoryEntry entry : entries) {
             BContainer cont = new BContainer(glay);
@@ -175,18 +173,18 @@ public class HistoryDialog extends BDecoratedWindow
         pack();
         center();
     }
-    
+
     protected BangContext _ctx;
     protected HideoutObject _hideoutobj;
     protected MessageBundle _msgs;
-    
+
     protected int _offset;
     protected HistoryEntry[] _entries;
-    
+
     protected BContainer _econt;
     protected BButton _back, _forward;
     protected StatusLabel _status;
-    
+
     /** The date format to use for history entries. */
     protected static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("M/d/yy h:mm a");
 }

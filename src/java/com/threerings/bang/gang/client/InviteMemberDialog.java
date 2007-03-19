@@ -25,12 +25,13 @@ import com.threerings.bang.gang.data.GangCodes;
  * gang member and specify an invitation message.
  */
 public class InviteMemberDialog extends RequestDialog
+    implements GangCodes
 {
     public InviteMemberDialog (BangContext ctx, StatusLabel status)
     {
         this(ctx, status, null);
     }
-    
+
     public InviteMemberDialog (
         BangContext ctx, StatusLabel status, Handle handle)
     {
@@ -39,19 +40,22 @@ public class InviteMemberDialog extends RequestDialog
         _handle = handle;
 
         setRequiresString(300, "");
-        
+
         // if the handle is not specified already, add the fields to enter it
         if (_handle == null) {
-            add(0, new BLabel(ctx.xlate(GangCodes.GANG_MSGS, "m.invite_name")), GroupLayout.FIXED);
+            add(0, new BLabel(ctx.xlate(GANG_MSGS, "m.invite_name")), GroupLayout.FIXED);
             add(1, _hfield = new BTextField(NameFactory.getValidator().getMaxHandleLength()),
                 GroupLayout.FIXED);
             _hfield.setPreferredWidth(200);
             new EnablingValidator(_hfield, _buttons[0]);
             add(2, new Spacer(1, 15), GroupLayout.FIXED);
         }
-        
+
         // limit the length of the invite message, over 255 will break
         _input.setDocument(new LengthLimitedDocument(200));
+
+        // shove the title up on top
+        add(0, new BLabel(ctx.xlate(GANG_MSGS, "t.invite_dialog"), "window_title"));
     }
 
     // documentation inherited
@@ -63,7 +67,7 @@ public class InviteMemberDialog extends RequestDialog
         }
         gsvc.inviteMember(_ctx.getClient(), _handle, (String)result, this);
     }
-    
+
     protected Handle _handle;
     protected BTextField _hfield;
 }

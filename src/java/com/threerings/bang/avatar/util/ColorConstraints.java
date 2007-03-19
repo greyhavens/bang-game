@@ -291,21 +291,21 @@ public class ColorConstraints
         preds.put("greencopper", new Normal());
         preds.put("bluesteel", new Normal());
         preds.put("white", new Normal());
-        preds.put("tan", new Starter());
+        preds.put("tan", new Disabled());
         preds.put("dkbrn", new Normal());
         preds.put("leather", new Starter());
         preds.put("brown", new Starter());
-        preds.put("pink", new Normal());
+        preds.put("pink", new Disabled());
         preds.put("red", new Normal());
         preds.put("maroon", new Normal());
-        preds.put("orange", new Normal());
+        preds.put("orange", new Disabled());
         preds.put("yellow", new Normal());
         preds.put("moss", new Normal());
         preds.put("lime", new Normal());
         preds.put("aqua", new Normal());
         preds.put("violet", new Normal());
         preds.put("purple", new Normal());
-        preds.put("black", new Normal());
+        preds.put("black", new Disabled());
         preds.put("grey", new Normal());
     }
 }
