@@ -222,6 +222,9 @@ public class BangServer extends CrowdServer
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
 
+    /** Manages tracking and discouraging of misbehaving players. */
+    public static NaughtyPlayerManager npmgr = new NaughtyPlayerManager();
+
     /** Contains information about the whole town. */
     public static TownObject townobj;
 
