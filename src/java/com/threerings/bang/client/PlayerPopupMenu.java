@@ -95,60 +95,12 @@ public class PlayerPopupMenu extends BPopupMenu
         addListener(this);
         setLayer(BangUI.POPUP_MENU_LAYER);
 
-        MessageBundle msgs = ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
-        PlayerObject self = _ctx.getUserObject();
-
         // add their name as a non-menu item
         String title = "@=u(" + handle.toString() + ")";
         add(new BLabel(title, "popupmenu_title"));
 
-        // add an item for viewing their wanted poster
-        addMenuItem(new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
-
-        // if we're an admin/support, add a link to their admin account page
-        if (_ctx.getUserObject().tokens.isSupport()) {
-            addMenuItem(new BMenuItem(msgs.get("m.pm_view_account"), "view_account"));
-        }
-
-        // stop here if this is us
-        if (self.handle.equals(handle)) {
-            return;
-        }
-
-        // add an item for viewing their wanted poster
-        if (isPresent) {
-            addMenuItem(new BMenuItem(msgs.get("m.pm_register_complaint"), "complain"));
-        }
-
-        // if they're our pardner, add some pardner-specific items
-        PardnerEntry entry = _ctx.getUserObject().pardners.get(handle);
-        if (entry != null) {
-            if (entry.isAvailable()) {
-                addMenuItem(new BMenuItem(msgs.get("m.pm_chat_pardner"), "chat_pardner"));
-            }
-            if (entry.gameOid > 0) {
-                addMenuItem(new BMenuItem(msgs.get("m.pm_watch_pardner"), "watch_pardner"));
-            }
-            addMenuItem(new BMenuItem(msgs.get("m.pm_remove_pardner"), "remove_pardner"));
-
-        } else if (isPresent) {
-            // otherwise add an item for inviting them to be our pardner
-            addMenuItem(new BMenuItem(msgs.get("m.pm_invite_pardner"), "invite_pardner"));
-        }
-
-        // add invitation option if they're either present or a pardner
-        if (shouldShowGangInvite() && (isPresent || entry != null)) {
-            addMenuItem(new BMenuItem(_ctx.xlate(BangCodes.BANG_MSGS, "m.pm_invite_member"),
-                "invite_member"));
-        }
-
-        // add an item for muting/unmuting (always allow unmuting, only allow muting if the caller
-        // indicates that we're in a context where it is appropriate)
-        boolean muted = _ctx.getMuteDirector().isMuted(handle);
-        if (muted || isPresent) {
-            String mute = muted ? "unmute" : "mute";
-            addMenuItem(new BMenuItem(msgs.get("m.pm_" + mute), mute));
-        }
+        // add our menu items
+        addMenuItems(isPresent);
     }
 
     // from interface ActionListener
@@ -214,6 +166,60 @@ public class PlayerPopupMenu extends BPopupMenu
             } catch (Exception e) {
                 listener.requestFailed(e);
             }
+        }
+    }
+
+    protected void addMenuItems (boolean isPresent)
+    {
+        MessageBundle msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
+        PlayerObject self = _ctx.getUserObject();
+
+        // add an item for viewing their wanted poster
+        addMenuItem(new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
+
+        // if we're an admin/support, add a link to their admin account page
+        if (_ctx.getUserObject().tokens.isSupport()) {
+            addMenuItem(new BMenuItem(msgs.get("m.pm_view_account"), "view_account"));
+        }
+
+        // stop here if this is us
+        if (self.handle.equals(_handle)) {
+            return;
+        }
+
+        // add an item for viewing their wanted poster
+        if (isPresent) {
+            addMenuItem(new BMenuItem(msgs.get("m.pm_register_complaint"), "complain"));
+        }
+
+        // if they're our pardner, add some pardner-specific items
+        PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
+        if (entry != null) {
+            if (entry.isAvailable()) {
+                addMenuItem(new BMenuItem(msgs.get("m.pm_chat_pardner"), "chat_pardner"));
+            }
+            if (entry.gameOid > 0) {
+                addMenuItem(new BMenuItem(msgs.get("m.pm_watch_pardner"), "watch_pardner"));
+            }
+            addMenuItem(new BMenuItem(msgs.get("m.pm_remove_pardner"), "remove_pardner"));
+
+        } else if (isPresent) {
+            // otherwise add an item for inviting them to be our pardner
+            addMenuItem(new BMenuItem(msgs.get("m.pm_invite_pardner"), "invite_pardner"));
+        }
+
+        // add gang invitation option if they're either present or a pardner
+        if (shouldShowGangInvite() && (isPresent || entry != null)) {
+            addMenuItem(new BMenuItem(_ctx.xlate(BangCodes.BANG_MSGS, "m.pm_invite_member"),
+                "invite_member"));
+        }
+
+        // add an item for muting/unmuting (always allow unmuting, only allow muting if the caller
+        // indicates that we're in a context where it is appropriate)
+        boolean muted = _ctx.getMuteDirector().isMuted(_handle);
+        if (muted || isPresent) {
+            String mute = muted ? "unmute" : "mute";
+            addMenuItem(new BMenuItem(msgs.get("m.pm_" + mute), mute));
         }
     }
 

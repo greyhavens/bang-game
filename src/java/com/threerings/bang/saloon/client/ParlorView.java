@@ -58,7 +58,6 @@ public class ParlorView extends ShopView
         add(_chat = new PlaceChatView(ctx, _msgs.get("m.parlor_chat")),
             new Rectangle(552, 78, 445, 551));
 
-
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
         _status.setText(_msgs.get("m.intro_tip"));
@@ -127,8 +126,7 @@ public class ParlorView extends ShopView
     public void actionPerformed (ActionEvent event)
     {
         if ("to_saloon".equals(event.getAction())) {
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
+            BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.saloonOid);
 
         } else if ("settings".equals(event.getAction())) {
@@ -183,7 +181,6 @@ public class ParlorView extends ShopView
     protected ParlorController _ctrl;
     protected StatusLabel _status;
     protected PlaceChatView _chat;
-    protected BContainer _ccont;
     protected BButton _settings;
 
     protected ParlorGameConfigView _gconfig;

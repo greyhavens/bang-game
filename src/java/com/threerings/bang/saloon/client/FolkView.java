@@ -79,7 +79,7 @@ public class FolkView extends BContainer
             boolean ff = _user.isFriend(info.playerId);
             if (pard || !_ffOnly || ff) {
                 Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, handle, pard, ff));
+                insertCell(new FolkCell(_ctx, handle, pard, _ffOnly && ff));
             }
         }
     }
@@ -168,7 +168,7 @@ public class FolkView extends BContainer
             boolean ff = _user.isFriend(((BangOccupantInfo) info).playerId);
             if ((!_ffOnly || ff) &&  !_folks.containsKey(info.username)) {
                 Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, handle, false, ff));
+                insertCell(new FolkCell(_ctx, handle, false, _ffOnly && ff));
             }
         }
 

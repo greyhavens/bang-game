@@ -24,6 +24,7 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.bang.chat.client.PardnerChatView;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.InvitePardnerDialog;
+import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.WantedPosterView;
 import com.threerings.bang.data.AvatarInfo;
@@ -121,51 +122,14 @@ public class FolkCell extends BContainer
     }
 
     /**
-     * A popup menu that is displayed when a player right clicks on an entry
-     * in the friendly folks list in the Saloon.
+     * A popup menu that is displayed when a player right clicks on an entry in the friendly folks
+     * list in the Saloon.
      */
-    protected class FolkPopupMenu extends BPopupMenu
-        implements ActionListener
+    protected class FolkPopupMenu extends PlayerPopupMenu
     {
-        /**
-         * Creates a popup menu for the specified player.
-         */
         public FolkPopupMenu (BWindow parent, Handle handle)
         {
-            super(parent);
-
-            setStyleClass("folk_menu");
-            addListener(this);
-            setLayer(BangUI.POPUP_MENU_LAYER);
-
-            MessageBundle bangMsgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
-            MessageBundle saloonMsgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
-
-            // add their name as a non-menu item
-            String title = "@=u(" + handle.toString() + ")";
-            add(new BLabel(title, "popupmenu_title"));
-
-            if (!_isSelf) {
-                addMenuItem(new BMenuItem(saloonMsgs.get("m.folk_chat"), "chat"));
-            }
-
-            // add an item for viewing their wanted poster
-            addMenuItem(new BMenuItem(bangMsgs.get("m.pm_view_poster"), "view_poster"));
-
-            // add an item for muting/unmuting
-            if (!_isSelf) {
-                String mute = _ctx.getMuteDirector().isMuted(handle) ? "unmute" : "mute";
-                addMenuItem(new BMenuItem(bangMsgs.get("m.pm_" + mute), mute));
-            }
-
-            if (_isFriend) {
-                // add an item for removing them from the list
-                addMenuItem(new BMenuItem(saloonMsgs.get("m.folk_remove"), "remove"));
-            }
-            if (!_isPardner && !_isSelf) {
-                // add an item for inviting them to be our pardner
-                addMenuItem(new BMenuItem(bangMsgs.get("m.pm_invite_pardner"), "invite_pardner"));
-            }
+            super(FolkCell.this._ctx, parent, handle, true);
         }
 
         // from interface ActionListener
@@ -175,8 +139,7 @@ public class FolkCell extends BContainer
                 _chat.openUserTab(_handle, getAvatar(), true);
 
             } else if ("remove".equals(event.getAction())) {
-                OccupantInfo info =
-                    _ctx.getOccupantDirector().getOccupantInfo(_handle);
+                OccupantInfo info = _ctx.getOccupantDirector().getOccupantInfo(_handle);
                 if (info == null) {
                     return; // shouldn't happen
                 }
@@ -187,11 +150,10 @@ public class FolkCell extends BContainer
                     public void requestProcessed () {
                         // TODO: confirmation?
                     }
-                    public void requestFailed(String cause) {
-                        log.warning("Folk request failed: " + cause);
+                    public void requestFailed (String cause) {
                         _ctx.getChatDirector().displayFeedback(
-                            GameCodes.GAME_MSGS, MessageBundle.tcompose(
-                                "m.folk_note_failed", cause));
+                            GameCodes.GAME_MSGS,
+                            MessageBundle.tcompose("m.folk_note_failed", cause));
                     }
                 };
 
@@ -200,18 +162,25 @@ public class FolkCell extends BContainer
                 psvc.noteFolk(_ctx.getClient(), playerId,
                               PlayerService.FOLK_NEUTRAL, listener);
 
-            } else if ("mute".equals(event.getAction())) {
-                _ctx.getMuteDirector().setMuted(_handle, true);
+            } else {
+                super.actionPerformed(event);
+            }
+        }
 
-            } else if ("unmute".equals(event.getAction())) {
-                _ctx.getMuteDirector().setMuted(_handle, false);
+        @Override // from PlayerPopupMenu
+        protected void addMenuItems (boolean isPresent)
+        {
+            MessageBundle msgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
-            } else if ("invite_pardner".equals(event.getAction())) {
-                _ctx.getBangClient().displayPopup(
-                    new InvitePardnerDialog(_ctx, null, _handle), true, 400);
+            if (!_isSelf) {
+                addMenuItem(new BMenuItem(msgs.get("m.folk_chat"), "chat"));
+            }
 
-            } else if ("view_poster".equals(event.getAction())) {
-                WantedPosterView.displayWantedPoster(_ctx, _handle);
+            super.addMenuItems(isPresent);
+
+            if (_isFriend) {
+                // add an item for removing them from the list
+                addMenuItem(new BMenuItem(msgs.get("m.folk_remove"), "remove"));
             }
         }
     }
