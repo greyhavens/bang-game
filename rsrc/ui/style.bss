@@ -1922,7 +1922,7 @@ roster_entry_inactive {
 
 history_view {
   background: image "ui/window/border_ornate.png" framexy;
-  size: 500 -1;
+  size: 700 -1;
   padding: 15 15;
 }
 
@@ -1936,7 +1936,6 @@ history_date {
 history_desc {
   font: "Dom Casual" plain 17;
   color: #5C361D;
-  size: 325 -1;
 }
 
 play_view {
@@ -2167,7 +2166,7 @@ outfit_item {
 
 outfit_tip {
   font: "Helvetica" plain 14;
-  color: #F7E17E;
+  color: #4C2602;
   vertical-align: top;
 }
 
