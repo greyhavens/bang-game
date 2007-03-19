@@ -21,6 +21,9 @@ public class PlayerRecord
     /** A flag indicating the player's gender. */
     public static final int IS_MALE_FLAG = 1 << 0;
 
+    /** A flag indicating this account is a "demo" account. */
+    public static final int IS_DEMO_ACCOUNT = 1 << 1;
+
     /** This player's unique identifier. */
     public int playerId;
 

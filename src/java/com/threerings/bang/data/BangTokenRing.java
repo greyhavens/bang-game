@@ -10,11 +10,14 @@ import com.threerings.crowd.data.TokenRing;
  */
 public class BangTokenRing extends TokenRing
 {
-    /** TEMP: a flag to limit music only to ourselves and the SomaTone guys. */
+    /** Indicates that the user is an "insider" and may get access to pre-release stuff. */
     public static final int INSIDER = (1 << 1);
 
     /** Indicates that the user is support personel. */
     public static final int SUPPORT = (1 << 2);
+
+    /** Indicates that the user is a demo account. */
+    public static final int DEMO = (1 << 3);
 
     /**
      * A default constructor, used when unserializing token rings.
@@ -32,7 +35,7 @@ public class BangTokenRing extends TokenRing
     }
 
     /**
-     * TEMP: Convenience function for checking whether this ring holds the {@link #INSIDER} token.
+     * Convenience function for checking whether this ring holds the {@link #INSIDER} token.
      */
     public boolean isInsider ()
     {
@@ -45,5 +48,13 @@ public class BangTokenRing extends TokenRing
     public boolean isSupport ()
     {
         return holdsToken(SUPPORT);
+    }
+
+    /**
+     * Convenience function for checking whether this ring holds the {@link #DEMO} token.
+     */
+    public boolean isDemo ()
+    {
+        return holdsToken(DEMO);
     }
 }

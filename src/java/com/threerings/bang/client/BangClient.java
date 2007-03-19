@@ -1279,6 +1279,10 @@ public class BangClient extends BasicClient
             if (!_isIdle && idle > ChatCodes.DEFAULT_IDLE_TIME) {
                 updateIdle(true, idle);
             }
+            // if this is a demo account, don't log them off for being idle
+            if (_ctx.getUserObject() != null && _ctx.getUserObject().tokens.isDemo()) {
+                return;
+            }
             if (idle > LOGOFF_DELAY) {
                 if (_ctx.getClient().isLoggedOn()) {
                     cancel();
