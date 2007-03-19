@@ -70,7 +70,7 @@ public class WhereToView extends SteelWindow
 
         BImage underline = _ctx.loadImage("ui/window/underline.png");
         BContainer tutcol = new BContainer(
-                GroupLayout.makeVert(GroupLayout.TOP).setGap(5).setOffAxisPolicy(GroupLayout.STRETCH));
+            GroupLayout.makeVert(GroupLayout.TOP).setGap(5).setOffAxisPolicy(GroupLayout.STRETCH));
         tutcol.add(new BLabel(_msgs.get("m.whereto_tuts"), "where_title"));
         tutcol.add(new BLabel(new ImageIcon(underline)));
         tutcol.add(new BLabel(_msgs.get("m.whereto_intro"), "where_info"));
@@ -121,7 +121,8 @@ public class WhereToView extends SteelWindow
         }
         horiz.add(bldgs);
 
-        if (!postGame && BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
+        if (!postGame && BangPrefs.shouldShowWhereTo(_ctx.getUserObject()) &&
+            !_ctx.getUserObject().tokens.isDemo()) {
             BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
             ((GroupLayout)row.getLayoutManager()).setGap(25);
             row.add(_nowhere = new BCheckBox(_msgs.get("m.no_whereto")));

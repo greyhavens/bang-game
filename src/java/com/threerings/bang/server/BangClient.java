@@ -83,14 +83,18 @@ public class BangClient extends CrowdClient
 
         // if we have auth data in the form of a token ring, use it
         if (_authdata instanceof BangTokenRing) {
-            // we can set things directly here rather than use the setter methods because the user
-            // object is not yet out in the wild
-            user.tokens = (BangTokenRing)_authdata;
+            BangTokenRing atokens = (BangTokenRing)_authdata;
+            // add tokens provided by our authentication plugin; we can set things directly here
+            // because the user object is not yet out in the wild
+            for (int ii = 0; ii < 31; ii++) {
+                int token = (1 << ii);
+                if (atokens.holdsToken(ii)) {
+                    user.tokens.setToken(ii);
+                }
+            }
         } else {
             log.warning("Missing or bogus authdata [who=" + _username +
                         ", adata=" + _authdata + "].");
-            // give them zero privileges
-            user.tokens = new BangTokenRing();
         }
 
         // configure the player in the town for this server

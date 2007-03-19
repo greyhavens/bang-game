@@ -101,7 +101,7 @@ public class PlayerObject extends BodyObject
     public boolean isMale;
 
     /** Indicates which access control tokens are held by this user. */
-    public BangTokenRing tokens;
+    public BangTokenRing tokens = new BangTokenRing();
 
     /** The id of the user's gang, if any. */
     public int gangId;

@@ -25,6 +25,7 @@ import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
@@ -34,10 +35,11 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.data.TrainTicket;
+import com.threerings.bang.util.BangUtil;
+
 import com.threerings.bang.server.persist.FolkRecord;
 import com.threerings.bang.server.persist.PardnerRecord;
 import com.threerings.bang.server.persist.PlayerRecord;
-import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -97,6 +99,9 @@ public class BangClientResolver extends CrowdClientResolver
             buser.handle = new Handle(player.handle);
         }
         buser.isMale = player.isSet(PlayerRecord.IS_MALE_FLAG);
+        if (player.isSet(PlayerRecord.IS_DEMO_ACCOUNT)) {
+            buser.tokens.setToken(BangTokenRing.DEMO, true);
+        }
         buser.scrip = player.scrip;
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(player.accountName);
 
