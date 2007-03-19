@@ -66,7 +66,7 @@ public interface GangCodes extends InvocationCodes
     public static final long DONATION_DELAY = 7L * 24 * 60 * 60 * 1000;
 
     /** The starting number of icons gangs can have on their buckles. */
-    public static final int BASE_MAX_BUCKLE_ICONS = 3;
+    public static final int DEFAULT_MAX_BUCKLE_ICONS = 1;
 
     /** The gang weight classes. */
     public static final WeightClass[] WEIGHT_CLASSES = {

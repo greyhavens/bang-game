@@ -13,6 +13,7 @@ import com.threerings.crowd.chat.data.SpeakObject;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BuckleInfo;
+import com.threerings.bang.data.BuckleUpgrade;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.saloon.data.TopRankObject;
@@ -181,7 +182,13 @@ public class GangObject extends DObject
      */
     public int getMaxBuckleIcons ()
     {
-        return GangCodes.BASE_MAX_BUCKLE_ICONS;
+        int icons = GangCodes.DEFAULT_MAX_BUCKLE_ICONS;
+        for (Item item : inventory) {
+            if (item instanceof BuckleUpgrade) {
+                icons = Math.max(icons, ((BuckleUpgrade)item).getIcons());
+            }
+        }
+        return icons;
     }
 
     /**

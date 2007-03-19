@@ -47,6 +47,7 @@ import com.threerings.bang.client.bui.RequestButton;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BucklePart;
+import com.threerings.bang.data.BuckleUpgrade;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.util.BangContext;
 
@@ -391,8 +392,7 @@ public class BuckleDialog extends BDecoratedWindow
                 }
             }, brect);
 
-            String msg = MessageBundle.compose("m.buckle_type",
-                "m.buckle_icons." + _gangobj.getMaxBuckleIcons());
+            String msg = BuckleUpgrade.getName(_gangobj.getMaxBuckleIcons());
             add(new BLabel(_msgs.xlate(msg), "buckle_preview_label"),
                 new Rectangle(22, 149, 176, 14));
         }

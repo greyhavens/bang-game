@@ -16,6 +16,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.avatar.util.BucklePartCatalog;
 
 import com.threerings.bang.gang.data.BucklePartGood;
+import com.threerings.bang.gang.data.BuckleUpgradeGood;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangObject;
@@ -53,6 +54,13 @@ public class GangGoodsCatalog
         for (byte ii = 1; ii < WEIGHT_CLASSES.length; ii++) {
             WeightClass wclass = WEIGHT_CLASSES[ii];
             registerGood(new WeightClassUpgradeGood(ii, 0, wclass.coins, wclass.aces), pf);
+        }
+
+        // and the buckle upgrades
+        for (int ii = 0; ii < BUCKLE_UPGRADE_COSTS.length; ii++) {
+            int[] costs = BUCKLE_UPGRADE_COSTS[ii];
+            registerGood(new BuckleUpgradeGood(
+                DEFAULT_MAX_BUCKLE_ICONS + ii + 1, 0, costs[0], costs[1]), pf);
         }
     }
 
@@ -145,4 +153,8 @@ public class GangGoodsCatalog
 
     /** Contains mappings from {@link GangGood} to {@link ProviderFactory} for all salable goods. */
     protected HashMap<GangGood, ProviderFactory> _providers = new HashMap<GangGood, ProviderFactory>();
+
+    /** The cost in coins/aces for each of the buckle upgrades. */
+    protected static final int[][] BUCKLE_UPGRADE_COSTS = {
+        { 5, 200 }, { 10, 400 }, { 20, 700 }, { 40, 1000} };
 }

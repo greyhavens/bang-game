@@ -6,25 +6,25 @@ package com.threerings.bang.gang.data;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BuckleUpgrade;
 import com.threerings.bang.data.Item;
-import com.threerings.bang.data.WeightClassUpgrade;
 
 /**
- * A weight class upgrade for sale.
+ * A buckle upgrade for sale.
  */
-public class WeightClassUpgradeGood extends GangGood
+public class BuckleUpgradeGood extends GangGood
 {
     /**
      * Creates a good representing the specified upgrade.
      */
-    public WeightClassUpgradeGood (byte weightClass, int scripCost, int coinCost, int aceCost)
+    public BuckleUpgradeGood (int icons, int scripCost, int coinCost, int aceCost)
     {
-        super("upgrades/weight_class_" + weightClass, scripCost, coinCost, aceCost);
-        _weightClass = weightClass;
+        super("upgrades/buckle_" + icons, scripCost, coinCost, aceCost);
+        _icons = (byte)icons;
     }
 
     /** A constructor only used during serialization. */
-    public WeightClassUpgradeGood ()
+    public BuckleUpgradeGood ()
     {
     }
 
@@ -37,26 +37,26 @@ public class WeightClassUpgradeGood extends GangGood
     // documentation inherited
     public boolean isAvailable (GangObject gang)
     {
-        return (gang.getWeightClass() < _weightClass);
+        return (gang.getMaxBuckleIcons() < _icons);
     }
 
     @Override // from Good
     public Item createItem (int gangId)
     {
-        return new WeightClassUpgrade(gangId, _weightClass);
+        return new BuckleUpgrade(gangId, _icons);
     }
 
     @Override // from Good
     public String getName ()
     {
-        return WeightClassUpgrade.getName(_weightClass);
+        return BuckleUpgrade.getName(_icons);
     }
 
     @Override // from Good
     public String getTip ()
     {
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.weight_class_upgrade_tip");
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.buckle_upgrade_tip");
     }
 
-    protected byte _weightClass;
+    protected byte _icons;
 }
