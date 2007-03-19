@@ -16,6 +16,7 @@ import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.WeightClassUpgrade;
+import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangMemberEntry;
@@ -146,6 +147,17 @@ public class GangUtil
         } else {
             return MessageBundle.compose("m.times_" + ndescs, descs.toArray(new String[ndescs]));
         }
+    }
+
+    /**
+     * Puts a statement in quotes, substituting "..." if it's empty and running it through the
+     * chat filter if not.
+     */
+    public static String quoteStatement (BangContext ctx, String statement)
+    {
+        String fstmt = (statement.trim().length() == 0) ? "..." :
+            ctx.getChatDirector().filter(statement, null, false);
+        return "\"" + fstmt + "\"";
     }
 
     /** Sorts active members before inactive, then by decreasing seniority. */

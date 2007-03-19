@@ -41,6 +41,7 @@ import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
+import com.threerings.bang.gang.util.GangUtil;
 
 /**
  * Displays information about the gang for its members: notoriety, statement, contents of coffers,
@@ -104,7 +105,8 @@ public class GangInfoView extends BContainer
         rcont.add(ncont, GroupLayout.FIXED);
 
         BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
-        scont.add(_statement = new BLabel(gangobj.statement, "gang_statement"));
+        scont.add(_statement = new BLabel(GangUtil.quoteStatement(_ctx, _gangobj.statement),
+            "gang_statement"));
         BContainer pcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         pcont.add(_page = new BButton(_msgs.get("m.home_page"), this, "page"));
         _page.setStyleClass("alt_button");
@@ -187,7 +189,7 @@ public class GangInfoView extends BContainer
             if (name.equals(GangObject.NOTORIETY)) {
                 _notoriety.setText(getNotorietyDesc());
             } else if (name.equals(GangObject.STATEMENT)) {
-                _statement.setText(_gangobj.statement);
+                _statement.setText(GangUtil.quoteStatement(_ctx, _gangobj.statement));
             } else if (name.equals(GangObject.URL)) {
                 _page.setVisible(_gangobj.getURL() != null);
             } else if (name.equals(GangObject.BUCKLE)) {

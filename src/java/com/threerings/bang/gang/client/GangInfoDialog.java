@@ -40,6 +40,7 @@ import com.threerings.bang.avatar.client.BuckleView;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangInfo;
 import com.threerings.bang.gang.data.HideoutCodes;
+import com.threerings.bang.gang.util.GangUtil;
 
 /**
  * Displays information about a gang to any interested parties, much like the Wanted Poster
@@ -146,7 +147,8 @@ public class GangInfoDialog extends BWindow
         scont.add(createLabel("underline_short"));
 
         scont.add(new Spacer(1, 8));
-        scont.add(new BLabel(info.statement, "gang_info_statement"));
+        scont.add(new BLabel(GangUtil.quoteStatement(_ctx, info.statement),
+            "gang_info_statement"));
         scont.add(new Spacer(1, 15));
 
         try {
