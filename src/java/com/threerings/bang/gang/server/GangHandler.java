@@ -58,6 +58,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.WeightClassUpgrade;
 import com.threerings.bang.server.BangPeerManager.RemotePlayerObserver;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.BangServer.PlayerObserver;
@@ -282,7 +283,16 @@ public class GangHandler
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent event)
     {
-        if (!event.getName().equals(GangObject.MEMBERS)) {
+        String name = event.getName();
+        if (name.equals(GangObject.INVENTORY) &&
+            event.getEntry() instanceof WeightClassUpgrade && _client == null) {
+            // update weight class and notoriety on purchase of upgrade
+            _gangobj.setNotoriety(GangUtil.getNotorietyLevel(
+                _gangobj.getWeightClass(), _notoriety));
+            gangInfoChanged();
+            return;
+
+        } else if (!name.equals(GangObject.MEMBERS)) {
             return;
         }
         // invalidate any cached gang info
@@ -499,7 +509,7 @@ public class GangHandler
         }
 
         // make sure they're not already a member and that we're not at our limit
-        int maxMembers = MEMBER_LIMITS[_gangobj.getWeightClass()];
+        int maxMembers = WEIGHT_CLASSES[_gangobj.getWeightClass()].maxMembers;
         if (_gangobj.members.containsKey(target)) {
             throw new InvocationException(MessageBundle.tcompose(
                 "e.already_member_this", target));
@@ -541,7 +551,7 @@ public class GangHandler
         verifyLocalOrPeer(caller);
 
         // update the database
-        final int maxMembers = MEMBER_LIMITS[_gangobj.getWeightClass()];
+        final int maxMembers = WEIGHT_CLASSES[_gangobj.getWeightClass()].maxMembers;
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
                 _error = BangServer.gangrepo.deleteInvite(_gangId, maxMembers, playerId, accept);

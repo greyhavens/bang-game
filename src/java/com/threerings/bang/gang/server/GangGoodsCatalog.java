@@ -16,8 +16,10 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.avatar.util.BucklePartCatalog;
 
 import com.threerings.bang.gang.data.BucklePartGood;
+import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangObject;
+import com.threerings.bang.gang.data.WeightClassUpgradeGood;
 
 import static com.threerings.bang.Log.log;
 
@@ -26,6 +28,7 @@ import static com.threerings.bang.Log.log;
  * with providers that are used to actually create and deliver the goods when purchased.
  */
 public class GangGoodsCatalog
+    implements GangCodes
 {
     /**
      * Creates a gang goods catalog, loading up the various bits necessary to create buckle
@@ -43,6 +46,13 @@ public class GangGoodsCatalog
                 registerGood(new BucklePartGood(
                     pclass + "/" + part.name, part.scrip, part.coins, part.aces), pf);
             }
+        }
+
+        // add the weight class upgrades
+        pf = new ItemProviderFactory();
+        for (byte ii = 1; ii < WEIGHT_CLASSES.length; ii++) {
+            WeightClass wclass = WEIGHT_CLASSES[ii];
+            registerGood(new WeightClassUpgradeGood(ii, 0, wclass.coins, wclass.aces), pf);
         }
     }
 
@@ -83,6 +93,20 @@ public class GangGoodsCatalog
         public abstract GangGoodProvider createProvider (
             GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
             throws InvocationException;
+    }
+
+    /** Used for non-colorized items. */
+    protected class ItemProviderFactory extends ProviderFactory {
+        public GangGoodProvider createProvider (
+            GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
+            throws InvocationException
+        {
+            return new GangItemProvider(gang, handle, admin, good, args) {
+                protected Item createItem () throws InvocationException {
+                    return _good.createItem(_gang.gangId);
+                }
+            };
+        }
     }
 
     /** Used for {@link BucklePartGood}s. */

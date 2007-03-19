@@ -10,6 +10,30 @@ import com.threerings.presents.data.InvocationCodes;
  */
 public interface GangCodes extends InvocationCodes
 {
+    /** Describes one of the "weight classes" for gangs. */
+    public static class WeightClass
+    {
+        /** The cost in aces to upgrade to this class. */
+        public int aces;
+
+        /** The coin cost to upgrade. */
+        public int coins;
+
+        /** The maximum number of members allowed in this class. */
+        public int maxMembers;
+
+        /** The notoriety level cutoffs. */
+        public int[] notorietyLevels;
+
+        public WeightClass (int aces, int coins, int maxMembers, int[] notorietyLevels)
+        {
+            this.aces = aces;
+            this.coins = coins;
+            this.maxMembers = maxMembers;
+            this.notorietyLevels = notorietyLevels;
+        }
+    }
+
     /** The message bundle identifier for our translation messages. */
     public static final String GANG_MSGS = "gang";
 
@@ -44,17 +68,13 @@ public interface GangCodes extends InvocationCodes
     /** The starting number of icons gangs can have on their buckles. */
     public static final int BASE_MAX_BUCKLE_ICONS = 3;
 
-    /** The number of gang weight classes. */
-    public static final int WEIGHT_CLASS_COUNT = 5;
-
-    /** The maximum number of members for each of the weight classes. */
-    public static final int[] MEMBER_LIMITS = { 20, 50, 100, 200, Integer.MAX_VALUE };
-
-    /** Notoriety level cutoffs for each of the weight classes. */
-    public static final int[][] NOTORIETY_LEVELS = {
-        { 130, 520, 1560, 3640, 6240, 9360 },
-        { 325, 1300, 3900, 9100, 15600, 23400 },
-        { 650, 2600, 7800, 18200, 31200, 46800 },
-        { 1300, 5200, 15600, 36400, 62400, 93600 },
-        { 2600, 10400, 31200, 72800, 124800, 187200 } };
+    /** The gang weight classes. */
+    public static final WeightClass[] WEIGHT_CLASSES = {
+        new WeightClass(0, 0, 20, new int[] { 130, 520, 1560, 3640, 6240, 9360 }),
+        new WeightClass(200, 5, 50, new int[] { 325, 1300, 3900, 9100, 15600, 23400 }),
+        new WeightClass(400, 10, 100, new int[] { 650, 2600, 7800, 18200, 31200, 46800 }),
+        new WeightClass(700, 20, 200, new int[] { 1300, 5200, 15600, 36400, 62400, 93600 }),
+        new WeightClass(1000, 40, Integer.MAX_VALUE,
+            new int[] { 2600, 10400, 31200, 72800, 124800, 187200 }),
+    };
 }

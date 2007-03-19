@@ -24,12 +24,15 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
+import com.threerings.bang.data.WeightClassUpgrade;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.BuckleView;
@@ -44,7 +47,7 @@ import com.threerings.bang.gang.data.HideoutObject;
  * etc.
  */
 public class GangInfoView extends BContainer
-    implements ActionListener, AttributeChangeListener
+    implements ActionListener
 {
     public GangInfoView (
         BangContext ctx, HideoutObject hideoutobj, GangObject gangobj, StatusLabel status)
@@ -95,12 +98,9 @@ public class GangInfoView extends BContainer
         bcont.add(new Spacer(40, 1));
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
-        String msg = "m.weight_class." + gangobj.getWeightClass();
-        ncont.add(new BLabel(_ctx.xlate(GangCodes.GANG_MSGS, msg), "gang_notoriety"));
+        ncont.add(_weightClass = new BLabel(getWeightClassDesc(), "gang_notoriety"));
         ncont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/diamond.png"))));
-        msg = "m.notoriety." + gangobj.notoriety;
-        ncont.add(_ranking = new BLabel("\"" + _ctx.xlate(GangCodes.GANG_MSGS, msg) + "\"",
-            "gang_notoriety"));
+        ncont.add(_notoriety = new BLabel(getNotorietyDesc(), "gang_notoriety"));
         rcont.add(ncont, GroupLayout.FIXED);
 
         BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
@@ -151,31 +151,58 @@ public class GangInfoView extends BContainer
         }
     }
 
-    // documentation inherited from interface AttributeChangeListener
-    public void attributeChanged (AttributeChangedEvent event)
-    {
-        String name = event.getName();
-        if (name.equals(GangObject.STATEMENT)) {
-            _statement.setText(_gangobj.statement);
-        } else if (name.equals(GangObject.URL)) {
-            _page.setVisible(_gangobj.getURL() != null);
-        } else if (name.equals(GangObject.BUCKLE)) {
-            _buckle.setBuckle(_gangobj.getBuckleInfo());
-        }
-    }
-
     @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();
-        _gangobj.addListener(this);
+        _gangobj.addListener(_updater);
     }
 
     @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        _gangobj.removeListener(this);
+        _gangobj.removeListener(_updater);
+    }
+
+    protected String getWeightClassDesc ()
+    {
+        String msg = "m.weight_class." + _gangobj.getWeightClass();
+        return _ctx.xlate(GangCodes.GANG_MSGS, msg);
+    }
+
+    protected String getNotorietyDesc ()
+    {
+        String msg = "m.notoriety." + _gangobj.notoriety;
+        return "\"" + _ctx.xlate(GangCodes.GANG_MSGS, msg) + "\"";
+    }
+
+    protected class Updater extends SetAdapter
+        implements AttributeChangeListener
+    {
+        // documentation inherited from interface AttributeChangeListener
+        public void attributeChanged (AttributeChangedEvent event)
+        {
+            String name = event.getName();
+            if (name.equals(GangObject.NOTORIETY)) {
+                _notoriety.setText(getNotorietyDesc());
+            } else if (name.equals(GangObject.STATEMENT)) {
+                _statement.setText(_gangobj.statement);
+            } else if (name.equals(GangObject.URL)) {
+                _page.setVisible(_gangobj.getURL() != null);
+            } else if (name.equals(GangObject.BUCKLE)) {
+                _buckle.setBuckle(_gangobj.getBuckleInfo());
+            }
+        }
+
+        @Override // from SetAdapter
+        public void entryAdded (EntryAddedEvent event)
+        {
+            if (event.getName().equals(GangObject.INVENTORY) &&
+                event.getEntry() instanceof WeightClassUpgrade) {
+                _weightClass.setText(getWeightClassDesc());
+            }
+        }
     }
 
     protected class StatementDialog extends RequestDialog
@@ -271,9 +298,10 @@ public class GangInfoView extends BContainer
     protected MessageBundle _msgs;
     protected HideoutObject _hideoutobj;
     protected GangObject _gangobj;
+    protected Updater _updater = new Updater();
 
     protected BuckleView _buckle;
-    protected BLabel _ranking, _statement;
+    protected BLabel _weightClass, _notoriety, _statement;
     protected CofferLabel _coffers;
     protected BButton _page;
 

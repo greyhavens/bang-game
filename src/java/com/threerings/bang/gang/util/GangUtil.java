@@ -15,6 +15,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.WeightClassUpgrade;
 
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangMemberEntry;
@@ -25,6 +26,7 @@ import static com.threerings.bang.Log.log;
  * Gang-related utility methods and classes.
  */
 public class GangUtil
+    implements GangCodes
 {
     /**
      * Determines a gang's weight class by running through its inventory looking for
@@ -32,8 +34,13 @@ public class GangUtil
      */
     public static byte getWeightClass (Iterable<Item> inventory)
     {
-        // no upgrades yet
-        return (byte)0;
+        int weightClass = 0;
+        for (Item item : inventory) {
+            if (item instanceof WeightClassUpgrade) {
+                weightClass = Math.max(weightClass, ((WeightClassUpgrade)item).getWeightClass());
+            }
+        }
+        return (byte)weightClass;
     }
 
     /**
@@ -41,7 +48,7 @@ public class GangUtil
      */
     public static byte getNotorietyLevel (int wclass, int notoriety)
     {
-        int[] cutoffs = GangCodes.NOTORIETY_LEVELS[wclass];
+        int[] cutoffs = WEIGHT_CLASSES[wclass].notorietyLevels;
         for (byte ii = 0; ii < cutoffs.length; ii++) {
             if (notoriety < cutoffs[ii]) {
                 return ii;
@@ -58,7 +65,7 @@ public class GangUtil
     {
         GangMemberEntry senior = null;
         for (GangMemberEntry entry : members) {
-            if (entry.rank == GangCodes.LEADER_RANK && entry.isActive() &&
+            if (entry.rank == LEADER_RANK && entry.isActive() &&
                 (senior == null || entry.joined < senior.joined)) {
                 senior = entry;
             }
@@ -75,7 +82,7 @@ public class GangUtil
     {
         ArrayList<GangMemberEntry> entries = new ArrayList<GangMemberEntry>();
         for (GangMemberEntry entry : members) {
-            if ((entry.rank == GangCodes.LEADER_RANK) == leaders) {
+            if ((entry.rank == LEADER_RANK) == leaders) {
                 entries.add(entry);
             }
         }

@@ -19,6 +19,7 @@ import com.threerings.bang.data.Song;
 import com.threerings.bang.data.Star;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.data.UnitPass;
+import com.threerings.bang.data.WeightClassUpgrade;
 
 import static com.threerings.bang.Log.log;
 
@@ -105,6 +106,7 @@ public class ItemFactory
         registerItemClass(Star.class);
         registerItemClass(BucklePart.class);
         registerItemClass(FreeTicket.class);
+        registerItemClass(WeightClassUpgrade.class);
         // end of registration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 
