@@ -12,13 +12,14 @@ import com.samskivert.util.ComparableArrayList;
 import com.samskivert.util.IntTuple;
 import com.samskivert.velocity.InvocationContext;
 
-import com.threerings.parlor.rating.util.Percentiler;
+import com.threerings.stats.data.IntStat;
+import com.threerings.stats.data.Stat;
 
+import com.threerings.parlor.rating.util.Percentiler;
 import com.threerings.user.OOOUser;
 
-import com.threerings.bang.data.IntStat;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.server.persist.StatRepository;
+import com.threerings.bang.data.StatType;
+import com.threerings.bang.server.persist.BangStatRepository;
 
 import com.threerings.bang.web.OfficeApp;
 
@@ -32,9 +33,8 @@ public class player_stats extends AdminLogic
     public void invoke (OfficeApp app, InvocationContext ctx, OOOUser user)
         throws Exception
     {
-        ComparableArrayList<Stat.Type> types =
-            new ComparableArrayList<Stat.Type>();
-        for (Stat.Type type : Stat.Type.values()) {
+        ComparableArrayList<StatType> types = new ComparableArrayList<StatType>();
+        for (StatType type : StatType.values()) {
             if (type.isPersistent()) {
                 types.insertSorted(type);
             }
@@ -42,17 +42,15 @@ public class player_stats extends AdminLogic
         ctx.put("types", types);
 
         // if they specified a type, look it up
-        Stat.Type type = Stat.getType(
-            ParameterUtil.getIntParameter(
-                ctx.getRequest(), "type", 0, "error.invalid_type"));
+        StatType type = (StatType)Stat.getType(
+            ParameterUtil.getIntParameter(ctx.getRequest(), "type", 0, "error.invalid_type"));
         if (type == null) {
             return;
         }
 
-        final ComparableArrayList<StatRecord> stats =
-            new ComparableArrayList<StatRecord>();
+        final ComparableArrayList<StatRecord> stats = new ComparableArrayList<StatRecord>();
         final Percentiler tiler = new Percentiler();
-        StatRepository.Processor proc = new StatRepository.Processor() {
+        BangStatRepository.Processor proc = new BangStatRepository.Processor() {
             public void process (int playerId, String accountName, String handle,
                                  Date created, int sessionMinutes, Stat stat) {
                 StatRecord record = new StatRecord();
