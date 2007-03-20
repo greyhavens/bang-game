@@ -109,12 +109,12 @@ public class SaloonManager extends MatchHostManager
         // recruiting gangs are named after the gang
         Handle creator;
         if (type == ParlorInfo.Type.RECRUITING) {
-            creator = BangServer.gangmgr.requireGang(user.gangId).getGangObject().name;
             if (user.gangRank != GangCodes.LEADER_RANK) {
                 log.warning("Non-leader tried to create recruiting parlor [who=" +
                     user.who() + "].");
                 throw new InvocationException(INTERNAL_ERROR);
             }
+            creator = BangServer.gangmgr.requireGang(user.gangId).getGangObject().name;
         } else {
             creator = user.handle;
         }
