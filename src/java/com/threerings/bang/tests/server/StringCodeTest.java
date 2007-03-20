@@ -10,7 +10,7 @@ import com.samskivert.util.OneLineLogFormatter;
 
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.ServerConfig;
-import com.threerings.bang.server.persist.StatRepository;
+import com.threerings.bang.server.persist.BangStatRepository;
 
 /**
  * A standalone test for the stat repository dynamically assigned string code
@@ -27,7 +27,7 @@ public class StringCodeTest
         try {
             StaticConnectionProvider conprov =
                 new StaticConnectionProvider(ServerConfig.getJDBCConfig());
-            StatRepository statrepo = new StatRepository(conprov);
+            BangStatRepository statrepo = new BangStatRepository(conprov);
 
             // this should generate a warning
             System.out.println("Looking for missing code: " +

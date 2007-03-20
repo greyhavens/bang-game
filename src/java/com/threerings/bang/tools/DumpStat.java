@@ -18,14 +18,14 @@ import com.threerings.stats.data.StringSetStat;
 
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.ServerConfig;
-import com.threerings.bang.server.persist.StatRepository;
+import com.threerings.bang.server.persist.BangStatRepository;
 
 /**
  * Dumps information on a particular statistic.
  */
 public class DumpStat
 {
-    public interface Grinder extends StatRepository.Processor
+    public interface Grinder extends BangStatRepository.Processor
     {
         public void printSummary ();
     }
@@ -59,7 +59,7 @@ public class DumpStat
 
         StaticConnectionProvider conprov =
             new StaticConnectionProvider(ServerConfig.getJDBCConfig());
-        StatRepository statrepo = new StatRepository(conprov);
+        BangStatRepository statrepo = new BangStatRepository(conprov);
 
         Grinder grinder = null;
         switch (action) {

@@ -80,10 +80,10 @@ import com.threerings.bang.tourney.server.BangTourniesManager;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.TownObject;
+import com.threerings.bang.server.persist.BangStatRepository;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.RatingRepository;
-import com.threerings.bang.server.persist.StatRepository;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
@@ -174,7 +174,7 @@ public class BangServer extends CrowdServer
     public static ItemRepository itemrepo;
 
     /** Manages the persistent repository of stats. */
-    public static StatRepository statrepo;
+    public static BangStatRepository statrepo;
 
     /** Manages the persistent repository of ratings. */
     public static RatingRepository ratingrepo;
@@ -292,7 +292,7 @@ public class BangServer extends CrowdServer
         playrepo = new PlayerRepository(conprov);
         gangrepo = new GangRepository(conprov);
         itemrepo = new ItemRepository(conprov);
-        statrepo = new StatRepository(conprov);
+        statrepo = new BangStatRepository(conprov);
         ratingrepo = new RatingRepository(conprov);
         lookrepo = new LookRepository(conprov);
         bountyrepo = new BountyRepository(conprov);
