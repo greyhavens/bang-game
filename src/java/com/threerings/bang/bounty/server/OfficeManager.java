@@ -20,6 +20,7 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
@@ -133,6 +134,11 @@ public class OfficeManager extends ShopManager
      */
     public void noteCompletedBounty (String bountyId, Handle player)
     {
+        // anonymous players don't get put on the list
+        if (player instanceof GuestHandle) {
+            return;
+        }
+
         // add their name to the appropriate completers list
         RecentCompleters comp = _offobj.completers.get(bountyId);
         if (comp == null) {
