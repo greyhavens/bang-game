@@ -200,10 +200,11 @@ public class BuckleDialog extends BDecoratedWindow
             // append or set and update preview
             if (_pcrec.isMultiple()) {
                 _buckle = ArrayUtil.append(_buckle, partId);
+                setSelectedIcon(_buckle.length - 1);
             } else {
                 _buckle[_pcrec.idx] = partId;
+                _preview.update();
             }
-            _preview.update();
 
         } else if (!selected && _pcrec.isMultiple() && pidx != -1) {
             // remove and deselect or adjust selection index
