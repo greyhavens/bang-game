@@ -181,5 +181,5 @@ public class GangGoodsCatalog
 
     /** The cost in coins/aces for each of the buckle upgrades. */
     protected static final int[][] BUCKLE_UPGRADE_COSTS = {
-        { 5, 200 }, { 10, 400 }, { 20, 700 }, { 40, 1000} };
+        { 5, 200 }, { 10, 400 }, { 20, 700 }, { 40, 1000 }, { 80, 2000 } };
 }

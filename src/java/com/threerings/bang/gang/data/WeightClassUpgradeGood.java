@@ -29,12 +29,6 @@ public class WeightClassUpgradeGood extends GangGood
     }
 
     // documentation inherited
-    public String getIconPath ()
-    {
-        return "goods/default.png";
-    }
-
-    // documentation inherited
     public boolean isAvailable (GangObject gang)
     {
         return (gang.getWeightClass() < _weightClass);

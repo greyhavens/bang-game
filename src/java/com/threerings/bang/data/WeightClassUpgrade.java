@@ -65,8 +65,7 @@ public class WeightClassUpgrade extends Item
     @Override // from Item
     public String getIconPath ()
     {
-        // return "goods/upgrades/weight_class_" + _weightClass + ".png";
-        return "goods/default.png";
+        return "goods/upgrades/weight_class_" + _weightClass + ".png";
     }
 
     @Override // documentation inherited

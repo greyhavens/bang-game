@@ -63,8 +63,7 @@ public class BuckleUpgrade extends Item
     @Override // from Item
     public String getIconPath ()
     {
-        // return "goods/upgrades/buckle_" + _icons + ".png";
-        return "goods/default.png";
+        return "goods/upgrades/buckle_" + _icons + ".png";
     }
 
     @Override // documentation inherited
