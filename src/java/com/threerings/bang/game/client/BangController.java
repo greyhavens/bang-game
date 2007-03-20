@@ -26,6 +26,8 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 import com.samskivert.swing.event.CommandEvent;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -37,18 +39,16 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
-import com.threerings.util.MessageBundle;
 
 import com.threerings.parlor.game.client.GameController;
+import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.client.BangMetrics;
 import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.data.BangBootstrapData;
-import com.threerings.bang.data.StatSet;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.AvatarView;
-
 import com.threerings.bang.bounty.data.BountyConfig;
 
 import com.threerings.bang.game.data.BangConfig;

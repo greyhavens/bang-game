@@ -14,11 +14,11 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 
+import com.threerings.stats.data.IntStat;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.util.StateSaver;
-import com.threerings.bang.data.IntStat;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.Criterion;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
@@ -97,7 +97,7 @@ public abstract class CriterionEditor extends BContainer
     {
         public Criterion getCriterion () {
             IntStatCriterion crit = new IntStatCriterion();
-            crit.stat = (Stat.Type)_stat.getSelectedValue();
+            crit.stat = (StatType)_stat.getSelectedValue();
             crit.condition = (IntStatCriterion.Condition)_condition.getSelectedItem();
             crit.value = Integer.parseInt(_value.getText());
             return crit;
@@ -112,7 +112,7 @@ public abstract class CriterionEditor extends BContainer
 
         protected void createInterface () {
             if (_intstats.size() == 0) {
-                for (Stat.Type stat : Stat.Type.values()) {
+                for (StatType stat : StatType.values()) {
                     if (stat.isBounty() && stat.newStat() instanceof IntStat) {
                         _intstats.add(new BComboBox.Item(stat, _msgs.xlate(stat.key())));
                     }

@@ -16,7 +16,7 @@ import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Star;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bounty.data.BountyConfig;
@@ -47,7 +47,7 @@ public class BountyList extends BContainer
         Star.Difficulty firstUnavail = null, highestAvail = null;
         for (int ii = 0; ii < bounties.size(); ii++) {
             BountyConfig config = bounties.get(ii);
-            if (user.stats.containsValue(Stat.Type.BOUNTIES_COMPLETED, config.ident)) {
+            if (user.stats.containsValue(StatType.BOUNTIES_COMPLETED, config.ident)) {
                 completed++;
             } else if (config.isAvailable(user)) {
                 unlocked++;

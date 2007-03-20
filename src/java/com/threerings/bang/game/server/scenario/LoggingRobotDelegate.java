@@ -12,7 +12,7 @@ import com.jme.math.FastMath;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.piece.LoggingRobot;
@@ -174,7 +174,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
             LoggingRobot bot = (LoggingRobot)piece;
             _living[bot.getRobotType()]--;
             if (bot.isSuper() && shooter != -1) {
-                bangobj.stats[shooter].incrementStat(Stat.Type.HARD_ROBOT_KILLS, 1);
+                bangobj.stats[shooter].incrementStat(StatType.HARD_ROBOT_KILLS, 1);
             }
         }
     }

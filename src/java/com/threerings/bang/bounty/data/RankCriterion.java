@@ -13,7 +13,7 @@ import com.jme.util.export.OutputCapsule;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Criterion;
@@ -33,7 +33,7 @@ public class RankCriterion extends Criterion
     }
 
     // from Criterion
-    public void addWatchedStats (HashSet<Stat.Type> stats)
+    public void addWatchedStats (HashSet<StatType> stats)
     {
         // nada
     }

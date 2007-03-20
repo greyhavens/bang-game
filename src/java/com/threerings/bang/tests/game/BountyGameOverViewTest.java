@@ -13,14 +13,14 @@ import com.samskivert.util.RandomUtil;
 import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.DSet;
+import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.tests.TestApp;
 
@@ -88,10 +88,10 @@ public class BountyGameOverViewTest extends TestApp
         bangobj.awards = new Award[bangobj.players.length];
         bangobj.state = BangObject.GAME_OVER;
         bangobj.critStats = new StatSet();
-        bangobj.critStats.setStat(Stat.Type.CATTLE_RUSTLED, 5+RandomUtil.getInt(10));
-        bangobj.critStats.setStat(Stat.Type.UNITS_KILLED, 5);
-        bangobj.critStats.setStat(Stat.Type.UNITS_LOST, 2);
-        bangobj.critStats.setStat(Stat.Type.BRAND_POINTS, 250);
+        bangobj.critStats.setStat(StatType.CATTLE_RUSTLED, 5+RandomUtil.getInt(10));
+        bangobj.critStats.setStat(StatType.UNITS_KILLED, 5);
+        bangobj.critStats.setStat(StatType.UNITS_LOST, 2);
+        bangobj.critStats.setStat(StatType.BRAND_POINTS, 250);
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;

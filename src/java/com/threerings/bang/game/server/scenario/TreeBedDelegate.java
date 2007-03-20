@@ -14,8 +14,7 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.QuickSort;
 
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ClearPieceEffect;

@@ -35,6 +35,9 @@ import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.StreamablePoint;
 
+import com.threerings.stats.data.Stat;
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -64,8 +67,7 @@ import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.Rating;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
@@ -470,7 +472,7 @@ public class BangManager extends GameManager
         }
 
         // note that this player played a card
-        _bangobj.stats[card.owner].incrementStat(Stat.Type.CARDS_PLAYED, 1);
+        _bangobj.stats[card.owner].incrementStat(StatType.CARDS_PLAYED, 1);
 
         // let them know it worked
         listener.requestProcessed();
@@ -583,7 +585,7 @@ public class BangManager extends GameManager
                                     ", move=" + x + "/" + y + ", target=" + target +
                                     ", dam1=" + dam1 + ", dam2=" + dam2+ "].");
                     } else if (unit.owner != -1) {
-                        _bangobj.stats[unit.owner].incrementStat(Stat.Type.SHOTS_FIRED, 1);
+                        _bangobj.stats[unit.owner].incrementStat(StatType.SHOTS_FIRED, 1);
                     }
                 } else {
                     effect = ((MoveShootEffect)meffect).shotEffect;
@@ -605,7 +607,7 @@ public class BangManager extends GameManager
                     if (effect != null) {
                         deployEffect(target.owner, effect);
                         if (target.owner != -1) {
-                            _bangobj.stats[target.owner].incrementStat(Stat.Type.SHOTS_FIRED, 1);
+                            _bangobj.stats[target.owner].incrementStat(StatType.SHOTS_FIRED, 1);
                         }
                     }
                 }
@@ -995,7 +997,7 @@ public class BangManager extends GameManager
         // if this is a bounty game, set up a listener on the stat set so that we can broadcast the
         // values of our criterion related stats when they change
         if (_bconfig.type == BangConfig.Type.BOUNTY) {
-            final HashSet<Stat.Type> sset = new HashSet<Stat.Type>();
+            final HashSet<StatType> sset = new HashSet<StatType>();
             for (Criterion crit : _bconfig.criteria) {
                 crit.addWatchedStats(sset);
             }
@@ -1507,13 +1509,13 @@ public class BangManager extends GameManager
         // check for high noon
         if (cal.get(Calendar.HOUR_OF_DAY) == 12 && cal.get(Calendar.MINUTE) == 0 &&
             cal.get(Calendar.SECOND) == 0) {
-            user.stats.incrementStat(Stat.Type.MYSTERY_ONE, 1);
+            user.stats.incrementStat(StatType.MYSTERY_ONE, 1);
         }
 
         // check for christmas morning
         if (cal.get(Calendar.MONTH) == Calendar.DECEMBER &&
             cal.get(Calendar.DATE) == 25 && cal.get(Calendar.HOUR_OF_DAY) < 8) {
-            user.stats.incrementStat(Stat.Type.MYSTERY_TWO, 1);
+            user.stats.incrementStat(StatType.MYSTERY_TWO, 1);
         }
 
         // TODO: night owl
@@ -1690,7 +1692,7 @@ public class BangManager extends GameManager
             for (int ii = 0; ii < ranks.length; ii++) {
                 ranks[ii] = new RankRecord(
                     ii, _bangobj.perRoundPoints[_activeRoundId][ii],
-                    _rounds[_activeRoundId].stats[ii].getIntStat(Stat.Type.UNITS_KILLED),
+                    _rounds[_activeRoundId].stats[ii].getIntStat(StatType.UNITS_KILLED),
                     (isActivePlayer(ii) ? 1 : 0));
             }
 
@@ -1717,7 +1719,7 @@ public class BangManager extends GameManager
             }
 
             // record for all players still in the game that they "used" their units in this round
-            noteUnitsUsed(_purchases, Stat.Type.UNITS_USED, -1);
+            noteUnitsUsed(_purchases, StatType.UNITS_USED, -1);
 
             // also keep track of all big shot units used during the game
             for (Unit unit : _bangobj.bigShots) {
@@ -1792,7 +1794,7 @@ public class BangManager extends GameManager
             // practice tutorial as completed
             if (_bconfig.duration == BangConfig.Duration.PRACTICE &&
                 _bangobj.tick > _bangobj.duration/2) {
-                user.stats.addToSetStat(Stat.Type.TUTORIALS_COMPLETED,
+                user.stats.addToSetStat(StatType.TUTORIALS_COMPLETED,
                                         TutorialCodes.PRACTICE_PREFIX + _bconfig.getScenario(0));
             }
 
@@ -1838,12 +1840,12 @@ public class BangManager extends GameManager
                 }
 
                 if (failed == 0) {
-                    user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
+                    user.stats.addToSetStat(StatType.BOUNTY_GAMES_COMPLETED,
                                             _bounty.getStatKey(_bangobj.bountyGameId));
-                    if (!user.stats.containsValue(Stat.Type.BOUNTIES_COMPLETED, _bounty.ident) &&
+                    if (!user.stats.containsValue(StatType.BOUNTIES_COMPLETED, _bounty.ident) &&
                         _bounty.isCompleted(user)) {
                         completedBounty = true;
-                        user.stats.addToSetStat(Stat.Type.BOUNTIES_COMPLETED, _bounty.ident);
+                        user.stats.addToSetStat(StatType.BOUNTIES_COMPLETED, _bounty.ident);
                         // report this completion to the office manager
                         BangServer.officemgr.noteCompletedBounty(_bounty.ident, user.handle);
                     }
@@ -1956,9 +1958,9 @@ public class BangManager extends GameManager
 
             } else if (prec.user.isActive()) {
                 // we only track a couple of stats for unranked games: the number played
-                prec.user.stats.incrementStat(Stat.Type.UNRANKED_GAMES_PLAYED, 1);
+                prec.user.stats.incrementStat(StatType.UNRANKED_GAMES_PLAYED, 1);
                 // the amount of cash earned
-                prec.user.stats.incrementStat(Stat.Type.CASH_EARNED, award.cashEarned);
+                prec.user.stats.incrementStat(StatType.CASH_EARNED, award.cashEarned);
             }
         }
 
@@ -2080,7 +2082,7 @@ public class BangManager extends GameManager
                 int kills = 0;
                 for (int rr = 0; rr < _rounds.length; rr++) {
                     if (_rounds[rr].stats != null) {
-                        kills += _rounds[rr].stats[ii].getIntStat(Stat.Type.UNITS_KILLED);
+                        kills += _rounds[rr].stats[ii].getIntStat(StatType.UNITS_KILLED);
                     }
                 }
                 active[ii] = isActivePlayer(ii);
@@ -2220,7 +2222,7 @@ public class BangManager extends GameManager
 
         // record the move to this player's statistics
         if (unit.owner != -1) {
-            _bangobj.stats[unit.owner].incrementStat(Stat.Type.DISTANCE_MOVED, steps);
+            _bangobj.stats[unit.owner].incrementStat(StatType.DISTANCE_MOVED, steps);
         }
 
         // dispatch a move effect to actually move the unit
@@ -2228,7 +2230,7 @@ public class BangManager extends GameManager
         _onTheMove = unit;
         if (deployEffect(unit.owner, meffect) && meffect instanceof MoveShootEffect &&
             unit.owner != -1) {
-            _bangobj.stats[unit.owner].incrementStat(Stat.Type.SHOTS_FIRED, 1);
+            _bangobj.stats[unit.owner].incrementStat(StatType.SHOTS_FIRED, 1);
         }
         _onTheMove = null;
 
@@ -2363,7 +2365,7 @@ public class BangManager extends GameManager
         }
 
         // record the damage dealt statistic
-        _bangobj.stats[pidx].incrementStat(Stat.Type.DAMAGE_DEALT, total);
+        _bangobj.stats[pidx].incrementStat(StatType.DAMAGE_DEALT, total);
 
         // award points for the damage dealt: 1 point for each 10 units
         total /= 10;
@@ -2461,7 +2463,7 @@ public class BangManager extends GameManager
             if (!allRoundsCoop) {
                 BangServer.invoker.postUnit(new Invoker.Unit() {
                     public boolean invoke () {
-                        Stat stat = Stat.Type.CONSEC_WINS.newStat();
+                        Stat stat = StatType.CONSEC_WINS.newStat();
                         stat.setModified(true);
                         BangServer.statrepo.writeModified(user.playerId, new Stat[] { stat });
                         return false;
@@ -2477,25 +2479,25 @@ public class BangManager extends GameManager
         try {
             // if the game wasn't sufficiently long, certain stats don't count
             if (gameMins >= MIN_STATS_DURATION) {
-                user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
-                user.stats.incrementStat(Stat.Type.SESSION_GAMES_PLAYED, 1);
-                user.stats.incrementStat(Stat.Type.GAME_TIME, gameMins);
+                user.stats.incrementStat(StatType.GAMES_PLAYED, 1);
+                user.stats.incrementStat(StatType.SESSION_GAMES_PLAYED, 1);
+                user.stats.incrementStat(StatType.GAME_TIME, gameMins);
                 // cooperative games don't affect wins/losses
                 if (!allRoundsCoop) {
                     // increment consecutive wins for 1st place only
                     if (award.rank == 0) {
-                        user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
-                        user.stats.incrementStat(Stat.Type.CONSEC_WINS, 1);
+                        user.stats.incrementStat(StatType.GAMES_WON, 1);
+                        user.stats.incrementStat(StatType.CONSEC_WINS, 1);
                         // note this win for all the big shots they used
-                        noteUnitsUsed(_bigshots, Stat.Type.BIGSHOT_WINS, pidx);
+                        noteUnitsUsed(_bigshots, StatType.BIGSHOT_WINS, pidx);
                     } else {
-                        user.stats.setStat(Stat.Type.CONSEC_WINS, 0);
+                        user.stats.setStat(StatType.CONSEC_WINS, 0);
                     }
                     // increment consecutive losses for 4th place only
                     if (award.rank == 3) {
-                        user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 1);
+                        user.stats.incrementStat(StatType.CONSEC_LOSSES, 1);
                     } else {
-                        user.stats.setStat(Stat.Type.CONSEC_LOSSES, 0);
+                        user.stats.setStat(StatType.CONSEC_LOSSES, 0);
                     }
                 }
             }
@@ -2509,7 +2511,7 @@ public class BangManager extends GameManager
                 // accumulate stats tracked during this round
                 boolean competitive = _rounds[rr].scenario.getInfo().isCompetitive();
                 for (int ss = 0; ss < ACCUM_STATS.length; ss++) {
-                    Stat.Type type = ACCUM_STATS[ss];
+                    StatType type = ACCUM_STATS[ss];
                     // only track competitive stats for competitive rounds
                     if (type.isCompetitiveOnly() && !competitive) {
                         continue;
@@ -2523,9 +2525,9 @@ public class BangManager extends GameManager
                 }
 
                 // check to see if any "max" stat was exceeded in this round
-                user.stats.maxStat(Stat.Type.HIGHEST_POINTS, _bangobj.perRoundPoints[rr][pidx]);
+                user.stats.maxStat(StatType.HIGHEST_POINTS, _bangobj.perRoundPoints[rr][pidx]);
                 for (int ss = 0; ss < MAX_STATS.length; ss += 2) {
-                    Stat.Type type = MAX_STATS[ss+1];
+                    StatType type = MAX_STATS[ss+1];
                     // only track competitive stats for competitive rounds
                     if (type.isCompetitiveOnly() && !competitive) {
                         continue;
@@ -2536,7 +2538,7 @@ public class BangManager extends GameManager
             }
 
             // note their cash earned
-            user.stats.incrementStat(Stat.Type.CASH_EARNED, award.cashEarned);
+            user.stats.incrementStat(StatType.CASH_EARNED, award.cashEarned);
 
             // allow the scenario to record statistics as well
             _scenario.recordStats(_bangobj, gameMins, pidx, user);
@@ -2547,7 +2549,7 @@ public class BangManager extends GameManager
             // determine whether this player qualifies for a free ticket
             _tickets[pidx] = FreeTicket.checkQualifies(user, ServerConfig.townIndex);
             if (_tickets[pidx] != null) {
-                user.stats.addToSetStat(Stat.Type.FREE_TICKETS, _tickets[pidx].getTownId());
+                user.stats.addToSetStat(StatType.FREE_TICKETS, _tickets[pidx].getTownId());
             }
 
         } finally {
@@ -2558,7 +2560,7 @@ public class BangManager extends GameManager
     /**
      * A helper function for recording unit usage related stats.
      */
-    protected void noteUnitsUsed (PieceSet units, Stat.Type stat, int pidx)
+    protected void noteUnitsUsed (PieceSet units, StatType stat, int pidx)
     {
         for (Piece piece : units.values()) {
             if (!(piece instanceof Unit) || (piece.owner < 0) ||
@@ -3068,7 +3070,7 @@ public class BangManager extends GameManager
                         }
 
                         // hey, they seem to have activate a real bonus; count it
-                        _bangobj.stats[piece.owner].incrementStat(Stat.Type.BONUSES_COLLECTED, 1);
+                        _bangobj.stats[piece.owner].incrementStat(StatType.BONUSES_COLLECTED, 1);
                     }
                 }
             }
@@ -3225,18 +3227,18 @@ public class BangManager extends GameManager
     protected static final int MIN_STATS_DURATION = 2;
 
     /** Stats that we accumulate at the end of the game into the player's persistent stats. */
-    protected static final Stat.Type[] ACCUM_STATS = {
-        Stat.Type.UNITS_KILLED,
-        Stat.Type.UNITS_LOST,
-        Stat.Type.BONUSES_COLLECTED,
-        Stat.Type.CARDS_PLAYED,
-        Stat.Type.POINTS_EARNED,
-        Stat.Type.SHOTS_FIRED,
-        Stat.Type.DISTANCE_MOVED,
+    protected static final StatType[] ACCUM_STATS = {
+        StatType.UNITS_KILLED,
+        StatType.UNITS_LOST,
+        StatType.BONUSES_COLLECTED,
+        StatType.CARDS_PLAYED,
+        StatType.POINTS_EARNED,
+        StatType.SHOTS_FIRED,
+        StatType.DISTANCE_MOVED,
     };
 
     /** Stats that we max() at the end of the game into the player's persistent stats. */
-    protected static final Stat.Type[] MAX_STATS = {
-        Stat.Type.CONSEC_KILLS, Stat.Type.CONSEC_KILLS,
+    protected static final StatType[] MAX_STATS = {
+        StatType.CONSEC_KILLS, StatType.CONSEC_KILLS,
     };
 }

@@ -24,7 +24,7 @@ import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
@@ -257,7 +257,7 @@ public class BountyGameOverView extends SteelWindow
         BContainer games = new BContainer(new TableLayout(2, 2, 20));
         for (BountyConfig.GameInfo game : _bounty.games) {
             String key = _bounty.getStatKey(game.ident);
-            boolean gcompleted = _user.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED, key);
+            boolean gcompleted = _user.stats.containsValue(StatType.BOUNTY_GAMES_COMPLETED, key);
             BContainer pair = GroupLayout.makeHBox(GroupLayout.LEFT);
             pair.add(new BLabel(gcompleted ? BangUI.completed : BangUI.incomplete));
             pair.add(new BLabel(game.name, "bover_game"));

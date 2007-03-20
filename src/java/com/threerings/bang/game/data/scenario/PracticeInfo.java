@@ -6,7 +6,7 @@ package com.threerings.bang.game.data.scenario;
 import java.util.HashMap;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 /**
  * Contains metadata on the Practice scenario.
@@ -50,7 +50,7 @@ public class PracticeInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type[] getObjectives ()
+    public StatType[] getObjectives ()
     {
         return null;
     }

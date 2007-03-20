@@ -16,7 +16,7 @@ import com.threerings.crowd.chat.client.CurseFilter;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.DeploymentConfig;

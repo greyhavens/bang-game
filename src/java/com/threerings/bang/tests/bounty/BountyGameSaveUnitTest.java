@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.export.binary.BinaryImporter;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.BangConfig;
 
 import com.threerings.bang.bounty.data.IntStatCriterion;
@@ -40,7 +40,7 @@ public class BountyGameSaveUnitTest extends TestCase
             "frontier_town/steamgunman", "frontier_town/sharpshooter" });
 
         IntStatCriterion crit = new IntStatCriterion();
-        crit.stat = Stat.Type.POINTS_EARNED;
+        crit.stat = StatType.POINTS_EARNED;
         crit.condition = IntStatCriterion.Condition.AT_LEAST;
         crit.value = 500;
         config.criteria.add(crit);

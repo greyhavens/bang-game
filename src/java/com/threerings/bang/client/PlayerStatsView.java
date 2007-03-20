@@ -7,9 +7,11 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.layout.TableLayout;
 
+import com.threerings.stats.data.Stat;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -35,12 +37,12 @@ public class PlayerStatsView extends BContainer
         Stat[] stats = user.stats.toArray(new Stat[user.stats.size()]);
         // TODO: sort on translated key
         for (int ii = 0; ii < stats.length; ii++) {
-            boolean hidden = stats[ii].getType().isHidden();
+            StatType type = (StatType)stats[ii].getType();
+            boolean hidden = type.isHidden();
             if (hidden && !_ctx.getUserObject().tokens.isAdmin()) {
                 continue;
             }
-            String key = stats[ii].getType().key();
-            add(new BLabel(hidden ? key : _ctx.xlate(BangCodes.STATS_MSGS, key)));
+            add(new BLabel(hidden ? type.key() : _ctx.xlate(BangCodes.STATS_MSGS, type.key())));
             add(new BLabel(stats[ii].valueToString()));
         }
     }

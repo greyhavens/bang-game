@@ -37,7 +37,7 @@ import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
@@ -198,7 +198,7 @@ public class WhereToView extends SteelWindow
         BIcon icon;
         String btext;
         boolean unplayed = false;
-        if (_ctx.getUserObject().stats.containsValue(Stat.Type.TUTORIALS_COMPLETED, tid)) {
+        if (_ctx.getUserObject().stats.containsValue(StatType.TUTORIALS_COMPLETED, tid)) {
             icon = BangUI.completed;
             btext = "m.tut_replay";
         } else {

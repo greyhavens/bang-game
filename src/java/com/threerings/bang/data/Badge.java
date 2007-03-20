@@ -16,6 +16,8 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.game.data.card.Card;
@@ -41,57 +43,57 @@ public class Badge extends Item
         // games played badges
         GAMES_PLAYED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5;
+                return user.stats.getIntStat(StatType.GAMES_PLAYED) >= 5;
             }
         },
         GAMES_PLAYED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 50;
+                return user.stats.getIntStat(StatType.GAMES_PLAYED) >= 50;
             }
         },
         GAMES_PLAYED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 500;
+                return user.stats.getIntStat(StatType.GAMES_PLAYED) >= 500;
             }
         },
         GAMES_PLAYED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 2000;
+                return user.stats.getIntStat(StatType.GAMES_PLAYED) >= 2000;
             }
         },
         GAMES_PLAYED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
+                return user.stats.getIntStat(StatType.GAMES_PLAYED) >= 5000;
             }
         },
 
         // units killed badges
         UNITS_KILLED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 50;
+                return user.stats.getIntStat(StatType.UNITS_KILLED) >= 50;
             }
         },
         UNITS_KILLED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 500;
+                return user.stats.getIntStat(StatType.UNITS_KILLED) >= 500;
             }
         },
         UNITS_KILLED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 5000;
+                return user.stats.getIntStat(StatType.UNITS_KILLED) >= 5000;
             }
         },
         UNITS_KILLED_4 {
             public boolean qualifies (PlayerObject user) {
-                float killRatio = user.stats.getIntStat(Stat.Type.UNITS_KILLED) /
-                    Math.max(1f, user.stats.getIntStat(Stat.Type.UNITS_LOST));
+                float killRatio = user.stats.getIntStat(StatType.UNITS_KILLED) /
+                    Math.max(1f, user.stats.getIntStat(StatType.UNITS_LOST));
                 return UNITS_KILLED_2.qualifies(user) && (killRatio >= 1.7f);
             }
         },
         UNITS_KILLED_5 {
             public boolean qualifies (PlayerObject user) {
-                float killRatio = user.stats.getIntStat(Stat.Type.UNITS_KILLED) /
-                    Math.max(1f, user.stats.getIntStat(Stat.Type.UNITS_LOST));
+                float killRatio = user.stats.getIntStat(StatType.UNITS_KILLED) /
+                    Math.max(1f, user.stats.getIntStat(StatType.UNITS_LOST));
                 return UNITS_KILLED_3.qualifies(user) && (killRatio >= 1.5f);
             }
         },
@@ -99,59 +101,59 @@ public class Badge extends Item
         // highest points badges
         HIGHEST_POINTS_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.HIGHEST_POINTS) >= 500;
+                return user.stats.getIntStat(StatType.HIGHEST_POINTS) >= 500;
             }
         },
         HIGHEST_POINTS_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.HIGHEST_POINTS) >= 800;
+                return user.stats.getIntStat(StatType.HIGHEST_POINTS) >= 800;
             }
         },
 
         // consecutive kills badges
         CONSEC_KILLS_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CONSEC_KILLS) >= 5;
+                return user.stats.getIntStat(StatType.CONSEC_KILLS) >= 5;
             }
         },
         CONSEC_KILLS_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CONSEC_KILLS) >= 10;
+                return user.stats.getIntStat(StatType.CONSEC_KILLS) >= 10;
             }
         },
         CONSEC_KILLS_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CONSEC_KILLS) >= 15;
+                return user.stats.getIntStat(StatType.CONSEC_KILLS) >= 15;
             }
         },
 
         // consecutive wins badges (wins means first place)
         CONSEC_WINS_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 5;
+                return user.stats.getIntStat(StatType.CONSEC_WINS) >= 5;
             }
         },
         CONSEC_WINS_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 15;
+                return user.stats.getIntStat(StatType.CONSEC_WINS) >= 15;
             }
         },
         CONSEC_WINS_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 30;
+                return user.stats.getIntStat(StatType.CONSEC_WINS) >= 30;
             }
         },
         CONSEC_WINS_4 {
             public boolean qualifies (PlayerObject user) {
-                int wins = user.stats.getIntStat(Stat.Type.GAMES_WON);
-                int losses = Math.max(user.stats.getIntStat(Stat.Type.GAMES_PLAYED) - wins, 1);
+                int wins = user.stats.getIntStat(StatType.GAMES_WON);
+                int losses = Math.max(user.stats.getIntStat(StatType.GAMES_PLAYED) - wins, 1);
                 return CONSEC_WINS_2.qualifies(user) && ((wins / (float)losses) >= 2f);
             }
         },
         CONSEC_WINS_5 {
             public boolean qualifies (PlayerObject user) {
-                int wins = user.stats.getIntStat(Stat.Type.GAMES_WON);
-                int losses = Math.max(user.stats.getIntStat(Stat.Type.GAMES_PLAYED) - wins, 1);
+                int wins = user.stats.getIntStat(StatType.GAMES_WON);
+                int losses = Math.max(user.stats.getIntStat(StatType.GAMES_PLAYED) - wins, 1);
                 return CONSEC_WINS_3.qualifies(user) && ((wins / (float)losses) >= 3f);
             }
         },
@@ -159,12 +161,12 @@ public class Badge extends Item
         // you suck badges
         UNITS_LOST_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_LOST) >= 100;
+                return user.stats.getIntStat(StatType.UNITS_LOST) >= 100;
             }
         },
         UNITS_LOST_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_LOST) >= 10000;
+                return user.stats.getIntStat(StatType.UNITS_LOST) >= 10000;
             }
         },
 
@@ -172,195 +174,195 @@ public class Badge extends Item
         // last place)
         CONSEC_LOSSES_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CONSEC_LOSSES) >= 5;
+                return user.stats.getIntStat(StatType.CONSEC_LOSSES) >= 5;
             }
         },
         CONSEC_LOSSES_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CONSEC_LOSSES) >= 15;
+                return user.stats.getIntStat(StatType.CONSEC_LOSSES) >= 15;
             }
         },
 
         // shots fired badges
         SHOTS_FIRED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.SHOTS_FIRED) >= 1000;
+                return user.stats.getIntStat(StatType.SHOTS_FIRED) >= 1000;
             }
         },
         SHOTS_FIRED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.SHOTS_FIRED) >= 25000;
+                return user.stats.getIntStat(StatType.SHOTS_FIRED) >= 25000;
             }
         },
 
         // distance moved badges
         DISTANCE_MOVED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 1000;
+                return user.stats.getIntStat(StatType.DISTANCE_MOVED) >= 1000;
             }
         },
         DISTANCE_MOVED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 50000;
+                return user.stats.getIntStat(StatType.DISTANCE_MOVED) >= 50000;
             }
         },
         DISTANCE_MOVED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 500000;
+                return user.stats.getIntStat(StatType.DISTANCE_MOVED) >= 500000;
             }
         },
 
         // cards played badges
         CARDS_PLAYED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CARDS_PLAYED) >= 50;
+                return user.stats.getIntStat(StatType.CARDS_PLAYED) >= 50;
             }
         },
         CARDS_PLAYED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CARDS_PLAYED) >= 500;
+                return user.stats.getIntStat(StatType.CARDS_PLAYED) >= 500;
             }
         },
         CARDS_PLAYED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CARDS_PLAYED) >= 5000;
+                return user.stats.getIntStat(StatType.CARDS_PLAYED) >= 5000;
             }
         },
         CARDS_PLAYED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.BLUFF_CARD_WINS) >= 30;
+                return user.stats.getIntStat(StatType.BLUFF_CARD_WINS) >= 30;
             }
         },
         CARDS_PLAYED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.PACK_CARD_WINS) >= 250;
+                return user.stats.getIntStat(StatType.PACK_CARD_WINS) >= 250;
             }
         },
 
         // bonuses collected badges
         BONUSES_COLLECTED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >= 100;
+                return user.stats.getIntStat(StatType.BONUSES_COLLECTED) >= 100;
             }
         },
         BONUSES_COLLECTED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >= 1000;
+                return user.stats.getIntStat(StatType.BONUSES_COLLECTED) >= 1000;
             }
         },
         BONUSES_COLLECTED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >= 10000;
+                return user.stats.getIntStat(StatType.BONUSES_COLLECTED) >= 10000;
             }
         },
         BONUSES_COLLECTED_4 {
             public boolean qualifies (PlayerObject user) {
                 return false; // TODO: uncomment when we see how MOST_BONUSES shapes up
-                // return user.stats.getIntStat(Stat.Type.MOST_BONUSES) >= 6;
+                // return user.stats.getIntStat(StatType.MOST_BONUSES) >= 6;
             }
         },
         BONUSES_COLLECTED_5 {
             public boolean qualifies (PlayerObject user) {
                 return false; // TODO: uncomment when we see how MOST_BONUSES shapes up
-                // return user.stats.getIntStat(Stat.Type.MOST_BONUSES) >= 10;
+                // return user.stats.getIntStat(StatType.MOST_BONUSES) >= 10;
             }
         },
 
         // cash earned badges
         CASH_EARNED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CASH_EARNED) >= 10000;
+                return user.stats.getIntStat(StatType.CASH_EARNED) >= 10000;
             }
         },
         CASH_EARNED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CASH_EARNED) >= 100000;
+                return user.stats.getIntStat(StatType.CASH_EARNED) >= 100000;
             }
         },
         CASH_EARNED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CASH_EARNED) >= 1000000;
+                return user.stats.getIntStat(StatType.CASH_EARNED) >= 1000000;
             }
         },
 
         // nuggets claimed badges
         NUGGETS_CLAIMED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10;
+                return user.stats.getIntStat(StatType.NUGGETS_CLAIMED) >= 10;
             }
         },
         NUGGETS_CLAIMED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 100;
+                return user.stats.getIntStat(StatType.NUGGETS_CLAIMED) >= 100;
             }
         },
         NUGGETS_CLAIMED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 1000;
+                return user.stats.getIntStat(StatType.NUGGETS_CLAIMED) >= 1000;
             }
         },
         NUGGETS_CLAIMED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10000;
+                return user.stats.getIntStat(StatType.NUGGETS_CLAIMED) >= 10000;
             }
         },
         NUGGETS_CLAIMED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getMaxIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10;
+                return user.stats.getMaxIntStat(StatType.NUGGETS_CLAIMED) >= 10;
             }
         },
 
         // cattle rustled badges
         CATTLE_RUSTLED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10;
+                return user.stats.getIntStat(StatType.CATTLE_RUSTLED) >= 10;
             }
         },
         CATTLE_RUSTLED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 100;
+                return user.stats.getIntStat(StatType.CATTLE_RUSTLED) >= 100;
             }
         },
         CATTLE_RUSTLED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 1000;
+                return user.stats.getIntStat(StatType.CATTLE_RUSTLED) >= 1000;
             }
         },
         CATTLE_RUSTLED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10000;
+                return user.stats.getIntStat(StatType.CATTLE_RUSTLED) >= 10000;
             }
         },
         CATTLE_RUSTLED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.MOST_CATTLE) >= 9;
+                return user.stats.getIntStat(StatType.MOST_CATTLE) >= 9;
             }
         },
 
         // homesteads claimed badges
         STEADS_CLAIMED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 10;
+                return user.stats.getIntStat(StatType.STEADS_CLAIMED) >= 10;
             }
         },
         STEADS_CLAIMED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 100;
+                return user.stats.getIntStat(StatType.STEADS_CLAIMED) >= 100;
             }
         },
         STEADS_DESTROYED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.STEADS_DESTROYED) >= 10;
+                return user.stats.getIntStat(StatType.STEADS_DESTROYED) >= 10;
             }
         },
         STEADS_DESTROYED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.STEADS_DESTROYED) >= 100;
+                return user.stats.getIntStat(StatType.STEADS_DESTROYED) >= 100;
             }
         },
         STEADS_CLAIMED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.LONE_STEADER) >= 20;
+                return user.stats.getIntStat(StatType.LONE_STEADER) >= 20;
             }
         },
 
@@ -382,24 +384,24 @@ public class Badge extends Item
         },
         TOTEMS_STACKED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TOTEMS_LARGE) >= 100;
+                return user.stats.getIntStat(StatType.TOTEMS_LARGE) >= 100;
             }
         },
         TOTEMS_STACKED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TOTEMS_CROWN) >= 100;
+                return user.stats.getIntStat(StatType.TOTEMS_CROWN) >= 100;
             }
         },
 
         // trees saved badges
         TREES_SAVED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.PERFECT_WAVES) >= 5;
+                return user.stats.getIntStat(StatType.PERFECT_WAVES) >= 5;
             }
         },
         TREES_SAVED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TREES_ELDER) >= 250;
+                return user.stats.getIntStat(StatType.TREES_ELDER) >= 250;
             }
         },
         TREES_SAVED_3 {
@@ -410,39 +412,39 @@ public class Badge extends Item
         TREES_SAVED_4 {
             public boolean qualifies (PlayerObject user) {
                 return false; // TODO: uncomment when we see how MOST_HARD_ROBOT_KILLS shapes up
-                // return user.stats.getMaxIntStat(Stat.Type.HARD_ROBOT_KILLS) >= N;
+                // return user.stats.getMaxIntStat(StatType.HARD_ROBOT_KILLS) >= N;
             }
         },
         TREES_SAVED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.HIGHEST_SAWS) >= 10;
+                return user.stats.getIntStat(StatType.HIGHEST_SAWS) >= 10;
             }
         },
 
         // wendigo survival badges
         WENDIGO_SURVIVALS_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.WENDIGO_SURVIVALS) >= 30;
+                return user.stats.getIntStat(StatType.WENDIGO_SURVIVALS) >= 30;
             }
         },
         WENDIGO_SURVIVALS_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.WENDIGO_SURVIVALS) >= 500;
+                return user.stats.getIntStat(StatType.WENDIGO_SURVIVALS) >= 500;
             }
         },
         WENDIGO_SURVIVALS_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.WENDIGO_SURVIVALS) >= 5000;
+                return user.stats.getIntStat(StatType.WENDIGO_SURVIVALS) >= 5000;
             }
         },
         WENDIGO_SURVIVALS_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TALISMAN_SPOT_SURVIVALS) >= 100;
+                return user.stats.getIntStat(StatType.TALISMAN_SPOT_SURVIVALS) >= 100;
             }
         },
         WENDIGO_SURVIVALS_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.WHOLE_TEAM_SURVIVALS) >= 50;
+                return user.stats.getIntStat(StatType.WHOLE_TEAM_SURVIVALS) >= 50;
             }
         },
 
@@ -464,13 +466,13 @@ public class Badge extends Item
         },
         FT_BIGSHOT_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkUnitUsage(user.stats, Stat.Type.BIGSHOT_WINS,
+                return checkUnitUsage(user.stats, StatType.BIGSHOT_WINS,
                                       BangCodes.FRONTIER_TOWN, BIGSHOT_UNITS, 10);
             }
         },
         FT_ALLUNIT_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkUnitUsage(user.stats, Stat.Type.UNITS_USED,
+                return checkUnitUsage(user.stats, StatType.UNITS_USED,
                                       BangCodes.FRONTIER_TOWN, ALL_UNITS, 1);
             }
         },
@@ -493,13 +495,13 @@ public class Badge extends Item
         },
         ITP_BIGSHOT_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkUnitUsage(user.stats, Stat.Type.BIGSHOT_WINS,
+                return checkUnitUsage(user.stats, StatType.BIGSHOT_WINS,
                                       BangCodes.INDIAN_POST, BIGSHOT_UNITS, 10);
             }
         },
         ITP_ALLUNIT_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkUnitUsage(user.stats, Stat.Type.UNITS_USED,
+                return checkUnitUsage(user.stats, StatType.UNITS_USED,
                                       BangCodes.INDIAN_POST, ALL_UNITS, 1);
             }
         },
@@ -507,37 +509,37 @@ public class Badge extends Item
         // social badges
         GAMES_HOSTED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_HOSTED) >= 50;
+                return user.stats.getIntStat(StatType.GAMES_HOSTED) >= 50;
             }
         },
         GAMES_HOSTED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_HOSTED) >= 250;
+                return user.stats.getIntStat(StatType.GAMES_HOSTED) >= 250;
             }
         },
         CHAT_SENT_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CHAT_SENT) >= 1000;
+                return user.stats.getIntStat(StatType.CHAT_SENT) >= 1000;
             }
         },
         CHAT_SENT_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CHAT_SENT) >= 5000;
+                return user.stats.getIntStat(StatType.CHAT_SENT) >= 5000;
             }
         },
         CHAT_SENT_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CHAT_SENT) >= 15000;
+                return user.stats.getIntStat(StatType.CHAT_SENT) >= 15000;
             }
         },
         CHAT_RECEIVED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CHAT_RECEIVED) >= 1000;
+                return user.stats.getIntStat(StatType.CHAT_RECEIVED) >= 1000;
             }
         },
         CHAT_RECEIVED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CHAT_RECEIVED) >= 5000;
+                return user.stats.getIntStat(StatType.CHAT_RECEIVED) >= 5000;
             }
         },
 
@@ -571,12 +573,12 @@ public class Badge extends Item
         // wacky badges
         IRON_HORSE {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.SESSION_GAMES_PLAYED) >= 25;
+                return user.stats.getIntStat(StatType.SESSION_GAMES_PLAYED) >= 25;
             }
         },
         SAINT_NICK {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.MYSTERY_TWO) >= 1;
+                return user.stats.getIntStat(StatType.MYSTERY_TWO) >= 1;
             }
         },
         BETA_TESTER {
@@ -586,12 +588,12 @@ public class Badge extends Item
         },
         NIGHT_OWL {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.LATE_NIGHTS) >= 5000;
+                return user.stats.getIntStat(StatType.LATE_NIGHTS) >= 5000;
             }
         },
         HIGH_NOON {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.MYSTERY_ONE) >= 1;
+                return user.stats.getIntStat(StatType.MYSTERY_ONE) >= 1;
             }
         },
         NEW_SHERRIF_IN_TOWN,
@@ -942,13 +944,13 @@ public class Badge extends Item
     /** Used by Totem Building badges. */
     protected static int getTotemsStacked (StatSet stats)
     {
-        return stats.getIntStat(Stat.Type.TOTEMS_SMALL) +
-            stats.getIntStat(Stat.Type.TOTEMS_MEDIUM) + stats.getIntStat(Stat.Type.TOTEMS_LARGE);
+        return stats.getIntStat(StatType.TOTEMS_SMALL) +
+            stats.getIntStat(StatType.TOTEMS_MEDIUM) + stats.getIntStat(StatType.TOTEMS_LARGE);
     }
 
     /** Used by unit usage badges. */
     protected static boolean checkUnitUsage (
-        StatSet stats, Stat.Type stat, String townId, EnumSet<UnitConfig.Rank> which, int usages)
+        StatSet stats, StatType stat, String townId, EnumSet<UnitConfig.Rank> which, int usages)
     {
         for (UnitConfig cfg : UnitConfig.getTownUnits(townId, which)) {
             if (stats.getMapValue(stat, cfg.type) < usages) {
@@ -961,8 +963,8 @@ public class Badge extends Item
     /** Used by Big Shot usage badges. */
     protected static boolean checkBigShotUsage (StatSet stats, String type)
     {
-        return stats.getMapValue(Stat.Type.UNITS_USED, type) >= 100 ||
-            stats.getMapValue(Stat.Type.BIGSHOT_WINS, type) >= 30;
+        return stats.getMapValue(StatType.UNITS_USED, type) >= 100 ||
+            stats.getMapValue(StatType.BIGSHOT_WINS, type) >= 30;
     }
 
     /** Used by the all bounty badges. */
@@ -970,7 +972,7 @@ public class Badge extends Item
         StatSet stats, String townId, BountyConfig.Type type)
     {
         for (String bounty : BountyConfig.getBountyIds(townId, type)) {
-            if (!stats.containsValue(Stat.Type.BOUNTIES_COMPLETED, bounty)) {
+            if (!stats.containsValue(StatType.BOUNTIES_COMPLETED, bounty)) {
                 return false;
             }
         }

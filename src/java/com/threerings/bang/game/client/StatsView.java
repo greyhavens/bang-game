@@ -34,16 +34,17 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.image.Colorization;
-import com.threerings.presents.client.InvocationService;
 import com.threerings.util.MessageBundle;
+
+import com.threerings.presents.client.InvocationService;
+import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
@@ -225,7 +226,7 @@ public class StatsView extends SteelWindow
     protected int getObjectiveCount (int pidx)
     {
         int count = 0;
-        for (Stat.Type type : _statTypes) {
+        for (StatType type : _statTypes) {
             count += getIntStat(pidx, type);
         }
         return count;
@@ -262,7 +263,7 @@ public class StatsView extends SteelWindow
     /**
      * Convenience function to get int stat values for a player.
      */
-    protected int getIntStat (int pidx, Stat.Type type)
+    protected int getIntStat (int pidx, StatType type)
     {
         return getIntStat(pidx, _bobj.stats, type);
     }
@@ -270,7 +271,7 @@ public class StatsView extends SteelWindow
     /**
      * Convenience function to get int stat values for a player.
      */
-    protected int getIntStat (int pidx, StatSet[] stats, Stat.Type type)
+    protected int getIntStat (int pidx, StatSet[] stats, StatType type)
     {
         if (stats == null || pidx >= stats.length || stats[pidx] == null) {
             return 0;
@@ -541,8 +542,8 @@ public class StatsView extends SteelWindow
             // add the data
             for (int ii = 0; ii < size; ii++) {
                 BLabel[] labels = new BLabel[7];
-                int points = getIntStat(ii, Stat.Type.POINTS_EARNED);
-                int starPoints = getIntStat(ii, Stat.Type.BONUS_POINTS);
+                int points = getIntStat(ii, StatType.POINTS_EARNED);
+                int starPoints = getIntStat(ii, StatType.BONUS_POINTS);
                 int damagePoints = points - _scenPoints[ii] - starPoints;
                 _ptscont.add(makeAvatarView(ii));
                 _ptscont.add(labels[0] = new BLabel(
@@ -684,7 +685,7 @@ public class StatsView extends SteelWindow
                     if (statSet[jj] == null) {
                         statSet[jj] = new StatSet();
                     }
-                    for (Stat.Type type : BASE_STAT_TYPES) {
+                    for (StatType type : BASE_STAT_TYPES) {
                         statSet[jj].incrementStat(
                                 type, getIntStat(jj, tmpset, type));
                     }
@@ -698,8 +699,8 @@ public class StatsView extends SteelWindow
         }
 
         // which stats are we displaying
-        ArrayList<Stat.Type> statTypes = new ArrayList<Stat.Type>();
-        for (Stat.Type type : BASE_STAT_TYPES) {
+        ArrayList<StatType> statTypes = new ArrayList<StatType>();
+        for (StatType type : BASE_STAT_TYPES) {
             boolean interesting = false;
             for (int ii = 0; ii < size; ii++) {
                 if (getIntStat(ii, statSet, type) > 0) {
@@ -731,12 +732,12 @@ public class StatsView extends SteelWindow
 
         Dimension boxdim = new Dimension(width, height);
         Dimension headerdim = new Dimension(width, HEADER_HEIGHT);
-        HashMap<Stat.Type, Integer> map = new HashMap<Stat.Type, Integer>();
+        HashMap<StatType, Integer> map = new HashMap<StatType, Integer>();
 
         // Add the headers
-        for (Iterator<Stat.Type> iter = statTypes.iterator();
+        for (Iterator<StatType> iter = statTypes.iterator();
                 iter.hasNext(); ) {
-            Stat.Type type = iter.next();
+            StatType type = iter.next();
             String key = "m.header_" + StringUtil.toUSLowerCase(type.name());
             BLabel header = new BLabel(_msgs.get(key), "endgame_smallheader") {
                 protected Dimension computePreferredSize (
@@ -756,9 +757,9 @@ public class StatsView extends SteelWindow
 
         // Add the stat details
         for (int ii = 0; ii < size; ii++) {
-            for (Iterator<Stat.Type> iter = statTypes.iterator();
+            for (Iterator<StatType> iter = statTypes.iterator();
                     iter.hasNext(); ) {
-                Stat.Type type = iter.next();
+                StatType type = iter.next();
                 final boolean isDark = (ii % 2 == 0);
                 BContainer cont = new BContainer(new BorderLayout()) {
                     protected void wasAdded() {
@@ -841,8 +842,8 @@ public class StatsView extends SteelWindow
     protected BLabel[][] _labels;
 
     /** Information on the game scenario. */
-    protected Stat.Type[] _statTypes;
-    protected Stat.Type _secStatType;
+    protected StatType[] _statTypes;
+    protected StatType _secStatType;
     protected ImageIcon[][] _objectiveIcons;
     protected BIcon _secIcon;
     protected String _objectiveTitle;
@@ -879,26 +880,26 @@ public class StatsView extends SteelWindow
     /** The width of the secondary objective icon, points, and plus sign. */
     protected static final int SECONDARY_OBJECTIVE_WIDTH = 120;
 
-    protected static final Stat.Type[] BASE_STAT_TYPES = {
+    protected static final StatType[] BASE_STAT_TYPES = {
         // Global Stats
-        Stat.Type.DAMAGE_DEALT, Stat.Type.UNITS_KILLED,
-        Stat.Type.BONUSES_COLLECTED, Stat.Type.CARDS_PLAYED,
-        Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
-        Stat.Type.UNITS_LOST,
+        StatType.DAMAGE_DEALT, StatType.UNITS_KILLED,
+        StatType.BONUSES_COLLECTED, StatType.CARDS_PLAYED,
+        StatType.DISTANCE_MOVED, StatType.SHOTS_FIRED,
+        StatType.UNITS_LOST,
         // Cattle Rustling
-        Stat.Type.CATTLE_RUSTLED, Stat.Type.BRAND_POINTS,
+        StatType.CATTLE_RUSTLED, StatType.BRAND_POINTS,
         // Claim Jumping & Gold Rush
-        Stat.Type.NUGGETS_CLAIMED,
+        StatType.NUGGETS_CLAIMED,
         // Land Grab
-        Stat.Type.STEADS_CLAIMED, Stat.Type.STEAD_POINTS,
+        StatType.STEADS_CLAIMED, StatType.STEAD_POINTS,
         // Totem Building
-        Stat.Type.TOTEMS_SMALL, Stat.Type.TOTEMS_MEDIUM,
-        Stat.Type.TOTEMS_LARGE, Stat.Type.TOTEMS_CROWN,
-        Stat.Type.TOTEM_POINTS,
+        StatType.TOTEMS_SMALL, StatType.TOTEMS_MEDIUM,
+        StatType.TOTEMS_LARGE, StatType.TOTEMS_CROWN,
+        StatType.TOTEM_POINTS,
         // Wendigo Attack
-        Stat.Type.WENDIGO_SURVIVALS, Stat.Type.TALISMAN_POINTS,
+        StatType.WENDIGO_SURVIVALS, StatType.TALISMAN_POINTS,
         // Forest Guardians
-        Stat.Type.TREES_SAPLING, Stat.Type.TREES_MATURE,
-        Stat.Type.TREES_ELDER, Stat.Type.TREE_POINTS,
+        StatType.TREES_SAPLING, StatType.TREES_MATURE,
+        StatType.TREES_ELDER, StatType.TREE_POINTS,
     };
 }

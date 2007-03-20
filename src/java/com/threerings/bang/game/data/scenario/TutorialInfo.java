@@ -4,7 +4,7 @@
 package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.piece.Marker;
 
 /**
@@ -40,7 +40,7 @@ public class TutorialInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type[] getObjectives ()
+    public StatType[] getObjectives ()
     {
         return null;
     }

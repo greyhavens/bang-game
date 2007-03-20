@@ -12,7 +12,7 @@ import com.samskivert.util.QuickSort;
 
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.HomesteadEffect;
@@ -137,7 +137,7 @@ public class HomesteadDelegate extends ScenarioDelegate
         }
         for (int ii = 0; ii < steads.length; ii++) {
             bangobj.grantPoints(ii, steads[ii] * LandGrabInfo.POINTS_PER_STEAD);
-            bangobj.stats[ii].setStat(Stat.Type.STEADS_CLAIMED, steads[ii]);
+            bangobj.stats[ii].setStat(StatType.STEADS_CLAIMED, steads[ii]);
         }
     }
 
@@ -153,7 +153,7 @@ public class HomesteadDelegate extends ScenarioDelegate
             }
         }
         for (int ii = 0; ii < points.length; ii++) {
-            bangobj.stats[ii].incrementStat(Stat.Type.STEAD_POINTS, points[ii]);
+            bangobj.stats[ii].incrementStat(StatType.STEAD_POINTS, points[ii]);
             bangobj.grantPoints(ii, points[ii]);
         }
 
@@ -180,9 +180,9 @@ public class HomesteadDelegate extends ScenarioDelegate
         if (piece instanceof Homestead) {
             Homestead stead = (Homestead)piece;
             bangobj.grantPoints(stead.previousOwner, -LandGrabInfo.POINTS_PER_STEAD);
-            bangobj.stats[stead.previousOwner].incrementStat(Stat.Type.STEADS_CLAIMED, -1);
+            bangobj.stats[stead.previousOwner].incrementStat(StatType.STEADS_CLAIMED, -1);
             if (shooter != -1) {
-                bangobj.stats[shooter].incrementStat(Stat.Type.STEADS_DESTROYED, 1);
+                bangobj.stats[shooter].incrementStat(StatType.STEADS_DESTROYED, 1);
             }
         }
     }
@@ -203,7 +203,7 @@ public class HomesteadDelegate extends ScenarioDelegate
 
                 // grant this player points for the claimed homestead
                 bangobj.grantPoints(claimer.owner, LandGrabInfo.POINTS_PER_STEAD);
-                bangobj.stats[claimer.owner].incrementStat(Stat.Type.STEADS_CLAIMED, 1);
+                bangobj.stats[claimer.owner].incrementStat(StatType.STEADS_CLAIMED, 1);
 
                 // move this homestead to the end of the claims list
                 if (_claims != null) {

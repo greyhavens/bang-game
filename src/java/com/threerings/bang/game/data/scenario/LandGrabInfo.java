@@ -4,7 +4,7 @@
 package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 /**
  * Contains metadata on the Land Grab scenario.
@@ -39,9 +39,9 @@ public class LandGrabInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type[] getObjectives ()
+    public StatType[] getObjectives ()
     {
-        return new Stat.Type[] { Stat.Type.STEADS_CLAIMED };
+        return new StatType[] { StatType.STEADS_CLAIMED };
     }
 
     @Override // from ScenarioInfo
@@ -51,9 +51,9 @@ public class LandGrabInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getSecondaryObjective ()
+    public StatType getSecondaryObjective ()
     {
-        return Stat.Type.STEAD_POINTS;
+        return StatType.STEAD_POINTS;
     }
     
     @Override // from ScenarioInfo

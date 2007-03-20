@@ -28,7 +28,7 @@ public class FreeTicket extends Item
         // for now we're only giving out free ITP tickets
         if (townIdx != BangUtil.getTownIndex(BangCodes.INDIAN_POST) ||
             // check if they already have this free ticket
-            user.stats.containsValue(Stat.Type.FREE_TICKETS, BangCodes.TOWN_IDS[townIdx]) ||
+            user.stats.containsValue(StatType.FREE_TICKETS, BangCodes.TOWN_IDS[townIdx]) ||
             // check if they've already bought the ticket
             user.holdsTicket(BangCodes.TOWN_IDS[townIdx]) ||
             // make sure they have purchased the pervious town ticket
@@ -37,7 +37,7 @@ public class FreeTicket extends Item
         }
 
         // see if they qualify
-        if (user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= FREE_ITP_REQUIREMENT) {
+        if (user.stats.getIntStat(StatType.GAMES_PLAYED) >= FREE_ITP_REQUIREMENT) {
             return new FreeTicket(user.playerId, townIdx);
         }
 

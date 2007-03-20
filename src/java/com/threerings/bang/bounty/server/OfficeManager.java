@@ -22,7 +22,7 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.ShopManager;
@@ -77,7 +77,7 @@ public class OfficeManager extends ShopManager
             for (BountyConfig.GameInfo game : config.games) {
                 if (game.ident.equals(gameId)) {
                     break;
-                } else if (!player.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED,
+                } else if (!player.stats.containsValue(StatType.BOUNTY_GAMES_COMPLETED,
                                                        config.getStatKey(game.ident))) {
                     log.warning("Player tried to play bounty game out of order " +
                                 "[who=" + player.who() + ", bounty=" + bountyId +

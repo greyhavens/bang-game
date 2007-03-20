@@ -12,7 +12,7 @@ import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ArrayUtil;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BasicContext;
 
 /**
@@ -29,14 +29,14 @@ public class ForestGuardiansStatsView extends StatsView
     protected void loadGameData ()
     {
         // record the most recent wave scores for display
-        _scores = _bobj.stats[0].getIntArrayStat(Stat.Type.WAVE_SCORES);
+        _scores = _bobj.stats[0].getIntArrayStat(StatType.WAVE_SCORES);
         if (_scores.length > MAX_WAVE_SCORES) {
             _wavenum = 1 + (_scores.length - MAX_WAVE_SCORES);
             _scores = ArrayUtil.splice(_scores, 0, _wavenum - 1);
         } else {
             _wavenum = 1;
         }
-        _points = _bobj.stats[0].getIntStat(Stat.Type.WAVE_POINTS);
+        _points = _bobj.stats[0].getIntStat(StatType.WAVE_POINTS);
         _icons = new ImageIcon[ICON_NAMES.length];
         for (int ii = 0; ii < ICON_NAMES.length; ii++) {
             _icons[ii] = new ImageIcon(_ctx.loadImage("ui/postgame/icons/" +

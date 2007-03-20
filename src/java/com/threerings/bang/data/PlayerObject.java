@@ -7,6 +7,9 @@ import java.util.Arrays;
 
 import com.threerings.util.Name;
 
+import com.threerings.stats.data.Stat;
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.BodyObject;

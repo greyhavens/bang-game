@@ -12,7 +12,7 @@ import java.awt.Rectangle;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.CountEffect;
@@ -261,15 +261,15 @@ public class WendigoDelegate extends CounterDelegate
                     bangobj.grantPoints(
                         idx, survivals[idx] * pointsPerCounter() + talpts);
                     bangobj.stats[idx].incrementStat(
-                        Stat.Type.WENDIGO_SURVIVALS, survivals[idx]);
+                        StatType.WENDIGO_SURVIVALS, survivals[idx]);
                     bangobj.stats[idx].incrementStat(
-                        Stat.Type.TALISMAN_POINTS, talpts);
+                        StatType.TALISMAN_POINTS, talpts);
                     bangobj.stats[idx].incrementStat(
-                        Stat.Type.TALISMAN_SPOT_SURVIVALS, talsurvivals[idx]);
+                        StatType.TALISMAN_SPOT_SURVIVALS, talsurvivals[idx]);
                 }
                 if (teamSurvival[idx]) {
                     bangobj.stats[idx].incrementStat(
-                        Stat.Type.WHOLE_TEAM_SURVIVALS, 1);
+                        StatType.WHOLE_TEAM_SURVIVALS, 1);
                 }
             }
         } finally {

@@ -17,7 +17,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.game.data.BangConfig;
@@ -238,7 +238,7 @@ public abstract class ScenarioInfo
     /**
      * Returns the stats associated with the scenario's primary objective.
      */
-    public abstract Stat.Type[] getObjectives ();
+    public abstract StatType[] getObjectives ();
 
     /**
      * Returns for each objective the number of points earned for each time the objective is
@@ -258,7 +258,7 @@ public abstract class ScenarioInfo
      * Returns the stat associated with our secondary objective or null if this scenario has no
      * secondary objective.
      */
-    public Stat.Type getSecondaryObjective ()
+    public StatType getSecondaryObjective ()
     {
         return null;
     }

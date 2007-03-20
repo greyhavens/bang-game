@@ -6,7 +6,7 @@ package com.threerings.bang.game.server.scenario;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.BonusConfig;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
@@ -37,7 +37,7 @@ public class NuggetDelegate extends CounterDelegate
 
         // start everyone off with the appropriate NUGGETS_CLAIMED stat
         for (Counter counter : _counters) {
-            bangobj.stats[counter.owner].setStat(Stat.Type.NUGGETS_CLAIMED, counter.count);
+            bangobj.stats[counter.owner].setStat(StatType.NUGGETS_CLAIMED, counter.count);
         }
     }
 
@@ -120,7 +120,7 @@ public class NuggetDelegate extends CounterDelegate
             effect.claimId = counter.pieceId;
             _bangmgr.deployEffect(unit.owner, effect);
             // update the owner of this claim's NUGGETS_CLAIMED stat
-            bangobj.stats[counter.owner].setStat(Stat.Type.NUGGETS_CLAIMED, counter.count);
+            bangobj.stats[counter.owner].setStat(StatType.NUGGETS_CLAIMED, counter.count);
         }
     }
 

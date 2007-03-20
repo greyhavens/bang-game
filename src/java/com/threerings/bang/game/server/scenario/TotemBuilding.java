@@ -11,7 +11,7 @@ import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.TotemLogic;

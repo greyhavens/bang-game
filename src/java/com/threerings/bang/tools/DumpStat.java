@@ -12,9 +12,11 @@ import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.util.CountHashMap;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.bang.data.IntStat;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StringSetStat;
+import com.threerings.stats.data.IntStat;
+import com.threerings.stats.data.Stat;
+import com.threerings.stats.data.StringSetStat;
+
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.StatRepository;
 
@@ -46,9 +48,9 @@ public class DumpStat
             return; // help the compiler be smart
         }
 
-        Stat.Type type;
+        StatType type;
         try {
-            type = Enum.valueOf(Stat.Type.class, args[1].toUpperCase());
+            type = Enum.valueOf(StatType.class, args[1].toUpperCase());
         } catch (Exception e) {
             System.err.println("Unknown stat " + args[1] + ".");
             System.exit(-1);
@@ -77,7 +79,7 @@ public class DumpStat
         }
     }
 
-    protected static Grinder getSummaryGrinder (Stat.Type type)
+    protected static Grinder getSummaryGrinder (StatType type)
     {
         Stat stat = type.newStat();
         if (stat instanceof StringSetStat) {
@@ -87,7 +89,7 @@ public class DumpStat
         }
     }
 
-    protected static Grinder getDateSummaryGrinder (Stat.Type type)
+    protected static Grinder getDateSummaryGrinder (StatType type)
     {
         Stat stat = type.newStat();
         if (stat instanceof StringSetStat) {

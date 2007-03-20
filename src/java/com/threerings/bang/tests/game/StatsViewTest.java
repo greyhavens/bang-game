@@ -6,20 +6,21 @@ package com.threerings.bang.tests.game;
 import java.util.logging.Level;
 
 import com.jme.util.LoggingSystem;
-
 import com.jmex.bui.BWindow;
 
 import com.samskivert.util.RandomUtil;
-
 import com.threerings.util.Name;
+
+import com.threerings.presents.dobj.DSet;
+
+import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.client.GameOverView;
 import com.threerings.bang.game.client.StatsView;
@@ -33,8 +34,6 @@ import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 
 import com.threerings.bang.tests.TestApp;
-
-import com.threerings.presents.dobj.DSet;
 
 /**
  * Test harness for the game over view.
@@ -83,27 +82,27 @@ public class StatsViewTest extends TestApp
             bangobj.playerInfo[ii] = new BangObject.PlayerInfo();
             bangobj.playerInfo[ii].avatar = BangAI.getAvatar(RandomUtil.getInt(100) > 50);
             bangobj.stats[ii] = new StatSet();
-            bangobj.stats[ii].setStat(Stat.Type.CATTLE_RUSTLED, RandomUtil.getInt(5) * ii);
-            bangobj.stats[ii].setStat(Stat.Type.NUGGETS_CLAIMED, RandomUtil.getInt(10));
-            bangobj.stats[ii].setStat(Stat.Type.DAMAGE_DEALT, RandomUtil.getInt(500));
-            bangobj.stats[ii].setStat(Stat.Type.POINTS_EARNED, RandomUtil.getInt(2500, 1000));
-            bangobj.stats[ii].setStat(Stat.Type.DAMAGE_DEALT, RandomUtil.getInt(500));
-            bangobj.stats[ii].setStat(Stat.Type.UNITS_KILLED, RandomUtil.getInt(15));
-            bangobj.stats[ii].setStat(Stat.Type.UNITS_LOST, RandomUtil.getInt(15));
-            bangobj.stats[ii].setStat(Stat.Type.BONUSES_COLLECTED, RandomUtil.getInt(7));
-            bangobj.stats[ii].setStat(Stat.Type.CARDS_PLAYED, RandomUtil.getInt(6));
-            bangobj.stats[ii].setStat(Stat.Type.DISTANCE_MOVED, RandomUtil.getInt(250));
-            bangobj.stats[ii].setStat(Stat.Type.SHOTS_FIRED, RandomUtil.getInt(50));
-            bangobj.stats[ii].setStat(Stat.Type.BRAND_POINTS, RandomUtil.getInt(400));
-            bangobj.stats[ii].setStat(Stat.Type.TOTEMS_SMALL, RandomUtil.getInt(6));
-            bangobj.stats[ii].setStat(Stat.Type.TOTEMS_MEDIUM, RandomUtil.getInt(6));
-            bangobj.stats[ii].setStat(Stat.Type.TOTEMS_LARGE, RandomUtil.getInt(6));
-            bangobj.stats[ii].setStat(Stat.Type.TOTEMS_CROWN, RandomUtil.getInt(3));
-            bangobj.stats[ii].setStat(Stat.Type.TOTEM_POINTS, RandomUtil.getInt(200));
-            bangobj.stats[ii].setStat(Stat.Type.TREES_SAPLING, RandomUtil.getInt(4));
-            bangobj.stats[ii].setStat(Stat.Type.TREES_MATURE, RandomUtil.getInt(4));
-            bangobj.stats[ii].setStat(Stat.Type.TREES_ELDER, RandomUtil.getInt(4));
-            bangobj.stats[ii].setStat(Stat.Type.TREE_POINTS, RandomUtil.getInt(200));
+            bangobj.stats[ii].setStat(StatType.CATTLE_RUSTLED, RandomUtil.getInt(5) * ii);
+            bangobj.stats[ii].setStat(StatType.NUGGETS_CLAIMED, RandomUtil.getInt(10));
+            bangobj.stats[ii].setStat(StatType.DAMAGE_DEALT, RandomUtil.getInt(500));
+            bangobj.stats[ii].setStat(StatType.POINTS_EARNED, RandomUtil.getInt(2500, 1000));
+            bangobj.stats[ii].setStat(StatType.DAMAGE_DEALT, RandomUtil.getInt(500));
+            bangobj.stats[ii].setStat(StatType.UNITS_KILLED, RandomUtil.getInt(15));
+            bangobj.stats[ii].setStat(StatType.UNITS_LOST, RandomUtil.getInt(15));
+            bangobj.stats[ii].setStat(StatType.BONUSES_COLLECTED, RandomUtil.getInt(7));
+            bangobj.stats[ii].setStat(StatType.CARDS_PLAYED, RandomUtil.getInt(6));
+            bangobj.stats[ii].setStat(StatType.DISTANCE_MOVED, RandomUtil.getInt(250));
+            bangobj.stats[ii].setStat(StatType.SHOTS_FIRED, RandomUtil.getInt(50));
+            bangobj.stats[ii].setStat(StatType.BRAND_POINTS, RandomUtil.getInt(400));
+            bangobj.stats[ii].setStat(StatType.TOTEMS_SMALL, RandomUtil.getInt(6));
+            bangobj.stats[ii].setStat(StatType.TOTEMS_MEDIUM, RandomUtil.getInt(6));
+            bangobj.stats[ii].setStat(StatType.TOTEMS_LARGE, RandomUtil.getInt(6));
+            bangobj.stats[ii].setStat(StatType.TOTEMS_CROWN, RandomUtil.getInt(3));
+            bangobj.stats[ii].setStat(StatType.TOTEM_POINTS, RandomUtil.getInt(200));
+            bangobj.stats[ii].setStat(StatType.TREES_SAPLING, RandomUtil.getInt(4));
+            bangobj.stats[ii].setStat(StatType.TREES_MATURE, RandomUtil.getInt(4));
+            bangobj.stats[ii].setStat(StatType.TREES_ELDER, RandomUtil.getInt(4));
+            bangobj.stats[ii].setStat(StatType.TREE_POINTS, RandomUtil.getInt(200));
         }
         bangobj.scenario = new ForestGuardiansInfo();
 

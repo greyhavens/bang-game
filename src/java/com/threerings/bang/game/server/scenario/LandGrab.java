@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Homestead;
@@ -65,7 +65,7 @@ public class LandGrab extends Scenario
             }
         }
         if (loneClaimerIdx >= 0) {
-            bangobj.stats[loneClaimerIdx].incrementStat(Stat.Type.LONE_STEADER, 1);
+            bangobj.stats[loneClaimerIdx].incrementStat(StatType.LONE_STEADER, 1);
         }
     }
 
@@ -76,7 +76,7 @@ public class LandGrab extends Scenario
         super.recordStats(bangobj, gameTime, pidx, user);
 
         // persist their various homestead related stats
-        for (Stat.Type stat : ACCUM_STATS) {
+        for (StatType stat : ACCUM_STATS) {
             user.stats.incrementStat(stat, bangobj.stats[pidx].getIntStat(stat));
         }
     }
@@ -92,7 +92,7 @@ public class LandGrab extends Scenario
     protected HomesteadDelegate _homedel;
 
     /** Stats we accumulate from the in-game versions to the player's object. */
-    protected static final Stat.Type[] ACCUM_STATS = {
-        Stat.Type.STEADS_CLAIMED, Stat.Type.STEADS_DESTROYED, Stat.Type.LONE_STEADER
+    protected static final StatType[] ACCUM_STATS = {
+        StatType.STEADS_CLAIMED, StatType.STEADS_DESTROYED, StatType.LONE_STEADER
     };
 }

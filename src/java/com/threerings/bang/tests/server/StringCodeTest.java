@@ -8,7 +8,7 @@ import com.samskivert.util.Log;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.StatRepository;
 
@@ -31,28 +31,28 @@ public class StringCodeTest
 
             // this should generate a warning
             System.out.println("Looking for missing code: " +
-                               statrepo.getCodeString(Stat.Type.UNUSED, -1));
+                               statrepo.getCodeString(StatType.UNUSED, -1));
 
             // the first time we'll create and insert a mapping
             String value = "test_one";
             System.out.println("Create mapping: " + value + "=" +
-                               statrepo.getStringCode(Stat.Type.UNUSED, value));
+                               statrepo.getStringCode(StatType.UNUSED, value));
 
             // the second time it comes from the cache
             System.out.println("Lookup from cache: " + value + "=" +
-                               statrepo.getStringCode(Stat.Type.UNUSED, value));
+                               statrepo.getStringCode(StatType.UNUSED, value));
 
             // now clear the mapping and go through the code path that would be
             // executed if someone else created a mapping before we did
-            statrepo.clearMapping(Stat.Type.UNUSED, value);
+            statrepo.clearMapping(StatType.UNUSED, value);
             System.out.println("Lookup with value collision: " + value + "=" +
-                               statrepo.getStringCode(Stat.Type.UNUSED, value));
+                               statrepo.getStringCode(StatType.UNUSED, value));
 
             // now add a second value, clear it out and fake a code collision
             // (requires hackery in the stat repository)
             value = "test_two";
             System.out.println("Create with code collision: " + value + "=" +
-                               statrepo.getStringCode(Stat.Type.UNUSED, value));
+                               statrepo.getStringCode(StatType.UNUSED, value));
 
         } catch (Exception e) {
             e.printStackTrace(System.err);

@@ -15,7 +15,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.card.Card;
@@ -223,14 +223,14 @@ public abstract class Effect extends SimpleStreamableObject
                     shooter.didKill();
                     if (shooter instanceof Unit) {
                         bangobj.stats[shooterIdx].maxStat(
-                                Stat.Type.CONSEC_KILLS, ((Unit)shooter).consecKills);
+                                StatType.CONSEC_KILLS, ((Unit)shooter).consecKills);
                     }
                 }
                 // record the kill statistics
-                bangobj.stats[shooterIdx].incrementStat(Stat.Type.UNITS_KILLED, 1);
+                bangobj.stats[shooterIdx].incrementStat(StatType.UNITS_KILLED, 1);
             }
             if (target.owner != -1) {
-                bangobj.stats[target.owner].incrementStat(Stat.Type.UNITS_LOST, 1);
+                bangobj.stats[target.owner].incrementStat(StatType.UNITS_LOST, 1);
             }
         }
 

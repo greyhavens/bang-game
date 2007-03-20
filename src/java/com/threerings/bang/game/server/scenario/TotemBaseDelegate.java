@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.effect.TotemEffect;
@@ -77,7 +77,7 @@ public class TotemBaseDelegate extends CounterDelegate
     }
 
     protected void adjustCounter (
-        BangObject bangobj, int owner, int delta, Stat.Type stat)
+        BangObject bangobj, int owner, int delta, StatType stat)
     {
         bangobj.stats[owner].incrementStat(stat, delta);
         for (Counter counter: _counters) {
@@ -184,7 +184,7 @@ public class TotemBaseDelegate extends CounterDelegate
                 bangobj.grantPoints(pp, diff);
                 _points[pp] = points[pp] + totemPoints[pp];
                 bangobj.stats[pp].setStat(
-                    Stat.Type.TOTEM_POINTS, totemPoints[pp]);
+                    StatType.TOTEM_POINTS, totemPoints[pp]);
             }
         } finally {
             bangobj.commitTransaction();

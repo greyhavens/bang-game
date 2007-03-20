@@ -9,7 +9,7 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.client.BallisticShotHandler;
 import com.threerings.bang.game.client.InstantShotHandler;

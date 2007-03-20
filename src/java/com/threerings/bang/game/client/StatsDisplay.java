@@ -16,13 +16,14 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
+import com.threerings.stats.data.Stat;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangObject;
@@ -55,14 +56,14 @@ public class StatsDisplay extends BDecoratedWindow
         }
 
         // enumerate all the stat types accumulated during the game
-        HashSet<Stat.Type> types = new HashSet<Stat.Type>();
+        HashSet<StatType> types = new HashSet<StatType>();
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
             for (Iterator iter = bangobj.stats[ii].iterator(); iter.hasNext(); ) {
-                types.add(((Stat)iter.next()).getType());
+                types.add((StatType)((Stat)iter.next()).getType());
             }
         }
 
-        for (Stat.Type type : types) {
+        for (StatType type : types) {
             bits.add(new BLabel(_ctx.xlate(BangCodes.STATS_MSGS, type.key()) + ":"));
             for (int pp = 0; pp < bangobj.stats.length; pp++) {
                 Stat pstat = bangobj.stats[pp].get(type.name());

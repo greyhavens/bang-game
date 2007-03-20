@@ -12,7 +12,7 @@ import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.NuggetEffect;
@@ -114,9 +114,9 @@ public class GoldRush extends Scenario
         super.recordStats(bangobj, gameTime, pidx, user);
 
         // record the number of nuggets they claimed
-        int nuggets = bangobj.stats[pidx].getIntStat(Stat.Type.NUGGETS_CLAIMED);
+        int nuggets = bangobj.stats[pidx].getIntStat(StatType.NUGGETS_CLAIMED);
         if (nuggets > 0) {
-            user.stats.incrementStat(Stat.Type.NUGGETS_CLAIMED, nuggets);
+            user.stats.incrementStat(StatType.NUGGETS_CLAIMED, nuggets);
         }
     }
 

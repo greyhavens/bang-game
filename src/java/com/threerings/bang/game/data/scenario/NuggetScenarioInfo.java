@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.data.scenario;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 
 /**
@@ -15,9 +15,9 @@ public abstract class NuggetScenarioInfo extends ScenarioInfo
     public static final int POINTS_PER_NUGGET = 50;
 
     @Override // from ScenarioInfo
-    public Stat.Type[] getObjectives ()
+    public StatType[] getObjectives ()
     {
-        return new Stat.Type[] { Stat.Type.NUGGETS_CLAIMED };
+        return new StatType[] { StatType.NUGGETS_CLAIMED };
     }
 
     @Override // from ScenarioInfo

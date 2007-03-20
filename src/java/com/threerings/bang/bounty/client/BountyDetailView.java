@@ -22,7 +22,7 @@ import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bounty.data.BountyConfig;
@@ -88,7 +88,7 @@ public class BountyDetailView extends BContainer
         for (BountyConfig.GameInfo game : _config.games) {
             BContainer row = new BContainer(glay);
             String key = _config.getStatKey(game.ident);
-            boolean completed = user.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED, key);
+            boolean completed = user.stats.containsValue(StatType.BOUNTY_GAMES_COMPLETED, key);
             row.add(new BLabel(completed ? BangUI.completed : BangUI.incomplete),
                     GroupLayout.FIXED);
             row.add(new BLabel(game.name));

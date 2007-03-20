@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TotemSprite;
@@ -24,15 +24,15 @@ public class TotemBonus extends Bonus
     public static enum Type
     {
         TOTEM_LARGE(TotemEffect.TOTEM_LARGE_BONUS, 30, 3, 0,
-                Stat.Type.TOTEMS_LARGE),
+                StatType.TOTEMS_LARGE),
         TOTEM_MEDIUM(TotemEffect.TOTEM_MEDIUM_BONUS, 20, 2, 20,
-                Stat.Type.TOTEMS_MEDIUM),
+                StatType.TOTEMS_MEDIUM),
         TOTEM_SMALL(TotemEffect.TOTEM_SMALL_BONUS, 10, 1, 40,
-                Stat.Type.TOTEMS_SMALL),
+                StatType.TOTEMS_SMALL),
         TOTEM_CROWN(TotemEffect.TOTEM_CROWN_BONUS, 40, 4, 0,
-                Stat.Type.TOTEMS_CROWN);
+                StatType.TOTEMS_CROWN);
 
-        Type (String bonus, int value, int height, int damage, Stat.Type stat) {
+        Type (String bonus, int value, int height, int damage, StatType stat) {
             _bonus = bonus;
             _value = value;
             _height = height;
@@ -56,8 +56,8 @@ public class TotemBonus extends Bonus
             return _damage;
         }
 
-        public Stat.Type stat () {
-            return Stat.Type.values()[_stat];
+        public StatType stat () {
+            return StatType.values()[_stat];
         }
 
         protected String _bonus;

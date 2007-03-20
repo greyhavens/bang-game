@@ -20,13 +20,12 @@ import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.server.InvocationException;
-
 import com.threerings.parlor.game.data.GameAI;
+import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.RobotWaveEffect;
@@ -188,7 +187,7 @@ public class ForestGuardians extends Scenario
             for (int ii = 0; ii < bangobj.stats.length; ii++) {
                 bangobj.stats[ii].incrementStat(
                     ForestGuardiansInfo.GROWTH_STATS[tree.growth-1], 1);
-                bangobj.stats[ii].incrementStat(Stat.Type.WAVE_POINTS, points);
+                bangobj.stats[ii].incrementStat(StatType.WAVE_POINTS, points);
                 bangobj.grantPoints(ii, points);
             }
         }
@@ -198,7 +197,7 @@ public class ForestGuardians extends Scenario
 //         int perf = (total > 0 ? RobotWaveEffect.getPerformance(living, total) :
 //                     RobotWaveEffect.MAX_PERFORMANCE);
 //         for (StatSet stats : bangobj.stats) {
-//             stats.appendStat(Stat.Type.WAVE_SCORES, perf);
+//             stats.appendStat(StatType.WAVE_SCORES, perf);
 //         }
 
         _payouts = new int[bangobj.players.length];
@@ -227,7 +226,7 @@ public class ForestGuardians extends Scenario
 
         // record the number of trees they grew
         for (int ii = 0; ii < ForestGuardiansInfo.GROWTH_STATS.length; ii++) {
-            Stat.Type stat = ForestGuardiansInfo.GROWTH_STATS[ii];
+            StatType stat = ForestGuardiansInfo.GROWTH_STATS[ii];
             user.stats.incrementStat(stat, bangobj.stats[pidx].getIntStat(stat));
         }
 
@@ -238,7 +237,7 @@ public class ForestGuardians extends Scenario
         }
 
         // and the highest difficulty level reached
-        user.stats.maxStat(Stat.Type.HIGHEST_SAWS, _difficulty + 1);
+        user.stats.maxStat(StatType.HIGHEST_SAWS, _difficulty + 1);
     }
 
     @Override // documentation inherited
@@ -285,12 +284,12 @@ public class ForestGuardians extends Scenario
         int points = scalePoints(
             ForestGuardiansInfo.GROWTH_POINTS[TreeBed.FULLY_GROWN - 1] * grown);
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
-            bangobj.stats[ii].incrementStat(Stat.Type.TREES_ELDER, grown);
-            bangobj.stats[ii].appendStat(Stat.Type.WAVE_SCORES, perf);
+            bangobj.stats[ii].incrementStat(StatType.TREES_ELDER, grown);
+            bangobj.stats[ii].appendStat(StatType.WAVE_SCORES, perf);
             if (perf == RobotWaveEffect.MAX_PERFORMANCE) {
-                bangobj.stats[ii].incrementStat(Stat.Type.PERFECT_WAVES, 1);
+                bangobj.stats[ii].incrementStat(StatType.PERFECT_WAVES, 1);
             }
-            bangobj.stats[ii].incrementStat(Stat.Type.WAVE_POINTS, points);
+            bangobj.stats[ii].incrementStat(StatType.WAVE_POINTS, points);
             bangobj.grantPoints(ii, points);
         }
 
@@ -394,6 +393,6 @@ public class ForestGuardians extends Scenario
     protected static final int[][] PAYOUT_ADJUSTMENTS = {
         { -10, +10 }, { -10, 0, +10 }, { -10, -5, +5, +10 } };
 
-    protected static final Stat.Type[] ACCUM_STATS = {
-        Stat.Type.HARD_ROBOT_KILLS, Stat.Type.PERFECT_WAVES };
+    protected static final StatType[] ACCUM_STATS = {
+        StatType.HARD_ROBOT_KILLS, StatType.PERFECT_WAVES };
 }

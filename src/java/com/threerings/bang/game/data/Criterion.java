@@ -9,7 +9,7 @@ import com.jme.util.export.Savable;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 /**
  * Defines a particular additional criterion for "winning" a bounty game.
@@ -30,7 +30,7 @@ public abstract class Criterion extends SimpleStreamableObject
      * Instructs this criterion to add any stats that should be made watchable during a bounty game
      * to the supplied set.
      */
-    public abstract void addWatchedStats (HashSet<Stat.Type> stats);
+    public abstract void addWatchedStats (HashSet<StatType> stats);
 
     /**
      * Returns the current state of this criterion. This is called throughout the game after each

@@ -18,7 +18,7 @@ import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ShopManager;
@@ -131,7 +131,7 @@ public class StationManager extends ShopManager
             }
 
             public void handleSuccess() {
-                user.stats.addToSetStat(Stat.Type.ACTIVATED_TICKETS, finalTicket.getTownId());
+                user.stats.addToSetStat(StatType.ACTIVATED_TICKETS, finalTicket.getTownId());
                 listener.requestProcessed();
             }
 

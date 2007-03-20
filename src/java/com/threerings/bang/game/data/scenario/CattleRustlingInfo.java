@@ -4,7 +4,7 @@
 package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.piece.Marker;
 
 /**
@@ -34,9 +34,9 @@ public class CattleRustlingInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type[] getObjectives ()
+    public StatType[] getObjectives ()
     {
-        return new Stat.Type[] { Stat.Type.CATTLE_RUSTLED };
+        return new StatType[] { StatType.CATTLE_RUSTLED };
     }
 
     @Override // from ScenarioInfo
@@ -46,9 +46,9 @@ public class CattleRustlingInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getSecondaryObjective ()
+    public StatType getSecondaryObjective ()
     {
-        return Stat.Type.BRAND_POINTS;
+        return StatType.BRAND_POINTS;
     }
 
     @Override // from ScenarioInfo

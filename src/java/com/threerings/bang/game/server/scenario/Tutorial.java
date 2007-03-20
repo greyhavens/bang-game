@@ -20,7 +20,7 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -112,7 +112,7 @@ public class Tutorial extends Scenario
         PlayerObject user = (PlayerObject)_bangmgr.getPlayer(0);
         if (user != null) {
             _firstTime = !user.stats.containsValue(
-                Stat.Type.TUTORIALS_COMPLETED, _config.ident);
+                StatType.TUTORIALS_COMPLETED, _config.ident);
         }
 
         // start by executing the zeroth action
@@ -139,7 +139,7 @@ public class Tutorial extends Scenario
             PlayerObject user = (PlayerObject)_bangmgr.getPlayer(0);
             if (user != null) {
                 user.stats.addToSetStat(
-                    Stat.Type.TUTORIALS_COMPLETED, _config.ident);
+                    StatType.TUTORIALS_COMPLETED, _config.ident);
             }
         }
         return validate;
@@ -155,7 +155,7 @@ public class Tutorial extends Scenario
     @Override // documentation inherited
     public boolean shouldPayEarnings (PlayerObject user)
     {
-        return _firstTime && user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED, _config.ident);
+        return _firstTime && user.stats.containsValue(StatType.TUTORIALS_COMPLETED, _config.ident);
     }
 
     @Override // documentation inherited

@@ -25,7 +25,7 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;

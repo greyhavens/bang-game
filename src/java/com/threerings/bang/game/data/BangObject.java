@@ -15,12 +15,14 @@ import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.Streamable;
-import com.threerings.parlor.game.data.GameObject;
 import com.threerings.util.StreamablePoint;
 
+import com.threerings.parlor.game.data.GameObject;
+import com.threerings.stats.data.Stat;
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.bang.data.AvatarInfo;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.bounty.data.BountyConfig;
 
@@ -651,7 +653,7 @@ public class BangObject extends GameObject
      */
     public void grantBonusPoints (int pidx, int amount)
     {
-        stats[pidx].incrementStat(Stat.Type.BONUS_POINTS, amount);
+        stats[pidx].incrementStat(StatType.BONUS_POINTS, amount);
         grantPoints(pidx, amount);
     }
 
@@ -663,7 +665,7 @@ public class BangObject extends GameObject
     {
         setPointsAt(points[pidx] + amount, pidx);
         perRoundPoints[roundId-1][pidx] += amount;
-        stats[pidx].incrementStat(Stat.Type.POINTS_EARNED, amount);
+        stats[pidx].incrementStat(StatType.POINTS_EARNED, amount);
 
         // keep our point factors up to date (on the server)
         if (pdata != null) {

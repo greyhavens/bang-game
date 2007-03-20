@@ -13,15 +13,16 @@ import com.samskivert.util.StringUtil;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.stats.data.StringSetStat;
+
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Star;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StringSetStat;
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.GameCodes;
@@ -316,7 +317,7 @@ public class BountyConfig extends SimpleStreamableObject
         // if they have completed all the games, they're done!
         for (GameInfo game : games) {
             if (!user.stats.containsValue(
-                    Stat.Type.BOUNTY_GAMES_COMPLETED, getStatKey(game.ident))) {
+                    StatType.BOUNTY_GAMES_COMPLETED, getStatKey(game.ident))) {
                 return false;
             }
         }
@@ -460,7 +461,7 @@ public class BountyConfig extends SimpleStreamableObject
     {
         int cleared = 0;
         StringSetStat completed = (StringSetStat)
-            user.stats.get(Stat.Type.BOUNTIES_COMPLETED.name());
+            user.stats.get(StatType.BOUNTIES_COMPLETED.name());
         if (completed != null) {
             for (String ident : completed.values()) {
                 BountyConfig config = getBounty(ident);

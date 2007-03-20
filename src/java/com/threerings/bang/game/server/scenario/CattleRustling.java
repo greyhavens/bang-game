@@ -16,7 +16,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -144,9 +144,9 @@ public class CattleRustling extends Scenario
 
         // propagate this player's cattle related stats into their permanent stat set
         user.stats.incrementStat(
-            Stat.Type.CATTLE_RUSTLED, bangobj.stats[pidx].getIntStat(Stat.Type.CATTLE_RUSTLED));
+            StatType.CATTLE_RUSTLED, bangobj.stats[pidx].getIntStat(StatType.CATTLE_RUSTLED));
         user.stats.maxStat(
-            Stat.Type.MOST_CATTLE, bangobj.stats[pidx].getIntStat(Stat.Type.MOST_CATTLE));
+            StatType.MOST_CATTLE, bangobj.stats[pidx].getIntStat(StatType.MOST_CATTLE));
     }
 
     @Override // documentation inherited
@@ -217,11 +217,11 @@ public class CattleRustling extends Scenario
                 }
                 // you get points for your branded cows at each tick
                 int points = cattle * CattleRustlingInfo.POINTS_PER_BRAND;
-                bangobj.stats[counter.owner].incrementStat(Stat.Type.BRAND_POINTS, points);
+                bangobj.stats[counter.owner].incrementStat(StatType.BRAND_POINTS, points);
                 bangobj.grantPoints(counter.owner, points);
                 // update this player's current cattle rustled stats
-                bangobj.stats[counter.owner].setStat(Stat.Type.CATTLE_RUSTLED, cattle);
-                bangobj.stats[counter.owner].maxStat(Stat.Type.MOST_CATTLE, cattle);
+                bangobj.stats[counter.owner].setStat(StatType.CATTLE_RUSTLED, cattle);
+                bangobj.stats[counter.owner].maxStat(StatType.MOST_CATTLE, cattle);
             }
             return false;
         }

@@ -4,7 +4,7 @@
 package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BasicContext;
 
@@ -25,8 +25,8 @@ public class ForestGuardiansInfo extends ScenarioInfo
     public static final int POINTS_PER_TREE_GROWTH = 1;
 
     /** Stat types for each level of growth (minus one). */
-    public static final Stat.Type[] GROWTH_STATS = {
-        Stat.Type.TREES_SAPLING, Stat.Type.TREES_MATURE, Stat.Type.TREES_ELDER };
+    public static final StatType[] GROWTH_STATS = {
+        StatType.TREES_SAPLING, StatType.TREES_MATURE, StatType.TREES_ELDER };
 
     /** Points awarded for living trees at the end of each wave. */
     public static final int[] GROWTH_POINTS = { 1, 3, 5 };
@@ -50,7 +50,7 @@ public class ForestGuardiansInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type[] getObjectives ()
+    public StatType[] getObjectives ()
     {
         return GROWTH_STATS;
     }
@@ -68,9 +68,9 @@ public class ForestGuardiansInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getSecondaryObjective ()
+    public StatType getSecondaryObjective ()
     {
-        return Stat.Type.TREE_POINTS;
+        return StatType.TREE_POINTS;
     }
 
     @Override // from ScenarioInfo

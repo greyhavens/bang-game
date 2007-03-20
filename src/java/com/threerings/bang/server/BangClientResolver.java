@@ -17,6 +17,9 @@ import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.stats.data.Stat;
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.server.persist.GangInviteRecord;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
@@ -34,8 +37,7 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
-import com.threerings.bang.data.Stat;
-import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangUtil;
 
@@ -125,10 +127,10 @@ public class BangClientResolver extends CrowdClientResolver
         int itpidx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
         boolean holdsITPTicket = buser.holdsTicket(BangCodes.INDIAN_POST);
         if (buser.playerId < BangCodes.BETA_PLAYER_CUTOFF && !holdsITPTicket &&
-            buser.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= FREE_ITP_GP_REQUIREMENT) {
+            buser.stats.getIntStat(StatType.GAMES_PLAYED) >= FREE_ITP_GP_REQUIREMENT) {
             log.info("Granting free ITP ticket to beta player [who=" + username +
                      ", handle=" + buser.handle + ", pid=" + buser.playerId +
-                     ", games=" + buser.stats.getIntStat(Stat.Type.GAMES_PLAYED) + "].");
+                     ", games=" + buser.stats.getIntStat(StatType.GAMES_PLAYED) + "].");
             TrainTicket ticket = new TrainTicket(buser.playerId, itpidx);
             BangServer.itemrepo.insertItem(ticket);
             BangServer.playrepo.grantTownAccess(buser.playerId, ticket.getTownId());

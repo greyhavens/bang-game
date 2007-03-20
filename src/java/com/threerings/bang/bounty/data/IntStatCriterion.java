@@ -15,7 +15,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Criterion;
@@ -29,7 +29,7 @@ public class IntStatCriterion extends Criterion
     public enum Condition { LESS_THAN, AT_LEAST, EQUAL_TO };
 
     /** The statistic in question. */
-    public Stat.Type stat;
+    public StatType stat;
 
     /** The condition to be met. */
     public Condition condition;
@@ -46,7 +46,7 @@ public class IntStatCriterion extends Criterion
     }
 
     // from Criterion
-    public void addWatchedStats (HashSet<Stat.Type> stats)
+    public void addWatchedStats (HashSet<StatType> stats)
     {
         stats.add(stat);
     }
@@ -101,7 +101,7 @@ public class IntStatCriterion extends Criterion
     public void read (JMEImporter im) throws IOException
     {
         InputCapsule in = im.getCapsule(this);
-        stat = Stat.Type.valueOf(in.readString("stat", null));
+        stat = StatType.valueOf(in.readString("stat", null));
         condition = Condition.valueOf(in.readString("condition", null));
         value = in.readInt("value", 0);
     }

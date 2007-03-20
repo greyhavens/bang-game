@@ -4,7 +4,7 @@
 package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.piece.Marker;
 
 /**
@@ -40,9 +40,9 @@ public class WendigoAttackInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type[] getObjectives ()
+    public StatType[] getObjectives ()
     {
-        return new Stat.Type[] { Stat.Type.WENDIGO_SURVIVALS };
+        return new StatType[] { StatType.WENDIGO_SURVIVALS };
     }
 
     @Override // from ScenarioInfo
@@ -52,8 +52,8 @@ public class WendigoAttackInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getSecondaryObjective ()
+    public StatType getSecondaryObjective ()
     {
-        return Stat.Type.TALISMAN_POINTS;
+        return StatType.TALISMAN_POINTS;
     }
 }

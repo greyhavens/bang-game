@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.util.Iterator;
  
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.game.client.StatsView;
@@ -42,11 +42,11 @@ public class TotemBuildingInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type[] getObjectives ()
+    public StatType[] getObjectives ()
     {
-        return new Stat.Type[] {
-            Stat.Type.TOTEMS_SMALL, Stat.Type.TOTEMS_MEDIUM,
-            Stat.Type.TOTEMS_LARGE, Stat.Type.TOTEMS_CROWN
+        return new StatType[] {
+            StatType.TOTEMS_SMALL, StatType.TOTEMS_MEDIUM,
+            StatType.TOTEMS_LARGE, StatType.TOTEMS_CROWN
         };
     }
 
@@ -68,9 +68,9 @@ public class TotemBuildingInfo extends ScenarioInfo
     }
     
     @Override // from ScenarioInfo
-    public Stat.Type getSecondaryObjective ()
+    public StatType getSecondaryObjective ()
     {
-        return Stat.Type.TOTEM_POINTS;
+        return StatType.TOTEM_POINTS;
     }
 
     @Override // from ScenarioInfo

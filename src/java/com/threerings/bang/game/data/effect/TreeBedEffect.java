@@ -5,7 +5,7 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
-import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.LoggingRobot;
@@ -98,7 +98,7 @@ public class TreeBedEffect extends Effect
             if (piece == null || piece.owner == -1) {
                 continue;
             }
-            bangobj.stats[piece.owner].incrementStat(Stat.Type.TREE_POINTS,
+            bangobj.stats[piece.owner].incrementStat(StatType.TREE_POINTS,
                 ForestGuardiansInfo.POINTS_PER_TREE_GROWTH);
             bangobj.grantPoints(piece.owner,
                 ForestGuardiansInfo.POINTS_PER_TREE_GROWTH);
