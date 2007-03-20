@@ -61,8 +61,8 @@ public class BangApp extends JmeApp
     public static RecentList recentLog = new RecentList(50);
 
     /**
-     * Redirects the output of the application to the specified log file and
-     * configures our various logging systems.
+     * Redirects the output of the application to the specified log file and configures our various
+     * logging systems.
      */
     public static void configureLog (String logfile)
     {
@@ -83,14 +83,12 @@ public class BangApp extends JmeApp
 
             // and now redirect our output
             try {
-                PrintStream logOut = new PrintStream(
-                    new FileOutputStream(nlog), true);
+                PrintStream logOut = new PrintStream(new FileOutputStream(nlog), true);
                 System.setOut(logOut);
                 System.setErr(logOut);
 
             } catch (IOException ioe) {
-                log.warning("Failed to open debug log [path=" + nlog +
-                            ", error=" + ioe + "].");
+                log.warning("Failed to open debug log [path=" + nlog + ", error=" + ioe + "].");
             }
         }
 
@@ -121,9 +119,9 @@ public class BangApp extends JmeApp
         configureLog("bang.log");
 
         try {
-            // this is a hack, but we can't set our translated title until we've
-            // create our client and message manager and whatnot; but I'll be
-            // damned if we're going to have it say "Game" for even half a second
+            // this is a hack, but we can't set our translated title until we've create our client
+            // and message manager and whatnot; but I'll be damned if we're going to have it say
+            // "Game" for even half a second
             Display.setTitle("Bang! Howdy");
 
             // set up our application icons
@@ -137,8 +135,8 @@ public class BangApp extends JmeApp
         }
 
         // default to connecting to the frontier town server
-        String username = (args.length > 0) ? args[0] : null;
-        String password = (args.length > 1) ? args[1] : null;
+        String username = (args.length > 0) ? args[0] : System.getProperty("username");
+        String password = (args.length > 1) ? args[1] : System.getProperty("password");
         String townId = (args.length > 2) ? args[2] : BangCodes.FRONTIER_TOWN;
         String server = DeploymentConfig.getServerHost(townId);
         int[] ports = DeploymentConfig.getServerPorts(townId);
@@ -183,22 +181,19 @@ public class BangApp extends JmeApp
         return true;
     }
 
-    public void run (
-        String server, int[] ports, String username, String password)
+    public void run (String server, int[] ports, String username, String password)
     {
         Client client = _client.getContext().getClient();
 
         // configure our server, port and client version
-        log.info("Using [server=" + server +
-                 ", ports=" + StringUtil.toString(ports) +
+        log.info("Using [server=" + server + ", ports=" + StringUtil.toString(ports) +
                  ", version=" + DeploymentConfig.getVersion() + "].");
         client.setServer(server, ports);
         client.setVersion(String.valueOf(DeploymentConfig.getVersion()));
 
         // configure the client with credentials if they were supplied
         if (username != null && password != null) {
-            client.setCredentials(
-                _client.createCredentials(new Name(username), password));
+            client.setCredentials(_client.createCredentials(new Name(username), password));
         }
 
         // now start up the main event loop
@@ -221,8 +216,7 @@ public class BangApp extends JmeApp
         _api = props.getRenderer();
         DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
         display.setVSyncEnabled(!_profiling);
-        display.createWindow(props.getWidth(), props.getHeight(),
-                             props.getDepth(), props.getFreq(),
+        display.createWindow(props.getWidth(), props.getHeight(), props.getDepth(), props.getFreq(),
                              props.getFullscreen());
         return display;
     }
@@ -348,6 +342,5 @@ public class BangApp extends JmeApp
     protected BangClient _client;
 
     /** Used to configure the renderer appropriately when profiling. */
-    protected boolean _profiling =
-        "true".equalsIgnoreCase(System.getProperty("profiling"));
+    protected boolean _profiling = "true".equalsIgnoreCase(System.getProperty("profiling"));
 }
