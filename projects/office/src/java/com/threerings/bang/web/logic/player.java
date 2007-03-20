@@ -12,12 +12,11 @@ import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
 import com.samskivert.velocity.InvocationContext;
 
+import com.threerings.stats.data.Stat;
 import com.threerings.user.OOOUser;
 
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.persist.PlayerRecord;
-import com.threerings.bang.server.persist.StatRepository;
 
 import com.threerings.bang.web.OfficeApp;
 
