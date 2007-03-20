@@ -19,6 +19,12 @@ public class BangTokenRing extends TokenRing
     /** Indicates that the user is a demo account. */
     public static final int DEMO = (1 << 3);
 
+    /** Indicates that the user is anonymous. */
+    public static final int ANONYMOUS = (1 << 4);
+
+    /** Indicatest that the user is over 13. */
+    public static final int OVER_13 = (1 << 5);
+
     /**
      * A default constructor, used when unserializing token rings.
      */
@@ -56,5 +62,21 @@ public class BangTokenRing extends TokenRing
     public boolean isDemo ()
     {
         return holdsToken(DEMO);
+    }
+
+    /**
+     * Convenience function for checking whether this ring holds the {@link #ANONYMOUS} token.
+     */
+    public boolean isAnonymous ()
+    {
+        return holdsToken(ANONYMOUS);
+    }
+
+    /**
+     * Convenience function for checking whether this ring holds the {@link #OVER_13} token.
+     */
+    public boolean isOver13 ()
+    {
+        return holdsToken(OVER_13);
     }
 }

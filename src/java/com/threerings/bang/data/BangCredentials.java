@@ -16,13 +16,17 @@ public class BangCredentials extends UsernamePasswordCreds
     /** The machine identifier of the client, if one is known. */
     public String ident;
 
+    /** If the client is asking for anonymous access. */
+    public boolean anonymous;
+
     /**
      * Creates credentials with the specified username and password.
      * {@link #ident} should be set before logging in.
      */
     public BangCredentials (Name username, Password password)
     {
-        super(username, password.getEncrypted());
+        super(username, password == null ? "" : password.getEncrypted());
+        anonymous = password == null;
     }
 
     /**

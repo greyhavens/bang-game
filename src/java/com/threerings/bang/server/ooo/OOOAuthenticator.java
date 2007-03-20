@@ -11,6 +11,12 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.RandomUtil;
+import com.samskivert.servlet.JDBCTableSiteIdentifier;
+import com.samskivert.servlet.user.InvalidUsernameException;
+import com.samskivert.servlet.user.Password;
+import com.samskivert.servlet.user.UserExistsException;
+import com.samskivert.servlet.user.Username;
 
 import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
@@ -54,6 +60,8 @@ public class OOOAuthenticator extends BangAuthenticator
     public OOOAuthenticator ()
     {
         try {
+            _siteident = new JDBCTableSiteIdentifier(BangServer.conprov);
+
             // we get our user manager configuration from the ocean config
             _usermgr = new OOOUserManager(ServerConfig.config.getSubProperties("oooauth"),
                                           BangServer.conprov);
@@ -71,6 +79,61 @@ public class OOOAuthenticator extends BangAuthenticator
     {
         // pass the word on to the user repository
         _authrep.updateUserIsActive(username, OOOUser.IS_ACTIVE_BANG_PLAYER, isActive);
+    }
+
+    // from abstract BangAuthenticator
+    public String createAccount (
+            String username, String password, String email, String affiliate, String machIdent)
+        throws PersistenceException
+    {
+        // check if their username already exists
+        if (_authrep.loadUser(username) != null) {
+            return NAME_IN_USE;
+        }
+
+        // figure out the sideId
+        int siteId;
+        try {
+            siteId = Integer.decode(affiliate);
+        } catch (Exception e) {
+            siteId = _siteident.getSiteId(affiliate);
+        }
+
+        try {
+            // make sure that this machien identifier is allowed to create a new account
+            int rv = _authrep.checkCanCreate(machIdent);
+            switch(rv) {
+            case OOOUserRepository.NEW_ACCOUNT_TAINTED: return MACHINE_TAINTED;
+            case OOOUserRepository.ACCESS_GRANTED:
+                // we're grooving right along
+                break;
+            default:
+                log.warning("Unhandled checkCanCreate() response code " +
+                            "[ident=" + machIdent + ", rv=" + rv + "].");
+                return SERVER_ERROR;
+            }
+
+            Username uname = new Username(username);
+            Password pass = Password.makeFromCrypto(password);
+
+            // create the account
+            _authrep.createUser(uname, pass, email, siteId, 0);
+
+            return null;
+
+        } catch (InvalidUsernameException iue) {
+            // the client shouldn't allow invalid names, so we just give a generic exception here
+            log.warning("User submitted invalid username? [username=" + username + "].");
+            return SERVER_ERROR;
+
+        } catch (UserExistsException uee) {
+            return NAME_IN_USE;
+
+        } catch (PersistenceException pe) {
+            log.log(Level.WARNING, "Error creating arround [username=" + username + ", password=" +
+                    password + ", siteId=" + siteId + ", ident=" + machIdent + "].", pe);
+            return SERVER_ERROR;
+        }
     }
 
     @Override // from Authenticator
@@ -152,20 +215,47 @@ public class OOOAuthenticator extends BangAuthenticator
 
         // load up their user account record
         OOOUser user = _authrep.loadUser(username, true);
-        if (user == null) {
-            rdata.code = NO_SUCH_USER;
-            return;
-        }
 
         // we need to find out if this account has ever logged in so that we can decide how to
         // handle tainted idents; we load up the player record for this account; if this player
         // makes it through the gauntlet, we'll stash this away in a place that the client resolver
         // can get it so that we can avoid loading the record twice during authentication
         PlayerRecord prec = BangServer.playrepo.loadPlayer(username);
+        String password = creds.getPassword();
+
+        if (user == null && prec == null && !StringUtil.isBlank(username) &&
+                !StringUtil.isBlank(password)) {
+            rdata.code = NO_SUCH_USER;
+            return;
+        }
+
+        boolean anonymous = user == null;
+
+        if (anonymous && StringUtil.isBlank(username)) {
+            // we're a new anonymous client, so better make up fake username
+            int attempts = 0;
+            do {
+                username = StringUtil.md5hex(Integer.toString(
+                            RandomUtil.getInt(Integer.MAX_VALUE)));
+                prec = BangServer.playrepo.loadPlayer(username);
+                attempts++;
+            } while (prec != null && attempts < MAX_LOOP);
+
+            // well crap, can't find them a username
+            if (prec != null) {
+                rdata.code = SERVER_ERROR;
+                return;
+            }
+        }
+
+        if (user == null && prec != null && !prec.isSet(PlayerRecord.IS_ANONYMOUS)) {
+            rdata.code = INVALID_PASSWORD;
+            return;
+        }
 
         // make sure this player has access to this server's town
         int serverTownIdx = ServerConfig.townIndex;
-        if (RuntimeConfig.server.freeIndianPost &&
+        if (!anonymous && RuntimeConfig.server.freeIndianPost &&
             serverTownIdx == BangUtil.getTownIndex(BangCodes.INDIAN_POST)) {
             // free access
             serverTownIdx = -1;
@@ -194,7 +284,8 @@ public class OOOAuthenticator extends BangAuthenticator
 
         // check to see whether this account has been banned or if this is a first time user
         // logging in from a tainted machine
-        int vc = _authrep.validateUser(OOOUser.BANGHOWDY_SITE_ID, user, creds.ident, prec == null);
+        int vc = anonymous ? _authrep.validateMachIdent(creds.ident, prec == null) :
+                _authrep.validateUser(OOOUser.BANGHOWDY_SITE_ID, user, creds.ident, prec == null);
         switch (vc) {
         case OOOUserRepository.ACCOUNT_BANNED:
             log.info("Rejecting banned account [who=" + username + "].");
@@ -212,63 +303,72 @@ public class OOOAuthenticator extends BangAuthenticator
         }
 
         // check whether we're restricting non-insider login
-        if (!RuntimeConfig.server.openToPublic && !user.holdsToken(OOOUser.INSIDER) &&
-            !user.holdsToken(OOOUser.TESTER) && !user.isSupportPlus()) {
+        if (!RuntimeConfig.server.openToPublic && (anonymous ||
+                    (!user.holdsToken(OOOUser.INSIDER) && !user.holdsToken(OOOUser.TESTER) &&
+                     !user.isSupportPlus()))) {
             rdata.code = NON_PUBLIC_SERVER;
             return;
         }
 
         // check whether we're restricting non-admin login
-        if (!RuntimeConfig.server.nonAdminsAllowed && !user.isSupportPlus()) {
+        if (!RuntimeConfig.server.nonAdminsAllowed && (anonymous || !user.isSupportPlus())) {
             rdata.code = UNDER_MAINTENANCE;
             return;
         }
 
         // now check their password
-        if (!user.password.equals(creds.getPassword())) {
+        if (!anonymous && !user.password.equals(password)) {
             rdata.code = INVALID_PASSWORD;
             return;
         }
 
         // configure a token ring for this user
         int tokens = 0;
-        if (user.holdsToken(OOOUser.ADMIN)) {
-            tokens |= BangTokenRing.ADMIN;
-            tokens |= BangTokenRing.SUPPORT;
-            tokens |= BangTokenRing.INSIDER;
-        }
-        if (user.holdsToken(OOOUser.SUPPORT)) {
-            tokens |= BangTokenRing.SUPPORT;
-            tokens |= BangTokenRing.INSIDER;
-        }
-        if (user.holdsToken(OOOUser.INSIDER)) {
-            tokens |= BangTokenRing.INSIDER;
+        if (!anonymous) {
+            if (user.holdsToken(OOOUser.ADMIN)) {
+                tokens |= BangTokenRing.ADMIN;
+                tokens |= BangTokenRing.SUPPORT;
+                tokens |= BangTokenRing.INSIDER;
+            }
+            if (user.holdsToken(OOOUser.SUPPORT)) {
+                tokens |= BangTokenRing.SUPPORT;
+                tokens |= BangTokenRing.INSIDER;
+            }
+            if (user.holdsToken(OOOUser.INSIDER)) {
+                tokens |= BangTokenRing.INSIDER;
+            }
         }
         rsp.authdata = new BangTokenRing(tokens);
 
         // replace the username in their credentials with the canonical name in their user record
         // as that username will later be stuffed into their user object
-        creds.setUsername(new Name(user.username));
+        if (!anonymous) {
+            creds.setUsername(new Name(user.username));
+        } else {
+            creds.setUsername(new Name(username));
+        }
 
         // log.info("User logged on [user=" + user.username + "].");
         rdata.code = BangAuthResponseData.SUCCESS;
 
         if (prec != null) {
-            // redeem any rewards for which they have become eligible, but don't let this stick a
-            // fork in the logon process
-            prec.rewards = new ArrayList<String>();
-            try {
-                ArrayList<RewardRecord> rewards =
-                    _rewardrep.loadActivatedRewards(prec.accountName, creds.ident);
-                for (RewardRecord record : rewards) {
-                    if (record.account.equals(user.username) &&
-                        StringUtil.isBlank(record.redeemerIdent)) {
-                        maybeRedeemReward(prec, creds.ident, record, rewards);
+            if (!anonymous) {
+                // redeem any rewards for which they have become eligible, but don't let this stick
+                // a fork in the logon process
+                prec.rewards = new ArrayList<String>();
+                try {
+                    ArrayList<RewardRecord> rewards =
+                        _rewardrep.loadActivatedRewards(prec.accountName, creds.ident);
+                    for (RewardRecord record : rewards) {
+                        if (record.account.equals(user.username) &&
+                            StringUtil.isBlank(record.redeemerIdent)) {
+                            maybeRedeemReward(prec, creds.ident, record, rewards);
+                        }
                     }
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Failed to redeem rewards for account " +
+                            "[who=" + prec.accountName + "].", e);
                 }
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to redeem rewards for account " +
-                        "[who=" + prec.accountName + "].", e);
             }
 
             // pass their player record to the client resolver for use later
@@ -315,6 +415,7 @@ public class OOOAuthenticator extends BangAuthenticator
         prec.rewards.add(info.data);
     }
 
+    protected JDBCTableSiteIdentifier _siteident;
     protected OOOUserManager _usermgr;
     protected OOOUserRepository _authrep;
     protected RewardRepository _rewardrep;
@@ -322,4 +423,7 @@ public class OOOAuthenticator extends BangAuthenticator
 
     /** We only allow two accounts with the same machine ident to redeem a reward. */
     protected static final int MAX_RELATED_REDEEMERS = 2;
+
+    /** Max times we'll try to generate an anonymous username before giving up. */
+    protected static final int MAX_LOOP = 1000;
 }

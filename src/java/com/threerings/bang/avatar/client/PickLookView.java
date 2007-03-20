@@ -18,6 +18,7 @@ import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
@@ -79,6 +80,8 @@ public class PickLookView extends BContainer
     {
         if (_selection != null) {
             _avatar.setAvatar(_selection.getAvatar(_ctx.getUserObject()));
+        } else {
+            _avatar.setAvatar(new AvatarInfo());
         }
     }
 
@@ -98,6 +101,7 @@ public class PickLookView extends BContainer
             }
         } else {
             log.warning("Missing default look? " + user);
+            refreshDisplay();
         }
     }
 

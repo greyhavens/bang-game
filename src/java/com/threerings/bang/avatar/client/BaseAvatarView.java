@@ -126,8 +126,12 @@ public abstract class BaseAvatarView extends BLabel
 
         // if this avatar is misconfigured, stop here
         if (avatar.print == null || avatar.print.length == 0) {
-            log.warning("Refusing to load blank avatar " + avatar + ".");
-            receiver.requestCompleted(null);
+            if (_defaultImage != null) {
+                receiver.requestCompleted(ctx.getImageCache().getBufferedImage(_defaultImage));
+            } else {
+                log.warning("Refusing to load blank avatar " + avatar + ".");
+                receiver.requestCompleted(null);
+            }
             return;
         }
 
@@ -189,6 +193,9 @@ public abstract class BaseAvatarView extends BLabel
                 getImage(_ctx, avatar, avatar.getWidth()/_scale, avatar.getHeight()/_scale,
                     _mirror, rl);
             }
+
+        } else if (_defaultImage != null) {
+            setImage(_ctx.getImageCache().getBImage(_defaultImage, (float)_scale/4, false));
         }
     }
 
@@ -363,4 +370,7 @@ public abstract class BaseAvatarView extends BLabel
 
     /** Used to flip texture coordinates. */
     protected static Vector2f _tcoord = new Vector2f();
+
+    /** A default image to use when the print is misconfigured. */
+    protected static String _defaultImage;
 }

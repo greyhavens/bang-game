@@ -45,4 +45,7 @@ public interface BangAuthCodes extends AuthCodes
      * the server which generally means we're in the middle of updating the
      * game. */
     public static final String NEWER_VERSION = "m.newer_version";
+
+    /** A code indicating that the username already exists. */
+    public static final String NAME_IN_USE = "m.name_in_use";
 }

@@ -71,6 +71,15 @@ public interface BangCodes extends InvocationCodes
      * hovered above everything (like the bug report popup). */
     public static final int NEVER_CLEAR_LAYER = 10;
 
+    /** An error code when the user needs to create a handle. */
+    public static final String CREATE_HANDLE = "create_handle";
+
+    /** An error code when the user needs to create an account. */
+    public static final String SIGN_UP = "sign_up";
+
+    /** An error code when the user needs to verify they are over 13. */
+    public static final String UNDER_13 = "under_13";
+
     /** An error code reported when a financial transaction cannot complete. */
     public static final String E_INSUFFICIENT_FUNDS =
         MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");

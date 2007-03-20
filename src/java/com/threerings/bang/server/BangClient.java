@@ -100,6 +100,9 @@ public class BangClient extends CrowdClient
         // configure the player in the town for this server
         user.townId = ServerConfig.townId;
 
+        // configure anonimity
+        user.tokens.setToken(BangTokenRing.ANONYMOUS, creds.anonymous);
+
         // make a note of their current avatar poses for later comparison and potential updating
         _startPoses = (String[])user.poses.clone();
     }

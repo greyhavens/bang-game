@@ -99,6 +99,12 @@ public class BankManager extends ShopManager
     }
 
     @Override // from ShopManager
+    protected boolean allowAnonymous ()
+    {
+        return false;
+    }
+
+    @Override // from ShopManager
     protected String getIdent ()
     {
         return "bank";

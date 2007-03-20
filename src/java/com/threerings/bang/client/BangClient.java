@@ -95,6 +95,7 @@ import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.FreeTicket;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
@@ -345,6 +346,9 @@ public class BangClient extends BasicClient
         // setup our modal shade color
         _ctx.getRootNode().setModalShade(BangUI.MODAL_SHADE);
 
+        // configure our guest handle name
+        GuestHandle.setDefaultName(_ctx.xlate(BangCodes.BANG_MSGS, "m.you"));
+
         // create and display the logon view; which we do by hand instead of
         // using setMainView() because we don't want to start the resource
         // resolution until we're faded in
@@ -413,6 +417,34 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Called when the client created its first avatar.
+     */
+    public void createdAvatar ()
+    {
+        PlayerObject user = _ctx.getUserObject();
+
+        // if they have no big shots then they need the intro for those
+        if (!(user.handle instanceof GuestHandle) && !user.hasBigShot()) {
+            displayPopup(new FirstBigShotView(_ctx), true, 600);
+            return;
+        }
+        resetTownView();
+    }
+
+    /**
+     * Called when a popup is cleared that responded to a moveTo failure.
+     */
+    public void continueMoveTo ()
+    {
+        if (_headingTo != -1) {
+            _ctx.getLocationDirector().moveTo(_headingTo);
+            _headingTo = -1;
+            return;
+        }
+        resetTownView();
+    }
+
+    /**
      * Potentially shows the next phase of the client introduction or tutorial
      * or displays pending notifications. Basically anything that should be
      * popped up once a player is in the town view and ready to go is shown.
@@ -423,15 +455,17 @@ public class BangClient extends BasicClient
     {
         PlayerObject user = _ctx.getUserObject();
 
+        /*
         // if this player does not have a name, it's their first time, so pop up the create avatar
         // view
         if (user.handle == null) {
             displayPopup(new CreateAvatarView(_ctx), true, 800);
             return true;
         }
+        */
 
         // if they have no big shots then they need the intro for those
-        if (!user.hasBigShot()) {
+        if (!(user.handle instanceof GuestHandle) && !user.hasBigShot()) {
             displayPopup(new FirstBigShotView(_ctx), true, 600);
             return true;
         }
@@ -487,6 +521,19 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Resets the client to the town view.
+     */
+    public void resetTownView ()
+    {
+        _showingAccount = false;
+        if (isShowingTownView()) {
+            ((TownView)_mview).resetViewpoint();
+        } else {
+            showTownView();
+        }
+    }
+
+    /**
      * Returns true if there are popups showing.
      */
     public boolean hasPopups ()
@@ -501,12 +548,6 @@ public class BangClient extends BasicClient
     {
         // don't allow popups during view transitions
         if (_viewTransition) {
-            return false;
-        }
-
-        // only allow status view after we've created our avatar
-        if (type == MainView.Type.STATUS &&
-            _ctx.getUserObject().handle == null) {
             return false;
         }
 
@@ -801,7 +842,7 @@ public class BangClient extends BasicClient
     public BangCredentials createCredentials (Name username, String password)
     {
         BangCredentials creds = new BangCredentials(
-            username, Password.makeFromClear(password));
+            username, (password == null ? null : Password.makeFromClear(password)));
         creds.ident = IdentUtil.getMachineIdentifier();
         // if we got a real ident from the client, mark it as such
         if (creds.ident != null && !creds.ident.matches("S[A-Za-z0-9/+]{32}")) {
@@ -862,8 +903,11 @@ public class BangClient extends BasicClient
         }
 
         // update our title to contain our username
-        Display.setTitle(_msgmgr.getBundle(BangCodes.BANG_MSGS).get(
-                             "m.online_title", _ctx.getUserObject().username));
+        PlayerObject user = (PlayerObject)_ctx.getUserObject();
+        if (!user.tokens.isAnonymous()) {
+            Display.setTitle(_msgmgr.getBundle(BangCodes.BANG_MSGS).get(
+                                 "m.online_title", user.username));
+        }
 
         // get a reference to the player service
         _psvc = (PlayerService)_client.requireService(PlayerService.class);
@@ -984,6 +1028,14 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Called to have popup occur after the client has logged on.
+     */
+    public void showPopupAfterLogon (String popup)
+    {
+        _popup = popup;
+    }
+
+    /**
      * Pops up a dialog suggesting a lower level of graphical detail to the
      * user, or saves the suggestion until it can be displayed.
      */
@@ -994,6 +1046,23 @@ public class BangClient extends BasicClient
         } else {
             _suggestLowerDetail = true;
         }
+        return false;
+    }
+
+    /**
+     * Called to let the client potentially stop the app from shutting down.
+     */
+    public boolean shouldStop ()
+    {
+        if (!_ctx.getClient().isLoggedOn()) {
+            return true;
+        }
+        PlayerObject user = _ctx.getUserObject();
+        if (!user.tokens.isAnonymous() || _showingAccount) {
+            return true;
+        }
+        displayPopup(new CreateAccountView(_ctx, true), true, 800);
+        _showingAccount = true;
         return false;
     }
 
@@ -1411,11 +1480,18 @@ public class BangClient extends BasicClient
                     ((BangBootstrapData)_ctx.getClient().getBootstrapData()).saloonOid);
 
             } else {
-                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, reason);
-                if (isShowingTownView()) {
-                    ((TownView)_mview).resetViewpoint();
+                if (CREATE_HANDLE.equals(reason)) {
+                    _headingTo = placeId;
+                    displayPopup(new CreateAvatarView(_ctx), true, 800);
+                } else if (SIGN_UP.equals(reason)) {
+                    displayPopup(new CreateAccountView(_ctx, false), true, 800);
+                    _showingAccount = true;
+                } else if (UNDER_13.equals(reason)) {
+                    _headingTo = placeId;
+                    displayPopup(new CoppaView(_ctx), true, 800);
                 } else {
-                    showTownView();
+                    _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, reason);
+                    resetTownView();
                 }
             }
         }
@@ -1468,6 +1544,9 @@ public class BangClient extends BasicClient
     protected String _priorLocationIdent;
     protected int _priorLocationOid;
     protected String _logOffMsg;
+    protected String _popup;
+    protected int _headingTo = -1;
+    protected boolean _showingAccount;
 
     /** The time in milliseconds after which we log off an idle user. */
     protected static final long LOGOFF_DELAY = 8L * 60L * 1000L;

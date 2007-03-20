@@ -22,12 +22,14 @@ import com.samskivert.util.Predicate;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.client.PickLookView;
+import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.ranch.client.UnitPalette;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
@@ -137,7 +139,8 @@ public class StatusView extends BWindow
         add(_handle = new BLabel("", "status_handle"),
             new Rectangle(40, 590, 195, 33));
         _handle.setFit(BLabel.Fit.SCALE);
-        _posterBtn = new BButton(_msgs.get("m.status_poster"), this, "poster");
+        String poster = user.handle instanceof GuestHandle ? "avatar" : "poster";
+        _posterBtn = new BButton(_msgs.get("m.status_" + poster), this, poster);
         _posterBtn.setStyleClass("big_button");
         add(_posterBtn, new Point(40, 147));
 
@@ -179,6 +182,10 @@ public class StatusView extends BWindow
             WantedPosterView.displayWantedPoster(
                 _ctx, _ctx.getUserObject().handle);
             _posterBtn.setEnabled(false);
+
+        } else if (cmd.equals("avatar")) {
+            _ctx.getBangClient().clearPopup(this, true);
+            _ctx.getBangClient().displayPopup(new CreateAvatarView(_ctx), true, 800);
         }
     }
 
@@ -203,7 +210,8 @@ public class StatusView extends BWindow
     {
         super.wasAdded();
         // our handle can be changed, so set it every time
-        _handle.setText(_ctx.getUserObject().handle.toString());
+        PlayerObject user = _ctx.getUserObject();
+        _handle.setText(user.handle.toString());
     }
 
     @Override // documentation inherited

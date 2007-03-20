@@ -78,6 +78,8 @@ import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangCredentials;
+import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
@@ -255,6 +257,27 @@ public class PlayerManager
                         ", reward=" + reward + "].", e);
             }
         }
+    }
+
+    // documentation inherited from interface PlayerProvider
+    public void declareOfAge (ClientObject caller, final PlayerService.ConfirmListener listener)
+        throws InvocationException
+    {
+        final PlayerObject user = (PlayerObject)caller;
+
+        BangServer.invoker.postUnit(new PersistingUnit("declareOfAge", listener) {
+            public void invokePersistent () throws PersistenceException {
+                _playrepo.setOver13(user.playerId);
+            }
+            public void handleSuccess () {
+                user.tokens.setToken(BangTokenRing.OVER_13, true);
+                user.setTokens(user.tokens);
+                listener.requestProcessed();
+            }
+            public String requestFailed () {
+                return "Failed to set over 13 flag [who=" + user.who() + "]";
+            }
+        });
     }
 
     // documentation inherited from interface PlayerProvider
@@ -817,6 +840,55 @@ public class PlayerManager
             public String getFailureMessage () {
                 return "Failed to destroy item [who=" + user.who() + ", item=" + item + "]";
             }
+        });
+    }
+
+    // from interface PlayerProvider
+    public void createAccount (
+            ClientObject caller, final String username, final String password, final String email,
+            final String affiliate, final PlayerService.ConfirmListener listener)
+        throws InvocationException
+    {
+        final PlayerObject user = (PlayerObject)caller;
+
+        // make sure we're anonymous
+        if (!user.tokens.isAnonymous()) {
+            log.warning("Non-anonymous user tried to create account [who=" + user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        final String machIdent = ((BangCredentials)((BangClient)BangServer.clmgr.getClient(
+                        user.username)).getCredentials()).ident;
+
+        // clear their anonymous status immediately
+        user.tokens.setToken(BangTokenRing.ANONYMOUS, false);
+        user.setTokens(user.tokens);
+
+        BangServer.authInvoker.postUnit(new Invoker.Unit("createAccount") {
+            public boolean invoke () {
+                try {
+                    _errmsg = BangServer.author.createAccount(
+                        username, password, email, affiliate, machIdent);
+                    if (_errmsg == null) {
+                        _playrepo.clearAnonymous(user.playerId);
+                    }
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING,
+                        "Failed to create account for [who=" + user.who() + "]", pe);
+                    _errmsg = INTERNAL_ERROR;
+                }
+                return true;
+            }
+            public void handleResult () {
+                if (_errmsg != null) {
+                    listener.requestFailed(_errmsg);
+                    user.tokens.setToken(BangTokenRing.ANONYMOUS, true);
+                    user.setTokens(user.tokens);
+                } else {
+                    listener.requestProcessed();
+                }
+            }
+            protected String _errmsg;
         });
     }
 

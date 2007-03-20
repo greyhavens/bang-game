@@ -43,6 +43,7 @@ public class FirstBigShotView extends SteelWindow
     public FirstBigShotView (BangContext ctx)
     {
         super(ctx, ctx.xlate(RanchCodes.RANCH_MSGS, "m.firstbs_title"));
+        setModal(true);
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(15));
         _contents.setStyleClass("padded");
 
@@ -124,7 +125,7 @@ public class FirstBigShotView extends SteelWindow
             public void requestProcessed () {
                 // move to the next phase of the intro
                 _ctx.getBangClient().clearPopup(FirstBigShotView.this, true);
-                _ctx.getBangClient().checkShowIntro(false);
+                _ctx.getBangClient().continueMoveTo();
             }
             public void requestFailed (String reason) {
                 _status.setText(_msgs.xlate(reason));

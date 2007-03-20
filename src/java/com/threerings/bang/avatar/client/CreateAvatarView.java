@@ -46,6 +46,7 @@ public class CreateAvatarView extends SteelWindow
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
+        setModal(true);
 
         _contents.add(new BLabel(_msgs.get("m.create_intro"), "dialog_text"));
         _contents.setStyleClass("padded");
@@ -59,6 +60,7 @@ public class CreateAvatarView extends SteelWindow
         _status = new StatusLabel(ctx);
         _status.setStyleClass("dialog_text");
         _contents.add(_status);
+        _buttons.add(_cancel = new BButton(_msgs.get("m.cancel"), this, "cancel"));
         _buttons.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
         _done.setEnabled(false);
 
@@ -97,6 +99,9 @@ public class CreateAvatarView extends SteelWindow
             maybeClearStatus();
         } else if (cmd.equals("done")) {
             createAvatar();
+        } else if (cmd.equals("cancel")) {
+            _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
+            _ctx.getBangClient().resetTownView();
         }
     }
 
@@ -135,7 +140,7 @@ public class CreateAvatarView extends SteelWindow
             public void requestProcessed () {
                 // move to the next phase of the intro
                 _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
-                _ctx.getBangClient().checkShowIntro(false);
+                _ctx.getBangClient().createdAvatar();
             }
             public void requestFailed (String reason) {
                 _status.setStatus(_msgs.xlate(reason), true);
@@ -243,7 +248,7 @@ public class CreateAvatarView extends SteelWindow
     protected BComboBox _gender;
     protected BTextField _handle;
     protected FirstLookView _look;
-    protected BButton _done;
+    protected BButton _done, _cancel;
 
     protected static final int PREF_WIDTH = 640;
 }

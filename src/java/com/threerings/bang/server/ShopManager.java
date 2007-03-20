@@ -16,6 +16,7 @@ import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
 
 import static com.threerings.bang.Log.log;
@@ -28,9 +29,22 @@ public abstract class ShopManager extends PlaceManager
     @Override // documentation inherited
     public String ratifyBodyEntry (BodyObject body)
     {
-        return checkShopEnabled((PlayerObject)body) ? null :
-            MessageBundle.qualify(BangCodes.BANG_MSGS,
-                                  MessageBundle.compose("e.shop_disabled", "m." + getIdent()));
+        PlayerObject user = (PlayerObject)body;
+        if (!checkShopEnabled(user)) {
+            return disabledMessage();
+        }
+
+        String msg = null;
+
+        if (requireHandle() && (user.handle == null || user.handle instanceof GuestHandle)) {
+            msg = BangCodes.CREATE_HANDLE;
+        } else if (!allowAnonymous() && user.tokens.isAnonymous()) {
+            msg = BangCodes.SIGN_UP;
+        } else if (!allowUnder13() && !user.tokens.isOver13()) {
+            msg = BangCodes.UNDER_13;
+        }
+
+        return msg;
     }
 
     @Override // documentation inherited
@@ -41,6 +55,15 @@ public abstract class ShopManager extends PlaceManager
     }
 
     /**
+     * The error string for a disabled shop.
+     */
+    protected String disabledMessage ()
+    {
+        return MessageBundle.qualify(BangCodes.BANG_MSGS,
+                          MessageBundle.compose("e.shop_disabled", "m." + getIdent()));
+    }
+
+    /**
      * Checks whether the specified shop is enabled, throws an invocation exception if it is not.
      * This should be called at the start of all of a shop's invocation services. Casts and returns
      * the supplied caller to a {@link PlayerObject} for convenience.
@@ -48,9 +71,8 @@ public abstract class ShopManager extends PlaceManager
     protected PlayerObject requireShopEnabled (ClientObject caller)
         throws InvocationException
     {
-        String errmsg = ratifyBodyEntry((PlayerObject)caller);
-        if (errmsg != null) {
-            throw new InvocationException(errmsg);
+        if (!checkShopEnabled((PlayerObject)caller)) {
+            throw new InvocationException(disabledMessage());
         }
         return (PlayerObject)caller;
     }
@@ -69,6 +91,30 @@ public abstract class ShopManager extends PlaceManager
                     "[ident=" + getIdent() + "].", e);
             return false;
         }
+    }
+
+    /**
+     * Returns true if the shop requires the user have a handle.
+     */
+    protected boolean requireHandle ()
+    {
+        return false;
+    }
+
+    /**
+     * Returns true if the shop allows anonymous access.
+     */
+    protected boolean allowAnonymous ()
+    {
+        return true;
+    }
+
+    /**
+     * Returns true if the shop allows underaged access.
+     */
+    protected boolean allowUnder13 ()
+    {
+        return true;
     }
 
     /**

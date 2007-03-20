@@ -18,6 +18,18 @@ import com.threerings.util.Name;
 public interface PlayerProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link PlayerService#createAccount} request.
+     */
+    public void createAccount (ClientObject caller, String arg1, String arg2, String arg3, String arg4, InvocationService.ConfirmListener arg5)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link PlayerService#declareOfAge} request.
+     */
+    public void declareOfAge (ClientObject caller, InvocationService.ConfirmListener arg1)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#destroyItem} request.
      */
     public void destroyItem (ClientObject caller, int arg1, InvocationService.ConfirmListener arg2)

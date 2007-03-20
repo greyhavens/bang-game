@@ -93,6 +93,18 @@ public abstract class MatchHostManager extends ShopManager
         }
     }
 
+    @Override // from ShopManager
+    protected boolean requireHandle ()
+    {
+        return true;
+    }
+
+    @Override // from ShopManager
+    protected boolean allowUnder13 ()
+    {
+        return false;
+    }
+
     @Override // documentation inherited
     protected void bodyLeft (int bodyOid)
     {

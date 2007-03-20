@@ -71,6 +71,12 @@ public class RanchManager extends ShopManager
     }
 
     @Override // from ShopManager
+    protected boolean requireHandle ()
+    {
+        return true;
+    }
+
+    @Override // from ShopManager
     protected String getIdent ()
     {
         return "ranch";

@@ -10,8 +10,8 @@ import java.util.HashMap;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.CollectionUtil;
-import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
@@ -25,8 +25,10 @@ import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.FreeTicket;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
@@ -88,7 +90,9 @@ public class BangClientResolver extends CrowdClientResolver
         // if they're not in the db, it's their first time, how nice
         if (player == null) {
             // it's their first time, how nice
-            player = new PlayerRecord(username);
+            BangClient client = (BangClient)BangServer.clmgr.getClient(buser.username);
+            player = new PlayerRecord(
+                    username, ((BangCredentials)client.getCredentials()).anonymous);
             BangServer.playrepo.insertPlayer(player);
             BangServer.author.setAccountIsActive(username, true);
             BangServer.generalLog("first_timer " + username);
@@ -97,11 +101,13 @@ public class BangClientResolver extends CrowdClientResolver
         buser.playerId = player.playerId;
         if (player.handle != null) {
             buser.handle = new Handle(player.handle);
+        } else {
+            buser.handle = new GuestHandle(username);
         }
         buser.isMale = player.isSet(PlayerRecord.IS_MALE_FLAG);
-        if (player.isSet(PlayerRecord.IS_DEMO_ACCOUNT)) {
-            buser.tokens.setToken(BangTokenRing.DEMO, true);
-        }
+        buser.tokens.setToken(BangTokenRing.ANONYMOUS, player.isSet(PlayerRecord.IS_ANONYMOUS));
+        buser.tokens.setToken(BangTokenRing.OVER_13, player.isSet(PlayerRecord.IS_OVER_13));
+        buser.tokens.setToken(BangTokenRing.DEMO, player.isSet(PlayerRecord.IS_DEMO_ACCOUNT));
         buser.scrip = player.scrip;
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(player.accountName);
 
@@ -150,7 +156,7 @@ public class BangClientResolver extends CrowdClientResolver
 
         // if we're giving out free access to ITP, give the user a temporary ITP ticket for this
         // session (if they don't already have one)
-        if (RuntimeConfig.server.freeIndianPost && !holdsITPTicket &&
+        if (RuntimeConfig.server.freeIndianPost && !buser.tokens.isAnonymous() && !holdsITPTicket &&
                 !buser.holdsFreeTicket(BangCodes.INDIAN_POST)) {
             buser.addToInventory(new TrainTicket(buser.playerId, itpidx));
         }

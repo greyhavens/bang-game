@@ -24,6 +24,12 @@ public class PlayerRecord
     /** A flag indicating this account is a "demo" account. */
     public static final int IS_DEMO_ACCOUNT = 1 << 1;
 
+    /** A flag indicating if the player's over 13. */
+    public static final int IS_OVER_13 = 1 << 2;
+
+    /** A flag indicating the player is anonymous. */
+    public static final int IS_ANONYMOUS = 1 << 3;
+
     /** This player's unique identifier. */
     public int playerId;
 
@@ -81,11 +87,20 @@ public class PlayerRecord
     /** Constructs a blank player record for the supplied account. */
     public PlayerRecord (String accountName)
     {
+        this(accountName, false);
+    }
+
+    /** Constructs a blank player record for the supplied account. */
+    public PlayerRecord (String accountName, boolean anonymous)
+    {
         this.accountName = accountName;
         this.look = "";
         this.victoryLook = "";
         this.wantedLook = "";
         this.townId = BangCodes.FRONTIER_TOWN;
+        if (anonymous) {
+            this.flags = IS_ANONYMOUS;
+        }
     }
 
     /** Returns true if the specified flag is set. */

@@ -206,6 +206,14 @@ public class BangApp extends JmeApp
     }
 
     @Override // documentation inherited
+    public void stop ()
+    {
+        if (_client.shouldStop()) {
+            super.stop();
+        }
+    }
+
+    @Override // documentation inherited
     protected DisplaySystem createDisplay ()
     {
         PropertiesIO props = new PropertiesIO(getConfigPath("jme.cfg"));

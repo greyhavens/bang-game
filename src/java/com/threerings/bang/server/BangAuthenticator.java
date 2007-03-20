@@ -20,6 +20,13 @@ public abstract class BangAuthenticator extends Authenticator
     public abstract void setAccountIsActive (String username, boolean isActive)
         throws PersistenceException;
 
+    /**
+     * Called to create an account.
+     */
+    public abstract String createAccount (
+            String username, String password, String email, String affiliate, String machIdent)
+        throws PersistenceException;
+
     @Override // from Authenticator
     protected Invoker getInvoker ()
     {

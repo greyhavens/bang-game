@@ -56,6 +56,7 @@ import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.bounty.data.BountyConfig;
 
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
@@ -915,6 +916,8 @@ public class BangManager extends GameManager
                 Look look = prec.user.getLook(Look.Pose.DEFAULT);
                 if (look != null) {
                     pinfo[ii].avatar = look.getAvatar(prec.user);
+                } else {
+                    pinfo[ii].avatar = new AvatarInfo();
                 }
                 look = prec.user.getLook(Look.Pose.VICTORY);
                 if (look != null) {

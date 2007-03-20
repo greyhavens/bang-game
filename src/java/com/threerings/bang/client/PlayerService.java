@@ -25,6 +25,11 @@ public interface PlayerService extends InvocationService
     public static final int FOLK_IS_FOE = 3;
 
     /**
+     * Declare that the user is of age to access multiplayer areas.
+     */
+    public void declareOfAge (Client client, ConfirmListener listener);
+
+    /**
      * Issues a request to create this player's (free) first Big Shot.
      */
     public void pickFirstBigShot (Client client, String type, Name name, ConfirmListener cl);
@@ -40,7 +45,7 @@ public interface PlayerService extends InvocationService
      */
     public void respondToNotification (Client client, Comparable key, int resp,
                                        ConfirmListener listener);
-    
+
     /**
      * Remove one of our pardners from our pardner list.
      */
@@ -96,9 +101,15 @@ public interface PlayerService extends InvocationService
      * randomly assigned identifier that can be used to download the song.
      */
     public void prepSongForDownload (Client client, String song, ResultListener listener);
-    
+
     /**
      * Requests to destroy an item in the player's inventory.
      */
     public void destroyItem (Client client, int itemId, ConfirmListener listener);
+
+    /**
+     * Requests to create an account for the player.
+     */
+    public void createAccount (Client client, String username, String password, String email,
+            String affiliate, ConfirmListener listener);
 }

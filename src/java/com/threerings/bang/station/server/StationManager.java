@@ -142,6 +142,12 @@ public class StationManager extends ShopManager
     }
 
     @Override // from ShopManager
+    protected boolean allowAnonymous ()
+    {
+        return false;
+    }
+
+    @Override // from ShopManager
     protected String getIdent ()
     {
         return "station";
