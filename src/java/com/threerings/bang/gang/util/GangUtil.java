@@ -102,7 +102,7 @@ public class GangUtil
             return null;
         }
 
-        // find the listed parts
+        // find the listed parts and use them to form the fingerprint
         BucklePart[] parts = new BucklePart[partIds.length];
         for (int ii = 0; ii < parts.length; ii++) {
             Item item = items.get(partIds[ii]);
@@ -112,7 +112,14 @@ public class GangUtil
             }
             parts[ii] = (BucklePart)item;
         }
+        return getBuckleInfo(parts);
+    }
 
+    /**
+     * Forms and returns a buckle fingerprint based on the ordered list of buckle parts given.
+     */
+    public static BuckleInfo getBuckleInfo (BucklePart[] parts)
+    {
         // put them into the print in order, with each component having an encoded component id
         // and colorization followed by encoded coordinates
         int[] print = new int[0], pair = new int[2];

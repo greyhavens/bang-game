@@ -53,6 +53,7 @@ import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
+import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
@@ -636,6 +637,10 @@ public class GangHandler
         // make sure it comes from a leader
         verifyIsLeader(handle);
 
+        // form the fingerprint before fiddling with the array
+        final BuckleInfo buckle = GangUtil.getBuckleInfo(parts);
+
+        // store the parts in a temporary DSet to facilitate
         // verify and count all of the parts, clear out the ones that haven't changed
         final int[] partIds = new int[parts.length];
         int[] ccounts = new int[AvatarLogic.BUCKLE_PARTS.length];
@@ -695,7 +700,7 @@ public class GangHandler
                         BangServer.itemrepo.updateItem(part);
                     }
                 }
-                BangServer.gangrepo.updateBuckle(_gangId, partIds);
+                BangServer.gangrepo.updateBuckle(_gangId, partIds, buckle.print);
             }
             public void handleSuccess () {
                 _gangobj.startTransaction();

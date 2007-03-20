@@ -32,6 +32,7 @@ import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
@@ -154,8 +155,7 @@ public class GangManager
             GangRecord grec = _gangrepo.loadGang(mrec.gangId, false);
             info.gang = grec.getName();
             info.rank = getPosterRank(mrec.rank);
-            info.buckle = GangUtil.getBuckleInfo(
-                grec.getBuckle(), new DSet<Item>(grec.inventory));
+            info.buckle = new BuckleInfo(grec.getBucklePrint());
         }
     }
 
@@ -213,12 +213,11 @@ public class GangManager
                 GangInfo info = new GangInfo();
                 info.name = _grec.getName();
                 info.founded = _grec.founded.getTime();
-                info.weightClass = GangUtil.getWeightClass(_grec.inventory);
-                info.notoriety = GangUtil.getNotorietyLevel(info.weightClass, _grec.notoriety);
+                info.weightClass = _grec.weightClass;
+                info.notoriety = GangUtil.getNotorietyLevel(_grec.weightClass, _grec.notoriety);
                 info.statement = _grec.statement;
                 info.url = _grec.url;
-                info.buckle = GangUtil.getBuckleInfo(
-                    _grec.getBuckle(), new DSet<Item>(_grec.inventory));
+                info.buckle = new BuckleInfo(_grec.getBucklePrint());
                 info.avatar = _grec.avatar;
                 info.leaders = getSortedMembers(_grec.members, true);
                 info.members = getSortedMembers(_grec.members, false);
@@ -342,8 +341,9 @@ public class GangManager
                     _grec.inventory.add(part);
                     bids[ii] = part.getItemId();
                 }
-                _gangrepo.updateBuckle(_grec.gangId, bids);
-                _grec.setBuckle(bids);
+                BuckleInfo buckle = GangUtil.getBuckleInfo(parts);
+                _gangrepo.updateBuckle(_grec.gangId, bids, buckle.print);
+                _grec.setBuckle(bids, buckle.print);
                 return null;
             }
             protected void rollbackPersistentAction ()

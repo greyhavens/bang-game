@@ -73,6 +73,7 @@ public class GangRepository extends JORARepository
         _playerIdMask.setModified("playerId");
         _buckleMask = _gtable.getFieldMask();
         _buckleMask.setModified("buckle");
+        _buckleMask.setModified("bucklePrint");
     }
 
     /**
@@ -114,15 +115,12 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         GangRecord grec = loadByExample(_gtable, new GangRecord(gangId), _gangIdMask);
-        if (grec == null) {
-            return null;
+        if (grec == null || !all) {
+            return grec;
         }
 
         // load the gang inventory
         grec.inventory = BangServer.itemrepo.loadItems(gangId, true);
-        if (!all) {
-            return grec;
-        }
 
         // load the members
         grec.members = loadGangMembers(gangId);
@@ -157,9 +155,8 @@ public class GangRepository extends JORARepository
     {
         GangRecord grec = loadByExample(_gtable, new GangRecord(name), _normalizedMask);
         if (grec != null) {
-            // load members, inventory, avatar; skip coins and outfit
+            // load members, avatar; skip inventory, coins, outfit
             grec.members = loadGangMembers(grec.gangId);
-            grec.inventory = BangServer.itemrepo.loadItems(grec.gangId, true);
             GangMemberEntry leader = GangUtil.getSeniorLeader(grec.members);
             grec.avatar = (leader == null) ?
                 null : BangServer.lookrepo.loadSnapshot(leader.playerId);
@@ -203,13 +200,26 @@ public class GangRepository extends JORARepository
     }
 
     /**
-     * Updates a gang's buckle.
+     * Updates a gang's cached weight class.
      */
-    public void updateBuckle (int gangId, int[] buckle)
+    public void updateWeightClass (int gangId, byte weightClass)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANGS set WEIGHT_CLASS = " + weightClass +
+            " where GANG_ID = " + gangId, 1);
+    }
+
+    /**
+     * Updates a gang's buckle.
+     *
+     * @param buckle an array containing the item ids of the buckle parts used, in order.
+     * @param print the buckle fingerprint.
+     */
+    public void updateBuckle (int gangId, int[] buckle, int[] print)
         throws PersistenceException
     {
         GangRecord grec = new GangRecord(gangId);
-        grec.setBuckle(buckle);
+        grec.setBuckle(buckle, print);
         if (update(_gtable, grec, _buckleMask) != 1) {
             throw new PersistenceException("Failed to update buckle [gangId=" + gangId + "].");
         }
@@ -623,32 +633,20 @@ public class GangRepository extends JORARepository
             "FOUNDED DATETIME NOT NULL",
             "STATEMENT TEXT NOT NULL",
             "URL VARCHAR(255) NOT NULL",
+            "WEIGHT_CLASS TINYINT NOT NULL",
             "NOTORIETY INTEGER NOT NULL",
             "LAST_PLAYED DATETIME NOT NULL",
             "SCRIP INTEGER NOT NULL",
             "ACES INTEGER NOT NULL",
             "BUCKLE BLOB NOT NULL",
+            "BUCKLE_PRINT BLOB NOT NULL",
             "PRIMARY KEY (GANG_ID)",
         }, "");
 
-        // TEMP: add the normalized name column, aces column, change brand to buckle
-        if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "NORMALIZED")) {
-            JDBCUtil.addColumn(conn, "GANGS", "NORMALIZED", "VARCHAR(64) UNIQUE", "NAME");
-            Statement stmt = conn.createStatement();
-            try {
-                // NOTE: all collisions must be removed by hand before this is run or it will fail
-                stmt.executeUpdate(
-                    "update GANGS set NORMALIZED = LOWER(REPLACE(NAME, \" \", \"\"))");
-            } finally {
-                stmt.close();
-            }
-            JDBCUtil.changeColumn(conn, "GANGS", "NORMALIZED",
-                "NORMALIZED VARCHAR(64) NOT NULL UNIQUE");
-        }
-        if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "BUCKLE")) {
-            JDBCUtil.changeColumn(conn, "GANGS", "BRAND", "BUCKLE BLOB NOT NULL");
-        }
+        // TEMP: add aces, weight class, buckle print columns
         JDBCUtil.addColumn(conn, "GANGS", "ACES", "INTEGER NOT NULL", "SCRIP");
+        JDBCUtil.addColumn(conn, "GANGS", "WEIGHT_CLASS", "TINYINT NOT NULL", "URL");
+        JDBCUtil.addColumn(conn, "GANGS", "BUCKLE_PRINT", "BLOB NOT NULL", "BUCKLE");
         // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_MEMBERS", new String[] {

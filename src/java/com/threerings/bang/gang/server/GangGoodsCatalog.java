@@ -6,11 +6,15 @@ package com.threerings.bang.gang.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.samskivert.io.PersistenceException;
+
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.WeightClassUpgrade;
+import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.avatar.util.BucklePartCatalog;
@@ -50,13 +54,14 @@ public class GangGoodsCatalog
         }
 
         // add the weight class upgrades
-        pf = new ItemProviderFactory();
+        pf = new WeightClassUpgradeProviderFactory();
         for (byte ii = 1; ii < WEIGHT_CLASSES.length; ii++) {
             WeightClass wclass = WEIGHT_CLASSES[ii];
             registerGood(new WeightClassUpgradeGood(ii, 0, wclass.coins, wclass.aces), pf);
         }
 
         // and the buckle upgrades
+        pf = new ItemProviderFactory();
         for (int ii = 0; ii < BUCKLE_UPGRADE_COSTS.length; ii++) {
             int[] costs = BUCKLE_UPGRADE_COSTS[ii];
             registerGood(new BuckleUpgradeGood(
@@ -103,15 +108,35 @@ public class GangGoodsCatalog
             throws InvocationException;
     }
 
-    /** Used for non-colorized items. */
+    /** Used for generic items. */
     protected class ItemProviderFactory extends ProviderFactory {
         public GangGoodProvider createProvider (
             GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
             throws InvocationException
         {
+            return new GangItemProvider(gang, handle, admin, good, args);
+        }
+    }
+
+    /** Used for {@link WeightClassUpgrade}s. */
+    protected class WeightClassUpgradeProviderFactory extends ProviderFactory {
+        public GangGoodProvider createProvider (
+            GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
+            throws InvocationException
+        {
+            final byte oldWeightClass = gang.getWeightClass();
             return new GangItemProvider(gang, handle, admin, good, args) {
-                protected Item createItem () throws InvocationException {
-                    return _good.createItem(_gang.gangId);
+                protected String persistentAction () throws PersistenceException {
+                    String result = super.persistentAction();
+                    if (result == null) {
+                        BangServer.gangrepo.updateWeightClass(_gang.gangId,
+                            ((WeightClassUpgrade)_item).getWeightClass());
+                    }
+                    return null;
+                }
+                protected void rollbackPersistentAction () throws PersistenceException {
+                    super.rollbackPersistentAction();
+                    BangServer.gangrepo.updateWeightClass(_gang.gangId, oldWeightClass);
                 }
             };
         }

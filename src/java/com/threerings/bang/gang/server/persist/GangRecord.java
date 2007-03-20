@@ -39,6 +39,9 @@ public class GangRecord
     /** The gang's home page. */
     public String url;
 
+    /** The gang's weight class (determined by the upgrades it holds, but stored for queries). */
+    public byte weightClass;
+
     /** The gang's accumulated notoriety points. */
     public int notoriety;
 
@@ -53,6 +56,9 @@ public class GangRecord
 
     /** The encoded buckle (item ids of the parts used). */
     public byte[] buckle;
+
+    /** The cached buckle fingerprint. */
+    public byte[] bucklePrint;
 
     /** The number of coins in the gang's coffers. */
     public transient int coins;
@@ -77,6 +83,7 @@ public class GangRecord
         statement = "";
         url = "";
         buckle = new byte[0];
+        bucklePrint = new byte[0];
         inventory = new ArrayList<Item>();
         outfit = new OutfitArticle[0];
         members = new ArrayList<GangMemberEntry>();
@@ -111,24 +118,24 @@ public class GangRecord
      */
     public int[] getBuckle ()
     {
-        int[] ibuckle = new int[buckle.length / 4];
-        ByteBuffer.wrap(buckle).asIntBuffer().get(ibuckle);
-        return ibuckle;
+        return decode(buckle);
+    }
+
+    /**
+     * Returns the buckle fingerprint.
+     */
+    public int[] getBucklePrint ()
+    {
+        return decode(bucklePrint);
     }
 
     /**
      * Sets the buckle field.
      */
-    public void setBuckle (int[] ibuckle)
+    public void setBuckle (int[] buckle, int[] print)
     {
-        buckle = new byte[ibuckle.length * 4];
-        ByteBuffer.wrap(buckle).asIntBuffer().put(ibuckle);
-    }
-
-    /** Returns the maximum number of members this gang can have. */
-    public int getMaxMembers ()
-    {
-        return 50; // for now, a constant
+        this.buckle = encode(buckle);
+        bucklePrint = encode(print);
     }
 
     /** Returns a string representation of this instance. */
@@ -136,5 +143,19 @@ public class GangRecord
     {
         return "[gangId=" + gangId + ", name=" + name + ", founded=" +
             founded + ", scrip=" + scrip + "]";
+    }
+
+    protected static byte[] encode (int[] values)
+    {
+        byte[] data = new byte[values.length * 4];
+        ByteBuffer.wrap(data).asIntBuffer().put(values);
+        return data;
+    }
+
+    protected static int[] decode (byte[] data)
+    {
+        int[] values = new int[data.length / 4];
+        ByteBuffer.wrap(data).asIntBuffer().get(values);
+        return values;
     }
 }
