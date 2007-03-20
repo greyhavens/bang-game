@@ -419,6 +419,7 @@
 
     <ant dir="projects/installers" target="clean" inheritAll="false"/>
     <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
+    <delete file="etc/bang-client.pro"/>
 
     <!-- if we're generating packages, revert any modified model.properties files to -->
     <!-- avoid checkclean freakout -->
@@ -558,7 +559,6 @@
     <antcall target="baseclient">
       <param name="client_dir" value="${client.base}"/>
     </antcall>
-    <delete file="etc/bang-client.pro"/>
 
     <!-- make our Proguard mapping file accessible to Hemiptera -->
     <mkdir dir="${deploy.dir}/hemiptera-map"/>
@@ -645,7 +645,6 @@
     <antcall target="baseclient">
       <param name="client_dir" value="${client.base}"/>
     </antcall>
-    <delete file="etc/bang-client.pro"/>
 
     <!-- copy the just built client into var/ where it can be used for future diffing -->
     <copy todir="${var.dir}">
