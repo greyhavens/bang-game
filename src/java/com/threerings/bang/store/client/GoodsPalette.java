@@ -5,6 +5,7 @@ package com.threerings.bang.store.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.samskivert.util.ListUtil;
@@ -12,6 +13,7 @@ import com.samskivert.util.ListUtil;
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
@@ -54,6 +56,16 @@ public class GoodsPalette extends IconPalette
 
     public void reinitGoods (boolean reselectPrevious)
     {
+        // reuse existing icons when they require colorizations (both to avoid the expense of
+        // recoloring again and to prevent a disconcerting change of all colors on screen)
+        HashMap<Good, GoodsIcon> oicons = new HashMap<Good, GoodsIcon>();
+        for (SelectableIcon icon : _icons) {
+            GoodsIcon gicon = (GoodsIcon)icon;
+            if (gicon.getGood().getColorizationClasses(_ctx) != null) {
+                oicons.put(gicon.getGood(), gicon);
+            }
+        }
+
         Good sgood = (getSelectedIcon() == null) ? null : ((GoodsIcon)getSelectedIcon()).getGood();
         int opage = _page;
         clear();
@@ -71,7 +83,11 @@ public class GoodsPalette extends IconPalette
         Good[] goods = filtered.toArray(new Good[filtered.size()]);
         Arrays.sort(goods);
         for (int ii = 0; ii < goods.length; ii++) {
-            addIcon(new GoodsIcon(_ctx, getColorEntity(), goods[ii]));
+            GoodsIcon icon = oicons.get(goods[ii]);
+            if (icon == null) {
+                icon = new GoodsIcon(_ctx, getColorEntity(), goods[ii]);
+            }
+            addIcon(icon);
         }
 
         // reselect the previously selected good if specified and it's still
