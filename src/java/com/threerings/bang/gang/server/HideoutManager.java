@@ -459,7 +459,13 @@ public class HideoutManager extends MatchHostManager
             public boolean invoke () {
                 try {
                     _lists = new ArrayList<TopRankedGangList>();
-                    _lists.add(BangServer.gangrepo.loadTopRankedByNotoriety(TOP_RANKED_LIST_SIZE));
+                    for (byte ii = 0; ii < WEIGHT_CLASSES.length; ii++) {
+                        TopRankedGangList list = BangServer.gangrepo.loadTopRankedByNotoriety(
+                            ii, TOP_RANKED_LIST_SIZE);
+                        if (list != null) {
+                            _lists.add(list);
+                        }
+                    }
                     return true;
 
                 } catch (PersistenceException pe) {
@@ -470,20 +476,8 @@ public class HideoutManager extends MatchHostManager
 
             public void handleResult () {
                 // make sure we weren't shutdown while we were off invoking
-                if (!_hobj.isActive()) {
-                    return;
-                }
-                _hobj.startTransaction();
-                try {
-                    for (TopRankedGangList list : _lists) {
-                        if (_hobj.topRanked.containsKey(list.criterion)) {
-                            _hobj.updateTopRanked(list);
-                        } else {
-                            _hobj.addToTopRanked(list);
-                        }
-                    }
-                } finally {
-                    _hobj.commitTransaction();
+                if (_hobj.isActive()) {
+                    _hobj.setTopRanked(new DSet<TopRankedGangList>(_lists));
                 }
             }
 

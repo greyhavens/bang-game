@@ -7,6 +7,7 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
 
 /**
@@ -20,6 +21,9 @@ public class TopRankedGangList extends SimpleStreamableObject
 
     /** The names of the gangs in rank order. */
     public Handle[] names;
+
+    /** The buckle of the number one gang. */
+    public BuckleInfo topDogBuckle;
 
     // documentation inherited from interface DSet.Key
     public Comparable getKey ()

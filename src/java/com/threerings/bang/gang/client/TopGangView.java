@@ -13,7 +13,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 
-import com.threerings.bang.saloon.data.SaloonCodes;
+import com.threerings.bang.avatar.client.BuckleView;
 
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
@@ -40,22 +40,7 @@ public class TopGangView extends BContainer
         add(new BScrollPane(cont), BorderLayout.CENTER);
 
         for (TopRankedGangList list : hideoutobj.topRanked) {
-            if (list.criterion.indexOf("m.top_notoriety") > -1) {
-                addScenario(cont, list);
-                break;
-            }
-        }
-        for (TopRankedGangList list : hideoutobj.topRanked) {
-            if (list.criterion.indexOf("m.scenario_oa") > -1) {
-                addScenario(cont, list);
-                break;
-            }
-        }
-        for (TopRankedGangList list : hideoutobj.topRanked) {
-            if (list.criterion.indexOf("m.top_notoriety") == -1 &&
-                list.criterion.indexOf("m.scenario_oa") == -1) {
-                addScenario(cont, list);
-            }
+            addScenario(cont, list);
         }
     }
 
@@ -63,15 +48,37 @@ public class TopGangView extends BContainer
     {
         cont.add(new Spacer(10, 5));
 
-        BContainer col = new BContainer(GroupLayout.makeVStretch());
+        BContainer row = new BContainer(
+            GroupLayout.makeHoriz(GroupLayout.CENTER));
+        ((GroupLayout)row.getLayoutManager()).setGap(25);
+        ((GroupLayout)row.getLayoutManager()).setOffAxisJustification(
+            GroupLayout.BOTTOM);
+        cont.add(row);
+
+        BContainer col = new BContainer(
+            GroupLayout.makeVert(GroupLayout.CENTER));
+        ((GroupLayout)col.getLayoutManager()).setGap(0);
+        row.add(col);
 
         String cat = _ctx.xlate(HideoutCodes.HIDEOUT_MSGS, list.criterion);
         col.add(new BLabel(cat, "top_score_category"));
-        for (int ii = 0; ii < list.names.length; ii++) {
+
+        BuckleView bview = new BuckleView(_ctx, 3, true);
+        col.add(bview, GroupLayout.FIXED);
+        if (list.names.length > 0) {
+            bview.setName(list.names[0], "1. " + list.names[0]);
+        }
+        if (list.topDogBuckle != null) {
+            bview.setBuckle(list.topDogBuckle);
+        }
+
+        col = new BContainer(GroupLayout.makeVStretch());
+        ((GroupLayout)col.getLayoutManager()).setGap(0);
+        row.add(col);
+        for (int ii = 1; ii < list.names.length; ii++) {
             col.add(BangUI.createGangLabel(
                 list.names[ii], (ii + 1) + ". " + list.names[ii], "top_score_list"));
         }
-        cont.add(col);
     }
 
     protected BangContext _ctx;

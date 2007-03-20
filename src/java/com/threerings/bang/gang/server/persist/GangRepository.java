@@ -29,6 +29,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.persist.PlayerRecord;
@@ -559,22 +560,41 @@ public class GangRepository extends JORARepository
     }
 
     /**
-     * Loads the top-ranked gangs in terms of notoriety.
+     * Loads the top-ranked gangs in terms of notoriety for one weight class.
      */
-    public TopRankedGangList loadTopRankedByNotoriety (int count)
+    public TopRankedGangList loadTopRankedByNotoriety (byte weightClass, int count)
         throws PersistenceException
     {
+        final String query = "select GANG_ID, NAME from GANGS where WEIGHT_CLASS = " +
+            weightClass + " and LAST_PLAYED > " + STALE_DATE +
+            " order by NOTORIETY desc limit " + count;
+
+        final TopRankedGangList list = new TopRankedGangList();
+        list.criterion = MessageBundle.compose("m.top_notoriety",
+            MessageBundle.qualify(GangCodes.GANG_MSGS, "m.weight_class." + weightClass));
+
         final ArrayList<Handle> names = new ArrayList<Handle>();
-        final String query = "select NAME from GANGS order by NOTORIETY desc limit " + count;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 Statement stmt = conn.createStatement();
                 try {
+                    // load the names and remember the top gang's id
                     ResultSet rs = stmt.executeQuery(query);
-                    while (rs.next()) {
-                        names.add(new Handle(rs.getString(1)));
+                    if (!rs.next()) {
+                        return null;
+                    }
+                    int topGangId = rs.getInt(1);
+                    do {
+                        names.add(new Handle(rs.getString(2)));
+                    } while (rs.next());
+
+                    // load the top gang's buckle print
+                    rs = stmt.executeQuery("select BUCKLE_PRINT from GANGS where GANG_ID = " +
+                        topGangId);
+                    if (rs.next()) {
+                        list.topDogBuckle = new BuckleInfo(GangRecord.decode(rs.getBytes(1)));
                     }
                     return null;
 
@@ -583,8 +603,9 @@ public class GangRepository extends JORARepository
                 }
             }
         });
-        TopRankedGangList list = new TopRankedGangList();
-        list.criterion = "m.top_notoriety";
+        if (names.isEmpty()) {
+            return null;
+        }
         list.names = names.toArray(new Handle[names.size()]);
         return list;
     }
@@ -702,4 +723,9 @@ public class GangRepository extends JORARepository
     protected Table<GangHistoryRecord> _htable;
     protected Table<GangOutfitRecord> _otable;
     protected FieldMask _gangIdMask, _normalizedMask, _playerIdMask, _buckleMask;
+
+    /** The cutoff after which a gang is considered inactive and is no longer
+     * considered when calculating top scores. */
+    protected static final String STALE_DATE =
+        "DATE_SUB(NOW(), INTERVAL 2 WEEK)";
 }

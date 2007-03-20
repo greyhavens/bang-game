@@ -2016,18 +2016,6 @@ menu_directory:selected {
   background: image "ui/hideout/menu_directory_selected.png" centerxy;
 }
 
-compact_button {
-  parent: "button";
-  padding: 0 23;
-}
-compact_button:hover {
-  parent: "button:hover";
-}
-compact_button:down {
-  parent: "button:down";
-  padding: 2 24 0 22;
-}
-
 hideout_members {
   background: image "ui/hideout/fields_members_in_hideout.png" centerxy;
   size: 434 148;
@@ -2057,6 +2045,14 @@ gang_rank_view {
 }
 
 // Gang buckle dialog styles
+
+buckle_view {
+  color: #442801;
+  padding: 7 12 7 12;
+  text-align: center;
+  vertical-align: bottom;
+  font: "Dom Casual" plain 14;
+}
 
 buckle_dialog {
   background: image "ui/window/border_wood.png" framexy;

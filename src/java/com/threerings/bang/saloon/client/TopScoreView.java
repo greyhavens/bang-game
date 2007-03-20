@@ -39,13 +39,13 @@ public class TopScoreView extends BContainer
         add(new BScrollPane(cont), BorderLayout.CENTER);
 
         for (TopRankedList list : rankobj.getTopRanked()) {
-            if (list.criterion.indexOf("m.scenario_oa") > -1) {
+            if (list.criterion.indexOf("m.scenario_oa") > -1 && list.players.length > 0) {
                 addScenario(cont, list);
                 break;
             }
         }
         for (TopRankedList list : rankobj.getTopRanked()) {
-            if (list.criterion.indexOf("m.scenario_oa") == -1) {
+            if (list.criterion.indexOf("m.scenario_oa") == -1 && list.players.length > 0) {
                 addScenario(cont, list);
             }
         }
@@ -55,7 +55,7 @@ public class TopScoreView extends BContainer
     {
         return _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.top_scores");
     }
-    
+
     protected void addScenario (BContainer cont, TopRankedList list)
     {
         cont.add(new Spacer(10, 5));

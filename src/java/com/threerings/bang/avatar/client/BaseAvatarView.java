@@ -242,12 +242,14 @@ public abstract class BaseAvatarView extends BLabel
     {
         if (_image != null) {
             int ix = (getWidth() - _image.getWidth())/2;
-            int iy = (getHeight() - _image.getHeight())/2;
-            if (_scroll != null) {
-                iy = _scroll.getHeight()/2;
-            }
+            int iy = getImageY();
             _image.render(renderer, ix, iy, _alpha);
         }
+    }
+
+    protected int getImageY ()
+    {
+        return (_scroll == null ? (getHeight() - _image.getHeight()) : _scroll.getHeight())/2;
     }
 
     protected void renderScroll (Renderer renderer)
