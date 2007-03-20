@@ -13,6 +13,9 @@
     <part name="checker" coins="4" aces="400"/>
     <part name="swirls2" coins="3" aces="300"/>
     <part name="swirls3" coins="3" aces="250"/>
+    <part name="clockwork" coins="3" aces="400"/>
+    <part name="design" coins="3" aces="250"/>
+    <part name="rattlers" coins="4" aces="400"/>
   </class>
 
   <!-- buckle borders -->
@@ -26,6 +29,9 @@
     <part name="round_2_studs" coins="4" aces="500"/>
     <part name="round_10_studs" coins="5" aces="550"/>
     <part name="scrolls" coins="6" aces="550"/>
+    <part name="barbed_wire" coins="5" aces="450"/>
+    <part name="mech_chain" coins="6" aces="600"/>
+    <part name="rattler" coins="4" aces="350"/>
   </class>
 
   <!-- buckle icons -->
@@ -55,5 +61,29 @@
     <part name="rabbit" coins="2" aces="300"/>
     <part name="snake" coins="2" aces="300"/>
     <part name="watch" coins="2" aces="300"/>
+    <part name="gun_crossed_02_left" coins="2" aces="150"/>
+    <part name="gun_crossed_02_right" coins="2" aces="150"/>
+    <part name="gun_crossed_left" coins="2" aces="150"/>
+    <part name="gun_crossed_right" coins="2" aces="150"/>
+    <part name="gun_left" coins="2" aces="150"/>
+    <part name="gun_right" coins="2" aces="150"/>
+    <part name="rose_left" coins="2" aces="250"/>
+    <part name="rose_right" coins="2" aces="250"/>
+    <part name="rose_tilt_left" coins="2" aces="250"/>
+    <part name="rose_tilt_right" coins="2" aces="250"/>
+    <part name="scorpy_left" coins="3" aces="500"/>
+    <part name="scorpy_right" coins="3" aces="500"/>
+    <part name="scorpy_small_a" coins="2" aces="150"/>
+    <part name="scorpy_small_b" coins="2" aces="150"/>
+    <part name="scorpy_small_left_a" coins="2" aces="150"/>
+    <part name="scorpy_small_left_b" coins="2" aces="150"/>
+    <part name="scorpy_small_right_a" coins="2" aces="150"/>
+    <part name="scorpy_small_right_b" coins="2" aces="150"/>
+    <part name="wrench_crossed_02_left" coins="2" aces="300"/>
+    <part name="wrench_crossed_02_right" coins="2" aces="300"/>
+    <part name="wrench_crossed_left" coins="2" aces="300"/>
+    <part name="wrench_crossed_right" coins="2" aces="300"/>
+    <part name="wrench_left" coins="2" aces="300"/>
+    <part name="wrench_right" coins="2" aces="300"/>
   </class>
 </parts>
