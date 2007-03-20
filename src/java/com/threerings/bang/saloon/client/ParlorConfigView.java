@@ -31,6 +31,8 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.gang.data.GangCodes;
+
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
@@ -137,6 +139,11 @@ public class ParlorConfigView extends BDecoratedWindow
     {
         ArrayList<BComboBox.Item> types = new ArrayList<BComboBox.Item>();
         for (ParlorInfo.Type type : ParlorInfo.Type.values()) {
+            // only gang leaders can create recruiting parlors
+            if (type == ParlorInfo.Type.RECRUITING &&
+                ctx.getUserObject().gangRank != GangCodes.LEADER_RANK) {
+                continue;
+            }
             String msg = "m.pt_" + StringUtil.toUSLowerCase(type.toString());
             types.add(new BComboBox.Item(type, ctx.xlate(SaloonCodes.SALOON_MSGS, msg)));
         }

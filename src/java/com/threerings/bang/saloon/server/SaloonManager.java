@@ -35,6 +35,8 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.server.BangManager;
 
+import com.threerings.bang.gang.data.GangCodes;
+
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.ParlorConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
@@ -104,14 +106,27 @@ public class SaloonManager extends MatchHostManager
     {
         PlayerObject user = requireShopEnabled(caller);
 
-        // make sure this player doesn't already have a parlor created
-        if (_parlors.containsKey(user.handle)) {
+        // recruiting gangs are named after the gang
+        Handle creator;
+        if (type == ParlorInfo.Type.RECRUITING) {
+            creator = BangServer.gangmgr.requireGang(user.gangId).getGangObject().name;
+            if (user.gangRank != GangCodes.LEADER_RANK) {
+                log.warning("Non-leader tried to create recruiting parlor [who=" +
+                    user.who() + "].");
+                throw new InvocationException(INTERNAL_ERROR);
+            }
+        } else {
+            creator = user.handle;
+        }
+
+        // make sure they doesn't already have a parlor created
+        if (_parlors.containsKey(creator)) {
             throw new InvocationException(ALREADY_HAVE_PARLOR);
         }
 
         // create the new parlor
         final ParlorInfo info = new ParlorInfo();
-        info.creator = user.handle;
+        info.creator = creator;
         info.type = type;
 
         try {
