@@ -15,6 +15,7 @@
   !META-INF/*,!**/jme/tools/*Task.class,**/jme/tools/**,!**/tools/**)
 -injars ../dist/lib/nenya-openal.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/vilya-parlor.jar(!META-INF/*,!**/tools/**,!**/persist/**,!**/ezgame/**)
+-injars ../dist/lib/vilya-stats.jar(!META-INF/*,!**/tools/**,!**/persist/**)
 -injars ../dist/lib/samskivert.jar(
   com/samskivert/Log.class,**/io/**,**/net/**,**/swing/**,**/text/**,**/util/**,**/xml/**,
   **/servlet/user/Password.class,**/servlet/user/UserUtil.class)
@@ -119,7 +120,7 @@
     static <fields>;
 }
 
--keep public class com.threerings.bang.data.Stat {
+-keep public class com.threerings.stats.data.Stat {
     static <fields>;
 }
 
@@ -136,7 +137,7 @@
 }
 
 # Prevent this interface from being nixed entirely
--keep public interface com.threerings.bang.data.StatSet$Container {
+-keep public interface com.threerings.stats.data.StatSet$Container {
     public <methods>;
 }
 
