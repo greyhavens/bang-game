@@ -97,7 +97,6 @@ public class BangPrefs
                  props.getWidth() + "x" + props.getHeight() +
                  "x" + props.getDepth() + " " + props.getFreq() + "Hz " +
                  "(current: " + Display.getDisplayMode() + ").");
-        return (width >= BangUI.MIN_WIDTH && height >= BangUI.MIN_HEIGHT);
     }
 
     /**
