@@ -179,6 +179,16 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
+     * Mark's a player as bing a coin buyer.
+     */
+    public void markAsCoinBuyer (int playerId)
+        throws PersistenceException
+    {
+        checkedUpdate("update PLAYERS set FLAGS = FLAGS | " + PlayerRecord.IS_COIN_BUYER +
+                " where PLAYER_ID = " + playerId, 1);
+    }
+
+    /**
      * Deletes the specified player from the repository.
      */
     public void deletePlayer (PlayerRecord player)

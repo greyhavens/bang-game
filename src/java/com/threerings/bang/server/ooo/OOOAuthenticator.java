@@ -273,6 +273,14 @@ public class OOOAuthenticator extends BangAuthenticator
             }
         }
 
+        // see if they're a coin buyer
+        if (!anonymous && prec != null && !prec.isSet(PlayerRecord.IS_COIN_BUYER)) {
+            if (user.hasBoughtCoins()) {
+                BangServer.playrepo.markAsCoinBuyer(prec.playerId);
+                prec.flags = prec.flags | PlayerRecord.IS_COIN_BUYER;
+            }
+        }
+
         // make sure this player has access to this server's town
         int serverTownIdx = ServerConfig.townIndex;
         if (!anonymous && RuntimeConfig.server.freeIndianPost &&

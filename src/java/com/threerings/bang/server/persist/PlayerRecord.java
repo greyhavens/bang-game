@@ -27,6 +27,9 @@ public class PlayerRecord
     /** A flag indicating the player is anonymous. */
     public static final int IS_ANONYMOUS = 1 << 2;
 
+    /** A flag indicating the player is a coin buyer. */
+    public static final int IS_COIN_BUYER = 1 << 3;
+
     /** This player's unique identifier. */
     public int playerId;
 
