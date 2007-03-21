@@ -15,6 +15,7 @@ import org.lwjgl.opengl.Display;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.system.DisplaySystem;
+import com.jme.system.JmeException;
 import com.jme.system.PropertiesIO;
 import com.jme.util.LoggingSystem;
 
@@ -210,6 +211,7 @@ public class BangApp extends JmeApp
 
     @Override // documentation inherited
     protected DisplaySystem createDisplay ()
+        throws JmeException
     {
         PropertiesIO props = new PropertiesIO(getConfigPath("jme.cfg"));
         BangPrefs.configureDisplayMode(props, Boolean.getBoolean("safemode"));

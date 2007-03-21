@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.Display;
 
+import com.jme.system.JmeException;
 import com.jme.system.PropertiesIO;
 
 import com.samskivert.util.PrefsConfig;
@@ -37,19 +38,37 @@ public class BangPrefs
     public static PrefsConfig config = new PrefsConfig("bang");
 
     /**
-     * Returns the display mode in the supplied list that matches the one configured as our
-     * preference, or null if there are no matches.
+     * Configures props with a display setting.
+     *
+     * @throws JmeException if a valid displaymode cannot be found
      */
     public static void configureDisplayMode (PropertiesIO props, boolean safeMode)
+        throws JmeException
     {
         // first look up our "preferred" mode
-        int width = safeMode ? 1024 : config.getValue("display_width", 1024);
-        int height = safeMode ? 768 : config.getValue("display_height", 768);
+        int width = safeMode ? BangUI.MIN_WIDTH :
+                config.getValue("display_width", BangUI.MIN_WIDTH);
+        int height = safeMode ? BangUI.MIN_HEIGHT :
+                config.getValue("display_height", BangUI.MIN_HEIGHT);
         int bpp = safeMode ? 16 : config.getValue("display_bpp", 16);
         int freq = safeMode ? 60 : config.getValue("display_freq", 60);
         boolean fullscreen = safeMode ? true : isFullscreen();
 
-        // if that is a full screen mode, we need to find the closest matching
+        if (!fullscreen) {
+            DisplayMode mode = Display.getDisplayMode();
+            // if the display mode is too small, we'll try to go fullscreen
+            if (mode.getWidth() <= BangUI.MIN_WIDTH || mode.getHeight() <= BangUI.MIN_HEIGHT) {
+                fullscreen = true;
+                updateFullscreen(true);
+
+            // otherwise we just need to sanitize the depth and frequency
+            } else {
+                bpp = mode.getBitsPerPixel();
+                freq = mode.getFrequency();
+            }
+        }
+
+        // if this is a full screen mode, we need to find the closest matching
         // available screen mode
         if (fullscreen) {
             DisplayMode mode = getClosest(width, height, bpp, freq);
@@ -60,12 +79,11 @@ public class BangPrefs
             height = mode.getHeight();
             bpp = mode.getBitsPerPixel();
             freq = mode.getFrequency();
-
-        } else {
-            // otherwise we just need to sanitize the depth and frequency
-            DisplayMode mode = Display.getDisplayMode();
-            bpp = mode.getBitsPerPixel();
-            freq = mode.getFrequency();
+        }
+        if (width < BangUI.MIN_WIDTH || height < BangUI.MIN_HEIGHT) {
+            throw new JmeException("Cannot find display mode which meats the minimum dimensions [" +
+                    "found (" + width + "x" + height + ") requires (" + BangUI.MIN_WIDTH +
+                    "x" + BangUI.MIN_HEIGHT + ")]");
         }
 
         props.set("WIDTH", String.valueOf(width));
@@ -79,6 +97,7 @@ public class BangPrefs
                  props.getWidth() + "x" + props.getHeight() +
                  "x" + props.getDepth() + " " + props.getFreq() + "Hz " +
                  "(current: " + Display.getDisplayMode() + ").");
+        return (width >= BangUI.MIN_WIDTH && height >= BangUI.MIN_HEIGHT);
     }
 
     /**
@@ -331,7 +350,8 @@ public class BangPrefs
             for (int ii = 0; ii < modes.length; ii++) {
                 DisplayMode m = modes[ii];
                 // apparently LWJGL can't cope with >24 bpp
-                if (m.getBitsPerPixel() > 24) {
+                if (m.getBitsPerPixel() > 24 || m.getWidth() < BangUI.MIN_WIDTH ||
+                        m.getHeight() < BangUI.MIN_HEIGHT) {
                     continue;
                 }
                 if (c == null) {

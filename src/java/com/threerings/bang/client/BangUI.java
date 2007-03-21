@@ -98,6 +98,12 @@ public class BangUI
         WINDOW_OPEN,
     };
 
+    /** The minimum window width. */
+    public static final int MIN_WIDTH = 1024;
+
+    /** The minimum window height. */
+    public static final int MIN_HEIGHT = 768;
+
     /** The default max length of any text field. */
     public static final int TEXT_FIELD_MAX_LENGTH = 300;
 

@@ -277,7 +277,8 @@ public class OptionsView extends BDecoratedWindow
                  iter.hasNext(); ) {
                 DisplayMode mode = iter.next();
                 // our minimum display size is 1024x768
-                if (mode.getWidth() < 1024 || mode.getHeight() < 768) {
+                if (mode.getWidth() < BangUI.MIN_WIDTH ||
+                        mode.getHeight() < BangUI.MIN_HEIGHT) {
                     iter.remove();
                 }
 
