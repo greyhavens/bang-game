@@ -184,7 +184,7 @@ public class PlayerRepository extends JORARepository
     public void markAsCoinBuyer (int playerId)
         throws PersistenceException
     {
-        checkedUpdate("update PLAYERS set FLAGS = FLAGS | " + PlayerRecord.IS_COIN_BUYER +
+        warnedUpdate("update PLAYERS set FLAGS = FLAGS | " + PlayerRecord.IS_COIN_BUYER +
                 " where PLAYER_ID = " + playerId, 1);
     }
 

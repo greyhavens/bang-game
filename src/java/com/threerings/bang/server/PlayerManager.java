@@ -859,6 +859,7 @@ public class PlayerManager
                     _errmsg = BangServer.author.createAccount(
                         username, password, email, affiliate, machIdent, bdate);
                     if (_errmsg == null) {
+                        BangServer.author.setAccountIsActive(username, true);
                         _playrepo.clearAnonymous(user.playerId);
                     }
                 } catch (PersistenceException pe) {
