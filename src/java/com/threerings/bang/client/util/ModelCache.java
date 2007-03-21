@@ -13,11 +13,12 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.TextureState;
 
+import com.samskivert.util.ChainedResultListener;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.ObjectUtil;
+import com.samskivert.util.ResultHandler;
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.ResultListenerList;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
@@ -37,7 +38,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     public ModelCache (BasicContext ctx)
     {
         super(ctx);
-        
+
         // create a texture state here in order to make sure that the
         // texture state initialization isn't called from the loader
         _ctx.getRenderer().createTextureState();
@@ -52,7 +53,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     {
         getModel(type, name, null, rl);
     }
-    
+
     /**
      * Loads an instance of the specified model.
      *
@@ -84,36 +85,31 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     {
         getInstance(new ModelKey(type, name, variant), zations, rl);
     }
-    
+
     @Override // documentation inherited
-    protected void postPrototypeLoader (final ModelKey key)
+    protected void postPrototypeLoader (final ModelKey key, final ResultHandler<Model> handler)
     {
         // variants are loaded by loading and configuring the default prototype
         if (key.variant != null) {
-            getPrototype(key.getDefaultVariantKey(),
-                new ResultListener<Model>() {
+            getPrototype(key.getDefaultVariantKey(), new ChainedResultListener<Model>(handler) {
                 public void requestCompleted (Model result) {
                     // if it's not a listed variant, it's the default
                     String[] variants = result.getVariantNames();
                     if (ListUtil.contains(variants, key.variant)) {
                         Model prototype = result.createPrototype(key.variant);
-                        prototype.resolveTextures(
-                            new ModelTextureProvider(key, null));
-                        loadPrototypeCompleted(key, prototype);
+                        prototype.resolveTextures(new ModelTextureProvider(key, null));
+                        handler.requestCompleted(prototype);
                     } else {
-                        loadPrototypeCompleted(key, result);
+                        handler.requestCompleted(result);
                     }
                 }
-                public void requestFailed (Exception cause) {
-                    loadPrototypeFailed(key, cause);
-                }
             });
-            
+
         } else {
-            super.postPrototypeLoader(key);
+            super.postPrototypeLoader(key, handler);
         }
     }
-    
+
     // documentation inherited
     protected Model loadPrototype (ModelKey key)
         throws Exception
@@ -137,7 +133,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
             prototype.setAnimationMode(Model.AnimationMode.MORPH);
         }
     }
-    
+
     // documentation inherited
     protected Model createInstance (
         ModelKey key, Model prototype, Colorization[] zations)
@@ -149,7 +145,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
         }
         return instance;
     }
-    
+
     /** Resolved model textures using the texture cache. */
     protected class ModelTextureProvider
         implements TextureProvider
@@ -159,7 +155,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
             _key = key;
             _zations = zations;
         }
-        
+
         // documentation inherited from interface TextureProvider
         public TextureState getTexture (String name)
         {
@@ -176,29 +172,29 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
             }
             return tstate;
         }
-        
+
         /** The model key. */
         protected ModelKey _key;
-        
+
         /** The colorizations to apply, or <code>null</code> for none. */
         protected Colorization[] _zations;
-        
+
         /** Maps texture paths to texture states created so far. */
         protected HashMap<String, TextureState> _tstates =
             new HashMap<String, TextureState>();
     }
-    
+
     /** Identifies a model type/variant. */
     protected static class ModelKey
     {
         public String type, variant;
-        
+
         public ModelKey (String type, String name, String variant)
         {
             this.type = type + "/" + name;
             this.variant = variant;
         }
-        
+
         /**
          * Returns the key of the default variant of this model.
          */
@@ -206,7 +202,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
         {
             return new ModelKey(type);
         }
-        
+
         @Override // documentation inherited
         public boolean equals (Object other)
         {
@@ -214,14 +210,14 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
             return type.equals(okey.type) &&
                 ObjectUtil.equals(variant, okey.variant);
         }
-        
+
         @Override // documentation inherited
         public int hashCode ()
         {
             return type.hashCode() +
                 (variant == null ? 0 : variant.hashCode());
         }
-        
+
         protected ModelKey (String type)
         {
             this.type = type;
