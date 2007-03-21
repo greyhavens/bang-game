@@ -84,7 +84,8 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         final ArrayList<GangEntry> list = new ArrayList<GangEntry>();
-        final String query = "select NAME from GANGS";
+        final String query = "select NAME, LAST_PLAYED from GANGS where LAST_PLAYED > " +
+            STALE_DATE;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -93,7 +94,7 @@ public class GangRepository extends JORARepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        list.add(new GangEntry(new Handle(rs.getString(1))));
+                        list.add(new GangEntry(new Handle(rs.getString(1)), rs.getTimestamp(2)));
                     }
                     return null;
 

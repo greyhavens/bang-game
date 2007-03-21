@@ -34,7 +34,6 @@ import com.threerings.crowd.peer.server.CrowdPeerManager;
 
 import com.threerings.bang.avatar.data.Look;
 
-import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangObject;
 
 import com.threerings.bang.client.BangPeerService;
@@ -375,8 +374,8 @@ public class BangPeerManager extends CrowdPeerManager
 
             // pass gang directory updates to the HideoutManager
             String name = event.getName();
-            if (name.equals(BangNodeObject.ADDED_GANG)) {
-                BangServer.hideoutmgr.addGangLocal((GangEntry)event.getValue());
+            if (name.equals(BangNodeObject.ACTIVATED_GANG)) {
+                BangServer.hideoutmgr.activateGangLocal((Handle)event.getValue());
             } else if (name.equals(BangNodeObject.REMOVED_GANG)) {
                 BangServer.hideoutmgr.removeGangLocal((Handle)event.getValue());
             }

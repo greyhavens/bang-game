@@ -444,6 +444,9 @@ public class GangHandler
             return;
         }
 
+        // refresh the gang's last played time on all servers
+        BangServer.hideoutmgr.activateGang(_gangobj.name);
+
         // update the database
         final GangMemberEntry entry = member;
         BangServer.invoker.postUnit(new RepositoryUnit() {

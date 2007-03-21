@@ -359,7 +359,7 @@ public class GangManager
             protected void actionCompleted () {
                 log.info("Formed new gang [who=" + user.who() + ", name=" + name +
                          ", gangId=" + _grec.gangId + "].");
-                BangServer.hideoutmgr.addGang(new GangEntry(name));
+                BangServer.hideoutmgr.activateGang(name);
                 if (user.isActive()) {
                     _gangs.put(_grec.gangId, new GangHandler(_grec, user));
                     listener.requestProcessed();

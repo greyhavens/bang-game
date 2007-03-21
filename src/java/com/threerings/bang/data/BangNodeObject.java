@@ -5,8 +5,6 @@ package com.threerings.bang.data;
 
 import com.threerings.crowd.peer.data.CrowdNodeObject;
 
-import com.threerings.bang.gang.data.GangEntry;
-
 /**
  * Extends the Peer system's {@link CrowdNodeObject} with information needed by Bang! Howdy.
  */
@@ -19,8 +17,8 @@ public class BangNodeObject extends CrowdNodeObject
     /** The field name of the <code>bangPeerService</code> field. */
     public static final String BANG_PEER_SERVICE = "bangPeerService";
 
-    /** The field name of the <code>addedGang</code> field. */
-    public static final String ADDED_GANG = "addedGang";
+    /** The field name of the <code>activatedGang</code> field. */
+    public static final String ACTIVATED_GANG = "activatedGang";
 
     /** The field name of the <code>removedGang</code> field. */
     public static final String REMOVED_GANG = "removedGang";
@@ -31,13 +29,13 @@ public class BangNodeObject extends CrowdNodeObject
 
     /** The peer service for Bang-specific requests. */
     public BangPeerMarshaller bangPeerService;
-    
-    /** Used to broadcast the addition of a new gang. */
-    public GangEntry addedGang;
-    
+
+    /** Used to broadcast the addition of a new gang or the reactivation of an existing gang. */
+    public Handle activatedGang;
+
     /** Used to broadcast the removal of a gang. */
     public Handle removedGang;
-    
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>townId</code> field be set to the
@@ -72,19 +70,19 @@ public class BangNodeObject extends CrowdNodeObject
     }
 
     /**
-     * Requests that the <code>addedGang</code> field be set to the
+     * Requests that the <code>activatedGang</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setAddedGang (GangEntry value)
+    public void setActivatedGang (Handle value)
     {
-        GangEntry ovalue = this.addedGang;
+        Handle ovalue = this.activatedGang;
         requestAttributeChange(
-            ADDED_GANG, value, ovalue);
-        this.addedGang = value;
+            ACTIVATED_GANG, value, ovalue);
+        this.activatedGang = value;
     }
 
     /**

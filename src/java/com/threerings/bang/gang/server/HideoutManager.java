@@ -59,14 +59,14 @@ public class HideoutManager extends MatchHostManager
     implements GangCodes, HideoutCodes, HideoutProvider
 {
     /**
-     * Adds an entry to the Hideout's list of gangs and broadcasts the addition to the server's
-     * peers (if any).
+     * Adds an entry to the Hideout's list of gangs or reactivates an existing gang and broadcasts
+     * the activation to the server's peers (if any).
      */
-    public void addGang (GangEntry entry)
+    public void activateGang (Handle name)
     {
-        addGangLocal(entry);
+        activateGangLocal(name);
         if (BangServer.peermgr != null) {
-            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setAddedGang(entry);
+            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setActivatedGang(name);
         }
     }
 
@@ -83,12 +83,16 @@ public class HideoutManager extends MatchHostManager
     }
 
     /**
-     * Adds an entry to the Hideout's list of gangs on this server only.
+     * (Re)activates a gang on this server only.
      */
-    public void addGangLocal (GangEntry entry)
+    public void activateGangLocal (Handle name)
     {
-        if (_hobj != null) {
-            _hobj.addToGangs(entry);
+        // if there's no entry, create one; otherwise, refresh the time
+        GangEntry entry = _hobj.gangs.get(name);
+        if (entry == null) {
+            _hobj.addToGangs(new GangEntry(name));
+        } else {
+            entry.lastPlayed = System.currentTimeMillis();
         }
     }
 
@@ -97,7 +101,7 @@ public class HideoutManager extends MatchHostManager
      */
     public void removeGangLocal (Handle name)
     {
-        if (_hobj != null) {
+        if (_hobj != null && _hobj.gangs.containsKey(name)) {
             _hobj.removeFromGangs(name);
         }
     }
@@ -384,13 +388,14 @@ public class HideoutManager extends MatchHostManager
             }
         });
 
-        // start up our top-ranked list refresher interval
+        // start up our interval to refresh the top-ranked list and purge inactive gangs
         _rankval = new Interval(BangServer.omgr) {
             public void expired () {
                 refreshTopRanked();
+                purgeInactiveGangs();
             }
         };
-        _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
+        _rankval.schedule(1000L, RANK_PURGE_INTERVAL);
     }
 
     @Override // from PlaceManager
@@ -485,12 +490,35 @@ public class HideoutManager extends MatchHostManager
         });
     }
 
+    protected void purgeInactiveGangs ()
+    {
+        long cutoff = System.currentTimeMillis() - ACTIVITY_DELAY;
+        ArrayList<GangEntry> removals = new ArrayList<GangEntry>();
+        for (GangEntry entry : _hobj.gangs) {
+            if (entry.lastPlayed < cutoff) {
+                removals.add(entry);
+            }
+        }
+        if (removals.isEmpty()) {
+            return;
+        }
+
+        _hobj.startTransaction();
+        try {
+            for (GangEntry entry : removals) {
+                _hobj.removeFromGangs(entry.name);
+            }
+        } finally {
+            _hobj.commitTransaction();
+        }
+    }
+
     protected GangGoodsCatalog _goods;
     protected HideoutObject _hobj;
     protected Interval _rankval;
 
-    /** The frequency with which we update the top-ranked gang lists. */
-    protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;
+    /** The frequency with which we update the top-ranked gang lists and purge inactive gangs. */
+    protected static final long RANK_PURGE_INTERVAL = 60 * 60 * 1000L;
 
     /** The size of the top-ranked gang lists. */
     protected static final int TOP_RANKED_LIST_SIZE = 10;
