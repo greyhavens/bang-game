@@ -151,8 +151,4 @@ public class AvatarView extends BaseAvatarView
     }
 
     protected Handle _handle;
-
-    static {
-        _defaultImage = "ui/status/silhouette.png";
-    }
 }

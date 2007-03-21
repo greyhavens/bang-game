@@ -27,11 +27,11 @@ public abstract class BaseAvatarInfo extends SimpleStreamableObject
     public String image;
 
     /**
-     * Returns true if we have either a print or a custom image.
+     * Returns true if we have either a print, a custom image, or a default image.
      */
     public boolean isValid ()
     {
-        return (print != null && print.length > 0) || !StringUtil.isBlank(image);
+        return (print != null && print.length > 0) || !StringUtil.isBlank(getImage());
     }
 
     /**
@@ -63,6 +63,28 @@ public abstract class BaseAvatarInfo extends SimpleStreamableObject
      * Returns the desired height of framed images.
      */
     public abstract int getFramedHeight ();
+
+    /**
+     * If this avatar has a half-sized custom image, returns that image's path; otherwise,
+     * returns <code>null</code> if there's a fingerprint or {@link #getDefaultImage} if
+     * not.
+     */
+    public String getImage ()
+    {
+        if (image != null) {
+            return image;
+        }
+        return (print == null || print.length == 0) ? getDefaultImage() : null;
+    }
+
+    /**
+     * Returns the path of an image to use when {@link #print} and {@link #image} are both
+     * <code>null</code>, or <code>null</code> if there is no default image.
+     */
+    public String getDefaultImage ()
+    {
+        return null;
+    }
 
     @Override // from Object
     public boolean equals (Object other)

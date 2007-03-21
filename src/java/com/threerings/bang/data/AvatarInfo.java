@@ -62,6 +62,12 @@ public class AvatarInfo extends BaseAvatarInfo
         return AvatarLogic.FRAMED_HEIGHT;
     }
 
+    @Override // documentation inherited
+    public String getDefaultImage ()
+    {
+        return "ui/status/silhouette.png";
+    }
+
     @Override // from Object
     public boolean equals (Object other)
     {

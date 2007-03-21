@@ -119,19 +119,16 @@ public abstract class BaseAvatarView extends BLabel
         }
 
         // if this is a custom image avatar, get the image from the buffered image cache
-        if (!StringUtil.isBlank(avatar.image)) {
-            receiver.requestCompleted(ctx.getImageCache().getBufferedImage(avatar.image));
+        String ipath = avatar.getImage();
+        if (!StringUtil.isBlank(ipath)) {
+            receiver.requestCompleted(ctx.getImageCache().getBufferedImage(ipath));
             return;
         }
 
         // if this avatar is misconfigured, stop here
-        if (avatar.print == null || avatar.print.length == 0) {
-            if (_defaultImage != null) {
-                receiver.requestCompleted(ctx.getImageCache().getBufferedImage(_defaultImage));
-            } else {
-                log.warning("Refusing to load blank avatar " + avatar + ".");
-                receiver.requestCompleted(null);
-            }
+        if (!avatar.isValid()) {
+            log.warning("Refusing to load blank avatar " + avatar + ".");
+            receiver.requestCompleted(null);
             return;
         }
 
@@ -176,10 +173,11 @@ public abstract class BaseAvatarView extends BLabel
         _avatar = (BaseAvatarInfo)avatar.clone();
 
         // if we have a custom image, just use that directly
-        if (_avatar.image != null) {
-            setImage(_ctx.getImageCache().getBImage(_avatar.image, _scale/2, false));
+        String ipath = _avatar.getImage();
+        if (ipath != null) {
+            setImage(_ctx.getImageCache().getBImage(ipath, 2f/_scale, false));
 
-        } else if (_avatar.print != null && _avatar.print.length > 0) {
+        } else if (_avatar.isValid()) {
             ResultListener<BImage> rl = new ResultListener<BImage>() {
                 public void requestCompleted (BImage image) {
                     setImage(image);
@@ -193,9 +191,6 @@ public abstract class BaseAvatarView extends BLabel
                 getImage(_ctx, avatar, avatar.getWidth()/_scale, avatar.getHeight()/_scale,
                     _mirror, rl);
             }
-
-        } else if (_defaultImage != null) {
-            setImage(_ctx.getImageCache().getBImage(_defaultImage, (float)_scale/4, false));
         }
     }
 
@@ -372,7 +367,4 @@ public abstract class BaseAvatarView extends BLabel
 
     /** Used to flip texture coordinates. */
     protected static Vector2f _tcoord = new Vector2f();
-
-    /** A default image to use when the print is misconfigured. */
-    protected static String _defaultImage;
 }
