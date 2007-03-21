@@ -18,7 +18,8 @@
 -injars ../dist/lib/vilya-stats.jar(!META-INF/*,!**/tools/**,!**/persist/**)
 -injars ../dist/lib/samskivert.jar(
   com/samskivert/Log.class,**/io/**,**/net/**,**/swing/**,**/text/**,**/util/**,**/xml/**,
-  **/servlet/user/Password.class,**/servlet/user/UserUtil.class)
+  **/servlet/user/Password.class,**/servlet/user/UserUtil.class,**/servlet/user/Username.java,
+  **/servlet/user/InvalidUsernameException.java)
 -injars ../dist/lib/jme.jar(!META-INF/*)
 -injars ../dist/lib/jme-effects.jar(!META-INF/*)
 -injars ../dist/lib/jme-model.jar(!META-INF/*)
