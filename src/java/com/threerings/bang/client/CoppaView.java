@@ -34,45 +34,16 @@ public class CoppaView extends SteelWindow
 
         _contents.add(new BLabel(_msgs.get("m.coppa_info"), "dialog_text"));
 
-        _contents.add(_status = new BLabel("", "dialog_text"));
-
-        _buttons.add(_over = new BButton(_msgs.get("m.coppa_over"), this, "over"));
-        _buttons.add(_under = new BButton(_msgs.get("m.coppa_under"), this, "under"));
+        _buttons.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
     }
 
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        String cmd = event.getAction();
-        if ("under".equals(cmd)) {
-            _ctx.getBangClient().clearPopup(this, true);
-            _ctx.getBangClient().resetTownView();
-        } else if ("over".equals(cmd)) {
-            declareAge();
-        }
-    }
-
-    protected void declareAge ()
-    {
-        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
-        PlayerService.ConfirmListener cl = new PlayerService.ConfirmListener() {
-            public void requestProcessed () {
-                _ctx.getBangClient().clearPopup(CoppaView.this, true);
-                _ctx.getBangClient().continueMoveTo();
-            }
-            public void requestFailed (String reason) {
-                _status.setText(_msgs.xlate(reason));
-                _over.setEnabled(true);
-                _under.setEnabled(true);
-            }
-        };
-        _over.setEnabled(false);
-        _under.setEnabled(false);
-        psvc.declareOfAge(_ctx.getClient(), cl);
+        _ctx.getBangClient().clearPopup(this, true);
+        _ctx.getBangClient().resetTownView();
     }
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
-    protected BLabel _status;
-    protected BButton _over, _under;
 }

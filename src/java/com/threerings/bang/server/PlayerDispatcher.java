@@ -43,14 +43,7 @@ public class PlayerDispatcher extends InvocationDispatcher
         case PlayerMarshaller.CREATE_ACCOUNT:
             ((PlayerProvider)provider).createAccount(
                 source,
-                (String)args[0], (String)args[1], (String)args[2], (String)args[3], (InvocationService.ConfirmListener)args[4]
-            );
-            return;
-
-        case PlayerMarshaller.DECLARE_OF_AGE:
-            ((PlayerProvider)provider).declareOfAge(
-                source,
-                (InvocationService.ConfirmListener)args[0]
+                (String)args[0], (String)args[1], (String)args[2], (String)args[3], ((Long)args[4]).longValue(), (InvocationService.ConfirmListener)args[5]
             );
             return;
 

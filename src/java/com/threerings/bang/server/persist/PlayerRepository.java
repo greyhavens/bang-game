@@ -169,16 +169,6 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Mark's a player as being over 13.
-     */
-    public void setOver13 (int playerId)
-        throws PersistenceException
-    {
-       checkedUpdate("update PLAYERS set FLAGS = FLAGS | " + PlayerRecord.IS_OVER_13 +
-            " where PLAYER_ID = " + playerId, 1);
-    }
-
-    /**
      * Mark's a player as no longer being anonymous.
      */
     public void clearAnonymous (int playerId)

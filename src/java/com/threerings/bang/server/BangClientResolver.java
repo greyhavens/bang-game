@@ -91,7 +91,6 @@ public class BangClientResolver extends CrowdClientResolver
 
         // if they're not in the db, it's their first time, how nice
         if (player == null) {
-            // it's their first time, how nice
             BangClient client = (BangClient)BangServer.clmgr.getClient(buser.username);
             player = new PlayerRecord(
                     username, ((BangCredentials)client.getCredentials()).anonymous);
@@ -108,7 +107,7 @@ public class BangClientResolver extends CrowdClientResolver
         }
         buser.isMale = player.isSet(PlayerRecord.IS_MALE_FLAG);
         buser.tokens.setToken(BangTokenRing.ANONYMOUS, player.isSet(PlayerRecord.IS_ANONYMOUS));
-        buser.tokens.setToken(BangTokenRing.OVER_13, player.isSet(PlayerRecord.IS_OVER_13));
+        buser.tokens.setToken(BangTokenRing.OVER_13, player.isOver13);
         buser.tokens.setToken(BangTokenRing.DEMO, player.isSet(PlayerRecord.IS_DEMO_ACCOUNT));
         buser.scrip = player.scrip;
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(player.accountName);

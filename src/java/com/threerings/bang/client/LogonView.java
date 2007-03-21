@@ -144,6 +144,8 @@ public class LogonView extends BWindow
     }
 
     protected void showNewUserView () {
+        removeAll();
+
         BContainer cont = new BContainer(GroupLayout.makeHoriz(
                     GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.NONE));
         ((GroupLayout)cont.getLayoutManager()).setGap(20);
@@ -204,9 +206,11 @@ public class LogonView extends BWindow
 
     protected void showStatus ()
     {
-        _status = new StatusLabel(_ctx);
-        _status.setStyleClass("logon_status");
-        _status.setPreferredSize(new Dimension(360, 40));
+        if (_status == null) {
+            _status = new StatusLabel(_ctx);
+            _status.setStyleClass("logon_status");
+            _status.setPreferredSize(new Dimension(360, 40));
+        }
         add(_status, new Rectangle(40, 140, 375, 60));
 
         BContainer row = GroupLayout.makeHBox(GroupLayout.LEFT);
@@ -256,7 +260,7 @@ public class LogonView extends BWindow
                 showLoginView();
                 return;
             }
-            _ctx.getBangClient().showPopupAfterLogon("create_account");
+            _ctx.getBangClient().showPopupAfterLogon(BangCodes.SIGN_UP);
             logon(BangCodes.FRONTIER_TOWN, anonymous, null);
 
         } else if ("anonymous".equals(event.getAction())) {
@@ -346,8 +350,10 @@ public class LogonView extends BWindow
 
     protected void switchToServerStatus ()
     {
-        _action.setText(_msgs.get("m.server_status"));
-        _action.setAction("server_status");
+        if (_action != null) {
+            _action.setText(_msgs.get("m.server_status"));
+            _action.setAction("server_status");
+        }
     }
 
     protected ClientAdapter _listener = new ClientAdapter() {
@@ -366,9 +372,18 @@ public class LogonView extends BWindow
             _status.setStatus(_msgs.xlate(msg.left), true);
 
             // if we got a NO_TICKET message, reset our last town id just to be sure
-            if (cause.getMessage() != null &&
-                cause.getMessage().indexOf(BangAuthCodes.NO_TICKET) != -1) {
+            if (cause.getMessage() == null) {
+                return;
+            }
+            String cmsg = cause.getMessage();
+            if (cmsg.indexOf(BangAuthCodes.NO_TICKET) != -1) {
                 BangPrefs.setLastTownId(_username.getText(), BangCodes.FRONTIER_TOWN);
+
+            // if we got a no such user message and we're anonymous, clear it out
+            } else if (cmsg.indexOf(BangAuthCodes.NO_SUCH_USER) != -1 &&
+                        StringUtil.isBlank(BangPrefs.config.getValue("username", ""))) {
+                BangPrefs.config.setValue("anonymous", "");
+                showNewUserView();
             }
         }
     };

@@ -20,13 +20,7 @@ public interface PlayerProvider extends InvocationProvider
     /**
      * Handles a {@link PlayerService#createAccount} request.
      */
-    public void createAccount (ClientObject caller, String arg1, String arg2, String arg3, String arg4, InvocationService.ConfirmListener arg5)
-        throws InvocationException;
-
-    /**
-     * Handles a {@link PlayerService#declareOfAge} request.
-     */
-    public void declareOfAge (ClientObject caller, InvocationService.ConfirmListener arg1)
+    public void createAccount (ClientObject caller, String arg1, String arg2, String arg3, String arg4, long arg5, InvocationService.ConfirmListener arg6)
         throws InvocationException;
 
     /**

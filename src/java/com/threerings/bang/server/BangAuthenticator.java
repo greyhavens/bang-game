@@ -3,6 +3,8 @@
 
 package com.threerings.bang.server;
 
+import java.sql.Date;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;
 
@@ -23,8 +25,8 @@ public abstract class BangAuthenticator extends Authenticator
     /**
      * Called to create an account.
      */
-    public abstract String createAccount (
-            String username, String password, String email, String affiliate, String machIdent)
+    public abstract String createAccount (String username, String password, String email,
+            String affiliate, String machIdent, Date birthdate)
         throws PersistenceException;
 
     @Override // from Authenticator

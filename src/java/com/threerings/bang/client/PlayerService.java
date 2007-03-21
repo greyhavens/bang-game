@@ -25,11 +25,6 @@ public interface PlayerService extends InvocationService
     public static final int FOLK_IS_FOE = 3;
 
     /**
-     * Declare that the user is of age to access multiplayer areas.
-     */
-    public void declareOfAge (Client client, ConfirmListener listener);
-
-    /**
      * Issues a request to create this player's (free) first Big Shot.
      */
     public void pickFirstBigShot (Client client, String type, Name name, ConfirmListener cl);
@@ -111,5 +106,5 @@ public interface PlayerService extends InvocationService
      * Requests to create an account for the player.
      */
     public void createAccount (Client client, String username, String password, String email,
-            String affiliate, ConfirmListener listener);
+            String affiliate, long birthday, ConfirmListener listener);
 }

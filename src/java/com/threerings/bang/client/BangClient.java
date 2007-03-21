@@ -464,6 +464,13 @@ public class BangClient extends BasicClient
         }
         */
 
+        // see if we're an anonymous user that wants to sign up
+        if (SIGN_UP.equals(_popup)) {
+            _popup = null;
+            showCreateAccount(false);
+            return true;
+        }
+
         // if they have no big shots then they need the intro for those
         if (!(user.handle instanceof GuestHandle) && !user.hasBigShot()) {
             displayPopup(new FirstBigShotView(_ctx), true, 600);
@@ -1061,8 +1068,7 @@ public class BangClient extends BasicClient
         if (!user.tokens.isAnonymous() || _showingAccount) {
             return true;
         }
-        displayPopup(new CreateAccountView(_ctx, true), true, 800);
-        _showingAccount = true;
+        showCreateAccount(true);
         return false;
     }
 
@@ -1291,6 +1297,15 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Convenience method to popup the create account window.
+     */
+    protected void showCreateAccount (boolean onExit)
+    {
+        displayPopup(new CreateAccountView(_ctx, onExit), true, 800);
+        _showingAccount = true;
+    }
+
+    /**
      * Attempts to relaunch Getdown, exiting the application after a short
      * pause.
      *
@@ -1484,8 +1499,7 @@ public class BangClient extends BasicClient
                     _headingTo = placeId;
                     displayPopup(new CreateAvatarView(_ctx), true, 800);
                 } else if (SIGN_UP.equals(reason)) {
-                    displayPopup(new CreateAccountView(_ctx, false), true, 800);
-                    _showingAccount = true;
+                    showCreateAccount(false);
                 } else if (UNDER_13.equals(reason)) {
                     _headingTo = placeId;
                     displayPopup(new CoppaView(_ctx), true, 800);

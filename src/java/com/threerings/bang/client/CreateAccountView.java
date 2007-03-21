@@ -3,8 +3,12 @@
 
 package com.threerings.bang.client;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BComboBox;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BPasswordField;
 import com.jmex.bui.BTextField;
@@ -41,6 +45,7 @@ public class CreateAccountView extends SteelWindow
     {
         super(ctx, ctx.xlate(BangCodes.BANG_MSGS, "m.account_title"));
         setModal(true);
+        setLayer(BangCodes.NEVER_CLEAR_LAYER);
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
         _onExit = onExit;
@@ -61,24 +66,95 @@ public class CreateAccountView extends SteelWindow
         grid.add(new BLabel(_msgs.get("m.email"), "right_label"));
         grid.add(_email = new BTextField());
         _email.setPreferredWidth(150);
+        grid.add(new BLabel(_msgs.get("m.birthday"), "right_label"));
+        BContainer birthcont = GroupLayout.makeHBox(GroupLayout.LEFT);
+        birthcont.add(new BLabel(_msgs.get("m.year")));
+        _years = new BComboBox();
+        _years.setPreferredColumns(10);
+        Calendar cal = Calendar.getInstance();
+        cal.roll(Calendar.YEAR, -7);
+        int base = cal.get(Calendar.YEAR);
+        for (int ii = 0; ii < 100; ii++) {
+            _years.addItem(Integer.valueOf(base - ii));
+        }
+        _years.selectItem(0);
+        _years.addListener(new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                String action = event.getAction();
+                if (action.equals("selectionChanged")) {
+                    Calendar year = Calendar.getInstance();
+                    year.set((Integer)_years.getSelectedItem(), Calendar.DECEMBER, 31);
+                    Calendar now = Calendar.getInstance();
+                    now.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
+                    boolean visible = year.compareTo(now) > 0;
+                    _monthL.setVisible(visible);
+                    _months.setVisible(visible);
+                    _dayL.setVisible(visible);
+                    _days.setVisible(visible);
+                }
+            }
+        });
+        birthcont.add(_years);
+        birthcont.add(_monthL = new BLabel(_msgs.get("m.month")));
+        _months = new BComboBox();
+        for (int ii = 1; ii <= 12; ii++) {
+            _months.addItem(Integer.valueOf(ii));
+        }
+        _months.selectItem(0);
+        birthcont.add(_months);
+        birthcont.add(_dayL = new BLabel(_msgs.get("m.day")));
+        _days = new BComboBox();
+        _days.setPreferredColumns(10);
+        for (int ii = 1; ii <= 31; ii++) {
+            _days.addItem(Integer.valueOf(ii));
+        }
+        _days.selectItem(0);
+        birthcont.add(_days);
+        grid.add(birthcont);
+
         _contents.add(grid);
 
         _contents.add(_status = new StatusLabel(_ctx));
+        _status.setStatus(_msgs.get("m.under_coppa"), false);
 
         _buttons.add(_cancel = new BButton(_msgs.get("m.cancel"), this, "cancel"));
         _buttons.add(_create = new BButton(_msgs.get("m.account_create"), this, "create"));
         _create.setEnabled(false);
 
+        // Create a listener for text entry
         TextListener tlistener = new TextListener () {
             public void textChanged (TextEvent event) {
-                _create.setEnabled(!StringUtil.isBlank(_username.getText()) &&
+                _textIn = !StringUtil.isBlank(_username.getText()) &&
                         !StringUtil.isBlank(_password.getText()) &&
-                        !StringUtil.isBlank(_repassword.getText()));
+                        !StringUtil.isBlank(_repassword.getText());
+                _create.setEnabled(_over13 && _textIn);
             }
         };
         _username.addListener(tlistener);
         _password.addListener(tlistener);
         _repassword.addListener(tlistener);
+
+        // Create a listener for the required age
+        ActionListener alistener = new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                if (event.getAction().equals("selectionChanged")) {
+                    Calendar year = Calendar.getInstance();
+                    year.set((Integer)_years.getSelectedItem(),
+                            ((Integer)_months.getSelectedItem() - 1),
+                            (Integer)_days.getSelectedItem());
+                    Calendar now = Calendar.getInstance();
+                    now.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
+                    _over13 = year.compareTo(now) <= 0;
+                    _status.setStatus(_over13 ? "" : _msgs.get("m.under_coppa"), false);
+                    _create.setEnabled(_over13 && _textIn);
+                    _birthdate = year.getTime();
+                }
+            }
+        };
+        _years.addListener(alistener);
+        _months.addListener(alistener);
+        _days.addListener(alistener);
+
     }
 
     // documentation inherited from interface ActionListener
@@ -133,7 +209,7 @@ public class CreateAccountView extends SteelWindow
 
         psvc.createAccount(_ctx.getClient(), uname,
                 Password.makeFromClear(_password.getText()).getEncrypted(), _email.getText(),
-                _ctx.getBangClient().getAffiliateFromInstallFile(), cl);
+                _ctx.getBangClient().getAffiliateFromInstallFile(), _birthdate.getTime(), cl);
     }
 
     /**
@@ -159,5 +235,8 @@ public class CreateAccountView extends SteelWindow
     protected BPasswordField _password, _repassword;
     protected StatusLabel _status;
     protected BButton _cancel, _create;
-    protected boolean _onExit;
+    protected BComboBox _years, _months, _days;
+    protected BLabel _monthL, _dayL;
+    protected boolean _onExit, _over13, _textIn;
+    protected Date _birthdate;
 }

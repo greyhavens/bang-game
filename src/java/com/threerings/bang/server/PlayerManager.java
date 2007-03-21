@@ -8,6 +8,7 @@ import java.lang.ref.SoftReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -257,27 +258,6 @@ public class PlayerManager
                         ", reward=" + reward + "].", e);
             }
         }
-    }
-
-    // documentation inherited from interface PlayerProvider
-    public void declareOfAge (ClientObject caller, final PlayerService.ConfirmListener listener)
-        throws InvocationException
-    {
-        final PlayerObject user = (PlayerObject)caller;
-
-        BangServer.invoker.postUnit(new PersistingUnit("declareOfAge", listener) {
-            public void invokePersistent () throws PersistenceException {
-                _playrepo.setOver13(user.playerId);
-            }
-            public void handleSuccess () {
-                user.tokens.setToken(BangTokenRing.OVER_13, true);
-                user.setTokens(user.tokens);
-                listener.requestProcessed();
-            }
-            public String requestFailed () {
-                return "Failed to set over 13 flag [who=" + user.who() + "]";
-            }
-        });
     }
 
     // documentation inherited from interface PlayerProvider
@@ -846,7 +826,7 @@ public class PlayerManager
     // from interface PlayerProvider
     public void createAccount (
             ClientObject caller, final String username, final String password, final String email,
-            final String affiliate, final PlayerService.ConfirmListener listener)
+            final String affiliate, long birthdate, final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         final PlayerObject user = (PlayerObject)caller;
@@ -854,6 +834,15 @@ public class PlayerManager
         // make sure we're anonymous
         if (!user.tokens.isAnonymous()) {
             log.warning("Non-anonymous user tried to create account [who=" + user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // make sure we're old enough (the client should already verify this)
+        final java.sql.Date bdate = new java.sql.Date(birthdate);
+        Calendar cal = Calendar.getInstance();
+        cal.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
+        if (bdate.after(cal.getTime())) {
+            log.warning("Underage user tried to create account [who=" + user.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -868,7 +857,7 @@ public class PlayerManager
             public boolean invoke () {
                 try {
                     _errmsg = BangServer.author.createAccount(
-                        username, password, email, affiliate, machIdent);
+                        username, password, email, affiliate, machIdent, bdate);
                     if (_errmsg == null) {
                         _playrepo.clearAnonymous(user.playerId);
                     }

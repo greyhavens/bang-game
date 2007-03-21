@@ -3,8 +3,10 @@
 
 package com.threerings.bang.server.ooo;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
@@ -22,6 +24,7 @@ import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.user.OOOAuxData;
 import com.threerings.user.OOOUser;
 import com.threerings.user.OOOUserManager;
 import com.threerings.user.OOOUserRepository;
@@ -82,8 +85,8 @@ public class OOOAuthenticator extends BangAuthenticator
     }
 
     // from abstract BangAuthenticator
-    public String createAccount (
-            String username, String password, String email, String affiliate, String machIdent)
+    public String createAccount (String username, String password, String email, String affiliate,
+            String machIdent, Date birthdate)
         throws PersistenceException
     {
         // check if their username already exists
@@ -117,7 +120,7 @@ public class OOOAuthenticator extends BangAuthenticator
             Password pass = Password.makeFromCrypto(password);
 
             // create the account
-            _authrep.createUser(uname, pass, email, siteId, 0);
+            _authrep.createUser(uname, pass, email, siteId, 0, birthdate, (byte)-1, null);
 
             return null;
 
@@ -223,8 +226,8 @@ public class OOOAuthenticator extends BangAuthenticator
         PlayerRecord prec = BangServer.playrepo.loadPlayer(username);
         String password = creds.getPassword();
 
-        if (user == null && prec == null && !StringUtil.isBlank(username) &&
-                !StringUtil.isBlank(password)) {
+        if (user == null && prec == null &&
+                (!StringUtil.isBlank(username) || !StringUtil.isBlank(password))) {
             rdata.code = NO_SUCH_USER;
             return;
         }
@@ -251,6 +254,18 @@ public class OOOAuthenticator extends BangAuthenticator
         if (user == null && prec != null && !prec.isSet(PlayerRecord.IS_ANONYMOUS)) {
             rdata.code = INVALID_PASSWORD;
             return;
+        }
+
+        // stash their age information
+        if (user != null && prec != null) {
+            OOOAuxData auxData = _authrep.getAuxRecord(user.userId);
+            if (auxData != null) {
+                Calendar coppa = Calendar.getInstance();
+                coppa.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
+                if (auxData.birthday.before(coppa.getTime())) {
+                    prec.isOver13 = true;
+                }
+            }
         }
 
         // make sure this player has access to this server's town

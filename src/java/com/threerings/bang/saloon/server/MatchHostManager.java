@@ -100,6 +100,12 @@ public abstract class MatchHostManager extends ShopManager
     }
 
     @Override // from ShopManager
+    protected boolean allowAnonymous ()
+    {
+        return false;
+    }
+
+    @Override // from ShopManager
     protected boolean allowUnder13 ()
     {
         return false;
