@@ -17,7 +17,7 @@ public abstract class NameCreator
     /** Returns a set of prefixes that can be prepended to a root to make a
      * Big Shot name. For example: "Handy" Jack, "Faithful" Alfred, etc. */
     public abstract HashSet<String> getBigShotPrefixes (boolean isMale);
-    
+
     /** Returns a set of prefixes that can be prepended to a root to make a
      * cowboy name. For example: "Wild" Pete, "Mean" Bart, "Oklahoma" Bob,
      * etc. */
@@ -30,7 +30,14 @@ public abstract class NameCreator
     /** Returns a set of suffixes that can be appended to a root to make a
      * cowboy name. For example: Billy "the Kid", Paul "Regret", etc. */
     public abstract HashSet<String> getHandleSuffixes (boolean isMale);
-    
+
+    /** Returns a set of family names that can be appended to a root to make a
+     * full name. For example Black, Houston, etc. */
+    public abstract HashSet<String> getHandleFamily ();
+
+    /** Returns a set of initials that can be prefixed to family names. */
+    public abstract HashSet<String> getHandleInitials ();
+
     /** Returns a set of suffixes that can be appended to a root to make a
      * gang name. For example: The Dalton "Gang", The Hatfield "Clan", etc. */
     public abstract HashSet<String> getGangSuffixes ();

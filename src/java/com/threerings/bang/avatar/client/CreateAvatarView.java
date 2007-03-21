@@ -117,19 +117,29 @@ public class CreateAvatarView extends SteelWindow
     protected void pickRandomHandle ()
     {
         boolean isMale = (_gender.getSelectedIndex() == 0);
-        HashSet<String> first, second;
-        if (RandomUtil.getInt(100) >= 50) {
+        HashSet<String> first, second, initials;
+        initials = NameFactory.getCreator().getHandleInitials();
+        String initial;
+        int random = RandomUtil.getInt(2 + initials.size());
+        if (random == 0) {
             first = NameFactory.getCreator().getHandlePrefixes(isMale);
             second = NameFactory.getCreator().getHandleRoots(isMale);
-        } else {
+            initial = " ";
+        } else if (random == 1) {
             first = NameFactory.getCreator().getHandleRoots(isMale);
             second = NameFactory.getCreator().getHandleSuffixes(isMale);
+            initial = " ";
+        } else {
+            first = NameFactory.getCreator().getHandleRoots(isMale);
+            second = NameFactory.getCreator().getHandleFamily();
+            initial =
+                " " + (String)RandomUtil.pickRandom(initials.iterator(), initials.size()) + " ";
         }
         String fname = (String)
             RandomUtil.pickRandom(first.iterator(), first.size());
         String sname = (String)
             RandomUtil.pickRandom(second.iterator(), second.size());
-        _handle.setText(fname + " " + sname);
+        _handle.setText(fname + initial + sname);
     }
 
     protected void createAvatar ()

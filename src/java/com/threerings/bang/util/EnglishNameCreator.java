@@ -43,6 +43,18 @@ public class EnglishNameCreator extends NameCreator
     }
 
     @Override // documentation inherited
+    public HashSet<String> getHandleFamily ()
+    {
+        return FAMILY_TABLE;
+    }
+
+    @Override // documentation inherited
+    public HashSet<String> getHandleInitials ()
+    {
+        return INITIALS_TABLE;
+    }
+
+    @Override // documentation inherited
     public HashSet<String> getGangSuffixes ()
     {
         return GANG_SUFF_TABLE;
@@ -55,6 +67,9 @@ public class EnglishNameCreator extends NameCreator
     protected static HashSet<String> FEMALE_PREF_TABLE = new HashSet<String>();
     protected static HashSet<String> FEMALE_ROOT_TABLE = new HashSet<String>();
     protected static HashSet<String> FEMALE_SUFF_TABLE = new HashSet<String>();
+
+    protected static HashSet<String> FAMILY_TABLE = new HashSet<String>();
+    protected static HashSet<String> INITIALS_TABLE = new HashSet<String>();
 
     protected static HashSet<String> AI_PREF_TABLE = new HashSet<String>();
     protected static HashSet<String> BSHOT_PREF_TABLE = new HashSet<String>();
@@ -274,7 +289,7 @@ public class EnglishNameCreator extends NameCreator
         "Wanda",
     };
 
-    protected static final String[] SHARED_SUFFIXES = {
+    protected static final String[] SHARED_FAMILY = {
         "Armstrong",
         "Avery",
         "Barker",
@@ -347,6 +362,9 @@ public class EnglishNameCreator extends NameCreator
         "Whitfield",
         "Williams",
         "Woodward",
+    };
+
+    protected static final String[] SHARED_SUFFIXES = {
         "the Kid",
     };
 
@@ -402,5 +420,10 @@ public class EnglishNameCreator extends NameCreator
         CollectionUtil.addAll(BSHOT_PREF_TABLE, BIG_SHOT_PREFIXES);
 
         CollectionUtil.addAll(GANG_SUFF_TABLE, GANG_SUFFIXES);
+
+        CollectionUtil.addAll(FAMILY_TABLE, SHARED_FAMILY);
+        for (char cc = 'A'; cc <= 'Z'; cc++) {
+            INITIALS_TABLE.add(Character.toString(cc));
+        }
     }
 }
