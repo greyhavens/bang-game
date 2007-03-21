@@ -83,33 +83,7 @@ public class WaterNode extends Node
         // use our fancy shaders if possible
         if (GLContext.getCapabilities().GL_ARB_vertex_shader &&
             GLContext.getCapabilities().GL_ARB_fragment_shader &&
-            BangPrefs.isHighDetail()) {
-            if (_fogShaderId == -1) {
-                File vert = _ctx.getResourceManager().getResourceFile("shaders/water.vert"),
-                    frag = _ctx.getResourceManager().getResourceFile("shaders/water.frag");
-                _fogShaderId = JmeUtil.loadShaders(vert, frag, "ENABLE_FOG").getProgramID();
-                _foglessShaderId = JmeUtil.loadShaders(vert, frag).getProgramID();
-            }
-            _sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
-            _sstate.setProgramID(_foglessShaderId);
-            _sstate.setUniform("normalMap", 0);
-            setRenderState(_sstate);
-            setRenderState(_nmtstate = new LWJGLTextureState() {
-                public void apply () {
-                    super.apply();
-                    if (needsRefresh() && _nmap != null) {
-                        TextureStateRecord rec = (TextureStateRecord)_ctx.getDisplay().
-                            getCurrentContext().getStateRecord(RenderState.RS_TEXTURE);
-                        if (rec.currentUnit != 0) {
-                            GL13.glActiveTexture(GL13.GL_TEXTURE0);
-                            rec.currentUnit = 0;
-                        }
-                        GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0,
-                            WAVE_MAP_SIZE, WAVE_MAP_SIZE,
-                            GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, _nmap);
-                    }
-                }
-            });
+            BangPrefs.isHighDetail() && !_disableShaders && initShaders()) {
             return;
         }
 
@@ -361,6 +335,50 @@ public class WaterNode extends Node
     }
 
     /**
+     * Initializes the shader state.
+     *
+     * @return true if the shaders were compiled successfully, false to fall back on the fixed
+     * function implementation.
+     */
+    protected boolean initShaders ()
+    {
+         if (_fogShaderId == -1) {
+            File vert = _ctx.getResourceManager().getResourceFile("shaders/water.vert"),
+                frag = _ctx.getResourceManager().getResourceFile("shaders/water.frag");
+            GLSLShaderObjectsState fogShader = JmeUtil.loadShaders(vert, frag, "ENABLE_FOG"),
+                foglessShader = JmeUtil.loadShaders(vert, frag);
+            if (fogShader == null || foglessShader == null) {
+                _disableShaders = true;
+                return false;
+            }
+            _fogShaderId = fogShader.getProgramID();
+            _foglessShaderId = foglessShader.getProgramID();
+        }
+
+        _sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
+        _sstate.setProgramID(_foglessShaderId);
+        _sstate.setUniform("normalMap", 0);
+        setRenderState(_sstate);
+        setRenderState(_nmtstate = new LWJGLTextureState() {
+            public void apply () {
+                super.apply();
+                if (needsRefresh() && _nmap != null) {
+                    TextureStateRecord rec = (TextureStateRecord)_ctx.getDisplay().
+                        getCurrentContext().getStateRecord(RenderState.RS_TEXTURE);
+                    if (rec.currentUnit != 0) {
+                        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+                        rec.currentUnit = 0;
+                    }
+                    GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0,
+                        WAVE_MAP_SIZE, WAVE_MAP_SIZE,
+                        GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, _nmap);
+                }
+            }
+        });
+        return true;
+    }
+
+    /**
      * Initializes the state required for the normal map.
      */
     protected void initNormalMap ()
@@ -508,6 +526,9 @@ public class WaterNode extends Node
 
     /** A tile-sized quad to share as a low resolution water surface. */
     protected static Quad _quad;
+
+    /** If true, the shaders didn't link; don't try to compile them again. */
+    protected static boolean _disableShaders;
 
     /** The program id of the linked shader (with fog enabled). */
     protected static int _fogShaderId = -1;
