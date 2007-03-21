@@ -234,6 +234,11 @@ public class OOOAuthenticator extends BangAuthenticator
 
         boolean anonymous = user == null;
 
+        if (anonymous && !RuntimeConfig.server.anonymousAccessEnabled) {
+            rdata.code = NO_ANONYMOUS_ACCESS;
+            return;
+        }
+
         if (anonymous && StringUtil.isBlank(username)) {
             // we're a new anonymous client, so better make up fake username
             int attempts = 0;

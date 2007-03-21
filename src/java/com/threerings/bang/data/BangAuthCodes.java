@@ -48,4 +48,7 @@ public interface BangAuthCodes extends AuthCodes
 
     /** A code indicating that the username already exists. */
     public static final String NAME_IN_USE = "m.name_in_use";
+
+    /** A code indicating that this server is not open to anonymous users. */
+    public static final String NO_ANONYMOUS_ACCESS = "m.no_anonymous_access";
 }

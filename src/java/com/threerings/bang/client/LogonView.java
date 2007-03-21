@@ -384,6 +384,10 @@ public class LogonView extends BWindow
                         StringUtil.isBlank(BangPrefs.config.getValue("username", ""))) {
                 BangPrefs.config.setValue("anonymous", "");
                 showNewUserView();
+
+            // if we got a no anonymous user message, change to user login mode
+            } else if (cmsg.indexOf(BangAuthCodes.NO_ANONYMOUS_ACCESS) != -1) {
+                showLoginView();
             }
         }
     };
