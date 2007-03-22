@@ -159,7 +159,7 @@ public class LobbyView extends BWindow
 
         // pass will enter place onto interested parties
         _chat.willEnterPlace(plobj);
-        _tbldtr.willEnterPlace(plobj);
+        _tbldtr.setTableObject(plobj);
 
         // iterate over the tables already active in this lobby and put
         // them in their respective lists
@@ -181,7 +181,7 @@ public class LobbyView extends BWindow
         _penders.removeAll();
         _inplay.removeAll();
 
-        _tbldtr.didLeavePlace(plobj);
+        _tbldtr.clearTableObject();
         _chat.didLeavePlace(plobj);
     }
 
