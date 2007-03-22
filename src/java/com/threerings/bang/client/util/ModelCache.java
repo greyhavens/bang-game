@@ -225,7 +225,8 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
                 }
             }
             if (buffers != null) {
-                ARBBufferObject.glDeleteBuffersARB(BufferUtils.createIntBuffer(buffers));
+                ARBBufferObject.glDeleteBuffersARB(
+                    BufferUtils.createIntBuffer(IntListUtil.compact(buffers)));
             }
             _vbois = null;
         }
@@ -245,6 +246,13 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
 
             _vbois = vbois.isEmpty() ? null : vbois.toArray(new VBOInfo[vbois.size()]);
             _lists = (_lists == null) ? null : IntListUtil.compact(_lists);
+
+            // immediately flush if the reference has already been cleared
+            if (get() == null) {
+                log.warning("Prototype cleared before the model finished loading?! [model=" +
+                    prototype.getName() + "].");
+                flush();
+            }
         }
 
         protected int[] maybeAdd (int[] values, int value)
