@@ -29,6 +29,9 @@ public abstract class PrototypeCache<S, T>
     /**
      * Creates an instance of the identified object, loading its prototype
      * on the invoker thread if necessary.
+     *
+     * @param rl the listener to receive the instance, or <code>null</code>
+     * to preload the prototype.
      */
     protected void getInstance (
         S key, Colorization[] zations, ResultListener<T> rl)
@@ -40,6 +43,9 @@ public abstract class PrototypeCache<S, T>
     /**
      * Fetches the prototype for the identified object, loading it on the
      * invoker thread if necessary.
+     *
+     * @param rl the listener to receive the instance, or <code>null</code>
+     * to preload the prototype.
      */
     protected void getPrototype (S key, ResultListener<T> rl)
     {
@@ -48,7 +54,9 @@ public abstract class PrototypeCache<S, T>
             _prototypes.put(key, handler = new ResultHandler<T>());
             postPrototypeLoader(key, handler);
         }
-        handler.getResult(rl);
+        if (rl != null) {
+            handler.getResult(rl);
+        }
     }
 
     /**
