@@ -299,31 +299,11 @@ public class GangHandler
         // invalidate any cached gang info
         gangInfoChanged();
 
-        // set the user's gang fields and remove any outstanding gang invitations (except the one
-        // for this gang, which will be removed by the response handler) if he's online
+        // set the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
         PlayerObject user = BangServer.lookupPlayer(entry.handle);
-        if (user == null) {
-            return;
-        }
-        ArrayList<GangInvite> invites = new ArrayList<GangInvite>();
-        for (Notification note : user.notifications) {
-            if (!(note instanceof GangInvite)) {
-                continue;
-            }
-            GangInvite invite = (GangInvite)note;
-            if (!invite.gang.equals(_gangobj.name)) {
-                invites.add(invite);
-            }
-        }
-        user.startTransaction();
-        try {
+        if (user != null) {
             initPlayer(user, entry);
-            for (GangInvite invite : invites) {
-                user.removeFromNotifications(invite.gang);
-            }
-        } finally {
-            user.commitTransaction();
         }
     }
 
@@ -345,9 +325,25 @@ public class GangHandler
      */
     public void initPlayer (PlayerObject user, GangMemberEntry entry)
     {
+        // remove any outstanding gang invitations (except the one for this gang, which will be
+        // removed by the response handler)
+        ArrayList<GangInvite> invites = new ArrayList<GangInvite>();
+        for (Notification note : user.notifications) {
+            if (!(note instanceof GangInvite)) {
+                continue;
+            }
+            GangInvite invite = (GangInvite)note;
+            if (!invite.gang.equals(_gangobj.name)) {
+                invites.add(invite);
+            }
+        }
+
         // set the gang fields of their player object
         user.startTransaction();
         try {
+            for (GangInvite invite : invites) {
+                user.removeFromNotifications(invite.gang);
+            }
             user.setGangId(_gangId);
             user.setGangRank(entry.rank);
             user.setJoinedGang(entry.joined);
@@ -643,7 +639,6 @@ public class GangHandler
         // form the fingerprint before fiddling with the array
         final BuckleInfo buckle = GangUtil.getBuckleInfo(parts);
 
-        // store the parts in a temporary DSet to facilitate
         // verify and count all of the parts, clear out the ones that haven't changed
         final int[] partIds = new int[parts.length];
         int[] ccounts = new int[AvatarLogic.BUCKLE_PARTS.length];

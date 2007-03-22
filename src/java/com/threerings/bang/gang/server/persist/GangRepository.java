@@ -365,6 +365,10 @@ public class GangRepository extends JORARepository
         if (member.joined == null) {
             member.joined = new Timestamp(System.currentTimeMillis());
         }
+
+        // make sure there are no any pending invitations
+        update("delete from GANG_INVITES where PLAYER_ID = " + member.playerId);
+
         insert(_mtable, member);
     }
 
