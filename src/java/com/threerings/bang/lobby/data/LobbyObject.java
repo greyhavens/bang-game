@@ -9,6 +9,7 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.parlor.data.Table;
 import com.threerings.parlor.data.TableLobbyObject;
+import com.threerings.parlor.data.TableMarshaller;
 
 /**
  * Contains the distributed information for a Bang! lobby.
@@ -25,6 +26,9 @@ public class LobbyObject extends PlaceObject
 
     /** The field name of the <code>scenarios</code> field. */
     public static final String SCENARIOS = "scenarios";
+
+    /** The field name of the <code>tableService</code> field. */
+    public static final String TABLE_SERVICE = "tableService";
     // AUTO-GENERATED: FIELDS END
 
     /** A set containing all of the tables being managed by this lobby.
@@ -37,25 +41,34 @@ public class LobbyObject extends PlaceObject
     /** Valid scenarios that may be match-made from this lobby. */
     public String[] scenarios;
 
-    // documentation inherited
+    /** Used to interact with our table manager. */
+    public TableMarshaller tableService;
+
+    // from interface TableLobbyObject
     public DSet<Table> getTables ()
     {
         return tableSet;
     }
 
-    // documentation inherited from interface
+    // from interface TableLobbyObject
+    public TableMarshaller getTableService ()
+    {
+        return tableService;
+    }
+
+    // from interface TableLobbyObject
     public void addToTables (Table table)
     {
         addToTableSet(table);
     }
 
-    // documentation inherited from interface
+    // from interface TableLobbyObject
     public void updateTables (Table table)
     {
         updateTableSet(table);
     }
 
-    // documentation inherited from interface
+    // from interface TableLobbyObject
     public void removeFromTables (Comparable key)
     {
         removeFromTableSet(key);
@@ -157,6 +170,22 @@ public class LobbyObject extends PlaceObject
         requestElementUpdate(
             SCENARIOS, index, value, ovalue);
         this.scenarios[index] = value;
+    }
+
+    /**
+     * Requests that the <code>tableService</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setTableService (TableMarshaller value)
+    {
+        TableMarshaller ovalue = this.tableService;
+        requestAttributeChange(
+            TABLE_SERVICE, value, ovalue);
+        this.tableService = value;
     }
     // AUTO-GENERATED: METHODS END
 }

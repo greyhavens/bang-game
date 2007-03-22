@@ -10,7 +10,6 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.parlor.server.TableManager;
-import com.threerings.parlor.server.TableManagerProvider;
 
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.server.ServerConfig;
@@ -21,14 +20,7 @@ import com.threerings.bang.lobby.data.LobbyObject;
  * Takes care of the server side of a Bang! lobby.
  */
 public class LobbyManager extends PlaceManager
-    implements TableManagerProvider
 {
-    // documentation inherited from interface TableManagerProvider
-    public TableManager getTableManager ()
-    {
-        return _tablemgr;
-    }
-
     @Override // documentation inherited
     protected void didStartup ()
     {
@@ -37,9 +29,19 @@ public class LobbyManager extends PlaceManager
         _lobobj = (LobbyObject)_plobj;
         _lobobj.addListener(_emptyListener);
         _lobobj.setTownId(ServerConfig.townId);
-        _lobobj.setScenarios(
-            ScenarioInfo.getScenarioIds(ServerConfig.townId, false));
-        _tablemgr = new TableManager(this);
+        _lobobj.setScenarios(ScenarioInfo.getScenarioIds(ServerConfig.townId, false));
+
+        // create a manager for our tables
+        _tablemgr = new TableManager(getPlaceObject());
+    }
+
+    @Override // documentation inherited
+    protected void didShutdown ()
+    {
+        super.didShutdown();
+
+        // shutdown our table manager
+        _tablemgr.shutdown();
     }
 
     @Override // documentation inherited
