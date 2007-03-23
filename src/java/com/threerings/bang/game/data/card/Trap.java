@@ -20,7 +20,7 @@ public class Trap extends AddPieceCard
     {
         return pidx == owner;
     }
-    
+
     @Override // documentation inherited
     public String getType ()
     {
@@ -54,7 +54,6 @@ public class Trap extends AddPieceCard
     // documentation inherited
     protected Piece createPiece ()
     {
-        return Bonus.createBonus(
-            BonusConfig.getConfig("indian_post/trap"));
+        return Bonus.createBonus(BonusConfig.getConfig("indian_post/trap"), owner);
     }
 }

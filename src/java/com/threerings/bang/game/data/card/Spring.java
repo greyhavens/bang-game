@@ -19,7 +19,7 @@ public class Spring extends AddPieceCard
     {
         return pidx == owner;
     }
-    
+
     @Override // documentation inherited
     public String getType ()
     {
@@ -47,7 +47,6 @@ public class Spring extends AddPieceCard
     // documentation inherited
     protected Piece createPiece ()
     {
-        return Bonus.createBonus(
-            BonusConfig.getConfig("frontier_town/spring"));
+        return Bonus.createBonus(BonusConfig.getConfig("frontier_town/spring"), owner);
     }
 }

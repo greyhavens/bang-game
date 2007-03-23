@@ -22,7 +22,7 @@ public class Joker extends AddPieceCard
     {
         return pidx == owner;
     }
-    
+
     @Override // documentation inherited
     public String getType ()
     {
@@ -50,8 +50,7 @@ public class Joker extends AddPieceCard
     // documentation inherited
     protected Piece createPiece ()
     {
-        return Bonus.createBonus(
-            BonusConfig.getConfig("frontier_town/joker"));
+        return Bonus.createBonus(BonusConfig.getConfig("frontier_town/joker"), owner);
     }
 
     @Override // documentation inherited

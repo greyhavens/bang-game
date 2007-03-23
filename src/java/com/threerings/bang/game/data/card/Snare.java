@@ -21,7 +21,7 @@ public class Snare extends AddPieceCard
     {
         return pidx == owner;
     }
-    
+
     @Override // documentation inherited
     public String getType ()
     {
@@ -49,7 +49,6 @@ public class Snare extends AddPieceCard
     @Override // documentation inherited
     protected Piece createPiece ()
     {
-        return Bonus.createBonus(
-            BonusConfig.getConfig("indian_post/snare"));
+        return Bonus.createBonus(BonusConfig.getConfig("indian_post/snare"), owner);
     }
 }

@@ -75,8 +75,8 @@ public class Bonus extends Piece
             buf.append(config.type).append(" ").append(weights[ii]);
         }
 
-        log.fine("Selecting bonus [turn=" + bangobj.tick + ", avgpow=" + avgpow + 
-                ", avgdam=" + avgdam + ", avgpc=" + avgunits + ", pointDiff=" + pointDiff + 
+        log.fine("Selecting bonus [turn=" + bangobj.tick + ", avgpow=" + avgpow +
+                ", avgdam=" + avgdam + ", avgpc=" + avgunits + ", pointDiff=" + pointDiff +
                 ", reachers=" + reachers + ", weights=(" + buf + ")].");
 
         // and select one at random
@@ -97,6 +97,14 @@ public class Bonus extends Piece
      */
     public static Bonus createBonus (BonusConfig config)
     {
+        return createBonus(config, -1);
+    }
+
+    /**
+     * Creates a bonus with the specified configuration.
+     */
+    public static Bonus createBonus (BonusConfig config, int owner)
+    {
         if (config == null) {
             return null;
         }
@@ -109,6 +117,7 @@ public class Bonus extends Piece
                 bonus = new Bonus();
             }
             bonus.init(config);
+            bonus.owner = owner;
             return bonus;
 
         } catch (Exception e) {
@@ -171,7 +180,7 @@ public class Bonus extends Piece
             effect.bonusId = pieceId;
             effect.init(piece);
             if (!_config.hidden) {
-                effect.puntEffect = 
+                effect.puntEffect =
                     PuntEffect.puntBonus(bangobj, this, piece.pieceId);
             }
             return effect;
@@ -200,7 +209,7 @@ public class Bonus extends Piece
     {
         return (_config.hidden ? -1 : 0);
     }
-    
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
@@ -218,7 +227,7 @@ public class Bonus extends Piece
     @Override // documentation inherited
     public String toString ()
     {
-        return super.toString() + " t:" + 
+        return super.toString() + " t:" +
             (_config != null ? _config.type : "unknown");
     }
 
