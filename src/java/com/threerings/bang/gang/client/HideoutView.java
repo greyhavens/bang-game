@@ -184,7 +184,7 @@ public class HideoutView extends ShopView
 
         // add the one selectable tab
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
-            NON_MEMBER_TABS, true, 145, 15), TABS_RECT);
+            NON_MEMBER_TABS, true, 145, 15), NON_MEMBER_TABS_RECT);
         _tcont.add(new TopGangView(_ctx, _hideoutobj));
     }
 
@@ -228,7 +228,7 @@ public class HideoutView extends ShopView
             }
             protected TopGangView _tgview;
             protected TopScoreView _tmview;
-        }, TABS_RECT);
+        }, MEMBER_TABS_RECT);
     }
 
     /**
@@ -347,9 +347,12 @@ public class HideoutView extends ShopView
     /** The tabs for non-members. */
     protected final String[] NON_MEMBER_TABS = { "top_gangs" };
 
+    /** The bounds of the non-member tabs. */
+    protected static final Rectangle NON_MEMBER_TABS_RECT = new Rectangle(717, 588, 145, 44);
+
     /** The tabs for gang members. */
     protected final String[] MEMBER_TABS = { "gang_chat", "top_gangs", "top_members" };
 
-    /** The bounds of the tabs. */
-    protected static final Rectangle TABS_RECT = new Rectangle(572, 588, 3*145, 44);
+    /** The bounds of the member tabs. */
+    protected static final Rectangle MEMBER_TABS_RECT = new Rectangle(572, 588, 3*145, 44);
 }
