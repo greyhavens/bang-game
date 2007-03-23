@@ -144,6 +144,16 @@ public class LookRepository extends SimpleRepository
     }
 
     /**
+     * Deletes all looks and current snapshot for a particular player.
+     */
+    public void deleteAllLooks (int playerId)
+        throws PersistenceException
+    {
+        update("delete from LOOKS where PLAYER_ID = " + playerId);
+        update("delete from SNAPSHOTS where PLAYER_ID = " + playerId);
+    }
+
+    /**
      * Loads the specified player's "wanted poster" snapshot. Returns null if no snapshot could be
      * located for that player.
      */

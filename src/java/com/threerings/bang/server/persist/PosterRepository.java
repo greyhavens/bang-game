@@ -60,6 +60,15 @@ public class PosterRepository extends JORARepository
         delete(_ptable, record);
     }
 
+    /**
+     * Deletes the poster for the specified playerId from the repository
+     */
+    public void deletePoster (int playerId)
+        throws PersistenceException
+    {
+        update("delete from POSTERS where PLAYER_ID = " + playerId);
+    }
+
     @Override // from SimpleRepository
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException

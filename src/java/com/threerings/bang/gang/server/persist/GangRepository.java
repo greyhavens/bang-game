@@ -367,7 +367,7 @@ public class GangRepository extends JORARepository
         }
 
         // make sure there are no any pending invitations
-        update("delete from GANG_INVITES where PLAYER_ID = " + member.playerId);
+        deletePendingInvites(member.playerId);
 
         insert(_mtable, member);
     }
@@ -509,6 +509,15 @@ public class GangRepository extends JORARepository
                 return null;
             }
         });
+    }
+
+    /**
+     * Deletes pending gang invitations from the database for a particular player.
+     */
+    public void deletePendingInvites (final int playerId)
+        throws PersistenceException
+    {
+        update("delete from GANG_INVITES where PLAYER_ID = " + playerId);
     }
 
     /**

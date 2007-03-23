@@ -278,6 +278,19 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
+     * Returns 5 player records that can be expired.
+     */
+    public ArrayList<PlayerRecord> loadExpiredPlayers (Date anon, Date user)
+        throws PersistenceException
+    {
+        return loadAll(_ptable, "where FLAGS & " + PlayerRecord.IS_COIN_BUYER + " = 0 and " +
+                "((HANDLE is NULL and LAST_SESSION < '" + anon + "') " +
+                // currently disabled expiring non-anonymous players
+                //"or LAST_SESSION < '" + user + "'" +
+                ") limit 5");
+    }
+
+    /**
      * Note that a user's session has ended: increment their sessions, add in the number of minutes
      * spent online, set their last session time to now and update any changed poses.
      */
@@ -327,6 +340,15 @@ public class PlayerRepository extends JORARepository
         } else {
             store(_ftable, frec); // this will update or insert
         }
+    }
+
+    /**
+     * Clears all registered opinions on/of the target player.
+     */
+    public void clearOpinions (int playerId)
+        throws PersistenceException
+    {
+        update("delete from FOLKS where PLAYER_ID = " + playerId + " or TARGET_ID = " + playerId);
     }
 
     /**

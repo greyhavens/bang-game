@@ -82,6 +82,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
@@ -102,6 +103,8 @@ import com.threerings.bang.server.persist.PosterRepository;
 import com.threerings.bang.server.persist.RatingRepository.RankLevels;
 import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.util.BangUtil;
+
+import com.threerings.bang.gang.server.persist.GangMemberRecord;
 
 import static com.threerings.bang.Log.log;
 
@@ -166,6 +169,15 @@ public class PlayerManager
                 });
             }
         }.schedule(DOWNLOAD_PURGE_INTERVAL, true);
+
+        // register our player purging interval if we're on frontier town
+        if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
+            new Interval() {
+                public void expired () {
+                    purgeExpiredPlayers();
+                }
+            }.schedule(PLAYER_PURGE_INTERVAL, true);
+        }
     }
 
     /**
@@ -940,6 +952,35 @@ public class PlayerManager
     }
 
     /**
+     * Checks for any players that should be purged from the system.
+     */
+    public void purgeExpiredPlayers ()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, -ANONYMOUS_EXPIRE_DAYS);
+        final java.sql.Date anon = new java.sql.Date(cal.getTimeInMillis());
+        cal.setTimeInMillis(System.currentTimeMillis());
+        cal.add(Calendar.DAY_OF_MONTH, -USER_EXPIRE_DAYS);
+        final java.sql.Date user = new java.sql.Date(cal.getTimeInMillis());
+
+        BangServer.invoker.postUnit(new Invoker.Unit("purgeExpiredPlayers") {
+            public boolean invoke () {
+                try {
+                    _players = _playrepo.loadExpiredPlayers(anon, user);
+                } catch (PersistenceException pe) {
+                    log.warning("Failed to load player records to be expired [pe=" + pe + "].");
+                    return false;
+                }
+                return true;
+            }
+            public void handleResult () {
+                purgePlayers(_players.iterator());
+            }
+            protected ArrayList<PlayerRecord> _players;
+        });
+    }
+
+    /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
     protected void playComputer (
@@ -1188,6 +1229,84 @@ public class PlayerManager
     }
 
     /**
+     * Called periodically to purge players that have not logged in for
+     * a while.
+     */
+    protected void purgePlayers (final Iterator<PlayerRecord> players)
+    {
+        if (!players.hasNext()) {
+            return;
+        }
+
+        InvocationService.ConfirmListener rl = new InvocationService.ConfirmListener() {
+            public void requestProcessed () {
+                doNext();
+            }
+            public void requestFailed (String cause) {
+                log.warning(cause);
+                doNext();
+            }
+            protected void doNext() {
+                if (players.hasNext()) {
+                    purgePlayer(players.next(), this);
+                }
+            }
+        };
+
+        purgePlayer(players.next(), rl);
+    }
+
+    /**
+     * Purge a player from Bang.
+     */
+    protected void purgePlayer (
+            final PlayerRecord user, final InvocationService.ConfirmListener listener)
+    {
+        BangServer.invoker.postUnit(new PersistingUnit("purgePlayer", listener) {
+            public void invokePersistent () throws PersistenceException {
+                _pardrepo.removeAllPardners(user.playerId);
+                _playrepo.clearOpinions(user.playerId);
+                _postrepo.deletePoster(user.playerId);
+                _lookrepo.deleteAllLooks(user.playerId);
+                BangServer.statrepo.deleteStats(user.playerId);
+                BangServer.ratingrepo.deleteRatings(user.playerId);
+                BangServer.itemrepo.deleteItems(user.playerId, "purging player");
+
+                // find out if they're in a gang, and remove them from it, or remove any
+                // pending gang invitations
+                if (user.handle != null) {
+                    GangMemberRecord gmr = BangServer.gangrepo.loadMember(user.playerId);
+                    if (gmr == null) {
+                        BangServer.gangrepo.deletePendingInvites(user.playerId);
+                    } else {
+                        try {
+                            BangServer.gangmgr.requireGangPeerProvider(gmr.gangId).removeFromGang(
+                                    null, null, new Handle(user.handle),
+                                    new InvocationService.ConfirmListener() {
+                                        public void requestProcessed () { }
+                                        public void requestFailed (String cause) { }
+                                    });
+                        } catch (InvocationException ie) {
+                            log.warning("Failure removing purged player from gang! " +
+                                    "Proceeding with purge anyway [ie=" + ie + "].");
+                        }
+                    }
+                }
+                _playrepo.deletePlayer(user);
+            }
+            public void handleSuccess () {
+                if (user.handle != null) {
+                    BangServer.coinexmgr.userWasDeleted(user.handle);
+                }
+                listener.requestProcessed();
+            }
+            public String getFailureMessage () {
+                return "Failed to purge player! [user=" + user + "].";
+            }
+        });
+    }
+
+    /**
      * Called periodically (on the invoker thread) to purge download symlinks that are more than 5
      * minutes old.
      */
@@ -1249,4 +1368,13 @@ public class PlayerManager
 
     /** The frequency with which download symlinks are purged. */
     protected static final long DOWNLOAD_PURGE_INTERVAL = 60 * 1000L;
+
+    /** The frequencey with which we search for players to purge. */
+    protected static final long PLAYER_PURGE_INTERVAL = 60 * 1000L;
+
+    /** The number of days after which to expire anonymous players. */
+    protected static final int ANONYMOUS_EXPIRE_DAYS = 30;
+
+    /** The number of days after which to expire regular players. */
+    protected static final int USER_EXPIRE_DAYS = 120;
 }

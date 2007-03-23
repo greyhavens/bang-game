@@ -138,6 +138,15 @@ public class RatingRepository extends SimpleRepository
     }
 
     /**
+     * Deletes the ratings for the specified player.
+     */
+    public void deleteRatings (final int playerId)
+        throws PersistenceException
+    {
+        update("delete from RATINGS where PLAYER_ID = " + playerId);
+    }
+
+    /**
      * Updates the supplied ratings for the specified player.
      */
     public void updateRatings (final int playerId, final ArrayList<Rating> rats)

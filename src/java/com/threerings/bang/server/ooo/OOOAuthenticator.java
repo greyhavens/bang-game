@@ -275,7 +275,7 @@ public class OOOAuthenticator extends BangAuthenticator
 
         // see if they're a coin buyer
         if (!anonymous && prec != null && !prec.isSet(PlayerRecord.IS_COIN_BUYER)) {
-            if (user.hasBoughtCoins()) {
+            if (user.hasBoughtCoins() || user.isSupportPlus()) {
                 BangServer.playrepo.markAsCoinBuyer(prec.playerId);
                 prec.flags = prec.flags | PlayerRecord.IS_COIN_BUYER;
             }

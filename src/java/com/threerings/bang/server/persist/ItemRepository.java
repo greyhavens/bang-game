@@ -384,6 +384,36 @@ public class ItemRepository extends SimpleRepository
     }
 
     /**
+     * Deletes all items owned by the specified player.
+     */
+    public void deleteItems (final int playerId, final String why)
+        throws PersistenceException
+    {
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                String query = "select ITEM_ID from ITEMS where OWNER_ID = " + playerId;
+                ArrayIntSet itemIds = new ArrayIntSet();
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        itemIds.add(rs.getInt(1));
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                if (!itemIds.isEmpty()) {
+                    deleteItems(itemIds, why);
+                }
+
+                return null;
+            }
+        });
+    }
+
+    /**
      * Given a set of player ids and a prototype item, determines which of the players own
      * an identical item.
      *

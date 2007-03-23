@@ -220,6 +220,16 @@ public class PardnerRepository extends SimpleRepository
     }
 
     /**
+     * Removes all pardner mappings for the supplied playerId.
+     */
+    public void removeAllPardners (final int playerId)
+        throws PersistenceException
+    {
+        update("delete from PARDNERS where PLAYER_ID1 = " + playerId +
+               " or PLAYER_ID2 = " + playerId);
+    }
+
+    /**
      * Returns the number of active pardnerships to which the specified player belongs.
      */
     protected int getPardnerCount (Statement stmt, int playerId)
