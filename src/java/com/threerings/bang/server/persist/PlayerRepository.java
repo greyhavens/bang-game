@@ -412,7 +412,7 @@ public class PlayerRepository extends JORARepository
             "FLAGS INTEGER NOT NULL",
             "PRIMARY KEY (PLAYER_ID)",
             "UNIQUE (ACCOUNT_NAME)",
-            "INDEX (LAST_SESSION",
+            "INDEX (LAST_SESSION)",
         }, "");
 
         JDBCUtil.createTableIfMissing(conn, "FOLKS", new String[] {
