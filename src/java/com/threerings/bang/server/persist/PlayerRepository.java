@@ -171,7 +171,7 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Mark's a player as no longer being anonymous.
+     * Marks a player as no longer being anonymous.
      */
     public void clearAnonymous (int playerId)
         throws PersistenceException
@@ -181,7 +181,7 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Mark's a player as being a coin buyer.
+     * Marks a player as being a coin buyer.
      */
     public void markAsCoinBuyer (int playerId)
         throws PersistenceException
@@ -191,13 +191,13 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Mark's a list of players as being coin buyers.
+     * Marks a list of players as being coin buyers.
      */
     public void markAsCoinBuyers (List<String> usernames)
         throws PersistenceException
     {
         String query = "update PLAYERS set FLAGS = FLAGS | " + PlayerRecord.IS_COIN_BUYER +
-            " where ACCOUNT_NAME in " + StringUtil.toString(usernames.iterator(), "(", ")");
+            " where ACCOUNT_NAME in (" + JDBCUtil.escape(usernames.toArray()) + ")";
         warnedUpdate(query, usernames.size());
     }
 
