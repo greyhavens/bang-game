@@ -63,10 +63,6 @@ import com.jme.system.DisplaySystem;
 public class LWJGLLightState extends LightState {
 	private static final long serialVersionUID = 1L;
 
-    private float[] fourvals = new float[4];
-
-    private static final float[] FOUR_ZEROS = new float[4];
-
 	/**
 	 * Constructor instantiates a new <code>LWJGLLightState</code>.
 	 */
@@ -116,9 +112,10 @@ public class LWJGLLightState extends LightState {
 			}
 
 			if ((lightMask & MASK_GLOBALAMBIENT) == 0) {
-				setModelAmbient(record, globalAmbient);
+				setModelAmbient(record, globalAmbient[0], globalAmbient[1],
+				    globalAmbient[2], globalAmbient[3]);
 			} else {
-				setDefaultModel(record, toArray(0f, 0f, 0f, 1f));
+				setDefaultModel(record, 0f, 0f, 0f, 1f);
 			}
 
 		} else {
@@ -131,31 +128,31 @@ public class LWJGLLightState extends LightState {
 
 		if ((lightMask & MASK_AMBIENT) == 0
 				&& (light.getLightMask() & MASK_AMBIENT) == 0) {
-			setAmbient(index, record, toArray(light.getAmbient().r,
+			setAmbient(index, record, light.getAmbient().r,
 					light.getAmbient().g, light.getAmbient().b, light
-							.getAmbient().a));
+							.getAmbient().a);
 		} else {
-			setDefaultAmbient(index, record, FOUR_ZEROS);
+			setDefaultAmbient(index, record, 0f, 0f, 0f, 0f);
 		}
 
 		if ((lightMask & MASK_DIFFUSE) == 0
 				&& (light.getLightMask() & MASK_DIFFUSE) == 0) {
 
-			setDiffuse(index, record, toArray(light.getDiffuse().r,
+			setDiffuse(index, record, light.getDiffuse().r,
 					light.getDiffuse().g, light.getDiffuse().b, light
-							.getDiffuse().a));
+							.getDiffuse().a);
 		} else {
-			setDefaultDiffuse(index, record, FOUR_ZEROS);
+			setDefaultDiffuse(index, record, 0f, 0f, 0f, 0f);
 		}
 
 		if ((lightMask & MASK_SPECULAR) == 0
 				&& (light.getLightMask() & MASK_SPECULAR) == 0) {
 
-			setSpecular(index, record, toArray(light.getSpecular().r, light
+			setSpecular(index, record, light.getSpecular().r, light
 					.getSpecular().g, light.getSpecular().b, light
-					.getSpecular().a));
+					.getSpecular().a);
 		} else {
-			setDefaultSpecular(index, record, FOUR_ZEROS);
+			setDefaultSpecular(index, record, 0f, 0f, 0f, 0f);
 		}
 
 		if (light.isAttenuate()) {
@@ -170,16 +167,16 @@ public class LWJGLLightState extends LightState {
             case Light.LT_DIRECTIONAL: {
                 DirectionalLight pkDL = (DirectionalLight) light;
 
-                setPosition(index, record, toArray(-pkDL.getDirection().x, -pkDL
-                        .getDirection().y, -pkDL.getDirection().z, 0));
+                setPosition(index, record, -pkDL.getDirection().x, -pkDL
+                        .getDirection().y, -pkDL.getDirection().z, 0);
                 break;
             }
             case Light.LT_POINT:
             case Light.LT_SPOT: {
                 PointLight pointLight = (PointLight) light;
-                setPosition(index, record, toArray(pointLight.getLocation().x,
+                setPosition(index, record, pointLight.getLocation().x,
                         pointLight.getLocation().y, pointLight.getLocation().z,
-                        1));
+                        1);
                 break;
             }
         }
@@ -187,11 +184,11 @@ public class LWJGLLightState extends LightState {
 		if (light.getType() == Light.LT_SPOT) {
 			SpotLight spot = (SpotLight) light;
 			setSpotCutoff(index, record, spot.getAngle());
-			setSpotDirection(index, record, toArray(spot.getDirection().x, spot
-					.getDirection().y, spot.getDirection().z, 0));
+			setSpotDirection(index, record, spot.getDirection().x, spot
+					.getDirection().y, spot.getDirection().z, 0);
 			setSpotExponent(index, record, spot.getExponent());
 		} else {
-			setSpotDirection(index, record, toArray(0, 0, -1, 0));
+			setSpotDirection(index, record, 0, 0, -1, 0);
 			setSpotExponent(index, record, 0);
 			setSpotCutoff(index, record, 180);
 		}
@@ -326,82 +323,81 @@ public class LWJGLLightState extends LightState {
 		}
 	}
 
-	private void setModelAmbient(LightStateRecord record, float[] ambient) {
-		if (!isArrayEqual(record.getGlobalAmbient(), ambient)) {
+	private void setModelAmbient(LightStateRecord record, float r, float g, float b, float a) {
+		if (!isArrayEqual(record.getGlobalAmbient(), r, g, b, a)) {
+		    float[] ambient = toArray(record.getGlobalAmbient(), r, g, b, a);
 			record.lightBuffer.clear();
             record.lightBuffer.put(ambient);
             record.lightBuffer.flip();
 			GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, record.lightBuffer);
-			record.setGlobalAmbient((float[])ambient.clone());
+			record.setGlobalAmbient(ambient);
 		}
 	}
 
-	private void setDefaultModel(LightStateRecord record, float[] ambient) {
-		if (!isArrayEqual(record.getGlobalAmbient(), ambient)) {
+	private void setDefaultModel(LightStateRecord record, float r, float g, float b, float a) {
+		if (!isArrayEqual(record.getGlobalAmbient(), r, g, b, a)) {
 			GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, zeroBuffer);
-			record.setGlobalAmbient((float[])ambient.clone());
+			record.setGlobalAmbient(toArray(record.getGlobalAmbient(), r, g, b, a));
 		}
 	}
 
 	private void setAmbient(int index, LightStateRecord record,
-			float[] ambient) {
+			float r, float g, float b, float a) {
 		LightRecord lr = record.getLightRecord(index);
 		if (lr == null) {
-			lr = new LightRecord();
+			record.setLightRecord(lr = new LightRecord(), index);
 		}
-		if (!isArrayEqual(lr.getAmbient(), ambient)) {
+		if (!isArrayEqual(lr.getAmbient(), r, g, b, a)) {
+		    float[] ambient = toArray(lr.getAmbient(), r, g, b, a);
             record.lightBuffer.clear();
             record.lightBuffer.put(ambient);
             record.lightBuffer.flip();
 			GL11.glLight(index, GL11.GL_AMBIENT, record.lightBuffer);
-			lr.setAmbient((float[])ambient.clone());
-			record.setLightRecord(lr, index);
+			lr.setAmbient(ambient);
 		}
 	}
 
 	private void setDefaultAmbient(int index, LightStateRecord record,
-			float[] ambient) {
+			float r, float g, float b, float a) {
 		LightRecord lr = record.getLightRecord(index);
 		if (lr == null) {
-			lr = new LightRecord();
+			record.setLightRecord(lr = new LightRecord(), index);
 		}
-		if (!isArrayEqual(lr.getAmbient(), ambient)) {
+		if (!isArrayEqual(lr.getAmbient(), r, g, b, a)) {
 			GL11.glLight(index, GL11.GL_AMBIENT, zeroBuffer3);
-			lr.setAmbient((float[])ambient.clone());
-			record.setLightRecord(lr, index);
+			lr.setAmbient(toArray(lr.getAmbient(), r, g, b, a));
 		}
 	}
 
 	private void setDiffuse(int index, LightStateRecord record,
-			float[] diffuse) {
+			float r, float g, float b, float a) {
 		LightRecord lr = record.getLightRecord(index);
 		if (lr == null) {
-			lr = new LightRecord();
+			record.setLightRecord(lr = new LightRecord(), index);
 		}
-		if (!isArrayEqual(lr.getDiffuse(), diffuse)) {
+		if (!isArrayEqual(lr.getDiffuse(), r, g, b, a)) {
+		    float[] diffuse = toArray(lr.getDiffuse(), r, g, b, a);
             record.lightBuffer.clear();
             record.lightBuffer.put(diffuse);
             record.lightBuffer.flip();
 			GL11.glLight(index, GL11.GL_DIFFUSE, record.lightBuffer);
-			lr.setDiffuse((float[])diffuse.clone());
-			record.setLightRecord(lr, index);
+			lr.setDiffuse(diffuse);
 		}
 	}
 
 	private void setDefaultDiffuse(int index, LightStateRecord record,
-			float[] diffuse) {
+			float r, float g, float b, float a) {
 		LightRecord lr = record.getLightRecord(index);
 		if (lr == null) {
-			lr = new LightRecord();
+			record.setLightRecord(lr = new LightRecord(), index);
 		}
-		if (!isArrayEqual(lr.getDiffuse(), diffuse)) {
+		if (!isArrayEqual(lr.getDiffuse(), r, g, b, a)) {
 			GL11.glLight(index, GL11.GL_DIFFUSE, zeroBuffer3);
-			lr.setDiffuse((float[])diffuse.clone());
-			record.setLightRecord(lr, index);
+			lr.setDiffuse(toArray(lr.getDiffuse(), r, g, b, a));
 		}
 	}
 
-	private void setPosition(int index, LightStateRecord record, float[] position) {
+	private void setPosition(int index, LightStateRecord record, float x, float y, float z, float w) {
 		// From OpenGL Docs:
 		// The light position is transformed by the contents of the current top
 		// of the ModelView matrix stack when you specify the light position
@@ -412,13 +408,15 @@ public class LWJGLLightState extends LightState {
 		// light’s position, you must again specify the light position with a
 		// call to glLightfv(GL_LIGHT_POSITION,…).
         record.lightBuffer.clear();
-        record.lightBuffer.put(position);
+        record.lightBuffer.put(x);
+        record.lightBuffer.put(y);
+        record.lightBuffer.put(z);
+        record.lightBuffer.put(w);
         record.lightBuffer.flip();
 		GL11.glLight(index, GL11.GL_POSITION, record.lightBuffer);
-
 	}
 
-	private void setSpotDirection(int index, LightStateRecord record, float[] direction) {
+	private void setSpotDirection(int index, LightStateRecord record, float x, float y, float z, float w) {
 		// From OpenGL Docs:
 		// The light position is transformed by the contents of the current top
 		// of the ModelView matrix stack when you specify the light position
@@ -429,51 +427,59 @@ public class LWJGLLightState extends LightState {
 		// light’s position, you must again specify the light position with a
 		// call to glLightfv(GL_LIGHT_POSITION,…).
         record.lightBuffer.clear();
-        record.lightBuffer.put(direction);
+        record.lightBuffer.put(x);
+        record.lightBuffer.put(y);
+        record.lightBuffer.put(z);
+        record.lightBuffer.put(w);
         record.lightBuffer.flip();
 		GL11.glLight(index, GL11.GL_SPOT_DIRECTION, record.lightBuffer);
 	}
 
 	private void setDefaultSpecular(int index, LightStateRecord record,
-			float[] specular) {
+			float r, float g, float b, float a) {
 		LightRecord lr = record.getLightRecord(index);
 		if (lr == null) {
-			lr = new LightRecord();
+			record.setLightRecord(lr = new LightRecord(), index);
 		}
-		if (!isArrayEqual(lr.getSpecular(), specular)) {
+		if (!isArrayEqual(lr.getSpecular(), r, g, b, a)) {
 			GL11.glLight(index, GL11.GL_SPECULAR, zeroBuffer3);
-			lr.setSpecular((float[])specular.clone());
-			record.setLightRecord(lr, index);
+			lr.setSpecular(toArray(lr.getSpecular(), r, g, b, a));
 		}
 	}
 
 	private void setSpecular(int index, LightStateRecord record,
-			float[] specular) {
+			float r, float g, float b, float a) {
 		LightRecord lr = record.getLightRecord(index);
 		if (lr == null) {
-			lr = new LightRecord();
+			record.setLightRecord(lr = new LightRecord(), index);
 		}
-		if (!isArrayEqual(lr.getSpecular(), specular)) {
-            record.lightBuffer.clear();
+		if (!isArrayEqual(lr.getSpecular(), r, g, b, a)) {
+		    float[] specular = toArray(lr.getSpecular(), r, g, b, a);
+			record.lightBuffer.clear();
             record.lightBuffer.put(specular);
             record.lightBuffer.flip();
 			GL11.glLight(index, GL11.GL_SPECULAR, record.lightBuffer);
-			lr.setSpecular((float[])specular.clone());
-			record.setLightRecord(lr, index);
+			lr.setSpecular(specular);
 		}
 	}
 
-    private float[] toArray(float v1, float v2, float v3, float v4) {
-        fourvals[0] = v1;
-        fourvals[1] = v2;
-        fourvals[2] = v3;
-        fourvals[3] = v4;
-        return fourvals;
-    }
-
-	private boolean isArrayEqual(float[] f1, float[] f2) {
-		return Arrays.equals(f1, f2);
+	private boolean isArrayEqual(float[] values, float v1, float v2, float v3, float v4) {
+		return (values != null && values.length == 4 &&
+		    values[0] == v1 && values[1] == v2 && values[2] == v3 && values[3] == v4);
 	}
+
+    private float[] toArray (float[] values, float v1, float v2, float v3, float v4)
+    {
+        if (values == null || values.length != 4) {
+            return new float[] { v1, v2, v3, v4 };
+        } else {
+            values[0] = v1;
+            values[1] = v2;
+            values[2] = v3;
+            values[3] = v4;
+            return values;
+        }
+    }
 
 	private void setConstant(int index, float constant, LightRecord lr) {
 		if (constant != lr.getConstant()) {
