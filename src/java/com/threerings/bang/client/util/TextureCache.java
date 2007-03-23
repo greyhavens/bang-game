@@ -20,6 +20,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.scene.state.RenderState;
+import com.jme.scene.state.lwjgl.records.TextureStateRecord;
 import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.util.Rectangle;
@@ -245,6 +247,10 @@ public class TextureCache
         {
             if (_textureId[0] > 0) {
                 GL11.glDeleteTextures(BufferUtils.createIntBuffer(_textureId));
+                TextureStateRecord record =
+                    (TextureStateRecord)_ctx.getDisplay().getCurrentContext().getStateRecord(
+                        RenderState.RS_TEXTURE);
+                record.removeTextureRecord(_textureId[0]);
                 _textureId[0] = 0;
             }
         }
