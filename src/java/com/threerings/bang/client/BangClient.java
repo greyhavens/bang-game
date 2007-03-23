@@ -99,6 +99,7 @@ import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -1561,6 +1562,10 @@ public class BangClient extends BasicClient
     protected String _popup;
     protected int _headingTo = -1;
     protected boolean _showingAccount;
+
+    /** We need to trigger static initialization of the StatType class before we download our
+     * PlayerObject from the server which will be full of stats. */
+    protected static final StatType INIT_STATS = StatType.UNUSED;
 
     /** The time in milliseconds after which we log off an idle user. */
     protected static final long LOGOFF_DELAY = 8L * 60L * 1000L;
