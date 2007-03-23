@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -37,15 +37,16 @@ import java.util.HashMap;
 import org.lwjgl.BufferUtils;
 
 import com.jme.math.Vector3f;
+import com.jme.util.HashIntMap;
 
 public class TextureStateRecord extends StateRecord {
-    
+
     public FloatBuffer eyePlaneS = BufferUtils.createFloatBuffer(4);
     public FloatBuffer eyePlaneT = BufferUtils.createFloatBuffer(4);
     public FloatBuffer eyePlaneR = BufferUtils.createFloatBuffer(4);
     public FloatBuffer eyePlaneQ = BufferUtils.createFloatBuffer(4);
 
-    public HashMap<Integer, TextureRecord> textures;
+    public HashIntMap<TextureRecord> textures;
     public TextureUnitRecord[] units;
     public int hint = -1;
     public int currentUnit = -1;
@@ -61,7 +62,7 @@ public class TextureStateRecord extends StateRecord {
     public final FloatBuffer tmp_matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public TextureStateRecord(int maxUnits) {
-        textures = new HashMap<Integer, TextureRecord>();
+        textures = new HashIntMap<TextureRecord>();
         units = new TextureUnitRecord[maxUnits];
         for (int i = 0; i < maxUnits; i++) {
             units[i] = new TextureUnitRecord();
@@ -81,7 +82,7 @@ public class TextureStateRecord extends StateRecord {
         }
         return tr;
     }
-    
+
     public void removeTextureRecord(int textureId) {
         textures.remove(textureId);
         for (int i = 0; i < units.length; i++) {
@@ -89,5 +90,5 @@ public class TextureStateRecord extends StateRecord {
                 units[i].boundTexture = -1;
         }
     }
-    
+
 }

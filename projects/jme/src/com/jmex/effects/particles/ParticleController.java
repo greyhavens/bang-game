@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -47,7 +47,7 @@ import com.jme.util.export.OutputCapsule;
 /**
  * <code>ParticleController</code> controls and maintains the parameters of a
  * ParticleGeometry particle system over time.
- * 
+ *
  * @author Joshua Slack
  * @version $Id: ParticleController.java,v 1.10 2006/09/07 14:57:51 nca Exp $
  */
@@ -69,10 +69,10 @@ public class ParticleController extends Controller {
     private ArrayList<ParticleInfluence> influences;
 
     public ParticleController() {}
-    
+
     /**
      * ParticleManager constructor
-     * 
+     *
      * @param numParticles
      *            Desired number of particles in this system.
      */
@@ -96,7 +96,7 @@ public class ParticleController extends Controller {
      * Update the particles managed by this manager. If any particles are "dead"
      * recreate them at the origin position (which may be a point, line or
      * rectangle.) See com.jme.scene.Controller.update(float)
-     * 
+     *
      * @param secondsPassed
      *            float
      */
@@ -131,18 +131,22 @@ public class ParticleController extends Controller {
                         DisplaySystem.getDisplaySystem().getRenderer().getCamera(),
                         particles.getInvScale(), true);
                 }
-                
+
                 if (influences != null) {
-                    for (ParticleInfluence influence : influences) {
-                        influence.prepare(particles);
+                    ParticleInfluence inf;
+                    for (int ii = 0, nn = influences.size(); ii < nn; ii++) {
+                        inf = influences.get(ii);
+                        if (inf.isEnabled()) {
+                            inf.prepare(particles);
+                        }
                     }
                 }
-                
+
                 int i = 0;
                 boolean dead = true;
                 while (i < particles.getNumParticles()) {
                     Particle p = particles.getParticle(i);
-                    
+
                     if (influences != null && p.getStatus() == Particle.ALIVE) {
                         for (int x = 0; x < influences.size(); x++) {
                             ParticleInfluence inf = influences.get(x);
@@ -150,8 +154,8 @@ public class ParticleController extends Controller {
                                 inf.apply(timePassed, p, i);
                         }
                     }
-                        
-                    
+
+
                     if (p.updateAndCheck(timePassed)
                             && (!controlFlow || particlesToCreate > 0)) {
                         if (p.getStatus() == Particle.DEAD
@@ -187,7 +191,7 @@ public class ParticleController extends Controller {
     /**
      * Get how soon after the last update the manager will send updates to the
      * particles.
-     * 
+     *
      * @return The precision.
      */
     public float getPrecision() {
@@ -201,7 +205,7 @@ public class ParticleController extends Controller {
      * This means that if an update is called every 2ms (e.g. running at 500
      * FPS) the particles position and stats will be updated every fifth frame
      * with the elapsed time (in this case, 10ms) since previous update.
-     * 
+     *
      * @param precision
      *            in seconds
      */
@@ -212,7 +216,7 @@ public class ParticleController extends Controller {
     /**
      * Get the variance possible on the release rate. 0.0f = no variance 0.5f =
      * between releaseRate / 2f and 1.5f * releaseRate
-     * 
+     *
      * @return release variance as a percent.
      */
     public float getReleaseVariance() {
@@ -221,7 +225,7 @@ public class ParticleController extends Controller {
 
     /**
      * Set the variance possible on the release rate.
-     * 
+     *
      * @param variance
      *            release rate +/- variance as a percent (eg. .5 = 50%)
      */
@@ -231,7 +235,7 @@ public class ParticleController extends Controller {
 
     /**
      * Does this manager regulate the particle flow?
-     * 
+     *
      * @return true if this manager regulates how many particles per sec are
      *         emitted.
      */
@@ -241,7 +245,7 @@ public class ParticleController extends Controller {
 
     /**
      * Set the regulate flow property on the manager.
-     * 
+     *
      * @param regulate
      *            regulate particle flow.
      */
@@ -251,7 +255,7 @@ public class ParticleController extends Controller {
 
     /**
      * Get the Spatial that holds all of the particle information for display.
-     * 
+     *
      * @return Spatial holding particle information.
      */
     public Spatial getParticles() {
@@ -260,7 +264,7 @@ public class ParticleController extends Controller {
 
     /**
      * Return the number this manager has warmed up
-     * 
+     *
      * @return int
      */
     public int getIterations() {
@@ -270,7 +274,7 @@ public class ParticleController extends Controller {
     /**
      * Sets the iterations for the warmup and calls warmUp with the number of
      * iterations as the argument
-     * 
+     *
      * @param iterations
      */
     public void setIterations(int iterations) {
@@ -279,7 +283,7 @@ public class ParticleController extends Controller {
 
     /**
      * Add an external influence to this particle controller.
-     * 
+     *
      * @param influence
      *            ParticleInfluence
      */
@@ -290,7 +294,7 @@ public class ParticleController extends Controller {
 
     /**
      * Remove an influence from this particle controller.
-     * 
+     *
      * @param influence
      *            ParticleInfluence
      * @return true if found and removed.
@@ -299,27 +303,27 @@ public class ParticleController extends Controller {
         if (influences == null) return false;
         return influences.remove(influence);
     }
-    
+
     /**
      * Returns the list of influences acting on this particle controller.
-     * 
+     *
      * @return ArrayList
      */
     public ArrayList<ParticleInfluence> getInfluences() {
         return influences;
     }
-    
+
     public void clearInfluences() {
         if (influences != null)
             influences.clear();
     }
-    
+
     /**
      * Runs the update method of this particle manager for iteration seconds
      * with an update every .1 seconds (IE <code>iterations</code> * 10
      * update(.1f) calls). This is used to "warm up" and get the particle
      * manager going.
-     * 
+     *
      * @param iterations
      *            The number of iterations to warm up.
      */
@@ -328,7 +332,7 @@ public class ParticleController extends Controller {
         for (int i = iterations; --i >= 0;)
             update(.1f);
     }
-    
+
     public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
