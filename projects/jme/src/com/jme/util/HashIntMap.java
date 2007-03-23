@@ -140,19 +140,19 @@ public class HashIntMap<T>
 
     protected static class Entry<T>
     {
-		public int key;
-		public T value;
+        public int key;
+        public T value;
 
-		Entry (int key, T value)
-		{
+        Entry (int key, T value)
+        {
             this.key = key;
             this.value = value;
-		}
-	}
+        }
+    }
 
-	protected int _capacity, _size, _threshold, _mask;
+    protected int _capacity, _size, _threshold, _mask;
     protected Entry<T>[] _entries;
 
-	/** The initial capacity of the map (as a power of two). */
-	protected static final int INITIAL_CAPACITY = 4;
+    /** The initial capacity of the map (as a power of two). */
+    protected static final int INITIAL_CAPACITY = 4;
 }
