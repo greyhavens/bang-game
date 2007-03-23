@@ -206,13 +206,13 @@ public class RenderUtil
      * @param color Color of the text
      * @param ocolor Outline color of the text
      */
-    public static Quad createTextQuad (BasicContext ctx, Font font, 
+    public static Quad createTextQuad (BasicContext ctx, Font font,
             ColorRGBA color, ColorRGBA ocolor, String text)
     {
         return createTextQuad(ctx, font, color, ocolor, text, 1);
     }
 
-    public static Quad createTextQuad (BasicContext ctx, Font font, 
+    public static Quad createTextQuad (BasicContext ctx, Font font,
             ColorRGBA color, ColorRGBA ocolor, String text, int outline)
     {
         Vector2f[] tcoords = new Vector2f[4];
@@ -303,7 +303,7 @@ public class RenderUtil
                     gfx.draw(layout.getOutline(null));
                     gfx.setStroke(oldstroke);
                     gfx.setColor(acolor);
-                } 
+                }
                 gfx.fill(layout.getOutline(null));
                 if (outline <= 1) {
                     gfx.setColor(oacolor);
@@ -351,11 +351,19 @@ public class RenderUtil
     public static Texture createTexture (Image image)
     {
         Texture texture = new Texture();
+        configureTexture(texture, image);
+        return texture;
+    }
+
+    /**
+     * Configures an existing texture with the supplied image.
+     */
+    public static void configureTexture (Texture texture, Image image)
+    {
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
         texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
         texture.setImage(image);
-        return texture;
     }
 
     /**
@@ -398,7 +406,7 @@ public class RenderUtil
     {
         ensureLoaded(createTextureState(ctx, tex));
     }
-    
+
     /**
      * Ensures that all the textures in the specified state are loaded and bound to
      * OpenGL names.
@@ -412,7 +420,7 @@ public class RenderUtil
             }
         }
     }
-    
+
     /**
      * Configures the specified texture's scale and translation so as to select
      * the <code>tile</code>th tile from a <code>size</code> x
@@ -526,7 +534,7 @@ public class RenderUtil
         }
         return false;
     }
-    
+
     /**
      * Creates a JME {@link ColorRGBA} object with alpha equal to one from a
      * packed RGB value.
