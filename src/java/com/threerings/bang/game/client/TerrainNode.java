@@ -145,14 +145,14 @@ public class TerrainNode extends Node
             _verts.add(new Vector3f(v.x, v.y,
                 getHeightfieldHeight(v.x, v.y) + 0.1f));
         }
-        
+
         @Override // documentation inherited
         protected void setParent (Node parent)
         {
             super.setParent(parent);
             updateRenderState();
         }
-    
+
         protected ArrayList<Vector3f> _verts = new ArrayList<Vector3f>();
         protected Vector2f _v1 = new Vector2f(), _v2 = new Vector2f(),
             _between = new Vector2f();
@@ -174,10 +174,10 @@ public class TerrainNode extends Node
 
         /** If true, the highlight will be flat. */
         public boolean flatten;
-                
+
         /** Whether or not the user is hovering over the highlight. */
         public boolean hover;
-        
+
         /** Whether or not the user *can* hover over it. */
         public boolean hoverable;
 
@@ -206,12 +206,12 @@ public class TerrainNode extends Node
         protected Highlight (float x, float y, float width, float height,
             boolean onTile, boolean overPieces, boolean flatten, int minElev)
         {
-            this(x, y, width, height, onTile, 
+            this(x, y, width, height, onTile,
                     overPieces, flatten, (byte)2, minElev);
         }
-        
+
         protected Highlight (
-                float x, float y, float width, float height, boolean onTile, 
+                float x, float y, float width, float height, boolean onTile,
                 boolean overPieces, boolean flatten, byte layer, int minElev)
         {
             super("highlight");
@@ -224,7 +224,7 @@ public class TerrainNode extends Node
             _width = width;
             _height = height;
             _onTile = onTile;
-            
+
             setLightCombineMode(LightState.OFF);
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             setRenderState(RenderUtil.overlayZBuf);
@@ -234,7 +234,7 @@ public class TerrainNode extends Node
             // set the vertices, which change according to position and terrain
             if (_onTile) {
                 _vwidth = _vheight = BangBoard.HEIGHTFIELD_SUBDIVISIONS + 1;
-                
+
             } else {
                 _vwidth = (int)FastMath.ceil(_width / SUB_TILE_SIZE) + 2;
                 _vheight = (int)FastMath.ceil(_height / SUB_TILE_SIZE) + 2;
@@ -315,7 +315,7 @@ public class TerrainNode extends Node
             _hoverColor = hoverColor;
             updateHoverState();
         }
-        
+
         /**
          * Sets the default and hover textures for this highlight.
          */
@@ -326,7 +326,7 @@ public class TerrainNode extends Node
             _hoverTexture = hoverTexture;
             updateHoverState();
         }
-        
+
         /**
          * Sets the hover state of this highlight.
          */
@@ -335,7 +335,7 @@ public class TerrainNode extends Node
             this.hover = hover;
             updateHoverState();
         }
-        
+
         /**
          * Sets whether this highlight has normals.
          */
@@ -349,7 +349,7 @@ public class TerrainNode extends Node
                 setNormalBuffer(0, null);
             }
         }
-        
+
         /**
          * Updates the vertices of the highlight to reflect a change in
          * position or in the underlying terrain.
@@ -364,7 +364,7 @@ public class TerrainNode extends Node
                 nbuf = getNormalBuffer(0);
             IntBuffer ibuf = getIndexBuffer(0);
             ibuf.rewind();
-            
+
             // if we're putting highlights over pieces and there's a piece
             // here, raise the highlight above it and make the center of the
             // highlight its origin
@@ -372,7 +372,7 @@ public class TerrainNode extends Node
             Vector3f offset = null;
             getLocalTranslation().set(0f, 0f, 0f);
             float height = 0f;
-            boolean flat = flatten && (_board.isBridge(tx, ty) || 
+            boolean flat = flatten && (_board.isBridge(tx, ty) ||
                     !_board.isTraversable(tx, ty));
             int belev = _board.getElevation(tx, ty);
             if (flat) {
@@ -380,7 +380,7 @@ public class TerrainNode extends Node
                     belev = minElev;
                 }
                 int maxelev = _board.getMaxHeightfieldElevation(tx, ty);
-                height = (float)(Math.max(minElev, Math.max(belev, maxelev)) * 
+                height = (float)(Math.max(minElev, Math.max(belev, maxelev)) *
                         _elevationScale);
 
             } else if (_onTile && overPieces) {
@@ -406,7 +406,7 @@ public class TerrainNode extends Node
                             BufferUtils.setInBuffer(vertex, nbuf, idx);
                         }
                     }
-                    
+
                     // set the vertex
                     getHeightfieldVertex(sx, sy, vertex);
                     if (flat) {
@@ -418,7 +418,7 @@ public class TerrainNode extends Node
                     }
                     vertex.z += layer * LAYER_OFFSET;
                     BufferUtils.setInBuffer(vertex, vbuf, idx++);
-                    
+
                     // update the index buffer according to the diagonalization
                     // toggles set by the splat blocks
                     if (sy == sy0 || sx == sx0) {
@@ -428,15 +428,15 @@ public class TerrainNode extends Node
                         ul = ur - 1, lr = ur - _vwidth, ll = lr - 1;
                     if (_diags.length <= sy+1) {
                         log.warning("Attempting to access _diags out of " +
-                                "range [_diags.length=" + _diags.length + 
-                                ", sy=" + sy + ", sy0=" + sy0 + ", sy1=" + 
+                                "range [_diags.length=" + _diags.length +
+                                ", sy=" + sy + ", sy0=" + sy0 + ", sy1=" +
                                 sy1 + "].");
                         ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
                         ibuf.put(ll); ibuf.put(lr); ibuf.put(ur);
                         continue;
                     } else if (_diags[sy+1].length <= sx+1) {
                         log.warning("Attempting to access _diags out of " +
-                                "range [_diags[sy+1].length=" + 
+                                "range [_diags[sy+1].length=" +
                                 _diags[sy+1].length + ", sx=" + sx + ", sx0=" +
                                 sx0 + ", sx1=" + sx1 + "].");
                         ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
@@ -486,30 +486,30 @@ public class TerrainNode extends Node
             setRenderState(hover ? _hoverTexture : _defaultTexture);
             updateRenderState();
         }
-        
+
         @Override // documentation inherited
         protected void setParent (Node parent)
         {
             super.setParent(parent);
             updateRenderState();
         }
-    
+
         /** If true, the highlight will always be aligned with a tile. */
         protected boolean _onTile;
 
         /** The dimensions of the highlight in world units. */
         protected float _width, _height;
-        
+
         /** The dimensions of the highlight in vertices. */
         protected int _vwidth, _vheight;
-        
+
         /** The colors for normal and hover modes. */
         protected ColorRGBA _defaultColor = ColorRGBA.white,
             _hoverColor = ColorRGBA.white;
-        
+
         /** The textures for normal and hover modes. */
         protected TextureState _defaultTexture, _hoverTexture;
-        
+
         /** The zoffset for each layer. */
         protected static final float LAYER_OFFSET = TILE_SIZE/1000;
     }
@@ -523,7 +523,7 @@ public class TerrainNode extends Node
         {
             super(name, target);
         }
-        
+
         @Override // documentation inherited
         public void findPick(Ray ray, PickResults results)
         {
@@ -534,7 +534,7 @@ public class TerrainNode extends Node
             }
         }
     }
-    
+
     /**
      * An interface for progress update callbacks.
      */
@@ -547,27 +547,27 @@ public class TerrainNode extends Node
          */
         public void update (float complete);
     }
-    
+
     public TerrainNode (BasicContext ctx, BoardView view, boolean editorMode)
     {
         super("terrain");
         _ctx = ctx;
         _view = view;
         _editorMode = editorMode;
-        
+
         // always perform backface culling
         setRenderState(RenderUtil.backCull);
         setRenderQueueMode(Renderer.QUEUE_SKIP);
-        
+
         // we normalize things ourself
         setNormalsMode(NM_USE_PROVIDED);
-        
+
         MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.setColorMaterial(MaterialState.CM_DIFFUSE);
         mstate.getAmbient().set(ColorRGBA.white);
         setRenderState(mstate);
     }
-    
+
     /**
      * Initializes the terrain geometry using terrain data from the given board
      * and saves the board reference for later updates.
@@ -578,9 +578,10 @@ public class TerrainNode extends Node
         _elevationScale = _board.getElevationScale(TILE_SIZE);
         _diags = new boolean[_board.getHeightfieldHeight()+3][
             _board.getHeightfieldWidth()+3];
-        
+
         // clean up any existing geometry
         detachAllChildren();
+        cleanup();
 
         // create, store, and attach the splat blocks immediately in the
         // editor, or through the invoker in the game
@@ -599,15 +600,15 @@ public class TerrainNode extends Node
                 }
             }
         }
-        
+
         // attach the skirt surrounding the terrain
         attachChild(_skirt = new Skirt());
         _skirt.updateRenderState();
-        
+
         // compute the bounding box planes used for ray casting
         computeBoundingBoxPlanes();
     }
-    
+
     /**
      * Releases the resources created by this node.
      */
@@ -630,7 +631,7 @@ public class TerrainNode extends Node
             }
         }
     }
-    
+
     /**
      * Refreshes the entire heightfield.
      */
@@ -652,7 +653,7 @@ public class TerrainNode extends Node
             _elevationScale = elevationScale;
             computeBoundingBoxPlanes();
         }
-        
+
         // if the region includes the edges, we have to update all blocks
         // on the edges, plus the skirt
         boolean updateEdges = false;
@@ -704,11 +705,11 @@ public class TerrainNode extends Node
             _board.updateEdgeTerrain();
             _skirt.updateTexture();
         }
-        
+
         // grow the rectangle to make sure it includes surroundings
         Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
         rect.grow(1, 1);
-        
+
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 SplatBlock block = _blocks[x][y];
@@ -731,7 +732,7 @@ public class TerrainNode extends Node
             }
         }
     }
-    
+
     /**
      * Populates the a shadow map by finding the height of the shadow
      * volume above each heightfield vertex.
@@ -742,7 +743,7 @@ public class TerrainNode extends Node
     {
         int hfwidth = _board.getHeightfieldWidth(),
             hfheight = _board.getHeightfieldHeight();
-        
+
         // make sure terrain collision trees are up-to-date
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
@@ -751,7 +752,7 @@ public class TerrainNode extends Node
             }
         }
         updateGeometricState(0, true);
-        
+
         // generate the shadow buffer
         float azimuth = _board.getLightAzimuth(0),
             elevation = _board.getLightElevation(0),
@@ -769,13 +770,13 @@ public class TerrainNode extends Node
                 if ((complete % 32) == 0) {
                     listener.update(complete / total);
                 }
-                
+
                 // determine the shadow height from self-shadowing
                 getHeightfieldVertex(x, y, origin);
                 theight = origin.z;
                 int sheight = (int)((getSelfShadowHeight(ray) - theight) /
                     hstep);
-                
+
                 // use a binary search to find the highest piece shadow
                 int lower = 0, upper = 256, middle = 128;
                 while (middle > lower && middle < upper) {
@@ -789,7 +790,7 @@ public class TerrainNode extends Node
                     }
                     middle = (lower + upper) / 2;
                 }
-                
+
                 shadows[y*hfwidth + x] = (byte)
                     (Math.max(sheight, middle) - 128);
             }
@@ -854,7 +855,7 @@ public class TerrainNode extends Node
             int x, int y, boolean overPieces, boolean flatten, int minElev)
     {
         return new Highlight(
-                x, y, overPieces && Config.floatHighlights, 
+                x, y, overPieces && Config.floatHighlights,
                 flatten && Config.flattenHighlights, minElev);
     }
 
@@ -880,7 +881,7 @@ public class TerrainNode extends Node
         if (worldBound == null || !worldBound.intersects(ray)) {
             return false;
         }
-        
+
         // check for special case of vertical ray
         Vector3f origin = ray.getOrigin(), dir = ray.getDirection();
         if (dir.x == 0f && dir.y == 0f) {
@@ -891,7 +892,7 @@ public class TerrainNode extends Node
             result.set(origin.x, origin.y, height);
             return true;
         }
-        
+
         // step from entrance to exit until we find a transition
         Vector3f entrance = new Vector3f(), exit = new Vector3f();
         computeEntranceExit(ray, entrance, exit);
@@ -909,7 +910,7 @@ public class TerrainNode extends Node
                 float t = (h1 - r1) / (r2 + h1 - r1 - h2);
                 result.set(v1.x + t*(between.x - v1.x),
                     v1.y + t*(between.y - v1.y), h1 + t*(h2 - h1));
-                
+
                 return true;
             }
             v1.set(between);
@@ -918,7 +919,7 @@ public class TerrainNode extends Node
         }
         return false;
     }
-    
+
     /**
      * Returns the interpolated height at the specified set of node space
      * coordinates.
@@ -1011,7 +1012,7 @@ public class TerrainNode extends Node
         return (_board == null) ?
             0f : _board.getHeightfieldValue(x, y) * _elevationScale;
     }
-    
+
     /**
      * Computes and returns the interpolated shadow height at the specified
      * world coordinates.
@@ -1035,7 +1036,7 @@ public class TerrainNode extends Node
         return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
             FastMath.LERP(ay, cf, cc));
     }
-    
+
     /**
      * Returns the scaled height of the shadow volume at the specified sub-tile
      * coordinates.
@@ -1045,7 +1046,7 @@ public class TerrainNode extends Node
         return (_board.getHeightfieldValue(x, y) +
             _board.getShadowValue(x, y)) * _elevationScale;
     }
-    
+
     /**
      * Computes the height of the shadow volume from terrain self-shadowing.
      *
@@ -1058,7 +1059,7 @@ public class TerrainNode extends Node
         if (dir.x == 0f && dir.y == 0f) {
             return -Float.MAX_VALUE;
         }
-        
+
         // step from exit to origin updating height of volume
         Vector3f xydir = new Vector3f(dir.x, dir.y, 0f).normalizeLocal(),
             entrance = new Vector3f(), exit = new Vector3f();
@@ -1075,7 +1076,7 @@ public class TerrainNode extends Node
         }
         return height;
     }
-    
+
     /**
      * Determines whether the pick results contain any triangles.
      */
@@ -1090,12 +1091,12 @@ public class TerrainNode extends Node
                                        ((PieceSprite)sprite).getShadowType() ==
                                        PieceSprite.Shadow.STATIC)) {
                     return true;
-                }   
+                }
             }
         }
         return false;
     }
-    
+
     /**
      * Computes the normal at the specified heightfield location in sub-tile
      * coordinates.
@@ -1116,7 +1117,7 @@ public class TerrainNode extends Node
             2*SUB_TILE_SIZE);
         result.normalizeLocal();
     }
-    
+
     /**
      * Computes and returns the alpha value for the specified terrain code at
      * the given sub-tile coordinates.
@@ -1139,7 +1140,7 @@ public class TerrainNode extends Node
         }
         return alpha / total;
     }
-    
+
     /**
      * Returns the smoothed shadow value for the specified sub-tile coordinate.
      * 0.0 is completely unshadowed, 1.0 is completely shadowed.
@@ -1160,7 +1161,7 @@ public class TerrainNode extends Node
         }
         return (value / total) * _board.getShadowIntensity();
     }
-    
+
     /**
      * Computes and stores the planes of the bounding box.
      */
@@ -1179,7 +1180,7 @@ public class TerrainNode extends Node
             new Plane(Vector3f.UNIT_Z.negate(), -bbzmax),
         };
     }
-    
+
     /**
      * Computes the points at which the given ray enters and exits the bounding
      * volume.  If the ray originates from within the bounding volume, the
@@ -1206,7 +1207,7 @@ public class TerrainNode extends Node
             }
             if (texit < 0f) {
                 texit = t;
-                
+
             } else {
                 tentrance = Math.min(t, texit);
                 texit = Math.max(t, texit);
@@ -1215,7 +1216,7 @@ public class TerrainNode extends Node
         entrance.scaleAdd(tentrance, ray.direction, ray.origin);
         exit.scaleAdd(texit, ray.direction, ray.origin);
     }
-    
+
     /**
      * Determines whether the bounding box contains the given point.
      *
@@ -1224,14 +1225,14 @@ public class TerrainNode extends Node
     protected boolean boundsContain (Vector3f pt, int skip)
     {
         for (int ii = 0; ii < _bbplanes.length; ii++) {
-            if (ii % 3 != skip && 
+            if (ii % 3 != skip &&
                 _bbplanes[ii].whichSide(pt) == Plane.NEGATIVE_SIDE) {
                 return false;
             }
         }
         return true;
     }
-    
+
     /**
      * If the two vertices lie on either side of a horizontal, vertical, or
      * diagonal boundary, find the location of the boundary crossing nearest to
@@ -1254,7 +1255,7 @@ public class TerrainNode extends Node
         result.set(v1.x + t*(v2.x - v1.x), v1.y + t*(v2.y - v1.y));
         return true;
     }
-    
+
     /**
      * If the two values lie on either side of a boundary, find the location
      * of the boundary crossing nearest to the first point.
@@ -1279,7 +1280,7 @@ public class TerrainNode extends Node
         }
         return Float.MAX_VALUE;
     }
-    
+
     /**
      * Returns a boundary index for the specified value.  Starting at zero,
      * every other index represents a boundary between two regions.  The
@@ -1309,7 +1310,7 @@ public class TerrainNode extends Node
     {
         return FastMath.abs(a - b) < 0.001f;
     }
-        
+
     /**
      * Returns the distance between two 2D points.
      */
@@ -1318,7 +1319,7 @@ public class TerrainNode extends Node
         float dx = v1.x - v2.x, dy = v1.y - v2.y;
         return FastMath.sqrt(dx*dx + dy*dy);
     }
-    
+
     /**
      * Checks whether we should render terrain splats (as opposed to simply rendering the most
      * common kind of terrain for each block).
@@ -1327,7 +1328,7 @@ public class TerrainNode extends Node
     {
         return (BangPrefs.isMediumDetail() && TextureState.getNumberOfFixedUnits() >= 2);
     }
-    
+
     /** Creates and adds a single terrain block on the invoker thread. */
     protected class BlockCreator extends Invoker.Unit
     {
@@ -1337,25 +1338,25 @@ public class TerrainNode extends Node
             _y = y;
             _view.addResolving(this);
         }
-        
+
         // documentation inherited
         public boolean invoke ()
         {
             _blocks[_x][_y] = new SplatBlock(_x, _y);
             return true;
         }
-        
+
         @Override // documentation inherited
         public void handleResult ()
         {
             _blocks[_x][_y].finishCreation();
             _view.clearResolving(this);
         }
-        
+
         /** The coordinates of the block to create. */
         protected int _x, _y;
     }
-    
+
     /** Contains all the state associated with a splat block (a collection of
      * splats covering a single block of terrain). */
     protected class SplatBlock
@@ -1375,7 +1376,7 @@ public class TerrainNode extends Node
 
         /** The index buffer. */
         public IntBuffer ibuf;
-        
+
         /** Maps terrain codes to ground texture states. */
         public HashIntMap<TextureState> groundTextures =
             new HashIntMap<TextureState>();
@@ -1387,11 +1388,11 @@ public class TerrainNode extends Node
         /** Contains the code for each terrain layer (plus one, because zeros
          * are interpreted as empty spaces by {@link IntListUtil}. */
         public int[] layers;
-        
+
         /** The texture states containing created textures. */
         public ArrayList<TextureState> tstates =
             new ArrayList<TextureState>();
-        
+
         public SplatBlock (int sx, int sy)
         {
             // create the containing node
@@ -1428,10 +1429,10 @@ public class TerrainNode extends Node
             if (!_editorMode) {
                 setIndices();
             }
-            
+
             // set the colors based on shadow values
             refreshColors();
-            
+
             // set the texture coordinates
             FloatBuffer
                 tbuf0 = BufferUtils.createFloatBuffer(vwidth*vheight*2),
@@ -1442,7 +1443,7 @@ public class TerrainNode extends Node
                 for (int x = (le ? -2 : 0), xmax = x + vwidth; x < xmax; x++) {
                     tbuf0.put(x * step0);
                     tbuf0.put(y * step0);
-                    
+
                     tbuf1.put(0.5f*step1 + x * step1);
                     tbuf1.put(0.5f*step1 + y * step1);
                 }
@@ -1472,11 +1473,11 @@ public class TerrainNode extends Node
                 }
                 mesh.lockBounds();
             }
-            
+
             // create the splat meshes
             refreshSplats(bounds);
         }
-        
+
         /**
          * Performs the steps necessary to finish creation of the block on the
          * main thread, which can make OpenGL calls.
@@ -1495,17 +1496,17 @@ public class TerrainNode extends Node
                 mesh.setRenderState(tstate);
                 mesh.lockMeshes();
             }
-            
+
             // load the textures
             for (TextureState tstate : tstates) {
                 RenderUtil.ensureLoaded(tstate);
             }
-            
+
             // attach self and update render state
             attachChild(node);
             node.updateRenderState();
         }
-        
+
         /**
          * Checks whether this block includes an edge.
          */
@@ -1513,7 +1514,7 @@ public class TerrainNode extends Node
         {
             return !ebounds.equals(bounds);
         }
-        
+
         /**
          * Refreshes the geometry covered by the specified rectangle (in
          * sub-tile coordinates).
@@ -1525,13 +1526,13 @@ public class TerrainNode extends Node
                 for (int x = rect.x, xmax = x + rect.width; x < xmax; x++) {
                     int ur = (y-ebounds.y)*ebounds.width + (x-ebounds.x),
                         ul = ur - 1, lr = ur - ebounds.width, ll = lr - 1;
-                    
+
                     getHeightfieldVertex(x, y, v1);
                     BufferUtils.setInBuffer(v1, vbuf, ur);
-                        
+
                     getHeightfieldNormal(x, y, v1);
                     BufferUtils.setInBuffer(v1, nbuf, ur);
-                    
+
                     // update the indices, dividing the quad to separate the
                     // pair of vertices with the greater angle between their
                     // normals
@@ -1562,7 +1563,7 @@ public class TerrainNode extends Node
                             ibuf.put(iidx++, ul);
                             ibuf.put(iidx++, ll);
                             ibuf.put(iidx++, lr);
-                            
+
                             ibuf.put(iidx++, ul);
                             ibuf.put(iidx++, lr);
                             ibuf.put(iidx, ur);
@@ -1570,7 +1571,7 @@ public class TerrainNode extends Node
                             ibuf.put(iidx++, ll);
                             ibuf.put(iidx++, ur);
                             ibuf.put(iidx++, ul);
-                            
+
                             ibuf.put(iidx++, ll);
                             ibuf.put(iidx++, lr);
                             ibuf.put(iidx, ur);
@@ -1590,7 +1591,7 @@ public class TerrainNode extends Node
             // create a temporary buffer with the maximum possible space
             IntBuffer tbuf = BufferUtils.createIntBuffer(ebounds.width * 3 *
                 (ebounds.height - 1));
-            
+
             boolean even = true, ud = true, nud;
             for (int y = ebounds.y, ymax = y + (ebounds.height - 1);
                 y < ymax; y++) {
@@ -1628,12 +1629,12 @@ public class TerrainNode extends Node
                 even = !even;
             }
             tbuf.flip();
-            
+
             // create a new buffer to hold the used part of the temporary one
             ibuf = BufferUtils.createIntBuffer(tbuf.limit());
             ibuf.put(tbuf);
         }
-        
+
         /**
          * Refreshes the entire color buffer in response to a change in the
          * shadow map.
@@ -1651,7 +1652,7 @@ public class TerrainNode extends Node
                 }
             }
         }
-        
+
         /**
          * Refreshes the splats according to terrain changes over the
          * specified rectangle (in sub-tile coordinates).
@@ -1661,7 +1662,7 @@ public class TerrainNode extends Node
             // remove all the existing children and delete created textures
             node.detachAllChildren();
             deleteCreatedTextures();
-            
+
             // find out which terrain codes this block contains, get the
             // most common code, update the layers and find out if all alpha
             // textures must be remade
@@ -1684,7 +1685,7 @@ public class TerrainNode extends Node
                 for (IntIntMap.IntIntEntry entry : codes.entrySet()) {
                     count = entry.getIntValue();
                     code = entry.getIntKey();
-                    if (count > ccount && 
+                    if (count > ccount &&
                         TerrainConfig.getConfig(code-1).lowDetail) {
                         ccount = count;
                         ccode = code;
@@ -1695,7 +1696,7 @@ public class TerrainNode extends Node
             if (layers == null || layers[0] != ccode) {
                 layers = new int[] { ccode };
                 rect = bounds;
-                
+
             } else {
                 for (int ii = 1; ii < layers.length; ii++) {
                     if (!codes.contains(layers[ii])) {
@@ -1713,7 +1714,7 @@ public class TerrainNode extends Node
                 }
             }
             layers = IntListUtil.compact(layers);
-            
+
             // use the most common terrain for the base mesh (which both tests
             // and writes to the z buffer)
             SharedMesh base = new SharedMesh("base", mesh);
@@ -1729,14 +1730,14 @@ public class TerrainNode extends Node
                 node.updateRenderState();
                 return;
             }
-            
+
             // add the rest as splats (which only test the z buffer)
             initAlphaTotals(ccode, rect);
             for (int ii = 1; ii < layers.length; ii++) {
-                
+
                 SharedMesh splat = new SharedMesh("layer" + ii, mesh);
                 splat.setIsCollidable(false);
-                
+
                 // initialize the texture state
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
@@ -1781,7 +1782,7 @@ public class TerrainNode extends Node
             }
             tstates.clear();
         }
-        
+
         /**
          * Returns the ground texture state for the given terrain code, making
          * sure that we always pick the same "random" texture for this splat.
@@ -1819,7 +1820,7 @@ public class TerrainNode extends Node
                 }
             }
         }
-        
+
         /**
          * Creates and returns an alpha texture for the specified terrain
          * code, using preexisting buffers when possible.
@@ -1835,7 +1836,7 @@ public class TerrainNode extends Node
                     TEXTURE_SIZE*TEXTURE_SIZE*4));
                 rect = bounds;
             }
-            
+
             // update the affected region of the buffer
             float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE, alpha;
             int x1 = (int)((rect.x - bounds.x) / step),
@@ -1853,7 +1854,7 @@ public class TerrainNode extends Node
                         (int)((alpha / (_atotals[idx] += alpha))*255));
                 }
             }
-            
+
             Texture texture = new Texture();
             abuf.rewind();
             texture.setImage(new Image(Image.RGBA8888, TEXTURE_SIZE,
@@ -1880,7 +1881,7 @@ public class TerrainNode extends Node
                 nbuf = BufferUtils.createVector3Buffer(8),
                 tbuf = BufferUtils.createVector2Buffer(8);
             IntBuffer ibuf = BufferUtils.createIntBuffer(10);
-            
+
             float bwidth = _board.getWidth() * TILE_SIZE,
                 bheight = _board.getHeight() * TILE_SIZE,
                 voffset = 2 * SUB_TILE_SIZE,
@@ -1905,22 +1906,22 @@ public class TerrainNode extends Node
             tbuf.put(-etiles).put(-etiles);
             vbuf.put(EDGE_SIZE + bwidth).put(-EDGE_SIZE).put(z);
             tbuf.put(etiles + twidth).put(-etiles);
-            
+
             for (int ii = 0; ii < 8; ii++) {
                 nbuf.put(0f).put(0f).put(1f);
             }
-            
+
             ibuf.put(3).put(0).put(2).put(6).put(4);
             ibuf.put(7).put(5).put(1).put(3).put(0);
-            
+
             reconstruct(vbuf, nbuf, null, tbuf, ibuf);
             getBatch(0).setMode(TriangleBatch.TRIANGLE_STRIP);
-                    
+
             setModelBound(new BoundingBox());
             updateModelBound();
             updateTexture();
         }
-        
+
         /**
          * Updates the height of the skirt's vertices to match the current
          * edge height.
@@ -1934,7 +1935,7 @@ public class TerrainNode extends Node
             }
             updateModelBound();
         }
-        
+
         /**
          * Updates the skirt's texture to match the most common edge terrain.
          */
@@ -1950,51 +1951,51 @@ public class TerrainNode extends Node
                 }
             }
         }
-        
+
         /** The current terrain code. */
         protected byte _tcode = -1;
     }
-    
+
     /** The application context. */
     protected BasicContext _ctx;
 
     /** The board view. */
     protected BoardView _view;
-    
+
     /** Whether or not we are in editor mode. */
     protected boolean _editorMode;
-    
+
     /** The board with the terrain. */
     protected BangBoard _board;
-    
+
     /** The elevation scale specified in the board. */
     protected float _elevationScale;
-    
+
     /** The array of splat blocks containing the terrain geometry/textures. */
     protected SplatBlock[][] _blocks;
-    
+
     /** The flat skirt that surrounds the board. */
     protected Skirt _skirt;
-    
+
     /** Reusable objects for efficiency. */
     protected ColorRGBA _c1 = new ColorRGBA(), _c2 = new ColorRGBA();
-    
+
     /** The shared texture coordinate buffer for highlights on tiles. */
     protected static FloatBuffer _htbuf;
 
     /** The planes of the node's bounding box. */
     protected Plane[] _bbplanes;
-    
+
     /** For each sub-tile, whether the diagonal goes from upper left to lower
      * right instead of lower left to upper right. */
     protected boolean[][] _diags;
-    
+
     /** A temporary result vector. */
     protected Vector3f _isect = new Vector3f();
-    
+
     /** Used to store alpha totals when computing alpha maps. */
     protected float[] _atotals;
-    
+
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;
 
@@ -2007,7 +2008,7 @@ public class TerrainNode extends Node
 
     /** The size of the board edges that hide the void. */
     protected static final float EDGE_SIZE = 10000f;
-    
+
     /** The number of segments in the cursor. */
     protected static final int CURSOR_SEGMENTS = 32;
 }
