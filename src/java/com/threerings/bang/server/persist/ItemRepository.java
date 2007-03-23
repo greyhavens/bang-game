@@ -389,12 +389,14 @@ public class ItemRepository extends SimpleRepository
     public void deleteItems (final int playerId, final String why)
         throws PersistenceException
     {
+        final ArrayIntSet itemIds = new ArrayIntSet();
+
+        // first enumerate all items owned by this player
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 String query = "select ITEM_ID from ITEMS where OWNER_ID = " + playerId;
-                ArrayIntSet itemIds = new ArrayIntSet();
                 Statement stmt = conn.createStatement();
                 try {
                     ResultSet rs = stmt.executeQuery(query);
@@ -404,13 +406,14 @@ public class ItemRepository extends SimpleRepository
                 } finally {
                     JDBCUtil.close(stmt);
                 }
-                if (!itemIds.isEmpty()) {
-                    deleteItems(itemIds, why);
-                }
-
                 return null;
             }
         });
+
+        // then delete them in the standard way so that we get an audit log with the deleted ids
+        if (!itemIds.isEmpty()) {
+            deleteItems(itemIds, why);
+        }
     }
 
     /**
