@@ -14,6 +14,7 @@ import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.RandomUtil;
+import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.servlet.JDBCTableSiteIdentifier;
 import com.samskivert.servlet.user.InvalidUsernameException;
 import com.samskivert.servlet.user.Password;
@@ -74,6 +75,22 @@ public class OOOAuthenticator extends BangAuthenticator
             log.log(Level.WARNING, "Failed to initialize OOO authenticator. " +
                     "Users will be unable to log in.", pe);
         }
+
+        // TEMP can be removed after all servers are past 2007-03-23
+        if (_authrep != null) {
+            try {
+                BangServer.transitrepo.transition(OOOAuthenticator.class, "set_coins_flag",
+                        new TransitionRepository.Transition() {
+                            public void run () throws PersistenceException {
+                                setHasBoughtCoinsFlag();
+                            }
+                });
+            } catch (PersistenceException pe) {
+                log.log(Level.WARNING, "Problem setting HAS_BOUGHT_COINS flag!", pe);
+            }
+        }
+        // ENDTEMP can be removed after all servers are past 2007-03-23
+
     }
 
     // from abstract BangAuthenticator
@@ -442,6 +459,21 @@ public class OOOAuthenticator extends BangAuthenticator
         // finally tack it's game data onto their list
         prec.rewards.add(info.data);
     }
+
+    // TEMP can be removed after all servers are past 2007-03-23
+    protected void setHasBoughtCoinsFlag ()
+        throws PersistenceException
+    {
+        ArrayList<String> usernames = _authrep.getUsernamesWhere("where flags & 68 = 68");
+        int idx = 0;
+        int size = usernames.size();
+        // do the update in 500 username batches to avoid freak-outery
+        while (idx < size) {
+            BangServer.playrepo.markAsCoinBuyers(usernames.subList(idx, Math.min(idx + 500, size)));
+            idx += 500;
+        }
+    }
+    // ENDTEMP can be removed after all servers are past 2007-03-23
 
     protected JDBCTableSiteIdentifier _siteident;
     protected OOOUserManager _usermgr;

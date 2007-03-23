@@ -13,7 +13,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
+import com.samskivert.util.StringUtil;
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -179,13 +181,24 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Mark's a player as bing a coin buyer.
+     * Mark's a player as being a coin buyer.
      */
     public void markAsCoinBuyer (int playerId)
         throws PersistenceException
     {
         warnedUpdate("update PLAYERS set FLAGS = FLAGS | " + PlayerRecord.IS_COIN_BUYER +
                 " where PLAYER_ID = " + playerId, 1);
+    }
+
+    /**
+     * Mark's a list of players as being coin buyers.
+     */
+    public void markAsCoinBuyers (List<String> usernames)
+        throws PersistenceException
+    {
+        String query = "update PLAYERS set FLAGS = FLAGS | " + PlayerRecord.IS_COIN_BUYER +
+            " where ACCOUNT_NAME in " + StringUtil.toString(usernames.iterator(), "(", ")");
+        warnedUpdate(query, usernames.size());
     }
 
     /**

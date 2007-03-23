@@ -1246,7 +1246,7 @@ public class PlayerManager
                 log.warning(cause);
                 doNext();
             }
-            protected void doNext() {
+            protected void doNext () {
                 if (players.hasNext()) {
                     purgePlayer(players.next(), this);
                 }
