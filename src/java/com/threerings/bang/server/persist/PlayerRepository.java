@@ -287,7 +287,7 @@ public class PlayerRepository extends JORARepository
                 "((HANDLE is NULL and LAST_SESSION < '" + anon + "') " +
                 // currently disabled expiring non-anonymous players
                 //"or LAST_SESSION < '" + user + "'" +
-                ") limit 5");
+                ") order by LAST_SESSION asc limit " + MAX_EXPIRED_PLAYERS_PER_CALL);
     }
 
     /**
@@ -412,6 +412,7 @@ public class PlayerRepository extends JORARepository
             "FLAGS INTEGER NOT NULL",
             "PRIMARY KEY (PLAYER_ID)",
             "UNIQUE (ACCOUNT_NAME)",
+            "INDEX (LAST_SESSION",
         }, "");
 
         JDBCUtil.createTableIfMissing(conn, "FOLKS", new String[] {
@@ -449,6 +450,10 @@ public class PlayerRepository extends JORARepository
             JDBCUtil.addColumn(conn, "PLAYERS", "NEXT_TOWN", "DATETIME DEFAULT NULL", "TOWN_ID");
         }
         // ENT TEMP
+
+        // TEMP: add PLAYERS.LAST_SESSION index
+        JDBCUtil.addIndexToTable(conn, "PLAYERS", "LAST_SESSION", "LAST_SESSION_INDEX");
+        // END TEMP
     }
 
     @Override // documentation inherited
@@ -462,4 +467,8 @@ public class PlayerRepository extends JORARepository
     protected Table<PlayerRecord> _ptable;
     protected Table<FolkRecord> _ftable;
     protected FieldMask _byNameMask;
+
+    /** The maximum number of expired players we'll return in a single call (as the server will go
+     * on to delete all the players we return and we don't want to overload it). */
+    protected static final int MAX_EXPIRED_PLAYERS_PER_CALL = 5;
 }
