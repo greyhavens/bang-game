@@ -61,6 +61,9 @@ public class ShaderCache
             }
             _programIds.put(key, programId = pstate.getProgramID());
         }
+        if (sstate.getProgramID() == programId) {
+            return true;
+        }
         sstate.setProgramID(programId);
         for (ShaderUniform uniform : sstate.uniforms) {
             uniform.uniformID = -1;

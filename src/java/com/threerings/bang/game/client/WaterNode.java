@@ -344,11 +344,11 @@ public class WaterNode extends Node
     protected boolean initShaders ()
     {
         _sstate = _ctx.getShaderCache().createShaderState("shaders/water.vert", "shaders/water.frag");
-        _sstate.setUniform("normalMap", 0);
         if (_sstate == null) {
             _disableShaders = true;
             return false;
         }
+        _sstate.setUniform("normalMap", 0);
 
         setRenderState(_sstate);
         setRenderState(_nmtstate = new LWJGLTextureState() {
