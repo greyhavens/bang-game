@@ -1,4 +1,4 @@
-600
+604
 buckle/background := bullzeye := 539
 buckle/background := checker := 540
 buckle/background := clockwork := 571
@@ -164,6 +164,7 @@ female/eyes := sly := 92
 female/eyes := small := 93
 female/eyes := squinty := 142
 female/familiar := mini_blimp := 386
+female/glasses := clown_nose := 602
 female/glasses := mask := 498
 female/glasses := round := 94
 female/glasses := steamgoggles := 336
@@ -269,6 +270,7 @@ female/makeup := brave := 315
 female/makeup := bridge := 154
 female/makeup := bridge_cheek := 155
 female/makeup := butterfly := 156
+female/makeup := clown := 604
 female/makeup := cougar := 157
 female/makeup := dead := 158
 female/makeup := dear := 159
@@ -427,6 +429,7 @@ male/eyes := squinty := 7
 male/eyes := stare := 419
 male/eyes := weary := 229
 male/eyes := wide := 230
+male/glasses := clown_nose := 601
 male/glasses := goggles := 438
 male/glasses := mask := 502
 male/glasses := round := 8
@@ -543,6 +546,7 @@ male/makeup := bear := 303
 male/makeup := brave := 304
 male/makeup := bridge := 59
 male/makeup := butterfly := 60
+male/makeup := clown := 603
 male/makeup := crow := 61
 male/makeup := crywarrior := 62
 male/makeup := dead := 63
