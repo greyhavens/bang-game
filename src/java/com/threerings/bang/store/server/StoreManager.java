@@ -3,6 +3,11 @@
 
 package com.threerings.bang.store.server;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import com.samskivert.util.Interval;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.dobj.DSet;
@@ -98,10 +103,48 @@ public class StoreManager extends ShopManager
         _stobj.setService((StoreMarshaller)
                           BangServer.invmgr.registerDispatcher(new StoreDispatcher(this)));
 
+        ArrayList<Good> goods = _goods.getGoods(ServerConfig.townId);
+
+        // filter out the pending items
+        for (Iterator<Good> iter = goods.iterator(); iter.hasNext(); ) {
+            Good good = iter.next();
+            if (good.isPending(System.currentTimeMillis())) {
+                _pending.add(good);
+                iter.remove();
+            }
+        }
+
         // populate the store object with our salable goods
-        _stobj.setGoods(new DSet<Good>(_goods.getGoods(ServerConfig.townId)));
+        _stobj.setGoods(new DSet<Good>(goods));
+
+        // register our goods update interval
+        new Interval() {
+            public void expired () {
+                long now = System.currentTimeMillis();
+                // remove expired goods
+                Good[] goods = _stobj.goods.toArray(new Good[_stobj.goods.size()]);
+                for (Good good : goods) {
+                    if (good.isExpired(now)) {
+                        _stobj.removeFromGoods(good.getKey());
+                    }
+                }
+                // add in former pending goods
+                for (Iterator<Good> iter = _pending.iterator(); iter.hasNext(); ) {
+                    Good good = iter.next();
+                    if (!good.isPending(now)) {
+                        iter.remove();
+                    }
+                    if (!good.isExpired(now)) {
+                        _stobj.addToGoods(good);
+                    }
+                }
+            }
+        }.schedule(UPDATE_GOODS_INTERVAL, true);
     }
 
     protected StoreObject _stobj;
     protected GoodsCatalog _goods;
+    protected ArrayList<Good> _pending = new ArrayList<Good>();
+
+    protected static final long UPDATE_GOODS_INTERVAL = 15 * 60 * 1000L;
 }

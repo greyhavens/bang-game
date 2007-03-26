@@ -28,6 +28,7 @@ import com.threerings.cast.ComponentClass;
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
 
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
@@ -272,6 +273,53 @@ public class AvatarLogic
     public static int decodeTertiary (int value)
     {
         return (value >> 26) & 0x1F;
+    }
+
+    /**
+     * Strips the supplied list of articles from the supplied looks returning a list of looks
+     * that were modified during the process.
+     */
+    public static ArrayList<Look> stripLooks (
+            ArrayIntSet removals, Iterable<Item> items, Iterable<Look> looks)
+    {
+        // find the item ids of all gang articles as well as suitable replacements for
+        // each slot
+        int[] replacements = new int[AvatarLogic.SLOTS.length];
+        for (Item item : items) {
+            if (!(item instanceof Article)) {
+                continue;
+            }
+            Article article = (Article)item;
+            int itemId = article.getItemId();
+            if (article.getGangId() > 0 || removals.contains(itemId)) {
+                continue;
+            }
+            int sidx = getSlotIndex(article.getSlot());
+            if (!SLOTS[sidx].optional) {
+                // we end up with the newest articles for each slot, or 0 if we can't
+                // find one (which shouldn't happen).  the selection doesn't really
+                // matter, but we need to be consistent between the database and the
+                // dobj
+                replacements[sidx] = Math.max(replacements[sidx], itemId);
+            }
+        }
+
+        // modify the looks
+        ArrayList<Look> modified = new ArrayList<Look>();
+        for (Look look : looks) {
+            int[] articles = look.articles;
+            boolean replaced = false;
+            for (int ii = 0; ii < articles.length; ii++) {
+                if (removals.contains(articles[ii])) {
+                    articles[ii] = replacements[ii];
+                    replaced = true;
+                }
+            }
+            if (replaced) {
+                modified.add(look);
+            }
+        }
+        return modified;
     }
 
     /**
@@ -612,7 +660,8 @@ public class AvatarLogic
             return null;
         }
         String type = article.townId + "/" + article.name;
-        return new Article(playerId, article.slot, type, getComponentIds(article, zations));
+        return new Article(
+                playerId, article.slot, type, getComponentIds(article, zations), article.stop);
     }
 
     /**

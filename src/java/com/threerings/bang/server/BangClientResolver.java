@@ -6,6 +6,7 @@ package com.threerings.bang.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
@@ -26,7 +27,9 @@ import com.threerings.bang.gang.server.persist.GangMemberRecord;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
@@ -116,6 +119,17 @@ public class BangClientResolver extends CrowdClientResolver
 
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
+        long now = System.currentTimeMillis();
+        // check for expired items
+        ArrayIntSet removals = new ArrayIntSet();
+        for (Iterator<Item> iter = items.iterator(); iter.hasNext(); ) {
+            Item item = iter.next();
+            if (item instanceof Article && ((Article)item).isExpired(now)) {
+                removals.add(item.getItemId());
+                iter.remove();
+                BangServer.itemrepo.deleteItem(item, "Article expired");
+            }
+        }
         buser.inventory = new DSet<Item>(items.iterator());
 
         // load up this player's persistent stats
@@ -168,8 +182,16 @@ public class BangClientResolver extends CrowdClientResolver
         ArrayList<Rating> ratings = BangServer.ratingrepo.loadRatings(buser.playerId);
         buser.ratings = new DSet<Rating>(ratings.iterator());
 
-        // load up this player's avatar looks
-        buser.looks = new DSet<Look>(BangServer.lookrepo.loadLooks(player.playerId).iterator());
+        // load up this player's avatar looks and modify any looks that have now expired articles
+        ArrayList<Look> looks = BangServer.lookrepo.loadLooks(player.playerId);
+        if (!removals.isEmpty()) {
+            ArrayList<Look> modified = AvatarLogic.stripLooks(
+                    removals, buser.inventory, looks);
+            for (Look look : modified) {
+                BangServer.lookrepo.updateLook(buser.playerId, look);
+            }
+        }
+        buser.looks = new DSet<Look>(looks);
 
         // configure their chosen poses
         buser.poses = new String[Look.POSE_COUNT];

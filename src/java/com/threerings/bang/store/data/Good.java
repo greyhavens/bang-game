@@ -138,6 +138,22 @@ public abstract class Good extends SimpleStreamableObject
     public abstract boolean isAvailable (PlayerObject user);
 
     /**
+     * Returns true if this good is not yet available.
+     */
+    public boolean isPending (long timestamp)
+    {
+        return false;
+    }
+
+    /**
+     * Returns true if this good is no longer available.
+     */
+    public boolean isExpired (long timestamp)
+    {
+        return false;
+    }
+
+    /**
      * Creates the {@link Item} sold by this good for the specified player.
      */
     public Item createItem (int playerId)

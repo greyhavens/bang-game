@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.util;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,6 +55,12 @@ public class ArticleCatalog
         /** A qualification needed to access the article. */
         public String qualifier;
 
+        /** The date this article becomes available. */
+        public Date start;
+
+        /** The date this article becomes unavailable. */
+        public Date stop;
+
         /** The list of components that make up this article. */
         public ArrayList<Component> components = new ArrayList<Component>();
 
@@ -67,6 +74,18 @@ public class ArticleCatalog
         public String toString ()
         {
             return StringUtil.fieldsToString(this);
+        }
+
+        /** Returns true if this article is not yet available. */
+        public boolean isPending (long timestamp)
+        {
+            return start != null && start.after(new Date(timestamp));
+        }
+
+        /** Returns true if this article is no longer available. */
+        public boolean hasExpired (long timestamp)
+        {
+            return stop != null && stop.before(new Date(timestamp));
         }
 
         /** Increase this value when object's serialized state is impacted by a

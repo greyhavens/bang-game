@@ -84,8 +84,12 @@ public class GoodsCatalog
         // use the avatar article catalog to create goods for all avatar articles
         pf = new ArticleProviderFactory();
         for (ArticleCatalog.Article article : _alogic.getArticleCatalog().getArticles()) {
-            ArticleGood good = new ArticleGood(article.townId + "/" + article.name, article.scrip,
-                                               article.coins, article.qualifier);
+            if (article.hasExpired(System.currentTimeMillis())) {
+                continue;
+            }
+            ArticleGood good = new ArticleGood(
+                    article.townId + "/" + article.name, article.scrip, article.coins,
+                    article.qualifier, article.start, article.stop);
             registerGood(article.townId, good, pf);
         }
 
@@ -135,12 +139,12 @@ public class GoodsCatalog
     /**
      * Returns the goods that are available in the town in question.
      */
-    public Good[] getGoods (String townId)
+    public ArrayList<Good> getGoods (String townId)
     {
         ArrayList<Good> goods = new ArrayList<Good>();
         goods.addAll(_tgoods.get("")); // global goods
         goods.addAll(_tgoods.get(townId)); // goods for sale in this town
-        return goods.toArray(new Good[goods.size()]);
+        return goods;
     }
 
     /**

@@ -1583,61 +1583,28 @@ public class GangHandler
         // delete the member record itself
         BangServer.gangrepo.deleteMember(playerId);
 
-        // strip the looks of all gang articles and update
         ArrayList<Look> modified = stripLooks(
-            BangServer.itemrepo.loadItems(playerId),
-            BangServer.lookrepo.loadLooks(playerId));
+                BangServer.itemrepo.loadItems(playerId), BangServer.lookrepo.loadLooks(playerId));
+
         for (Look look : modified) {
             BangServer.lookrepo.updateLook(playerId, look);
         }
     }
 
     /**
-     * Strips the given looks of all gang items, returning a list of the ones modified.
+     * Returns a list of modified looks with all gang owned articles removed.
      */
     protected ArrayList<Look> stripLooks (Iterable<Item> items, Iterable<Look> looks)
     {
-        // find the item ids of all gang articles as well as suitable replacements for
-        // each slot
         ArrayIntSet removals = new ArrayIntSet();
-        int[] replacements = new int[AvatarLogic.SLOTS.length];
         for (Item item : items) {
-            if (!(item instanceof Article)) {
-                continue;
-            }
-            Article article = (Article)item;
-            int itemId = article.getItemId();
-            if (article.getGangId() == _gangId) {
-                removals.add(itemId);
-            } else if (article.getGangId() > 0) {
-                continue;
-            }
-            int sidx = AvatarLogic.getSlotIndex(article.getSlot());
-            if (!AvatarLogic.SLOTS[sidx].optional) {
-                // we end up with the newest articles for each slot, or 0 if we can't
-                // find one (which shouldn't happen).  the selection doesn't really
-                // matter, but we need to be consistent between the database and the
-                // dobj
-                replacements[sidx] = Math.max(replacements[sidx], itemId);
+            if (item instanceof Article && ((Article)item).getGangId() == _gangId) {
+                removals.add(item.getItemId());
             }
         }
 
-        // modify the looks
-        ArrayList<Look> modified = new ArrayList<Look>();
-        for (Look look : looks) {
-            int[] articles = look.articles;
-            boolean replaced = false;
-            for (int ii = 0; ii < articles.length; ii++) {
-                if (removals.contains(articles[ii])) {
-                    articles[ii] = replacements[ii];
-                    replaced = true;
-                }
-            }
-            if (replaced) {
-                modified.add(look);
-            }
-        }
-        return modified;
+        // strip the looks of all gang articles and update
+        return AvatarLogic.stripLooks(removals, items, looks);
     }
 
     /** The id of our gang. */

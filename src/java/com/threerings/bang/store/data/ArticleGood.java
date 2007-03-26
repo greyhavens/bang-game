@@ -3,6 +3,8 @@
 
 package com.threerings.bang.store.data;
 
+import java.util.Date;
+
 import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.media.image.ColorPository.ColorRecord;
@@ -30,10 +32,16 @@ public class ArticleGood extends Good
     /**
      * Creates a good representing the specified article.
      */
-    public ArticleGood (String type, int scripCost, int coinCost, String qualifier)
+    public ArticleGood (
+            String type, int scripCost, int coinCost, String qualifier, Date start, Date stop)
     {
         super(type, scripCost, coinCost);
         _qualifier = qualifier;
+        _dstart = start;
+        _dstop = stop;
+        if (_dstop != null) {
+            _stop = _dstop.getTime();
+        }
     }
 
     /** A constructor only used during serialization. */
@@ -87,6 +95,18 @@ public class ArticleGood extends Good
     }
 
     @Override // from Good
+    public boolean isPending (long timestamp)
+    {
+        return _dstart != null && _dstart.after(new Date(timestamp));
+    }
+
+    @Override // from Good
+    public boolean isExpired (long timestamp)
+    {
+        return _dstop != null && _dstop.before(new Date(timestamp));
+    }
+
+    @Override // from Good
     public String getName ()
     {
         return Article.getName(_type);
@@ -95,7 +115,12 @@ public class ArticleGood extends Good
     @Override // from Good
     public String getTip ()
     {
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.article_tip");
+        if (_stop != 0 && _dstop == null) {
+            _dstop = new Date(_stop);
+        }
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS,
+                (_dstop == null ? "m.article_tip" : MessageBundle.tcompose(
+                        "m.article_tip_expires", Article.EXPIRE_FORMAT.format(_dstop))));
     }
 
     @Override // from Good
@@ -105,4 +130,6 @@ public class ArticleGood extends Good
     }
 
     protected String _qualifier;
+    protected long _stop;
+    protected transient Date _dstart, _dstop;
 }

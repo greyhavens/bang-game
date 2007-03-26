@@ -5,6 +5,8 @@ package com.threerings.bang.data;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import com.jme.renderer.Renderer;
 
@@ -35,6 +37,9 @@ import static com.threerings.bang.Log.log;
  */
 public class Article extends Item
 {
+    /** Date formating when showing temporary articles. */
+    public static final SimpleDateFormat EXPIRE_FORMAT = new SimpleDateFormat("MMM d, yyyy");
+
     /**
      * Creates a comparator to sort articles.
      */
@@ -90,10 +95,19 @@ public class Article extends Item
      */
     public Article (int ownerId, String slot, String name, int[] components)
     {
+        this(ownerId, slot, name, components, null);
+    }
+
+    /**
+     * Creates a new article item with the specified slot and components.
+     */
+    public Article (int ownerId, String slot, String name, int[] components, Date expires)
+    {
         super(ownerId);
         _slot = slot;
         _name = name;
         _components = components;
+        _expires = (expires == null ? 0 : expires.getTime());
     }
 
     /**
@@ -155,6 +169,18 @@ public class Article extends Item
         return (_gangId == 0 || _gangId == user.gangId);
     }
 
+    /**
+     * Determines whether this article has expired.
+     */
+    public boolean isExpired (long timestamp)
+    {
+        if (_expires == 0) {
+            return false;
+        }
+        Date expire = new Date(_expires);
+        return expire.before(new Date(timestamp));
+    }
+
     @Override // documentation inherited
     public String getName ()
     {
@@ -164,9 +190,14 @@ public class Article extends Item
     @Override // documentation inherited
     public String getTooltip (PlayerObject user)
     {
-        String suffix = (_gangId == 0) ? "" :
-            (isWearable(user) ? "_uniform" : "_unwearable");
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.article_tip" + suffix);
+        String msg = "m.article_tip";
+        if (_expires != 0) {
+            msg = MessageBundle.tcompose(
+                    msg + "_expires", EXPIRE_FORMAT.format(new Date(_expires)));
+        } else if (_gangId != 0) {
+            msg += (isWearable(user) ? "_uniform" : "_unwearable");
+        }
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 
     @Override // documentation inherited
@@ -262,9 +293,13 @@ public class Article extends Item
         if (_gangId > 0) {
             buf.append(", gangId=").append(_gangId);
         }
+        if (_expires != 0) {
+            buf.append(", expires=").append(_expires);
+        }
     }
 
     protected String _slot, _name;
     protected int[] _components;
     protected int _gangId;
+    protected long _expires;
 }

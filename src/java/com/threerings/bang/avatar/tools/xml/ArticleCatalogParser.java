@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.tools.xml;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.digester.Digester;
 import com.samskivert.xml.SetPropertyFieldsRule;
@@ -35,7 +36,16 @@ public class ArticleCatalogParser extends CompiledConfigParser
         // create and configure class record instances
         prefix += "/article";
         digest.addObjectCreate(prefix, Article.class.getName());
-        digest.addRule(prefix, new SetPropertyFieldsRule());
+        SetPropertyFieldsRule spfr = new SetPropertyFieldsRule();
+        SetPropertyFieldsRule.FieldParser dateParser = new SetPropertyFieldsRule.FieldParser() {
+            public Object parse (String property) throws Exception {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                return sdf.parse(property);
+            }
+        };
+        spfr.addFieldParser("start", dateParser);
+        spfr.addFieldParser("stop", dateParser);
+        digest.addRule(prefix, spfr);
         digest.addSetNext(prefix, "addArticle", Article.class.getName());
 
         // create and configure article instances
