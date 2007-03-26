@@ -240,8 +240,9 @@ public class WaterNode extends Node
     public void refreshShader ()
     {
         if (_sstate != null) {
-            _sstate.setProgramID((_board.getFogDensity() > 0f) ? _fogShaderId : _foglessShaderId);
-            _sstate.setNeedsRefresh(true);
+            _ctx.getShaderCache().configureShaderState(_sstate,
+                "shaders/water.vert", "shaders/water.frag",
+                (_board.getFogDensity() > 0f) ? new String[] { "ENABLE_FOG" } : new String[0]);
         }
     }
 
@@ -342,22 +343,13 @@ public class WaterNode extends Node
      */
     protected boolean initShaders ()
     {
-         if (_fogShaderId == -1) {
-            File vert = _ctx.getResourceManager().getResourceFile("shaders/water.vert"),
-                frag = _ctx.getResourceManager().getResourceFile("shaders/water.frag");
-            GLSLShaderObjectsState fogShader = JmeUtil.loadShaders(vert, frag, "ENABLE_FOG"),
-                foglessShader = JmeUtil.loadShaders(vert, frag);
-            if (fogShader == null || foglessShader == null) {
-                _disableShaders = true;
-                return false;
-            }
-            _fogShaderId = fogShader.getProgramID();
-            _foglessShaderId = foglessShader.getProgramID();
+        _sstate = _ctx.getShaderCache().createShaderState("shaders/water.vert", "shaders/water.frag");
+        _sstate.setUniform("normalMap", 0);
+        if (_sstate == null) {
+            _disableShaders = true;
+            return false;
         }
 
-        _sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
-        _sstate.setProgramID(_foglessShaderId);
-        _sstate.setUniform("normalMap", 0);
         setRenderState(_sstate);
         setRenderState(_nmtstate = new LWJGLTextureState() {
             public void apply () {
@@ -529,12 +521,6 @@ public class WaterNode extends Node
 
     /** If true, the shaders didn't link; don't try to compile them again. */
     protected static boolean _disableShaders;
-
-    /** The program id of the linked shader (with fog enabled). */
-    protected static int _fogShaderId = -1;
-
-    /** The program id of the linked shader (with fog disabled). */
-    protected static int _foglessShaderId = -1;
 
     /** The size in samples of the wave map. */
     protected static final int WAVE_MAP_SIZE = 32;

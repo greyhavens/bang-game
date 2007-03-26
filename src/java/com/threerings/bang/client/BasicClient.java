@@ -60,6 +60,7 @@ import com.threerings.bang.util.SoundUtil;
 import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.PerfMonitor;
+import com.threerings.bang.client.util.ShaderCache;
 import com.threerings.bang.client.util.TextureCache;
 
 import static com.threerings.bang.Log.log;
@@ -135,6 +136,7 @@ public class BasicClient
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _icache = new ImageCache(_ctx.getResourceManager());
         _tcache = new TextureCache(_ctx);
+        _scache = new ShaderCache(_ctx);
         _mcache = new ModelCache(_ctx);
         _pcache = new ParticleCache(_ctx);
 
@@ -294,6 +296,10 @@ public class BasicClient
             return _tcache;
         }
 
+        public ShaderCache getShaderCache () {
+            return _scache;
+        }
+
         public ModelCache getModelCache () {
             return _mcache;
         }
@@ -373,6 +379,7 @@ public class BasicClient
 
     protected ImageCache _icache;
     protected TextureCache _tcache;
+    protected ShaderCache _scache;
     protected ModelCache _mcache;
     protected ParticleCache _pcache;
     protected CharacterManager _charmgr;

@@ -28,6 +28,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.ParticleCache;
+import com.threerings.bang.client.util.ShaderCache;
 import com.threerings.bang.client.util.TextureCache;
 
 import static com.threerings.bang.Log.log;
@@ -68,6 +69,9 @@ public interface BasicContext extends JmeContext
 
     /** Returns a reference to our texture cache. */
     public TextureCache getTextureCache ();
+
+    /** Returns a reference to our shader cache. */
+    public ShaderCache getShaderCache ();
 
     /** Returns a reference to our model cache. */
     public ModelCache getModelCache ();
