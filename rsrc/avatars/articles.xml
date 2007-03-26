@@ -181,6 +181,10 @@
     <component cclass="male/glasses" name="von_helmet_goggles"/>
   </article>
 
+  <article name="male_clown_nose" townId="frontier_town" slot="glasses" scrip="1000" coins="0" colors="clothes_p">
+    <component cclass="male/glasses" name="clown_nose"/>
+  </article>
+
   <!-- male hats: frontier town -->
   <article name="male_stetson_bare" townId="frontier_town" slot="hat" scrip="1500" coins="2" colors="clothes_p">
     <component cclass="male/hat" name="stetson"/>
@@ -428,6 +432,10 @@
     <component cclass="male/makeup" name="wolf"/>
   </article>
 
+  <article name="male_clown" townId="indian_post" slot="makeup" scrip="1000" coins="0">
+    <component cclass="male/makeup" name="clown"/>
+  </article>
+
   <!-- female clothing: frontier town -->
   <article name="female_gunslinger" townId="frontier_town" slot="clothing" scrip="1500" coins="1" starter="true">
     <component cclass="female/clothing_back" name="gunslinger"/>
@@ -609,6 +617,10 @@
 
   <article name="female_von_helmet_goggles" townId="frontier_town" slot="glasses" scrip="5000" coins="5" colors="" qualifier="bounty:hard/von_helmet">
     <component cclass="female/glasses" name="von_helmet_goggles"/>
+  </article>
+
+  <article name="female_clown_nose" townId="frontier_town" slot="glasses" scrip="1000" coins="0" colors="clothes_p">
+    <component cclass="female/glasses" name="clown_nose"/>
   </article>
 
   <!-- female hats: frontier town -->
@@ -850,5 +862,10 @@
 
   <article name="female_wolf" townId="indian_post" slot="makeup" scrip="2500" coins="3">
     <component cclass="female/makeup" name="wolf"/>
+
+  <article name="female_clown" townId="indian_post" slot="makeup" scrip="1000" coins="0">
+    <component cclass="female/makeup" name="clown"/>
+  </article>
+
   </article>
 </articles>
