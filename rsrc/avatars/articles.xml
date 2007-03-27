@@ -181,7 +181,8 @@
     <component cclass="male/glasses" name="von_helmet_goggles"/>
   </article>
 
-  <article name="male_clown_nose" townId="frontier_town" slot="glasses" scrip="1000" coins="0" colors="clothes_p">
+  <article name="male_clown_nose" townId="frontier_town" slot="glasses" scrip="1000" coins="0"
+      colors="clothes_p" start="2007-04-01" stop="2007-04-08">
     <component cclass="male/glasses" name="clown_nose"/>
   </article>
 
@@ -432,7 +433,8 @@
     <component cclass="male/makeup" name="wolf"/>
   </article>
 
-  <article name="male_clown" townId="indian_post" slot="makeup" scrip="1000" coins="0">
+  <article name="male_clown" townId="indian_post" slot="makeup" scrip="1000" coins="0"
+      start="2007-04-01" stop="2007-04-08">
     <component cclass="male/makeup" name="clown"/>
   </article>
 
@@ -619,7 +621,8 @@
     <component cclass="female/glasses" name="von_helmet_goggles"/>
   </article>
 
-  <article name="female_clown_nose" townId="frontier_town" slot="glasses" scrip="1000" coins="0" colors="clothes_p">
+  <article name="female_clown_nose" townId="frontier_town" slot="glasses" scrip="1000" coins="0"
+      colors="clothes_p" start="2007-04-01" stop="2007-04-08">
     <component cclass="female/glasses" name="clown_nose"/>
   </article>
 
@@ -863,7 +866,8 @@
   <article name="female_wolf" townId="indian_post" slot="makeup" scrip="2500" coins="3">
     <component cclass="female/makeup" name="wolf"/>
 
-  <article name="female_clown" townId="indian_post" slot="makeup" scrip="1000" coins="0">
+  <article name="female_clown" townId="indian_post" slot="makeup" scrip="1000" coins="0"
+        start="2007-04-01" stop="2007-04-08">
     <component cclass="female/makeup" name="clown"/>
   </article>
 
