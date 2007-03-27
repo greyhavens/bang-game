@@ -19,6 +19,7 @@ import com.jmex.bui.util.Rectangle;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
@@ -100,7 +101,9 @@ public class PickLookView extends BContainer
                 selectLook(current);
             }
         } else {
-            log.warning("Missing default look? " + user);
+            if (!(user.handle instanceof GuestHandle)) {
+                log.warning("Missing default look? " + user);
+            }
             refreshDisplay();
         }
     }

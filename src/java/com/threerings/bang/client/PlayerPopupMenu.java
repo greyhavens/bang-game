@@ -182,8 +182,8 @@ public class PlayerPopupMenu extends BPopupMenu
             addMenuItem(new BMenuItem(msgs.get("m.pm_view_account"), "view_account"));
         }
 
-        // stop here if this is us
-        if (self.handle.equals(_handle)) {
+        // stop here if this is us or we're anonymous
+        if (self.tokens.isAnonymous() || self.handle.equals(_handle)){
             return;
         }
 

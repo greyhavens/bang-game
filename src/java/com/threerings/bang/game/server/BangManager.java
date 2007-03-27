@@ -64,6 +64,7 @@ import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.FreeTicket;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.Rating;
@@ -1921,7 +1922,8 @@ public class BangManager extends GameManager
                     if (completedBounty) {
                         award.cashEarned += _bounty.reward.scrip;
                         // if there's an article or badge that goes with this bounty award it
-                        if (_bounty.reward.articles != null && !prec.user.tokens.isAnonymous()) {
+                        if (_bounty.reward.articles != null &&
+                                !(prec.user.handle instanceof GuestHandle)) {
                             int aidx = prec.user.isMale ? 0 : 1;
                             award.item = (Article)_bounty.reward.articles[aidx].clone();
                             award.item.setOwnerId(prec.playerId);

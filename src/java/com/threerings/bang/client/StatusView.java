@@ -29,6 +29,7 @@ import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
@@ -138,7 +139,7 @@ public class StatusView extends BWindow
         add(_handle = new BLabel("", "status_handle"),
             new Rectangle(40, 590, 195, 33));
         _handle.setFit(BLabel.Fit.SCALE);
-        String poster = user.tokens.isAnonymous() ? "poster" : "avatar";
+        String poster = user.handle instanceof GuestHandle ? "avatar" : "poster";
         _posterBtn = new BButton(_msgs.get("m.status_" + poster), this, poster);
         _posterBtn.setStyleClass("big_button");
         add(_posterBtn, new Point(40, 147));

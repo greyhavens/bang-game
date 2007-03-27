@@ -20,8 +20,9 @@ import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.Article;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.GuestHandle;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -89,7 +90,7 @@ public class ArticleGood extends Good
     public boolean isAvailable (PlayerObject user)
     {
         // make sure the gender matches
-        boolean isMale = (user.tokens.isAnonymous() ? user.isMale :
+        boolean isMale = (user.handle instanceof GuestHandle ? user.isMale :
                 (_type.indexOf("female") == -1));
         return user.isMale == isMale &&
             (_qualifier == null || (user.tokens.isSupport() && !"ai".equals(_qualifier)));

@@ -31,6 +31,7 @@ import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -89,7 +90,7 @@ public class GoodsInspector extends BContainer
 
         // make sure we're showing the buy interface
         showMode(Mode.BUY);
-        _buy.setEnabled(!_ctx.getUserObject().tokens.isAnonymous());
+        _buy.setEnabled(!(_ctx.getUserObject().handle instanceof GuestHandle));
 
         // remove our color selectors
         removeColors();

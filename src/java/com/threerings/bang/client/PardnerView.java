@@ -83,17 +83,22 @@ public class PardnerView extends IconPalette
         layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
         layout.setGap(10);
         BContainer acont = new BContainer(layout);
-        acont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
-        acont.add(_name = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
-        _name.setPreferredWidth(324);
-        _submit = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_submit"), this, "submit");
-        acont.add(_submit);
+        if (ctx.getUserObject().tokens.isAnonymous()) {
+            acont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_anonymous")));
+        } else {
+            acont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
+            acont.add(_name = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
+            _name.setPreferredWidth(324);
+            _submit = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_submit"), this, "submit");
+            acont.add(_submit);
+
+            // disable submit until a name is entered
+            new EnablingValidator(_name, _submit);
+        }
         ccont.add(acont);
         ccont.add(new Spacer(1, 12));
         add(ccont, BorderLayout.CENTER);
 
-        // disable submit until a name is entered
-        new EnablingValidator(_name, _submit);
     }
 
     // documentation inherited from interface ActionListener
@@ -122,8 +127,10 @@ public class PardnerView extends IconPalette
         }
 
         // these start out as disabled/empty
-        _submit.setEnabled(false);
-        _name.setText("");
+        if (_submit != null) {
+            _submit.setEnabled(false);
+            _name.setText("");
+        }
 
         // register as a listener for changes to the pardner list
         _ctx.getUserObject().addListener(_plist);

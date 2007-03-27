@@ -321,10 +321,14 @@ public class PlayerManager
         final String message, final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
+        // make sure we're not anonymous (the client should prevent this)
+        final PlayerObject inviter = (PlayerObject)caller;
+        if (inviter.tokens.isAnonymous()) {
+            throw new InvocationException(INTERNAL_ERROR);
+
         // make sure it's not the player himself, that it's not already
         // a pardner, and that the player is under the limit
-        final PlayerObject inviter = (PlayerObject)caller;
-        if (inviter.handle.equals(handle)) {
+        } else if (inviter.handle.equals(handle)) {
             throw new InvocationException("e.pardner_self");
 
         } else if (inviter.pardners.containsKey(handle)) {
