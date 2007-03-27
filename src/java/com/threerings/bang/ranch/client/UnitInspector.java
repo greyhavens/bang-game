@@ -113,6 +113,10 @@ public class UnitInspector extends BContainer
         BButton btn = new BButton(_msgs.get("m.recruit"), this, "recruit");
         btn.setStyleClass("big_button");
         _recruit.add(btn);
+        // don't allow anonymous players to recruit big shots
+        if (_ctx.getUserObject().tokens.isAnonymous()) {
+            btn.setEnabled(false);
+        }
 
         // we'll use this group to start practice scenarios
         _practice = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));

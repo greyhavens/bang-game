@@ -89,7 +89,7 @@ public class GoodsInspector extends BContainer
 
         // make sure we're showing the buy interface
         showMode(Mode.BUY);
-        _buy.setEnabled(true);
+        _buy.setEnabled(!_ctx.getUserObject().tokens.isAnonymous());
 
         // remove our color selectors
         removeColors();
@@ -194,6 +194,8 @@ public class GoodsInspector extends BContainer
             }
         }
 
+        _palette.reinitGoods(true);
+
         // if they bought an article, give them a quick button to go try it on
         String msg = "m.purchased";
         if (_good instanceof ArticleGood) {
@@ -204,7 +206,6 @@ public class GoodsInspector extends BContainer
             msg += "_song";
         }
 
-        _palette.reinitGoods(true);
         _descrip.setText(_ctx.xlate(StoreCodes.STORE_MSGS, msg));
         BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
     }

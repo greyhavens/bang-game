@@ -49,7 +49,7 @@ public class StoreManager extends ShopManager
         }
 
         // validate that the client can buy this good
-        if (!good.isAvailable(user)) {
+        if (!good.isAvailable(user) || user.tokens.isAnonymous()) {
             log.warning("Requested to buy unavailable good [who=" + user.who() +
                         ", good=" + good + "].");
             throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
@@ -64,12 +64,6 @@ public class StoreManager extends ShopManager
         }
         provider.setListener(cl);
         provider.start();
-    }
-
-    @Override // from ShopManager
-    protected boolean requireHandle ()
-    {
-        return true;
     }
 
     @Override // from ShopManager

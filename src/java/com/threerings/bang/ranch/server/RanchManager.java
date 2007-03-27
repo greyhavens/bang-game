@@ -41,6 +41,11 @@ public class RanchManager extends ShopManager
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
+        if (user.tokens.isAnonymous()) {
+            log.warning("Requested to recruit unit from anonymous user [who=" + user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
         UnitConfig config = UnitConfig.getConfig(type, false);
         if (config == null) {
             log.warning("Requested to recruit bogus unit [who=" + user.who() +
@@ -68,12 +73,6 @@ public class RanchManager extends ShopManager
         BigShotItem unit = new BigShotItem(user.playerId, config.type);
         unit.setGivenName(name);
         new RecruitBigShotAction(user, config, unit, listener).start();
-    }
-
-    @Override // from ShopManager
-    protected boolean requireHandle ()
-    {
-        return true;
     }
 
     @Override // from ShopManager

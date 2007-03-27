@@ -89,7 +89,8 @@ public class ArticleGood extends Good
     public boolean isAvailable (PlayerObject user)
     {
         // make sure the gender matches
-        boolean isMale = (_type.indexOf("female") == -1);
+        boolean isMale = (user.tokens.isAnonymous() ? user.isMale :
+                (_type.indexOf("female") == -1));
         return user.isMale == isMale &&
             (_qualifier == null || (user.tokens.isSupport() && !"ai".equals(_qualifier)));
     }
