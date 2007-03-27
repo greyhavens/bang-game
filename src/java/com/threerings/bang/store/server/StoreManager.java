@@ -125,9 +125,10 @@ public class StoreManager extends ShopManager
                 // add in former pending goods
                 for (Iterator<Good> iter = _pending.iterator(); iter.hasNext(); ) {
                     Good good = iter.next();
-                    if (!good.isPending(now)) {
-                        iter.remove();
+                    if (good.isPending(now)) {
+                        continue;
                     }
+                    iter.remove();
                     if (!good.isExpired(now)) {
                         _stobj.addToGoods(good);
                     }
