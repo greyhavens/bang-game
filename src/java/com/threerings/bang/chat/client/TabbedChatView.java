@@ -66,6 +66,7 @@ public class TabbedChatView extends BContainer
                 _send.setEnabled(visible);
             }
             protected void tabWasRemoved (BComponent tab, boolean btnClose) {
+                super.tabWasRemoved(tab, btnClose);
                 if (btnClose) {
                     ((UserTab)tab).wasClosed();
                 }
