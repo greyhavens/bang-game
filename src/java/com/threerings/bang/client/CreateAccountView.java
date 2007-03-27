@@ -87,6 +87,8 @@ public class CreateAccountView extends SteelWindow
                     Calendar now = Calendar.getInstance();
                     now.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
                     boolean visible = year.compareTo(now) > 0;
+                    year.roll(Calendar.YEAR, -1);
+                    visible = visible && year.compareTo(now) < 0;
                     _monthL.setVisible(visible);
                     _months.setVisible(visible);
                     _dayL.setVisible(visible);
@@ -111,13 +113,18 @@ public class CreateAccountView extends SteelWindow
         _days.selectItem(0);
         birthcont.add(_days);
         grid.add(birthcont);
+        _monthL.setVisible(false);
+        _months.setVisible(false);
+        _dayL.setVisible(false);
+        _days.setVisible(false);
 
         _contents.add(grid);
 
         _contents.add(_status = new StatusLabel(_ctx));
         _status.setStatus(_msgs.get("m.under_coppa"), false);
 
-        _buttons.add(_cancel = new BButton(_msgs.get("m.cancel"), this, "cancel"));
+        _buttons.add(_cancel = new BButton(
+                    _msgs.get(onExit ? "m.quit" : "m.cancel"), this, "cancel"));
         _buttons.add(_create = new BButton(_msgs.get("m.account_create"), this, "create"));
         _create.setEnabled(false);
 
