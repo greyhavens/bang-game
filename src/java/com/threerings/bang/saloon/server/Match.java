@@ -6,6 +6,7 @@ package com.threerings.bang.saloon.server;
 import java.util.HashSet;
 
 import com.samskivert.util.Interval;
+import com.samskivert.util.IntSet;
 import com.threerings.util.Name;
 
 import com.threerings.bang.data.PlayerObject;
@@ -206,6 +207,21 @@ public class Match
             }
         }
         return false;
+    }
+
+    /**
+     * Verifies that all match players are still present, returns true if all players present.
+     */
+    public boolean verifyOccupants (IntSet validOids)
+    {
+        boolean present = true;
+        for (int poid : matchobj.playerOids) {
+            if (poid > 0 && !validOids.contains(poid)) {
+                remove(poid);
+                present = false;
+            }
+        }
+        return present;
     }
 
     /**

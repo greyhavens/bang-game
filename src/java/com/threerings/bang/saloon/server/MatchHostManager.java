@@ -4,6 +4,7 @@
 package com.threerings.bang.saloon.server;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.samskivert.util.Interval;
@@ -56,10 +57,25 @@ public abstract class MatchHostManager extends ShopManager
         checkCriterion(criterion);
 
         // look for an existing match that is compatible
-        for (Match match : _matches.values()) {
+        for (Iterator<Match> iter = _matches.values().iterator(); iter.hasNext(); ) {
+            Match match = iter.next();
             // don't allow players to join matches that are about to start
             if (match.matchobj.starting) {
                 continue;
+            }
+
+            // double check for missing players
+            if (!match.verifyOccupants(_occInfo.intKeySet())) {
+                if (match.getPlayerCount() > 0) {
+                    checkReadiness(match);
+                    if (match.matchobj.starting) {
+                        continue;
+                    }
+                } else {
+                    iter.remove();
+                    clearMatchServices(match);
+                    continue;
+                }
             }
 
             if (match.join(user, criterion)) {
@@ -249,14 +265,18 @@ public abstract class MatchHostManager extends ShopManager
 
     protected void clearMatch (Match match)
     {
-        int moid = match.matchobj.getOid();
-        if (_matches.remove(moid) == null) {
+        if (_matches.remove(match.matchobj.getOid()) == null) {
             return; // don't doubly clear a match
         }
+        clearMatchServices(match);
+    }
+
+    protected void clearMatchServices (Match match)
+    {
         if (match.matchobj.speakService != null) {
             BangServer.invmgr.clearDispatcher(match.matchobj.speakService);
         }
-        BangServer.omgr.destroyObject(moid);
+        BangServer.omgr.destroyObject(match.matchobj.getOid());
         BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
     }
 
