@@ -28,26 +28,26 @@ public class TrainSprite extends MobileSprite
     {
         super("extras/frontier_town/train", TYPE_NAMES[type]);
     }
-    
+
     @Override // documentation inherited
     public Coloring getColoringType ()
     {
         return Coloring.DYNAMIC;
     }
-    
+
     @Override // documentation inherited
     public boolean updatePosition (BangBoard board)
     {
         super.updatePosition(board);
-        
+
         // store our last x and y for path forming
         Train train = (Train)_piece;
         _lastLastX = train.lastX;
         _lastLastY = train.lastY;
-        
+
         return isMoving();
     }
-    
+
     @Override // documentation inherited
     protected void createDustManager ()
     {
@@ -80,7 +80,7 @@ public class TrainSprite extends MobileSprite
             setLocalRotation(rotate);
         }
     }
-    
+
     @Override // documentation inherited
     protected Path createPath (BangBoard board)
     {
@@ -126,18 +126,18 @@ public class TrainSprite extends MobileSprite
                 completed = true;
             }
             super.update(time);
-            if (completed) {
+            if (completed && _sprite.isMoving()) {
                 _sprite.pathCompleted();
             }
         }
     }
-    
+
     /** The position two ticks back, used to form curves. */
     protected short _lastLastX = Train.UNSET, _lastLastY = Train.UNSET;
 
     /** The owner corresponding to the current colorizations. */
     protected int _owner = -1;
-    
+
     /** The model names for each train type. */
     protected static final String[] TYPE_NAMES = { "locomotive", "caboose",
         "cattle", "freight", "coal" };
