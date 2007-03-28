@@ -551,10 +551,22 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean validTarget (BangObject bangobj, Piece target, boolean allowSelf)
     {
+        return validTarget(bangobj, target, allowSelf, false);
+    }
+
+    /**
+     * Returns true if this target is valid.
+     */
+    public boolean validTarget (BangObject bangobj, Piece target, boolean allowSelf, boolean prox)
+    {
         // if we do no damage to this type of target, it is not valid
         return super.validTarget(bangobj, target, allowSelf) &&
-            (computeDamage(target) > 0) &&
-            (getHindrance() == null || getHindrance().validTarget(this, target, allowSelf));
+            (getHindrance() == null || getHindrance().validTarget(this, target, allowSelf)) &&
+            // proximity attacks care about distance
+            ((prox && getDistance(target) == 1 &&
+              bangobj.board.canCross(x, y, target.x, target.y)) ||
+            // non-proximity attacks acre about damage
+            (!prox && computeDamage(target) > 0));
     }
 
     @Override // documentation inherited
