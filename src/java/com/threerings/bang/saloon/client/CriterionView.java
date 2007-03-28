@@ -155,7 +155,7 @@ public abstract class CriterionView extends BContainer
                 _players[2].isSelected());
             int rsel = _ranked.getSelectedIndex();
             criterion.ranked = Criterion.compose(
-                (rsel == 0 || rsel == 2), (rsel == 1 || rsel == 2), false);
+                (rsel == 0 || rsel == 1), (rsel == 0 || rsel == 2), false);
             criterion.range = _range.getSelectedIndex();
             criterion.allowAIs = getAllowAIs();
             criterion.allowPreviousTowns =
@@ -176,7 +176,7 @@ public abstract class CriterionView extends BContainer
     protected BCheckBox _prev;
     protected BButton _go;
 
-    protected static final String[] RANKED = { "ranked", "unranked", "both" };
+    protected static final String[] RANKED = { "both", "ranked", "unranked" };
     protected static final String[] RANGE = { "tight", "loose", "open" };
     protected static final String[] ALLOW_AIS = { "allow", "disallow", "both" };
 }

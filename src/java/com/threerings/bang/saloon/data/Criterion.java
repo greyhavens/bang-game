@@ -97,6 +97,10 @@ public class Criterion extends SimpleStreamableObject
      */
     public boolean couldStart (int playerCount)
     {
+        // a ranked game can never start with just one player
+        if (!isBitSet(ranked, 1) && playerCount == 1) {
+            return false;
+        }
         for (int ii = 1, ll = getAllowedAIs(); ii <= ll; ii++) {
             if (isBitSet(players, playerCount-2 + ii)) {
                 return true;
