@@ -9,6 +9,7 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.AdjustTickEffect;
 import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
@@ -58,6 +59,13 @@ public class NuggetDelegate extends CounterDelegate
     {
         if (NuggetEffect.PICKED_UP_NUGGET.equals(effect)) {
             _picker = piece;
+
+        // if a unit has been giddy upped then it's free to drop off it's nugget
+        } else if (_picker != null && (AdjustTickEffect.GIDDY_UPPED.equals(effect) ||
+                AdjustTickEffect.HALF_GIDDY_UPPED.equals(effect))) {
+            if (_picker.pieceId == piece.pieceId) {
+                _picker = null;
+            }
         }
     }
 

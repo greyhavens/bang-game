@@ -3036,9 +3036,14 @@ public class BangManager extends GameManager
             if ((effect.equals(AdjustTickEffect.GIDDY_UPPED) ||
                  effect.equals(AdjustTickEffect.HALF_GIDDY_UPPED)) &&
                 piece.ticksUntilMovable(_bangobj.tick) == 0) {
+                // have the scenario hear about this first so it can react to giddy up before
+                // the unit's order get executed
+                _scenario.pieceAffected(piece, effect);
+
                 // if a piece was giddy upped into readiness, immediately execute any advance order
                 // it has registered
                 executeOrders(piece.pieceId);
+                return;
             } else if (HoldEffect.isDroppedEffect(effect)) {
                 // if a piece dropped its held bonus, cancel any advance order it has registered
                 clearOrders(piece.pieceId, true);
