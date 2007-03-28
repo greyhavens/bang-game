@@ -1450,10 +1450,6 @@ public class TerrainNode extends Node
          * are interpreted as empty spaces by {@link IntListUtil}. */
         public int[] layers;
 
-        /** The texture states containing created textures. */
-        public ArrayList<TextureState> tstates =
-            new ArrayList<TextureState>();
-
         /** The generated alpha textures. */
         public ArrayList<Texture> alphaTextures = new ArrayList<Texture>();
 
@@ -1566,7 +1562,9 @@ public class TerrainNode extends Node
             }
 
             // load the textures
-            for (TextureState tstate : tstates) {
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                TextureState tstate = (TextureState)node.getChild(ii).getRenderState(
+                    RenderState.RS_TEXTURE);
                 RenderUtil.ensureLoaded(tstate);
             }
 
@@ -1752,9 +1750,8 @@ public class TerrainNode extends Node
             node.detachAllChildren();
             deleteCreatedTextures();
 
-            // find out which terrain codes this block contains (expanding a little,
-            // because we may be influenced by terrain just outside the edge) and
-            // determine which one is the most common
+            // find out which terrain codes this block contains and determine
+            // which one is the most common
             IntIntMap codes = new IntIntMap();
             int ccount = 0, ccode = 0, count, code;
             for (int y = bounds.y, ymax = y + bounds.height; y < ymax; y++) {
@@ -1853,7 +1850,6 @@ public class TerrainNode extends Node
 
                 TextureState tstate = _ctx.getDisplay().getRenderer().createTextureState();
                 pass.setRenderState(tstate);
-                tstates.add(tstate);
 
                 for (int jj = 0, tidx = 0; jj < splats; jj++, lidx++) {
                     int code = layers[lidx] - 1;
@@ -1910,7 +1906,6 @@ public class TerrainNode extends Node
                 tstate.setTexture(ground, 0);
                 Texture alpha = createAlphaTexture(code, rect, false);
                 tstate.setTexture(alpha, 1);
-                tstates.add(tstate);
                 alphaTextures.add(alpha);
                 splat.setRenderState(tstate);
 
@@ -1937,7 +1932,6 @@ public class TerrainNode extends Node
                 }
             }
             alphaTextures.clear();
-            tstates.clear();
         }
 
         /**

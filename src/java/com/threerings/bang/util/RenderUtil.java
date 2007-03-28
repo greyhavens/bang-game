@@ -46,7 +46,6 @@ import com.jme.scene.VBOInfo;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
-import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
@@ -92,8 +91,6 @@ public class RenderUtil
     public static CullState frontCull;
 
     public static LightState noLights;
-
-    public static GLSLShaderObjectsState noShader;
 
     /**
      * Initializes our commonly used render states and terrain textures.
@@ -147,9 +144,6 @@ public class RenderUtil
 
         noLights = renderer.createLightState();
         noLights.setEnabled(false);
-
-        noShader = renderer.createGLSLShaderObjectsState();
-        noShader.setEnabled(false);
     }
 
     /** Rounds the supplied value up to a power of two. */
