@@ -54,8 +54,8 @@ public class ShaderCache
         Integer programId = _programIds.get(key);
         if (programId == null) {
             GLSLShaderObjectsState pstate = JmeUtil.loadShaders(
-                _ctx.getResourceManager().getResourceFile(vert),
-                _ctx.getResourceManager().getResourceFile(frag), defs);
+                (vert == null) ? null : _ctx.getResourceManager().getResourceFile(vert),
+                (frag == null) ? null : _ctx.getResourceManager().getResourceFile(frag), defs);
             if (pstate == null) {
                 return false;
             }

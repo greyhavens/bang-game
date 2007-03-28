@@ -18,9 +18,9 @@ import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;

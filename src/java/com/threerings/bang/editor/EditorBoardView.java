@@ -764,6 +764,7 @@ public class EditorBoardView extends BoardView
         _board.setFogParams(color, density);
         refreshFog();
         _wnode.refreshShader();
+        _tnode.refreshShaders();
         refreshBackgroundColor();
     }
 

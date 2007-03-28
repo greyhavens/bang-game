@@ -13,6 +13,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
@@ -38,6 +39,7 @@ import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
+import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
@@ -565,6 +567,14 @@ public class TerrainNode extends Node
         MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.setColorMaterial(MaterialState.CM_DIFFUSE);
         mstate.getAmbient().set(ColorRGBA.white);
+
+        // this is a workaround for a mysterious bug in JME (or maybe LWJGL, or my OpenGL drivers).
+        // without some difference in the material parameters between the terrain node and the
+        // default material, the color material state appears to get "stuck" when used with the
+        // shader.  changing the shininess has no other effect here, because the material's
+        // specular color remains at the default black
+        mstate.setShininess(1f);
+
         setRenderState(mstate);
     }
 
@@ -583,6 +593,17 @@ public class TerrainNode extends Node
         detachAllChildren();
         cleanup();
 
+        // find out now whether we should use shaders (so that the block creator knows)
+        boolean useShaders = false;
+        if (shouldUseShaders()) {
+            GLSLShaderObjectsState sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
+            if (!configureShaderState(sstate, 2, true)) {
+                _disableShaders = true;
+            } else {
+                useShaders = true;
+            }
+        }
+
         // create, store, and attach the splat blocks immediately in the
         // editor, or through the invoker in the game
         int swidth = (int)Math.ceil((_board.getHeightfieldWidth() - 1.0) /
@@ -593,10 +614,10 @@ public class TerrainNode extends Node
         for (int x = 0; x < swidth; x++) {
             for (int y = 0; y < sheight; y++) {
                 if (_editorMode) {
-                    _blocks[x][y] = new SplatBlock(x, y);
+                    _blocks[x][y] = new SplatBlock(x, y, useShaders);
                     _blocks[x][y].finishCreation();
                 } else {
-                    _ctx.getInvoker().postUnit(new BlockCreator(x, y));
+                    _ctx.getInvoker().postUnit(new BlockCreator(x, y, useShaders));
                 }
             }
         }
@@ -716,6 +737,7 @@ public class TerrainNode extends Node
                 Rectangle isect = rect.intersection(block.bounds);
                 if (!isect.isEmpty()) {
                     block.refreshSplats(isect);
+                    block.refreshShaders();
                 }
             }
         }
@@ -729,6 +751,18 @@ public class TerrainNode extends Node
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 _blocks[x][y].refreshColors();
+            }
+        }
+    }
+
+    /**
+     * Refreshes the board's shader parameters.
+     */
+    public void refreshShaders ()
+    {
+        for (int x = 0; x < _blocks.length; x++) {
+            for (int y = 0; y < _blocks[x].length; y++) {
+                _blocks[x][y].refreshShaders();
             }
         }
     }
@@ -1321,6 +1355,29 @@ public class TerrainNode extends Node
     }
 
     /**
+     * Determines whether we should use GLSL shaders when rendering the terrain.
+     */
+    protected boolean shouldUseShaders ()
+    {
+        return shouldRenderSplats() &&
+            GLContext.getCapabilities().GL_ARB_vertex_shader &&
+            GLContext.getCapabilities().GL_ARB_fragment_shader &&
+            TextureState.getNumberOfFragmentUnits() >= 4 &&
+            !_disableShaders;
+    }
+
+    /**
+     * Configures a terrain shader state with the requested parameters.
+     */
+    protected boolean configureShaderState (GLSLShaderObjectsState sstate, int splats, boolean fog)
+    {
+        String sdef = "NUM_SPLATS " + splats;
+        return _ctx.getShaderCache().configureShaderState(sstate,
+            null, "shaders/terrain.frag",
+            (fog ? new String[] { "ENABLE_FOG", sdef } : new String[] { sdef }));
+    }
+
+    /**
      * Checks whether we should render terrain splats (as opposed to simply rendering the most
      * common kind of terrain for each block).
      */
@@ -1332,17 +1389,18 @@ public class TerrainNode extends Node
     /** Creates and adds a single terrain block on the invoker thread. */
     protected class BlockCreator extends Invoker.Unit
     {
-        public BlockCreator (int x, int y)
+        public BlockCreator (int x, int y, boolean useShaders)
         {
             _x = x;
             _y = y;
+            _useShaders = useShaders;
             _view.addResolving(this);
         }
 
         // documentation inherited
         public boolean invoke ()
         {
-            _blocks[_x][_y] = new SplatBlock(_x, _y);
+            _blocks[_x][_y] = new SplatBlock(_x, _y, _useShaders);
             return true;
         }
 
@@ -1355,6 +1413,9 @@ public class TerrainNode extends Node
 
         /** The coordinates of the block to create. */
         protected int _x, _y;
+
+        /** Whether or not to use shaders. */
+        protected boolean _useShaders;
     }
 
     /** Contains all the state associated with a splat block (a collection of
@@ -1393,10 +1454,17 @@ public class TerrainNode extends Node
         public ArrayList<TextureState> tstates =
             new ArrayList<TextureState>();
 
-        public SplatBlock (int sx, int sy)
+        /** The generated alpha textures. */
+        public ArrayList<Texture> alphaTextures = new ArrayList<Texture>();
+
+        /** Whether or not we're using shaders. */
+        public boolean useShaders;
+
+        public SplatBlock (int sx, int sy, boolean useShaders)
         {
             // create the containing node
             node = new Node("block_" + sx + "_" + sy);
+            this.useShaders = useShaders;
 
             // determine which edges this splat contains, if any
             boolean le = (sx == 0), re = (sx == _blocks.length - 1),
@@ -1502,6 +1570,9 @@ public class TerrainNode extends Node
                 RenderUtil.ensureLoaded(tstate);
             }
 
+            // create the shader states
+            refreshShaders();
+
             // attach self and update render state
             attachChild(node);
             node.updateRenderState();
@@ -1513,6 +1584,24 @@ public class TerrainNode extends Node
         public boolean isOnEdge ()
         {
             return !ebounds.equals(bounds);
+        }
+
+        /**
+         * Refreshes all of the shader parameters.
+         */
+        public void refreshShaders ()
+        {
+            if (!useShaders) {
+                return;
+            }
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                Spatial pass = node.getChild(ii);
+                TextureState tstate = (TextureState)pass.getRenderState(RenderState.RS_TEXTURE);
+                int splats = tstate.getNumberOfSetTextures() / 2;
+                GLSLShaderObjectsState sstate = (GLSLShaderObjectsState)pass.getRenderState(
+                    RenderState.RS_GLSL_SHADER_OBJECTS);
+                configureShaderState(sstate, splats, _board.getFogDensity() > 0f);
+            }
         }
 
         /**
@@ -1663,13 +1752,13 @@ public class TerrainNode extends Node
             node.detachAllChildren();
             deleteCreatedTextures();
 
-            // find out which terrain codes this block contains, get the
-            // most common code, update the layers and find out if all alpha
-            // textures must be remade
+            // find out which terrain codes this block contains (expanding a little,
+            // because we may be influenced by terrain just outside the edge) and
+            // determine which one is the most common
             IntIntMap codes = new IntIntMap();
             int ccount = 0, ccode = 0, count, code;
-            for (int y = bounds.y, ymax = y+bounds.height; y < ymax; y++) {
-                for (int x = bounds.x, xmax = x+bounds.width; x < xmax; x++) {
+            for (int y = bounds.y, ymax = y + bounds.height; y < ymax; y++) {
+                for (int x = bounds.x, xmax = x + bounds.width; x < xmax; x++) {
                     code = _board.getTerrainValue(x, y)+1;
                     if ((count = codes.increment(code, 1)) > ccount) {
                         ccount = count;
@@ -1714,20 +1803,90 @@ public class TerrainNode extends Node
                 }
             }
             layers = IntListUtil.compact(layers);
+            if (layers.length == 1) {
+                // no point in using shaders for one layer
+                useShaders = false;
+            }
 
+            // build layers using shaders or fixed functionality pipeline
+            if (useShaders) {
+                buildShaderLayers(rect);
+            } else {
+                buildFixedLayers(rect);
+            }
+
+            // prune any unused alpha buffers from the map
+            for (Interator it = alphaBuffers.keys(); it.hasNext(); ) {
+                if (!codes.contains(it.nextInt()+1)) {
+                    it.remove();
+                }
+            }
+
+            node.updateRenderState();
+        }
+
+        protected void buildShaderLayers (Rectangle rect)
+        {
+            int units = TextureState.getNumberOfFragmentUnits();
+
+            for (int ii = 0, lidx = 0; lidx < layers.length; ii++) {
+                SharedMesh pass = new SharedMesh("pass" + ii, mesh);
+                node.attachChild(pass);
+
+                // determine the number of splats in this pass
+                int splats = Math.min(units / 2, layers.length - lidx);
+
+                if (ii > 0) {
+                    // passes after the first are added on
+                    if (_addAlpha == null) {
+                        _addAlpha = _ctx.getRenderer().createAlphaState();
+                        _addAlpha.setBlendEnabled(true);
+                        _addAlpha.setSrcFunction(AlphaState.SB_ONE);
+                        _addAlpha.setDstFunction(AlphaState.DB_ONE);
+                    }
+                    pass.setRenderState(_addAlpha);
+                    pass.setRenderState(RenderUtil.overlayZBuf);
+                    pass.setIsCollidable(false);
+                }
+                GLSLShaderObjectsState sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
+                pass.setRenderState(sstate);
+
+                TextureState tstate = _ctx.getDisplay().getRenderer().createTextureState();
+                pass.setRenderState(tstate);
+                tstates.add(tstate);
+
+                for (int jj = 0, tidx = 0; jj < splats; jj++, lidx++) {
+                    int code = layers[lidx] - 1;
+                    TextureState gtstate = getGroundTexture(code);
+                    if (gtstate == null) {
+                        continue; // something's funny, skip it
+                    }
+                    tstate.setTexture(gtstate.getTexture(), tidx);
+                    String suffix = jj + "]";
+                    sstate.setUniform("splatColorTextures[" + suffix, tidx++);
+
+                    Texture alpha = createAlphaTexture(code, rect, true);
+                    tstate.setTexture(alpha, tidx);
+                    sstate.setUniform("splatAlphaTextures[" + suffix, tidx++);
+                    alphaTextures.add(alpha);
+                }
+            }
+        }
+
+        protected void buildFixedLayers (Rectangle rect)
+        {
             // use the most common terrain for the base mesh (which both tests
             // and writes to the z buffer)
             SharedMesh base = new SharedMesh("base", mesh);
-            TextureState gtex = getGroundTexture(--ccode);
+            int ccode = layers[0] - 1;
+            TextureState gtex = getGroundTexture(ccode);
             if (gtex != null) {
                 base.setRenderState(gtex);
             }
-            base.setRenderState(RenderUtil.lequalZBuf);
             node.attachChild(base);
 
-            // for low detail, just stop there
-            if (!shouldRenderSplats()) {
-                node.updateRenderState();
+            // for low detail or single layers, just stop there
+            if (!shouldRenderSplats() || layers.length == 1) {
                 return;
             }
 
@@ -1741,15 +1900,18 @@ public class TerrainNode extends Node
                 // initialize the texture state
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
-                TextureState gtstate = getGroundTexture(code = layers[ii]-1);
+                int code = layers[ii] - 1;
+                TextureState gtstate = getGroundTexture(code);
                 if (gtstate == null) {
                     continue; // something's funny, skip it
                 }
 
                 Texture ground = gtstate.getTexture();
                 tstate.setTexture(ground, 0);
-                tstate.setTexture(createAlphaTexture(code, rect), 1);
+                Texture alpha = createAlphaTexture(code, rect, false);
+                tstate.setTexture(alpha, 1);
                 tstates.add(tstate);
+                alphaTextures.add(alpha);
                 splat.setRenderState(tstate);
 
                 // and the z buffer state
@@ -1760,15 +1922,6 @@ public class TerrainNode extends Node
 
                 node.attachChild(splat);
             }
-
-            // prune any unused alpha buffers from the map
-            for (Interator it = alphaBuffers.keys(); it.hasNext(); ) {
-                if (!codes.contains(it.nextInt()+1)) {
-                    it.remove();
-                }
-            }
-
-            node.updateRenderState();
         }
 
         /**
@@ -1776,10 +1929,14 @@ public class TerrainNode extends Node
          */
         public void deleteCreatedTextures ()
         {
-            for (TextureState tstate : tstates) {
-                // just delete the alpha texture in the second slot
-                tstate.delete(1);
+            // delete the generated alpha textures
+            TextureState tstate = _ctx.getRenderer().createTextureState();
+            for (Texture texture : alphaTextures) {
+                if (texture.getTextureId() > 0) {
+                    tstate.deleteTextureId(texture.getTextureId());
+                }
             }
+            alphaTextures.clear();
             tstates.clear();
         }
 
@@ -1826,14 +1983,16 @@ public class TerrainNode extends Node
          * code, using preexisting buffers when possible.
          *
          * @param rect the modified region
+         * @param additive if true, the texture will be used for additive blending; use the
+         * interpolated alpha directly without scaling by and adjusting totals
          */
-        protected Texture createAlphaTexture (int code, Rectangle rect)
+        protected Texture createAlphaTexture (int code, Rectangle rect, boolean additive)
         {
             // create the buffer if it doesn't already exist
             ByteBuffer abuf = alphaBuffers.get(code);
             if (abuf == null) {
                 alphaBuffers.put(code, abuf = ByteBuffer.allocateDirect(
-                    TEXTURE_SIZE*TEXTURE_SIZE*4));
+                    TEXTURE_SIZE*TEXTURE_SIZE*2));
                 rect = bounds;
             }
 
@@ -1850,15 +2009,16 @@ public class TerrainNode extends Node
                     idx = y*TEXTURE_SIZE + x;
                     alpha = getTerrainAlpha(code, bounds.x + x*step,
                         bounds.y + y*step);
-                    abuf.putInt(idx*4, 0xFFFFFF00 |
-                        (int)((alpha / (_atotals[idx] += alpha))*255));
+                    if (!additive) {
+                        alpha /= (_atotals[idx] += alpha);
+                    }
+                    abuf.putShort(idx*2, (short)(0xFF00 | (int)(alpha * 255)));
                 }
             }
 
             Texture texture = new Texture();
             abuf.rewind();
-            texture.setImage(new Image(Image.RGBA8888, TEXTURE_SIZE,
-                TEXTURE_SIZE, abuf));
+            texture.setImage(new Image(Image.RA88, TEXTURE_SIZE, TEXTURE_SIZE, abuf));
 
             // set the filter parameters
             texture.setFilter(Texture.FM_LINEAR);
@@ -1995,6 +2155,12 @@ public class TerrainNode extends Node
 
     /** Used to store alpha totals when computing alpha maps. */
     protected float[] _atotals;
+
+    /** If true, the shaders didn't link; don't try to compile them again. */
+    protected static boolean _disableShaders;
+
+    /** An additive state that doesn't bother with source alpha values. */
+    protected static AlphaState _addAlpha;
 
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;
