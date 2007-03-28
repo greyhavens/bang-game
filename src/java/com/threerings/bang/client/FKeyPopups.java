@@ -45,6 +45,7 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.TellFeedbackMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
 import static com.threerings.bang.Log.log;
@@ -106,6 +107,7 @@ public class FKeyPopups
             _ctx.getKeyManager().registerCommand(type.keyCode(), this);
         }
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
+        _cmsgs = _ctx.getMessageManager().getBundle(BangCodes.CHAT_MSGS);
     }
 
     /**
@@ -299,22 +301,27 @@ public class FKeyPopups
         window.setLayer(BangUI.POPUP_MENU_LAYER);
 
         BTextArea history = new BTextArea();
-        history.setStyleClass( "chat_history_log");
+        history.setStyleClass("chat_history_log");
         history.setPreferredSize(new Dimension(800, 600));
         List<ChatMessage> list =
             ((BangChatDirector)_ctx.getChatDirector()).getMessageHistory();
         for (ChatMessage msg : list) {
             if (msg instanceof UserMessage) {
                 UserMessage umsg = (UserMessage) msg;
-                if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
-                    history.appendText(
-                        "[" + umsg.speaker + " whispers] ", ColorRGBA.magenta);
-                    history.appendText(umsg.message + "\n");
+                String who;
+                ColorRGBA color;
+                if (umsg instanceof TellFeedbackMessage) {
+                    who = _cmsgs.tcompose("m.history_tell", umsg.speaker);
+                    color = ColorRGBA.magenta;
+                } else if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
+                    who = _cmsgs.tcompose("m.history_told", umsg.speaker);
+                    color = ColorRGBA.magenta;
                 } else {
-                    history.appendText(
-                        "<" + umsg.speaker + "> ", ColorRGBA.blue);
-                    history.appendText(umsg.message + "\n");
+                    who = _cmsgs.tcompose("m.history_speak", umsg.speaker);
+                    color = ColorRGBA.blue;
                 }
+                history.appendText(_cmsgs.xlate(who), color);
+                history.appendText(" " + umsg.message + "\n");
 
             } else if (msg instanceof SystemMessage) {
                 history.appendText(msg.message + "\n", ColorRGBA.red);
@@ -361,7 +368,7 @@ public class FKeyPopups
     }
 
     protected BangContext _ctx;
-    protected MessageBundle _msgs;
+    protected MessageBundle _msgs, _cmsgs;
 
     protected Type _poppedType = null;
     protected BDecoratedWindow _popped;
