@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -73,7 +73,7 @@ import com.jme.util.TextureManager;
 /**
  * <code>LWJGLTextureState</code> subclasses the TextureState object using the
  * LWJGL API to access OpenGL for texture processing.
- * 
+ *
  * @author Mark Powell
  * @author Joshua Slack - updates, optimizations, etc. also StateRecords
  * @version $Id: LWJGLTextureState.java,v 1.83 2006/11/16 19:18:02 nca Exp $
@@ -117,7 +117,7 @@ public class LWJGLTextureState extends TextureState {
             // to do multitexturing, so we need to support GL13 as well.
             supportsMultiTexture = (GLContext.getCapabilities().GL_ARB_multitexture && GLContext
                     .getCapabilities().OpenGL13);
-            
+
             supportsEnvDot3 = GLContext.getCapabilities().GL_ARB_texture_env_dot3;
 
             // If we do support multitexturing, find out how many textures we
@@ -363,7 +363,7 @@ public class LWJGLTextureState extends TextureState {
      * subsequent calls. The multitexture extension is used to define the
      * multiple texture states, with the number of units being determined at
      * construction time.
-     * 
+     *
      * @see com.jme.scene.state.RenderState#apply()
      */
     public void apply() {
@@ -391,10 +391,10 @@ public class LWJGLTextureState extends TextureState {
             // loop through all available texture units...
             for (int i = 0; i < numTotalTexUnits; i++) {
                 unitRecord = record.units[i];
-                
+
                 // grab a texture for this unit, if available
                 texture = getTexture(i);
-                
+
                 // check for invalid textures - ones that have no opengl id and
                 // no image data
                 if (texture != null && texture.getTextureId() == 0
@@ -441,31 +441,29 @@ public class LWJGLTextureState extends TextureState {
                         unitRecord.boundTexture = texture.getTextureId();
                     }
                 }
-            
+
                 // Grab our record for this texture
                 texRecord = record.getTextureRecord(texture.getTextureId());
-            
+
                 // Set the idCache value for this unit of this texture state
                 // This is done so during state comparison we don't have to
                 // spend a lot of time pulling out classes and finding field
                 // data.
                 idCache[i] = texture.getTextureId();
 
+                // Enable 2D texturing on this unit if not enabled.
+                if (!unitRecord.enabled) {
+                    checkAndSetUnit(i, record);
+                    GL11.glEnable(GL11.GL_TEXTURE_2D);
+                    unitRecord.enabled = true;
+                }
+
+                // These are texture specific
+                applyFilter(texture, texRecord, i, record);
+                applyWrap(texture, texRecord, i, record);
+
                 // Some texture things only apply to fixed function pipeline
                 if (i < numFixedTexUnits) {
-
-                    // Check we are in the right unit
-                    
-                    // Enable 2D texturing on this unit if not enabled.
-                    if (!unitRecord.enabled) {
-                        checkAndSetUnit(i, record);
-                        GL11.glEnable(GL11.GL_TEXTURE_2D);
-                        unitRecord.enabled = true;
-                    }
-
-                    // These are texture specific
-                    applyFilter(texture, texRecord, i, record);
-                    applyWrap(texture, texRecord, i, record);
 
                     // Now time to play with texture matrices
                     // Determine which transforms to do.
@@ -518,15 +516,15 @@ public class LWJGLTextureState extends TextureState {
         // support it, disable this texture.
         boolean checked = false;
         if (!supportsEnvDot3 && (texture.getCombineFuncAlpha() == Texture.ACF_DOT3_RGB
-                || texture.getCombineFuncAlpha() == Texture.ACF_DOT3_RGBA 
+                || texture.getCombineFuncAlpha() == Texture.ACF_DOT3_RGBA
                 || texture.getCombineFuncRGB() == Texture.ACF_DOT3_RGB
                 || texture.getCombineFuncRGB() == Texture.ACF_DOT3_RGBA)) {
-        
+
             checkAndSetUnit(unit, record);
             checked = true;
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             unitRecord.enabled = false;
-            
+
             // No need to continue
             return;
         }
@@ -552,7 +550,7 @@ public class LWJGLTextureState extends TextureState {
                     .getCombineScaleRGB());
             unitRecord.envAlphaScale = texture.getCombineScaleAlpha();
         }
-        
+
         // Time to set the RGB combines
         int rgbCombineFunc = texture.getCombineFuncRGB();
         if (unitRecord.rgbCombineFunc != rgbCombineFunc) {
@@ -564,7 +562,7 @@ public class LWJGLTextureState extends TextureState {
                     getGLCombineFunc(rgbCombineFunc));
             unitRecord.rgbCombineFunc = rgbCombineFunc;
         }
-        
+
         int combSrcRGB = texture.getCombineSrc0RGB();
         if (unitRecord.combSrcRGB0 != combSrcRGB) {
             if (!checked) {
@@ -574,7 +572,7 @@ public class LWJGLTextureState extends TextureState {
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_RGB, getGLCombineSrc(combSrcRGB));
             unitRecord.combSrcRGB0 = combSrcRGB;
         }
-        
+
         int combOpRGB = texture.getCombineOp0RGB();
         if (unitRecord.combOpRGB0 != combOpRGB) {
             if (!checked) {
@@ -586,7 +584,7 @@ public class LWJGLTextureState extends TextureState {
         }
 
         if (rgbCombineFunc != Texture.ACF_REPLACE) {
-            
+
             combSrcRGB = texture.getCombineSrc1RGB();
             if (unitRecord.combSrcRGB1 != combSrcRGB) {
                 if (!checked) {
@@ -608,7 +606,7 @@ public class LWJGLTextureState extends TextureState {
             }
 
             if (rgbCombineFunc == Texture.ACF_INTERPOLATE) {
-                
+
                 combSrcRGB = texture.getCombineSrc2RGB();
                 if (unitRecord.combSrcRGB2 != combSrcRGB) {
                     if (!checked) {
@@ -618,7 +616,7 @@ public class LWJGLTextureState extends TextureState {
                     GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE2_RGB, getGLCombineSrc(combSrcRGB));
                     unitRecord.combSrcRGB2 = combSrcRGB;
                 }
-                
+
                 combOpRGB = texture.getCombineOp2RGB();
                 if (unitRecord.combOpRGB2 != combOpRGB) {
                     if (!checked) {
@@ -632,7 +630,7 @@ public class LWJGLTextureState extends TextureState {
             }
         }
 
-        
+
         // Now Alpha combines
         int alphaCombineFunc = texture.getCombineFuncAlpha();
         if (unitRecord.alphaCombineFunc != alphaCombineFunc) {
@@ -644,7 +642,7 @@ public class LWJGLTextureState extends TextureState {
                     getGLCombineFunc(alphaCombineFunc));
             unitRecord.alphaCombineFunc = alphaCombineFunc;
         }
-        
+
         int combSrcAlpha = texture.getCombineSrc0Alpha();
         if (unitRecord.combSrcAlpha0 != combSrcAlpha) {
             if (!checked) {
@@ -654,7 +652,7 @@ public class LWJGLTextureState extends TextureState {
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_ALPHA, getGLCombineSrc(combSrcAlpha));
             unitRecord.combSrcAlpha0 = combSrcAlpha;
         }
-        
+
         int combOpAlpha = texture.getCombineOp0Alpha();
         if (unitRecord.combOpAlpha0 != combOpAlpha) {
             if (!checked) {
@@ -676,7 +674,7 @@ public class LWJGLTextureState extends TextureState {
                 GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE1_ALPHA, getGLCombineSrc(combSrcAlpha));
                 unitRecord.combSrcAlpha1 = combSrcAlpha;
             }
-            
+
             combOpAlpha = texture.getCombineOp1Alpha();
             if (unitRecord.combOpAlpha1 != combOpAlpha) {
                 if (!checked) {
@@ -697,7 +695,7 @@ public class LWJGLTextureState extends TextureState {
                     GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE2_ALPHA, getGLCombineSrc(combSrcAlpha));
                     unitRecord.combSrcAlpha2 = combSrcAlpha;
                 }
-                
+
                 combOpAlpha = texture.getCombineOp2Alpha();
                 if (unitRecord.combOpAlpha2 != combOpAlpha) {
                     if (!checked) {
@@ -710,7 +708,7 @@ public class LWJGLTextureState extends TextureState {
             }
         }
     }
-    
+
     private static int getGLCombineOpRGB(int combineOpRGB) {
         switch (combineOpRGB) {
             case Texture.ACO_SRC_COLOR:
@@ -725,7 +723,7 @@ public class LWJGLTextureState extends TextureState {
                 return GL11.GL_SRC_COLOR;
         }
     }
-    
+
     private static int getGLCombineOpAlpha(int combineOpAlpha) {
         switch (combineOpAlpha) {
             case Texture.ACO_SRC_ALPHA:
@@ -819,7 +817,7 @@ public class LWJGLTextureState extends TextureState {
                 return GL13.GL_PRIMARY_COLOR;
         }
     }
-    
+
     private static int getGLCombineFunc(int combineFunc) {
         switch (combineFunc) {
             case Texture.ACF_REPLACE:
@@ -854,9 +852,9 @@ public class LWJGLTextureState extends TextureState {
     private void applyBlendColor(Texture texture, TextureUnitRecord unitRecord, TextureRecord texRecord, int unit, TextureStateRecord record) {
         ColorRGBA texBlend = texture.getBlendColor();
         if (texBlend == null) texBlend = TextureRecord.defaultColor;
-        if (unitRecord.blendColor.r != texBlend.r || 
-                unitRecord.blendColor.g != texBlend.g || 
-                unitRecord.blendColor.b != texBlend.b || 
+        if (unitRecord.blendColor.r != texBlend.r ||
+                unitRecord.blendColor.g != texBlend.g ||
+                unitRecord.blendColor.b != texBlend.b ||
                 unitRecord.blendColor.a != texBlend.a) {
             checkAndSetUnit(unit, record);
             texRecord.colorBuffer.clear();
@@ -870,7 +868,7 @@ public class LWJGLTextureState extends TextureState {
 
     private void applyTextureTransforms(Texture texture, int unit,
             TextureStateRecord record) {
-        
+
         // Should we load a base matrix?
         boolean doMatrix = (texture.getMatrix() != null && !texture.getMatrix()
                 .isIdentity());
@@ -878,13 +876,13 @@ public class LWJGLTextureState extends TextureState {
         // Should we apply transforms?
         boolean doTrans = texture.getTranslation() != null
                 && (texture.getTranslation().x != 0
-                        || texture.getTranslation().y != 0 
+                        || texture.getTranslation().y != 0
                         || texture.getTranslation().z != 0);
         boolean doRot = texture.getRotation() != null
                 && !texture.getRotation().isIdentity();
         boolean doScale = texture.getScale() != null
-                && (texture.getScale().x != 1 
-                        || texture.getScale().y != 1 
+                && (texture.getScale().x != 1
+                        || texture.getScale().y != 1
                         || texture.getScale().z != 1);
 
         // Now do them.
@@ -918,7 +916,7 @@ public class LWJGLTextureState extends TextureState {
             TextureUnitRecord unitRecord, int unit, TextureStateRecord record) {
         boolean checked = false;
         if (texture.getEnvironmentalMapMode() == Texture.EM_NONE) {
-            
+
             // No coordinate generation
             if (unitRecord.textureGenQ) {
                 checkAndSetUnit(unit, record);
@@ -1148,12 +1146,12 @@ public class LWJGLTextureState extends TextureState {
     /**
      * Check if the filter settings of this particular texture have been changed and
      * apply as needed.
-     * 
+     *
      * @param texture
      *            our texture object
      * @param texRecord
      *            our record of the last state of the texture in gl
-     * @param record 
+     * @param record
      */
     private void applyFilter(Texture texture, TextureRecord texRecord, int unit, TextureStateRecord record) {
         int magFilter = getGLMagFilter(texture.getFilter());
@@ -1173,7 +1171,7 @@ public class LWJGLTextureState extends TextureState {
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D,
                     GL11.GL_TEXTURE_MIN_FILTER, minFilter);
             texRecord.minFilter = minFilter;
-        } 
+        }
     }
 
     private static int getGLMagFilter(int magFilter) {
@@ -1181,9 +1179,9 @@ public class LWJGLTextureState extends TextureState {
             case Texture.FM_LINEAR:
                 return GL11.GL_LINEAR;
             case Texture.FM_NEAREST:
-            default: 
+            default:
                 return GL11.GL_NEAREST;
-                
+
         }
     }
 
@@ -1202,21 +1200,21 @@ public class LWJGLTextureState extends TextureState {
             case Texture.MM_NONE:
                 return GL11.GL_NEAREST;
             case Texture.MM_NEAREST_LINEAR:
-            default: 
+            default:
                 return GL11.GL_NEAREST_MIPMAP_LINEAR;
-                
+
         }
     }
 
     /**
      * Check if the wrap mode of this particular texture has been changed and
      * apply as needed.
-     * 
+     *
      * @param texture
      *            our texture object
      * @param unitRecord
      *            our record of the last state of the unit in gl
-     * @param record 
+     * @param record
      */
     private void applyWrap(Texture texture, TextureRecord texRecord, int unit, TextureStateRecord record) {
         int wrapS = -1;
@@ -1247,7 +1245,7 @@ public class LWJGLTextureState extends TextureState {
                 wrapS = GL11.GL_REPEAT;
                 wrapT = GL11.GL_REPEAT;
         }
-        
+
         if (texRecord.wrapS != wrapS) {
             checkAndSetUnit(unit, record);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D,
@@ -1260,9 +1258,9 @@ public class LWJGLTextureState extends TextureState {
                     GL11.GL_TEXTURE_WRAP_T, wrapT);
             texRecord.wrapT = wrapT;
         }
-        
+
     }
-    
+
     public static void checkTexAndUnit(int texID, int unitNo, String label) {
         IntBuffer fetch = BufferUtils.createIntBuffer(16);
         fetch.rewind();
@@ -1338,13 +1336,13 @@ public class LWJGLTextureState extends TextureState {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.jme.scene.state.TextureState#delete(int)
      */
     public void delete(int unit) {
         if (unit < 0 || unit >= texture.size() || texture.get(unit) == null)
             return;
-        
+
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()
                 .getCurrentContext();
@@ -1361,7 +1359,7 @@ public class LWJGLTextureState extends TextureState {
         tex.setTextureId(0);
 
         GL11.glDeleteTextures(id);
-        
+
         // if the texture was currently bound glDeleteTextures reverts the binding to 0
         // however we still have to clear it from currentTexture.
         record.removeTextureRecord(texId);
@@ -1370,7 +1368,7 @@ public class LWJGLTextureState extends TextureState {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.jme.scene.state.TextureState#deleteAll()
      */
     public void deleteAll() {
@@ -1379,11 +1377,11 @@ public class LWJGLTextureState extends TextureState {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.jme.scene.state.TextureState#deleteAll()
      */
     public void deleteAll(boolean removeFromCache) {
-        
+
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()
                 .getCurrentContext();
@@ -1413,7 +1411,7 @@ public class LWJGLTextureState extends TextureState {
     }
 
     public void deleteTextureId(int textureId) {
-        
+
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()
                 .getCurrentContext();
