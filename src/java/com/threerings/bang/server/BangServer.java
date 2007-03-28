@@ -262,6 +262,10 @@ public class BangServer extends CrowdServer
         // create our transition manager prior to doing anything else
         transitrepo = new TransitionRepository(conprov);
 
+        // TEMP: the authenticator is going to access the player repository, so it needs to
+        // be created here
+        playrepo = new PlayerRepository(conprov);
+
         // do the base server initialization
         super.init();
 
@@ -289,7 +293,6 @@ public class BangServer extends CrowdServer
         alogic = new AvatarLogic(rsrcmgr, comprepo);
 
         // create our repositories
-        playrepo = new PlayerRepository(conprov);
         gangrepo = new GangRepository(conprov);
         itemrepo = new ItemRepository(conprov);
         statrepo = new BangStatRepository(conprov);
