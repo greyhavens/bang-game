@@ -275,6 +275,13 @@
       <fileset dir="rsrc" includes="**/prop.properties"/>
     </updatepropheight>
 
+    <copy todir="${deploy.dir}/rsrc/units/wreckage">
+        <fileset dir="rsrc/units/wreckage">
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+    </copy>
+
     <for list="${towns}" param="town"><sequential>
       <copy todir="${deploy.dir}/rsrc/units/@{town}">
         <fileset dir="rsrc/units/@{town}">
