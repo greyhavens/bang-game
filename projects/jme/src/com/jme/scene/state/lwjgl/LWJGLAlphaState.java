@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -42,7 +42,7 @@ import com.jme.system.DisplaySystem;
 /**
  * <code>LWJGLAlphaState</code> subclasses the AlphaState using the LWJGL API
  * to set OpenGL's alpha state.
- * 
+ *
  * @author Mark Powell
  * @author Joshua Slack - reworked for StateRecords.
  * @version $Id: LWJGLAlphaState.java,v 1.9 2006/11/16 19:18:03 nca Exp $
@@ -53,7 +53,7 @@ public class LWJGLAlphaState extends AlphaState {
 	/**
 	 * Constructor instantiates a new <code>LWJGLAlphaState</code> object with
 	 * default values.
-	 *  
+	 *
 	 */
 	public LWJGLAlphaState() {
 		super();
@@ -63,7 +63,7 @@ public class LWJGLAlphaState extends AlphaState {
 	 * <code>set</code> is called to set the alpha state. If blending is
 	 * enabled, the blend function is set up and if alpha testing is enabled the
 	 * alpha functions are set.
-	 * 
+	 *
 	 * @see com.jme.scene.state.RenderState#apply()
 	 */
 	public void apply() {
@@ -101,7 +101,7 @@ public class LWJGLAlphaState extends AlphaState {
             record.blendEnabled = false;
         }
     }
-    
+
     private int getGLSrcValue(int srcBlend) {
         switch (srcBlend) {
             case SB_ZERO:
@@ -157,6 +157,8 @@ public class LWJGLAlphaState extends AlphaState {
             int glFunc = getGLFuncValue(test);
             if (record.alphaFunc != glFunc || record.alphaRef != reference) {
                 GL11.glAlphaFunc(glFunc, reference);
+                record.alphaFunc = glFunc;
+                record.alphaRef = reference;
             }
         } else if (record.testEnabled) {
             GL11.glDisable(GL11.GL_ALPHA_TEST);
