@@ -935,7 +935,7 @@ public class BangManager extends GameManager
         _bangobj.setPlayerInfo(pinfo);
 
         // when the players all arrive, go into the first game phase
-        startRound();
+        startRound(true);
     }
 
     @Override // documentation inherited
@@ -981,7 +981,7 @@ public class BangManager extends GameManager
     }
 
     /** Starts the pre-game buying phase. */
-    protected void startRound ()
+    protected void startRound (boolean firstRound)
     {
         _activeRoundId = _bangobj.roundId;
         // set the tick to -1 during the pre-round
@@ -994,6 +994,16 @@ public class BangManager extends GameManager
         }
         _rounds[_activeRoundId].stats = stats;
         _bangobj.stats = stats;
+
+        // if this is not the first round, we'll have to reset already booted players oids to -1
+        // so we don't hang up on them when starting the round
+        if (!firstRound) {
+            for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                if (!isAI(ii) && _playerOids[ii] == 0) {
+                    _playerOids[ii] = -1;
+                }
+            }
+        }
 
         // if this is a bounty game, set up a listener on the stat set so that we can broadcast the
         // values of our criterion related stats when they change
@@ -1765,7 +1775,7 @@ public class BangManager extends GameManager
 
         // maybe start the next round
         if (startNext) {
-            startRound();
+            startRound(false);
         }
     }
 
