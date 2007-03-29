@@ -5,14 +5,18 @@ package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
 
+import com.threerings.io.SimpleStreamableObject;
+
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.client.sprite.MarkerSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TotemBaseSprite;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.TotemEffect;
 
 import static com.threerings.bang.Log.log;
-import com.threerings.io.SimpleStreamableObject;
 
 /**
  * A totem base can have totem pieces added to it and toped off by a
@@ -196,6 +200,12 @@ public class TotemBase extends Prop
             (ArrayList<PieceData>)base._pieces.clone();
         base._pieces = npieces;
         return base;
+    }
+
+    @Override // documentation inherited
+    public String getName ()
+    {
+        return MessageBundle.qualify(GameCodes.GAME_MSGS, "m.totem");
     }
 
     protected static class PieceData extends SimpleStreamableObject

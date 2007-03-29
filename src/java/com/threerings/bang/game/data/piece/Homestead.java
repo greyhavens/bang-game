@@ -3,8 +3,11 @@
 
 package com.threerings.bang.game.data.piece;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.data.UnitConfig;
 
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.client.sprite.HomesteadSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 
@@ -52,7 +55,7 @@ public class Homestead extends Prop
     {
         return true;
     }
-    
+
     @Override // documentation inherited
     public int getGoalRadius (Piece mover)
     {
@@ -60,7 +63,7 @@ public class Homestead extends Prop
             ((Unit)mover).getConfig().rank == UnitConfig.Rank.BIGSHOT) ?
                 +1 : -1;
     }
-    
+
     @Override // documentation inherited
     public void wasKilled (short tick)
     {
@@ -70,5 +73,11 @@ public class Homestead extends Prop
 
         // and reset our damage
         damage = 0;
+    }
+
+    @Override // documentation inherited
+    public String getName ()
+    {
+        return MessageBundle.qualify(GameCodes.GAME_MSGS, "m.homestead");
     }
 }
