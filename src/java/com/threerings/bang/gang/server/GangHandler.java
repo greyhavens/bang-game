@@ -886,7 +886,8 @@ public class GangHandler
         for (int ii = 0; ii < outfit.length; ii++) {
             OutfitArticle oart = outfit[ii];
             catarts[ii] = BangServer.alogic.getArticleCatalog().getArticle(oart.article);
-            if (catarts[ii] == null) {
+            if (catarts[ii] == null || catarts[ii].qualifier != null ||
+                    catarts[ii].start != null || catarts[ii].stop != null) {
                 log.warning("Invalid article requested for outfit [who=" + handle +
                     ", article=" + oart.article + "].");
                 throw new InvocationException(INTERNAL_ERROR);

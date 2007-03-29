@@ -329,7 +329,7 @@ public class OutfitDialog extends BDecoratedWindow
 
         boolean support = _ctx.getUserObject().tokens.isSupport();
         for (ArticleCatalog.Article catart : catarts) {
-            if (catart.qualifier != null && (!support || catart.qualifier.equals("ai"))) {
+            if (catart.qualifier != null || catart.start != null || catart.stop != null) {
                 continue;
             }
             if (!(catart.townId.equals(BangCodes.FRONTIER_TOWN) || support ||
