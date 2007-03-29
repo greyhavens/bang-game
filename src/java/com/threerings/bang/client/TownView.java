@@ -118,11 +118,6 @@ public class TownView extends BWindow
         Enumeration iter = props.propertyNames();
         while (iter.hasMoreElements()) {
             String command = (String)iter.nextElement();
-            // TEMP: disable hideout for the public
-            if (command.equals("hideout") && !ctx.getUserObject().tokens.isSupport()) {
-                continue;
-            }
-            // END TEMP
             _commands.put(props.getProperty(command), command);
         }
 
