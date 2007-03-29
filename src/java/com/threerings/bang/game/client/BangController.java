@@ -811,7 +811,9 @@ public class BangController extends GameController
         } else {
             view = _statsView;
         }
-        _ctx.getBangClient().displayPopup(view, true);
+        if (view != null) {
+            _ctx.getBangClient().displayPopup(view, true);
+        }
     }
 
     /**
