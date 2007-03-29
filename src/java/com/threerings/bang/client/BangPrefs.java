@@ -57,7 +57,8 @@ public class BangPrefs
         if (!fullscreen) {
             DisplayMode mode = Display.getDisplayMode();
             // if the display mode is too small, we'll try to go fullscreen
-            if (mode.getWidth() <= BangUI.MIN_WIDTH || mode.getHeight() <= BangUI.MIN_HEIGHT) {
+            if (mode.getWidth() <= BangUI.MIN_WIDTH || mode.getHeight() <= BangUI.MIN_HEIGHT ||
+                    mode.getBitsPerPixel() < BangUI.MIN_BPP) {
                 fullscreen = true;
                 updateFullscreen(true);
 

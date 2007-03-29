@@ -104,6 +104,9 @@ public class BangUI
     /** The minimum window height. */
     public static final int MIN_HEIGHT = 768;
 
+    /** The minimum bpp. */
+    public static final int MIN_BPP = 16;
+
     /** The default max length of any text field. */
     public static final int TEXT_FIELD_MAX_LENGTH = 300;
 
