@@ -627,8 +627,7 @@ public class AvatarLogic
                     compids.add(compmask);
 
                 } catch (NoSuchComponentException nsce) {
-                    log.warning("Missing character component [class=" + gender + cclass +
-                        ", name=" + catasp.name + "].");
+                    // no problem, some of these are optional
                 }
             }
         }
