@@ -5,6 +5,9 @@ package com.threerings.bang.store.client;
 
 import java.util.ArrayList;
 
+import com.jmex.bui.icon.BIcon;
+import com.jmex.bui.util.Insets;
+
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.util.MessageBundle;
@@ -53,7 +56,23 @@ public class GoodsIcon extends PaletteIcon
         setTooltipText(_ctx.xlate(BangCodes.GOODS_MSGS, msg));
     }
 
+    @Override // documentation inherited
+    public Insets getInsets ()
+    {
+        // adjust the insets to accomodate irregularly sized icons
+        Insets insets = super.getInsets();
+        BIcon icon = getIcon();
+        if (icon != null) {
+            insets = new Insets(
+                insets.left, insets.top + (EXPECTED_ICON_HEIGHT - icon.getHeight())/2,
+                insets.right, insets.bottom);
+        }
+        return insets;
+    }
+
     protected BangContext _ctx;
     protected DObject _entity;
     protected Good _good;
+
+    protected static final int EXPECTED_ICON_HEIGHT = 128;
 }
