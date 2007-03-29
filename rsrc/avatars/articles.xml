@@ -646,35 +646,29 @@
 
   <article name="female_bowler" townId="frontier_town" slot="hat" scrip="750" coins="0" colors="clothes_p">
     <component cclass="female/hat" name="bowler"/>
-    <component cclass="female/hat_back" name="bowler"/>
   </article>
 
   <article name="female_bowler_thick" townId="frontier_town" slot="hat" scrip="750" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="bowler"/>
-    <component cclass="female/hat_back" name="bowler"/>
     <component cclass="female/hat_band" name="thick_bowler"/>
   </article>
 
   <article name="female_bowler_feather" townId="frontier_town" slot="hat" scrip="1250" coins="1">
     <component cclass="female/hat" name="bowler"/>
-    <component cclass="female/hat_back" name="bowler"/>
     <component cclass="female/hat_band" name="feather_bowler"/>
   </article>
 
   <article name="female_railbrim" townId="frontier_town" slot="hat" scrip="750" coins="0" colors="clothes_p">
     <component cclass="female/hat" name="railbrim"/>
-    <component cclass="female/hat_back" name="railbrim"/>
   </article>
 
   <article name="female_railbrim_thick" townId="frontier_town" slot="hat" scrip="750" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="railbrim"/>
-    <component cclass="female/hat_back" name="railbrim"/>
     <component cclass="female/hat_band" name="thick_railbrim"/>
   </article>
 
   <article name="female_railbrim_disks" townId="frontier_town" slot="hat" scrip="1000" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="railbrim"/>
-    <component cclass="female/hat_back" name="railbrim"/>
     <component cclass="female/hat_band" name="disks_railbrim"/>
   </article>
 
@@ -865,11 +859,11 @@
 
   <article name="female_wolf" townId="indian_post" slot="makeup" scrip="2500" coins="3">
     <component cclass="female/makeup" name="wolf"/>
+  </article>
 
   <article name="female_clown" townId="indian_post" slot="makeup" scrip="1000" coins="0"
         start="2007-04-01" stop="2007-04-08">
     <component cclass="female/makeup" name="clown"/>
   </article>
 
-  </article>
 </articles>
