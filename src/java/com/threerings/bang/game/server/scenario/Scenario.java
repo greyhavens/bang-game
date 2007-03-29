@@ -13,7 +13,6 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
-import com.threerings.media.util.MathUtil;
 
 import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
@@ -599,15 +598,14 @@ public abstract class Scenario
      */
     protected int getOwner (Piece target, ArrayIntSet exclude)
     {
-        int mindist2 = Integer.MAX_VALUE, idx = -1;
+        int mindist = Integer.MAX_VALUE, idx = -1;
         for (int ii = 0; ii < _startSpots.length; ii++) {
             if (exclude.contains(ii)) {
                 continue;
             }
-            int dist2 = MathUtil.distanceSq(
-                target.x, target.y, _startSpots[ii].x, _startSpots[ii].y);
-            if (dist2 < mindist2) {
-                mindist2 = dist2;
+            int dist = target.getDistance(_startSpots[ii].x, _startSpots[ii].y);
+            if (dist < mindist) {
+                mindist = dist;
                 idx = ii;
             }
         }

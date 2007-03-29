@@ -55,7 +55,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.StreamablePoint;
 
 import com.threerings.media.util.AStarPathUtil;
-import com.threerings.media.util.MathUtil;
 
 import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.camera.CameraPath;
@@ -1720,8 +1719,7 @@ public class BangBoardView extends BoardView
           case VS_AREA:
             clearHighlights();
             _attackSet.clear();
-            _bangobj.board.computeAttacks(
-                0, _card.getRadius(), tx, ty, _attackSet);
+            _bangobj.board.computeAttacks(0, _card.getRadius(), tx, ty, _attackSet);
             if (_bangobj.board.getPlayableArea().contains(tx, ty)) {
                 _attackSet.add(tx, ty);
             }

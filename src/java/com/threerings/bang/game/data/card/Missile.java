@@ -14,28 +14,6 @@ import com.threerings.bang.game.data.effect.Effect;
  */
 public class Missile extends AreaCard
 {
-    public int power = 60;
-
-    public int radius = 1;
-
-    @Override // documentation inherited
-    public void init (BangObject bangobj, int owner)
-    {
-        super.init(bangobj, owner);
-
-        // if they're getting this card during a game, potentially adjust it
-        // based on their current rank
-        if (bangobj.state == BangObject.IN_PLAY) {
-            if (bangobj.pdata[owner].power < 30) {
-                power = 80;
-                radius = 3;
-            } else if (bangobj.pdata[owner].powerFactor < 0.34) {
-                power = 70;
-                radius = 2;
-            }
-        }
-    }
-
     @Override // documentation inherited
     public String getType ()
     {
@@ -45,7 +23,7 @@ public class Missile extends AreaCard
     @Override // documentation inherited
     public int getRadius ()
     {
-        return radius;
+        return RADIUS;
     }
 
     @Override // documentation inherited
@@ -71,6 +49,9 @@ public class Missile extends AreaCard
     {
         int[] coords = (int[])target;
         return new AreaDamageEffect(
-            owner, power, getRadius(), coords[0], coords[1]);
+            owner, POWER, getRadius(), coords[0], coords[1]);
     }
+
+    protected static final int POWER = 60;
+    protected static final int RADIUS = 1;
 }

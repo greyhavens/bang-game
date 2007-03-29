@@ -9,8 +9,6 @@ import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
-import com.threerings.media.util.MathUtil;
-
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -41,16 +39,14 @@ public abstract class AreaEffect extends MultipleTargetEffect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         ArrayIntSet affected = new ArrayIntSet();
-        int r2 = radius * radius;
         for (Piece p : bangobj.pieces) {
-            if (isPieceAffected(p) &&
-                MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
+            if (isPieceAffected(p) && p.getDistance(x, y) <= radius) {
                 affected.add(p.pieceId);
             }
         }
         pieces = affected.toIntArray();
     }
-    
+
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
@@ -71,7 +67,7 @@ public abstract class AreaEffect extends MultipleTargetEffect
     @Override // documentation inherited
     public Rectangle[] getBounds (BangObject bangobj)
     {
-        return new Rectangle[] { new Rectangle(x - radius, y - radius, 
+        return new Rectangle[] { new Rectangle(x - radius, y - radius,
                 radius * 2 + 1, radius * 2 + 1) };
     }
 }

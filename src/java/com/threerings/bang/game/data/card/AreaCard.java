@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.data.card;
 
-import com.threerings.media.util.MathUtil;
-
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -25,8 +23,7 @@ public abstract class AreaCard extends Card
     {
         int r2 = getRadius() * getRadius();
         for (Piece p : bangobj.pieces) {
-            if (p.isTargetable() && p.isAlive() && 
-                    MathUtil.distanceSq(p.x, p.y, tx, ty) <= r2) {
+            if (p.isTargetable() && p.isAlive() && p.getDistance(tx, ty) < getRadius()) {
                 return true;
             }
         }

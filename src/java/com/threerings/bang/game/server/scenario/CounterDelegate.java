@@ -6,8 +6,6 @@ package com.threerings.bang.game.server.scenario;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import com.threerings.media.util.MathUtil;
-
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.game.data.BangObject;
@@ -41,7 +39,7 @@ public abstract class CounterDelegate extends ScenarioDelegate
             int mindist = Integer.MAX_VALUE;
             Counter counter = null;
             for (Counter c : counters) {
-                int dist = MathUtil.distanceSq(c.x, c.y, start.x, start.y);
+                int dist = c.getDistance(start.x, start.y);
                 if (dist < mindist) {
                     mindist = dist;
                     counter = c;

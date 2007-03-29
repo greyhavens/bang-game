@@ -1175,7 +1175,7 @@ public class BangBoard extends SimpleStreamableObject
         }
         return canCrossSide(sx, sy, dx, dy);
     }
-    
+
     /**
      * Returns true if a unit can move between these two tiles based on direction.
      */
@@ -1183,13 +1183,12 @@ public class BangBoard extends SimpleStreamableObject
     {
         // the source direction is the opposite of the destination
         int dir = (sx == dx) ? (dy > sy ? NORTH : SOUTH) : (dx < sx ? EAST : WEST);
-        
+
         // the side is not crossible
         int sdir = (dir + 2) % 4;
         return (((_dstate[dy*_width+dx] & (ENTER_NORTH << dir)) == 0) &&
                 ((_dstate[sy*_width+sx] & (EXIT_NORTH << sdir)) == 0));
     }
-    
 
     /**
      * Returns true if the specified coordinate is both unoccupied by any other piece and

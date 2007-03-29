@@ -9,7 +9,6 @@ import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
-import com.threerings.media.util.MathUtil;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;

@@ -11,7 +11,6 @@ import java.util.Iterator;
 
 import com.samskivert.util.RandomUtil;
 
-import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
