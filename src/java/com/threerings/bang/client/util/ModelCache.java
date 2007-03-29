@@ -210,25 +210,12 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
             int[] buffers = null;
             for (VBOInfo vboi : _vbois) {
                 buffers = maybeAdd(buffers, vboi.getVBOVertexID());
-                //vboi.setVBOVertexID(-1);
-                //vboi.setVBOVertexEnabled(false);
                 buffers = maybeAdd(buffers, vboi.getVBONormalID());
-                //vboi.setVBONormalID(-1);
-                //vboi.setVBONormalEnabled(false);
                 buffers = maybeAdd(buffers, vboi.getVBOIndexID());
-                //vboi.setVBOIndexID(-1);
-                //vboi.setVBOIndexEnabled(false);
                 buffers = maybeAdd(buffers, vboi.getVBOColorID());
-                //vboi.setVBOColorID(-1);
-                //vboi.setVBOColorEnabled(false);
                 for (int ii = 0, nn = TextureState.getNumberOfTotalUnits(); ii < nn; ii++) {
-                    int buffer = vboi.getVBOTextureID(ii);
-                    if (buffer > 0) {
-                        buffers = IntListUtil.add(buffers, buffer);
-                        //vboi.setVBOTextureID(ii, -1);
-                    }
+                    buffers = maybeAdd(buffers, vboi.getVBOTextureID(ii));
                 }
-                //vboi.setVBOTextureEnabled(false);
             }
             if (buffers != null) {
                 ARBBufferObject.glDeleteBuffersARB(
