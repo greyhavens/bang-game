@@ -594,7 +594,7 @@ public class WaveUtil
         for (int ll = 0; ll < mm; ll++) {
             int le = 2 << ll, le2 = le / 2, ip;
             float ur = 1f, ui = 0f, sr = FastMath.cos(FastMath.PI / le2),
-                si = -FastMath.sin(FastMath.PI / le2);
+                si = -FastMath.sin(FastMath.PI / le2), rip, iip;
 
             // loop for each sub-DFT
             for (int jj = 1; jj <= le2; jj++) {
@@ -602,8 +602,10 @@ public class WaveUtil
                 // loop for each butterfly
                 for (int ii = jj - 1; ii <= nm1; ii += le) {
                     ip = ii + le2;
-                    tr = rex[ip]*ur - imx[ip]*ui;
-                    ti = rex[ip]*ui + imx[ip]*ur;
+                    rip = rex[ip];
+                    iip = imx[ip];
+                    tr = rip*ur - iip*ui;
+                    ti = rip*ui + iip*ur;
                     rex[ip] = rex[ii] - tr;
                     imx[ip] = imx[ii] - ti;
                     rex[ii] += tr;
