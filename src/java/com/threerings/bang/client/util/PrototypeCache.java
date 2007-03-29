@@ -3,12 +3,14 @@
 
 package com.threerings.bang.client.util;
 
+import java.lang.ref.SoftReference;
+
 import java.util.HashMap;
 
+import com.samskivert.util.ChainedResultListener;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultHandler;
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.SoftCache;
 
 import com.threerings.media.image.Colorization;
 
@@ -24,15 +26,6 @@ public abstract class PrototypeCache<S, T>
     public PrototypeCache (BasicContext ctx)
     {
         _ctx = ctx;
-        _prototypes = createCache();
-    }
-
-    /**
-     * Creates the cache object to store the prototype handlers.
-     */
-    protected SoftCache<S, ResultHandler<T>> createCache ()
-    {
-        return new SoftCache<S, ResultHandler<T>>();
     }
 
     /**
@@ -55,22 +48,49 @@ public abstract class PrototypeCache<S, T>
      * @param rl the listener to receive the instance, or <code>null</code> to preload the
      * prototype.
      */
-    protected void getPrototype (S key, ResultListener<T> rl)
+    protected void getPrototype (S key, final ResultListener<T> rl)
     {
-        ResultHandler<T> handler = _prototypes.get(key);
+        ResultHandler<SoftReference<T>> handler = _prototypes.get(key);
+        if (handler != null) {
+            // take a peek at the result.  if it's available and non-null, we can provide the
+            // prototype immediately.  if it's available and null, the prototype has been
+            // collected, so we must reload it
+            SoftReference<T> ref = handler.peekResult();
+            if (ref != null) {
+                T result = ref.get();
+                if (result == null) {
+                    handler = null;
+                } else {
+                    if (rl != null) {
+                        rl.requestCompleted(result);
+                    }
+                    return;
+                }
+            }
+        }
         if (handler == null) {
-            _prototypes.put(key, handler = new ResultHandler<T>());
+            _prototypes.put(key, handler = new ResultHandler<SoftReference<T>>());
             postPrototypeLoader(key, handler);
         }
-        if (rl != null) {
-            handler.getResult(rl);
+        if (rl == null) {
+            return;
         }
+        handler.getResult(new ResultListener<SoftReference<T>>() {
+            public void requestCompleted (SoftReference<T> result) {
+                // this will be called just after the reference is created, so it should
+                // never be null
+                rl.requestCompleted(result.get());
+            }
+            public void requestFailed (Exception cause) {
+                rl.requestFailed(cause);
+            }
+        });
     }
 
     /**
      * Queues up a prototype loader for the identified object.
      */
-    protected void postPrototypeLoader (final S key, final ResultHandler<T> handler)
+    protected void postPrototypeLoader (final S key, final ResultHandler<SoftReference<T>> handler)
     {
         _ctx.getInvoker().postUnit(new Invoker.Unit() {
             public boolean invoke () {
@@ -86,7 +106,7 @@ public abstract class PrototypeCache<S, T>
             public void handleResult () {
                 if (_prototype != null) {
                     initPrototype(_prototype);
-                    handler.requestCompleted(_prototype);
+                    handler.requestCompleted(createPrototypeReference(_prototype));
                 } else {
                     handler.requestFailed(_cause);
                 }
@@ -94,6 +114,14 @@ public abstract class PrototypeCache<S, T>
             protected T _prototype;
             protected Exception _cause;
         });
+    }
+
+    /**
+     * Creates a soft reference to the supplied prototype.
+     */
+    protected SoftReference<T> createPrototypeReference (T prototype)
+    {
+        return new SoftReference<T>(prototype);
     }
 
     /**
@@ -164,7 +192,8 @@ public abstract class PrototypeCache<S, T>
     protected BasicContext _ctx;
 
     /** Maps keys to prototype handlers. */
-    protected SoftCache<S, ResultHandler<T>> _prototypes;
+    protected HashMap<S, ResultHandler<SoftReference<T>>> _prototypes =
+        new HashMap<S, ResultHandler<SoftReference<T>>>();
 
     /** Used to normalize relative paths. */
     protected static final String PATH_DOTDOT = "[^/.]+/\\.\\./";

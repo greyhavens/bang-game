@@ -62,7 +62,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
         // create the interval to flush cleared prototypes
         new Interval(ctx.getApp()) {
             public void expired () {
-                Reference<? extends ResultHandler<Model>> ref;
+                Reference<? extends Model> ref;
                 while ((ref = _cleared.poll()) != null) {
                     PrototypeReference.class.cast(ref).flush();
                 }
@@ -116,38 +116,35 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     }
 
     @Override // documentation inherited
-    protected SoftCache<ModelKey, ResultHandler<Model>> createCache ()
-    {
-        return new SoftCache<ModelKey, ResultHandler<Model>>() {
-            protected SoftReference<ResultHandler<Model>> createReference (
-                ResultHandler<Model> handler) {
-                return new PrototypeReference(handler);
-            }
-        };
-    }
-
-    @Override // documentation inherited
-    protected void postPrototypeLoader (final ModelKey key, final ResultHandler<Model> handler)
+    protected void postPrototypeLoader (
+        final ModelKey key, final ResultHandler<SoftReference<Model>> handler)
     {
         // variants are loaded by loading and configuring the default prototype
         if (key.variant != null) {
-            getPrototype(key.getDefaultVariantKey(), new ChainedResultListener<Model>(handler) {
+            getPrototype(key.getDefaultVariantKey(), new ResultListener<Model>() {
                 public void requestCompleted (Model result) {
                     // if it's not a listed variant, it's the default
                     String[] variants = result.getVariantNames();
                     if (ListUtil.contains(variants, key.variant)) {
-                        Model prototype = result.createPrototype(key.variant);
-                        prototype.resolveTextures(new ModelTextureProvider(key, null));
-                        handler.requestCompleted(prototype);
-                    } else {
-                        handler.requestCompleted(result);
+                        result = result.createPrototype(key.variant);
+                        result.resolveTextures(new ModelTextureProvider(key, null));
                     }
+                    handler.requestCompleted(createPrototypeReference(result));
+                }
+                public void requestFailed (Exception cause) {
+                    handler.requestFailed(cause);
                 }
             });
 
         } else {
             super.postPrototypeLoader(key, handler);
         }
+    }
+
+    @Override // documentation inherited
+    protected SoftReference<Model> createPrototypeReference (Model prototype)
+    {
+        return new PrototypeReference(prototype);
     }
 
     // documentation inherited
@@ -187,19 +184,12 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     }
 
     /** Identifies the resources that must be released when the prototype is cleared. */
-    protected class PrototypeReference extends SoftReference<ResultHandler<Model>>
+    protected class PrototypeReference extends SoftReference<Model>
     {
-        public PrototypeReference (ResultHandler<Model> handler)
+        public PrototypeReference (Model prototype)
         {
-            super(handler, _cleared);
-            handler.getResult(new ResultListener<Model>() {
-                public void requestCompleted (Model result) {
-                    recordResources(result);
-                }
-                public void requestFailed (Exception cause) {
-                    // this will be reported elsewhere
-                }
-            });
+            super(prototype, _cleared);
+            recordResources(prototype);
         }
 
         /**
@@ -220,25 +210,25 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
             int[] buffers = null;
             for (VBOInfo vboi : _vbois) {
                 buffers = maybeAdd(buffers, vboi.getVBOVertexID());
-                vboi.setVBOVertexID(-1);
-                vboi.setVBOVertexEnabled(false);
+                //vboi.setVBOVertexID(-1);
+                //vboi.setVBOVertexEnabled(false);
                 buffers = maybeAdd(buffers, vboi.getVBONormalID());
-                vboi.setVBONormalID(-1);
-                vboi.setVBONormalEnabled(false);
+                //vboi.setVBONormalID(-1);
+                //vboi.setVBONormalEnabled(false);
                 buffers = maybeAdd(buffers, vboi.getVBOIndexID());
-                vboi.setVBOIndexID(-1);
-                vboi.setVBOIndexEnabled(false);
+                //vboi.setVBOIndexID(-1);
+                //vboi.setVBOIndexEnabled(false);
                 buffers = maybeAdd(buffers, vboi.getVBOColorID());
-                vboi.setVBOColorID(-1);
-                vboi.setVBOColorEnabled(false);
+                //vboi.setVBOColorID(-1);
+                //vboi.setVBOColorEnabled(false);
                 for (int ii = 0, nn = TextureState.getNumberOfTotalUnits(); ii < nn; ii++) {
                     int buffer = vboi.getVBOTextureID(ii);
                     if (buffer > 0) {
                         buffers = IntListUtil.add(buffers, buffer);
-                        vboi.setVBOTextureID(ii, -1);
+                        //vboi.setVBOTextureID(ii, -1);
                     }
                 }
-                vboi.setVBOTextureEnabled(false);
+                //vboi.setVBOTextureEnabled(false);
             }
             if (buffers != null) {
                 ARBBufferObject.glDeleteBuffersARB(
@@ -262,13 +252,6 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
 
             _vbois = vbois.isEmpty() ? null : vbois.toArray(new VBOInfo[vbois.size()]);
             _lists = (_lists == null) ? null : IntListUtil.compact(_lists);
-
-            // immediately flush if the reference has already been cleared
-            if (get() == null) {
-                log.warning("Prototype cleared before the model finished loading?! [model=" +
-                    prototype.getName() + "].");
-                flush();
-            }
         }
 
         protected int[] maybeAdd (int[] values, int value)
@@ -362,8 +345,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     }
 
     /** The queue of prototypes to destroy. */
-    protected ReferenceQueue<ResultHandler<Model>> _cleared =
-        new ReferenceQueue<ResultHandler<Model>>();
+    protected ReferenceQueue<Model> _cleared = new ReferenceQueue<Model>();
 
     /** The rate at which to check for cleared prototypes to destroy. */
     protected static final long FLUSH_INTERVAL = 5000L;
