@@ -3,27 +3,14 @@
 
 package com.threerings.bang.gang.client;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-
-import com.jme.renderer.Renderer;
-
-import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BMenuItem;
-import com.jmex.bui.BPopupMenu;
 import com.jmex.bui.BScrollPane;
-import com.jmex.bui.event.ActionEvent;
-import com.jmex.bui.event.ActionListener;
+
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
-import com.samskivert.util.QuickSort;
-import com.samskivert.util.ResultListener;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -33,12 +20,8 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
-import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
-import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.util.BangContext;
-
-import com.threerings.bang.avatar.client.AvatarView;
 
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangMemberEntry;
@@ -53,17 +36,15 @@ import static com.threerings.bang.Log.*;
  * Allows the user to browse the list of gang members.
  */
 public class RosterView extends BContainer
-    implements ActionListener, AttributeChangeListener, SetListener, GangCodes, HideoutCodes
+    implements AttributeChangeListener, SetListener, GangCodes, HideoutCodes
 {
     public RosterView (
-        BangContext ctx, HideoutObject hideoutobj, GangObject gangobj, BContainer bcont,
-        StatusLabel status)
+        BangContext ctx, HideoutObject hideoutobj, GangObject gangobj, StatusLabel status)
     {
         super(GroupLayout.makeVStretch());
         _ctx = ctx;
         _hideoutobj = hideoutobj;
         _gangobj = gangobj;
-        _bcont = bcont;
         _status = status;
         _msgs = ctx.getMessageManager().getBundle(HIDEOUT_MSGS);
 
@@ -103,28 +84,6 @@ public class RosterView extends BContainer
         BScrollPane rpane = new BScrollPane(rcont);
         rpane.setStyleClass("roster_pane");
         add(rpane);
-    }
-
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        String action = event.getAction();
-        if (action.equals("options")) {
-            displayOptionsMenu();
-        } else if (action.equals("edit_buckle")) {
-            _ctx.getBangClient().displayPopup(
-                new BuckleDialog(_ctx, _hideoutobj, _gangobj), true, 500);
-        } else if (action.equals("purchase_outfits")) {
-            _ctx.getBangClient().displayPopup(
-                new OutfitDialog(_ctx, _hideoutobj, _gangobj), true, 500);
-        } else if (action.equals("purchase_items")) {
-            _ctx.getBangClient().displayPopup(
-                new GangStoreDialog(_ctx, _hideoutobj, _gangobj), true, 500);
-        } else if (action.equals("history")) {
-            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), false, 500);
-        } else if (action.equals("leave")) {
-            leaveGang();
-        }
     }
 
     // documentation inherited from interface AttributeChangeListener
@@ -184,18 +143,6 @@ public class RosterView extends BContainer
         updateMembers();
         _lview.update();
         _gangobj.addListener(this);
-
-        // populate the button panel
-        if (_ctx.getUserObject().gangRank == LEADER_RANK) {
-            _bcont.add(_options = createButton("options"));
-        }
-        _bcont.add(createButton("history"));
-        _bcont.add(createButton("leave"));
-    }
-
-    protected BButton createButton (String action)
-    {
-        return new BButton(_msgs.get("m." + action), this, action);
     }
 
     @Override // documentation inherited
@@ -203,18 +150,6 @@ public class RosterView extends BContainer
     {
         super.wasRemoved();
         _gangobj.removeListener(this);
-        _bcont.removeAll();
-    }
-
-    protected void displayOptionsMenu ()
-    {
-        BPopupMenu menu = new BPopupMenu(getWindow(), false);
-        menu.addMenuItem(new BMenuItem(_msgs.get("m.edit_buckle"), "edit_buckle"));
-        menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_outfits"), "purchase_outfits"));
-        menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_items"), "purchase_items"));
-        menu.addListener(this);
-
-        menu.popup(_options.getAbsoluteX(), _options.getAbsoluteY() + _options.getHeight(), true);
     }
 
     protected void updateMembers ()
@@ -242,18 +177,6 @@ public class RosterView extends BContainer
         cont.add(new BLabel(nstr, style));
     }
 
-    protected void leaveGang ()
-    {
-        String confirm = MessageBundle.tcompose("m.confirm_leave", _gangobj.name),
-            success = MessageBundle.tcompose("m.left", _gangobj.name);
-        _ctx.getBangClient().displayPopup(
-            new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
-                protected void fireRequest (Object result) {
-                    _hideoutobj.service.leaveGang(_ctx.getClient(), this);
-                }
-            }, true, 400);
-    }
-
     protected class LeaderView extends MemberLabel
     {
         public LeaderView (BangContext ctx, StatusLabel status)
@@ -279,8 +202,6 @@ public class RosterView extends BContainer
     protected GangObject _gangobj;
     protected StatusLabel _status;
 
-    protected BContainer _bcont, _lcont, _mcont;
+    protected BContainer _lcont, _mcont;
     protected LeaderView _lview;
-
-    protected BButton _options;
 }

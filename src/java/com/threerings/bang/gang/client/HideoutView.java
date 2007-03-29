@@ -6,6 +6,8 @@ package com.threerings.bang.gang.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BMenuItem;
+import com.jmex.bui.BPopupMenu;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
@@ -21,6 +23,8 @@ import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.ObjectAccessException;
@@ -32,6 +36,7 @@ import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.HackyTabs;
+import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -51,11 +56,11 @@ import static com.threerings.bang.Log.log;
  * etc.
  */
 public class HideoutView extends ShopView
-    implements GangCodes
+    implements ActionListener, HideoutCodes, GangCodes
 {
     public HideoutView (BangContext ctx)
     {
-        super(ctx, HideoutCodes.HIDEOUT_MSGS);
+        super(ctx, HIDEOUT_MSGS);
 
         // add our various interface components
         add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
@@ -98,6 +103,28 @@ public class HideoutView extends ShopView
 
         // unsubscribe from the gang object
         unsubscribeFromGang();
+    }
+
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        String action = event.getAction();
+        if (action.equals("options")) {
+            displayOptionsMenu();
+        } else if (action.equals("edit_buckle")) {
+            _ctx.getBangClient().displayPopup(
+                new BuckleDialog(_ctx, _hideoutobj, _gangobj), true, 500);
+        } else if (action.equals("purchase_outfits")) {
+            _ctx.getBangClient().displayPopup(
+                new OutfitDialog(_ctx, _hideoutobj, _gangobj), true, 500);
+        } else if (action.equals("purchase_items")) {
+            _ctx.getBangClient().displayPopup(
+                new GangStoreDialog(_ctx, _hideoutobj, _gangobj), true, 500);
+        } else if (action.equals("history")) {
+            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), false, 500);
+        } else if (action.equals("leave")) {
+            leaveGang();
+        }
     }
 
     @Override // documentation inherited
@@ -149,6 +176,7 @@ public class HideoutView extends ShopView
     {
         remove(_tabs);
         _ccont.removeAll();
+        _bcont.removeAll();
         _tcont.removeAll();
     }
 
@@ -199,6 +227,13 @@ public class HideoutView extends ShopView
         // add the gang menu
         _ccont.add(new GangMenu());
 
+        // add the buttons
+        if (_ctx.getUserObject().gangRank == LEADER_RANK) {
+            _bcont.add(_options = createButton("options"));
+        }
+        _bcont.add(createButton("history"));
+        _bcont.add(createButton("leave"));
+
         // add the tabs and gang chat (the first selected tab)
         final GangChatView gcview = new GangChatView(_ctx, _hideoutobj, _gangobj, _status);
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
@@ -232,6 +267,14 @@ public class HideoutView extends ShopView
     }
 
     /**
+     * Creates a button with the supplied action.
+     */
+    protected BButton createButton (String action)
+    {
+        return new BButton(_msgs.get("m." + action), this, action);
+    }
+
+    /**
      * Unsubscribes from the gang object and stops listening.
      */
     protected void unsubscribeFromGang ()
@@ -244,6 +287,35 @@ public class HideoutView extends ShopView
             _ctx.getChatDirector().removeAuxiliarySource(_gangobj);
             _gangobj = null;
         }
+    }
+
+    /**
+     * Pops up the leader options menu.
+     */
+    protected void displayOptionsMenu ()
+    {
+        BPopupMenu menu = new BPopupMenu(getWindow(), false);
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.edit_buckle"), "edit_buckle"));
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_outfits"), "purchase_outfits"));
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_items"), "purchase_items"));
+        menu.addListener(this);
+
+        menu.popup(_options.getAbsoluteX(), _options.getAbsoluteY() + _options.getHeight(), true);
+    }
+
+    /**
+     * Pops up a confirmation making sure that the user really wants to leave the gang.
+     */
+    protected void leaveGang ()
+    {
+        String confirm = MessageBundle.tcompose("m.confirm_leave", _gangobj.name),
+            success = MessageBundle.tcompose("m.left", _gangobj.name);
+        _ctx.getBangClient().displayPopup(
+            new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
+                protected void fireRequest (Object result) {
+                    _hideoutobj.service.leaveGang(_ctx.getClient(), this);
+                }
+            }, true, 400);
     }
 
     /** Handles the menu for games, the member roster, and the gang directory. */
@@ -285,7 +357,7 @@ public class HideoutView extends ShopView
 
             } else if (action.equals("roster")) {
                 if (_roster == null) {
-                    _roster = new RosterView(_ctx, _hideoutobj, _gangobj, _bcont, _status);
+                    _roster = new RosterView(_ctx, _hideoutobj, _gangobj, _status);
                 }
                 add(_roster);
 
@@ -330,6 +402,7 @@ public class HideoutView extends ShopView
 
     protected HackyTabs _tabs;
     protected BContainer _ccont, _tcont, _bcont;
+    protected BButton _options;
 
     protected StatusLabel _status;
 
