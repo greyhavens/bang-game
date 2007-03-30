@@ -293,8 +293,8 @@ public class BangServer extends CrowdServer
         alogic = new AvatarLogic(rsrcmgr, comprepo);
 
         // create our repositories
-        gangrepo = new GangRepository(conprov);
         itemrepo = new ItemRepository(conprov);
+        gangrepo = new GangRepository(conprov);
         statrepo = new BangStatRepository(conprov);
         ratingrepo = new RatingRepository(conprov);
         lookrepo = new LookRepository(conprov);
