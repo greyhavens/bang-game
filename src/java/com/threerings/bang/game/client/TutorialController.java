@@ -12,6 +12,7 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.MouseAdapter;
@@ -73,6 +74,10 @@ public class TutorialController
         _view.tutwin.setStyleClass("tutorial_window");
         _view.tutwin.setLayer(1);
         _view.tutwin.setLayoutManager(new BorderLayout(5, 15));
+        _default = new ImageBackground(
+                ImageBackground.FRAME_XY, _ctx.loadImage("ui/tutorials/bubble.png"));
+        _glow = new ImageBackground(
+                ImageBackground.FRAME_XY, _ctx.loadImage("ui/tutorials/bubble_glow.png"));
 
         BContainer north = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.CONSTRAIN));
@@ -265,6 +270,8 @@ public class TutorialController
             // let them know if we're waiting for them to click
             if (TutorialCodes.TEXT_CLICKED.matches(_pending.getEvent())) {
                 _click.setText(_gmsgs.get("m.tutorial_click"));
+                _view.tutwin.setBackground(BComponent.DEFAULT, _glow);
+                _view.tutwin.setBackground(BComponent.HOVER, null);
             }
             return true;
         }
@@ -311,6 +318,7 @@ public class TutorialController
         public void mousePressed (MouseEvent event) {
             if (_click.isEnabled()) {
                 _click.setText("");
+                _view.tutwin.setBackground(BComponent.DEFAULT, _default);
                 handleEvent(TutorialCodes.TEXT_CLICKED);
             }
         }
@@ -334,6 +342,7 @@ public class TutorialController
 
     protected BLabel _title, _info, _click, _steps;
     protected BButton _back, _forward;
+    protected ImageBackground _default, _glow;
 
     protected TutorialConfig _config;
     protected TutorialConfig.WaitAction _pending;
