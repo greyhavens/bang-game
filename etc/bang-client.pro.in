@@ -92,6 +92,10 @@
     <fields>;
 }
 
+-keep public class com.threerings.bang.client.BangClient {
+    protected static <fields>;
+}
+
 # this should be included because it implements Serializable, but somehow is not
 -keep public class com.threerings.bang.avatar.util.BucklePartCatalog {
     *;
