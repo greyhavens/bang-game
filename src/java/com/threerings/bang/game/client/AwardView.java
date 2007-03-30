@@ -146,6 +146,7 @@ public class AwardView extends BContainer
 
         if (award.item != null) {
             _item = new BContainer(new BorderLayout());
+            _item.setPreferredSize(200, -1);
             _item.setStyleClass("endgame_border");
             if (award.item instanceof Badge) {
                 txt = msgs.get("m.endgame_badge");
