@@ -4,18 +4,18 @@
 <parts>
   <!-- buckle backgrounds -->
   <class name="background">
-    <part name="fountain" coins="2" aces="100"/>
-    <part name="oval" colors="buckle_back_p, buckle_back_s" coins="4" aces="450"/>
-    <part name="plain" coins="1" aces="50" starter="true"/>
-    <part name="swirls" coins="2" aces="100"/>
-    <part name="tris" colors="buckle_back_p, buckle_back_s" coins="5" aces="400"/>
-    <part name="bullzeye" colors="buckle_back_p, buckle_back_s" coins="6" aces="600"/>
-    <part name="checker" colors="buckle_back_p, buckle_back_s" coins="4" aces="400"/>
-    <part name="swirls2" coins="3" aces="300"/>
-    <part name="swirls3" coins="3" aces="250"/>
-    <part name="clockwork" coins="3" aces="400"/>
-    <part name="design" colors="buckle_back_p, buckle_back_s" coins="3" aces="250"/>
-    <part name="rattlers" coins="4" aces="400"/>
+    <part name="fountain" colors="buckle_back_p" coins="2" aces="100"/>
+    <part name="oval" coins="4" aces="450"/>
+    <part name="plain" colors="buckle_back_p" coins="1" aces="50" starter="true"/>
+    <part name="swirls" colors="buckle_back_p" coins="2" aces="100"/>
+    <part name="tris" coins="5" aces="400"/>
+    <part name="bullzeye" coins="6" aces="600"/>
+    <part name="checker" coins="4" aces="400"/>
+    <part name="swirls2" colors="buckle_back_p" coins="3" aces="300"/>
+    <part name="swirls3" colors="buckle_back_p" coins="3" aces="250"/>
+    <part name="clockwork" colors="buckle_back_p" coins="3" aces="400"/>
+    <part name="design" coins="3" aces="250"/>
+    <part name="rattlers" colors="buckle_back_p" coins="4" aces="400"/>
   </class>
 
   <!-- buckle borders -->

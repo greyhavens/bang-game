@@ -95,7 +95,7 @@
          colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="190"/>
 
   <!-- buckle component classes -->
-  <class name="buckle/background" colors="buckle_back_p" mask="buckle/border"
+  <class name="buckle/background" colors="buckle_back_p,buckle_back_s" mask="buckle/border"
          renderPriority="10"/>
   <class name="buckle/border" colors="buckle_p"
          renderPriority="20"/>
