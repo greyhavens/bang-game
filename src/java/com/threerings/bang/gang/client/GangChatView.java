@@ -83,6 +83,7 @@ public class GangChatView extends BContainer
     {
         super.wasRemoved();
         _pcview.clearSpeakService();
+        _pcview.shutdown();
         _ctx.getOccupantDirector().removeOccupantObserver(_occlist);
         _gangobj.removeListener(_memberlist);
     }
