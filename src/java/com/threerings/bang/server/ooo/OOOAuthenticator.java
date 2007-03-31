@@ -123,13 +123,16 @@ public class OOOAuthenticator extends BangAuthenticator
             // make sure that this machien identifier is allowed to create a new account
             int rv = _authrep.checkCanCreate(machIdent);
             switch(rv) {
-            case OOOUserRepository.NEW_ACCOUNT_TAINTED: return MACHINE_TAINTED;
+            case OOOUserRepository.NEW_ACCOUNT_TAINTED:
+                return MACHINE_TAINTED;
+
+            case OOOUserRepository.NO_NEW_FREE_ACCOUNT: // we don't care, let 'em in
             case OOOUserRepository.ACCESS_GRANTED:
-                // we're grooving right along
                 break;
+
             default:
-                log.warning("Unhandled checkCanCreate() response code " +
-                            "[ident=" + machIdent + ", rv=" + rv + "].");
+                log.warning("Unhandled checkCanCreate() response code [ident=" + machIdent +
+                            ", rv=" + rv + "].");
                 return SERVER_ERROR;
             }
 
