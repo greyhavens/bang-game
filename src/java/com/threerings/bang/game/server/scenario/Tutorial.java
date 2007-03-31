@@ -199,19 +199,18 @@ public class Tutorial extends Scenario
                 }
 
                 // locate a bigshot in the player's inventory
-                BigShotItem bsitem = null;
+                String bstype = null;
                 for (Item item : user.inventory) {
                     if (item instanceof BigShotItem) {
-                        bsitem = (BigShotItem)item;
+                        bstype = ((BigShotItem)item).getType();
                         break;
                     }
                 }
-                if (bsitem == null) {
-                    log.warning("Player has no Big Shot in tutorial [game=" + _bangobj.which() +
-                                ", user=" + user.who() + "].");
-                    return false;
+                // if they have none, use a cavalry
+                if (bstype == null) {
+                    bstype = "frontier_town/cavalry";
                 }
-                piece = Unit.getUnit(bsitem.getType());
+                piece = Unit.getUnit(bstype);
 
             } else {
                 log.warning("Requested to add unknown piece type " + add + ".");
