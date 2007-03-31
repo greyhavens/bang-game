@@ -336,7 +336,7 @@ public class HideoutView extends ShopView
             add(bcont);
 
             _buttons[0].setSelected(true);
-            add(_play = new PlayView(_ctx, _hideoutobj, _status));
+            add(_play = new PlayView(_ctx, _hideoutobj, _bcont, _status));
         }
 
         // documentation inherited from interface ActionListener

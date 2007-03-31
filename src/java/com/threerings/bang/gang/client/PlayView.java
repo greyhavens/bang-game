@@ -31,12 +31,14 @@ import com.threerings.bang.gang.data.HideoutObject;
 public class PlayView extends BContainer
     implements HideoutCodes, GameReadyObserver
 {
-    public PlayView (BangContext ctx, HideoutObject hideoutobj, StatusLabel status)
+    public PlayView (
+        BangContext ctx, HideoutObject hideoutobj, BContainer bcont, StatusLabel status)
     {
         super(GroupLayout.makeVStretch());
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(HIDEOUT_MSGS);
         _hideoutobj = hideoutobj;
+        _bcont = bcont;
         _status = status;
 
         setStyleClass("play_view");
@@ -107,6 +109,9 @@ public class PlayView extends BContainer
             _mview = null;
         }
 
+        // disable the gang buttons while matchmaking
+        _bcont.setEnabled(false);
+
         // display a match view for this pending match
         add(_mview = new MatchView(_ctx, matchOid, false) { {
                 ((GroupLayout)getLayoutManager()).setGap(10);
@@ -142,11 +147,15 @@ public class PlayView extends BContainer
         if (!_crview.isAdded()) {
             add(_crview);
         }
+
+        // reenable the gang buttons
+        _bcont.setEnabled(true);
     }
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected HideoutObject _hideoutobj;
+    protected BContainer _bcont;
     protected StatusLabel _status;
 
     protected CriterionView _crview;
