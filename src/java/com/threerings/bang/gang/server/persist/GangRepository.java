@@ -31,7 +31,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.BuckleInfo;
-import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.persist.PlayerRecord;
@@ -77,57 +76,7 @@ public class GangRepository extends JORARepository
         _buckleMask = _gtable.getFieldMask();
         _buckleMask.setModified("buckle");
         _buckleMask.setModified("bucklePrint");
-
-        // TEMP can be removed after all servers are past 2007-03-30
-        BangServer.transitrepo.transition(
-            GangRepository.class, "grant_default_buckles",
-            new TransitionRepository.Transition() {
-                public void run ()
-                    throws PersistenceException {
-                    grantDefaultBuckles();
-                }
-            });
     }
-
-    public void grantDefaultBuckles ()
-        throws PersistenceException
-    {
-        // find all gangs without buckles
-        final String query = "select GANG_ID from GANGS where BUCKLE = x''";
-        final ArrayIntSet gangIds = new ArrayIntSet();
-        execute(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                Statement stmt = conn.createStatement();
-                try {
-                    ResultSet rs = stmt.executeQuery(query);
-                    while (rs.next()) {
-                        gangIds.add(rs.getInt(1));
-                    }
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-                return null;
-            }
-        });
-
-        // give them buckles
-        for (Integer gangId : gangIds) {
-            BucklePart[] parts = BangServer.alogic.createDefaultBuckle();
-            int[] bids = new int[parts.length];
-            for (int ii = 0; ii < parts.length; ii++) {
-                BucklePart part = parts[ii];
-                part.setOwnerId(gangId);
-                BangServer.itemrepo.insertItem(part);
-                bids[ii] = part.getItemId();
-            }
-            BuckleInfo buckle = GangUtil.getBuckleInfo(parts);
-            updateBuckle(gangId, bids, buckle.print);
-        }
-        log.info("Granted " + gangIds.size() + " starter buckles.");
-    }
-    // ENDTEMP can be removed after all servers are past 2007-03-30
 
     /**
      * Loads directory entries for all active gangs.
@@ -352,12 +301,14 @@ public class GangRepository extends JORARepository
     public void deleteGang (int gangId)
         throws PersistenceException
     {
-        delete(_gtable, new GangRecord(gangId));
-
         // delete all of the gang's invites, history entries, outfits
+        update("delete from GANG_MEMBERS where GANG_ID = " + gangId);
         update("delete from GANG_INVITES where GANG_ID = " + gangId);
         update("delete from GANG_HISTORY where GANG_ID = " + gangId);
         update("delete from GANG_OUTFITS where GANG_ID = " + gangId);
+
+        // finally, delete the gang itself
+        delete(_gtable, new GangRecord(gangId));
     }
 
     /**
