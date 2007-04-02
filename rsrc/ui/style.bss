@@ -1876,6 +1876,7 @@ directory_letter:selected {
 
 directory_pane {
   padding: 0 45 8 50;
+  size: 494 230;
 }
 
 directory_entry {
