@@ -1,4 +1,4 @@
-604
+607
 buckle/background := bullzeye := 539
 buckle/background := checker := 540
 buckle/background := clockwork := 571
@@ -6,10 +6,13 @@ buckle/background := design := 600
 buckle/background := fountain := 532
 buckle/background := oval := 528
 buckle/background := plain := 533
+buckle/background := radiate := 605
 buckle/background := rattlers := 572
+buckle/background := sunrise := 606
 buckle/background := swirls := 534
 buckle/background := swirls2 := 541
 buckle/background := swirls3 := 542
+buckle/background := top := 607
 buckle/background := tris := 535
 buckle/border := barbed_wire := 599
 buckle/border := four_corners := 543
