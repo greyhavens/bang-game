@@ -235,13 +235,13 @@ public class HideoutView extends ShopView
         _bcont.add(createButton("leave"));
 
         // add the tabs and gang chat (the first selected tab)
-        final GangChatView gcview = new GangChatView(_ctx, _hideoutobj, _gangobj, _status);
+        _gcview = new GangChatView(_ctx, _hideoutobj, _gangobj, _status);
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
             MEMBER_TABS, true, 145, 15) {
             protected void tabSelected (int index) {
                 _tcont.removeAll();
                 if (index == 0) {
-                    _tcont.add(gcview);
+                    _tcont.add(_gcview);
 
                 } else if (index == 1) {
                     if (_tgview == null) {
@@ -264,6 +264,13 @@ public class HideoutView extends ShopView
             protected TopGangView _tgview;
             protected TopScoreView _tmview;
         }, MEMBER_TABS_RECT);
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _gcview.shutdown();
     }
 
     /**
@@ -403,6 +410,7 @@ public class HideoutView extends ShopView
     protected HackyTabs _tabs;
     protected BContainer _ccont, _tcont, _bcont;
     protected BButton _options;
+    protected GangChatView _gcview;
 
     protected StatusLabel _status;
 

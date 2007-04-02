@@ -66,17 +66,22 @@ public class GangChatView extends BContainer
             }
         });
         _pcview.setPreferredSize(new Dimension(420, 358));
+        _pcview.setSpeakService(_gangobj.speakService);
+    }
 
-        // we will add the chat display when this view is added
-        _ctx.getChatDirector().removeChatDisplay(_pcview);
+    /**
+     * Called to release out chat resources.
+     */
+    public void shutdown ()
+    {
+        _pcview.clearSpeakService();
+        _pcview.shutdown();
     }
 
     @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();
-        _pcview.setSpeakService(_gangobj.speakService);
-        _ctx.getChatDirector().pushChatDisplay(_pcview);
         _ctx.getOccupantDirector().addOccupantObserver(_occlist);
         _gangobj.addListener(_memberlist);
         updateMembersInHideout();
@@ -86,8 +91,6 @@ public class GangChatView extends BContainer
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        _pcview.clearSpeakService();
-        _ctx.getChatDirector().removeChatDisplay(_pcview);
         _ctx.getOccupantDirector().removeOccupantObserver(_occlist);
         _gangobj.removeListener(_memberlist);
     }
