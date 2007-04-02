@@ -58,17 +58,6 @@ public class ItemRepository extends SimpleRepository
         throws PersistenceException
     {
         super(conprov, ITEM_DB_IDENT);
-
-        // TEMP can be removed after all servers are past 2007-03-29
-        BangServer.transitrepo.transition(
-            ItemRepository.class, "add_article_expires",
-            new TransitionRepository.Transition() {
-                public void run ()
-                    throws PersistenceException {
-                    addArticleExpires();
-                }
-            });
-        // ENDTEMP can be removed after all servers are past 2007-03-29
     }
 
     /**
@@ -109,101 +98,6 @@ public class ItemRepository extends SimpleRepository
         });
         return items;
     }
-
-    // TEMP can be removed after all servers are past 2007-03-29
-    public static class OldArticle
-        implements Streamable
-    {
-        public String slot, name;
-        public int[] components;
-        public int gangId;
-    }
-
-    public void addArticleExpires ()
-        throws PersistenceException
-    {
-        // first grap all the article item ids
-        final String query = "select ITEM_ID from ITEMS where ITEM_TYPE = " +
-            ItemFactory.getType(Article.class);
-        final ArrayIntSet itemIds = new ArrayIntSet();
-        final int[] counts = new int[2];
-        execute(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                Statement stmt = conn.createStatement();
-                try {
-                    ResultSet rs = stmt.executeQuery(query);
-                    while (rs.next()) {
-                        itemIds.add(rs.getInt(1));
-                    }
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-                return null;
-            }
-        });
-
-        // will do the updates in batches of 500 instead of decoding and storing all 200000
-        // articles at once
-        int size = itemIds.size();
-        int idx = 0;
-        while (idx < size) {
-            final StringBuilder query2 = new StringBuilder(
-                "select ITEM_ID, OWNER_ID, ITEM_DATA from ITEMS where ITEM_ID in (");
-            for (int stop = idx + 500; idx < size && idx < stop; idx++) {
-                query2.append(itemIds.get(idx)).append(",");
-            }
-            query2.replace(query2.length()-1, query2.length(), ")");
-            final ArrayList<Article> articles = new ArrayList<Article>();
-            execute(new Operation<Object>() {
-                public Object invoke (Connection conn, DatabaseLiaison liaison)
-                    throws SQLException, PersistenceException
-                {
-                    Statement stmt = conn.createStatement();
-                    try {
-                        ResultSet rs = stmt.executeQuery(query2.toString());
-                        while (rs.next()) {
-                            int itemId = rs.getInt(1);
-                            int ownerId = rs.getInt(2);
-                            OldArticle oart = new OldArticle();
-                            ObjectInputStream oin = new ObjectInputStream(rs.getBinaryStream(3));
-                            boolean converted;
-                            try {
-                                // if there's data left over, then it has already been converted
-                                oin.readBareObject(oart);
-                                converted = (oin.available() > 0);
-                            } catch (Exception e) {
-                                throw new PersistenceException(e);
-                            }
-                            if (!converted) {
-                                Article nart = new Article(
-                                        ownerId, oart.slot, oart.name, oart.components);
-                                nart.setGangId(oart.gangId);
-                                nart.setItemId(itemId);
-                                articles.add(nart);
-                                counts[0]++;
-                            } else {
-                                counts[1]++;
-                            }
-                        }
-                    } finally {
-                        JDBCUtil.close(stmt);
-                    }
-                    return null;
-                }
-            });
-            for (Article article : articles) {
-                updateItem(article);
-            }
-            if (idx % 10000 == 0) {
-                log.info("Converted " + idx + " of " + size + " articles");
-            }
-        }
-        log.info("Added expires to " + counts[0] + " articles (" + counts[1] +
-                " already converted).");
-    }
-    // ENDTEMP can be removed after all servers are past 2007-03-29
 
     /**
      * Instantiates the appropriate item class and decodes the item from
