@@ -565,6 +565,9 @@ public class GangHandler
             public void handleSuccess () {
                 if (_error != null) {
                     listener.requestFailed(_error);
+                } else if (_deleting && _mrec != null) {
+                    // the gang has been deleted already
+                    listener.requestFailed("e.invite_removed");
                 } else {
                     handleInviteSuccess(handle, playerId, inviter, _mrec, listener);
                 }
@@ -788,15 +791,15 @@ public class GangHandler
         final GangMemberEntry entry = verifyCanChange(handle, target);
 
         // delete the gang if they're the last member
-        final boolean delete = (_gangobj.members.size() == 1);
+        _deleting = (_gangobj.members.size() == 1);
 
         // post to the database
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                deleteFromGang(entry.playerId);
-                if (delete) {
+                if (_deleting) {
                     BangServer.gangrepo.deleteGang(_gangId);
                 } else {
+                    deleteFromGang(entry.playerId);
                     BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
                         MessageBundle.tcompose("m.left_entry", entry.handle) :
                         MessageBundle.tcompose("m.expelled_entry", handle, entry.handle));
@@ -804,14 +807,9 @@ public class GangHandler
             }
 
             public void handleSuccess () {
-                _gangobj.startTransaction();
-                try {
-                    _gangobj.removeFromMembers(entry.handle);
-                } finally {
-                    _gangobj.commitTransaction();
-                }
-                // if deleting, remove from Hideout directory and shut down immediately
-                if (delete) {
+                _gangobj.removeFromMembers(entry.handle);
+                if (_deleting) {
+                    // remove from Hideout directory and shut down immediately
                     BangServer.hideoutmgr.removeGang(_gangobj.name);
                     shutdown();
                 } else {
@@ -819,9 +817,14 @@ public class GangHandler
                 }
                 listener.requestProcessed();
             }
+
+            public void handleFailure (PersistenceException error) {
+                super.handleFailure(error);
+                _deleting = false;
+            }
             public String getFailureMessage () {
                 return "Failed to remove member from gang [gang=" + this + ", handle=" +
-                    handle + ", entry=" + entry + ", delete=" + delete + "].";
+                    handle + ", entry=" + entry + ", deleting=" + _deleting + "].";
             }
         });
     }
@@ -1653,6 +1656,9 @@ public class GangHandler
 
     /** Set when auto-promoting to keep us from doing it more than once. */
     protected boolean _promoting;
+
+    /** Set when deleting the gang to prevent us from accepting any new members. */
+    protected boolean _deleting;
 
     /** The frequency with which we update the top-ranked member lists. */
     protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;
