@@ -761,8 +761,10 @@
     <!-- create the main jar file with all the code and fiddly bits -->
     <jar file="${deploy.dir}/bang-code.jar" basedir="${deploy.dir}/classes" includes="com/**"/>
     <!-- create a jar file for use by the Underwire support system -->
-    <jar file="${deploy.dir}/bang-support.jar" basedir="${deploy.dir}/classes"
-         includes="com/threerings/bang/server/persist/**"/>
+    <jar file="${deploy.dir}/bang-support.jar" basedir="${deploy.dir}/classes">
+      <include name="com/threerings/bang/server/persist/**"/>
+      <include name="com/threerings/bang/data/Handle.class"/>
+    </jar>
   </target>
 
   <!-- builds the avatar, media and sounds jar files -->
