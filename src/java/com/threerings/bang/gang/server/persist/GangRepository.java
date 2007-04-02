@@ -76,6 +76,14 @@ public class GangRepository extends JORARepository
         _buckleMask = _gtable.getFieldMask();
         _buckleMask.setModified("buckle");
         _buckleMask.setModified("bucklePrint");
+
+        // TEMP: delete the orphans (members without gangs)
+        int count = update("delete from GANG_MEMBERS using GANG_MEMBERS left join GANGS on " +
+            "GANG_MEMBERS.GANG_ID = GANGS.GANG_ID where GANGS.GANG_ID is NULL");
+        if (count > 0) {
+            log.info("Deleted " + count + " orphaned gang member records.");
+        }
+        // END TEMP
     }
 
     /**
