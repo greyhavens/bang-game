@@ -210,6 +210,10 @@ public class GangManager
                 _grec = _gangrepo.loadGang(name);
             }
             public void handleSuccess () {
+                if (_grec == null) {
+                    listener.requestFailed("m.no_such_gang");
+                    return;
+                }
                 GangInfo info = new GangInfo();
                 info.name = _grec.getName();
                 info.founded = _grec.founded.getTime();
