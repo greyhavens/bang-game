@@ -762,7 +762,7 @@ public class GangHandler
             }
 
             protected void actionCompleted () {
-                log.info("Added to gang coffers [gang=" + this + ", member=" + handle +
+                log.info("Added to gang coffers [gang=" + GangHandler.this + ", member=" + handle +
                          ", scrip=" + scrip + ", coins=" + coins + "].");
                 _gangobj.startTransaction();
                 try {
@@ -823,7 +823,7 @@ public class GangHandler
                 _deleting = false;
             }
             public String getFailureMessage () {
-                return "Failed to remove member from gang [gang=" + this + ", handle=" +
+                return "Failed to remove member from gang [gang=" + GangHandler.this + ", handle=" +
                     handle + ", entry=" + entry + ", deleting=" + _deleting + "].";
             }
         });
@@ -1519,7 +1519,7 @@ public class GangHandler
                 _gangobj.setAvatar(_avatar);
             }
             public void handleFailure (Exception cause) {
-                log.warning("Failed to load senior leader avatar [gang=" + this +
+                log.warning("Failed to load senior leader avatar [gang=" + GangHandler.this +
                     ", leader=" + leader + ", error=" + cause + "].");
             }
             protected AvatarInfo _avatar;
