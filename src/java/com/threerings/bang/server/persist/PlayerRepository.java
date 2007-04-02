@@ -298,8 +298,7 @@ public class PlayerRepository extends JORARepository
     {
         return loadAll(_ptable, "where FLAGS & " + PlayerRecord.IS_COIN_BUYER + " = 0 and " +
                 "((HANDLE is NULL and LAST_SESSION < '" + anon + "') " +
-                // currently disabled expiring non-anonymous players
-                //"or LAST_SESSION < '" + user + "'" +
+                "or LAST_SESSION < '" + user + "'" +
                 ") order by LAST_SESSION asc limit " + MAX_EXPIRED_PLAYERS_PER_CALL);
     }
 
