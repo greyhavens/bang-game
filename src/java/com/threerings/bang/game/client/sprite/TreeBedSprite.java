@@ -59,14 +59,13 @@ public class TreeBedSprite extends ActiveSprite
             // hidden temporarily for counting by RobotWaveHandler
             setCullMode(CULL_INHERIT);
             _hnode.setCullMode(CULL_INHERIT);
-            
+
             _growth = tree.growth;
             _nextIdle = FastMath.FLT_EPSILON;
         }
 
-        // blend between the base or maxed texture and the damaged texture
-        setTextureStates((_growth == TreeBed.FULLY_GROWN) ?
-            _mtstate : _btstate, _dtstate, tree.getPercentDamage());
+        // update the blended textures
+        updateTextureStates();
     }
 
     @Override // documentation inherited
@@ -80,7 +79,7 @@ public class TreeBedSprite extends ActiveSprite
         }
         super.updateWorldData(time);
     }
-    
+
     @Override // documentation inherited
     protected void addProceduralActions ()
     {
@@ -99,7 +98,7 @@ public class TreeBedSprite extends ActiveSprite
             }
         });
     }
-    
+
     @Override // from PieceSprite
     protected void createGeometry ()
     {
@@ -163,6 +162,19 @@ public class TreeBedSprite extends ActiveSprite
         }
         _ptstate = _btstate;
         _ststate = null;
+
+        // update the textures now that the model is loaded
+        updateTextureStates();
+    }
+
+    /**
+     * Blends between the base or maxed texture and the damaged texture.
+     */
+    protected void updateTextureStates ()
+    {
+        setTextureStates(
+            (_growth == TreeBed.FULLY_GROWN) ? _mtstate : _btstate,
+            _dtstate, ((TreeBed)_piece).getPercentDamage());
     }
 
     /**
@@ -218,6 +230,10 @@ public class TreeBedSprite extends ActiveSprite
     protected void setTextureStates (
         TextureState t1, TextureState t2, float alpha)
     {
+        if (_model == null) {
+            // wait until the model is loaded
+            return;
+        }
         if (alpha == 0f) {
             t2 = null;
         } else if (alpha == 1f) {
@@ -262,7 +278,7 @@ public class TreeBedSprite extends ActiveSprite
             }
         }
     }
-    
+
     /** The currently depicted growth stage. */
     protected byte _growth;
 
@@ -274,13 +290,13 @@ public class TreeBedSprite extends ActiveSprite
 
     /** The current primary and secondary texture states. */
     protected TextureState _ptstate, _ststate;
-    
+
     /** The duration of the final growth animation. */
     protected static float _finalGrowthDuration;
-    
+
     /** The base, max, and damaged texture states. */
     protected static TextureState _btstate, _mtstate, _dtstate;
-    
+
     /** The duration of the falling trunk animation. */
     protected static final float TRUNK_FALL_DURATION = 1f;
 }
