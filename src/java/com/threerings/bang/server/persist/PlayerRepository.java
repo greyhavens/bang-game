@@ -72,7 +72,7 @@ public class PlayerRepository extends JORARepository
     public PlayerRecord loadByHandle (Handle handle)
         throws PersistenceException
     {
-        return load(_ptable, "where HANDLE = " + JDBCUtil.escape(handle.toString()));
+        return load(_ptable, "where NORMALIZED = " + JDBCUtil.escape(handle.getNormal()));
     }
 
     /**
@@ -371,7 +371,8 @@ public class PlayerRepository extends JORARepository
     {
         int playerId = -1;
         ResultSet rs = stmt.executeQuery(
-            "select PLAYER_ID from PLAYERS where HANDLE = " + JDBCUtil.escape(handle.toString()));
+            "select PLAYER_ID from PLAYERS where NORMALIZED = " +
+            JDBCUtil.escape(handle.getNormal()));
         while (rs.next()) {
             playerId = rs.getInt(1);
         }
