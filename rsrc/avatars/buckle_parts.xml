@@ -16,6 +16,9 @@
     <part name="clockwork" colors="buckle_back_p" coins="3" aces="400"/>
     <part name="design" coins="5" aces="450"/>
     <part name="rattlers" colors="buckle_back_p" coins="3" aces="350"/>
+    <part name="top" coins="4" aces="450"/>
+    <part name="sunrise" coins="4" aces="500"/>
+    <part name="radiate" coins="4" aces="450"/>
   </class>
 
   <!-- buckle borders -->
