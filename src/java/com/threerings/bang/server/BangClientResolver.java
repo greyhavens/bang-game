@@ -241,7 +241,8 @@ public class BangClientResolver extends CrowdClientResolver
                     BangClientResolver.super.handleResult();
                 }
                 public void requestFailed (Exception cause) {
-                    _failure = cause;
+                    // let them log in as if they didn't belong to a gang
+                    _grecord = null;
                     BangClientResolver.super.handleResult();
                 }
             });

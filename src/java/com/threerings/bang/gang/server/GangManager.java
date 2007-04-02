@@ -152,10 +152,14 @@ public class GangManager
         BangServer.refuseDObjThread(); // safety first
         GangMemberRecord mrec = _gangrepo.loadMember(player.playerId);
         if (mrec != null) {
+            // we have to make sure the gang record isn't null in case one of the servers
+            // deletes the gang in the meantime
             GangRecord grec = _gangrepo.loadGang(mrec.gangId, false);
-            info.gang = grec.getName();
-            info.rank = getPosterRank(mrec.rank);
-            info.buckle = new BuckleInfo(grec.getBucklePrint());
+            if (grec != null) {
+                info.gang = grec.getName();
+                info.rank = getPosterRank(mrec.rank);
+                info.buckle = new BuckleInfo(grec.getBucklePrint());
+            }
         }
     }
 

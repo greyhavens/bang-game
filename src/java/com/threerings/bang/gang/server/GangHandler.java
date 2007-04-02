@@ -1119,7 +1119,11 @@ public class GangHandler
                     _grec = BangServer.gangrepo.loadGang(_gangId, true);
                 }
                 public void handleSuccess () {
-                    createGangObject(_grec);
+                    if (_grec == null) {
+                        initFailed(new Exception("No such gang"));
+                    } else {
+                        createGangObject(_grec);
+                    }
                 }
                 public void handleFailure (Exception cause) {
                     initFailed(cause);
