@@ -52,13 +52,17 @@ public class BangPrefs
                 config.getValue("display_height", BangUI.MIN_HEIGHT);
         int bpp = safeMode ? 16 : config.getValue("display_bpp", 16);
         int freq = safeMode ? 60 : config.getValue("display_freq", 60);
+        boolean fullscreenSet = isFullscreenSet();
         boolean fullscreen = safeMode ? true : isFullscreen();
 
         if (!fullscreen) {
             DisplayMode mode = Display.getDisplayMode();
-            // if the display mode is too small, we'll try to go fullscreen
-            if (mode.getWidth() <= BangUI.MIN_WIDTH || mode.getHeight() <= BangUI.MIN_HEIGHT ||
-                    mode.getBitsPerPixel() < BangUI.MIN_BPP) {
+            // if the display mode is too small, we'll try to go fullscreen (if this is their
+            // first time then force fullscreen when the display mode is the minimum)
+            if (mode.getWidth() < BangUI.MIN_WIDTH || mode.getHeight() < BangUI.MIN_HEIGHT ||
+                    mode.getBitsPerPixel() < BangUI.MIN_BPP || (!fullscreenSet &&
+                        (mode.getWidth() <= BangUI.MIN_WIDTH ||
+                         mode.getHeight() <= BangUI.MIN_HEIGHT))) {
                 fullscreen = true;
                 updateFullscreen(true);
 
@@ -106,6 +110,14 @@ public class BangPrefs
     public static boolean isFullscreen ()
     {
         return config.getValue("display_fullscreen", false);
+    }
+
+    /**
+     * Returns whether there is a preference for fullscreen mode.
+     */
+    public static boolean isFullscreenSet ()
+    {
+        return config.getValue("display_fullscreen", (String)null) != null;
     }
 
     /**
