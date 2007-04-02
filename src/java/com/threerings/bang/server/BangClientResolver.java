@@ -108,7 +108,7 @@ public class BangClientResolver extends CrowdClientResolver
         if (player.handle != null) {
             buser.handle = new Handle(player.handle);
         } else {
-            buser.handle = new GuestHandle(username);
+            buser.handle = new GuestHandle("!!" + username);
         }
         buser.isMale = player.isSet(PlayerRecord.IS_MALE_FLAG);
         buser.tokens.setToken(BangTokenRing.ANONYMOUS, player.isSet(PlayerRecord.IS_ANONYMOUS));

@@ -244,7 +244,7 @@ public class GangHandler
     public void playerChangedHandle (PlayerObject user, Handle oldHandle)
     {
         // TODO: handle this for remote members
-        GangMemberEntry entry = (oldHandle == null) ? null : _gangobj.members.get(oldHandle);
+        GangMemberEntry entry = _gangobj.members.get(oldHandle);
         if (entry != null) {
             _gangobj.startTransaction();
             try {

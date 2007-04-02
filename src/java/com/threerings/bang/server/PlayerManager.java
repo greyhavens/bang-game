@@ -1278,30 +1278,27 @@ public class PlayerManager
 
                 // find out if they're in a gang, and remove them from it, or remove any
                 // pending gang invitations
-                if (user.handle != null) {
-                    GangMemberRecord gmr = BangServer.gangrepo.loadMember(user.playerId);
-                    if (gmr == null) {
-                        BangServer.gangrepo.deletePendingInvites(user.playerId);
-                    } else {
-                        try {
-                            BangServer.gangmgr.requireGangPeerProvider(gmr.gangId).removeFromGang(
-                                    null, null, new Handle(user.handle),
-                                    new InvocationService.ConfirmListener() {
-                                        public void requestProcessed () { }
-                                        public void requestFailed (String cause) { }
-                                    });
-                        } catch (InvocationException ie) {
-                            log.warning("Failure removing purged player from gang! " +
-                                    "Proceeding with purge anyway [ie=" + ie + "].");
-                        }
+                // TODO: make this play nice with gangs not currently loaded
+                GangMemberRecord gmr = BangServer.gangrepo.loadMember(user.playerId);
+                if (gmr == null) {
+                    BangServer.gangrepo.deletePendingInvites(user.playerId);
+                } else {
+                    try {
+                        BangServer.gangmgr.requireGangPeerProvider(gmr.gangId).removeFromGang(
+                                null, null, new Handle(user.handle),
+                                new InvocationService.ConfirmListener() {
+                                    public void requestProcessed () { }
+                                    public void requestFailed (String cause) { }
+                                });
+                    } catch (InvocationException ie) {
+                        log.warning("Failure removing purged player from gang! " +
+                                "Proceeding with purge anyway [ie=" + ie + "].");
                     }
                 }
                 _playrepo.deletePlayer(user);
             }
             public void handleSuccess () {
-                if (user.handle != null) {
-                    BangServer.coinexmgr.userWasDeleted(user.handle);
-                }
+                BangServer.coinexmgr.userWasDeleted(user.handle);
                 listener.requestProcessed();
             }
             public String getFailureMessage () {

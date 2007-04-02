@@ -36,7 +36,7 @@ public abstract class ShopManager extends PlaceManager
 
         String msg = null;
 
-        if (requireHandle() && (user.handle == null || user.handle instanceof GuestHandle)) {
+        if (requireHandle() && user.handle instanceof GuestHandle) {
             msg = BangCodes.CREATE_HANDLE;
         } else if (!allowAnonymous() && user.tokens.isAnonymous()) {
             msg = BangCodes.SIGN_UP;

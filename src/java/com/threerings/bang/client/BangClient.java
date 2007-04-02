@@ -459,7 +459,7 @@ public class BangClient extends BasicClient
         /*
         // if this player does not have a name, it's their first time, so pop up the create avatar
         // view
-        if (user.handle == null) {
+        if (user.handle instanceof GuestHandle) {
             displayPopup(new CreateAvatarView(_ctx), true, 800);
             return true;
         }

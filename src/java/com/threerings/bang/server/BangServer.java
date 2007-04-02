@@ -510,6 +510,7 @@ public class BangServer extends CrowdServer
      */
     public static void updatePlayer (final PlayerObject player, final Handle oldHandle)
     {
+        _players.remove(oldHandle);
         _players.put(player.handle, player);
 
         // notify our player observers

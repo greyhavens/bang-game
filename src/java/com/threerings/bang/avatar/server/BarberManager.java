@@ -27,6 +27,7 @@ import com.threerings.cast.NoSuchComponentException;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -243,8 +244,7 @@ public class BarberManager extends ShopManager
         final PlayerObject user = requireShopEnabled(caller);
 
         // sanity check
-        if (user.handle != null && !user.handle.isBlank() &&
-            user.getLook(Look.Pose.DEFAULT) != null) {
+        if (!(user.handle instanceof GuestHandle) && user.getLook(Look.Pose.DEFAULT) != null) {
             log.warning("User tried to recreate avatar [who=" + user.who() +
                         ", handle=" + handle + "].");
             throw new InvocationException(INTERNAL_ERROR);
