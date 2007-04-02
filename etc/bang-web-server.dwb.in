@@ -18,4 +18,6 @@
     Depends     bang-applet (= @VERSION@)
     Depends     bang-client-current (= @VERSION@)
     Depends     office-webapp (= @VERSION@)
+    # not strictly a dependency, but needed in current web configuration 
+    Depends     bang-hemiptera-map (= @VERSION@)
 </Package>
