@@ -111,6 +111,11 @@ public abstract class CriterionView extends BContainer
         table.add(_ranked = new BComboBox(xlate(msgs, RANKED)));
     }
 
+    protected int getRankedStatus (int index)
+    {
+        return Criterion.compose((index == 0 || index == 1), (index == 0 || index == 2), false);
+    }
+
     protected void addAIControls (MessageBundle msgs, BContainer table)
     {
         table.add(BangUI.createLabel(msgs, "m.opponents", "match_label"));
@@ -153,9 +158,7 @@ public abstract class CriterionView extends BContainer
             criterion.players = Criterion.compose(
                 _players[0].isSelected(), _players[1].isSelected(),
                 _players[2].isSelected());
-            int rsel = _ranked.getSelectedIndex();
-            criterion.ranked = Criterion.compose(
-                (rsel == 0 || rsel == 1), (rsel == 0 || rsel == 2), false);
+            criterion.ranked = getRankedStatus(_ranked.getSelectedIndex());
             criterion.range = _range.getSelectedIndex();
             criterion.allowAIs = getAllowAIs();
             criterion.allowPreviousTowns =

@@ -53,6 +53,9 @@ public class PlayView extends BContainer
                 table.add(BangUI.createLabel(_msgs, "m.game_mode", "match_label"));
                 table.add(_ranked = new BComboBox(xlate(_msgs, GAME_MODE)));
             }
+            protected int getRankedStatus (int index) {
+                return Criterion.compose(index == 0, index == 1, false);
+            }
             protected void addAIControls (MessageBundle msgs, BContainer table) {
                 // nada
             }
