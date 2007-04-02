@@ -13,6 +13,7 @@ import java.util.Date;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
@@ -81,7 +82,8 @@ public class GangInfoDialog extends BWindow
 
     protected GangInfoDialog (BangContext ctx, Handle name)
     {
-        super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.CENTER));
+        super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.TOP));
+        ((GroupLayout)getLayoutManager()).setPolicy(GroupLayout.STRETCH);
         _ctx = ctx;
 
         ((GroupLayout)getLayoutManager()).setGap(-2);
@@ -89,13 +91,14 @@ public class GangInfoDialog extends BWindow
         setModal(true);
 
         _vcont = GroupLayout.makeVBox(GroupLayout.TOP);
+        ((GroupLayout)_vcont.getLayoutManager()).setPolicy(GroupLayout.STRETCH);
         ((GroupLayout)_vcont.getLayoutManager()).setGap(0);
         _vcont.setStyleClass("gang_info_view");
         add(_vcont);
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         bcont.add(new BButton(ctx.xlate(GANG_MSGS, "m.dismiss"), this, "dismiss"));
-        add(bcont);
+        add(bcont, GroupLayout.FIXED);
 
         // fetch the gang info from the server
         GangService gsvc = (GangService)ctx.getClient().requireService(GangService.class);
@@ -104,7 +107,7 @@ public class GangInfoDialog extends BWindow
                 populate((GangInfo)result);
             }
             public void requestFailed (String cause) {
-                _vcont.add(new BLabel(_ctx.xlate(GANG_MSGS, cause)));
+                _vcont.add(new BLabel(_ctx.xlate(GANG_MSGS, cause)), GroupLayout.FIXED);
             }
         });
     }
@@ -114,19 +117,19 @@ public class GangInfoDialog extends BWindow
         MessageBundle msgs = _ctx.getMessageManager().getBundle(GANG_MSGS),
             hmsgs = _ctx.getMessageManager().getBundle(HideoutCodes.HIDEOUT_MSGS);
 
-        _vcont.add(createLabel("design_top"));
-        _vcont.add(new Spacer(1, 4));
+        _vcont.add(createLabel("design_top"), GroupLayout.FIXED);
+        _vcont.add(new Spacer(1, 4), GroupLayout.FIXED);
 
-        _vcont.add(new BLabel(info.name.toString(), "gang_info_title"));
-        _vcont.add(new Spacer(1, -2));
+        _vcont.add(new BLabel(info.name.toString(), "gang_info_title"), GroupLayout.FIXED);
+        _vcont.add(new Spacer(1, -2), GroupLayout.FIXED);
         String date = DATE_FORMAT.format(new Date(info.founded));
-        _vcont.add(new BLabel(msgs.get("m.founded", date), "gang_info_founded"));
-        _vcont.add(new Spacer(1, 2));
+        _vcont.add(new BLabel(msgs.get("m.founded", date), "gang_info_founded"), GroupLayout.FIXED);
+        _vcont.add(new Spacer(1, 2), GroupLayout.FIXED);
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)bcont.getLayoutManager()).setOffAxisJustification(GroupLayout.TOP);
         ((GroupLayout)bcont.getLayoutManager()).setGap(30);
-        _vcont.add(bcont);
+        _vcont.add(bcont, GroupLayout.FIXED);
         BuckleView buckle = new BuckleView(_ctx, 2);
         buckle.setBuckle(info.buckle);
         bcont.add(buckle);
@@ -165,18 +168,18 @@ public class GangInfoDialog extends BWindow
             // no problem, just don't include the button
         }
 
-        _vcont.add(createLabel("design_bottom"));
-        _vcont.add(new Spacer(1, 5));
+        _vcont.add(createLabel("design_bottom"), GroupLayout.FIXED);
+        _vcont.add(new Spacer(1, 5), GroupLayout.FIXED);
 
         BContainer rcont = new BContainer(GroupLayout.makeVert(
-            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH));
+            GroupLayout.STRETCH, GroupLayout.TOP, GroupLayout.STRETCH));
         ((GroupLayout)rcont.getLayoutManager()).setGap(-14);
         _vcont.add(rcont);
 
         BContainer tcont = new BContainer(GroupLayout.makeHoriz(
             GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.NONE));
         ((GroupLayout)tcont.getLayoutManager()).setOffAxisJustification(GroupLayout.TOP);
-        rcont.add(tcont);
+        rcont.add(tcont, GroupLayout.FIXED);
 
         BContainer left = new BContainer(GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH));
@@ -204,18 +207,23 @@ public class GangInfoDialog extends BWindow
         }
 
         BContainer bottom = new BContainer(GroupLayout.makeVert(
-            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH));
+            GroupLayout.STRETCH, GroupLayout.TOP, GroupLayout.STRETCH));
         ((GroupLayout)bottom.getLayoutManager()).setGap(0);
         rcont.add(bottom);
 
-        bottom.add(new BLabel(hmsgs.get("m.members"), "roster_title"));
-        bottom.add(createLabel("underline_long"));
+        bottom.add(new BLabel(hmsgs.get("m.members"), "roster_title"),
+            GroupLayout.FIXED);
+        bottom.add(createLabel("underline_long"), GroupLayout.FIXED);
+        bottom.add(new Spacer(1, 2), GroupLayout.FIXED);
         BContainer mcont = new BContainer(new TableLayout(3));
         mcont.setStyleClass("roster_table");
-        bottom.add(mcont);
+        BScrollPane pane = new BScrollPane(mcont);
+        pane.setShowScrollbarAlways(false);
+        bottom.add(pane);
         for (GangInfo.Member member : info.members) {
             mcont.add(createMemberLabel(member));
         }
+        bottom.add(new Spacer(1, 15), GroupLayout.FIXED);
     }
 
     protected BLabel createLabel (String img)
