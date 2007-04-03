@@ -1355,6 +1355,14 @@ public class TerrainNode extends Node
     }
 
     /**
+     * Clamps the given integer to [min, max).
+     */
+    protected static int iclamp (int value, int min, int max)
+    {
+        return (value <= min) ? min : (value >= max ? (max - 1) : value);
+    }
+
+    /**
      * Determines whether we should use GLSL shaders when rendering the terrain.
      */
     protected boolean shouldUseShaders ()
@@ -1508,8 +1516,8 @@ public class TerrainNode extends Node
                     tbuf0.put(x * step0);
                     tbuf0.put(y * step0);
 
-                    tbuf1.put(0.5f*step1 + x * step1);
-                    tbuf1.put(0.5f*step1 + y * step1);
+                    tbuf1.put(0.5f*step1 + iclamp(x, 0, bwidth) * step1);
+                    tbuf1.put(0.5f*step1 + iclamp(y, 0, bheight) * step1);
                 }
             }
 
@@ -1589,7 +1597,7 @@ public class TerrainNode extends Node
          */
         public void refreshShaders ()
         {
-            if (!useShaders) {
+            if (!useShaders || layers.length <= 1) {
                 return;
             }
             for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
@@ -1754,8 +1762,8 @@ public class TerrainNode extends Node
             // which one is the most common
             IntIntMap codes = new IntIntMap();
             int ccount = 0, ccode = 0, count, code;
-            for (int y = bounds.y, ymax = y + bounds.height; y < ymax; y++) {
-                for (int x = bounds.x, xmax = x + bounds.width; x < xmax; x++) {
+            for (int y = ebounds.y, ymax = y + ebounds.height; y < ymax; y++) {
+                for (int x = ebounds.x, xmax = x + ebounds.width; x < xmax; x++) {
                     code = _board.getTerrainValue(x, y)+1;
                     if ((count = codes.increment(code, 1)) > ccount) {
                         ccount = count;
@@ -1800,13 +1808,9 @@ public class TerrainNode extends Node
                 }
             }
             layers = IntListUtil.compact(layers);
-            if (layers.length == 1) {
-                // no point in using shaders for one layer
-                useShaders = false;
-            }
 
             // build layers using shaders or fixed functionality pipeline
-            if (useShaders) {
+            if (useShaders && layers.length > 1) {
                 buildShaderLayers(rect);
             } else {
                 buildFixedLayers(rect);
