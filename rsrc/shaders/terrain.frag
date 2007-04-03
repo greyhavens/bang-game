@@ -21,7 +21,7 @@ void main ()
     }
 
     // modulate by the light color
-    gl_FragColor.rgb = gl_FragColor.rgb * gl_Color.rgb;
+    gl_FragColor.rgb *= gl_Color.rgb;
 
     // blend between the computed color and the fog color
     #ifdef ENABLE_FOG
