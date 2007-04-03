@@ -1862,12 +1862,11 @@ public class TerrainNode extends Node
                         continue; // something's funny, skip it
                     }
                     tstate.setTexture(gtstate.getTexture(), tidx);
-                    String suffix = jj + "]";
-                    sstate.setUniform("splatColorTextures[" + suffix, tidx++);
+                    sstate.setUniform("splatTextures[" + tidx + "]", tidx++);
 
                     Texture alpha = createAlphaTexture(code, rect, true);
                     tstate.setTexture(alpha, tidx);
-                    sstate.setUniform("splatAlphaTextures[" + suffix, tidx++);
+                    sstate.setUniform("splatTextures[" + tidx + "]", tidx++);
                     alphaTextures.add(alpha);
                 }
             }
