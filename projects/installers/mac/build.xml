@@ -54,7 +54,7 @@
     </copy>
 
     <echo file="${deploy.dir}/${app.name}/${jdir}/getdown.txt"
-      message="appbase = ${root_url}/${bclient_ident}/${line.separator}"/>
+      message="appbase = ${root_url}/client/${line.separator}"/>
 
     <!-- Prepare for imaging -->
     <copy file="${ds_store}" tofile="${img.dir}/.DS_Store"/>
