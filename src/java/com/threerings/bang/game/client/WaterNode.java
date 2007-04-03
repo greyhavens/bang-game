@@ -225,11 +225,9 @@ public class WaterNode extends Node
         pbuf.rewind();
 
         Texture texture = new Texture();
-        texture.setImage(new Image(Image.RGBA8888, SPHERE_MAP_SIZE,
-            SPHERE_MAP_SIZE, pbuf));
+        RenderUtil.configureTexture(texture,
+            new Image(Image.RGBA8888, SPHERE_MAP_SIZE, SPHERE_MAP_SIZE, pbuf));
         texture.setEnvironmentalMapMode(Texture.EM_SPHERE);
-        texture.setFilter(Texture.FM_LINEAR);
-        texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
         texture.setApply(Texture.AM_REPLACE);
         _smtstate.setTexture(texture);
     }

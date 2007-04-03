@@ -361,7 +361,8 @@ public class RenderUtil
     public static void configureTexture (Texture texture, Image image)
     {
         texture.setFilter(Texture.FM_LINEAR);
-        texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+        texture.setMipmapState(
+            BangPrefs.isMediumDetail() ? Texture.MM_LINEAR_LINEAR : Texture.MM_NONE);
         texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
         texture.setImage(image);
     }

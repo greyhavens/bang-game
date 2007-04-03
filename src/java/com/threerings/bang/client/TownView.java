@@ -606,9 +606,7 @@ public class TownView extends BWindow
             }
             int oldTextureId = _poptex.getTextureId();
             _poptex.setTextureId(0);
-            _poptex.setImage(TextureManager.loadImage(img, true));
-            _poptex.setFilter(Texture.FM_LINEAR);
-            _poptex.setMipmapState(Texture.MM_LINEAR_LINEAR);
+            RenderUtil.configureTexture(_poptex, TextureManager.loadImage(img, true));
             return oldTextureId;
         }
 
