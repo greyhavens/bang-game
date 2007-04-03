@@ -270,7 +270,9 @@ public class HideoutView extends ShopView
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        _gcview.shutdown();
+        if (_gcview != null) {
+            _gcview.shutdown();
+        }
     }
 
     /**
