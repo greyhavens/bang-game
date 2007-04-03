@@ -1905,6 +1905,7 @@ public class TerrainNode extends Node
                 Texture ground = gtstate.getTexture();
                 tstate.setTexture(ground, 0);
                 Texture alpha = createAlphaTexture(code, rect, false);
+                alpha.setApply(Texture.AM_MODULATE);
                 tstate.setTexture(alpha, 1);
                 alphaTextures.add(alpha);
                 splat.setRenderState(tstate);
@@ -1986,7 +1987,7 @@ public class TerrainNode extends Node
             ByteBuffer abuf = alphaBuffers.get(code);
             if (abuf == null) {
                 alphaBuffers.put(code, abuf = ByteBuffer.allocateDirect(
-                    TEXTURE_SIZE*TEXTURE_SIZE*2));
+                    TEXTURE_SIZE*TEXTURE_SIZE));
                 rect = bounds;
             }
 
@@ -2006,20 +2007,17 @@ public class TerrainNode extends Node
                     if (!additive) {
                         alpha /= (_atotals[idx] += alpha);
                     }
-                    abuf.putShort(idx*2, (short)(0xFF00 | (int)(alpha * 255)));
+                    abuf.put(idx, (byte)(alpha * 255));
                 }
             }
 
             Texture texture = new Texture();
             abuf.rewind();
-            texture.setImage(new Image(Image.RA88, TEXTURE_SIZE, TEXTURE_SIZE, abuf));
+            texture.setImage(new Image(Image.A8, TEXTURE_SIZE, TEXTURE_SIZE, abuf));
 
             // set the filter parameters
             texture.setFilter(Texture.FM_LINEAR);
             texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-
-            // and the combination parameters
-            texture.setApply(Texture.AM_MODULATE);
 
             return texture;
         }
