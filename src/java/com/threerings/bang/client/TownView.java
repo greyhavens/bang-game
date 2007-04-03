@@ -557,25 +557,26 @@ public class TownView extends BWindow
         {
             _ctx.getInvoker().postUnit(new Invoker.Unit() {
                 public boolean invoke () {
-                    _oldTextureId = updatePopulationSignTexture(pop);
+                    updatePopulationSignTexture(pop);
                     return true;
                 }
                 public void handleResult () {
                     // delete the old texture using a dummy state now that we're in the main thread
-                    if (_oldTextureId > 0) {
+                    int oldTextureId = _poptex.getTextureId();
+                    if (oldTextureId > 0) {
                         TextureState tstate = _ctx.getRenderer().createTextureState();
                         Texture tex = new Texture();
-                        tex.setTextureId(_oldTextureId);
+                        tex.setTextureId(oldTextureId);
                         tstate.setTexture(tex);
                         tstate.deleteAll();
                     }
+                    _poptex.setTextureId(0);
                     clearResolving(TownBoardView.this);
                 }
-                protected int _oldTextureId;
             });
         }
 
-        protected int updatePopulationSignTexture (int pop)
+        protected void updatePopulationSignTexture (int pop)
         {
             // get a reference to the buffered sign image
             String townId = _bctx.getUserObject().townId;
@@ -583,7 +584,7 @@ public class TownView extends BWindow
             BufferedImage bimg = _ctx.getImageCache().getBufferedImage(path);
             if (bimg == null) {
                 log.warning("Couldn't find population sign image [path=" + path + "].");
-                return 0;
+                return;
             }
 
             // write population into image
@@ -604,10 +605,7 @@ public class TownView extends BWindow
             if (_poptex == null) {
                 _poptex = _ctx.getTextureCache().getTexture(path);
             }
-            int oldTextureId = _poptex.getTextureId();
-            _poptex.setTextureId(0);
             RenderUtil.configureTexture(_poptex, TextureManager.loadImage(img, true));
-            return oldTextureId;
         }
 
         protected BangContext _bctx;
