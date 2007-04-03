@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -58,12 +58,12 @@ public class Image implements Serializable, Savable {
     private static final long serialVersionUID = -2496120296189166346L;
 
     /**
-     * When used in texture loading, this indicates to let jME guess 
+     * When used in texture loading, this indicates to let jME guess
      * the format, but not to use S3TC compression, even if available.
      */
     public static final int GUESS_FORMAT_NO_S3TC = -2;
     /**
-     * When used in texture loading, this indicates to let jME guess 
+     * When used in texture loading, this indicates to let jME guess
      * the format.  jME will use S3TC compression, if available.
      */
     public static final int GUESS_FORMAT = -1;
@@ -88,48 +88,53 @@ public class Image implements Serializable, Savable {
      * 16-bit RA with 8 bits for red and 8 bits for alpha.
      */
     public static final int RA88 = 4;
-    
+
+    /**
+     * 8-bit A with 8 bits for alpha.
+     */
+    public static final int A8 = 5;
+
     /**
      * RGB888, compressed to DXT-1 internally.
      */
-    public static final int RGB888_DXT1 = 5;
+    public static final int RGB888_DXT1 = 6;
 
     /**
      * RGBA8888, compressed to DXT-1A internally.
      */
-    public static final int RGBA8888_DXT1A = 6;
+    public static final int RGBA8888_DXT1A = 7;
 
     /**
      * RGBA8888, compressed to DXT-3 internally.
      */
-    public static final int RGBA8888_DXT3 = 7;
+    public static final int RGBA8888_DXT3 = 8;
 
     /**
      * RGBA8888, compressed to DXT-5 internally.
      */
-    public static final int RGBA8888_DXT5 = 8;
-    
+    public static final int RGBA8888_DXT5 = 9;
+
     public static final int LAST_UNCOMPRESSED_TYPE = RGBA8888_DXT5;
 
     /**
      * DXT-1 compressed format, no alpha.
      */
-    public static final int DXT1_NATIVE = 9;
+    public static final int DXT1_NATIVE = 10;
 
     /**
      * DXT-1 compressed format, one bit alpha.
      */
-    public static final int DXT1A_NATIVE = 10;
+    public static final int DXT1A_NATIVE = 11;
 
     /**
      * DXT-3 compressed format, with alpha.
      */
-    public static final int DXT3_NATIVE = 11;
+    public static final int DXT3_NATIVE = 12;
 
     /**
      * DXT-5 compressed format, with alpha.
      */
-    public static final int DXT5_NATIVE = 12;
+    public static final int DXT5_NATIVE = 13;
 
     public static final int LAST_TYPE = DXT5_NATIVE;
 
@@ -162,18 +167,18 @@ public class Image implements Serializable, Savable {
         if(type < 0 || type > LAST_TYPE) {
             type = 0;
         }
-        
+
         if ( mipMapSizes != null && mipMapSizes.length <= 1 ) {
             mipMapSizes = null;
         }
-        
+
         this.type = type;
         this.width = width;
         this.height = height;
         this.data = data;
         this.mipMapSizes = mipMapSizes;
     }
-    
+
     /**
      * Constructor instantiates a new <code>Image</code> object. The attributes
      * of the image are defined during construction.
@@ -199,7 +204,7 @@ public class Image implements Serializable, Savable {
      * Sets the mipmap sizes stored in this image's data buffer. Mipmaps are stored
      * sequentially, and the first mipmap is the main image data. To specify no mipmaps,
      * pass null and this will automatically be expanded into a single mipmap of the full
-     * 
+     *
      * @param mipMapSizes the mipmap sizes array, or null for a single image map.
      */
     public void setMipMapSizes( int[] mipMapSizes ) {
@@ -208,7 +213,7 @@ public class Image implements Serializable, Savable {
 
         this.mipMapSizes = mipMapSizes;
     }
-    
+
     /**
      * <code>setHeight</code> sets the height value of the image. It is
      * typically a good idea to try to keep this as a multiple of 2.
@@ -256,7 +261,7 @@ public class Image implements Serializable, Savable {
     public boolean isCompressedType() {
         return type > LAST_UNCOMPRESSED_TYPE;
     }
-    
+
     /**
      *
      * <code>getWidth</code> returns the width of this image.
@@ -284,7 +289,7 @@ public class Image implements Serializable, Savable {
     public ByteBuffer getData() {
         return data;
     }
-    
+
     /**
      * Returns whether the image data contains mipmaps.
      * @return true if the image data contains mipmaps, false if not.
@@ -293,7 +298,7 @@ public class Image implements Serializable, Savable {
     {
         return mipMapSizes != null;
     }
-    
+
     /**
      * Returns the mipmap sizes for this image.
      * @return the mipmap sizes for this image.
@@ -322,10 +327,10 @@ public class Image implements Serializable, Savable {
       return true;
     }
 
-    
+
     /**
      * Used with Serialization. Do not call this directly.
-     * 
+     *
      * @param s
      * @throws IOException
      * @see java.io.Serializable
@@ -346,7 +351,7 @@ public class Image implements Serializable, Savable {
 
     /**
      * Used with Serialization. Do not call this directly.
-     * 
+     *
      * @param s
      * @throws IOException
      * @throws ClassNotFoundException
@@ -364,7 +369,7 @@ public class Image implements Serializable, Savable {
             ByteBuffer buf = BufferUtils.createByteBuffer(len);
             buf.put(dbuf);
             buf.rewind();
-            data = buf;   
+            data = buf;
         }
     }
 
@@ -385,7 +390,7 @@ public class Image implements Serializable, Savable {
         mipMapSizes = capsule.readIntArray("mipMapSizes", null);
         data = capsule.readByteBuffer("data", null);
     }
-    
+
     public Class getClassTag() {
         return this.getClass();
     }

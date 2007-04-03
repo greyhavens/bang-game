@@ -83,7 +83,7 @@ public class LWJGLTextureState extends TextureState {
     private static final long serialVersionUID = 1L;
 
     private static int[] imageComponents = { GL11.GL_RGBA4, GL11.GL_RGB8,
-            GL11.GL_RGB5_A1, GL11.GL_RGBA8, GL11.GL_LUMINANCE8_ALPHA8,
+            GL11.GL_RGB5_A1, GL11.GL_RGBA8, GL11.GL_LUMINANCE8_ALPHA8, GL11.GL_ALPHA8,
             EXTTextureCompressionS3TC.GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
             EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
             EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
@@ -94,8 +94,8 @@ public class LWJGLTextureState extends TextureState {
             EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT };
 
     private static int[] imageFormats = { GL11.GL_RGBA, GL11.GL_RGB,
-            GL11.GL_RGBA, GL11.GL_RGBA, GL11.GL_LUMINANCE_ALPHA, GL11.GL_RGB,
-            GL11.GL_RGBA, GL11.GL_RGBA, GL11.GL_RGBA };
+            GL11.GL_RGBA, GL11.GL_RGBA, GL11.GL_LUMINANCE_ALPHA, GL11.GL_ALPHA,
+            GL11.GL_RGB, GL11.GL_RGBA, GL11.GL_RGBA, GL11.GL_RGBA };
 
     private static boolean inited = false;
 
