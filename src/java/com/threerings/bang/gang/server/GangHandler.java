@@ -71,6 +71,8 @@ import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+
 import com.threerings.bang.saloon.server.SaloonManager;
 
 import com.threerings.bang.gang.data.GangCodes;
@@ -1188,7 +1190,8 @@ public class GangHandler
         // start the interval to calculate top-ranked members
         _rankval = new Interval(BangServer.omgr) {
             public void expired () {
-                SaloonManager.refreshTopRanked(_gangobj,
+                SaloonManager.refreshTopRanked(
+                    _gangobj, ScenarioInfo.getScenarioIds(),
                     "GANG_MEMBERS", "RATINGS.PLAYER_ID = GANG_MEMBERS.PLAYER_ID and " +
                     "GANG_MEMBERS.GANG_ID = " + _gangId, TOP_RANKED_LIST_SIZE);
             }

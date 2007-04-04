@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
@@ -81,6 +82,15 @@ public abstract class ScenarioInfo
             }
         }
         return true;
+    }
+
+    /**
+     * Returns an array containing all registered scenario ids.
+     */
+    public static String[] getScenarioIds ()
+    {
+        Set<String> keys = _scenarios.keySet();
+        return keys.toArray(new String[keys.size()]);
     }
 
     /**

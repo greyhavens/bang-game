@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
@@ -59,24 +60,21 @@ public class SaloonManager extends MatchHostManager
      * Refreshes the top-ranked lists for all scenarios (plus the overall rankings) in the
      * specified object.
      *
-     * @param join an additional table to join, or <code>null</code> for none
+     * @param scenarios the scenarios to include (in addition to the overall scenario).
+     * @param join an additional table to join, or <code>null</code> for none.
      * @param where additions to the where clause for the database query, or <code>null</code> for
-     * none
-     * @param count the number of entries desired in each list
+     * none.
+     * @param count the number of entries desired in each list.
      */
     public static void refreshTopRanked (
-        final TopRankObject rankobj, final String join, final String where, final int count)
+        final TopRankObject rankobj, final String[] scenarios, final String join, final String where,
+        final int count)
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
-                ArrayList<String> scens = new ArrayList<String>();
-                CollectionUtil.addAll(
-                    scens, ScenarioInfo.getScenarioIds(ServerConfig.townId, false));
-                scens.add(0, ScenarioInfo.OVERALL_IDENT);
-
+                String[] scens = ArrayUtil.append(scenarios, ScenarioInfo.OVERALL_IDENT);
                 try {
-                    _lists = BangServer.ratingrepo.loadTopRanked(
-                        scens.toArray(new String[scens.size()]), join, where, count);
+                    _lists = BangServer.ratingrepo.loadTopRanked(scens, join, where, count);
                     return true;
 
                 } catch (PersistenceException pe) {
@@ -188,7 +186,9 @@ public class SaloonManager extends MatchHostManager
         // start up our top-ranked list refresher interval
         _rankval = new Interval(BangServer.omgr) {
             public void expired () {
-                refreshTopRanked(_salobj, null, null, TOP_RANKED_LIST_SIZE);
+                refreshTopRanked(
+                    _salobj, ScenarioInfo.getScenarioIds(ServerConfig.townId, false),
+                    null, null, TOP_RANKED_LIST_SIZE);
             }
         };
         _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
