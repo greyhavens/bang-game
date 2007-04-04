@@ -246,7 +246,8 @@ public class TextureCache
         public void flush ()
         {
             if (_textureId[0] > 0) {
-                GL11.glDeleteTextures(BufferUtils.createIntBuffer(_textureId));
+//                GL11.glDeleteTextures(BufferUtils.createIntBuffer(_textureId));
+                log.info("Would have deleted: " + _textureId[0]);
                 TextureStateRecord record =
                     (TextureStateRecord)_ctx.getDisplay().getCurrentContext().getStateRecord(
                         RenderState.RS_TEXTURE);
