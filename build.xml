@@ -6,6 +6,7 @@
   <property name="deploy.dir"     value="dist"/>
   <property name="var.dir"        value="var"/>
   <property name="app.name"       value="bang"/>
+  <property name="extlibs.dir"    value="extlibs/java"/>
   <property name="savedoc.dir"    value="docs"/>
   <property name="build.optimize" value="on"/>
   <property name="nartool.path"   value="${basedir}/projects/narya/bin"/>
@@ -16,7 +17,7 @@
   <property name="webapps" value="office"/>
   <!-- jetty needs to import server.conf, not bang.conf which is the default -->
   <property name="jetty.app.conf" value="server.conf"/>
-  <import file="projects/tools/etc/build-support.xml"/>
+  <import file="build/etc/build-support.xml"/>
 
   <!-- override the fileset for the checkclean target to ignore ${var.dir} -->
   <fileset id="checkclean.fileset" dir="${basedir}">
@@ -39,29 +40,27 @@
 
   <!-- declare the libraries needed by the Bang runtime -->
   <filelist dir="." id="dist.libs">
-    <file name="${extlib.dir}/ant-contrib.jar"/>
-    <file name="${extlib.dir}/ant-nodeps.jar"/>
-    <file name="${extlib.dir}/ant.jar"/>
-    <file name="${extlib.dir}/commons-beanutils.jar"/>
-    <file name="${extlib.dir}/commons-codec.jar"/>
-    <file name="${extlib.dir}/commons-collections.jar"/>
-    <file name="${extlib.dir}/commons-digester.jar"/>
-    <file name="${extlib.dir}/commons-httpclient.jar"/>
-    <file name="${extlib.dir}/commons-io.jar"/>
-    <file name="${extlib.dir}/commons-lang.jar"/>
-    <file name="${extlib.dir}/commons-logging.jar"/>
-    <file name="${extlib.dir}/ehcache-1.2.jar"/>
-    <file name="${extlib.dir}/getdown.jar"/>
-    <file name="${extlib.dir}/jarbundler-1.2.jar"/>
-    <file name="${extlib.dir}/junit-3.7.jar"/>
-    <file name="${extlib.dir}/mail.jar"/>
-    <file name="${extlib.dir}/mysql-connector-java-3.1.12-bin.jar"/>
-    <file name="${extlib.dir}/proguard.jar"/>
-    <file name="${extlib.dir}/s3lib.jar"/>
-    <file name="${extlib.dir}/s3upload.jar"/>
-    <file name="${extlib.dir}/servlet-2.3.jar"/>
-    <file name="${extlib.dir}/underwire.jar"/>
-    <file name="${extlib.dir}/velocity-1.5-dev.jar"/>
+    <file name="${extlibs.dir}/ant.jar"/>
+    <file name="${extlibs.dir}/commons-beanutils.jar"/>
+    <file name="${extlibs.dir}/commons-codec.jar"/>
+    <file name="${extlibs.dir}/commons-collections.jar"/>
+    <file name="${extlibs.dir}/commons-digester.jar"/>
+    <file name="${extlibs.dir}/commons-httpclient.jar"/>
+    <file name="${extlibs.dir}/commons-io.jar"/>
+    <file name="${extlibs.dir}/commons-lang.jar"/>
+    <file name="${extlibs.dir}/commons-logging.jar"/>
+    <file name="${extlibs.dir}/ehcache-1.2.jar"/>
+    <file name="${extlibs.dir}/getdown.jar"/>
+    <file name="${extlibs.dir}/jarbundler-1.2.jar"/>
+    <file name="${extlibs.dir}/junit-3.7.jar"/>
+    <file name="${extlibs.dir}/mail.jar"/>
+    <file name="${extlibs.dir}/mysql-connector-java-3.1.12-bin.jar"/>
+    <file name="${extlibs.dir}/proguard.jar"/>
+    <file name="${extlibs.dir}/s3lib.jar"/>
+    <file name="${extlibs.dir}/s3upload.jar"/>
+    <file name="${extlibs.dir}/servlet-2.3.jar"/>
+    <file name="${extlibs.dir}/underwire.jar"/>
+    <file name="${extlibs.dir}/velocity-1.5-dev.jar"/>
     <file name="lib/lwjgl.jar"/>
     <file name="lib/lwjgl_util.jar"/>
     <file name="lib/jorbis-0.0.12.jar"/>
@@ -161,7 +160,7 @@
     <copy file="rsrc/config/resource/manager.properties"
           tofile="${deploy.dir}/rsrc/config/resource/manager.properties"/>
     <!-- use the default ehcache config for now -->
-    <copy file="projects/tools/etc/ehcache.xml" todir="${deploy.dir}/classes"/>
+    <copy file="build/etc/ehcache.xml" todir="${deploy.dir}/classes"/>
   </target>
 
   <!-- generates additional methods for distributed object classes -->
@@ -510,8 +509,7 @@
       <fileset dir="${deploy.dir}/lib" includes="commons-digester.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="commons-logging.jar"/>
     </copy>
-    <copy file="projects/tools/lib/java/getdown-pro.jar"
-          tofile="${client_dir}/code/getdown-pro-new.jar"/>
+    <copy file="${extlibs.dir}/getdown-pro.jar" tofile="${client_dir}/code/getdown-pro-new.jar"/>
     <delete file="${deploy.dir}/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
       <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
@@ -607,7 +605,7 @@
 
   <!-- builds the production client getdown distribution -->
   <target name="client" depends="copydistprops">
-    <exec executable="${basedir}/projects/tools/bin/buildstamp" outputproperty="version"
+    <exec executable="${basedir}/build/bin/buildstamp" outputproperty="version"
           failonerror="true">
     </exec>
     <!-- be extra safe and remove any old build.properties -->
@@ -726,7 +724,7 @@
     <property file="${cert_dir}/certificate.properties"/>
 
     <!-- copy the applet jar file into place and sign it -->
-    <copy file="projects/tools/lib/java/getdown-retro-pro.jar" todir="${applet.base}/client"/>
+    <copy file="${extlibs.dir}/getdown-retro-pro.jar" todir="${applet.base}/client"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
       <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
     </signjar>
@@ -865,15 +863,15 @@
   <!-- cleans JME which doesn't fit into our standard scheme -->
   <target name="cleanjme">
     <echo>Cleaning in jme...</echo>
-    <ant dir="${project.dir}/jme" target="clean" inheritAll="false"/>
+    <ant dir="${projects.dir}/jme" target="clean" inheritAll="false"/>
   </target>
 
   <!-- rebuilds JME which doesn't fit into our standard scheme -->
   <target name="distjme">
     <echo>Building in jme...</echo>
-    <ant dir="${project.dir}/jme" target="dist-all" inheritAll="false"/>
+    <ant dir="${projects.dir}/jme" target="dist-all" inheritAll="false"/>
     <copy todir="${deploy.dir}/lib">
-      <fileset dir="${project.dir}/jme/target">
+      <fileset dir="${projects.dir}/jme/target">
         <include name="jme.jar"/>
         <include name="jme-awt.jar"/>
         <include name="jme-effects.jar"/>
@@ -1022,13 +1020,13 @@
     <copy file="build.xml" todir="${pkg.base}"/>
     <copy file="rsrc/config/resource/manager.properties"
           todir="${pkg.base}/${deploy.dir}/rsrc/config/resource/"/>
-    <copy file="${tools.dir}/etc/build-support.xml" todir="${pkg.base}/${tools.dir}/etc"/>
-    <copy file="${tools.dir}/lib/perl/GrindUtil.pm" todir="${pkg.base}/${tools.dir}/lib/perl"/>
+    <copy file="build/etc/build-support.xml" todir="${pkg.base}/build/etc"/>
+    <copy file="tools/lib/perl/GrindUtil.pm" todir="${pkg.base}/tools/lib/perl"/>
     <antcall target="copywithperms">
       <param name="copy.perms" value="755"/>
-      <param name="copy.src"   value="${tools.dir}/bin"/>
+      <param name="copy.src"   value="tools/bin"/>
       <param name="copy.list"  value="lfilter,filter_interesting,sum_invokers"/>
-      <param name="copy.dest"  value="${pkg.base}/${tools.dir}/bin"/>
+      <param name="copy.dest"  value="${pkg.base}/tools/bin"/>
     </antcall>
     <antcall target="prepare-server-rcscript"/>
     <mkdir dir="${pkg.base}/run"/>

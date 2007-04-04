@@ -10,7 +10,7 @@ DESC="Bang game server"
 
 BANG_HOME=`dirname $0 | sed s:/bin$::`
 BANG_USER=www-data
-TOOLS_HOME=$BANG_HOME/projects/tools
+TOOLS_HOME=$BANG_HOME/tools
 HOSTNAME=`hostname`
 
 LOG_EMAIL=nightly-logs@threerings.net

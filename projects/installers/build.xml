@@ -10,12 +10,12 @@
   <!-- we want some tasks from ant-contrib -->
   <taskdef resource="net/sf/antcontrib/antlib.xml">
     <classpath>
-      <pathelement location="${basedir}/../tools/lib/java/ant-contrib.jar"/>
+      <pathelement location="${base.dir}/build/lib/java/ant-contrib.jar"/>
     </classpath>
   </taskdef>
 
   <target name="prepare">
-    <copy todir="data" file="${base.dir}/projects/tools/lib/java/getdown-pro.jar"/>
+    <copy todir="data" file="${base.dir}/extlibs/java/getdown-pro.jar"/>
     <mkdir dir="${deploy.dir}"/>
   </target>
 

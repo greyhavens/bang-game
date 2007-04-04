@@ -10,7 +10,7 @@ BEGIN {
     $root = `cd $root/.. ; pwd`; chomp($root);
 }
 
-use lib "$root/projects/tools/lib/perl";
+use lib "$root/tools/lib/perl";
 
 use Getopt::Long;
 use GrindUtil;

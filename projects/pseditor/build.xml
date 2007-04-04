@@ -19,7 +19,7 @@
   <import file="libs-incl.xml"/>
 
   <!-- helpful build targets -->
-  <import file="${base.dir}/projects/tools/etc/build-support.xml"/>
+  <import file="${base.dir}/build/etc/build-support.xml"/>
 
   <!-- declare our classpath -->
   <path id="classpath">

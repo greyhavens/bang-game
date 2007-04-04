@@ -9,7 +9,7 @@
   <property name="properties.file" value="server.properties"/>
 
   <!-- import the generic webapp build file and library dependencies -->
-  <import file="${base.dir}/projects/tools/etc/webapp-build.xml"/>
+  <import file="${base.dir}/build/etc/webapp-build.xml"/>
   <import file="libs-incl.xml"/>
 
   <!-- the location of the velocity templates -->
