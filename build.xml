@@ -542,12 +542,14 @@
       <entry key="config_version" value="${version}"/>
     </propertyfile>
     <echo message="Generating Proguard config file for devclient..."/>
-    <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
-      <arg line="etc/bang-client.pro.in"/>
-      <arg line="version=${version}"/>
-      <arg line="apply_mapping=#"/>
-      <arg line="apply_file=#"/>
-    </exec>
+    <copy file="etc/bang-client.pro.in" tofile="etc/bang-client.pro"
+          overwrite="true" encoding="UTF-8">
+      <filterset>
+        <filter token="version" value="${version}"/>
+        <filter token="apply_mapping" value="#"/>
+        <filter token="apply_file" value="#"/>
+      </filterset>
+    </copy>
 
     <!-- copy the getdown.txt file into the right place -->
     <property name="client.base" value="${deploy.dir}/client/pages/client"/>
@@ -621,12 +623,14 @@
     </exec>
     <echo message="Previous version used for renaming: ${latest_version}"/>
     <echo message="Generating Proguard config file for ${version}..."/>
-    <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro" failonerror="true">
-      <arg line="etc/bang-client.pro.in"/>
-      <arg line="version=${version}"/>
-      <arg line="apply_mapping=-applymapping"/>
-      <arg line="apply_file=proguard/${latest_version}.map"/>
-    </exec>
+    <copy file="etc/bang-client.pro.in" tofile="etc/bang-client.pro"
+          overwrite="true" encoding="UTF-8">
+      <filterset>
+        <filter token="version" value="${version}"/>
+        <filter token="apply_mapping" value="-applymapping"/>
+        <filter token="apply_file" value="proguard/${latest_version}.map"/>
+      </filterset>
+    </copy>
 
     <!-- copy the getdown.txt file into the right place -->
     <property name="client.base" value="${deploy.dir}/client/pages/client/${version}"/>
