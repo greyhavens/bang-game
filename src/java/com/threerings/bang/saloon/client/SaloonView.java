@@ -35,6 +35,8 @@ public class SaloonView extends ShopView
         _ctrl = ctrl;
 
         // add our various interface components
+        add(new BLabel(new ImageIcon(ctx.loadImage("ui/saloon/top_divider.png"))),
+                new Point(555, 588));
         add(new BLabel(_msgs.get("m.title"), "shop_status"),
             new Rectangle(266, 656, 491, 33));
         add(new WalletLabel(ctx, true), new Rectangle(25, 40, 150, 40));
