@@ -13,11 +13,7 @@ void main ()
     gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
 
     // add the splats, scaled by their alpha values
-    for (int ii = 0; ii < NUM_SPLATS; ii++) {
-        gl_FragColor +=
-            (texture2D(splatTextures[ii*2], gl_TexCoord[0].st) *
-                texture2D(splatTextures[ii*2+1], gl_TexCoord[1].st).a);
-    }
+    ADD_SPLATS
 
     // modulate by the light color
     gl_FragColor.rgb *= gl_Color.rgb;

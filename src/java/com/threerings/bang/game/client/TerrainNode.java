@@ -1380,9 +1380,16 @@ public class TerrainNode extends Node
     protected boolean configureShaderState (GLSLShaderObjectsState sstate, int splats, boolean fog)
     {
         String sdef = "NUM_SPLATS " + splats;
+        StringBuffer abuf = new StringBuffer("ADD_SPLATS ");
+        for (int ii = 0; ii < splats; ii++) {
+            abuf.append("gl_FragColor += (texture2D(splatTextures[" + (ii * 2) +
+                "], gl_TexCoord[0].st) * texture2D(splatTextures[" + (ii * 2 + 1) +
+                "], gl_TexCoord[1].st).a); ");
+        }
+        String adef = abuf.toString();
         return _ctx.getShaderCache().configureShaderState(sstate,
             null, "shaders/terrain.frag",
-            (fog ? new String[] { "ENABLE_FOG", sdef } : new String[] { sdef }));
+            (fog ? new String[] { "ENABLE_FOG", sdef, adef } : new String[] { sdef, adef }));
     }
 
     /**
