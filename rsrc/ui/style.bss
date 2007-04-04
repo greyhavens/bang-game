@@ -9,6 +9,7 @@
 root {
   color: #FFFFFF;
   font: "Dialog" plain 16;
+  cursor: "default";
 }
 
 root:disabled {
@@ -42,6 +43,7 @@ menuitem {
   padding: 5 5 5 5;
   color: #524129;
   font: "Dom Casual" plain 20;
+  cursor: "hand";
 }
 
 menuitem:disabled {
@@ -55,6 +57,7 @@ menuitem:hover {
 popupmenu_title {
   parent: "menuitem";
   font: "Dom Casual" bold 20;
+  cursor: "default";
 }
 
 tooltip_window {
@@ -83,6 +86,10 @@ label {
 //  border: 1 solid #FFFFFF;
 }
 
+def_button {
+  cursor: "hand";
+}
+
 button {
   color: #FFFFFF;
   background: image "ui/buttons/small_normal.png" framex;
@@ -90,6 +97,7 @@ button {
   text-align: center;
   vertical-align: center;
   padding: 0 25;
+  cursor: "hand";
 }
 button:disabled {
   background: image "ui/buttons/small_disabled.png" framex;
@@ -116,6 +124,7 @@ big_button {
   effect-color: #000000;
   vertical-align: center;
   padding: 0 25;
+  cursor: "hand";
 }
 big_button:disabled {
   background: image "ui/buttons/big_disabled.png" framex;
@@ -138,6 +147,7 @@ huge_button {
   effect-color: #000000;
   vertical-align: center;
   padding: 0 25;
+  cursor: "hand";
 }
 huge_button:disabled {
   background: image "ui/buttons/huge_disabled.png" framex;
@@ -158,6 +168,7 @@ alt_button {
   text-align: center;
   vertical-align: center;
   padding: 0 15;
+  cursor: "hand";
 }
 alt_button:disabled {
   background: image "ui/buttons/secondary_disabled.png" framex;
@@ -177,6 +188,7 @@ alt_button:selected {
 
 fwd_button {
   background: image "ui/buttons/forward_normal.png" centerxy;
+  cursor: "hand";
 }
 fwd_button:disabled {
   background: image "ui/buttons/forward_disabled.png" centerxy;
@@ -190,6 +202,7 @@ fwd_button:down {
 
 back_button {
   background: image "ui/buttons/back_normal.png" centerxy;
+  cursor: "hand";
 }
 back_button:disabled {
   background: image "ui/buttons/back_disabled.png" centerxy;
@@ -231,21 +244,11 @@ dice_button:disabled {
   parent: "alt_button:disabled";
 }
 
-invisibutton {
-}
-invisibutton:disabled {
-}
-invisibutton:hover {
-}
-invisibutton:down {
-}
-invisibutton:selected {
-}
-
 n_state_button {
   text-align: center;
   vertical-align: center;
   background: image "ui/buttons/n_state_normal.png" framex;
+  cursor: "hand";
 }
 
 n_state_button:hover {
@@ -268,6 +271,7 @@ tab {
   text-align: left;
   vertical-align: center;
   padding: 0 25;
+  cursor: "hand";
 }
 tab:down {
   color: #462300;
@@ -284,6 +288,7 @@ combobox {
   background: image "ui/combobox/normal.png" framex;
   padding: 5 22 5 10;
   text-align: center;
+  cursor: "hand";
 }
 
 combobox:hover {
@@ -303,6 +308,7 @@ textfield {
   font: "Dom Casual" plain 20;
   background: image "ui/textfield.png" framex;
   padding: 5;
+  cursor: "text";
 }
 
 textfield:disabled {
@@ -319,6 +325,7 @@ checkbox {
   font: "Dom Casual" plain 20;
   icon: image "ui/checkbox/unchecked.png";
   color: #4C2602;
+  cursor: "hand";
 }
 
 checkbox:selected {
@@ -335,6 +342,7 @@ checkbox:disselected {
 
 scrollbar_hthumb {
   background: image "ui/scrollbar/thumb_normal.png" framex;
+  cursor: "hand";
 }
 
 scrollbar_hthumb:down {
@@ -347,6 +355,7 @@ scrollbar_hthumb:disabled {
 
 scrollbar_vthumb {
   background: image "ui/scrollbar/thumb_normal.png" framey;
+  cursor: "hand";
 }
 
 scrollbar_vthumb:down {
@@ -360,6 +369,7 @@ scrollbar_vthumb:disabled {
 scrollbar_hwell {
   background: image "ui/scrollbar/well_normal.png" framex;
   padding: 2 3 2 3;
+  cursor: "hand";
 }
 
 scrollbar_hwell:disabled {
@@ -369,6 +379,7 @@ scrollbar_hwell:disabled {
 scrollbar_vwell {
   background: image "ui/scrollbar/well_normal.png" framey;
   padding: 2 3 2 3;
+  cursor: "hand";
 }
 
 scrollbar_vwell:disabled {
@@ -377,6 +388,7 @@ scrollbar_vwell:disabled {
 
 scrollbar_hless {
   icon: image "ui/scrollbar/left_normal.png" centerxy;
+  cursor: "hand";
 }
 
 scrollbar_hless:down {
@@ -389,6 +401,7 @@ scrollbar_hless:disabled {
 
 scrollbar_vless {
   background: image "ui/scrollbar/top_normal.png" centerxy;
+  cursor: "hand";
 }
 
 scrollbar_vless:down {
@@ -401,6 +414,7 @@ scrollbar_vless:disabled {
 
 scrollbar_hmore {
   icon: image "ui/scrollbar/right_normal.png" centerxy;
+  cursor: "hand";
 }
 
 scrollbar_hmore:down {
@@ -413,6 +427,7 @@ scrollbar_hmore:disabled {
 
 scrollbar_vmore {
   background: image "ui/scrollbar/bottom_normal.png" centerxy;
+  cursor: "hand";
 }
 
 scrollbar_vmore:down {
@@ -426,6 +441,7 @@ scrollbar_vmore:disabled {
 hslider {
   icon: image "ui/slider/normal.png";
   background: image "ui/slider/well.png" framex;
+  cursor: "hand";
 }
 hslider:down {
   icon: image "ui/slider/down.png";
@@ -571,6 +587,7 @@ wallet_name {
 
 color_selector {
   background: image "ui/barber/swatch_dot.png";
+  cursor: "hand";
 }
 
 color_selector_popup {
@@ -580,6 +597,7 @@ color_selector_popup {
 
 color_selector_item {
   padding: 0 0 0 0;
+  cursor: "hand";
 }
 
 debug_log {
@@ -682,6 +700,7 @@ palette_icon {
   text-align: center;
   vertical-align: top;
   padding: 24 4 4 4;
+  cursor: "hand";
 }
 
 palette_icon:selected {
@@ -700,6 +719,7 @@ card_palette_icon {
   vertical-align: top;
   padding: 12 2 2 2;
   background: image "ui/palette/card_background.png" framexy;
+  cursor: "hand";
 }
 
 card_palette_icon:selected {
@@ -725,6 +745,7 @@ logon_new {
   font: "Helvetica" plain 12;
   color: #FFFFFF;
   padding: 1 1;
+  cursor: "hand";
 }
 
 logon_new:hover {
@@ -813,6 +834,7 @@ pardner_view {
 }
 
 pardner_icon {
+  parent: def_button;
   font: "Dom Casual" plain 15;
   color: #4a2805;
   background: blank;
@@ -894,6 +916,7 @@ poster_gang {
   font: "Dom Casual" plain 20;
   color: #4a2805;
   size: 170 -1;
+  cursor: "hand";
 }
 
 poster_avatar {
@@ -912,6 +935,7 @@ poster_statement {
 poster_statement_field {
   parent: "textfield";
   font: "Dom Casual" plain 18;
+  cursor: "text";
 }
 
 poster_edit_popup {
@@ -958,6 +982,7 @@ folk_howto_button {
 
 tutorials_button {
   background: image "ui/buttons/tutorials_normal.png" centerxy;
+  cursor: "hand";
 }
 tutorials_button:hover {
   background: image "ui/buttons/tutorials_hover.png" centerxy;
@@ -968,6 +993,7 @@ tutorials_button:down {
 
 saddlebag_button {
   background: image "ui/buttons/saddlebag_normal.png" centerxy;
+  cursor: "hand";
 }
 saddlebag_button:hover {
   background: image "ui/buttons/saddlebag_hover.png" centerxy;
@@ -978,6 +1004,7 @@ saddlebag_button:down {
 
 pardners_button {
   background: image "ui/buttons/pardners_normal.png" centerxy;
+  cursor: "hand";
 }
 pardners_button:hover {
   background: image "ui/buttons/pardners_hover.png" centerxy;
@@ -995,6 +1022,7 @@ tip_label {
 
 exit_button {
   background: image "ui/buttons/exit_normal.png" centerxy;
+  cursor: "hand";
 }
 exit_button:hover {
   background: image "ui/buttons/exit_hover.png" centerxy;
@@ -1023,6 +1051,7 @@ comic_chat_viewport {
 chat_speaker_label {
   font: "Dom Casual" plain 14;
   text-align: center;
+  cursor: "hand";
 }
 
 sent_chat_bubble {
@@ -1262,6 +1291,7 @@ tutorial_window {
 
 tutorial_forward {
   background: image "ui/icons/right_arrow.png";
+  cursor: "hand";
 }
 tutorial_forward:hover {
   background: image "ui/icons/right_arrow_hover.png";
@@ -1275,6 +1305,7 @@ tutorial_forward:disabled {
 
 tutorial_back {
   background: image "ui/icons/left_arrow.png";
+  cursor: "hand";
 }
 tutorial_back:hover {
   background: image "ui/icons/left_arrow_hover.png";
@@ -1527,6 +1558,7 @@ avatar_view {
   padding: 7 12 7 12;
   text-align: center;
   vertical-align: bottom;
+  cursor: "hand";
 }
 
 avatar_view_framed_2 {
@@ -1613,6 +1645,7 @@ news_mastlabel {
 }
 
 news_news {
+  parent: def_button;
   background: image "ui/saloon/news_normal.png";
 }
 
@@ -1621,6 +1654,7 @@ news_news:selected {
 }
 
 news_folks {
+  parent: def_button;
   background: image "ui/saloon/folks_normal.png";
 }
 
@@ -1629,6 +1663,7 @@ news_folks:selected {
 }
 
 news_top_scores {
+  parent: def_button;
   background: image "ui/saloon/top_scores_normal.png";
 }
 
@@ -1671,6 +1706,7 @@ top_score_category {
 top_score_list {
   parent: "label";
   font: "Dom Casual" plain 16;
+  cursor: "hand";
 }
 
 parlor_list {
@@ -1737,6 +1773,7 @@ match_chat_text {
 match_chat_input {
   parent: "textfield";
   font: "Dom Casual" plain 16;
+  cursor: "input";
 }
 
 lobby_chat {
@@ -1804,6 +1841,7 @@ map_here {
 
 map_take {
   background: image "ui/station/take_train.png" centerxy;
+  cursor: "hand";
 }
 map_take:hover {
   background: image "ui/station/take_train_hover.png" centerxy;
@@ -1812,11 +1850,22 @@ map_take:disabled {
   background: blank;
 }
 
+map_frontier_town {
+  cursor: "hand";
+}
 map_frontier_town:hover {
   background: image "ui/station/frontier_town_hover.png" centerxy;
 }
+
+map_indian_post {
+  cursor: "hand";
+}
 map_indian_post:hover {
   background: image "ui/station/indian_post_hover.png" centerxy;
+}
+
+map_boom_town {
+  cursor: "hand";
 }
 map_boom_town:hover {
   background: image "ui/station/boom_town_hover.png" centerxy;
@@ -1883,6 +1932,7 @@ directory_entry {
   font: "Dom Casual" plain 18;
   color: #5C361D;
   padding: 5 5;
+  cursor: "hand";
 }
 
 roster_view {
@@ -1905,6 +1955,7 @@ leader_view {
   color: #5C361D;
   text-align: center;
   padding: 17 25 0 0;
+  cursor: "hand";
 }
 
 roster_table {
@@ -1915,6 +1966,7 @@ roster_entry {
   font: "Dom Casual" plain 17;
   color: #5C361D;
   padding: 0 20 0 0;
+  cursor: "hand";
 }
 roster_entry_inactive {
   parent: "roster_entry";
@@ -2053,6 +2105,7 @@ buckle_view {
   text-align: center;
   vertical-align: bottom;
   font: "Dom Casual" plain 14;
+  cursor: "hand";
 }
 
 buckle_dialog {
@@ -2321,6 +2374,7 @@ bge_table_rdata {
 
 bounty_recent {
   font: "Dom Casual" plain 14;
+  cursor: "hand";
 }
 
 //
