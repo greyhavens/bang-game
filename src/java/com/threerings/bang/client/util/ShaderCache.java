@@ -10,6 +10,7 @@ import java.util.HashSet;
 import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.util.ShaderUniform;
 
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ObjectUtil;
 
 import com.threerings.jme.util.JmeUtil;
@@ -35,10 +36,10 @@ public class ShaderCache
      * @return the newly created state, or <code>null</code> if there was an error and the
      * program could not be compiled.
      */
-    public GLSLShaderObjectsState createShaderState (String vert, String frag, String... defs)
+    public GLSLShaderObjectsState createState (String vert, String frag, String... defs)
     {
         GLSLShaderObjectsState sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
-        return (configureShaderState(sstate, vert, frag, defs) ? sstate : null);
+        return (configureState(sstate, vert, frag, defs) ? sstate : null);
     }
 
     /**
@@ -47,12 +48,29 @@ public class ShaderCache
      * @return true if the shader was successfully configured, false if the shader could not
      * be compiled.
      */
-    public boolean configureShaderState (
+    public boolean configureState (
         GLSLShaderObjectsState sstate, String vert, String frag, String... defs)
+    {
+        return configureState(sstate, vert, frag, defs, null);
+    }
+
+    /**
+     * (Re)configures an existing shader state with the supplied parameters.
+     *
+     * @param ddefs an optional array of derived preprocessor definitions that, unlike the
+     * principal definitions, need not be compared when differentiating between cached shaders.
+     * @return true if the shader was successfully configured, false if the shader could not
+     * be compiled.
+     */
+    public boolean configureState (
+        GLSLShaderObjectsState sstate, String vert, String frag, String[] defs, String[] ddefs)
     {
         ShaderKey key = new ShaderKey(vert, frag, defs);
         Integer programId = _programIds.get(key);
         if (programId == null) {
+            if (ddefs != null) {
+                defs = ArrayUtil.concatenate(defs, ddefs);
+            }
             GLSLShaderObjectsState pstate = JmeUtil.loadShaders(
                 (vert == null) ? null : _ctx.getResourceManager().getResourceFile(vert),
                 (frag == null) ? null : _ctx.getResourceManager().getResourceFile(frag), defs);
@@ -70,6 +88,15 @@ public class ShaderCache
         }
         sstate.setNeedsRefresh(true);
         return true;
+    }
+
+    /**
+     * Checks whether the specified shader is already loaded.  This is useful in order to avoid
+     * generating complex derived definitions when they won't be needed.
+     */
+    public boolean isLoaded (String vert, String frag, String... defs)
+    {
+        return _programIds.containsKey(new ShaderKey(vert, frag, defs));
     }
 
     /** Identifies a cached shader. */

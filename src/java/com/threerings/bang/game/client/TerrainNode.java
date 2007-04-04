@@ -58,6 +58,7 @@ import com.threerings.media.image.ColorUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
+import com.threerings.bang.client.util.ShaderCache;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -1379,17 +1380,22 @@ public class TerrainNode extends Node
      */
     protected boolean configureShaderState (GLSLShaderObjectsState sstate, int splats, boolean fog)
     {
+        ShaderCache scache = _ctx.getShaderCache();
+        String frag = "shaders/terrain.frag";
+
+        // only generate the derived ADD_SPLATS definition if the shader isn't already loaded
         String sdef = "NUM_SPLATS " + splats;
+        String[] defs = (fog ? new String[] { "ENABLE_FOG", sdef } : new String[] { sdef });
+        if (scache.isLoaded(null, frag, defs)) {
+            return scache.configureState(sstate, null, frag, defs);
+        }
         StringBuffer abuf = new StringBuffer("ADD_SPLATS ");
         for (int ii = 0; ii < splats; ii++) {
             abuf.append("gl_FragColor += (texture2D(splatTextures[" + (ii * 2) +
                 "], gl_TexCoord[0].st) * texture2D(splatTextures[" + (ii * 2 + 1) +
                 "], gl_TexCoord[1].st).a); ");
         }
-        String adef = abuf.toString();
-        return _ctx.getShaderCache().configureShaderState(sstate,
-            null, "shaders/terrain.frag",
-            (fog ? new String[] { "ENABLE_FOG", sdef, adef } : new String[] { sdef, adef }));
+        return scache.configureState(sstate, null, frag, defs, new String[] { abuf.toString() });
     }
 
     /**

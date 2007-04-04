@@ -238,7 +238,7 @@ public class WaterNode extends Node
     public void refreshShader ()
     {
         if (_sstate != null) {
-            _ctx.getShaderCache().configureShaderState(_sstate,
+            _ctx.getShaderCache().configureState(_sstate,
                 "shaders/water.vert", "shaders/water.frag",
                 (_board.getFogDensity() > 0f) ? new String[] { "ENABLE_FOG" } : new String[0]);
         }
@@ -341,7 +341,7 @@ public class WaterNode extends Node
      */
     protected boolean initShaders ()
     {
-        _sstate = _ctx.getShaderCache().createShaderState("shaders/water.vert", "shaders/water.frag");
+        _sstate = _ctx.getShaderCache().createState("shaders/water.vert", "shaders/water.frag");
         if (_sstate == null) {
             _disableShaders = true;
             return false;
