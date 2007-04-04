@@ -3,8 +3,10 @@
 
 package com.threerings.bang.client;
 
+
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.geom.AffineTransform;
@@ -18,6 +20,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.html.CSS;
 import javax.swing.text.html.StyleSheet;
 
+import java.lang.ref.WeakReference;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,8 +32,6 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import org.lwjgl.input.Cursor;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.WaveData;
@@ -39,6 +40,7 @@ import com.jme.image.Image;
 import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BCursor;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
@@ -263,55 +265,6 @@ public class BangUI
     }
 
     /**
-     * Configures the default cursor.
-     */
-    public static void configDefaultCursor ()
-    {
-        String path = "rsrc/ui/cursor.png";
-        BufferedImage image, cursor = ImageCache.createCompatibleImage(32, 32, true);
-        try {
-            // getdown has already unpacked our resources, so we can load these images straight
-            // from the filesystem (this method may get called before the resource manager and
-            // image cache are set up, otherwise we'd use them)
-            image = ImageIO.read(BangUtil.getResourceFile(path));
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to load cursor [path=" + path + "].", e);
-            return;
-        }
-        Graphics2D g = cursor.createGraphics();
-        try {
-            g.drawImage(image, null, 0, 0);
-            configCursor(cursor, 0, 0);
-        } finally {
-            g.dispose();
-        }
-    }
-
-    /**
-     * Configures our application mouse cursor.
-     */
-    public static void configCursor (BufferedImage image, int hx, int hy)
-    {
-        int ww = image.getWidth();
-        int hh = image.getHeight();
-        IntBuffer data = ByteBuffer.allocateDirect(ww*hh*4).asIntBuffer();
-        for (int yy = hh - 1; yy >= 0; yy--) {
-            for (int xx = 0; xx < ww; xx++) {
-                data.put(image.getRGB(xx, yy));
-            }
-        }
-        data.flip();
-        try {
-            if (!Mouse.isCreated()) {
-                Mouse.create();
-            }
-            Mouse.setNativeCursor(new Cursor(ww, hh, hx, hh - hy - 1, 1, data, null));
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to set cursor.", e);
-        }
-    }
-
-    /**
      * Configures our application icons (shown in the corner of the window and in the task bar,
      * etc.).
      */
@@ -422,6 +375,9 @@ public class BangUI
             }
             public BImage loadImage (String path) throws IOException {
                 return _ctx.getImageCache().getBImage(path);
+            }
+            public BCursor loadCursor (String name) throws IOException {
+                return BangUI.loadCursor(name);
             }
         };
         try {
@@ -536,6 +492,34 @@ public class BangUI
         return diagwin;
     }
 
+    public static BCursor loadCursor (String name) throws IOException {
+        // first check the cache
+        BCursor cursor = _ccache.get(name);
+        if (cursor != null) {
+            return cursor;
+        }
+
+        String path = "ui/cursor_" + name + ".png";
+        BufferedImage image = _ctx.getImageCache().getBufferedImage(path);
+        if (image != null) {
+            BufferedImage cimage = ImageCache.createCompatibleImage(32, 32, true);
+            Graphics2D g = cimage.createGraphics();
+            try {
+                g.drawImage(image, null, 0, 0);
+                Point pt = HOT_SPOTS.get(name);
+                if (pt != null) {
+                    cursor = new BCursor(cimage, pt.x, pt.y);
+                } else {
+                    cursor = new BCursor(cimage, 0, 0);
+                }
+            } finally {
+                g.dispose();
+            }
+        }
+        _ccache.put(name, cursor);
+        return cursor;
+    }
+
     protected static Font loadFont (BasicContext ctx, String path)
     {
         Font font = null;
@@ -614,9 +598,19 @@ public class BangUI
     protected static SoundGroup _sgroup;
     protected static HashMap<FeedbackSound,Sound> _sounds = new HashMap<FeedbackSound,Sound>();
 
+    /** A cache of {@link BCursor} instances. */
+    protected static HashMap<String, BCursor> _ccache = new HashMap<String, BCursor>();
+
     /** The number of simultaneous UI sounds allowed. */
     protected static final int UI_SOURCE_COUNT = 2;
 
     /** Sizes of icons we need. */
     protected static final int[] ICON_SIZES = {16, 32, 128};
+
+    /** Non (0, 0) hotspots for our cursors. */
+    protected static final HashMap<String, Point> HOT_SPOTS = new HashMap<String, Point>();
+    static {
+        HOT_SPOTS.put("hand", new Point(5, 0));
+        HOT_SPOTS.put("text", new Point(4, 21));
+    }
 }

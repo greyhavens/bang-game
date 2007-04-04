@@ -178,7 +178,7 @@ public class PlayerPopupMenu extends BPopupMenu
         addMenuItem(new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
 
         // if we're an admin/support, add a link to their admin account page
-        if (_ctx.getUserObject().tokens.isSupport()) {
+        if (self.tokens.isSupport()) {
             addMenuItem(new BMenuItem(msgs.get("m.pm_view_account"), "view_account"));
         }
 
@@ -193,7 +193,7 @@ public class PlayerPopupMenu extends BPopupMenu
         }
 
         // if they're our pardner, add some pardner-specific items
-        PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
+        PardnerEntry entry = self.pardners.get(_handle);
         if (entry != null) {
             if (entry.isAvailable()) {
                 addMenuItem(new BMenuItem(msgs.get("m.pm_chat_pardner"), "chat_pardner"));

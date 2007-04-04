@@ -45,5 +45,11 @@ public class SelectableIcon extends BToggleButton
         }
     }
 
+    @Override // from BComponent
+    protected boolean changeCursor ()
+    {
+        return super.changeCursor() && (_palette == null || _palette.getSelectable() > 0);
+    }
+
     protected IconPalette _palette;
 }

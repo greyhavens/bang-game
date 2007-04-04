@@ -168,6 +168,12 @@ public class BuckleView extends BaseAvatarView
         return handled || super.dispatchEvent(event);
     }
 
+    @Override // from BComponent
+    protected boolean changeCursor ()
+    {
+        return super.changeCursor() && _name != null;
+    }
+
     protected int getImageY ()
     {
         return (_scroll == null) ? super.getImageY() : _scroll.getHeight();

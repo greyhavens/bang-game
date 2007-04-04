@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.input.Cursor;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.light.DirectionalLight;
 import com.jme.math.FastMath;
@@ -34,6 +36,7 @@ import com.jme.scene.state.TextureState;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BCursor;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
@@ -162,7 +165,15 @@ public class BangBoardView extends BoardView
      */
     public boolean clearPlacingCard ()
     {
-        BangUI.configDefaultCursor();
+        if (_defaultCursor != null) {
+            try {
+                BCursor defaultCursor = BangUI.loadCursor("default");
+                defaultCursor.setCursor(_defaultCursor);
+                defaultCursor.show();
+            } catch (Exception e) {
+                // this should never happen
+            }
+        }
         if (_card == null) {
             return false;
         }
@@ -2010,13 +2021,13 @@ public class BangBoardView extends BoardView
     }
 
     /**
-     * Creates a moe cursor with a card icon.
+     * Creates a custom cursor with a card icon.
      */
     protected void createCardCursor (Card card)
     {
         BufferedImage merge = ImageCache.createCompatibleImage(32, 32, true);
         BufferedImage cursor =
-            _ctx.getImageCache().getBufferedImage("ui/cursor.png");
+            _ctx.getImageCache().getBufferedImage("ui/cursor_default.png");
         BufferedImage icon =
             _ctx.getImageCache().getBufferedImage(card.getIconPath("icon"));
         Graphics2D g = merge.createGraphics();
@@ -2065,7 +2076,14 @@ public class BangBoardView extends BoardView
                         ix, iy, Math.min(32, xx - ix), Math.min(32, yy - iy)),
                     null, Math.max(0, 31 - xx - ix), Math.max(0, 31 - yy - iy));
         g.drawImage(cursor, null, 0, 0);
-        BangUI.configCursor(merge, 0, 0);
+        try {
+            BCursor defaultCursor = BangUI.loadCursor("default");
+            _defaultCursor = defaultCursor.getCursor();
+            defaultCursor.setCursor(merge, 0, 0);
+            defaultCursor.show();
+        } catch (Exception e) {
+            // this should never happen
+        }
         g.dispose();
     }
 
@@ -2192,6 +2210,9 @@ public class BangBoardView extends BoardView
     protected SwingPath _tpath;
 
     protected ArrayList<UnitSprite> _readyUnits = new ArrayList<UnitSprite>();
+
+    /** The old default mouse cursor. */
+    protected Cursor _defaultCursor;
 
     /** Set to true if shift was down during the mouse press. */
     protected boolean _shiftDown = false;

@@ -253,6 +253,12 @@ public class PardnerView extends IconPalette
             setScroll(null);
         }
 
+        @Override // documentation inherited
+        protected boolean changeCursor ()
+        {
+            return _hover && _enabled && _visible;
+        }
+
         protected void updateAvatar ()
         {
             // start with the silhouette image

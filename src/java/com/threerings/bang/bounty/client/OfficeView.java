@@ -59,7 +59,7 @@ public class OfficeView extends ShopView
         for (int ii = 0; ii < TABS.length; ii++) {
             BButton btn = new BButton("", _selector, TABS[ii]);
             add(btn, new Rectangle(TAB_LOCS[ii], 623, 150, 30));
-            btn.setStyleClass("invisibutton");
+            btn.setStyleClass("def_button");
         }
 
         // this will display a particular bounty

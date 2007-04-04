@@ -129,9 +129,9 @@ public abstract class ShopView extends BWindow
         add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
                        "town_name_label"), new Rectangle(851, 637, 165, 20));
         // add a blank button over the shop image that returns to the town
-        _townBtn = new BButton(new BlankIcon(_shopimg.getWidth(), 
-                    _shopimg.getHeight()), _ctrl, "to_town"); 
-        _townBtn.setStyleClass("invisibutton");
+        _townBtn = new BButton(new BlankIcon(_shopimg.getWidth(),
+                    _shopimg.getHeight()), _ctrl, "to_town");
+        _townBtn.setStyleClass("def_button");
         add(_townBtn, new Point(
                     1012-_shopimg.getWidth(), 756-_shopimg.getHeight()));
 

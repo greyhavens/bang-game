@@ -150,5 +150,11 @@ public class AvatarView extends BaseAvatarView
         return handled || super.dispatchEvent(event);
     }
 
+    @Override // from BComponent
+    public boolean changeCursor ()
+    {
+        return super.changeCursor() && _handle != null;
+    }
+
     protected Handle _handle;
 }

@@ -235,6 +235,9 @@ public class ParlorList extends BContainer
         } else if (info.type == ParlorInfo.Type.PARDNERS_ONLY) {
             weight -= 1000;
         }
+        if (info.occupants == 0) {
+            weight -= 900;
+        }
         return weight;
     }
 

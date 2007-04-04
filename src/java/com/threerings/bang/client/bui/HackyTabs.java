@@ -3,9 +3,12 @@
 
 package com.threerings.bang.client.bui;
 
+import java.io.IOException;
+
 import com.jme.renderer.Renderer;
 
 import com.jmex.bui.BComponent;
+import com.jmex.bui.BCursor;
 import com.jmex.bui.BImage;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
@@ -24,7 +27,7 @@ public class HackyTabs extends BComponent
     {
         this(ctx, vertical, imgpref, tabs, false, size, border);
     }
-    
+
     /**
      * @param unselected if <code>true</code>, the tab images provided depict the unselected tabs;
      * "_selected" will be appended for the selected images
@@ -49,6 +52,13 @@ public class HackyTabs extends BComponent
             if (unselected) {
                 _stabs[ii] = _ctx.loadImage(imgpref + tabs[ii] + "_selected.png");
             }
+        }
+
+        // load up our hover cursor
+        try {
+            _hcursor = BangUI.loadCursor("hand");
+        } catch (IOException e) {
+            // we can just let it drop if something goes wrong
         }
     }
 
@@ -129,7 +139,7 @@ public class HackyTabs extends BComponent
             }
             return;
         }
-        
+
         int dx = 0, dy = 0;
         if (_vertical) {
             iy = getHeight() - _tsize;
@@ -144,13 +154,28 @@ public class HackyTabs extends BComponent
 
     protected MouseAdapter _mlistener = new MouseAdapter() {
         public void mousePressed (MouseEvent event) {
+            int tabidx = getTabIdx(event);
+            if (tabidx > -1) {
+                selectTab(tabidx);
+            }
+        }
+        public void mouseMoved (MouseEvent event) {
+            int tabidx = getTabIdx(event);
+            if (changeCursor()) {
+                updateCursor((tabidx == -1 || tabidx == _selidx) ? _cursor : _hcursor);
+            }
+            _hoverIdx = tabidx;
+        }
+        protected int getTabIdx (MouseEvent event) {
             int mx = event.getX() - getAbsoluteX(),
                 my = getHeight() - (event.getY() - getAbsoluteY());
             int tabidx = ((_vertical ? my : mx) - _tborder) / _tsize;
             if (tabidx >= 0 && tabidx < _tabs.length) {
-                selectTab(tabidx);
+                return tabidx;
             }
+            return -1;
         }
+        int _hoverIdx = -1;
     };
 
     protected BangContext _ctx;
@@ -158,4 +183,5 @@ public class HackyTabs extends BComponent
     protected int _tsize, _tborder;
     protected BImage[] _tabs, _stabs;
     protected int _deftab, _selidx = -1;
+    protected BCursor _hcursor;
 }

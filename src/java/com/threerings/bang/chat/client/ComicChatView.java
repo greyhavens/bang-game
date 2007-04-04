@@ -125,7 +125,7 @@ public abstract class ComicChatView
             // look up our speaker record for this speaker
             Speaker sprec = _speakers.get(_speaker);
 
-            sprec.loadAvatar(_ctx, 
+            sprec.loadAvatar(_ctx,
                     isLeftSide(_speaker) ^ !_ctx.getAvatarLogic().isMale(sprec.getAvatar()));
 
             ChatEntry entry = new ChatEntry(sprec, isLeftSide(_speaker));
@@ -392,7 +392,7 @@ public abstract class ComicChatView
         protected BIcon _avicon;
         protected ArrayList<BLabel> _penders;
     }
- 
+
     /** A chat entry that displays an avatar icon along with one or more messages in bubbles. */
     protected class ChatEntry extends BContainer
     {
@@ -453,5 +453,5 @@ public abstract class ComicChatView
     /** Chat bubble backgrounds for sent and received messages, first bubble in sequence and rest
      * of bubbles in sequence. */
     protected ImageBackground _sfbg, _srbg, _rfbg, _rrbg;
-   
+
 }

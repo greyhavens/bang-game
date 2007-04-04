@@ -49,6 +49,7 @@ public class FolkCell extends BContainer
     {
         super(GroupLayout.makeHoriz(GroupLayout.LEFT));
         setPreferredSize(new Dimension(200, 18));
+        setStyleClass("def_button");
 
         _ctx = ctx;
         _chat = _ctx.getBangClient().getPardnerChatView();
