@@ -105,6 +105,12 @@ public class BankManager extends ShopManager
     }
 
     @Override // from ShopManager
+    protected boolean requireHandle ()
+    {
+        return true;
+    }
+
+    @Override // from ShopManager
     protected String getIdent ()
     {
         return "bank";
