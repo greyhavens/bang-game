@@ -265,18 +265,6 @@ public class OOOAuthenticator extends BangAuthenticator
             return;
         }
 
-        // stash their age information
-        if (user != null && prec != null) {
-            OOOAuxData auxData = _authrep.getAuxRecord(user.userId);
-            if (auxData != null) {
-                Calendar coppa = Calendar.getInstance();
-                coppa.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
-                if (auxData.birthday.before(coppa.getTime())) {
-                    prec.isOver13 = true;
-                }
-            }
-        }
-
         // see if they're a coin buyer
         if (!anonymous && prec != null && !prec.isSet(PlayerRecord.IS_COIN_BUYER)) {
             if (user.hasBoughtCoins() || user.isSupportPlus()) {
@@ -382,6 +370,23 @@ public class OOOAuthenticator extends BangAuthenticator
 
         // log.info("User logged on [user=" + user.username + "].");
         rdata.code = BangAuthResponseData.SUCCESS;
+
+        // stash their age information
+        if (user != null) {
+            OOOAuxData auxData = _authrep.getAuxRecord(user.userId);
+            if (auxData != null) {
+                Calendar coppa = Calendar.getInstance();
+                coppa.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
+                if (auxData.birthday.before(coppa.getTime())) {
+                    if (prec != null) {
+                        prec.isOver13 = true;
+                    } else {
+                        BangClientResolver.stashPlayerOver13(user.username);
+                    }
+                }
+            }
+        }
+
 
         if (prec != null) {
             if (!anonymous) {

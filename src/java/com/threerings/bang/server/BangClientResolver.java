@@ -6,6 +6,7 @@ package com.threerings.bang.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
@@ -67,6 +68,17 @@ public class BangClientResolver extends CrowdClientResolver
         }
     }
 
+    /**
+     * This is called earlier in the authentication process where we find out the user's age
+     * so we stash it here to avoid loading it again when the time comes to resolve their data.
+     */
+    public static void stashPlayerOver13 (String accountName)
+    {
+        synchronized (_astash) {
+            _astash.add(accountName.toLowerCase());
+        }
+    }
+
     // documentation inherited
     public ClientObject createClientObject ()
     {
@@ -100,6 +112,11 @@ public class BangClientResolver extends CrowdClientResolver
             BangServer.playrepo.insertPlayer(player);
             if (!anonymous) {
                 BangServer.author.setAccountIsActive(username, true);
+                synchronized (_astash) {
+                    if (_astash.remove(username.toLowerCase())) {
+                        player.isOver13 = true;
+                    }
+                }
             }
             BangServer.generalLog("first_timer " + username);
         }
@@ -280,6 +297,9 @@ public class BangClientResolver extends CrowdClientResolver
 
     /** Used to temporarily store player records during resolution. */
     protected static HashMap<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();
+
+    /** Used to temporarily store player age during resolution. */
+    protected static HashSet<String> _astash = new HashSet<String>();
 
     /** The number of rated games a player has to have played to get a free ticket to ITP. */
     protected static final int FREE_ITP_GP_REQUIREMENT = 20;

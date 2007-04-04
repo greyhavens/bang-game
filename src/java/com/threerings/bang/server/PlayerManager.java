@@ -876,7 +876,7 @@ public class PlayerManager
                         username, password, email, affiliate, machIdent, bdate);
                     if (_errmsg == null) {
                         BangServer.author.setAccountIsActive(username, true);
-                        _playrepo.clearAnonymous(user.playerId);
+                        _playrepo.clearAnonymous(user.playerId, username);
                     }
                 } catch (PersistenceException pe) {
                     log.log(Level.WARNING,

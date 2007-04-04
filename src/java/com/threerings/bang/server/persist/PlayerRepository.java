@@ -171,12 +171,13 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Marks a player as no longer being anonymous.
+     * Marks a player as no longer being anonymous and gives them a real username.
      */
-    public void clearAnonymous (int playerId)
+    public void clearAnonymous (int playerId, String username)
         throws PersistenceException
     {
         checkedUpdate("update PLAYERS set FLAGS = FLAGS & " + ~PlayerRecord.IS_ANONYMOUS +
+                ", ACCOUNT_NAME = " + JDBCUtil.escape(username) +
                 " where PLAYER_ID = " + playerId, 1);
     }
 
