@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -44,7 +44,7 @@ import com.jme.util.geom.BufferUtils;
  * <code>Quad</code> defines a four sided, two dimensional shape. The local
  * height of the <code>Quad</code> defines it's size about the y-axis, while
  * the width defines the x-axis. The z-axis will always be 0.
- * 
+ *
  * @author Mark Powell
  * @version $Id: Quad.java,v 1.12 2006/05/11 19:39:25 nca Exp $
  */
@@ -53,14 +53,14 @@ public class Quad extends TriMesh {
 	private static final long serialVersionUID = 1L;
 
     public Quad() {
-        
+
     }
-    
+
 	/**
 	 * Constructor creates a new <code>Quad</code> object. That data for the
 	 * <code>Quad</code> is not set until a call to <code>initialize</code>
 	 * is made.
-	 * 
+	 *
 	 * @param name
 	 *            the name of this <code>Quad</code>.
 	 */
@@ -71,7 +71,7 @@ public class Quad extends TriMesh {
 	/**
 	 * Constructor creates a new <code>Quade</code> object with the provided
 	 * width and height.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the <code>Quad</code>.
 	 * @param width
@@ -87,7 +87,7 @@ public class Quad extends TriMesh {
 	/**
 	 * <code>resize</code> changes the width and height of the given quad by
 	 * altering its vertices.
-	 * 
+	 *
 	 * @param width
 	 *            the new width of the <code>Quad</code>.
 	 * @param height
@@ -103,11 +103,11 @@ public class Quad extends TriMesh {
 	}
 
 	/**
-	 * 
+	 *
 	 * <code>initialize</code> builds the data for the <code>Quad</code>
 	 * object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param width
 	 *            the width of the <code>Quad</code>.
 	 * @param height
@@ -133,13 +133,10 @@ public class Quad extends TriMesh {
 		batch.getNormalBuffer().put(0).put(0).put(1);
 		batch.getNormalBuffer().put(0).put(0).put(1);
 
-        
 		tbuf.put(0).put(1);
         tbuf.put(0).put(0);
         tbuf.put(1).put(0);
         tbuf.put(1).put(1);
-
-	    setDefaultColor(ColorRGBA.white);
 
 	    batch.getIndexBuffer().put(0);
 	    batch.getIndexBuffer().put(1);
@@ -151,7 +148,7 @@ public class Quad extends TriMesh {
 
 	/**
 	 * <code>getCenter</code> returns the center of the <code>Quad</code>.
-	 * 
+	 *
 	 * @return Vector3f the center of the <code>Quad</code>.
 	 */
 	public Vector3f getCenter() {
