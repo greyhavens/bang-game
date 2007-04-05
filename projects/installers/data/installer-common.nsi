@@ -14,9 +14,11 @@
   CRCCheck On
   OutFile ${OUTFILENAME}
 
+  RequestExecutionLevel user
+
 ;--------------------------------
 ;General
- 
+
   !define MUI_ICON "${RSRCDIR}\install_icon.ico"
   !define MUI_UNICON "${RSRCDIR}\uninstall_icon.ico"
   !define MUI_WELCOMEFINISHPAGE_BITMAP "${RSRCDIR}\branding.bmp"
@@ -25,7 +27,7 @@
   !include "MUI.nsh"
   !include "ZipDLL.nsh"
 
-;--------------------------------	
+;--------------------------------
 ;Modern UI Configuration
 
   !ifndef NO_QUESTIONS_ASKED
@@ -47,7 +49,7 @@
   !insertmacro MUI_UNPAGE_INSTFILES
 
 
-;--------------------------------	
+;--------------------------------
 ;Language jockeying
 
   ; Load up our localized messages
@@ -84,7 +86,8 @@ Function .onInit
   SetShellVarContext current
 
   ; Check to see if they already have the game installed
-  ReadRegStr $R0 HKLM "SOFTWARE\$(company_name)\${NAME}" \
+  ; Note: Prior to 04/04/07 we used to store our registry keys in HKLM, same location otherwise.
+  ReadRegStr $R0 HKCU "SOFTWARE\$(company_name)\${NAME}" \
       INSTALL_DIR_REG_KEY
   StrCmp $R0 "" CheckInstallPrivs
   ClearErrors
@@ -109,9 +112,16 @@ Function .onInit
 
   ; Check that they are installing with the necessary privileges
   CheckInstallPrivs:
+  Call GetWindowsVersion
+  Pop $R0
+  ; If we're on Vista install to the user space
+  StrCmp $R0 "Vista" UserPath
+
   Call IsUserAdmin
   Pop $R0
   StrCmp $R0 "true" ProceedInstall
+
+  UserPath:
   ; Install in their home directory instead
   StrCpy $INSTDIR "$APPDATA\Three Rings Design\${INSTALL_DIR}"
 
@@ -261,7 +271,7 @@ Section "Install" InstStuff
   ; Create the affiliate id file
   !ifdef FORCED_COBRAND_ID
     StrCpy $R0 "bang-${FORCED_COBRAND_ID}-install.exe"
-  !else 
+  !else
     System::Call 'kernel32::GetModuleFileNameA(i 0, t .R0, i 1024) i r1'
   !endif
   FileOpen $9 "$INSTDIR\installer.txt" "w"
@@ -309,15 +319,15 @@ Section "Install" InstStuff
                  "$INSTDIR\$(shortcut_name).lnk"
 
   ; Set up registry stuff
-  WriteRegStr HKLM "SOFTWARE\$(company_name)\${NAME}" \
+  WriteRegStr HKCU "SOFTWARE\$(company_name)\${NAME}" \
                    INSTALL_DIR_REG_KEY $INSTDIR
-  WriteRegStr HKLM "SOFTWARE\$(company_name)\${NAME}" \
+  WriteRegStr HKCU "SOFTWARE\$(company_name)\${NAME}" \
                    PRODUCT_VERSION_REG_KEY ${INSTALLER_VERSION}
 
   StrCpy $R0 "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}"
-  WriteRegStr HKLM $R0 "DisplayName" "${NAME}"
-  WriteRegStr HKLM $R0 "UninstallString" "$INSTDIR\$(uninstaller_name)"
-  WriteRegDWORD HKLM $R0 "NoModify" 1
+  WriteRegStr HKCU $R0 "DisplayName" "${NAME}"
+  WriteRegStr HKCU $R0 "UninstallString" "$INSTDIR\$(uninstaller_name)"
+  WriteRegDWORD HKCU $R0 "NoModify" 1
 SectionEnd
 
 
@@ -334,9 +344,9 @@ Section "Uninstall"
   RMDir /r "$SMPROGRAMS\${NAME}"
 !endif
   Delete "$DESKTOP\${NAME}.lnk"
-  DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}"
-  DeleteRegKey HKLM "SOFTWARE\$(company_name)\${NAME}"
-  DeleteRegKey HKLM "SOFTWARE\$(company_name)"
+  DeleteRegKey HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}"
+  DeleteRegKey HKCU "SOFTWARE\$(company_name)\${NAME}"
+  DeleteRegKey HKCU "SOFTWARE\$(company_name)"
 SectionEnd
 
 
@@ -355,14 +365,14 @@ FunctionEnd
  ;    top of stack-1 = needed version
  ; output:
  ;    top of stack = 1 if current version => neded version, else 0
- ; version is a string in format "xx.xx.xx.xx" (number of interger sections 
+ ; version is a string in format "xx.xx.xx.xx" (number of interger sections
  ; can be different in needed and existing versions)
 
 Function CompareVersions
    ; stack: existing ver | needed ver
-   Exch $R0 
+   Exch $R0
    Exch
-   Exch $R1 
+   Exch $R1
    ; stack: $R1|$R0
 
    Push $R1
@@ -379,7 +389,7 @@ Function CompareVersions
       Exch
 
       Call ParseVersion
-      Pop $R1 
+      Pop $R1
       Exch
 
       IntCmp $R1 $R0 +1 VersionOk VersionNotFound
@@ -387,7 +397,7 @@ Function CompareVersions
       Push $R0
 
    goto loop
-   
+
    VersionTestEnd:
       Pop $R0
       Pop $R1
@@ -398,7 +408,7 @@ Function CompareVersions
    VersionNotFound:
       StrCpy $R0 "0"
       Goto end
-      
+
    VersionOk:
       StrCpy $R0 "1"
 end:
@@ -420,7 +430,7 @@ FunctionEnd
  ; ParseVersion
  ; input:
  ;      top of stack = version string ("xx.xx.xx.xx")
- ; output: 
+ ; output:
  ;      top of stack   = first number in version ("xx")
  ;      top of stack-1 = rest of the version string ("xx.xx.xx")
 Function ParseVersion
@@ -447,10 +457,10 @@ Function ParseVersion
    StrCpy $R1 $R1 $R3 $R2
 
    Push $R1
-   
+
    Exch 2
    Pop $R3
-   
+
    Exch 2
    Pop $R2
 
@@ -463,7 +473,7 @@ FunctionEnd
  ; input:
  ;      top of stack   = string to search for (the needle)
  ;      top of stack-1 = string to search in (the haystack)
- ; output: 
+ ; output:
  ;      top of stack   = replaces with the portion of the string remaining
  ;
  ; Usage:
@@ -501,5 +511,101 @@ Function StrStr
    Pop $R2
    Exch $R1
 FunctionEnd
+
+;-----------------------------------------------------------------------------
+ ; GetWindowsVersion
+ ;
+ ; Based on Yazno's function, http://yazno.tripod.com/powerpimpit/
+ ; Updated by Joost Verburg
+ ;
+ ; Returns on top of stack
+ ;
+ ; Windows Version (95, 98, ME, NT x.x, 2000, XP, 2003, Vista)
+ ; or
+ ; '' (Unknown Windows Version)
+ ;
+ ; Usage:
+ ;   Call GetWindowsVersion
+ ;   Pop $R0
+ ;   ; at this point $R0 is "NT 4.0" or whatnot
+
+ Function GetWindowsVersion
+
+   Push $R0
+   Push $R1
+
+   ClearErrors
+
+   ReadRegStr $R0 HKLM \
+   "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+
+   IfErrors 0 lbl_winnt
+
+   ; we are not NT
+   ReadRegStr $R0 HKLM \
+   "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
+
+   StrCpy $R1 $R0 1
+   StrCmp $R1 '4' 0 lbl_error
+
+   StrCpy $R1 $R0 3
+
+   StrCmp $R1 '4.0' lbl_win32_95
+   StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
+
+   lbl_win32_95:
+     StrCpy $R0 '95'
+   Goto lbl_done
+
+   lbl_win32_98:
+     StrCpy $R0 '98'
+   Goto lbl_done
+
+   lbl_win32_ME:
+     StrCpy $R0 'ME'
+   Goto lbl_done
+
+   lbl_winnt:
+
+   StrCpy $R1 $R0 1
+
+   StrCmp $R1 '3' lbl_winnt_x
+   StrCmp $R1 '4' lbl_winnt_x
+
+   StrCpy $R1 $R0 3
+
+   StrCmp $R1 '5.0' lbl_winnt_2000
+   StrCmp $R1 '5.1' lbl_winnt_XP
+   StrCmp $R1 '5.2' lbl_winnt_2003
+   StrCmp $R1 '6.0' lbl_winnt_vista lbl_error
+
+   lbl_winnt_x:
+     StrCpy $R0 "NT $R0" 6
+   Goto lbl_done
+
+   lbl_winnt_2000:
+     Strcpy $R0 '2000'
+   Goto lbl_done
+
+   lbl_winnt_XP:
+     Strcpy $R0 'XP'
+   Goto lbl_done
+
+   lbl_winnt_2003:
+     Strcpy $R0 '2003'
+   Goto lbl_done
+
+   lbl_winnt_vista:
+     Strcpy $R0 'Vista'
+   Goto lbl_done
+
+   lbl_error:
+     Strcpy $R0 ''
+   lbl_done:
+
+   Pop $R1
+   Exch $R0
+
+ FunctionEnd
 
 ; eof
