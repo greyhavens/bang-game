@@ -235,7 +235,11 @@ public class FKeyPopups
     protected BDecoratedWindow createHelp ()
     {
         BDecoratedWindow help = BangUI.createDialog(_msgs.get("m.key_help_title"));
-        String text = _msgs.get("m.key_help");
+        String text = _msgs.get("m.key_help_key");
+        if (!_ctx.getUserObject().tokens.isAnonymous()) {
+            text += _msgs.get("m.key_help_bug");
+        }
+        text += _msgs.get("m.key_help");
         if (_ctx.getUserObject().tokens.isAdmin()) {
             text += _msgs.get("m.key_help_admin");
         }
@@ -246,6 +250,9 @@ public class FKeyPopups
 
     protected BDecoratedWindow createReportBug ()
     {
+        if (_ctx.getUserObject().tokens.isAnonymous()) {
+            return null;
+        }
         final BDecoratedWindow bug = BangUI.createDialog(_msgs.get("m.bug_title"));
         ((GroupLayout)bug.getLayoutManager()).setOffAxisPolicy(
             GroupLayout.STRETCH);
