@@ -124,7 +124,7 @@ public class UnitStatusView extends BWindow
 
         // if this unit was hijacked from another player, or a duplicate, or there are no unit
         // respawns, remove this label
-        if (((Unit)usprite.getPiece()).originalOwner != _pidx || 
+        if (((Unit)usprite.getPiece()).originalOwner != _pidx ||
                 !((BangConfig)_ctrl.getPlaceConfig()).respawnUnits) {
             _ustatuses.remove(ustatus);
             resort();
@@ -175,7 +175,7 @@ public class UnitStatusView extends BWindow
         public UnitLabel label;
 
         public UnitStatus () {
-            super(new AbsoluteLayout(true)); 
+            super(new AbsoluteLayout(true));
             if (_selected == null) {
                 _selected = _ctx.getImageCache().getBImage(
                         "ui/ustatus/unitstatus_select.png");
@@ -194,7 +194,7 @@ public class UnitStatusView extends BWindow
             vlay.setGap(4);
             _opened = new BContainer(vlay) {
                 public BComponent getHitComponent (int mx, int my) {
-                    if ((mx >= _x + 38) && (my >= _y) && 
+                    if ((mx >= _x + 38) && (my >= _y) &&
                             (mx < _x + _width) && (my < _y + _height)) {
                         return this;
                     }
@@ -243,7 +243,7 @@ public class UnitStatusView extends BWindow
             pieceId = _sprite.getPieceId();
             label.setUnitSprite(sprite);
             Unit unit = getUnit();
-            _health = new BLabel("", "unit_status_health" + unit.owner); 
+            _health = new BLabel("", "unit_status_health" + unit.owner);
             BContainer healthcont = new BContainer(GroupLayout.makeHStretch());
             healthcont.add(new Spacer(0, 0));
             healthcont.add(_health, GroupLayout.FIXED);
@@ -256,9 +256,9 @@ public class UnitStatusView extends BWindow
             _opened.removeAll();
 
             UnitConfig uc = unit.getConfig();
-            MessageBundle msgs = 
+            MessageBundle msgs =
                 _ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
-            MessageBundle umsgs = 
+            MessageBundle umsgs =
                 _ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
             _opened.add(new BLabel(
                         umsgs.xlate(uc.getName()), "unit_status_name"));
@@ -320,12 +320,12 @@ public class UnitStatusView extends BWindow
             if (_sprite.isSelected()) {
                 if (_opened.getParent() == this) {
                     _opened.render(renderer);
-                    _closer.render(renderer, 
+                    _closer.render(renderer,
                             getWidth() - _closer.getWidth() - 4, 2, 1f);
                 } else if (_closed.getParent() == this) {
                     _closed.render(renderer);
                 }
-                _selected.render(renderer, 0, 
+                _selected.render(renderer, 0,
                         getHeight() - _selected.getHeight(), 1f);
             }
             for (int ii = 0, ll = getComponentCount(); ii < ll; ii++) {
@@ -379,8 +379,8 @@ public class UnitStatusView extends BWindow
             if (_holdingU != null) {
                 String name = _holdingU;
                 _holdingL.setText(_ctx.xlate(
-                    GameCodes.GAME_MSGS, "m.help_bonus_" + 
-                    name.substring(name.lastIndexOf("/")+1) + 
+                    GameCodes.GAME_MSGS, "m.help_bonus_" +
+                    name.substring(name.lastIndexOf("/")+1) +
                     "_title"));
                 _holdingL.setIcon(new ImageIcon(_ctx.getImageCache().getBImage(
                                 "bonuses/" + name + "/holding.png")));
@@ -433,7 +433,7 @@ public class UnitStatusView extends BWindow
             Unit u2 = other.getUnit();
             UnitConfig uc1 = u1.getConfig(), uc2 = u2.getConfig();
             if (uc1.rank != uc2.rank) {
-                return (uc1.rank == UnitConfig.Rank.BIGSHOT ? -1 : 
+                return (uc1.rank == UnitConfig.Rank.BIGSHOT ? -1 :
                         (uc2.rank == UnitConfig.Rank.BIGSHOT ? 1 : -1));
             }
             return -1;
@@ -496,7 +496,7 @@ public class UnitStatusView extends BWindow
         protected Influence _influenceU;
         protected Hindrance _hindranceU;
     }
-    
+
     protected class UnitLabel extends BButton
     {
         protected BImage influence;
@@ -547,7 +547,7 @@ public class UnitStatusView extends BWindow
                 // clear out our background when our unit dies
                 _bground = null;
                 // and draw our icon at 50% alpha
-                _unit.setDefaultColor(ColorRGBA.white);
+                _unit.getBatch(0).getDefaultColor().set(ColorRGBA.white);
                 setAlpha(0.5f);
                 _isInvalid = false;
             } else {
@@ -566,9 +566,9 @@ public class UnitStatusView extends BWindow
                 // tint the unit icon red if it has a visible hindrance
                 /*
                 if (unit.getHindrance() == null || !unit.getHindrance().isVisible()) {
-                    _unit.setDefaultColor(ColorRGBA.white);
+                    _unit.getBatch(0).getDefaultColor().set(ColorRGBA.white);
                 } else {
-                    _unit.setDefaultColor(new ColorRGBA(1f, 0.5f, 0.5f, 0.8f));
+                    _unit.getBatch(0).getDefaultColor().set(1f, 0.5f, 0.5f, 0.8f);
                 }
                 */
             }
@@ -615,7 +615,7 @@ public class UnitStatusView extends BWindow
                 influence.render(renderer, getWidth()-19, getHeight()-19, 1f);
             }
             if (_isInvalid) {
-                _invalidated.render(renderer, 
+                _invalidated.render(renderer,
                         (getWidth() - _invalidated.getWidth())/2,
                         (getHeight() - _invalidated.getHeight())/2, 1f);
             }
@@ -661,6 +661,6 @@ public class UnitStatusView extends BWindow
     protected static BImage _selected;
     protected static BImage[] _closeArrow;
     protected static BImage _invalidated;
-    protected static final Dimension LABEL_PREFERRED_SIZE = 
+    protected static final Dimension LABEL_PREFERRED_SIZE =
         new Dimension(PieceStatus.ICON_SIZE, PieceStatus.ICON_SIZE);
 }
