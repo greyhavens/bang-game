@@ -2086,6 +2086,7 @@ hideout_members_entry {
   color: #5C361D;
   text-align: center;
   padding: 0 20;
+  cursor: "hand";
 }
 
 gang_chat {
