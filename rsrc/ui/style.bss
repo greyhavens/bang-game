@@ -1773,7 +1773,7 @@ match_chat_text {
 match_chat_input {
   parent: "textfield";
   font: "Dom Casual" plain 16;
-  cursor: "input";
+  cursor: "text";
 }
 
 lobby_chat {
