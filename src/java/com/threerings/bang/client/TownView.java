@@ -31,6 +31,7 @@ import com.jme.util.TextureManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BCursor;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
@@ -300,6 +301,13 @@ public class TownView extends BWindow
             _hstate.getDiffuse().set(ColorRGBA.white);
             _hstate.getEmissive().set(ColorRGBA.white);
 
+            // load up our hover cursor
+            try {
+                _hcursor = BangUI.loadCursor("hand");
+            } catch (IOException e) {
+                // we can just let it drop if something goes wrong
+            }
+
             BangBootstrapData bbd = (BangBootstrapData)_bctx.getClient().getBootstrapData();
             _safesub = new SafeSubscriber<TownObject>(bbd.townOid, this);
         }
@@ -495,6 +503,7 @@ public class TownView extends BWindow
             // if we're not yet enabled or the camera is moving, no hovering
             if (!_active || _ctx.getCameraHandler().cameraIsMoving() || hover == null) {
                 _tip.setText(_msgs.get("m.tip_select"));
+                updateCursor(_cursor);
                 return;
             }
 
@@ -507,6 +516,8 @@ public class TownView extends BWindow
             _hsprite = (PieceSprite)hover;
             _hsprite.setRenderState(_hstate);
             _hsprite.updateRenderState();
+
+            updateCursor(_hcursor);
         }
 
         protected Viewpoint getViewpoint (String name)
@@ -618,6 +629,8 @@ public class TownView extends BWindow
         protected SafeSubscriber<TownObject> _safesub;
         protected TownObject _townobj;
         protected Texture _poptex;
+
+        protected BCursor _hcursor;
     }
 
     /** Used to layout our overlapping town menu components. */
