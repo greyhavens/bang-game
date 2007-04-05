@@ -501,7 +501,7 @@ public class BangUI
 
         String path = "ui/cursor_" + name + ".png";
         BufferedImage image = _ctx.getImageCache().getBufferedImage(path);
-        if (image != null) {
+        if (image != null && image.getWidth() <= 32 && image.getHeight() <= 32) {
             BufferedImage cimage = ImageCache.createCompatibleImage(32, 32, true);
             Graphics2D g = cimage.createGraphics();
             try {
