@@ -245,8 +245,16 @@
   <target name="town_bundles">
     <for list="units,props,bonuses,cards,effects,extras,goods,bounties" param="type">
     <sequential>
+      <!-- Card and Unit icons were included in the general resource bundle -->
+      <if><equals arg1="@{type}" arg2="cards"/><then>
+        <var name="excluding" value="**/card.png"/>
+      </then><elseif><equals arg1="@{type}" arg2="units"/><then>
+        <var name="excluding" value="**/icon.png"/>
+      </then></elseif><else>
+        <var name="excluding" value=""/>
+      </else></if>
       <jar file="${deploy.dir}/rsrc/@{type}/${town}/bundle.jar">
-        <fileset dir="${deploy.dir}/rsrc/@{type}/${town}">
+        <fileset dir="${deploy.dir}/rsrc/@{type}/${town}" excludes="${excluding}">
           <include name="*.txt"/>
           <include name="**/*"/>
           <exclude name="**/*.jar"/>
@@ -823,6 +831,10 @@
       <exclude name="extras/**"/>
       <exclude name="props/**"/>
       <exclude name="units/**"/>
+      <fileset dir="${deploy.dir}/rsrc">
+        <include name="cards/**/card.png"/>
+        <include name="units/**/icon.png"/>
+      </fileset>
     </jar>
 
     <!-- collect up various configuration bits needed by the client -->
