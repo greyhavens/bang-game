@@ -966,7 +966,7 @@
   <target name="distcleanall" depends="distcleanprojects,distcleanwebapps,cleanjme,distclean"/>
 
   <!-- prepare ${destroot} for all the packages being built -->
-  <target name="preppkg">
+  <target name="preppkg" depends="copydistprops">
     <antcallback target="prepare-server" return="pkg.base"/>
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
@@ -981,7 +981,6 @@
       </antcall>
     </then></if>
 
-    <property file="${basedir}/${deploy.dir}/build.properties"/>
     <fail message="version, which comes from build.properties, must be set.">
        <condition><not><isset property="version"/></not></condition>
     </fail>
@@ -996,6 +995,8 @@
     <antcall target="maintainer-scripts">
       <param name="install.type" value="client"/>
       <param name="client.version" value="${version}"/>
+      <param name="client.ident" value="client"/>
+      <param name="client.path" value=""/>
       <param name="pkg.name" value="bang-client"/>
     </antcall>
     <!-- append the version number to the package name. for dev this will always be 0 -->
