@@ -127,7 +127,7 @@ public class LogonView extends BWindow
         _msgs = ctx.getMessageManager().getBundle(BangAuthCodes.AUTH_MSGS);
         String username = BangPrefs.config.getValue("username", "");
         if (StringUtil.isBlank(username)) {
-            showNewUserView();
+            showNewUserView(false);
         } else {
             showLoginView();
         }
@@ -143,7 +143,7 @@ public class LogonView extends BWindow
         _ctx.getClient().addClientObserver(_listener);
     }
 
-    protected void showNewUserView () {
+    protected void showNewUserView (boolean account) {
         removeAll();
 
         BContainer cont = new BContainer(GroupLayout.makeHoriz(
@@ -151,14 +151,24 @@ public class LogonView extends BWindow
         ((GroupLayout)cont.getLayoutManager()).setGap(20);
 
         String anonymous = BangPrefs.config.getValue("anonymous", "");
-        _anon = new BButton(
-                _msgs.get(StringUtil.isBlank(anonymous) ? "m.new_player" : "m.continue_player"),
-                this, "anonymous");
+        String btn1 = "m.continue_player";
+        String btn2 = "m.my_account";
+        String act1 = "anonymous";
+        String act2 = "my_account";
+        if (StringUtil.isBlank(anonymous)) {
+            btn1 = "m.new_player";
+            btn2 = "m.have_account";
+            act2 = "have_account";
+        } else if (account) {
+            btn1 = "m.have_account";
+            act1 = "have_account";
+            btn2 = "m.continue_player";
+            act2 = "anon_account";
+        }
+        _anon = new BButton(_msgs.get(btn1), this, act1);
         _anon.setStyleClass("big_button");
         cont.add(_anon);
-        _account = new BButton(
-                _msgs.get(StringUtil.isBlank(anonymous) ? "m.have_account" : "m.create_account"),
-                this, "anon_account");
+        _account = new BButton(_msgs.get(btn2), this, act2);
         _account.setStyleClass("big_button");
         cont.add(_account);
         add(cont, new Rectangle(40, 200, 365, 80));
@@ -256,12 +266,14 @@ public class LogonView extends BWindow
 
         } else if ("anon_account".equals(event.getAction())) {
             String anonymous = BangPrefs.config.getValue("anonymous", "");
-            if (StringUtil.isBlank(anonymous)) {
-                showLoginView();
-                return;
-            }
             _ctx.getBangClient().showPopupAfterLogon(BangCodes.SIGN_UP);
             logon(BangCodes.FRONTIER_TOWN, anonymous, null);
+
+        } else if ("my_account".equals(event.getAction())) {
+            showNewUserView(true);
+
+        } else if ("have_account".equals(event.getAction())) {
+            showLoginView();
 
         } else if ("anonymous".equals(event.getAction())) {
             logon(BangCodes.FRONTIER_TOWN, BangPrefs.config.getValue("anonymous", ""), null);
@@ -383,7 +395,7 @@ public class LogonView extends BWindow
             } else if (cmsg.indexOf(BangAuthCodes.NO_SUCH_USER) != -1 &&
                         StringUtil.isBlank(BangPrefs.config.getValue("username", ""))) {
                 BangPrefs.config.setValue("anonymous", "");
-                showNewUserView();
+                showNewUserView(false);
 
             // if we got a no anonymous user message, change to user login mode
             } else if (cmsg.indexOf(BangAuthCodes.NO_ANONYMOUS_ACCESS) != -1) {
