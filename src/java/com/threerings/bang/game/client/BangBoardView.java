@@ -165,15 +165,7 @@ public class BangBoardView extends BoardView
      */
     public boolean clearPlacingCard ()
     {
-        if (_defaultCursor != null) {
-            try {
-                BCursor defaultCursor = BangUI.loadCursor("default");
-                defaultCursor.setCursor(_defaultCursor);
-                defaultCursor.show();
-            } catch (Exception e) {
-                // this should never happen
-            }
-        }
+        resetCursor();
         if (_card == null) {
             return false;
         }
@@ -855,6 +847,9 @@ public class BangBoardView extends BoardView
         if (_tpath != null) {
             _ctx.getCameraHandler().moveCamera(null);
         }
+
+        // make sure our mouse is appropriate
+        resetCursor();
     }
 
     @Override // documentation inherited
@@ -2078,13 +2073,31 @@ public class BangBoardView extends BoardView
         g.drawImage(cursor, null, 0, 0);
         try {
             BCursor defaultCursor = BangUI.loadCursor("default");
-            _defaultCursor = defaultCursor.getCursor();
+            if (_defaultCursor == null) {
+                _defaultCursor = defaultCursor.getCursor();
+            }
             defaultCursor.setCursor(merge, 0, 0);
             defaultCursor.show();
         } catch (Exception e) {
             // this should never happen
         }
         g.dispose();
+    }
+
+    /**
+     * Reset the cursor to it's default state.
+     */
+    protected void resetCursor ()
+    {
+        if (_defaultCursor != null) {
+            try {
+                BCursor defaultCursor = BangUI.loadCursor("default");
+                defaultCursor.setCursor(_defaultCursor);
+                defaultCursor.show();
+            } catch (Exception e) {
+                // this should never happen
+            }
+        }
     }
 
     /** Used to visualize advance orders. */
