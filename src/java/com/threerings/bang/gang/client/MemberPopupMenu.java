@@ -47,7 +47,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
         }
         return false;
     }
-    
+
     /**
      * Creates a popup menu for the specified member.
      */
@@ -58,7 +58,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
         super(ctx, parent, member.handle, allowMute);
         _member = member;
         _status = status;
-                
+
         Object plobj = ctx.getLocationDirector().getPlaceObject();
         if (!(plobj instanceof HideoutObject)) {
             log.warning("Created member pop-up outside of hideout [plobj=" +
@@ -67,7 +67,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
             return;
         }
         _hideoutobj = (HideoutObject)plobj;
-        
+
         if (!_member.canChangeStatus(_ctx.getUserObject())) {
             return;
         }
@@ -81,7 +81,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
         }
         addMenuItem(new BMenuItem(_ctx.xlate(HIDEOUT_MSGS, "m.expel"), "expel"));
     }
-    
+
     @Override // documentation inherited
     public void actionPerformed (ActionEvent event)
     {
@@ -93,7 +93,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
             expelMember();
         }
     }
-    
+
     @Override // documentation inherited
     protected boolean shouldShowGangInvite ()
     {
@@ -103,20 +103,21 @@ public class MemberPopupMenu extends PlayerPopupMenu
     protected void changeMemberRank (final byte nrank)
     {
         String thandle = MessageBundle.taint(_member.handle),
-            rankmsg = MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[nrank]);
+            rankmsg = MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[nrank]),
+            rankdesc = MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[nrank] + "_desc");
+        boolean promote = nrank > _member.rank;
         String confirm = MessageBundle.compose(
-            "m.confirm_" + (nrank > _member.rank ? "promote" : "demote"),
-            thandle, rankmsg);
+            "m.confirm_" + (promote ? "promote" : "demote"), thandle, rankmsg, rankdesc);
         String success = MessageBundle.compose("m.changed_rank", thandle, rankmsg);
         _ctx.getBangClient().displayPopup(
             new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
                 protected void fireRequest (Object result) {
                     _hideoutobj.service.changeMemberRank(
                         _ctx.getClient(), _member.handle, nrank, this);
-                }        
+                }
             }, true, 400);
     }
-    
+
     protected void expelMember ()
     {
         String confirm = MessageBundle.tcompose("m.confirm_expel", _member.handle),
@@ -125,10 +126,10 @@ public class MemberPopupMenu extends PlayerPopupMenu
             new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
                 protected void fireRequest (Object result) {
                     _hideoutobj.service.expelMember(_ctx.getClient(), _member.handle, this);
-                }        
+                }
             }, true, 400);
     }
-    
+
     protected GangMemberEntry _member;
     protected HideoutObject _hideoutobj;
     protected StatusLabel _status;
