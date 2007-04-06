@@ -59,6 +59,8 @@ import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.util.GangUtil;
 
+import static com.threerings.bang.Log.*;
+
 /**
  * Allows gang leaders to configure their belt buckles.
  */
@@ -408,7 +410,12 @@ public class BuckleDialog extends BDecoratedWindow
                 int partId = _buckle[ii];
                 PreviewIcon icon = _icons.get(partId);
                 if (icon == null) {
-                    _icons.put(partId, icon = new PreviewIcon(_parts.get(partId)));
+                    BucklePart part = _parts.get(partId);
+                    if (part == null) {
+                        log.warning("Buckle icon missing from inventory [partId=" + partId + "].");
+                        continue;
+                    }
+                    _icons.put(partId, icon = new PreviewIcon(part));
                 }
                 icon.setSelected(_selidx == ii);
             }

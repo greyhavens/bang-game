@@ -107,7 +107,8 @@ public class GangUtil
         for (int ii = 0; ii < parts.length; ii++) {
             Item item = items.get(partIds[ii]);
             if (!(item instanceof BucklePart)) {
-                log.warning("Invalid part in buckle [item=" + item + "].");
+                log.warning("Invalid part in buckle [partId=" + partIds[ii] +
+                    ", item=" + item + "].");
                 return null;
             }
             parts[ii] = (BucklePart)item;
