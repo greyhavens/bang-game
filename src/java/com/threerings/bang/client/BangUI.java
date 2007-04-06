@@ -68,6 +68,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.gang.client.GangPopupMenu;
 
+import com.threerings.bang.client.util.TexturePool;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Handle;
@@ -167,6 +168,9 @@ public class BangUI
     {
         _ctx = ctx;
         _umsgs = _ctx.getMessageManager().getBundle("units");
+
+        // set our BImage texture pool
+        BImage.setTexturePool(new TexturePool(ctx, TEXTURE_POOL_SIZE));
 
         // configure our tooltip settings
         _ctx.getRootNode().setTooltipPreferredWidth(300);
@@ -600,6 +604,9 @@ public class BangUI
 
     /** A cache of {@link BCursor} instances. */
     protected static HashMap<String, BCursor> _ccache = new HashMap<String, BCursor>();
+
+    /** The size (in bytes) of the pool to maintain for UI textures. */
+    protected static final int TEXTURE_POOL_SIZE = 1024 * 1024 * 4;
 
     /** The number of simultaneous UI sounds allowed. */
     protected static final int UI_SOURCE_COUNT = 2;
