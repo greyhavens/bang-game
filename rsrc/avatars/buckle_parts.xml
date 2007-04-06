@@ -35,6 +35,9 @@
     <part name="barbed_wire" coins="6" aces="500"/>
     <part name="mech_chain" coins="5" aces="400"/>
     <part name="rattler" coins="6" aces="500"/>
+    <part name="cornered" coins="3" aces="200"/>
+    <part name="classic" coins="3" aces="200"/>
+    <part name="gilded" coins="5" aces="550"/>
   </class>
 
   <!-- buckle icons -->
