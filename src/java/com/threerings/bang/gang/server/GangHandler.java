@@ -1129,9 +1129,10 @@ public class GangHandler
                 public void invokePersist () throws PersistenceException {
                     _grec = BangServer.gangrepo.loadGang(_gangId, true);
 
-                    // TEMP: validate the buckle, fixing as necessary
+                    // TEMP: validate the buckle and weight class, fixing as necessary
                     if (_grec != null) {
                         validateBuckle(_grec);
+                        validateWeightClass(_grec);
                     }
                 }
                 public void handleSuccess () {
@@ -1221,6 +1222,22 @@ public class GangHandler
         BuckleInfo info = GangUtil.getBuckleInfo(parts);
         BangServer.gangrepo.updateBuckle(record.gangId, buckle, info.print);
         record.setBuckle(buckle, info.print);
+    }
+
+    /**
+     * Makes sure the cached weight class matches the inventory.
+     */
+    protected void validateWeightClass (GangRecord record)
+        throws PersistenceException
+    {
+        byte weightClass = GangUtil.getWeightClass(record.inventory);
+        if (record.weightClass == weightClass) {
+            return;
+        }
+        log.info("Correcting weight class [gang=" + this + ", weightClass = " + weightClass +
+            ", inventory=" + record.inventory + "].");
+        BangServer.gangrepo.updateWeightClass(record.gangId, weightClass);
+        record.weightClass = weightClass;
     }
 
     /**
