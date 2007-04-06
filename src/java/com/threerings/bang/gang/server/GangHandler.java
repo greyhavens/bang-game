@@ -23,6 +23,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -39,7 +40,6 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.peer.data.NodeObject.Lock;
 import com.threerings.presents.peer.util.PeerUtil;
-import com.threerings.presents.server.ClientManager.ClientObserver;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.util.PersistingUnit;
@@ -1508,6 +1508,12 @@ public class GangHandler
         _proxy = PeerUtil.createProviderProxy(
             GangPeerProvider.class, _gangobj.gangPeerService, _client);
 
+        _client.addClientObserver(_unsubber = new ClientAdapter() {
+            public void clientDidLogoff () {
+                unsubscribeFromPeer();
+            }
+        });
+
         log.info("Subscribed to gang " + this + " on " + _nodeName + ".");
         didInit();
     }
@@ -1539,6 +1545,7 @@ public class GangHandler
      */
     protected void unsubscribeFromPeer ()
     {
+        _client.removeClientObserver(_unsubber);
         _gangobj.removeListener(this);
         BangServer.invmgr.clearDispatcher(_gangobj.speakService);
         BangServer.peermgr.unproxyRemoteObject(_nodeName, _gangobj.remoteOid);
@@ -1715,6 +1722,9 @@ public class GangHandler
 
     /** The peer client, if our gang object is a proxy for a remote one. */
     protected Client _client;
+
+    /** Unsubscribes from the gang object when the peer connection is lost. */
+    protected ClientAdapter _unsubber;
 
     /** The proxy object implementing {@link GangPeerProvider} to forward requests to the peer. */
     protected GangPeerProvider _proxy;
