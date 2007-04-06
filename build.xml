@@ -92,7 +92,6 @@
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/rsrc"/>
-    <mkdir dir="${var.dir}"/>
 
     <!-- copy global static resources -->
     <copy todir="${deploy.dir}/rsrc">
@@ -665,6 +664,7 @@
     </antcall>
 
     <!-- copy the just built client into var/ where it can be used for future diffing -->
+    <mkdir dir="${var.dir}"/>
     <copy todir="${var.dir}">
       <fileset dir="${deploy.dir}/client/pages/client" includes="${version}/**"/>
     </copy>
