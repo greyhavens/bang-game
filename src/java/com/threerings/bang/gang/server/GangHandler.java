@@ -277,7 +277,8 @@ public class GangHandler
     {
         String name = event.getName();
         if (name.equals(GangObject.STATEMENT) || name.equals(GangObject.URL) ||
-            name.equals(GangObject.AVATAR) || name.equals(GangObject.NOTORIETY)) {
+            name.equals(GangObject.AVATAR) || name.equals(GangObject.NOTORIETY) ||
+            name.equals(GangObject.BUCKLE)) {
             // invalidate any cached gang info
             gangInfoChanged();
         }
