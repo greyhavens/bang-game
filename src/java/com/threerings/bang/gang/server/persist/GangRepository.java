@@ -77,11 +77,11 @@ public class GangRepository extends JORARepository
         _buckleMask.setModified("buckle");
         _buckleMask.setModified("bucklePrint");
 
-        // TEMP: delete the orphans (members without gangs)
-        int count = update("delete from GANG_MEMBERS using GANG_MEMBERS left join GANGS on " +
-            "GANG_MEMBERS.GANG_ID = GANGS.GANG_ID where GANGS.GANG_ID is NULL");
+        // TEMP: delete the barren (gangs without members)
+        int count = update("delete from GANGS using GANGS left join GANG_MEMBERS on " +
+            "GANGS.GANG_ID = GANG_MEMBERS.GANG_ID where GANG_MEMBERS.GANG_ID is NULL");
         if (count > 0) {
-            log.info("Deleted " + count + " orphaned gang member records.");
+            log.info("Deleted " + count + " empty gang records.");
         }
         // END TEMP
     }
