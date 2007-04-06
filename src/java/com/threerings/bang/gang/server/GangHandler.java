@@ -11,6 +11,7 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.RepositoryUnit;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
@@ -657,6 +658,10 @@ public class GangHandler
                 log.warning("Invalid part for buckle [gang=" + this + ", handle=" + handle +
                     ", opart=" + opart + ", npart=" + item + "].");
                 throw new InvocationException(INTERNAL_ERROR);
+            } else if (IntListUtil.contains(partIds, itemId)) {
+                log.warning("Duplicate part in buckle [gang=" + this + ", handle=" + handle +
+                    ", parts=" + StringUtil.toString(parts) + "].");
+                throw new InvocationException(INTERNAL_ERROR);
             }
             partIds[ii] = itemId;
             ccounts[AvatarLogic.getPartIndex(opart.getPartClass())]++;
@@ -1123,6 +1128,11 @@ public class GangHandler
             new RepositoryUnit("loadGang") {
                 public void invokePersist () throws PersistenceException {
                     _grec = BangServer.gangrepo.loadGang(_gangId, true);
+
+                    // TEMP: validate the buckle, fixing as necessary
+                    if (_grec != null) {
+                        validateBuckle(_grec);
+                    }
                 }
                 public void handleSuccess () {
                     if (_grec == null) {
@@ -1136,6 +1146,81 @@ public class GangHandler
                 }
                 protected GangRecord _grec;
             });
+    }
+
+    /**
+     * Makes sure the gang's buckle matches its inventory.  This is run on the invoker thread.
+     */
+    protected void validateBuckle (GangRecord record)
+        throws PersistenceException
+    {
+        int[] buckle = record.getBuckle();
+        if (buckle.length < 2) {
+            recreateBuckle(record);
+            return;
+        }
+
+        DSet<Item> inventory = new DSet<Item>(record.inventory);
+        boolean update = false;
+        for (int ii = 0; ii < buckle.length; ii++) {
+            Item item = inventory.get(buckle[ii]);
+            if (!(item instanceof BucklePart)) {
+                recreateBuckle(record);
+                return;
+            }
+            BucklePart part = (BucklePart)item;
+            if ((ii == 0 && !"background".equals(part.getPartClass())) ||
+                (ii == 1 && !"border".equals(part.getPartClass())) ||
+                (ii >= 2 && !"icon".equals(part.getPartClass()))) {
+                recreateBuckle(record);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Recreates the gang's buckle from what they already have (if anything).
+     */
+    protected void recreateBuckle (GangRecord record)
+        throws PersistenceException
+    {
+        log.info("Recreating invalid buckle [gang=" + this + ", buckle=" +
+            StringUtil.toString(record.getBuckle()) + ", inventory=" + record.inventory + "].");
+        int[] buckle = new int[2];
+        BucklePart[] parts = new BucklePart[2];
+        for (Item item : record.inventory) {
+            if (!(item instanceof BucklePart)) {
+                continue;
+            }
+            BucklePart part = (BucklePart)item;
+            if ("background".equals(part.getPartClass()) && parts[0] == null) {
+                parts[0] = part;
+                buckle[0] = part.getItemId();
+            } else if ("border".equals(part.getPartClass()) && parts[1] == null) {
+                parts[1] = part;
+                buckle[1] = part.getItemId();
+            }
+            if (parts[0] != null && parts[1] != null) {
+                break;
+            }
+        }
+        if (parts[0] == null || parts[1] == null) {
+            BucklePart[] dparts = BangServer.alogic.createDefaultBuckle();
+            for (int ii = 0; ii < 2; ii++) {
+                if (parts[ii] != null) {
+                    continue;
+                }
+                parts[ii] = dparts[ii];
+                parts[ii].setOwnerId(record.gangId);
+                BangServer.itemrepo.insertItem(parts[ii]);
+                record.inventory.add(parts[ii]);
+                buckle[ii] = parts[ii].getItemId();
+            }
+        }
+
+        BuckleInfo info = GangUtil.getBuckleInfo(parts);
+        BangServer.gangrepo.updateBuckle(record.gangId, buckle, info.print);
+        record.setBuckle(buckle, info.print);
     }
 
     /**
