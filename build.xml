@@ -981,6 +981,7 @@
       </antcall>
     </then></if>
 
+    <property file="${basedir}/${deploy.dir}/build.properties"/>
     <fail message="version, which comes from build.properties, must be set.">
        <condition><not><isset property="version"/></not></condition>
     </fail>
