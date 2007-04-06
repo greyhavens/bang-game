@@ -22,7 +22,7 @@ public class CardTripletGood extends Good
     public CardTripletGood (String cardType, int scripCost, int coinCost,
                             Badge.Type qualifier)
     {
-        super("card_trip_" + cardType, scripCost, coinCost);
+        super("card_trip_" + cardType, scripCost, coinCost, CARD_TRIPLET_PRIORITY);
         _cardType = cardType;
         _qualifier = qualifier;
     }
@@ -97,4 +97,6 @@ public class CardTripletGood extends Good
     protected Badge.Type _qualifier;
 
     protected transient int _quantity;
+
+    protected static final int CARD_TRIPLET_PRIORITY = 4;
 }

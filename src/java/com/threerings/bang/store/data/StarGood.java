@@ -30,7 +30,7 @@ public class StarGood extends Good
     {
         super("star_" + BangCodes.TOWN_IDS[townIdx] + "_" +
                 StringUtil.toUSLowerCase(difficulty.toString()),
-              difficulty.ordinal() * SCRIP_COST, COIN_COST);
+              difficulty.ordinal() * SCRIP_COST, COIN_COST, STAR_PRIORITY);
         _townIdx = townIdx;
         _difficulty = difficulty;
     }
@@ -90,4 +90,6 @@ public class StarGood extends Good
 
     protected int _townIdx;
     protected Star.Difficulty _difficulty;
+
+    protected static final int STAR_PRIORITY = 20;
 }

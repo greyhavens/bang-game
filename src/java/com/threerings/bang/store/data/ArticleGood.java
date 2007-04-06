@@ -36,7 +36,7 @@ public class ArticleGood extends Good
     public ArticleGood (
             String type, int scripCost, int coinCost, String qualifier, Date start, Date stop)
     {
-        super(type, scripCost, coinCost);
+        super(type, scripCost, coinCost, ARTICLE_PRIORITY);
         _qualifier = qualifier;
         _dstart = start;
         _dstop = stop;
@@ -134,4 +134,6 @@ public class ArticleGood extends Good
     protected String _qualifier;
     protected long _stop;
     protected transient Date _dstart, _dstop;
+
+    protected static final int ARTICLE_PRIORITY = 0;
 }

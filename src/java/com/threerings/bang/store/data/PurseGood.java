@@ -25,7 +25,8 @@ public class PurseGood extends Good
      */
     public PurseGood (int townIndex)
     {
-        super(Purse.PURSE_TYPES[townIndex+1], SCRIP_COST[townIndex], COIN_COST[townIndex]);
+        super(Purse.PURSE_TYPES[townIndex+1], SCRIP_COST[townIndex], COIN_COST[townIndex],
+                PURSE_PRIORITY);
         // annoyingly Purse maintains townIndex+1 not actual townIndex
         _townIndex = townIndex+1;
     }
@@ -61,4 +62,6 @@ public class PurseGood extends Good
     }
 
     protected int _townIndex;
+
+    protected static final int PURSE_PRIORITY = 15;
 }

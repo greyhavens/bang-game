@@ -23,7 +23,7 @@ public class CardPackGood extends Good
      */
     public CardPackGood (int size, int scripCost, int coinCost)
     {
-        super("card_pack" + size, scripCost, coinCost);
+        super("card_pack" + size, scripCost, coinCost, CARD_PACK_PRIORITY);
         _size = size;
     }
 
@@ -67,4 +67,6 @@ public class CardPackGood extends Good
     }
 
     protected int _size;
+
+    protected static final int CARD_PACK_PRIORITY = 5;
 }

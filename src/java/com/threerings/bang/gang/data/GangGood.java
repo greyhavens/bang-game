@@ -39,7 +39,7 @@ public abstract class GangGood extends Good
     /** Creates a gang good of the specified type. */
     protected GangGood (String type, int scripCost, int coinCost, int aceCost)
     {
-        super(type, scripCost, coinCost);
+        super(type, scripCost, coinCost, 0);
         _aceCost = aceCost;
     }
 

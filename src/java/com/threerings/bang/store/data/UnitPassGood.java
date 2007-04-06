@@ -21,7 +21,7 @@ public class UnitPassGood extends Good
      */
     public UnitPassGood (String unit, int scripCost, int coinCost)
     {
-        super(unit + "_pass", scripCost, coinCost);
+        super(unit + "_pass", scripCost, coinCost, UNIT_PASS_PRIORITY);
     }
 
     /** A constructor only used during serialization. */
@@ -71,4 +71,6 @@ public class UnitPassGood extends Good
     {
         return new UnitPass(playerId, getUnitType());
     }
+
+    protected static final int UNIT_PASS_PRIORITY = 10;
 }

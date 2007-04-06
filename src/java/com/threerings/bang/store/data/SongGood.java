@@ -28,7 +28,7 @@ public class SongGood extends Good
      */
     public SongGood (String song)
     {
-        super("song_" + song, SCRIP_COST, COIN_COST);
+        super("song_" + song, SCRIP_COST, COIN_COST, SONG_PRIORITY);
     }
 
     /**
@@ -75,4 +75,6 @@ public class SongGood extends Good
     {
         return new Song(playerId, getSong());
     }
+
+    protected static final int SONG_PRIORITY = 0;
 }

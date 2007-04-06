@@ -170,7 +170,8 @@ public abstract class Good extends SimpleStreamableObject
     // from interface Comparable<Good>
     public int compareTo (Good other)
     {
-        return _type.compareTo(other._type);
+        int diff = other._priority - _priority;
+        return diff == 0 ? _type.compareTo(other._type) : diff;
     }
 
     @Override // documentation inherited
@@ -186,14 +187,16 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /** Creates a good of the specified type. */
-    protected Good (String type, int scripCost, int coinCost)
+    protected Good (String type, int scripCost, int coinCost, int priority)
     {
         _type = type;
         _scripCost = scripCost;
         _coinCost = coinCost;
+        _priority = priority;
     }
 
     protected String _type;
     protected int _scripCost;
     protected int _coinCost;
+    protected int _priority;
 }
