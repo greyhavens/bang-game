@@ -233,26 +233,12 @@ public class LWJGLTextureState extends TextureState {
             }
         }
 
-        // ask for the current state record
-        RenderContext context = DisplaySystem.getDisplaySystem()
-                .getCurrentContext();
-        TextureStateRecord record = (context == null ? null :
-            (TextureStateRecord) context.getStateRecord(RS_TEXTURE));
+        IntBuffer id = BufferUtils.createIntBuffer(1);
+        id.clear();
+        GL11.glGenTextures(id);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, id.get(0));
 
-        // reuse deleted texture ids when possible
-        int texId;
-        if (record == null || record.freeTextureIds.isEmpty()) {
-            IntBuffer id = BufferUtils.createIntBuffer(1);
-            id.clear();
-            GL11.glGenTextures(id);
-            texId = id.get(0);
-
-        } else {
-            texId = record.freeTextureIds.remove(0);
-        }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-
-        texture.setTextureId(texId);
+        texture.setTextureId(id.get(0));
         TextureManager.registerForCleanup(texture.getTextureKey(), texture
                 .getTextureId());
 
@@ -1377,7 +1363,6 @@ public class LWJGLTextureState extends TextureState {
         // if the texture was currently bound glDeleteTextures reverts the binding to 0
         // however we still have to clear it from currentTexture.
         record.removeTextureRecord(texId);
-        record.freeTextureIds.add(texId);
         idCache[unit] = 0;
     }
 
@@ -1407,17 +1392,16 @@ public class LWJGLTextureState extends TextureState {
 
         for (int i = 0; i < texture.size(); i++) {
             Texture tex = texture.get(i);
-            if (tex == null)
-                continue;
             if (removeFromCache) TextureManager.releaseTexture(tex);
             int texId = tex.getTextureId();
+            if (tex == null)
+                continue;
             id.put(texId);
             tex.setTextureId(0);
 
             // if the texture was currently bound glDeleteTextures reverts the binding to 0
             // however we still have to clear it from currentTexture.
             record.removeTextureRecord(texId);
-            record.freeTextureIds.add(texId);
             idCache[i] = 0;
         }
 
@@ -1440,7 +1424,6 @@ public class LWJGLTextureState extends TextureState {
         id.rewind();
         GL11.glDeleteTextures(id);
         record.removeTextureRecord(textureId);
-        record.freeTextureIds.add(textureId);
     }
 
     @Override
