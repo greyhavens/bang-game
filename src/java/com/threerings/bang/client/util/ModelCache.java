@@ -125,11 +125,12 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
                 public void requestCompleted (Model result) {
                     // if it's not a listed variant, it's the default
                     String[] variants = result.getVariantNames();
+                    Model variant = result;
                     if (ListUtil.contains(variants, key.variant)) {
-                        result = result.createPrototype(key.variant);
-                        result.resolveTextures(new ModelTextureProvider(key, null));
+                        variant = result.createPrototype(key.variant);
+                        variant.resolveTextures(new ModelTextureProvider(key, null));
                     }
-                    handler.requestCompleted(createPrototypeReference(result));
+                    handler.requestCompleted(new PrototypeReference(variant, result));
                 }
                 public void requestFailed (Exception cause) {
                     handler.requestFailed(cause);
