@@ -32,7 +32,6 @@
 package com.jme.scene.state.lwjgl.records;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.BufferUtils;
@@ -51,8 +50,6 @@ public class TextureStateRecord extends StateRecord {
     public TextureUnitRecord[] units;
     public int hint = -1;
     public int currentUnit = -1;
-
-    public ArrayList<Integer> freeTextureIds = new ArrayList<Integer>();
 
     /**
      * temporary rotation axis vector to flatline memory usage.
