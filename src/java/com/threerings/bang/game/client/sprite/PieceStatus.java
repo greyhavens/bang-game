@@ -53,7 +53,7 @@ public class PieceStatus extends Node
     {
         this(ctx, highlight, null, null);
     }
-    
+
     /**
      * Creates a piece status helper with the supplied piece sprite highlight
      * node. The status will be textured onto the highlight node (using a
@@ -73,9 +73,9 @@ public class PieceStatus extends Node
         _ctx = ctx;
         _color = color;
         _dcolor = dcolor;
-        
+
         loadTextures();
-        
+
         _info = new SharedMesh[numLayers()];
         _icon = new Quad[numLayers()];
         // configure the info layers
@@ -158,11 +158,11 @@ public class PieceStatus extends Node
             // set up our starting outline color the first time we're updated
             _owner = piece.owner;
             ColorRGBA color = getColor(), dcolor = getDarkerColor();
-            _info[0].setDefaultColor(dcolor);
-            _icon[0].setDefaultColor(dcolor);
+            _info[0].getBatch(0).getDefaultColor().set(dcolor);
+            _icon[0].getBatch(0).getDefaultColor().set(dcolor);
             for (int ii = 1; ii < recolorLayers(); ii++) {
-                _info[ii].setDefaultColor(color);
-                _icon[ii].setDefaultColor(color);
+                _info[ii].getBatch(0).getDefaultColor().set(color);
+                _icon[ii].getBatch(0).getDefaultColor().set(color);
             }
             getTextureState(_info[0]).setTexture(_damout.createSimpleClone());
             getTextureState(_icon[0]).setTexture(_damout.createSimpleClone());
@@ -179,8 +179,8 @@ public class PieceStatus extends Node
         if (_selected != selected) {
             _selected = selected;
             ColorRGBA color = _selected ? ColorRGBA.white : getDarkerColor();
-            _info[0].setDefaultColor(color);
-            _icon[0].setDefaultColor(color);
+            _info[0].getBatch(0).getDefaultColor().set(color);
+            _icon[0].getBatch(0).getDefaultColor().set(color);
         }
     }
 
@@ -191,7 +191,7 @@ public class PieceStatus extends Node
     {
         return (_color == null) ? getJPieceColor(_owner) : _color;
     }
-    
+
     /**
      * Returns the darker color of the status view.
      */
@@ -199,7 +199,7 @@ public class PieceStatus extends Node
     {
         return (_dcolor == null) ? getDarkerPieceColor(_owner) : _dcolor;
     }
-    
+
     /**
      * Loads up the textures used by the status display.
      */

@@ -112,9 +112,9 @@ public class UnitSprite extends MobileSprite
             // if we have a pending node, adjust its highlight as well
             if (_pendnode != null) {
                 if (hovered) {
-                    _pendnode.setDefaultColor(ColorRGBA.white);
+                    _pendnode.getBatch(0).getDefaultColor().set(ColorRGBA.white);
                 } else {
-                    _pendnode.setDefaultColor(getJPieceColor(_piece.owner));
+                    _pendnode.getBatch(0).getDefaultColor().set(getJPieceColor(_piece.owner));
                 }
                 _pendnode.updateRenderState();
             }
@@ -221,7 +221,7 @@ public class UnitSprite extends MobileSprite
             }
             _pendtst.setTexture(createPendingTexture(ticks-1));
             _pendnode.setRenderState(_pendtst);
-            _pendnode.setDefaultColor(getJPieceColor(_piece.owner));
+            _pendnode.getBatch(0).getDefaultColor().set(getJPieceColor(_piece.owner));
             _pendnode.updateRenderState();
         }
     }

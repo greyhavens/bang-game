@@ -1707,7 +1707,7 @@ public class BoardView extends BComponent
                 set.getX(ii), set.getY(ii), true, false);
             highlight.setRenderState(_tgtstate);
             highlight.updateRenderState();
-            highlight.setDefaultColor(valid ?
+            highlight.getBatch(0).getDefaultColor().set(valid ?
                 ColorRGBA.white : INVALID_TARGET_HIGHLIGHT_COLOR);
         }
     }

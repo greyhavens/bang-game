@@ -53,7 +53,7 @@ public class PieceTarget extends Node
         boolean addModifiers = false;
         if (_pendingTick == -1) {
             addModifiers = true;
-            _tgtquad.setDefaultColor(DEFAULT_COLOR);
+            _tgtquad.getBatch(0).getDefaultColor().set(DEFAULT_COLOR);
             switch (mode) {
             case NONE:
                 _tgtquad.setCullMode(CULL_ALWAYS);
@@ -103,7 +103,7 @@ public class PieceTarget extends Node
     {
         if (pending) {
             if (_pendingTick == -1) {
-                _tgtquad.setDefaultColor(ColorRGBA.red);
+                _tgtquad.getBatch(0).getDefaultColor().set(ColorRGBA.red);
             }
             _pendingTick = _tick;
         } else {
@@ -121,9 +121,9 @@ public class PieceTarget extends Node
     {
         if (_pendingTick == -1) {
             ColorRGBA color = (possible ? POSSIBLE_COLOR : DEFAULT_COLOR);
-            _tgtquad.setDefaultColor(color);
+            _tgtquad.getBatch(0).getDefaultColor().set(color);
             for (Quad quad : _modquad) {
-                quad.setDefaultColor(color);
+                quad.getBatch(0).getDefaultColor().set(color);
             }
         }
     }
@@ -170,7 +170,7 @@ public class PieceTarget extends Node
     {
         // after picking, remove the result if it exceeds the radius
         // of the reticle (about 3/8ths the size of the texture)
-        int onum = results.getNumber();   
+        int onum = results.getNumber();
         super.findPick(ray, results);
         int nnum = results.getNumber();
         if (nnum > onum) {
@@ -188,7 +188,7 @@ public class PieceTarget extends Node
             }
         }
     }
-    
+
     /**
      * Create the geometry.
      */
@@ -213,7 +213,7 @@ public class PieceTarget extends Node
         bbn.attachChild(_tgtquad);
         _tgtquad.setCullMode(CULL_ALWAYS);
         _tgtquad.setIsCollidable(false);
-        
+
         // these icons are displayed when there are modifiers for a
         // potential target
         _modquad = new Quad[MOD_COORDS.length];
@@ -253,7 +253,7 @@ public class PieceTarget extends Node
         quad.setCullMode(CULL_DYNAMIC);
         quad.setIsCollidable(true);
         if (color != null) {
-            quad.setDefaultColor(color);
+            quad.getBatch(0).getDefaultColor().set(color);
         }
         quad.updateRenderState();
     }
@@ -307,7 +307,7 @@ public class PieceTarget extends Node
     }
 
     protected BasicContext _ctx;
-    
+
     /** Reference to the piece we are attached to. */
     protected Piece _piece;
 
@@ -322,7 +322,7 @@ public class PieceTarget extends Node
     protected static TextureState[] _crosstst;
     protected static TextureState[] _modtst;
 
-    protected static final String[] CROSS_TEXS = { 
+    protected static final String[] CROSS_TEXS = {
         "", "_q", "_1", "_2", "_n", "_skull" };
 
     protected static final Vector2f[] PTARG_COORDS = {

@@ -53,10 +53,10 @@ public class DamageIconViz extends IconViz
         if (target == null) {
             return;
         }
-        displayDamageIconViz(target, getJPieceColor(target.owner), 
+        displayDamageIconViz(target, getJPieceColor(target.owner),
                 getDarkerPieceColor(target.owner), showText, effect, ctx, view);
     }
-    
+
     /**
      * Creates a damage icon visualitzation for the given effect,
      * and adds it to the piece sprite.
@@ -70,7 +70,7 @@ public class DamageIconViz extends IconViz
         displayDamageIconViz(target, target.isAlive() ? "damaged" : "killed",
             color, dcolor, effect.getBaseDamage(target), showText, effect, ctx, view);
     }
-    
+
     /**
      * Creates a damage icon visualization for the given effect,
      * and adds it to the piece sprite.
@@ -82,12 +82,12 @@ public class DamageIconViz extends IconViz
         if (target == null) {
             return;
         }
-        
+
         PieceSprite sprite = view.getPieceSprite(target);
         if (sprite == null) {
             return;
         }
-        
+
         DamageIconViz diviz = null;
         if (effect instanceof MoveShootEffect) {
             effect = ((MoveShootEffect)effect).shotEffect;
@@ -105,7 +105,7 @@ public class DamageIconViz extends IconViz
             diviz.display();
         }
     }
-    
+
     protected DamageIconViz (String iname, int damage, ColorRGBA color,
         ColorRGBA dcolor, boolean showText)
     {
@@ -129,10 +129,10 @@ public class DamageIconViz extends IconViz
         super.didInit();
 
         // create the damage readout
-        int readoutsize = 1 + 
+        int readoutsize = 1 +
             (_attackIcons == null ? 0 : _attackIcons.length) +
             (_defendIcons == null ? 0 : _defendIcons.length);
-            
+
         int readoutidx = 0;
         float offset =  DAMAGE_SIZE * 0.58f;
         _readout = new Quad[readoutsize];
@@ -147,7 +147,7 @@ public class DamageIconViz extends IconViz
             float width = ICON_SIZE * tcoords[2].x / tcoords[2].y;
             _readout[0] = IconConfig.createIcon(_dmgTState, width, ICON_SIZE);
             _readout[0].setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
-            _readout[0].setDefaultColor(new ColorRGBA());
+            _readout[0].getBatch(0).getDefaultColor().set(new ColorRGBA());
             readoutidx = 1;
             offset += width / 2f;
         }
@@ -158,8 +158,8 @@ public class DamageIconViz extends IconViz
                 _readout[readoutidx] = IconConfig.createIcon(_ctx,
                     "influences/icons/" + _attackIcons[ii] + ".png",
                     DAMAGE_SIZE, DAMAGE_SIZE);
-                _readout[readoutidx].setDefaultColor(new ColorRGBA());
-                _readout[readoutidx].getLocalTranslation().x = 
+                _readout[readoutidx].getBatch(0).getDefaultColor().set(new ColorRGBA());
+                _readout[readoutidx].getLocalTranslation().x =
                     offset + ii * DAMAGE_SIZE;
                 readoutidx++;
             }
@@ -170,12 +170,12 @@ public class DamageIconViz extends IconViz
                 _readout[readoutidx] = IconConfig.createIcon(_ctx,
                     "influences/icons/" + _defendIcons[ii] + ".png",
                     DAMAGE_SIZE, DAMAGE_SIZE);
-                _readout[readoutidx].setDefaultColor(new ColorRGBA());
-                _readout[readoutidx].getLocalTranslation().x = 
+                _readout[readoutidx].getBatch(0).getDefaultColor().set(new ColorRGBA());
+                _readout[readoutidx].getLocalTranslation().x =
                     -(offset + ii * DAMAGE_SIZE);
             }
         }
-            
+
         for (int ii = 0; ii < _readout.length; ii++) {
             if (_readout[ii] != null) {
                 _billboard.attachChild(_readout[ii]);
@@ -263,14 +263,14 @@ public class DamageIconViz extends IconViz
 
     /** The alternate, darker color. */
     protected ColorRGBA _dcolor;
-    
+
     /** The name of the icons to display. */
     protected String[] _attackIcons;
     protected String[] _defendIcons;
 
     /** The amount of damage to display. */
     protected int _damage;
-    
+
     /** Show damage text. */
     protected boolean _showText;
 

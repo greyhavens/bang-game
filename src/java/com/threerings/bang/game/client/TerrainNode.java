@@ -87,7 +87,7 @@ public class TerrainNode extends Node
             super("cursor");
 
             setMode(LOOP);
-            setDefaultColor(ColorRGBA.white);
+            getBatch(0).getDefaultColor().set(ColorRGBA.white);
             setLightCombineMode(LightState.OFF);
             setRenderState(RenderUtil.lequalZBuf);
 
@@ -485,7 +485,7 @@ public class TerrainNode extends Node
          */
         protected void updateHoverState ()
         {
-            setDefaultColor(hover ? _hoverColor : _defaultColor);
+            getBatch(0).getDefaultColor().set(hover ? _hoverColor : _defaultColor);
             setRenderState(hover ? _hoverTexture : _defaultTexture);
             updateRenderState();
         }
