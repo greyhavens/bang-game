@@ -188,8 +188,17 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     {
         public PrototypeReference (Model prototype)
         {
+            this(prototype, null);
+        }
+
+        public PrototypeReference (Model prototype, Model original)
+        {
             super(prototype, _cleared);
-            recordResources(prototype);
+            if (original == null) {
+                recordResources(prototype);
+            } else {
+                _original = original;
+            }
         }
 
         /**
@@ -245,6 +254,10 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
         {
             return (value > 0) ? IntListUtil.add(values, value) : values;
         }
+
+        /** A reference to the default variant (if this isn't it) to keep it from being
+         * collected with this variant is in use. */
+        protected Model _original;
 
         /** The VBOs to delete. */
         protected VBOInfo[] _vbois;
