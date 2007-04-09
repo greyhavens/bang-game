@@ -64,12 +64,12 @@ public class OOOAuthenticator extends BangAuthenticator
     public OOOAuthenticator ()
     {
         try {
-            _siteident = new JDBCTableSiteIdentifier(BangServer.conprov);
-
             // we get our user manager configuration from the ocean config
             _usermgr = new OOOUserManager(ServerConfig.config.getSubProperties("oooauth"),
                                           BangServer.conprov);
             _authrep = (OOOUserRepository)_usermgr.getRepository();
+            _siteident = new JDBCTableSiteIdentifier(BangServer.conprov);
+
             _rewardrep = new RewardRepository(BangServer.conprov);
         } catch (PersistenceException pe) {
             log.log(Level.WARNING, "Failed to initialize OOO authenticator. " +
