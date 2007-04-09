@@ -477,6 +477,9 @@ public class BangManager extends GameManager
 
         // let them know it worked
         listener.requestProcessed();
+
+        // make sure everything's still good after playing this card
+        validateOrders();
     }
 
     // documentation inherited from interface BangProvider
