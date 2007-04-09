@@ -879,7 +879,7 @@ public class GangHandler
 
         // make sure it's not the same rank
         if (rank == entry.rank) {
-            log.warning("Tried to change to same rank [handle=" + handle +
+            log.warning("Tried to change to same rank [gang=" + this + ", handle=" + handle +
                 ", target=" + entry + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -1815,5 +1815,5 @@ public class GangHandler
 
     /** In order to prevent rapid loading and unloading, we wait this long after the last gang
      * member has logged off of the cluster to unload the gang. */
-    protected static final long UNLOAD_INTERVAL = 30 * 60 * 1000L;
+    protected static final long UNLOAD_INTERVAL = 60 * 60 * 1000L;
 }

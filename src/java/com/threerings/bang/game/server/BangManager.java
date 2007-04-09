@@ -1992,7 +1992,7 @@ public class BangManager extends GameManager
         _bangobj.setAwards(awards);
 
         // and persist the awards as well
-        postGamePersist(awards);
+        postGamePersist(awards, gameSecs);
 
         // round point and rank information for debugging
         StringBuffer buf = new StringBuffer("Game Results [");
@@ -2674,7 +2674,7 @@ public class BangManager extends GameManager
      * Persists the supplied cash and badges and sticks them into the distributed objects of the
      * appropriate players. Also updates the players' ratings if appropriate.
      */
-    protected void postGamePersist (final Award[] awards)
+    protected void postGamePersist (final Award[] awards, int gameSecs)
     {
         // award notoriety through the gang manager
         for (Award award : awards) {
@@ -2684,7 +2684,9 @@ public class BangManager extends GameManager
                     BangServer.gangmgr.requireGangPeerProvider(prec.gangId).grantAces(
                         null, prec.user.handle, award.acesEarned);
                 } catch (InvocationException e) {
-                    // a warning will have been logged by GangManager
+                    log.warning("Gang not available to grant aces [gangId=" + prec.gangId +
+                        ", handle=" + prec.user.handle + ", aces=" + award.acesEarned +
+                        ", seconds=" + gameSecs + "].");
                 }
             }
         }

@@ -115,7 +115,8 @@ public class GangManager
             try {
                 requireGang(mrec.gangId).initPlayer(player);
             } catch (InvocationException e) {
-                // a warning will have already been logged
+                log.warning("Gang not loaded to init player [gangId=" + mrec.gangId + ", player=" +
+                    player.who() + "].");
             }
         } else if (invites != null) {
             for (GangInviteRecord record : invites) {
@@ -139,7 +140,8 @@ public class GangManager
             info.rank = getPosterRank(player.gangRank);
             info.buckle = gangobj.getBuckleInfo();
         } catch (InvocationException e) {
-            // a warning will have already been logged
+            log.warning("Gang not loaded to populate poster [gangId=" + player.gangId +
+                ", player=" + player.who() + "].");
         }
     }
 
