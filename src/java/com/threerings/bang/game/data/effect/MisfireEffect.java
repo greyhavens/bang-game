@@ -30,6 +30,9 @@ public class MisfireEffect extends SetHindranceEffect
             public ShotEffect shoot (BangObject bangobj, Unit shooter,
                     Piece target, float scale)
             {
+                if (_expired) {
+                    return null;
+                }
                 _expired = true;
                 return new FailedShotEffect(shooter, target,
                         shooter.computeScaledDamage(bangobj, target, scale));

@@ -29,9 +29,12 @@ public class DudEffect extends SetHindranceEffect
                 return "dud";
             }
 
-            public ShotEffect shoot (BangObject bangobj, Unit shooter, 
+            public ShotEffect shoot (BangObject bangobj, Unit shooter,
                     Piece target, float scale)
             {
+                if (_expired) {
+                    return null;
+                }
                 _expired = true;
                 return new FailedShotEffect(shooter, target, 0);
             }
