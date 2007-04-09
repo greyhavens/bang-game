@@ -314,6 +314,22 @@ public class BangPrefs
     }
 
     /**
+     * Used to prevent a shop popup from showing upon entering said shop.
+     */
+    public static boolean shouldShowShopPopup (PlayerObject user, String shop)
+    {
+        return !config.getValue(user.username + ".shop_popup." + shop, false);
+    }
+
+    /**
+     * Called when the user has reqeusted not to show the shop popup.
+     */
+    public static void setNoShopPopup (PlayerObject user, String shop)
+    {
+        config.setValue(user.username + ".shop_popup." + shop, true);
+    }
+
+    /**
      * Check if we should popup our free ticket details window.
      */
     public static boolean shouldShowPassDetail (PlayerObject user, String townId)

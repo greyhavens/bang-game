@@ -250,7 +250,7 @@ public class FKeyPopups
 
     protected BDecoratedWindow createReportBug ()
     {
-        if (_ctx.getUserObject().tokens.isAnonymous()) {
+        if (_ctx.getUserObject() != null && _ctx.getUserObject().tokens.isAnonymous()) {
             return null;
         }
         final BDecoratedWindow bug = BangUI.createDialog(_msgs.get("m.bug_title"));
