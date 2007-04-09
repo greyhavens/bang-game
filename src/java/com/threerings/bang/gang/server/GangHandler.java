@@ -129,15 +129,43 @@ public class GangHandler
     /**
      * Creates a handler for a newly created gang.
      */
-    public GangHandler (GangRecord grec, PlayerObject creator)
+    public GangHandler (
+        final GangRecord grec, final PlayerObject creator,
+        final InvocationService.ConfirmListener listener)
     {
         _gangId = grec.gangId;
 
-        // create the object immediately
-        createGangObject(grec);
+        // add a listener to initialize the player and report success
+        getGangObject(new ResultListener<GangObject>() {
+            public void requestCompleted (GangObject result) {
+                initPlayer(creator);
+                listener.requestProcessed();
+            }
+            public void requestFailed (Exception cause) {
+                listener.requestFailed(INTERNAL_ERROR);
+            }
+        });
 
-        // initialize the creator
-        initPlayer(creator);
+        // initialize immediately if not running in peer mode
+        if (BangServer.peermgr == null) {
+            createGangObject(grec);
+            return;
+        }
+
+        // otherwise, acquire the lock before continuing
+        BangServer.peermgr.acquireLock(new Lock("gang", _gangId),
+            new ResultListener<String>() {
+                public void requestCompleted (String result) {
+                    if (result.equals(ServerConfig.nodename)) {
+                        createGangObject(grec);
+                    } else {
+                        subscribeToPeer(result);
+                    }
+                }
+                public void requestFailed (Exception cause) {
+                    initFailed(cause);
+                }
+            });
     }
 
     /**

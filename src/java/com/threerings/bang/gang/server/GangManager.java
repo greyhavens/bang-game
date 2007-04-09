@@ -369,8 +369,7 @@ public class GangManager
                          ", gangId=" + _grec.gangId + "].");
                 BangServer.hideoutmgr.activateGang(name);
                 if (user.isActive()) {
-                    _gangs.put(_grec.gangId, new GangHandler(_grec, user));
-                    listener.requestProcessed();
+                    _gangs.put(_grec.gangId, new GangHandler(_grec, user, listener));
                 }
             }
             protected void actionFailed (String cause) {
