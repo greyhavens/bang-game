@@ -1595,6 +1595,10 @@ public class BangManager extends GameManager
             hasOrders.clear();
             for (int pidx : players) {
                 AdvanceOrder order = aos[pidx].remove(0);
+                // we need to check this again since it could have been affected by previous orders
+                if (order.unit.ticksUntilMovable(tick) > 0) {
+                    continue;
+                }
                 try {
                     executeOrder(order.unit, order.x, order.y, order.targetId, false);
                     executed++;
