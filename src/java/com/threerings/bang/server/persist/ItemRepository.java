@@ -396,7 +396,8 @@ public class ItemRepository extends SimpleRepository
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
-                String query = "select ITEM_ID from ITEMS where OWNER_ID = " + playerId;
+                String query = "select ITEM_ID from ITEMS where OWNER_ID = " + playerId +
+                    " and GANG_OWNED = false";
                 Statement stmt = conn.createStatement();
                 try {
                     ResultSet rs = stmt.executeQuery(query);
