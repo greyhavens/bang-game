@@ -485,7 +485,9 @@ public class TerrainNode extends Node
          */
         protected void updateHoverState ()
         {
-            getBatch(0).getDefaultColor().set(hover ? _hoverColor : _defaultColor);
+            // here, we set by reference rather than by value, because the default color
+            // may be one of our special "throbbing" colors
+            setDefaultColor(hover ? _hoverColor : _defaultColor);
             setRenderState(hover ? _hoverTexture : _defaultTexture);
             updateRenderState();
         }
