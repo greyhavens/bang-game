@@ -982,9 +982,8 @@
     </then></if>
 
     <property file="${basedir}/${deploy.dir}/build.properties"/>
-    <fail message="version, which comes from build.properties, must be set.">
-       <condition><not><isset property="version"/></not></condition>
-    </fail>
+    <assert name="version" message="version, which comes from build.properties, must be set."/>
+    <!-- prepare the client and installer to be packaged -->
     <antcall target="prepare-extra">
       <param name="extra.type" value="client"/>
       <param name="pkg.name.override" value="bang-client-${version}"/>
