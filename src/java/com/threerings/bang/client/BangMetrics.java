@@ -31,11 +31,11 @@ public class BangMetrics
 
     /** Java colors for each of the players. */
     public static final Color[] PIECE_COLORS = {
-        Color.gray, 
-        new Color(0.08f, 0.33f, 1f, 1f), 
-        Color.red, 
-        Color.green, 
-        Color.yellow, 
+        Color.gray,
+        new Color(0.08f, 0.33f, 1f, 1f),
+        Color.red,
+        Color.green,
+        Color.yellow,
         new Color(1f, 0.47f, 0f, 1f),
         new Color(0.08f, 0.73f, 1f, 1f),
         new Color(0.43f, 0.12f, 1f, 1f),
@@ -64,18 +64,18 @@ public class BangMetrics
         JPIECE_COLORS[6].mult(ColorRGBA.darkGray),
         JPIECE_COLORS[7].mult(ColorRGBA.darkGray),
     };
-    
+
     /** Color indices for the teams. */
     public static final int[][] TEAM_COLOR = { { 1, 6, 7 }, {2, 5}, {4} };
 
-    /** 
-     * Get the Java piece color based on the current team lookup. 
+    /**
+     * Get the Java piece color based on the current team lookup.
      */
     public static Color getPieceColor (int owner) {
         return PIECE_COLORS[colorLookup[owner+1]];
     }
 
-    /** 
+    /**
      * Get the JME piece color based on the current team lookup.
      */
     public static ColorRGBA getJPieceColor (int owner) {
@@ -89,11 +89,15 @@ public class BangMetrics
         return DARKER_COLORS[colorLookup[owner+1]];
     }
 
-    /** 
-     * Generates an int array of color indices for all players. 
+    /**
+     * Generates an int array of color indices for all players.
      */
     public static void generateColorLookup (int[] teams)
     {
+        if (teams == null) {
+            colorLookup = new int[] { 0, 1, 2, 3, 4 };
+            return;
+        }
         int[] teamsize = new int[teams.length];
         boolean[] isteam = new boolean[teams.length];
         int[] teamidx = new int[teams.length];
@@ -131,7 +135,7 @@ public class BangMetrics
             for (int ii = 0; ii < teams.length; ii++) {
                 colorLookup[ii+1] = TEAM_COLOR[(teamsize[teams[ii]] == 3 ? 0 : 2)][teamidx[ii]];
             }
-                
+
         // 2v2 or 2v1
         } else if (numteams == 2) {
             int firstteam = 0;
@@ -145,7 +149,7 @@ public class BangMetrics
                 colorLookup[ii+1] = TEAM_COLOR[(firstteam == teams[ii] ? 0 : 1)][teamidx[ii]];
             }
 
-        // 2v1v1 
+        // 2v1v1
         } else {
             int firstteam = 0;
             for (int ii = 0; ii < isteam.length; ii++) {

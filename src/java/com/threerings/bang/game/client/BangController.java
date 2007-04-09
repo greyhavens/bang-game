@@ -193,10 +193,9 @@ public class BangController extends GameController
     public void willEnterPlace (PlaceObject plobj)
     {
         _bangobj = (BangObject)plobj;
-        // generate our color lookup if the teams are set
-        if (_bangobj.teams != null) {
-            BangMetrics.generateColorLookup(_bangobj.teams);
-        }
+
+        // generate our color lookup
+        BangMetrics.generateColorLookup(_bangobj.teams);
 
         super.willEnterPlace(plobj);
         _bangobj.addListener(_ranklist);
