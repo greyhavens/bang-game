@@ -324,7 +324,7 @@ public class BangController extends GameController
     public void handlePlaceCard (Object source, Object argument)
     {
         int value = ((Integer)argument).intValue();
-        if (_view.pstatus != null && _pidx < _view.pstatus.length) {
+        if (_view.pstatus != null && _pidx < _view.pstatus.length && _pidx > -1) {
             _view.pstatus[_pidx].playCardAtIndex(value);
         }
     }

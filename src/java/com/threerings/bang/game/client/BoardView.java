@@ -352,7 +352,9 @@ public class BoardView extends BComponent
         removePieceSprites();
 
         // reset the sound effects
-        _sounds.reclaimAll();
+        if (_sounds != null) {
+            _sounds.reclaimAll();
+        }
 
         // remove any possible pending or executing board actions
         clearBoardActions();
