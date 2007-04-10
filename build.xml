@@ -531,11 +531,14 @@
     <!-- generate the getdown digest file -->
     <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask">
       <classpath>
-        <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
+        <pathelement path="${deploy.dir}/lib/commons-codec.jar"/>
         <pathelement path="${deploy.dir}/lib/getdown.jar"/>
+        <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
       </classpath>
     </taskdef>
-    <digest appdir="${client_dir}"/>
+    <property file="${cert_dir}/certificate.properties"/>
+    <digest appdir="${client_dir}" keystore="${sign.keystore}" alias="${sign.alias}"
+            storepass="${sign.storepass}"/>
   </target>
 
   <!-- builds the development client getdown distribution -->
@@ -746,18 +749,15 @@
       <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
     </signjar>
 
-    <!-- generate our signed applet tags -->
-    <taskdef name="appsign" classname="com.threerings.getdown.tools.AppletParamTask">
-      <classpath>
-        <pathelement path="${deploy.dir}/lib/commons-codec.jar"/>
-        <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
-        <pathelement path="${deploy.dir}/lib/getdown.jar"/>
-      </classpath>
-    </taskdef>
-    <appsign keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}"
-             keypass="${sign.keypass}" appbase="${root_url}/client" appname="${client_ident}"
-             imgpath="/client/background.png" file="pages/incl/launch_open.html.in"
-             tofile="${applet.base}/incl/launch_open.html"/>
+    <!-- generate our applet tags -->
+    <copy file="pages/incl/launch_open.html.in" tofile="${applet.base}/incl/launch_open.html"
+          overwrite="true" encoding="UTF-8">
+      <filterset>
+        <filter token="APPBASE" value="${root_url}/client"/>
+        <filter token="APPNAME" value="${client_ident}"/>
+        <filter token="IMGPATH" value="/client/background.png"/>
+      </filterset>
+    </copy>
   </target>
 
   <!-- a target for rebuilding everything -->

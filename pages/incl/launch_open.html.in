@@ -5,7 +5,6 @@
 <param name="appname" value="@APPNAME@" />
 <param name="bgimage" value="@IMGPATH@" />
 <param name="installer" value="<!--#echo var="affiliate"-->" />
-<param name="signature" value="@SIGNATURE@" />
 <!--[if !IE]>-->
 <comment>
 <!--<object classid="java:com.threerings.getdown.launcher.GetdownApplet.class" archive="/client/getdown-pro.jar" width="490" height="364">-->
@@ -13,7 +12,7 @@
        archive="/client/getdown-retro-pro.jar" width="490" height="364"
        type="application/x-java-applet;version=1.4"
        pluginspage="http://java.sun.com/j2se/1.5.0/download.html"
-       appbase="@APPBASE@" appname="@APPNAME@" bgimage="@IMGPATH@" signature="@SIGNATURE@"
+       appbase="@APPBASE@" appname="@APPNAME@" bgimage="@IMGPATH@"
        installer="<!--#echo var="affiliate"-->"
 >
 <noembed>
