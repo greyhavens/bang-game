@@ -168,6 +168,14 @@ public class TextureCache
     }
 
     /**
+     * Creates a texture that will be deleted when it is no longer accessible.
+     */
+    public Texture createTexture ()
+    {
+        return new TextureReference(new CachedTexture()).get();
+    }
+
+    /**
      * Computes the count and size of our resident and non-resident cached
      * textures.
      */

@@ -2029,7 +2029,7 @@ public class TerrainNode extends Node
                 }
             }
 
-            Texture texture = new Texture();
+            Texture texture = _ctx.getTextureCache().createTexture();
             abuf.rewind();
             texture.setImage(new Image(Image.A8, TEXTURE_SIZE, TEXTURE_SIZE, abuf));
 

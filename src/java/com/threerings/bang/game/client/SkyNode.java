@@ -51,10 +51,10 @@ public class SkyNode extends Node
     {
         super("skynode");
         _ctx = ctx;
-        
+
         setLightCombineMode(LightState.OFF);
         setRenderQueueMode(Renderer.QUEUE_SKIP);
-        
+
         // create the dome geometry
         if (_dgeom == null) {
             _dgeom = new Dome("dgeom", DOME_PLANES, DOME_RADIAL_SAMPLES,
@@ -68,7 +68,7 @@ public class SkyNode extends Node
                 VBOInfo vboinfo = new VBOInfo(true);
                 vboinfo.setVBOIndexEnabled(true);
                 _dgeom.setVBOInfo(vboinfo);
-                
+
             } else if (Config.useDisplayLists) {
                 _dgeom.lockMeshes(ctx.getRenderer());
             }
@@ -86,7 +86,7 @@ public class SkyNode extends Node
         _dome.setRenderState(zbstate);
         attachChild(_dome);
         _dome.updateRenderState();
-        
+
         // create the cloud plane geometry, which fades out towards the edge
         if (_cgeom == null) {
             _cgeom = new Disk("cgeom", CLOUD_SHELL_SAMPLES,
@@ -114,7 +114,7 @@ public class SkyNode extends Node
                 VBOInfo vboinfo = new VBOInfo(true);
                 vboinfo.setVBOIndexEnabled(true);
                 _cgeom.setVBOInfo(vboinfo);
-                
+
             } else if (Config.useDisplayLists) {
                 _cgeom.lockMeshes(ctx.getRenderer());
             }
@@ -133,7 +133,7 @@ public class SkyNode extends Node
         attachChild(_clouds);
         _clouds.updateRenderState();
     }
-    
+
     /**
      * Initializes the sky geometry using data from the given board
      * and saves the board reference for later updates.
@@ -141,11 +141,11 @@ public class SkyNode extends Node
     public void createBoardSky (BangBoard board)
     {
         _board = board;
-        
+
         // (re)create the gradient texture
         refreshGradient();
     }
-    
+
     /**
      * Releases the resources created by this node.
      */
@@ -153,7 +153,7 @@ public class SkyNode extends Node
     {
         _gtstate.deleteAll();
     }
-    
+
     /**
      * Updates the gradient texture according to the board parameters.
      */
@@ -163,7 +163,7 @@ public class SkyNode extends Node
         _gtstate.setTexture(createGradientTexture());
         _dome.updateRenderState();
     }
-    
+
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
@@ -174,14 +174,14 @@ public class SkyNode extends Node
         if (_board == null) {
             return;
         }
-        
+
         // move the clouds according to the wind velocity
         float wdir = _board.getWindDirection(), wspeed = _board.getWindSpeed();
         _ctstate.getTexture().getTranslation().addLocal(
             time * wspeed * FastMath.cos(wdir) * 0.001f,
             time * wspeed * FastMath.sin(wdir) * 0.001f, 0f);
     }
-    
+
     /**
      * Creates and returns the gradient texture that fades from the horizon
      * color to the overhead color.
@@ -196,72 +196,72 @@ public class SkyNode extends Node
             _board.getSkyOverheadColor()),
                 tcolor = new ColorRGBA();
         float falloff = _board.getSkyFalloff();
-        
+
         for (int i = 0; i < size; i++) {
             float s = i / (size-1f),
                 a = FastMath.exp(-falloff * s);
             tcolor.interpolate(ocolor, hcolor, a);
-            
+
             pbuf.put((byte)(tcolor.r * 255));
             pbuf.put((byte)(tcolor.g * 255));
             pbuf.put((byte)(tcolor.b * 255));
         }
         pbuf.rewind();
-        
-        Texture texture = new Texture();
+
+        Texture texture = _ctx.getTextureCache().createTexture();
         texture.setImage(new Image(Image.RGB888, 1, size, pbuf));
         texture.setFilter(Texture.FM_LINEAR);
         return texture;
     }
-    
+
     /** The application context. */
     protected BasicContext _ctx;
-    
+
     /** The dome mesh. */
     protected SharedMesh _dome;
-    
+
     /** The gradient texture state. */
     protected TextureState _gtstate;
-    
+
     /** The cloud plane mesh. */
     protected SharedMesh _clouds;
-    
+
     /** The cloud texture state. */
     protected TextureState _ctstate;
-    
+
     /** The current board object. */
     protected BangBoard _board;
-    
+
     /** The shared sky dome geometry. */
     protected static Dome _dgeom;
-    
+
     /** The shared cloud plane geometry. */
     protected static Disk _cgeom;
-    
+
     /** The number of vertical samples in the sky dome. */
     protected static final int DOME_PLANES = 16;
-    
+
     /** The number of radial samples for the sky dome. */
     protected static final int DOME_RADIAL_SAMPLES = 32;
-    
+
     /** The radius of the sky dome. */
     protected static final float DOME_RADIUS = 1000f;
-    
+
     /** The size of the one-dimensional gradient texture. */
     protected static final int GRADIENT_TEXTURE_SIZE = 1024;
-    
+
     /** The number of rings in the cloud plane. */
     protected static final int CLOUD_SHELL_SAMPLES = 16;
-    
+
     /** The number of radial samples in the cloud plane. */
     protected static final int CLOUD_RADIAL_SAMPLES = 16;
-    
+
     /** The radius of the cloud plane. */
     protected static final float CLOUD_RADIUS = 10000f;
-    
+
     /** The height of the cloud plane. */
     protected static final float CLOUD_HEIGHT = 500f;
-    
+
     /** The texture scale (tiling factor) of the cloud texture. */
     protected static final float CLOUD_TEXTURE_SCALE = 10f;
 }

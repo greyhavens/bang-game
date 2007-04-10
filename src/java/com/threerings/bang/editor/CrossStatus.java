@@ -103,7 +103,7 @@ public class CrossStatus extends Node
             AffineTransformOp rot90op = new AffineTransformOp(
                     rot90, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
             for (int ii = 0; ii < DIRECTIONS.length; ii++) {
-                _sidetexs[ii] = RenderUtil.createTexture(
+                _sidetexs[ii] = RenderUtil.createTexture(_ctx,
                         _ctx.getImageCache().createImage(side, false));
                 RenderUtil.ensureLoaded(_ctx, _sidetexs[ii]);
                 side = rot90op.filter(side, null);

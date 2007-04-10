@@ -49,7 +49,7 @@ public class RobotWaveHandler extends EffectHandler
         }
         return true;
     }
-    
+
     /**
      * The superclass of the marquees for the start and end of waves.
      */
@@ -59,7 +59,7 @@ public class RobotWaveHandler extends EffectHandler
         {
             super(_ctx.getStyleSheet(), null);
         }
-        
+
         /**
          * Shows the marquee.
          */
@@ -68,14 +68,14 @@ public class RobotWaveHandler extends EffectHandler
             _ctx.getRootNode().addWindow(this);
             setBounds(0, 0, _ctx.getDisplay().getWidth(),
                 _ctx.getDisplay().getHeight());
-            
+
             final BLabel buzzsaw = new BLabel(new ImageIcon(
                 _ctx.loadImage("ui/wave/buzzsaw.png")));
             add(buzzsaw);
             final Dimension bsize = buzzsaw.getPreferredSize(-1, -1);
             buzzsaw.setLocation(-bsize.width, (_height - bsize.height) / 2);
             buzzsaw.setSize(bsize.width, bsize.height);
-            
+
             // the container scissors out everything not yet exposed by the
             // saw
             BContainer cont = new BContainer(
@@ -97,7 +97,7 @@ public class RobotWaveHandler extends EffectHandler
             cont.setLocation((_width - csize.width) / 2,
                 (_height - csize.height) / 2);
             cont.setSize(csize.width, csize.height);
-            
+
             // the controller flies the buzzsaw across the screen, revealing
             // the text, then pauses and fades the window out before removing
             // it
@@ -110,19 +110,19 @@ public class RobotWaveHandler extends EffectHandler
                             (int)((_elapsed / BUZZSAW_FLIGHT_DURATION) *
                                 (_width + bsize.width)),
                             buzzsaw.getY());
-                        
+
                     } else if (_elapsed < BUZZSAW_FLIGHT_DURATION +
                         lingerDuration) {
                         lingerUpdate(_elapsed - BUZZSAW_FLIGHT_DURATION);
-                        
+
                     } else if (_elapsed < BUZZSAW_FLIGHT_DURATION +
                         lingerDuration + FADE_DURATION) {
                         // perform one last update to make sure everything's
-                        // added 
+                        // added
                         lingerUpdate(lingerDuration);
                         setAlpha(1f - (_elapsed - BUZZSAW_FLIGHT_DURATION -
                             lingerDuration) / FADE_DURATION);
-                        
+
                     } else {
                         _ctx.getRootNode().removeWindow(WaveMarquee.this);
                         _ctx.getRootNode().removeController(this);
@@ -132,24 +132,24 @@ public class RobotWaveHandler extends EffectHandler
                 protected float _elapsed;
             });
         }
-        
+
         @Override // documentation inherited
         public boolean isOverlay ()
         {
             return true;
         }
-        
+
         @Override // documentation inherited
         public BComponent getHitComponent (int mx, int my)
         {
             return null;
         }
-        
+
         /**
          * Populates the marquee's content container.
          */
         protected abstract void initContent (BContainer cont);
-        
+
         /**
          * Returns the length of time to keep the status component on the
          * screen.
@@ -158,7 +158,7 @@ public class RobotWaveHandler extends EffectHandler
         {
             return LINGER_DURATION;
         }
-        
+
         /**
          * Called regularly during the linger phase.
          *
@@ -169,9 +169,9 @@ public class RobotWaveHandler extends EffectHandler
         {
         }
     }
-    
+
     /**
-     * Displays the wave number and difficulty level at the start of a 
+     * Displays the wave number and difficulty level at the start of a
      * wave.
      */
     protected class StartMarquee extends WaveMarquee
@@ -179,16 +179,16 @@ public class RobotWaveHandler extends EffectHandler
         public StartMarquee (int wave, int difficulty)
         {
             _wave = wave;
-            _difficulty = difficulty;    
+            _difficulty = difficulty;
         }
-        
+
         // documentation inherited
         protected void initContent (BContainer cont)
         {
             cont.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS,
                 MessageBundle.tcompose("m.wave_title", _wave)),
                 "marquee_title"));
-        
+
             BContainer scont = new BContainer(
                 GroupLayout.makeHoriz(GroupLayout.CENTER));
             ImageIcon sicon = new ImageIcon(
@@ -198,10 +198,10 @@ public class RobotWaveHandler extends EffectHandler
             }
             cont.add(scont);
         }
-        
+
         protected int _wave, _difficulty;
     }
-    
+
     /**
      * Displays the score and performance indicator at the end of a wave.
      */
@@ -213,14 +213,14 @@ public class RobotWaveHandler extends EffectHandler
             _living = living;
             _total = total;
         }
-        
+
         // documentation inherited
         protected void initContent (BContainer cont)
         {
             cont.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS,
                 MessageBundle.tcompose("m.wave_end", _wave)),
                 "marquee_title"));
-        
+
             _tcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
             ImageIcon gicon = new ImageIcon(
                 _ctx.loadImage("ui/wave/icon_tree_grown.png")),
@@ -232,13 +232,13 @@ public class RobotWaveHandler extends EffectHandler
                 _tcont.add(label);
             }
             cont.add(_tcont);
-            
+
             RobotWaveEffect reffect = (RobotWaveEffect)_effect;
             cont.add(_plabel = new BLabel(_ctx.xlate(GameCodes.GAME_MSGS,
                 "m.wave_perf" + reffect.getPerformance()),
                 "marquee_subtitle"));
             _plabel.setAlpha(0f);
-            
+
             // collect the sprites to count in random order (but with
             // living sprites at the beginning and dead ones at the end)
             ArrayUtil.shuffle(reffect.treeIds);
@@ -253,20 +253,20 @@ public class RobotWaveHandler extends EffectHandler
                 }
                 _tsprites.add(piece.isAlive() ? 0 : _tsprites.size(), sprite);
             }
-            
+
             // load the living and dead count sounds
             _lsound = _sounds.getSound(LIVING_SOUND);
             if (_living != _total) {
                 _dsound = _sounds.getSound(DEAD_SOUND);
             }
         }
-        
+
         @Override // documentation inherited
         protected float getLingerDuration ()
         {
             return super.getLingerDuration() + _total * TREE_DURATION;
         }
-        
+
         @Override // documentation inherited
         protected void lingerUpdate (float elapsed)
         {
@@ -284,7 +284,7 @@ public class RobotWaveHandler extends EffectHandler
                             new RepairViz());
                     }
                     (_tidx < _living ? _lsound : _dsound).play(true);
-                    
+
                 } else if (_tidx == _total) {
                     _plabel.setAlpha(1f);
                     if (_living == _total) { // perfect score
@@ -293,7 +293,7 @@ public class RobotWaveHandler extends EffectHandler
                 }
             }
         }
-        
+
         protected int _wave, _living, _total, _tidx = -1;
         protected BContainer _tcont;
         protected BLabel _plabel;
@@ -301,28 +301,28 @@ public class RobotWaveHandler extends EffectHandler
             new ArrayList<PieceSprite>();
         protected Sound _lsound, _dsound;
     }
-    
+
     /** The time it takes the buzzsaw to fly across the screen, revealing the
      * marquee. */
     protected static final float BUZZSAW_FLIGHT_DURATION = 1f;
 
     /** The time that the wave start marquee lingers on the screen. */
     protected static final float LINGER_DURATION = 1f;
-    
+
     /** The time it takes to count one tree (or display the performance). */
     protected static final float TREE_DURATION = 0.5f;
-    
+
     /** The time it takes the marquee to fade out. */
     protected static final float FADE_DURATION = 0.5f;
-    
+
     /** Played once for each living tree counted. */
     protected static final String LIVING_SOUND =
         "rsrc/bonuses/indian_post/totem_crown/pickedup.ogg";
-    
+
     /** Played once for each dead tree counted. */
     protected static final String DEAD_SOUND =
         "rsrc/effects/indian_post/totem/pickedup.ogg";
-    
+
     /** Played when the performance is announced to be perfect. */
     protected static final String PERFECT_SOUND =
         "rsrc/bonuses/indian_post/totem_crown/added.ogg";

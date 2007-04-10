@@ -70,7 +70,7 @@ public class RepairViz extends ParticleEffectViz
             _trenderer = RenderUtil.createTextureRenderer(_ctx, TEXTURE_SIZE,
                 TEXTURE_SIZE);
             _trenderer.setBackgroundColor(ColorRGBA.black);
-            _texture = new Texture();
+            _texture = _ctx.getTextureCache().createTexture();
             _texture.setRTTSource(Texture.RTT_SOURCE_RGB);
             _trenderer.setupTexture(_texture);
 
@@ -99,6 +99,8 @@ public class RepairViz extends ParticleEffectViz
             _view.getPieceNode().attachChild(this);
 
             localTranslation.set(target.getLocalTranslation());
+
+            System.out.println("activate " + target.getPiece());
         }
 
         public void updateWorldData (float time)

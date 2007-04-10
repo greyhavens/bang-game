@@ -98,16 +98,16 @@ public class UnitStatus extends PieceStatus
         Unit unit = (Unit)piece;
         if (unit.getMainInfluence() == null || unit.getMainInfluence() != _influence) {
             _influence = unit.getMainInfluence();
-            if (_influence == null || 
+            if (_influence == null ||
                     (_influence.hidden() && unit.owner != pidx)) {
                 _info[4].setCullMode(CULL_ALWAYS);
             } else {
                 String name = _influence.getName();
                 Texture tex = _modtexs.get(name);
                 if (tex == null) {
-                    tex = RenderUtil.createTexture(
+                    tex = RenderUtil.createTexture(_ctx,
                             _ctx.getImageCache().getImage(
-                                "influences/icons/" + name + ".png", 
+                                "influences/icons/" + name + ".png",
                                 true));
                     tex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
                     _modtexs.put(name, tex);
@@ -172,8 +172,8 @@ public class UnitStatus extends PieceStatus
 
     protected static Texture[] _ticktexs;
     protected static Texture _outtex, _routtex, _movetex, _shoottex;
-    protected static HashMap<String, Texture> _modtexs = 
-       new HashMap<String, Texture>(); 
+    protected static HashMap<String, Texture> _modtexs =
+       new HashMap<String, Texture>();
 
     protected static final float MOD_OFFSET = 3f * TILE_SIZE / 8f;
     protected static final Vector3f[] MOD_COORDS = {

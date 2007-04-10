@@ -224,7 +224,7 @@ public class WaterNode extends Node
         }
         pbuf.rewind();
 
-        Texture texture = new Texture();
+        Texture texture = _ctx.getTextureCache().createTexture();
         RenderUtil.configureTexture(texture,
             new Image(Image.RGBA8888, SPHERE_MAP_SIZE, SPHERE_MAP_SIZE, pbuf));
         texture.setEnvironmentalMapMode(Texture.EM_SPHERE);
@@ -387,7 +387,7 @@ public class WaterNode extends Node
 
         // create and add the texture
         _nmtstate.deleteAll();
-        Texture tex = new Texture();
+        Texture tex = _ctx.getTextureCache().createTexture();
         tex.setImage(new Image(Image.RGBA8888, WAVE_MAP_SIZE, WAVE_MAP_SIZE,
             _nmap = BufferUtils.createByteBuffer(WAVE_MAP_SIZE * WAVE_MAP_SIZE * 4)));
         tex.setFilter(Texture.FM_LINEAR);

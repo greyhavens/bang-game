@@ -334,33 +334,15 @@ public class RenderUtil
         tcoords[2] = new Vector2f(width/tsf, height/tsf);
         tcoords[3] = new Vector2f(width/tsf, 0);
 
-        return createTexture(ctx.getImageCache().convertImage(image));
-    }
-
-    /**
-     * Loads a texture from the local file system.
-     */
-    public static Texture loadTexture (
-        BasicContext ctx, String path, Colorization[] zations)
-    {
-        try {
-            BufferedImage bimg = ImageIO.read(new File(path));
-            return createTexture(zations == null ?
-                ctx.getImageCache().createImage(bimg, true) :
-                ctx.getImageCache().createImage(bimg, zations, true));
-        } catch (IOException ioe) {
-            log.log(Level.WARNING, "Unable to load texture [path=" + path +
-                ", error=" + ioe + "].");
-            return null;
-        }
+        return createTexture(ctx, ctx.getImageCache().convertImage(image));
     }
 
     /**
      * Creates a texture using the supplied image.
      */
-    public static Texture createTexture (Image image)
+    public static Texture createTexture (BasicContext ctx, Image image)
     {
-        Texture texture = new Texture();
+        Texture texture = ctx.getTextureCache().createTexture();
         configureTexture(texture, image);
         return texture;
     }
@@ -372,7 +354,7 @@ public class RenderUtil
     {
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(
-            BangPrefs.isMediumDetail() ? Texture.MM_LINEAR_LINEAR : Texture.MM_NONE);
+            BangPrefs.isMediumDetail() ? Texture.MM_LINEAR_LINEAR : Texture.MM_LINEAR);
         texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
         texture.setImage(image);
     }

@@ -217,9 +217,9 @@ public class PieceStatus extends Node
             BufferedImage full = _ctx.getImageCache().getBufferedImage(
                 PPRE + "health_meter_full.png");
             _damtexs = new Texture[11];
-            _damtexs[0] = RenderUtil.createTexture(
+            _damtexs[0] = RenderUtil.createTexture(_ctx,
                 _ctx.getImageCache().createImage(full, false));
-            _damtexs[10] = RenderUtil.createTexture(
+            _damtexs[10] = RenderUtil.createTexture(_ctx,
                 _ctx.getImageCache().createImage(empty, false));
             for (int ii = 1; ii < 10; ii++) {
                 _damtexs[ii] = createDamageTexture(_ctx, empty, full, ii*10);
@@ -249,7 +249,7 @@ public class PieceStatus extends Node
 
     protected Texture prepare (String path)
     {
-        Texture tex = RenderUtil.createTexture(
+        Texture tex = RenderUtil.createTexture(_ctx,
             _ctx.getImageCache().getImage(PPRE + path, false));
         return prepare(tex);
     }
@@ -287,7 +287,7 @@ public class PieceStatus extends Node
         } finally {
             gfx.dispose();
         }
-        return RenderUtil.createTexture(
+        return RenderUtil.createTexture(ctx,
             ctx.getImageCache().convertImage(target));
     }
 

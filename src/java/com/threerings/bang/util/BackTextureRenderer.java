@@ -16,6 +16,8 @@ import com.jme.renderer.RenderContext;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Spatial;
+import com.jme.scene.state.RenderState;
+import com.jme.scene.state.lwjgl.records.TextureStateRecord;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 
@@ -31,66 +33,66 @@ public class BackTextureRenderer
         _ctx = ctx;
         _width = width;
         _height = height;
-        
+
         // createCamera updates, so be sure to call the old one
         _camera = ctx.getRenderer().createCamera(width, height);
         ctx.getCameraHandler().getCamera().update();
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public boolean isSupported ()
     {
         return true;
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public int getPBufferWidth ()
     {
         return _width;
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public int getPBufferHeight ()
     {
         return _height;
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public ColorRGBA getBackgroundColor ()
     {
         return _bgcolor;
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void setBackgroundColor (ColorRGBA c)
     {
         _bgcolor = c;
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public Camera getCamera ()
     {
         return _camera;
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void setCamera (Camera camera)
     {
         _camera = camera;
     }
-    
-    // documentation inherited from interface TextureRenderer    
+
+    // documentation inherited from interface TextureRenderer
     public void updateCamera ()
     {
         _camera.update();
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void setupTexture (Texture tex)
     {
         setupTexture(tex, _width, _height);
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void setupTexture (Texture tex, int width, int height)
     {
@@ -108,7 +110,7 @@ public class BackTextureRenderer
 
         copyToTexture(tex, width, height);
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void render (ArrayList spats, Texture tex)
     {
@@ -119,11 +121,11 @@ public class BackTextureRenderer
             ((Spatial)spats.get(ii)).onDraw(parentRenderer);
         }
         postDraw(parentRenderer);
-        
+
         // copy back buffer to texture
         copyToTexture(tex, _width, _height);
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void render (ArrayList spats, Texture... texs)
     {
@@ -134,13 +136,13 @@ public class BackTextureRenderer
             ((Spatial)spats.get(ii)).onDraw(parentRenderer);
         }
         postDraw(parentRenderer);
-        
+
         // copy back buffer to texture(s)
         for (Texture tex : texs) {
             copyToTexture(tex, _width, _height);
         }
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void render (Spatial spat, Texture... texs)
     {
@@ -149,22 +151,27 @@ public class BackTextureRenderer
         preDraw(parentRenderer);
         spat.onDraw(parentRenderer);
         postDraw(parentRenderer);
-        
+
         // copy back buffer to texture(s)
         for (Texture tex : texs) {
             copyToTexture(tex, _width, _height);
         }
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void copyToTexture (Texture tex, int width, int height)
     {
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureId());
+        TextureStateRecord record =
+            (TextureStateRecord)_ctx.getDisplay().getCurrentContext().getStateRecord(
+                RenderState.RS_TEXTURE);
+
+        int texId = tex.getTextureId();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+        record.units[record.currentUnit].boundTexture = texId;
         GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0,
             getInternalFormat(tex.getRTTSource()), 0, 0, width, height, 0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void copyBufferToTexture (
         Texture tex, int width, int height, int buffer)
@@ -175,13 +182,13 @@ public class BackTextureRenderer
             0, width, height, 0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void forceCopy (boolean force)
     {
         // no-op
     }
-    
+
     // documentation inherited from interface TextureRenderer
     public void cleanup ()
     {
@@ -198,7 +205,7 @@ public class BackTextureRenderer
         _oldWidth = parentRenderer.getWidth();
         _oldHeight = parentRenderer.getHeight();
         _oldBackgroundColor = parentRenderer.getBackgroundColor();
-        
+
         // swap to rtt settings
         parentRenderer.setCamera(_camera);
         parentRenderer.reinit(_width, _height);
@@ -211,7 +218,7 @@ public class BackTextureRenderer
         parentRenderer.clearBuffers();
         parentRenderer.getQueue().swapBuckets();
     }
-    
+
     /**
      * Returns the renderer to its normal state.
      */
@@ -224,13 +231,13 @@ public class BackTextureRenderer
         parentRenderer.setCamera(_oldCamera);
         parentRenderer.reinit(_oldWidth, _oldHeight);
         parentRenderer.setBackgroundColor(_oldBackgroundColor);
-        
+
         // Clear the states again since we will be moving back to the old
         // location and don't want the states bleeding over causing things
         // *not* to be set when they should be.
         applyDefaultStates();
     }
-    
+
     /**
      * Reverts to the default states.
      */
@@ -239,15 +246,13 @@ public class BackTextureRenderer
         RenderContext ctx =
             DisplaySystem.getDisplaySystem().getCurrentContext();
         for (int ii = 0; ii < Renderer.defaultStateList.length; ii++) {
-            if (Renderer.defaultStateList[ii] != null &&
-                Renderer.defaultStateList[ii] !=
-                    ctx.getCurrentState(ii)) {
+            if (Renderer.defaultStateList[ii] != null) {
                 Renderer.defaultStateList[ii].apply();
             }
         }
         ctx.clearCurrentStates();
     }
-    
+
     /**
      * Returns the internal format corresponding to the given render-to-texture
      * source.
@@ -265,22 +270,22 @@ public class BackTextureRenderer
             default: return GL11.GL_RGBA;
         }
     }
-    
+
     /** The application context. */
     protected BasicContext _ctx;
-    
+
     /** The dimensions of the target texture. */
     protected int _width, _height;
-    
+
     /** The current background color. */
     protected ColorRGBA _bgcolor = new ColorRGBA();
-    
+
     /** The current camera. */
     protected Camera _camera;
-    
+
     /** The texture to which we shall render. */
     protected Texture _texture;
-    
+
     /** State preserved between {@link #preDraw} and {@link #postDraw}. */
     protected int _oldWidth, _oldHeight;
     protected Camera _oldCamera;
