@@ -319,7 +319,7 @@ public class BangServer extends CrowdServer
         }
 
         // create and set up our configuration registry and admin service
-        confreg = new DatabaseConfigRegistry(conprov, invoker);
+        confreg = new DatabaseConfigRegistry(conprov, invoker, ServerConfig.nodename);
         AdminProvider.init(invmgr, confreg);
 
         // now initialize our runtime configuration, postponing the remaining server initialization
