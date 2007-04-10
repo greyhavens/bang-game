@@ -67,6 +67,7 @@ public class TexturePool
             _size -= key.getTextureSize();
 
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+            record.currentUnit = Math.max(record.currentUnit, 0);
             record.units[record.currentUnit].boundTexture = texId;
 
             ByteBuffer data = texture.getImage().getData();
