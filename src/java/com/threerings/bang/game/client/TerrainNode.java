@@ -1394,8 +1394,8 @@ public class TerrainNode extends Node
         StringBuffer abuf = new StringBuffer("ADD_SPLATS ");
         for (int ii = 0; ii < splats; ii++) {
             abuf.append("gl_FragColor += (texture2D(splatTextures[" + (ii * 2) +
-                "], gl_TexCoord[0].st) * texture2D(splatTextures[" + (ii * 2 + 1) +
-                "], gl_TexCoord[1].st).a); ");
+                "], gl_TexCoord[0].st * terrainScales[" + ii + "]) * texture2D(splatTextures[" +
+                    (ii * 2 + 1) + "], gl_TexCoord[1].st).a); ");
         }
         return scache.configureState(sstate, null, frag, defs, new String[] { abuf.toString() });
     }
@@ -1461,13 +1461,11 @@ public class TerrainNode extends Node
         /** The index buffer. */
         public IntBuffer ibuf;
 
-        /** Maps terrain codes to ground texture states. */
-        public HashIntMap<TextureState> groundTextures =
-            new HashIntMap<TextureState>();
+        /** Maps terrain codes to ground textures. */
+        public HashIntMap<Texture> groundTextures = new HashIntMap<Texture>();
 
         /** Maps terrain codes to alpha texture buffers. */
-        public HashIntMap<ByteBuffer> alphaBuffers =
-            new HashIntMap<ByteBuffer>();
+        public HashIntMap<ByteBuffer> alphaBuffers = new HashIntMap<ByteBuffer>();
 
         /** Contains the code for each terrain layer (plus one, because zeros
          * are interpreted as empty spaces by {@link IntListUtil}. */
@@ -1872,12 +1870,16 @@ public class TerrainNode extends Node
 
                 for (int jj = 0, tidx = 0; jj < splats; jj++, lidx++) {
                     int code = layers[lidx] - 1;
-                    TextureState gtstate = getGroundTexture(code);
-                    if (gtstate == null) {
+                    Texture gtex = getGroundTexture(code).createSimpleClone();
+                    if (gtex == null) {
                         continue; // something's funny, skip it
                     }
-                    tstate.setTexture(gtstate.getTexture(), tidx);
+                    tstate.setTexture(gtex, tidx);
                     sstate.setUniform("splatTextures[" + tidx + "]", tidx++);
+
+                    // we clear out the fixed-function transform and scale in the shader
+                    sstate.setUniform("terrainScales[" + jj + "]", gtex.getScale().x);
+                    gtex.setScale(null);
 
                     Texture alpha = createAlphaTexture(code, rect, true);
                     tstate.setTexture(alpha, tidx);
@@ -1893,9 +1895,9 @@ public class TerrainNode extends Node
             // and writes to the z buffer)
             SharedMesh base = new SharedMesh("base", mesh);
             int ccode = layers[0] - 1;
-            TextureState gtex = getGroundTexture(ccode);
+            Texture gtex = getGroundTexture(ccode);
             if (gtex != null) {
-                base.setRenderState(gtex);
+                base.setRenderState(RenderUtil.createTextureState(_ctx, gtex));
             }
             node.attachChild(base);
 
@@ -1915,12 +1917,11 @@ public class TerrainNode extends Node
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
                 int code = layers[ii] - 1;
-                TextureState gtstate = getGroundTexture(code);
-                if (gtstate == null) {
+                Texture ground = getGroundTexture(code);
+                if (ground == null) {
                     continue; // something's funny, skip it
                 }
 
-                Texture ground = gtstate.getTexture();
                 tstate.setTexture(ground, 0);
                 Texture alpha = createAlphaTexture(code, rect, false);
                 alpha.setApply(Texture.AM_MODULATE);
@@ -1954,17 +1955,16 @@ public class TerrainNode extends Node
         }
 
         /**
-         * Returns the ground texture state for the given terrain code, making
-         * sure that we always pick the same "random" texture for this splat.
+         * Returns the ground texture for the given terrain code, making sure that we always pick
+         * the same "random" texture for this splat.
          */
-        protected TextureState getGroundTexture (int code)
+        protected Texture getGroundTexture (int code)
         {
-            TextureState tstate = groundTextures.get(code);
-            if (tstate == null) {
-                groundTextures.put(code,
-                    tstate = RenderUtil.getGroundTexture(_ctx, code));
+            Texture tex = groundTextures.get(code);
+            if (tex == null) {
+                groundTextures.put(code, tex = RenderUtil.getGroundTexture(_ctx, code));
             }
-            return tstate;
+            return tex;
         }
 
         /**
@@ -2113,10 +2113,9 @@ public class TerrainNode extends Node
         {
             byte code = _board.getTerrainValue(-1, -1);
             if (code != _tcode) {
-                TextureState tstate = RenderUtil.getGroundTexture(
-                    _ctx, _tcode = code);
-                if (tstate != null) {
-                    setRenderState(tstate);
+                Texture tex = RenderUtil.getGroundTexture(_ctx, _tcode = code);
+                if (tex != null) {
+                    setRenderState(RenderUtil.createTextureState(_ctx, tex));
                     updateRenderState();
                 }
             }

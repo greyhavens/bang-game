@@ -4,6 +4,9 @@
 /** The splat terrain textures and alpha maps. */
 uniform sampler2D splatTextures[NUM_SPLATS * 2];
 
+/** The scale values for each terrain layer. */
+uniform float terrainScales[NUM_SPLATS];
+
 /**
  * Fragment shader for Bang! terrain.
  */

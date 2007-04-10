@@ -3,6 +3,8 @@
 
 package com.threerings.bang.util;
 
+import java.lang.ref.SoftReference;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.BasicStroke;
@@ -157,35 +159,43 @@ public class RenderUtil
      * Returns a randomly selected ground texture for the specified terrain
      * type.
      */
-    public static TextureState getGroundTexture (BasicContext ctx, int code)
+    public static Texture getGroundTexture (BasicContext ctx, int code)
     {
-        ArrayList<TextureState> texs = _groundTexs.get(code);
+        ArrayList<SoftReference<Texture>> texs = _groundTexs.get(code);
         if (texs == null) {
             TerrainConfig terrain = TerrainConfig.getConfig(code);
             if (terrain == null) {
-                log.warning("Requested ground texture for unknown terrain " +
-                    "[code=" + code + "].");
+                log.warning("Requested ground texture for unknown terrain [code=" + code + "].");
                 return null;
             }
-            texs = new ArrayList<TextureState>();
+            _groundTexs.put(code, texs = new ArrayList<SoftReference<Texture>>());
             String prefix = "terrain/" + terrain.type + "/texture";
             for (int ii = 1; ; ii++) {
                 String path = prefix + ii + ".png";
                 if (!ctx.getResourceManager().getResourceFile(path).exists()) {
                     break;
                 }
-                TextureState tstate = createTextureState(ctx, path,
-                    BangPrefs.isMediumDetail() ? 1f : 0.5f);
-                tstate.getTexture().setScale(
-                    new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
-                texs.add(tstate);
+                texs.add(new SoftReference<Texture>(null));
             }
-            if (texs.size() == 0) {
+            if (texs.isEmpty()) {
                 log.warning("Found no ground textures [type=" + terrain + "].");
             }
-            _groundTexs.put(code, texs);
         }
-        return (texs.size() == 0) ? null : RandomUtil.pickRandom(texs);
+        int tsize = texs.size();
+        if (tsize == 0) {
+            return null;
+        }
+        int idx = RandomUtil.getInt(tsize);
+        Texture tex = texs.get(idx).get();
+        if (tex == null) {
+            TerrainConfig terrain = TerrainConfig.getConfig(code);
+            String path = "terrain/" + terrain.type + "/texture" + (idx + 1) + ".png";
+            texs.set(idx, new SoftReference<Texture>(
+                tex = ctx.getTextureCache().getTexture(
+                    path, BangPrefs.isMediumDetail() ? 1f : 0.5f)));
+            tex.setScale(new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
+        }
+        return tex;
     }
 
     /**
@@ -418,6 +428,7 @@ public class RenderUtil
             Texture tex = tstate.getTexture(ii);
             if (tex.getTextureId() == 0) {
                 tstate.apply();
+                return;
             }
         }
     }
@@ -552,12 +563,8 @@ public class RenderUtil
         return (value < 0) ? 256 + value : value;
     }
 
-    protected static HashIntMap<ArrayList<TextureState>> _groundTexs =
-        new HashIntMap<ArrayList<TextureState>>();
-
-    /** Maps terrain codes to average colors. */
-    protected static HashIntMap<ColorRGBA> _groundColors =
-        new HashIntMap<ColorRGBA>();
+    protected static HashIntMap<ArrayList<SoftReference<Texture>>> _groundTexs =
+        new HashIntMap<ArrayList<SoftReference<Texture>>>();
 
     /** Our most recently created shadow texture. */
     protected static TextureState _shadtex;
