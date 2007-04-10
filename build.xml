@@ -628,6 +628,11 @@
       <arg line="client"/>
       <arg line="${download_root_url}"/>
     </exec>
+    <!-- be sure a proguard map file does not already exist for this version -->
+    <available file="etc/proguard/${version}.map" property="map.exists"/>
+    <fail message="A map file for this version already exists. Wait 15 minutes to build again.">
+      <condition><istrue value="${map.exists}"/></condition>
+    </fail>
     <echo message="Previous version used for renaming: ${latest_version}"/>
     <echo message="Generating Proguard config file for ${version}..."/>
     <copy file="etc/bang-client.pro.in" tofile="etc/bang-client.pro"
