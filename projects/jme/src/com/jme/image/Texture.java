@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -56,7 +56,7 @@ import com.jme.util.export.Savable;
  * options, apply options and correction options. Default values are as follows:
  * mipmap - MM_NONE, filter - FM_NEAREST, wrap - WM_CLAMP_S_CLAMP_T, apply -
  * AM_MODULATE, correction - CM_AFFINE.
- * 
+ *
  * @see com.jme.image.Image
  * @author Mark Powell
  * @author Joshua Slack
@@ -801,7 +801,7 @@ public class Texture implements Serializable, Savable {
     rVal.memReq = memReq;
     rVal.setImageLocation(imageLocation);
     rVal.setMipmapState(mipmapState);
-    rVal.setTextureId(textureId);
+    rVal.setTextureId(getTextureId());
     rVal.setWrap(wrap);
     rVal.setBlendColor(blendColor != null ? blendColor.clone() : null);
     if (scale != null)
@@ -1017,15 +1017,15 @@ public class Texture implements Serializable, Savable {
         combineScaleRGB = capsule.readFloat("combineScaleRGB", 1);
         combineScaleAlpha = capsule.readFloat("combineScaleAlpha", 1);
     }
-    
+
     public Class getClassTag() {
         return this.getClass();
     }
 
     public void setTextureKey(TextureKey tkey) {
-         this.key = tkey;   
+         this.key = tkey;
     }
-    
+
     public TextureKey getTextureKey() {
         return key;
     }
