@@ -47,7 +47,7 @@ public class ParticlePool
         {
             super(particles);
         }
-        
+
         @Override // documentation inherited
         public void setActive (boolean active)
         {
@@ -66,6 +66,15 @@ public class ParticlePool
         _dusttex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
     }
 
+    public static void clear ()
+    {
+        _effects.clear();
+        _dustRings.clear();
+        _streamers.clear();
+        _sparkles.clear();
+        _steamClouds.clear();
+    }
+
     public static ParticleMesh getDustRing ()
     {
         int count = 0, index = -1;
@@ -80,7 +89,7 @@ public class ParticlePool
         _dustRings.add(dustRing);
         return dustRing;
     }
-    
+
     public static ParticleMesh getStreamer ()
     {
         int count = 0, index = -1;
@@ -95,7 +104,7 @@ public class ParticlePool
         _streamers.add(streamer);
         return streamer;
     }
-    
+
     public static ParticleMesh getSparkles ()
     {
         int count = 0, index = -1;
@@ -110,7 +119,7 @@ public class ParticlePool
         _sparkles.add(sparkles);
         return sparkles;
     }
-    
+
     public static ParticleMesh getSteamCloud ()
     {
         int count = 0, index = -1;
@@ -125,7 +134,7 @@ public class ParticlePool
         _steamClouds.add(steamCloud);
         return steamCloud;
     }
-    
+
     public static void getParticles (
         String name, final ResultAttacher<Spatial> rl)
     {
@@ -155,7 +164,7 @@ public class ParticlePool
             }
         });
     }
-    
+
     protected static ParticleMesh createDustRing ()
     {
         ParticleMesh particles = new ParticleMesh("dustring", 64);
@@ -174,14 +183,14 @@ public class ParticlePool
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
         particles.setModelBound(new BoundingBox());
         particles.setIsCollidable(false);
-        
+
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        
+
         return particles;
     }
-    
+
     protected static ParticleMesh createStreamer ()
     {
         ParticleMesh particles =
@@ -200,14 +209,14 @@ public class ParticlePool
         particles.setEndColor(new ColorRGBA(1f, 0.25f, 0f, 1f));
         particles.setModelBound(new BoundingBox());
         particles.setIsCollidable(false);
-        
+
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        
+
         return particles;
     }
-    
+
     protected static ParticleMesh createSparkles ()
     {
         ParticleMesh particles =
@@ -226,14 +235,14 @@ public class ParticlePool
         particles.setEndColor(new ColorRGBA(0f, 0f, 0f, 1f));
         particles.setModelBound(new BoundingBox());
         particles.setIsCollidable(false);
-        
+
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        
+
         return particles;
     }
-    
+
     protected static ParticleMesh createSteamCloud ()
     {
         ParticleMesh particles = new ParticleMesh("steamcloud", 32);
@@ -253,18 +262,18 @@ public class ParticlePool
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
         particles.setModelBound(new BoundingBox());
         particles.setIsCollidable(false);
-        
+
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        
+
         return particles;
     }
-    
+
     protected static BangContext _ctx;
     protected static HashMap<String, ArrayList<Spatial>> _effects =
         new HashMap<String, ArrayList<Spatial>>();
-        
+
     protected static ArrayList<ParticleMesh> _dustRings =
         new ArrayList<ParticleMesh>();
     protected static ArrayList<ParticleMesh> _streamers =

@@ -100,6 +100,7 @@ import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.data.TerrainConfig;
+import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.BonusSprite;
@@ -991,11 +992,17 @@ public class BoardView extends BComponent
             _sounds = null;
         }
 
-        // if we have a lingering fade-in, clear it
+        // if we have a lingering fade-in or marquee, clear them
         if (_fadein != null) {
             _ctx.getInterface().detachChild(_fadein);
             _fadein = null;
         }
+        if (_mroot != null) {
+            _ctx.getInterface().detachChild(_mroot);
+        }
+
+        // clear out the particle pool
+        ParticlePool.clear();
 
         // clear the render queue of any lingering references
         _ctx.getRenderer().clearQueue();
