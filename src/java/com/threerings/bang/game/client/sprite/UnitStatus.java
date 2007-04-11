@@ -7,8 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 
-import java.util.HashMap;
-
 import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -102,16 +100,9 @@ public class UnitStatus extends PieceStatus
                     (_influence.hidden() && unit.owner != pidx)) {
                 _info[4].setCullMode(CULL_ALWAYS);
             } else {
-                String name = _influence.getName();
-                Texture tex = _modtexs.get(name);
-                if (tex == null) {
-                    tex = RenderUtil.createTexture(_ctx,
-                            _ctx.getImageCache().getImage(
-                                "influences/icons/" + name + ".png",
-                                true));
-                    tex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-                    _modtexs.put(name, tex);
-                }
+                Texture tex = _ctx.getTextureCache().getTexture(
+                    "influences/icons/" + _influence.getName() + ".png");
+                tex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
                 _info[4].setCullMode(CULL_DYNAMIC);
                 getTextureState(_info[4]).setTexture(tex.createSimpleClone());
             }
@@ -172,8 +163,6 @@ public class UnitStatus extends PieceStatus
 
     protected static Texture[] _ticktexs;
     protected static Texture _outtex, _routtex, _movetex, _shoottex;
-    protected static HashMap<String, Texture> _modtexs =
-       new HashMap<String, Texture>();
 
     protected static final float MOD_OFFSET = 3f * TILE_SIZE / 8f;
     protected static final Vector3f[] MOD_COORDS = {
