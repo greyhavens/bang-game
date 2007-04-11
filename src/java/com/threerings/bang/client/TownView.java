@@ -39,6 +39,7 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BlankIcon;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BLayoutManager;
 import com.jmex.bui.layout.GroupLayout;
@@ -443,9 +444,10 @@ public class TownView extends BWindow
         }
 
         @Override // documentation inherited
-        protected Quad createMarqueeQuad (String text)
+        protected BLabel createMarqueeLabel (String text)
         {
-            return _bctx.loadImage("ui/town/" + _bctx.getUserObject().townId + ".png");
+            return new BLabel(new ImageIcon(
+                _bctx.loadImage("ui/town/" + _bctx.getUserObject().townId + ".png")));
         }
 
         @Override // documentation inherited

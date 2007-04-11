@@ -205,9 +205,9 @@ public class BangBoardView extends BoardView
      */
     public void doInterRoundMarqueeFade ()
     {
-        // create a marquee, but detach it
+        // create a marquee, but keep it hidden
         createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.round_over"));
-        _ctx.getInterface().detachChild(_marquee);
+        _marquee.setAlpha(0f);
 
         if (noActions()) {
             showInterRoundMarquee();
@@ -218,20 +218,14 @@ public class BangBoardView extends BoardView
 
     protected void showInterRoundMarquee ()
     {
-        // reattach the marquee with a fade in function
-        TimeFunction tf = new LinearTimeFunction(0f, 1f, 2f);
-        _ctx.getInterface().attachChild(
-            new FadeInOutEffect(_marquee, ColorRGBA.white, tf, true) {
-                protected void fadeComplete () {
-                    super.fadeComplete();
-                    // once we've faded in fully, attach it normally...
-                    _ctx.getInterface().attachChild(_marquee);
-                    // then clear it
-                    clearMarquee(0f);
-                    // let the controller know to show the stats page
-                    _ctrl.interRoundMarqueeFadeComplete();
-                }
-            });
+        // fade in the marquee
+        new ComponentFader(_marquee, new LinearTimeFunction(0f, 1f, 2f)) {
+            public void fadeComplete () {
+                // clear the marquee and let the controller know to show the stats page
+                clearMarquee(0f);
+                _ctrl.interRoundMarqueeFadeComplete();
+            }
+        }.start();
     }
 
     /**
@@ -263,9 +257,9 @@ public class BangBoardView extends BoardView
      */
     public void doPostGameMarqueeFade ()
     {
-        // create a marquee, but detach it
+        // create a marquee, but keep it hidden
         createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.game_over"));
-        _ctx.getInterface().detachChild(_marquee);
+        _marquee.setAlpha(0f);
 
         if (noActions()) {
             showPostGameMarquee();
@@ -276,15 +270,13 @@ public class BangBoardView extends BoardView
 
     protected void showPostGameMarquee ()
     {
-        // reattach the marquee with a fade in function
-        TimeFunction tf = new LinearTimeFunction(0f, 1f, 3f);
-        _ctx.getInterface().attachChild(
-            new FadeInOutEffect(_marquee, ColorRGBA.white, tf, true) {
-                protected void fadeComplete () {
-                    super.fadeComplete();
-                    _ctrl.postGameFadeComplete();
-                }
-            });
+        // fade in the marquee
+        new ComponentFader(_marquee, new LinearTimeFunction(0f, 1f, 3f)) {
+            public void fadeComplete () {
+                clearMarquee(0f);
+                _ctrl.postGameFadeComplete();
+            }
+        }.start();
     }
 
     /**
@@ -293,15 +285,13 @@ public class BangBoardView extends BoardView
     public void fadeMarqueeInOut (String message, final float halftime)
     {
         createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, message));
-        _ctx.getInterface().detachChild(_marquee);
-        TimeFunction tf = new LinearTimeFunction(0f, 1f, halftime);
-        _ctx.getInterface().attachChild(
-            new FadeInOutEffect(_marquee, ColorRGBA.white, tf, true) {
-                protected void fadeComplete () {
-                    super.fadeComplete();
-                    clearMarquee(halftime);
-                }
-            });
+        _marquee.setAlpha(0f);
+
+        new ComponentFader(_marquee, new LinearTimeFunction(0f, 1f, halftime)) {
+            public void fadeComplete () {
+                clearMarquee(halftime);
+            }
+        }.start();
     }
 
     /**

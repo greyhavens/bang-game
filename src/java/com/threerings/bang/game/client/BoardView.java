@@ -57,12 +57,17 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 
 import com.jmex.bui.BComponent;
+import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.util.Dimension;
-import com.jmex.bui.text.BText;
+import com.jmex.bui.BRootNode;
+import com.jmex.bui.BWindow;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.text.BText;
+import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Insets;
 
 import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleInfluence;
@@ -1344,47 +1349,32 @@ public class BoardView extends BComponent
         clearMarquee(0);
 
         // create the marquee, center it and display it
-        _marquee = createMarqueeQuad(text);
-        _marquee.setLocalTranslation(
-            new Vector3f(_ctx.getRenderer().getWidth()/2f,
-                         _ctx.getRenderer().getHeight()/2f, 0));
-        _marquee.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-        _marquee.setZOrder(-2);
-        _ctx.getInterface().attachChild(_marquee);
+        addMarquee(_marquee = createMarqueeLabel(text),
+            _ctx.getRenderer().getWidth()/2, _ctx.getRenderer().getHeight()/2);
     }
 
     /**
-     * Generates the marquee quad.
+     * Generates the marquee label.
      */
-    protected Quad createMarqueeQuad (String text)
+    protected BLabel createMarqueeLabel (String text)
     {
-        return RenderUtil.createTextQuad(_ctx, BangUI.MARQUEE_FONT,
-                ColorRGBA.white, ColorRGBA.black, text);
+        return new BLabel(text, "marquee");
     }
-
 
     /**
      * Clears our marquee display.
      */
     protected void clearMarquee (float fadeTime)
     {
-        if (_marquee != null) {
-            clearMarquee(_marquee, fadeTime);
-            _marquee = null;
+        if (_marquee == null) {
+            return;
         }
-    }
-
-    /**
-     * Clears out a marquee quad.
-     */
-    protected void clearMarquee (Quad mquad, float fadeTime)
-    {
-        _ctx.getInterface().detachChild(mquad);
         if (fadeTime > 0f) {
-            TimeFunction tf = new LinearTimeFunction(1f, 0f, fadeTime);
-            _ctx.getInterface().attachChild(
-                new FadeInOutEffect(mquad, ColorRGBA.white, tf, true));
+            new ComponentFader(_marquee, new LinearTimeFunction(1f, 0f, fadeTime)).start();
+        } else {
+            removeMarquee(_marquee);
         }
+        _marquee = null;
     }
 
     /**
@@ -1399,19 +1389,15 @@ public class BoardView extends BComponent
         }
         _curpct = pct;
 
-        if (_loading != null) {
-            _ctx.getInterface().detachChild(_loading);
-        }
-
         String pctstr = _ctx.xlate(
             GameCodes.GAME_MSGS, MessageBundle.tcompose(
                 "m.loading_pct", String.valueOf(pct)));
-        _loading = RenderUtil.createTextQuad(_ctx, BangUI.LOADING_FONT, pctstr);
-        _loading.setLocalTranslation(
-            new Vector3f(_ctx.getRenderer().getWidth()/2, 100, 0));
-        _loading.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-        _loading.setZOrder(-2);
-        _ctx.getInterface().attachChild(_loading);
+        if (_loading == null) {
+            addMarquee(_loading = new BLabel(pctstr, "loading_marquee"),
+                _ctx.getRenderer().getWidth()/2, 100);
+        } else {
+            _loading.setText(pctstr);
+        }
     }
 
     /**
@@ -1420,11 +1406,75 @@ public class BoardView extends BComponent
     protected void clearLoadingMarquee ()
     {
         if (_loading != null) {
-            _ctx.getInterface().detachChild(_loading);
+            removeMarquee(_loading);
             _loading = null;
         }
         _loaded = _toLoad = 0;
         _curpct = -1;
+    }
+
+    /**
+     * Adds a marquee component centered about the given coordinates.
+     */
+    protected void addMarquee (BComponent marquee, int x, int y)
+    {
+        if (_mroot == null) {
+            // create a bare bones root node above the normal one
+            _ctx.getInterface().attachChild(_mroot = new BRootNode() {
+                public long getTickStamp () {
+                    return System.currentTimeMillis();
+                }
+                public void rootInvalidated (BComponent root) {
+                    root.validate();
+                }
+            });
+            _mroot.setZOrder(-2);
+
+            // the layout centers its components about their positions
+            AbsoluteLayout layout = new AbsoluteLayout() {
+                public void layoutContainer (BContainer target) {
+                    Insets insets = target.getInsets();
+                    for (int ii = 0, cc = target.getComponentCount(); ii < cc; ii++) {
+                        BComponent comp = target.getComponent(ii);
+                        if (!comp.isVisible()) {
+                            continue;
+                        }
+                        com.jmex.bui.util.Point p = (com.jmex.bui.util.Point)_spots.get(comp);
+                        Dimension d = comp.getPreferredSize(-1, -1);
+                        comp.setBounds(
+                            insets.left + p.x - d.width / 2,
+                            insets.bottom + p.y - d.height / 2,
+                            d.width, d.height);
+                    }
+                }
+            };
+            _mwindow = new BWindow(_ctx.getStyleSheet(), layout) {
+                public boolean isOverlay () {
+                    return true;
+                }
+                public BComponent getHitComponent (int mx, int my) {
+                    return null;
+                }
+            };
+            _mroot.addWindow(_mwindow);
+            _mwindow.setBounds(0, 0, _ctx.getRenderer().getWidth(),
+                _ctx.getRenderer().getHeight());
+        }
+        _mwindow.add(marquee, new com.jmex.bui.util.Point(x, y));
+    }
+
+    /**
+     * Removes a marquee component.
+     */
+    protected void removeMarquee (BComponent marquee)
+    {
+        _mwindow.remove(marquee);
+        if (_mwindow.getComponentCount() == 0) {
+            _mroot.removeWindow(_mwindow);
+            _ctx.getInterface().detachChild(_mroot);
+            _mwindow = null;
+            _mroot = null;
+        }
     }
 
     /**
@@ -2060,13 +2110,43 @@ public class BoardView extends BComponent
         public void mediaResolved ();
     };
 
+    /** Fades a component in or out by manipulating its alpha value. */
+    protected class ComponentFader extends Controller
+    {
+        public ComponentFader (BComponent target, TimeFunction tfunc) {
+            _target = target;
+            _tfunc = tfunc;
+        }
+
+        public void start () {
+            _ctx.getRootNode().addController(this);
+        }
+
+        public void update (float time) {
+            _target.setAlpha(_tfunc.getValue(time));
+            if (_tfunc.isComplete()) {
+                _ctx.getRootNode().removeController(this);
+                fadeComplete();
+            }
+        }
+
+        public void fadeComplete () {
+            // nothing by default
+        }
+
+        protected BComponent _target;
+        protected TimeFunction _tfunc;
+    }
+
     protected BasicContext _ctx;
     protected BangObject _bangobj;
     protected BangBoard _board;
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected Quad _marquee, _loading;
+    protected BRootNode _mroot;
+    protected BWindow _mwindow;
+    protected BLabel _marquee, _loading;
     protected int _toLoad, _loaded, _curpct = -1;
 
     protected Node _node, _pnode, _hnode, _texnode;

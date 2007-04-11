@@ -20,8 +20,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.lwjgl.records.TextureStateRecord;
+import com.jme.scene.state.TextureState;
 import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.util.Rectangle;
@@ -45,6 +44,7 @@ public class TextureCache
     public TextureCache (BasicContext ctx)
     {
         _ctx = ctx;
+        _dtstate = ctx.getRenderer().createTextureState();
 
         // create the interval to flush cleared textures
         new Interval(ctx.getApp()) {
@@ -254,11 +254,7 @@ public class TextureCache
         public void flush ()
         {
             if (_textureId[0] > 0) {
-                GL11.glDeleteTextures(BufferUtils.createIntBuffer(_textureId));
-                TextureStateRecord record =
-                    (TextureStateRecord)_ctx.getDisplay().getCurrentContext().getStateRecord(
-                        RenderState.RS_TEXTURE);
-                record.removeTextureRecord(_textureId[0]);
+                _dtstate.deleteTextureId(_textureId[0]);
                 _textureId[0] = 0;
             }
         }
@@ -349,6 +345,9 @@ public class TextureCache
 
     /** The queue of textures to destroy. */
     protected ReferenceQueue<CachedTexture> _cleared = new ReferenceQueue<CachedTexture>();
+
+    /** A dummy texture state used to delete textures. */
+    protected TextureState _dtstate;
 
     protected IntBuffer _qbuf = BufferUtils.createIntBuffer(4);
 
