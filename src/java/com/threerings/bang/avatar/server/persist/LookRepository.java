@@ -254,6 +254,7 @@ public class LookRepository extends SimpleRepository
         JDBCUtil.createTableIfMissing(conn, "SNAPSHOTS", new String[] {
             "PLAYER_ID INTEGER NOT NULL",
             "AVATAR BLOB NOT NULL",
+            "PRIMARY KEY (PLAYER_ID)",
         }, "");
     }
 }

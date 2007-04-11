@@ -100,7 +100,7 @@ public class BarberManager extends ShopManager
         // otherwise we have to go to the database (TODO: cache these?)
         final int fpid = playerId;
         final ResultListener<AvatarInfo> flist = listener;
-        BangServer.invoker.postUnit(new Invoker.Unit() {
+        BangServer.invoker.postUnit(new Invoker.Unit("loadSnapshot") {
             public boolean invoke () {
                 try {
                     _snap = BangServer.lookrepo.loadSnapshot(fpid);
@@ -297,7 +297,7 @@ public class BarberManager extends ShopManager
         }
 
         // do the deed!
-        BangServer.invoker.postUnit(new Invoker.Unit() {
+        BangServer.invoker.postUnit(new Invoker.Unit("createAvatar") {
             public boolean invoke () {
                 try {
                     // first configure their chosen handle
@@ -371,7 +371,7 @@ public class BarberManager extends ShopManager
         final PlayerObject user, final Look look, final AvatarService.ConfirmListener cl)
     {
         final AvatarInfo avatar = look.getAvatar(user);
-        BangServer.invoker.postUnit(new Invoker.Unit() {
+        BangServer.invoker.postUnit(new Invoker.Unit("continueCreatingAvatar") {
             public boolean invoke () {
                 try {
                     BangServer.lookrepo.updateSnapshot(user.playerId, avatar.print);
