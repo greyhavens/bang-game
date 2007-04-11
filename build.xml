@@ -991,7 +991,7 @@
     <!-- prepare the client and installer to be packaged -->
     <antcall target="prepare-extra">
       <param name="extra.type" value="client"/>
-      <param name="pkg.name.override" value="bang-client-${version}"/>
+      <param name="pkg.name" value="bang-client-${version}"/>
     </antcall>
     <antcall target="prepare-extra">
       <param name="extra.type" value="applet"/>
@@ -1022,7 +1022,7 @@
 
     <antcall target="prepare-extra">
       <param name="extra.type" value="hemiptera-map"/>
-      <param name="prefix.app" value="${prefix}/threerings/etc/proguard/${app.name}"/>
+      <param name="pkg.prefix" value="${prefix}/threerings/etc/proguard/${app.name}"/>
     </antcall>
 
     <if><istrue value="${build.docs}"/><then>
@@ -1058,25 +1058,6 @@
     <mkdir dir="${pkg.base}/data/downloads"/>
     <copy todir="${pkg.base}/data">
       <fileset dir="data" includes="soundtrack/*.mp3"/>
-    </copy>
-  </target>
-
-  <!-- common target to build certain packages, such as the client and installers -->
-  <target name="prepare-extra">
-    <!-- if pkg.name was already supplied, use that -->
-    <if><isset property="pkg.name.override"/><then>
-      <var name="pkg.name" value="${pkg.name.override}"/>
-    </then><else>
-      <var name="pkg.name" value="bang-${extra.type}"/>
-    </else></if>
-    <var name="destroot.pkg" value="${destroot}/${pkg.name}"/>
-    <var name="pkg.base" value="${destroot.pkg}/${prefix.app}"/>
-    <echo level="info">Installing ${deploy.dir}/${extra.type}/ into ${destroot.pkg}...</echo>
-    <antcall target="clean-dir">
-      <param name="dir" value="${destroot.pkg}"/>
-    </antcall>
-    <copy todir="${pkg.base}">
-      <fileset dir="${deploy.dir}/${extra.type}" includes="**"/>
     </copy>
   </target>
 
