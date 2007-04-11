@@ -5,7 +5,7 @@ package com.threerings.bang.client.util;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 
 import java.awt.image.BufferedImage;
 
@@ -26,7 +26,6 @@ import com.jme.util.geom.BufferUtils;
 import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.Interval;
-import com.samskivert.util.SoftCache;
 
 import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
@@ -86,11 +85,11 @@ public class TextureCache
      * Creates a texture from the image with the specified path,
      * colorizations, and scale.
      */
-    public Texture getTexture (String path, Colorization[] zations,
-        float scale)
+    public Texture getTexture (String path, Colorization[] zations, float scale)
     {
         TextureKey tkey = new TextureKey(path, zations, null);
-        CachedTexture texture = _textures.get(tkey);
+        TextureReference ref = _textures.get(tkey);
+        CachedTexture texture = (ref == null) ? null : ref.get();
         if (texture != null) {
             return texture;
         }
@@ -109,7 +108,7 @@ public class TextureCache
         texture = new CachedTexture();
         RenderUtil.configureTexture(texture, img);
         texture.setImageLocation(path);
-        _textures.put(tkey, texture);
+        _textures.put(tkey, new TextureReference(texture));
         return texture;
     }
 
@@ -130,7 +129,8 @@ public class TextureCache
         String path, Colorization[] zations, Rectangle region)
     {
         TextureKey tkey = new TextureKey(path, zations, region);
-        CachedTexture texture = _textures.get(tkey);
+        TextureReference ref = _textures.get(tkey);
+        CachedTexture texture = (ref == null) ? null : ref.get();
         if (texture != null) {
             return texture;
         }
@@ -150,7 +150,7 @@ public class TextureCache
         texture = new CachedTexture();
         RenderUtil.configureTexture(texture, img);
         texture.setImageLocation(path);
-        _textures.put(tkey, texture);
+        _textures.put(tkey, new TextureReference(texture));
         return texture;
     }
 
@@ -182,8 +182,7 @@ public class TextureCache
     public void dumpResidence ()
     {
         int[] counts = new int[4], bytes = new int[4];
-        for (Map.Entry<TextureKey,SoftReference<CachedTexture>> entry :
-                 _textures.entrySet()) {
+        for (Map.Entry<TextureKey, TextureReference> entry : _textures.entrySet()) {
             TextureKey key = entry.getKey();
             Texture texture = entry.getValue().get();
             if (texture == null) {
@@ -220,27 +219,9 @@ public class TextureCache
                  " LD:" + counts[3] + "/" + bytes[3]);
     }
 
-    /** A soft mapping from texture keys to cached textures. */
-    protected class ReferenceCache extends SoftCache<TextureKey, CachedTexture>
-    {
-        /**
-         * Returns a reference to the underlying entry set.
-         */
-        public Set<Map.Entry<TextureKey, SoftReference<CachedTexture>>> entrySet ()
-        {
-            return _map.entrySet();
-        }
-
-        @Override // documentation inherited
-        protected SoftReference<CachedTexture> createReference (CachedTexture texture)
-        {
-            return new TextureReference(texture);
-        }
-    }
-
     /** Retains a reference to the cached texture's texture id in order to delete the OpenGL
      * texture when the reference is cleared. */
-    protected class TextureReference extends SoftReference<CachedTexture>
+    protected class TextureReference extends WeakReference<CachedTexture>
     {
         public TextureReference (CachedTexture texture)
         {
@@ -341,7 +322,8 @@ public class TextureCache
     protected BasicContext _ctx;
 
     /** The cached textures. */
-    protected ReferenceCache _textures = new ReferenceCache();
+    protected HashMap<TextureKey, TextureReference> _textures =
+        new HashMap<TextureKey, TextureReference>();
 
     /** The queue of textures to destroy. */
     protected ReferenceQueue<CachedTexture> _cleared = new ReferenceQueue<CachedTexture>();

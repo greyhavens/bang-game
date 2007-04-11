@@ -3,7 +3,7 @@
 
 package com.threerings.bang.util;
 
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -161,21 +161,21 @@ public class RenderUtil
      */
     public static Texture getGroundTexture (BasicContext ctx, int code)
     {
-        ArrayList<SoftReference<Texture>> texs = _groundTexs.get(code);
+        ArrayList<WeakReference<Texture>> texs = _groundTexs.get(code);
         if (texs == null) {
             TerrainConfig terrain = TerrainConfig.getConfig(code);
             if (terrain == null) {
                 log.warning("Requested ground texture for unknown terrain [code=" + code + "].");
                 return null;
             }
-            _groundTexs.put(code, texs = new ArrayList<SoftReference<Texture>>());
+            _groundTexs.put(code, texs = new ArrayList<WeakReference<Texture>>());
             String prefix = "terrain/" + terrain.type + "/texture";
             for (int ii = 1; ; ii++) {
                 String path = prefix + ii + ".png";
                 if (!ctx.getResourceManager().getResourceFile(path).exists()) {
                     break;
                 }
-                texs.add(new SoftReference<Texture>(null));
+                texs.add(new WeakReference<Texture>(null));
             }
             if (texs.isEmpty()) {
                 log.warning("Found no ground textures [type=" + terrain + "].");
@@ -190,7 +190,7 @@ public class RenderUtil
         if (tex == null) {
             TerrainConfig terrain = TerrainConfig.getConfig(code);
             String path = "terrain/" + terrain.type + "/texture" + (idx + 1) + ".png";
-            texs.set(idx, new SoftReference<Texture>(
+            texs.set(idx, new WeakReference<Texture>(
                 tex = ctx.getTextureCache().getTexture(
                     path, BangPrefs.isMediumDetail() ? 1f : 0.5f)));
             tex.setScale(new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
@@ -545,8 +545,8 @@ public class RenderUtil
         return (value < 0) ? 256 + value : value;
     }
 
-    protected static HashIntMap<ArrayList<SoftReference<Texture>>> _groundTexs =
-        new HashIntMap<ArrayList<SoftReference<Texture>>>();
+    protected static HashIntMap<ArrayList<WeakReference<Texture>>> _groundTexs =
+        new HashIntMap<ArrayList<WeakReference<Texture>>>();
 
     /** Our most recently created shadow texture. */
     protected static TextureState _shadtex;
