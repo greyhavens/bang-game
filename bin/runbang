@@ -56,6 +56,7 @@ JAVA_ARGS="-server -mx$SERVER_MEMORY \
 #    -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+PrintHeapAtGC \
 
 umask 002
+ulimit -d 524288
 
 JAVA_VM="$JAVA_HOME/bin/java"
 if [ ! -e $JAVA_VM ]; then
@@ -122,7 +123,7 @@ EXIT_CODE=$?
 
 # Mail out warnings from the logs
 FILTLOG=/tmp/bangfiltered.log
-cat $LOGFILE | $BANG_HOME/projects/tools/bin/lfilter > $FILTLOG
+cat $LOGFILE | $BANG_HOME/tools/bin/lfilter > $FILTLOG
 if [ -s $FILTLOG ]; then
     cat $FILTLOG | $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
 fi
