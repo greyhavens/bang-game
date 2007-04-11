@@ -1,0 +1,60 @@
+#!/usr/bin/perl -w
+#
+# $Id$
+
+my %bounties;
+
+while (<>) {
+    chomp;
+    if (m/game_ended t:(\d+) g:BOUNTY bid:(\S+)\/(\S+) gid:(\S+) (\S+)/) {
+        my $time = $1;
+        my $diff = $2;
+        my $bounty = $3;
+        my $game = $4;
+        my $info = $5;
+
+        # my $key = "$diff-$bounty";
+        my $key = "$bounty";
+
+        my @pinfos = split(/,/, $info);
+        my $pinfo = $pinfos[0];
+        my @bits = split(/:/, $pinfo);
+        my $username = $bits[0];
+        my $rank = $bits[1];
+
+        $bounties{$key}{"diff"} = "$diff";
+        $bounties{$key}{"plays"}++;
+        $bounties{$key}{"games"}{$game}{"plays"}++;
+        if ($rank == 0) {
+            $bounties{$key}{"wins"}++;
+            $bounties{$key}{"games"}{$game}{"wins"}++;
+        }
+        # print "$bounty ($diff) $game $time $username $rank\n";
+    }
+}
+
+printf("%-17s %5s %5s %s\n", "Bounty", "Plays", "Wins", "Pct");
+foreach $bounty (sort { $bounties{$b}{"plays"} - $bounties{$a}{"plays"} } keys %bounties) {
+    my $plays = $bounties{$bounty}{"plays"};
+    my $wins = $bounties{$bounty}{"wins"};
+    printf("%-17s %5d %5d %2d%%", $bounty, $plays, $wins, 100*$wins/$plays);
+
+    my %games = %{$bounties{$bounty}{"games"}};
+    my $idx = 0;
+    foreach $game (sort { $games{$b}{"plays"} - $games{$a}{"plays"} } keys %games) {
+        if ($idx++ > 0 && $idx % 2 == 1) {
+            if ($idx < 4) {
+                printf("\n  %-7s                        ", $bounties{$bounty}{"diff"});
+            } else {
+                printf("\n                                 ");
+            }
+        }
+        my $plays = $games{$game}{"plays"};
+        my $wins = defined $games{$game}{"wins"} ? $games{$game}{"wins"} : 0;
+        if (length($game) > 5) {
+            $game = substr($game, 0, 5);
+        }
+        printf(" (%-5s %4d %4d %2d%%)", $game, $plays, $wins, 100*$wins/$plays);
+    }
+    printf("\n");
+}

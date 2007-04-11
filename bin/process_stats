@@ -122,14 +122,6 @@ chomp($host);
 
 # if we're on a production server...
 if ($host =~ /^bang\d+/) {
-    # run our simple stat summarizer
-    $cmd = "$root/bin/summarize_stats $histlogdir/server_$node.log > /tmp/bangstats.tmp";
-    if ($dry_run) {
-        print("$cmd\n");
-    } else {
-        system_warn("nice -n 20 $cmd");
-    }
-
     # run our performance stat summarizer
     $cmd = "$root/bin/summarize_perf $histlogdir/perf_$node.log > $statsdir/perf_$node.html";
     if ($dry_run) {
@@ -139,6 +131,22 @@ if ($host =~ /^bang\d+/) {
         system_warn("nice -n 20 $cmd");
         # move the generated graphs into the right directory
         system_warn("mv *.png *.dat $statsdir");
+    }
+
+    # run our simple stat summarizer
+    $cmd = "$root/bin/summarize_stats $histlogdir/server_$node.log > /tmp/bangstats.tmp";
+    if ($dry_run) {
+        print("$cmd\n");
+    } else {
+        system_warn("nice -n 20 $cmd");
+    }
+
+    # summarize our bounty stats
+    $cmd = "$root/bin/grind_bounties $histlogdir/server_$node.log >> /tmp/bangstats.tmp";
+    if ($dry_run) {
+        print("$cmd\n");
+    } else {
+        system_warn("nice -n 20 $cmd");
     }
 
     # send the stats email
