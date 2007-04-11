@@ -493,7 +493,7 @@ public class BangServer extends CrowdServer
         _playerIds.put(player.playerId, player);
 
         // update our players online count in the status object
-        adminmgr.statobj.setPlayersOnline(clmgr.getClientCount());
+        adminmgr.statobj.updatePlayersOnline(clmgr.getClientCount());
 
         // notify our player observers
         _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
@@ -531,7 +531,7 @@ public class BangServer extends CrowdServer
         _playerIds.remove(player.playerId);
 
         // update our players online count in the status object
-        adminmgr.statobj.setPlayersOnline(clmgr.getClientCount());
+        adminmgr.statobj.updatePlayersOnline(clmgr.getClientCount());
 
         // notify our player observers
         _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {

@@ -66,9 +66,8 @@ public class SaloonManager extends MatchHostManager
      * none.
      * @param count the number of entries desired in each list.
      */
-    public static void refreshTopRanked (
-        final TopRankObject rankobj, final String[] scenarios, final String join, final String where,
-        final int count)
+    public static void refreshTopRanked (final TopRankObject rankobj, final String[] scenarios,
+                                         final String join, final String where, final int count)
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {

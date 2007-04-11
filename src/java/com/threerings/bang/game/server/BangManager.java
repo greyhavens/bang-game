@@ -825,15 +825,15 @@ public class BangManager extends GameManager
         _bconfig = (BangConfig)_gameconfig;
 
         // note this game in the status object
-        StatusObject.GameInfo info = new StatusObject.GameInfo();
-        info.gameOid = _bangobj.getOid();
-        info.players = getPlayerCount();
+        int humans = getPlayerCount();
         for (int ii = 0; ii < getPlayerCount(); ii++) {
             if (isAI(ii)) {
-                info.players--;
+                humans--;
             }
         }
-        BangServer.adminmgr.statobj.addToGames(info);
+        BangServer.adminmgr.statobj.addToGames(
+            new StatusObject.GameInfo(_bangobj.getOid(), _bconfig.type, _bconfig.rated,
+                                      _bconfig.grantAces, humans));
 
         // note the time at which we started
         _startStamp = System.currentTimeMillis();
@@ -2624,6 +2624,7 @@ public class BangManager extends GameManager
                 }
                 buf.append(" ts:").append(getTeamSize());
                 buf.append(" r:").append(_bconfig.rated);
+                buf.append(" a:").append(_bconfig.grantAces);
                 break;
 
             case BOUNTY:

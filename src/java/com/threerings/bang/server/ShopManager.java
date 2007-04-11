@@ -26,7 +26,7 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class ShopManager extends PlaceManager
 {
-    @Override // documentation inherited
+    @Override // from PlaceManager
     public String ratifyBodyEntry (BodyObject body)
     {
         PlayerObject user = (PlayerObject)body;
@@ -35,7 +35,6 @@ public abstract class ShopManager extends PlaceManager
         }
 
         String msg = null;
-
         if (requireHandle() && user.handle instanceof GuestHandle) {
             msg = BangCodes.CREATE_HANDLE;
         } else if (!allowAnonymous() && user.tokens.isAnonymous()) {
@@ -43,15 +42,35 @@ public abstract class ShopManager extends PlaceManager
         } else if (!allowUnder13() && !user.tokens.isOver13()) {
             msg = BangCodes.UNDER_13;
         }
-
         return msg;
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected long idleUnloadPeriod ()
     {
         // we don't want to unload
         return 0L;
+    }
+
+    @Override // from PlaceManager
+    protected void didStartup ()
+    {
+        super.didStartup();
+        BangServer.adminmgr.statobj.updatePlaceInfo(getIdent(), 0);
+    }
+
+    @Override // from PlaceManager
+    protected void bodyEntered (int bodyOid)
+    {
+        super.bodyEntered(bodyOid);
+        BangServer.adminmgr.statobj.updatePlaceInfo(getIdent(), _plobj.occupants.size());
+    }
+
+    @Override // from PlaceManager
+    protected void bodyLeft (int bodyOid)
+    {
+        super.bodyLeft(bodyOid);
+        BangServer.adminmgr.statobj.updatePlaceInfo(getIdent(), _plobj.occupants.size());
     }
 
     /**
