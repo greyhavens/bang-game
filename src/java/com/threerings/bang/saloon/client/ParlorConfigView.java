@@ -60,7 +60,7 @@ public class ParlorConfigView extends BDecoratedWindow
         BLabel label;
         bits.add(label = new BLabel(_msgs.get("m.parlor_type")));
         label.setTooltipText(_msgs.get("m.parlor_type_tip"));
-        bits.add(_type = new BComboBox(getParlorTypes(ctx)));
+        bits.add(_type = new BComboBox(getParlorTypes(ctx, true)));
         _type.setTooltipText(_msgs.get("m.parlor_type_tip"));
         _type.selectItem(0);
         _type.addListener(new ActionListener() {
@@ -135,13 +135,15 @@ public class ParlorConfigView extends BDecoratedWindow
         _parobj.service.updateParlorConfig(_ctx.getClient(), info, _creator.isSelected());
     }
 
-    protected static ArrayList<BComboBox.Item> getParlorTypes (BangContext ctx)
+    protected static ArrayList<BComboBox.Item> getParlorTypes (BangContext ctx, boolean dynamic)
     {
         ArrayList<BComboBox.Item> types = new ArrayList<BComboBox.Item>();
         for (ParlorInfo.Type type : ParlorInfo.Type.values()) {
             // only gang leaders can create recruiting parlors
-            if (type == ParlorInfo.Type.RECRUITING &&
-                ctx.getUserObject().gangRank != GangCodes.LEADER_RANK) {
+            if (type == ParlorInfo.Type.RECRUITING && (dynamic ||
+                ctx.getUserObject().gangRank != GangCodes.LEADER_RANK)) {
+                continue;
+            } else if (type == ParlorInfo.Type.MATCH && dynamic) {
                 continue;
             }
             String msg = "m.pt_" + StringUtil.toUSLowerCase(type.toString());

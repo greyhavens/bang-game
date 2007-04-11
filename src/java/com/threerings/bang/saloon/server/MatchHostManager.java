@@ -24,6 +24,7 @@ import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ShopManager;
 
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.server.BangManager;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 
@@ -64,18 +65,15 @@ public abstract class MatchHostManager extends ShopManager
                 continue;
             }
 
-            // double check for missing players
-            if (!match.verifyOccupants(_occInfo.intKeySet())) {
-                if (match.getPlayerCount() > 0) {
-                    checkReadiness(match);
-                    if (match.matchobj.starting) {
-                        continue;
-                    }
-                } else {
-                    iter.remove();
-                    clearMatchServices(match);
+            if (match.getPlayerCount() > 0) {
+                checkReadiness(match);
+                if (match.matchobj.starting) {
                     continue;
                 }
+            } else {
+                iter.remove();
+                clearMatchServices(match);
+                continue;
             }
 
             if (match.join(user, criterion)) {
@@ -109,6 +107,19 @@ public abstract class MatchHostManager extends ShopManager
         }
     }
 
+    /**
+     * Cleares a player for any pending matches.
+     */
+    public void clearPlayer (int bodyOid)
+    {
+        // clear this player out of any match they might have been in
+        for (Match match : _matches.values()) {
+            if (clearPlayerFromMatch(match, bodyOid)) {
+                break;
+            }
+        }
+    }
+
     @Override // from ShopManager
     protected boolean requireHandle ()
     {
@@ -131,13 +142,7 @@ public abstract class MatchHostManager extends ShopManager
     protected void bodyLeft (int bodyOid)
     {
         super.bodyLeft(bodyOid);
-
-        // clear this player out of any match they might have been in
-        for (Match match : _matches.values()) {
-            if (clearPlayerFromMatch(match, bodyOid)) {
-                break;
-            }
-        }
+        clearPlayer(bodyOid);
     }
 
     @Override // documentation inherited
@@ -148,11 +153,7 @@ public abstract class MatchHostManager extends ShopManager
         // if a player disconnects during the matchmaking phase, remove them
         // from their pending match
         if (info.status == OccupantInfo.DISCONNECTED) {
-            for (Match match : _matches.values()) {
-                if (clearPlayerFromMatch(match, info.bodyOid)) {
-                    break;
-                }
-            }
+            clearPlayer(info.bodyOid);
         }
     }
 
@@ -242,7 +243,8 @@ public abstract class MatchHostManager extends ShopManager
                 // go like the wind!
                 BangConfig config = match.createConfig();
                 try {
-                    BangServer.plreg.createPlace(config);
+                    BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
+                    match.startingMatch(mgr.getPlaceObject());
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Choked creating game " + config + ".", e);
                 }

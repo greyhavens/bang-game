@@ -37,6 +37,7 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.server.BangManager;
 
 import com.threerings.bang.saloon.client.ParlorService;
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorMarshaller;
@@ -104,7 +105,9 @@ public class ParlorManager extends PlaceManager
     public void updateParlorConfig (ClientObject caller, ParlorInfo info, boolean onlyCreatorStart)
     {
         PlayerObject user = (PlayerObject)caller;
-        if (user.handle.equals(_parobj.info.creator)) {
+        if (user.handle.equals(_parobj.info.creator) &&
+                // don't allow changing to/from matched parlors
+                !_parobj.info.isMatched() && !info.isMatched()) {
             _parobj.startTransaction();
             try {
                 info.creator = _parobj.info.creator;
@@ -224,6 +227,30 @@ public class ParlorManager extends PlaceManager
         clearPlayer(caller.getOid());
     }
 
+    // documentation inherited from interface ParlorProvider
+    public void findSaloonMatch (ClientObject caller, Criterion criterion,
+            ParlorService.ResultListener listener)
+        throws InvocationException
+    {
+        _salmgr.findMatch(caller, criterion, listener);
+    }
+
+    // documentation inhertied from interface ParlorProvider
+    public void leaveSaloonMatch (ClientObject caller, int matchOid)
+    {
+        _salmgr.leaveMatch(caller, matchOid);
+    }
+
+    /**
+     * Called when a game is started for an occupant of this parlor.
+     */
+    public void startingGame (PlaceObject gameobj)
+    {
+        if (_activeGames.add(gameobj.getOid())) {
+            gameobj.addListener(_gameOverListener);
+        }
+    }
+
     @Override // documentation inherited
     protected PlaceObject createPlaceObject ()
     {
@@ -281,8 +308,24 @@ public class ParlorManager extends PlaceManager
         // clear this player out of the game in case they were in it
         clearPlayer(bodyOid);
 
+        _salmgr.clearPlayer(bodyOid);
+
         // update our occupant count in the saloon
         publishOccupants();
+    }
+
+    @Override // documentation inherited
+    protected void bodyUpdated (OccupantInfo info)
+    {
+        super.bodyUpdated(info);
+
+        // if a player disconnects during the matchmaking phase, remove them
+        // from their pending match
+        if (info.status == OccupantInfo.DISCONNECTED) {
+            clearPlayer(info.bodyOid);
+
+            _salmgr.clearPlayer(info.bodyOid);
+        }
     }
 
     protected void publishOccupants ()
@@ -398,9 +441,7 @@ public class ParlorManager extends PlaceManager
 
         try {
             BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
-            PlaceObject gameobj = mgr.getPlaceObject();
-            _activeGames.add(gameobj.getOid());
-            gameobj.addListener(_gameOverListener);
+            startingGame(mgr.getPlaceObject());
         } catch (Exception e) {
             log.log(Level.WARNING, "Choked creating game " + config + ".", e);
         }

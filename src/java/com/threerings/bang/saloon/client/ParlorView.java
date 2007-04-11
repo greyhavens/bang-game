@@ -31,6 +31,7 @@ import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 
@@ -71,6 +72,11 @@ public class ParlorView extends ShopView
 
         // create our config view, but we'll add it later
         _gconfig = new ParlorGameConfigView(_ctx, _status);
+        _crview = new CriterionView(_ctx) {
+            protected void findMatch (Criterion criterion) {
+                _ctrl.findSaloonMatch(criterion);
+            }
+        };
 
         // allow the parlor owner to change the settings
         add(_settings = new BButton(_msgs.get("m.settings"), this, "settings"), new Point(340, 81));
@@ -83,6 +89,9 @@ public class ParlorView extends ShopView
      */
     public void displayMatchView ()
     {
+        if (_parobj.info.isMatched()) {
+            return;
+        }
         // remove our configuration view
         if (_gconfig.isAdded()) {
             remove(_gconfig);
@@ -99,11 +108,42 @@ public class ParlorView extends ShopView
     }
 
     /**
+     * Called by the controller to instruct us to display the pending saloon match view when we
+     * have requested to play a game.
+     */
+    public void displaySaloonMatchView (int matchOid)
+    {
+        if (!_parobj.info.isMatched()) {
+            return;
+        }
+        // remove our criterion view
+        if (_crview.isAdded()) {
+            remove(_crview);
+        }
+
+        // this should never happen, but just to be ultra-robust
+        if (_smview != null) {
+            remove(_smview);
+            _smview = null;
+        }
+
+        // display a match view for this pending match
+        add(_smview = new MatchView(_ctx, matchOid, false) {
+            protected void leaveMatch (int matchOid) {
+                _ctrl.leaveSaloonMatch(matchOid);
+            }
+        }, MATCH_RECT);
+    }
+
+    /**
      * Called by the match view if the player cancels their pending match.
      * Redisplays the criterion view.
      */
     public void clearMatchView ()
     {
+        if (_parobj.info.isMatched()) {
+            return;
+        }
         // out with the old match view
         if (_mview != null) {
             remove(_mview);
@@ -114,6 +154,38 @@ public class ParlorView extends ShopView
         if (!_gconfig.isAdded()) {
             add(_gconfig, SaloonView.CRIT_RECT);
         }
+    }
+
+    /**
+     * Called by the match view if the player cancels their pending saloon match.
+     * Redisplays the criterion view.
+     */
+    public void clearSaloonMatchView (String status)
+    {
+        if (!_parobj.info.isMatched()) {
+            return;
+        }
+        // out with the old match view
+        if (_smview != null) {
+            remove(_smview);
+            _smview = null;
+        }
+
+        // redisplay the criterion view
+        if (!_crview.isAdded()) {
+            add(_crview, SaloonView.CRIT_RECT);
+        }
+
+        setStatus(status);
+    }
+
+    public void findSaloonMatchFailed (String reason)
+    {
+        if (!_parobj.info.isMatched()) {
+            return;
+        }
+        _crview.reenable();
+        _status.setStatus(_msgs.xlate(reason), true);
     }
 
     public void setStatus (String status)
@@ -139,28 +211,35 @@ public class ParlorView extends ShopView
     {
         _parobj = (ParlorObject)plobj;
 
-        _gconfig.willEnterPlace(_parobj);
         _config.willEnterPlace(_parobj);
+        if (!_parobj.info.isMatched()) {
+            _gconfig.willEnterPlace(_parobj);
 
-        // show the match view if there's a game already in progress
-        if (_parobj.playerOids != null) {
-            displayMatchView();
+            // show the match view if there's a game already in progress
+            if (_parobj.playerOids != null) {
+                displayMatchView();
+            } else {
+                clearMatchView();
+            }
+
+            if (_ctx.getUserObject().handle.equals(_parobj.info.creator)) {
+                _settings.setVisible(true);
+            }
         } else {
-            clearMatchView();
+            clearSaloonMatchView(null);
         }
 
         add(new BLabel(_msgs.get("m.parlor_name", _parobj.info.creator), "parlor_label"),
                 new Point(165, 263));
         add(new FolkView(_ctx, plobj, false), new Rectangle(95, 119, 407, 130));
-        if (_ctx.getUserObject().handle.equals(_parobj.info.creator)) {
-            _settings.setVisible(true);
-        }
     }
 
     @Override // documentation inherited
     public void didLeavePlace (PlaceObject plobj)
     {
-        _gconfig.didLeavePlace();
+        if (!_parobj.info.isMatched()) {
+            _gconfig.didLeavePlace();
+        }
         _config.didLeavePlace();
 
         // unregister our chat display
@@ -186,4 +265,9 @@ public class ParlorView extends ShopView
     protected ParlorGameConfigView _gconfig;
     protected ParlorConfigIcons _config;
     protected ParlorMatchView _mview;
+    protected CriterionView _crview;
+    protected MatchView _smview;
+
+    protected static final Rectangle MATCH_RECT =
+        new Rectangle(77, 305, 440, 265);
 }

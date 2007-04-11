@@ -129,7 +129,7 @@ public abstract class MatchView extends BContainer
         _mobj.addListener(_atch);
 
         // create our player slots
-        _slots = new PlayerSlot[_mobj.playerOids.length];
+        _slots = new PlayerSlot[_mobj.playerInfo.length];
         for (int ii = 0; ii < _slots.length; ii++) {
             if (ii % 2 == 0) {
                 _left.add(_slots[ii] = new PlayerSlot(_ctx));
@@ -179,8 +179,8 @@ public abstract class MatchView extends BContainer
 
     protected void updateDisplay ()
     {
-        for (int ii = 0; ii < _mobj.playerOids.length; ii++) {
-            _slots[ii].setPlayerOid(_mobj.playerOids[ii]);
+        for (int ii = 0; ii < _mobj.playerInfo.length; ii++) {
+            _slots[ii].setPlayerInfo(_mobj.playerInfo[ii]);
         }
     }
 

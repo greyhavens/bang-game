@@ -20,6 +20,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
+import com.threerings.bang.saloon.data.MatchObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -45,44 +46,60 @@ public class PlayerSlot extends AvatarView
         setPreferredSize(null);
     }
 
+    /**
+     * Sets the playerOid for this slot.
+     */
     public void setPlayerOid (int playerOid)
     {
-        if (playerOid == _playerOid) {
+        if (_playerOid == playerOid) {
             return;
         }
         _playerOid = playerOid;
-
         if (playerOid <= 0) {
-            setText(_ctx.xlate(SaloonCodes.SALOON_MSGS,
-                               "m.waiting_for_player"));
+            setPlayerInfo(null);
             return;
         }
 
         BangOccupantInfo boi = (BangOccupantInfo)
             _ctx.getOccupantDirector().getOccupantInfo(playerOid);
         if (boi == null) {
-            log.warning("Missing occupant info for player " +
-                        "[oid=" + playerOid + "].");
-            setText("???");
-            setIcon(new BlankIcon(AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8));
-            _avatar = null;
+            setPlayerInfo(null);
         } else {
-            setText(boi.username.toString());
-            setAvatar(boi.avatar);
+            setPlayerInfo(new MatchObject.PlayerInfo((Handle)boi.username, boi.avatar));
         }
+    }
+
+    /**
+     * Sets the playerinfo for this slot.
+     */
+    public void setPlayerInfo (MatchObject.PlayerInfo pinfo)
+    {
+        if (pinfo == _pinfo) {
+            return;
+        }
+        _pinfo = pinfo;
+
+        if (pinfo == null) {
+            setText(_ctx.xlate(SaloonCodes.SALOON_MSGS, "m.waiting_for_player"));
+            return;
+        }
+
+        setText(pinfo.handle.toString());
+        setAvatar(pinfo.avatar);
     }
 
     public ColorRGBA getColor ()
     {
-        return _playerOid > 0 ? super.getColor() : GREY_ALPHA;
+        return _pinfo != null ? super.getColor() : GREY_ALPHA;
     }
 
     @Override // from BComponent
     public boolean dispatchEvent (BEvent event)
     {
         // pop up a player menu if they click the mouse
-        return PlayerPopupMenu.checkPopup(
-            _ctx, getWindow(), event, _playerOid) || super.dispatchEvent(event);
+        return (_pinfo != null ?
+            PlayerPopupMenu.checkPopup(_ctx, getWindow(), event, _pinfo.handle, false) : false) ||
+            super.dispatchEvent(event);
     }
 
     @Override // documentation inherited
@@ -114,7 +131,7 @@ public class PlayerSlot extends AvatarView
     @Override // documentation inherited
     protected void renderImage (Renderer renderer)
     {
-        if (_playerOid > 0) {
+        if (_pinfo != null) {
             super.renderImage(renderer);
         } else {
             int ix = (getWidth() - _silhouette.getWidth())/2;
@@ -125,7 +142,7 @@ public class PlayerSlot extends AvatarView
     @Override // documentation inherited
     protected void renderScroll (Renderer renderer)
     {
-        if (_playerOid > 0) {
+        if (_pinfo != null) {
             super.renderScroll(renderer);
         } else {
             int ix = (getWidth() - _emptyScroll.getWidth())/2;
@@ -134,9 +151,9 @@ public class PlayerSlot extends AvatarView
     }
 
     protected BangContext _ctx;
-    protected int _playerOid = -1;
+    protected MatchObject.PlayerInfo _pinfo;
+    protected int _playerOid;
     protected BImage _silhouette, _emptyScroll;
 
-    protected static final ColorRGBA GREY_ALPHA =
-        new ColorRGBA(0f, 0f, 0f, 0.25f);
+    protected static final ColorRGBA GREY_ALPHA = new ColorRGBA(0f, 0f, 0f, 0.25f);
 }

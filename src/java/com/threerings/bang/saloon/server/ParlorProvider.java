@@ -4,6 +4,7 @@
 package com.threerings.bang.saloon.server;
 
 import com.threerings.bang.saloon.client.ParlorService;
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.presents.client.Client;
@@ -18,6 +19,12 @@ import com.threerings.presents.server.InvocationProvider;
 public interface ParlorProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link ParlorService#findSaloonMatch} request.
+     */
+    public void findSaloonMatch (ClientObject caller, Criterion arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link ParlorService#joinMatch} request.
      */
     public void joinMatch (ClientObject caller);
@@ -26,6 +33,11 @@ public interface ParlorProvider extends InvocationProvider
      * Handles a {@link ParlorService#leaveMatch} request.
      */
     public void leaveMatch (ClientObject caller);
+
+    /**
+     * Handles a {@link ParlorService#leaveSaloonMatch} request.
+     */
+    public void leaveSaloonMatch (ClientObject caller, int arg1);
 
     /**
      * Handles a {@link ParlorService#startMatchMaking} request.

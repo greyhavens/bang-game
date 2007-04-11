@@ -9,14 +9,20 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.IntSet;
 import com.threerings.util.Name;
 
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.crowd.server.PlaceManager;
+
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.admin.server.RuntimeConfig;
+import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.MatchObject;
@@ -62,12 +68,19 @@ public class Match
     public void setObject (MatchObject matchobj)
     {
         this.matchobj = matchobj;
+        MatchObject.PlayerInfo[] pinfo = new MatchObject.PlayerInfo[players.length];
+        for (int ii = 0; ii < pinfo.length; ii++) {
+            if (players[ii] != null) {
+                pinfo[ii] = new MatchObject.PlayerInfo(players[ii]);
+            }
+        }
         int[] oids = new int[players.length];
         for (int ii = 0; ii < oids.length; ii++) {
             oids[ii] = (players[ii] == null) ? 0 : players[ii].getOid();
         }
         matchobj.setCriterion(_criterion);
         matchobj.setPlayerOids(oids);
+        matchobj.setPlayerInfo(pinfo);
     }
 
     /**
@@ -86,6 +99,21 @@ public class Match
         if (!starting && starter != null) {
             starter.cancel();
             starter = null;
+        }
+    }
+
+    /**
+     * Called when the match is starting and the BangManager has been created.
+     */
+    public void startingMatch (PlaceObject gameobj)
+    {
+        for (int ii = 0; ii < players.length; ii++) {
+            if (players[ii] != null) {
+                PlaceManager pmgr = BangServer.plreg.getPlaceManager(players[ii].location);
+                if (pmgr instanceof ParlorManager) {
+                    ((ParlorManager)pmgr).startingGame(gameobj);
+                }
+            }
         }
     }
 
@@ -156,6 +184,7 @@ public class Match
                     players[ii] = player;
                     _playerCriterions[ii] = criterion;
                     matchobj.setPlayerOidsAt(player.getOid(), ii);
+                    matchobj.setPlayerInfoAt(new MatchObject.PlayerInfo(player), ii);
                     added = ii;
                     break;
                 }
@@ -197,6 +226,7 @@ public class Match
                 try {
                     matchobj.startTransaction();
                     matchobj.setPlayerOidsAt(0, ii);
+                    matchobj.setPlayerInfoAt(null, ii);
                     rebuildCriterion(); // recreate the criterion now that this player is gone
                     matchobj.setCriterion(_criterion);
                 } finally {

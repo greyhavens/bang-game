@@ -4,6 +4,7 @@
 package com.threerings.bang.saloon.server;
 
 import com.threerings.bang.saloon.client.ParlorService;
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorMarshaller;
@@ -40,6 +41,13 @@ public class ParlorDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case ParlorMarshaller.FIND_SALOON_MATCH:
+            ((ParlorProvider)provider).findSaloonMatch(
+                source,
+                (Criterion)args[0], (InvocationService.ResultListener)args[1]
+            );
+            return;
+
         case ParlorMarshaller.JOIN_MATCH:
             ((ParlorProvider)provider).joinMatch(
                 source                
@@ -49,6 +57,13 @@ public class ParlorDispatcher extends InvocationDispatcher
         case ParlorMarshaller.LEAVE_MATCH:
             ((ParlorProvider)provider).leaveMatch(
                 source                
+            );
+            return;
+
+        case ParlorMarshaller.LEAVE_SALOON_MATCH:
+            ((ParlorProvider)provider).leaveSaloonMatch(
+                source,
+                ((Integer)args[0]).intValue()
             );
             return;
 

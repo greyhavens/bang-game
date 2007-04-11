@@ -3,10 +3,17 @@
 
 package com.threerings.bang.saloon.data;
 
+import com.threerings.io.Streamable;
+
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.data.SpeakObject;
+
+import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.avatar.data.Look;
 
 /**
  * Contains the shared state for a pending matched game.
@@ -14,9 +21,42 @@ import com.threerings.crowd.chat.data.SpeakObject;
 public class MatchObject extends DObject
     implements SpeakObject
 {
+    /** Used to keep track of player occupant information even if they're not in the room. */
+    public static class PlayerInfo implements Streamable
+    {
+        /** The player's unique identifier. */
+        public int playerId = -1;
+
+        /** The player's handle. */
+        public Handle handle;
+
+        /** The player's avatar pose. */
+        public AvatarInfo avatar;
+
+        public PlayerInfo ()
+        {
+        }
+
+        public PlayerInfo (PlayerObject user)
+        {
+            this.handle = user.handle;
+            Look look = user.getLook(Look.Pose.DEFAULT);
+            this.avatar  = (look != null ? look.getAvatar(user) : new AvatarInfo());
+        }
+
+        public PlayerInfo (Handle handle, AvatarInfo avatar)
+        {
+            this.handle = handle;
+            this.avatar = avatar;
+        }
+    }
+
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>speakService</code> field. */
     public static final String SPEAK_SERVICE = "speakService";
+
+    /** The field name of the <code>playerInfo</code> field. */
+    public static final String PLAYER_INFO = "playerInfo";
 
     /** The field name of the <code>playerOids</code> field. */
     public static final String PLAYER_OIDS = "playerOids";
@@ -30,6 +70,9 @@ public class MatchObject extends DObject
 
     /** Used for chatting among the matchmakees. */
     public SpeakMarshaller speakService;
+
+    /** Avatar fingerprints and other player information. */
+    public PlayerInfo[] playerInfo;
 
     /** The player object ids of the players in this game. */
     public int[] playerOids;
@@ -55,6 +98,39 @@ public class MatchObject extends DObject
         requestAttributeChange(
             SPEAK_SERVICE, value, ovalue);
         this.speakService = value;
+    }
+
+    /**
+     * Requests that the <code>playerInfo</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setPlayerInfo (MatchObject.PlayerInfo[] value)
+    {
+        MatchObject.PlayerInfo[] ovalue = this.playerInfo;
+        requestAttributeChange(
+            PLAYER_INFO, value, ovalue);
+        this.playerInfo = (value == null) ? null : (MatchObject.PlayerInfo[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>playerInfo</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setPlayerInfoAt (MatchObject.PlayerInfo value, int index)
+    {
+        MatchObject.PlayerInfo ovalue = this.playerInfo[index];
+        requestElementUpdate(
+            PLAYER_INFO, index, value, ovalue);
+        this.playerInfo[index] = value;
     }
 
     /**

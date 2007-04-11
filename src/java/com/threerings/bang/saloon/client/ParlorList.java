@@ -15,6 +15,7 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ComparableArrayList;
 import com.samskivert.util.StringUtil;
@@ -230,6 +231,8 @@ public class ParlorList extends BContainer
             weight += ((user.gangId <= 0 || user.canRecruit()) ? +750 : -750);
         } else if (info.type == ParlorInfo.Type.SOCIAL) {
             weight += 500;
+        } else if (info.type == ParlorInfo.Type.MATCH) {
+            weight += 400;
         } else if (info.type == ParlorInfo.Type.NORMAL) {
             weight += 100;
         } else if (info.type == ParlorInfo.Type.PARDNERS_ONLY) {
@@ -255,6 +258,7 @@ public class ParlorList extends BContainer
             _occs = new BLabel("");
             _enter = new BButton(msgs.get("m.enter"), ParlorList.this, "enter");
             _enter.setStyleClass("alt_button");
+            _enter.setPreferredSize(new Dimension(110,-1));
             update(info);
         }
 
