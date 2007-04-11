@@ -1759,8 +1759,8 @@ public class BoardView extends BComponent
                 set.getX(ii), set.getY(ii), true, false);
             highlight.setRenderState(_tgtstate);
             highlight.updateRenderState();
-            highlight.getBatch(0).getDefaultColor().set(valid ?
-                ColorRGBA.white : INVALID_TARGET_HIGHLIGHT_COLOR);
+            highlight.setColors(valid ? ColorRGBA.white : INVALID_TARGET_HIGHLIGHT_COLOR,
+                ColorRGBA.white);
         }
     }
 
@@ -2246,7 +2246,7 @@ public class BoardView extends BComponent
     protected static final ColorRGBA MOVEMENT_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 1f, 0.5f, 0.5f);
 
-    /** The color of the movement highglights when the mouse is hovering. */
+    /** The color of the movement highlights when the mouse is hovering. */
     protected static final ColorRGBA HOVER_HIGHLIGHT_COLOR =
         new ColorRGBA(0f, 0f, 0f, 0.5f);
 
