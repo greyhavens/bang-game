@@ -1225,6 +1225,18 @@ marquee_subtitle {
   color: #FFFFFF;
 }
 
+marquee {
+  font: "Old Town" plain 96;
+  color: #FFFFFF;
+  text-effect: outline;
+  effect-color: #000000;
+}
+
+loading_marquee {
+  font: "Dom Casual" plain 24;
+  color: #FFFFFF;
+}
+
 player_status_win {
   background: blank;
 }
