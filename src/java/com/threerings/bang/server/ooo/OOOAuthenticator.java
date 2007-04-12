@@ -95,7 +95,7 @@ public class OOOAuthenticator extends BangAuthenticator
             return NAME_IN_USE;
         }
 
-        // figure out the sideId
+        // figure out the siteId
         int siteId;
         try {
             siteId = Integer.decode(affiliate);
@@ -104,7 +104,7 @@ public class OOOAuthenticator extends BangAuthenticator
         }
 
         try {
-            // make sure that this machien identifier is allowed to create a new account
+            // make sure that this machine identifier is allowed to create a new account
             int rv = _authrep.checkCanCreate(machIdent);
             switch(rv) {
             case OOOUserRepository.NEW_ACCOUNT_TAINTED:

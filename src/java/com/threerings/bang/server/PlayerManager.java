@@ -467,6 +467,9 @@ public class PlayerManager
             // otherwise load up the tutorial configuration and use that to
             // configure the tutorial game
             TutorialConfig tconfig = TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutId);
+            if ("error".equals(tconfig.board)) {
+                throw new InvocationException(INTERNAL_ERROR);
+            }
             config.addRound(tconfig.ident, tconfig.board, null);
             config.type = BangConfig.Type.TUTORIAL;
         }

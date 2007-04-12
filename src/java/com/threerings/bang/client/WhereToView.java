@@ -10,6 +10,7 @@ import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.event.ActionEvent;
@@ -90,6 +91,9 @@ public class WhereToView extends SteelWindow
                 enabled = createTutorialButton(tuts, tutorials, ii, enabled, true);
             }
         }
+        if (self.tokens.isSupport()) {
+            customTutorialButton(tuts);
+        }
         tutcol.add(tuts);
         horiz.add(tutcol);
 
@@ -164,7 +168,11 @@ public class WhereToView extends SteelWindow
                     enableButtons(true);
                 }
             };
-            psvc.playTutorial(_ctx.getClient(), action, rl);
+            if (action.equals("custom_tut")) {
+                psvc.playTutorial(_ctx.getClient(), _customTut.getText(), rl);
+            } else {
+                psvc.playTutorial(_ctx.getClient(), action, rl);
+            }
             enableButtons(false);
         }
     }
@@ -237,9 +245,18 @@ public class WhereToView extends SteelWindow
         return enabled;
     }
 
+    protected void customTutorialButton (BContainer box)
+    {
+        box.add(_customTut = new BTextField());
+        BButton play = new BButton(_msgs.get("m.tut_play"), this, "custom_tut");
+        play.setStyleClass("alt_button");
+        box.add(play);
+    }
+
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BCheckBox _nowhere;
+    protected BTextField _customTut;
     protected ArrayList<BButton> _enabledButtons = new ArrayList<BButton>();
 
     protected static final String[] BLDGS = { "office", "saloon" };
