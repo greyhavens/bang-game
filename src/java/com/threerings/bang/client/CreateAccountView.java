@@ -39,7 +39,7 @@ import static com.threerings.bang.Log.log;
  * Allows a player to create an account.
  */
 public class CreateAccountView extends SteelWindow
-    implements ActionListener
+    implements ActionListener, BangClient.NonClearablePopup
 {
     public CreateAccountView (BangContext ctx, boolean onExit)
     {

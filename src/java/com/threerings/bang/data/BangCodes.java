@@ -89,6 +89,9 @@ public interface BangCodes extends InvocationCodes
     public static final String E_NO_SUCH_PLAYER =
         MessageBundle.qualify(BANG_MSGS, "e.no_such_player");
 
+    /** An error code reported when the action is already in progress. */
+    public static final String E_IN_PROGRESS = MessageBundle.qualify(BANG_MSGS, "e.in_progress");
+
     /** The minimum age of a player to avoid COPPA regulations. */
     public static final int COPPA_YEAR = 13;
 }

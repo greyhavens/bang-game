@@ -14,6 +14,7 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.ListUtil;
 
+import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
@@ -22,7 +23,7 @@ import com.threerings.bang.util.BangContext;
  * A generic dialog class for simple user interactions.
  */
 public class OptionDialog extends BDecoratedWindow
-    implements ActionListener, BangCodes
+    implements ActionListener, BangCodes, BangClient.NonClearablePopup
 {
     /** The index of the OK button. */
     public static final int OK_BUTTON = 0;

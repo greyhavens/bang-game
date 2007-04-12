@@ -1302,7 +1302,9 @@ public class BangClient extends BasicClient
      */
     protected void showCreateAccount (boolean onExit)
     {
-        displayPopup(new CreateAccountView(_ctx, onExit), true, 800);
+        CreateAccountView cav = new CreateAccountView(_ctx, onExit);
+        cav.setLayer(BangCodes.NEVER_CLEAR_LAYER);
+        displayPopup(cav, true, 800);
         _showingAccount = true;
     }
 

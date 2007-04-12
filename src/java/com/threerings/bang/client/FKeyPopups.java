@@ -258,8 +258,7 @@ public class FKeyPopups
             GroupLayout.STRETCH);
         bug.setLayer(BangCodes.NEVER_CLEAR_LAYER);
         bug.add(new BLabel(_msgs.get("m.bug_intro"), "dialog_text_left"));
-        final BTextField descrip = new BTextField(
-                "", BangUI.TEXT_FIELD_MAX_LENGTH);
+        final BTextField descrip = new BTextField("", BangUI.TEXT_FIELD_MAX_LENGTH);
         bug.add(descrip, GroupLayout.FIXED);
         descrip.requestFocus();
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);

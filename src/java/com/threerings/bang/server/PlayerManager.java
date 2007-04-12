@@ -21,6 +21,7 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Interval;
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
@@ -850,6 +851,11 @@ public class PlayerManager
     {
         final PlayerObject user = (PlayerObject)caller;
 
+        if (_creatingAccounts.contains(user.playerId)) {
+            listener.requestFailed(E_IN_PROGRESS);
+            return;
+        }
+
         // make sure we're anonymous
         if (!user.tokens.isAnonymous()) {
             log.warning("Non-anonymous user tried to create account [who=" + user.who() + "].");
@@ -868,9 +874,8 @@ public class PlayerManager
         final String machIdent = ((BangCredentials)((BangClient)BangServer.clmgr.getClient(
                         user.username)).getCredentials()).ident;
 
-        // clear their anonymous status immediately
-        user.tokens.setToken(BangTokenRing.ANONYMOUS, false);
-        user.setTokens(user.tokens);
+        // prevent multiple requests from coming in
+        _creatingAccounts.add(user.playerId);
 
         BangServer.authInvoker.postUnit(new Invoker.Unit("createAccount") {
             public boolean invoke () {
@@ -891,8 +896,7 @@ public class PlayerManager
             public void handleResult () {
                 if (_errmsg != null) {
                     listener.requestFailed(_errmsg);
-                    user.tokens.setToken(BangTokenRing.ANONYMOUS, true);
-                    user.setTokens(user.tokens);
+                    _creatingAccounts.remove(user.playerId);
                 } else {
                     listener.requestProcessed();
                 }
@@ -1363,6 +1367,9 @@ public class PlayerManager
     /** A light-weight cache of soft {@link PosterInfo} references. */
     protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
         new HashMap<Handle, SoftReference<PosterInfo>>();
+
+    /** Keeps track of pending create account requests. */
+    protected ArrayIntSet _creatingAccounts = new ArrayIntSet();
 
     /** The name of our poster cache. */
     protected static final String POSTER_CACHE = "posterCache";
