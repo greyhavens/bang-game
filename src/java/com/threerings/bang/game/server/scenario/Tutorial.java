@@ -237,7 +237,7 @@ public class Tutorial extends Scenario
                     log.warning("Can't add piece near non-existent piece " + add + ".");
                     return false;
                 } else {
-                    Point spot = _bangobj.board.getOccupiableSpot(near.x, near.y, 2);
+                    Point spot = _bangobj.board.getOccupiableSpot(near.x, near.y, 2, 4, null);
                     if (spot == null) {
                         log.warning("Can't find spot near piece [piece=" + near +
                                     ", add=" + add + "].");

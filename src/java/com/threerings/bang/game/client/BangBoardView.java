@@ -133,6 +133,30 @@ public class BangBoardView extends BoardView
     }
 
     /**
+     * Enables or disables user interaction. This is used by the tutorial to disable user
+     * interaction when we don't want the player messing with things.
+     */
+    public void setInteractive (boolean interactive)
+    {
+        if (interactive) {
+            // don't misbehave if we're already interactive
+            if (!isInteractive()) {
+                addListener(this);
+            }
+        } else {
+            removeListener(this);
+        }
+    }
+
+    /**
+     * Returns true if the board view is currently interactive.
+     */
+    public boolean isInteractive ()
+    {
+        return _listeners.contains(this);
+    }
+
+    /**
      * Requests that the specified card be enabled for placement. The area
      * of effect of the card will be rendered around the cursor and a left
      * click will activate the card at the specified coordinates while a
@@ -340,13 +364,13 @@ public class BangBoardView extends BoardView
         _pendmap.increment(pieceId, -1);
     }
 
-    // documentation inherited from interface MouseListener
+    // from interface MouseListener
     public void mouseClicked (MouseEvent e)
     {
         // nothing doing, we handle this ourselves
     }
 
-    // documentation inherited from interface MouseListener
+    // from interface MouseListener
     public void mousePressed (MouseEvent e)
     {
         // skip to the end of the board tour path, if active
@@ -371,7 +395,7 @@ public class BangBoardView extends BoardView
         }
     }
 
-    // documentation inherited from interface MouseListener
+    // from interface MouseListener
     public void mouseReleased (MouseEvent e)
     {
         if (_downButton == MouseEvent.BUTTON3) {
@@ -380,13 +404,13 @@ public class BangBoardView extends BoardView
         _downButton = -1;
     }
 
-    // documentation inherited from interface MouseListener
+    // from interface MouseListener
     public void mouseEntered (MouseEvent e)
     {
         // nada
     }
 
-    // documentation inherited from interface MouseListener
+    // from interface MouseListener
     public void mouseExited (MouseEvent e)
     {
         // nada
@@ -1171,9 +1195,9 @@ public class BangBoardView extends BoardView
     /** Handles a left mouse button click. */
     protected void handleLeftPress (int mx, int my)
     {
-        // nothing doing if the game is not in play or we're not a player
-        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx)
-                || !_bangobj.isInteractivePlay()) {
+        // nothing doing if the game is not in play or we're not a player or the tutorials have
+        // disabled movement
+        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx) || !_bangobj.isInteractivePlay()) {
             return;
         }
 
@@ -1543,6 +1567,11 @@ public class BangBoardView extends BoardView
 
     protected void selectUnit (Unit piece, boolean scrollCamera)
     {
+        // if we're not interactive, ignore this request
+        if (!isInteractive()) {
+            return;
+        }
+
         boolean deselect = (piece == _selection);
         clearSelection();
         if (deselect || !piece.isAlive()) {
@@ -2191,8 +2220,8 @@ public class BangBoardView extends BoardView
     protected Node _cursor, _pointer;
     protected Unit _selection;
 
-    /** This is disabled by the tutorial controller when the player is not
-     * allowed to attack during a tutorial. */
+    /** This is disabled by the tutorial controller when the player is not allowed to attack during
+     * a tutorial. */
     protected boolean _attackEnabled = true;
 
     protected PointSet _moveSet = new PointSet();

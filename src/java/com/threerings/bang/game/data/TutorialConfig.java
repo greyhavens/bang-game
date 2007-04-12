@@ -36,8 +36,7 @@ public class TutorialConfig
         }
 
         public String toString () {
-            return StringUtil.shortClassName(this) +
-                StringUtil.fieldsToString(this);
+            return StringUtil.shortClassName(this) + StringUtil.fieldsToString(this);
         }
 
         private static final long serialVersionUID = 1;
@@ -145,8 +144,8 @@ public class TutorialConfig
     /** The name of the board to use for this tutorial. */
     public String board;
 
-    /** The number of players in this tutorial. The first player will be the
-     * human, and all other players will be computer controlled. */
+    /** The number of players in this tutorial. The first player will be the human, and all other
+     * players will be computer controlled. */
     public int players;
 
     /** Returns an array containing the actions for this tutorial. */
@@ -164,8 +163,7 @@ public class TutorialConfig
     }
 
     /**
-     * Returns the total number of "steps" in this tutorial. This is for
-     * display to the user.
+     * Returns the total number of "steps" in this tutorial. This is for display to the user.
      */
     public int getSteps ()
     {
@@ -192,8 +190,8 @@ public class TutorialConfig
         return buf.append("]").toString();
     }
 
-    /** The total number of steps in this tutorial. This is inferred to be the
-     * step number of the highest numbered step. */
+    /** The total number of steps in this tutorial. This is inferred to be the step number of the
+     * highest numbered step. */
     protected int _steps;
 
     /** Contains the list of actions used in this tutorial. */

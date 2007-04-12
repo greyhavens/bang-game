@@ -131,6 +131,11 @@ public class TutorialController
         }
         log.info("Matched tutorial event: " + event + " (" + count + ").");
 
+        // if we were waiting for text clicked, reenable movement
+        if (TutorialCodes.TEXT_CLICKED.equals(event)) {
+            _view.view.setInteractive(true);
+        }
+
         // process the action
         processedAction(((TutorialConfig.Action)_pending).index);
         _pending = null;
@@ -253,8 +258,7 @@ public class TutorialController
 
             log.info("Waiting [event=" + _pending.getEvent() + ", action=" + _pending + "].");
 
-            // if an event's count is already satified, turn it into a "Click
-            // to continue..." event
+            // if an event's count is already satified, turn it into a "Click to continue..." event
             if (_pending.getCount() > 0 &&
                 getEventCount(_pending.getEvent()) >= _pending.getCount()) {
                 log.info("Converting to TEXT_CLICKED....");
@@ -272,6 +276,11 @@ public class TutorialController
                 _click.setText(_gmsgs.get("m.tutorial_click"));
                 _view.tutwin.setBackground(BComponent.DEFAULT, _glow);
                 _view.tutwin.setBackground(BComponent.HOVER, null);
+                // disable the ability to move their units at this time (unless we override that
+                // with allow attack which is sort of a hack but does the job)
+                if (!_pending.allowAttack()) {
+                    _view.view.setInteractive(false);
+                }
             }
             return true;
         }
