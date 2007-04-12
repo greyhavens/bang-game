@@ -1586,7 +1586,9 @@ public class TerrainNode extends Node
             for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
                 TextureState tstate = (TextureState)node.getChild(ii).getRenderState(
                     RenderState.RS_TEXTURE);
-                RenderUtil.ensureLoaded(tstate);
+                if (tstate != null) {
+                    RenderUtil.ensureLoaded(tstate);
+                }
             }
 
             // create the shader states
@@ -1616,6 +1618,9 @@ public class TerrainNode extends Node
             for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
                 Spatial pass = node.getChild(ii);
                 TextureState tstate = (TextureState)pass.getRenderState(RenderState.RS_TEXTURE);
+                if (tstate == null) {
+                    continue;
+                }
                 int splats = tstate.getNumberOfSetTextures() / 2;
                 GLSLShaderObjectsState sstate = (GLSLShaderObjectsState)pass.getRenderState(
                     RenderState.RS_GLSL_SHADER_OBJECTS);
