@@ -61,6 +61,11 @@ public class ParlorManager extends PlaceManager
         _parobj.setInfo(info);
         _password = password;
         log.info("Parlor created " + info + ".");
+
+        // don't let server parlors shutdown
+        if (info.server) {
+            cancelShutdowner();
+        }
     }
 
     /**
