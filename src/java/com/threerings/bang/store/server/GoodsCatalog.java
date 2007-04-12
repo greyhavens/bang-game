@@ -174,6 +174,14 @@ public class GoodsCatalog
         goods.add(good);
     }
 
+    /**
+     * Helpy helper function.
+     */
+    protected static int toInt (Object arg)
+    {
+        return (arg == null) ? 0 : (Integer)arg;
+    }
+
     /** Used to create a {@link Provider} for a particular {@link Good}. */
     protected abstract class ProviderFactory {
         public abstract Provider createProvider (PlayerObject user, Good good, Object[] args)
@@ -209,7 +217,7 @@ public class GoodsCatalog
                     }
                     // our arguments are colorization ids
                     int zations = AvatarLogic.composeZations(
-                        (Integer)_args[0], (Integer)_args[1], (Integer)_args[2]);
+                        toInt(_args[0]), toInt(_args[1]), toInt(_args[2]));
                     Item item = _alogic.createArticle(_user.playerId, article, zations);
                     if (item == null) {
                         throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
