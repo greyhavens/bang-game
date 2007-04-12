@@ -143,8 +143,6 @@ public class ParlorConfigView extends BDecoratedWindow
             if (type == ParlorInfo.Type.RECRUITING && (dynamic ||
                 ctx.getUserObject().gangRank != GangCodes.LEADER_RANK)) {
                 continue;
-            } else if (type == ParlorInfo.Type.MATCH && dynamic) {
-                continue;
             }
             String msg = "m.pt_" + StringUtil.toUSLowerCase(type.toString());
             types.add(new BComboBox.Item(type, ctx.xlate(SaloonCodes.SALOON_MSGS, msg)));

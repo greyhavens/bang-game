@@ -44,7 +44,7 @@ public class SaloonDispatcher extends InvocationDispatcher
         case SaloonMarshaller.CREATE_PARLOR:
             ((SaloonProvider)provider).createParlor(
                 source,
-                (ParlorInfo.Type)args[0], (String)args[1], (InvocationService.ResultListener)args[2]
+                (ParlorInfo.Type)args[0], (String)args[1], ((Boolean)args[2]).booleanValue(), (InvocationService.ResultListener)args[3]
             );
             return;
 

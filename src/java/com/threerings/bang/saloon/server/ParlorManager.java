@@ -105,9 +105,7 @@ public class ParlorManager extends PlaceManager
     public void updateParlorConfig (ClientObject caller, ParlorInfo info, boolean onlyCreatorStart)
     {
         PlayerObject user = (PlayerObject)caller;
-        if (user.handle.equals(_parobj.info.creator) &&
-                // don't allow changing to/from matched parlors
-                !_parobj.info.isMatched() && !info.isMatched()) {
+        if (user.handle.equals(_parobj.info.creator)) {
             _parobj.startTransaction();
             try {
                 info.creator = _parobj.info.creator;
@@ -466,7 +464,8 @@ public class ParlorManager extends PlaceManager
     @Override // documentation inherited
     protected boolean shouldDeclareEmpty (OccupantInfo leaver)
     {
-        return super.shouldDeclareEmpty(leaver) && _activeGames.size() == 0;
+        return super.shouldDeclareEmpty(leaver) && !_parobj.info.server &&
+            _activeGames.size() == 0;
     }
 
     protected ObjectDeathListener _gameOverListener = new ObjectDeathListener() {

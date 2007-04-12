@@ -28,7 +28,7 @@ public interface SaloonService extends InvocationService
     /**
      * Requests to create a back parlor with the specified configuration.
      */
-    public void createParlor (Client client, ParlorInfo.Type type, String password,
+    public void createParlor (Client client, ParlorInfo.Type type, String password, boolean matched,
                               ResultListener rl);
 
     /**

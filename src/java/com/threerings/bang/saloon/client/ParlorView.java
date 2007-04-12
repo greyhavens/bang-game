@@ -63,11 +63,7 @@ public class ParlorView extends ShopView
         _status.setStyleClass("shop_status");
         _status.setText(_msgs.get("m.intro_tip"));
 
-        // display some images over the ones baked into the background
-        ImageIcon banner = new ImageIcon(
-            _ctx.loadImage("ui/saloon/play_parlor_game.png"));
-        add(new BLabel(banner), new Point(206, 578));
-        banner = new ImageIcon(_ctx.loadImage("ui/saloon/parlor_settings.png"));
+        ImageIcon banner = new ImageIcon(_ctx.loadImage("ui/saloon/parlor_settings.png"));
         add(new BLabel(banner), new Point(90, 260));
 
         // create our config view, but we'll add it later
@@ -89,7 +85,7 @@ public class ParlorView extends ShopView
      */
     public void displayMatchView ()
     {
-        if (_parobj.info.isMatched()) {
+        if (_parobj.info.matched) {
             return;
         }
         // remove our configuration view
@@ -113,7 +109,7 @@ public class ParlorView extends ShopView
      */
     public void displaySaloonMatchView (int matchOid)
     {
-        if (!_parobj.info.isMatched()) {
+        if (!_parobj.info.matched) {
             return;
         }
         // remove our criterion view
@@ -141,7 +137,7 @@ public class ParlorView extends ShopView
      */
     public void clearMatchView ()
     {
-        if (_parobj.info.isMatched()) {
+        if (_parobj.info.matched) {
             return;
         }
         // out with the old match view
@@ -162,7 +158,7 @@ public class ParlorView extends ShopView
      */
     public void clearSaloonMatchView (String status)
     {
-        if (!_parobj.info.isMatched()) {
+        if (!_parobj.info.matched) {
             return;
         }
         // out with the old match view
@@ -181,7 +177,7 @@ public class ParlorView extends ShopView
 
     public void findSaloonMatchFailed (String reason)
     {
-        if (!_parobj.info.isMatched()) {
+        if (!_parobj.info.matched) {
             return;
         }
         _crview.reenable();
@@ -212,7 +208,12 @@ public class ParlorView extends ShopView
         _parobj = (ParlorObject)plobj;
 
         _config.willEnterPlace(_parobj);
-        if (!_parobj.info.isMatched()) {
+        if (!_parobj.info.matched) {
+            // display some images over the ones baked into the background
+            ImageIcon banner = new ImageIcon(
+                _ctx.loadImage("ui/saloon/play_parlor_game.png"));
+            add(new BLabel(banner), new Point(206, 578));
+
             _gconfig.willEnterPlace(_parobj);
 
             // show the match view if there's a game already in progress
@@ -229,7 +230,9 @@ public class ParlorView extends ShopView
             clearSaloonMatchView(null);
         }
 
-        add(new BLabel(_msgs.get("m.parlor_name", _parobj.info.creator), "parlor_label"),
+        add(new BLabel(_parobj.info.server ? _msgs.get("m.server_parlor") :
+                        _msgs.get(_parobj.info.matched ? "m.matched_name" : "m.parlor_name",
+                        _parobj.info.creator), "parlor_label"),
                 new Point(165, 263));
         add(new FolkView(_ctx, plobj, false), new Rectangle(95, 119, 407, 130));
     }
@@ -237,7 +240,7 @@ public class ParlorView extends ShopView
     @Override // documentation inherited
     public void didLeavePlace (PlaceObject plobj)
     {
-        if (!_parobj.info.isMatched()) {
+        if (!_parobj.info.matched) {
             _gconfig.didLeavePlace();
         }
         _config.didLeavePlace();

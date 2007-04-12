@@ -51,6 +51,7 @@ public class CreateParlorDialog extends BDecoratedWindow
             public void actionPerformed (ActionEvent event) {
                 ParlorInfo.Type type = (ParlorInfo.Type)_type.getSelectedValue();
                 _password.setEnabled(type == ParlorInfo.Type.PASSWORD);
+                _matched.setSelected(type == ParlorInfo.Type.SOCIAL);
             }
         });
         _type.setTooltipText(_msgs.get("m.parlor_type_tip"));
@@ -62,6 +63,12 @@ public class CreateParlorDialog extends BDecoratedWindow
         row.add(_password = new BTextField(50));
         _password.setPreferredWidth(75);
         _password.setEnabled(false);
+        params.add(row);
+
+        row = GroupLayout.makeHBox(GroupLayout.LEFT);
+        row.add(label = new BLabel(_msgs.get("m.use_matched")));
+        label.setTooltipText(_msgs.get("m.parlor_matched_tip"));
+        row.add(_matched = new BCheckBox(null));
         params.add(row);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -78,7 +85,7 @@ public class CreateParlorDialog extends BDecoratedWindow
             ParlorInfo.Type type = (ParlorInfo.Type)_type.getSelectedValue();
             String passwd = type == ParlorInfo.Type.PASSWORD ? _password.getText() : null;
             _salobj.service.createParlor(
-                _ctx.getClient(), type, passwd, new SaloonService.ResultListener() {
+                _ctx.getClient(), type, passwd, _matched.isSelected(), new SaloonService.ResultListener() {
                 public void requestProcessed (Object result) {
                     // move immediately to our new parlor
                     _ctx.getLocationDirector().moveTo((Integer)result);
@@ -102,4 +109,5 @@ public class CreateParlorDialog extends BDecoratedWindow
 
     protected BComboBox _type;
     protected BTextField _password;
+    protected BCheckBox _matched;
 }

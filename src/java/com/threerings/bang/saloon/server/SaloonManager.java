@@ -97,8 +97,8 @@ public class SaloonManager extends MatchHostManager
     }
 
     // documentation inherited from interface SaloonProvider
-    public void createParlor (ClientObject caller, ParlorInfo.Type type, final String password,
-                              final SaloonService.ResultListener rl)
+    public void createParlor (ClientObject caller, ParlorInfo.Type type, String password,
+                              boolean matched, SaloonService.ResultListener rl)
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
@@ -121,23 +121,7 @@ public class SaloonManager extends MatchHostManager
             throw new InvocationException(ALREADY_HAVE_PARLOR);
         }
 
-        // create the new parlor
-        final ParlorInfo info = new ParlorInfo();
-        info.creator = creator;
-        info.type = type;
-
-        try {
-            ParlorManager parmgr = (ParlorManager)BangServer.plreg.createPlace(new ParlorConfig());
-            ParlorObject parobj = (ParlorObject)parmgr.getPlaceObject();
-            parmgr.init(SaloonManager.this, info, password);
-            _parlors.put(info.creator, parmgr);
-            _salobj.addToParlors(info);
-            rl.requestProcessed(parobj.getOid());
-
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to create parlor " + info + ".", e);
-            rl.requestFailed(INTERNAL_ERROR);
-        }
+        createParlor(creator, type, password, matched, false, rl);
     }
 
     // documentation inherited from interface SaloonProvider
@@ -182,6 +166,9 @@ public class SaloonManager extends MatchHostManager
         _salobj.setService((SaloonMarshaller)
                            BangServer.invmgr.registerDispatcher(new SaloonDispatcher(this)));
 
+        // create our default parlor
+        createParlor(new Handle("!!!SERVER!!!"), ParlorInfo.Type.SOCIAL, null, true, true, null);
+
         // start up our top-ranked list refresher interval
         _rankval = new Interval(BangServer.omgr) {
             public void expired () {
@@ -208,6 +195,34 @@ public class SaloonManager extends MatchHostManager
         if (_rankval != null) {
             _rankval.cancel();
             _rankval = null;
+        }
+    }
+
+    protected void createParlor (Handle creator, ParlorInfo.Type type, final String password,
+            boolean matched, boolean server, final SaloonService.ResultListener rl)
+    {
+        // create the new parlor
+        final ParlorInfo info = new ParlorInfo();
+        info.creator = creator;
+        info.type = type;
+        info.matched = matched;
+        info.server = server;
+
+        try {
+            ParlorManager parmgr = (ParlorManager)BangServer.plreg.createPlace(new ParlorConfig());
+            ParlorObject parobj = (ParlorObject)parmgr.getPlaceObject();
+            parmgr.init(SaloonManager.this, info, password);
+            _parlors.put(info.creator, parmgr);
+            _salobj.addToParlors(info);
+            if (rl != null) {
+                rl.requestProcessed(parobj.getOid());
+            }
+
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to create parlor " + info + ".", e);
+            if (rl != null) {
+                rl.requestFailed(INTERNAL_ERROR);
+            }
         }
     }
 

@@ -16,7 +16,7 @@ public class ParlorInfo extends SimpleStreamableObject
     implements DSet.Entry
 {
     /** Indicates the type of this parlor. */
-    public enum Type { NORMAL, SOCIAL, RECRUITING, MATCH, PARDNERS_ONLY, PASSWORD };
+    public enum Type { NORMAL, SOCIAL, RECRUITING, PARDNERS_ONLY, PASSWORD };
 
     /** The player that created the parlor. */
     public Handle creator;
@@ -26,6 +26,12 @@ public class ParlorInfo extends SimpleStreamableObject
 
     /** The number of occupants in this parlor. */
     public int occupants;
+
+    /** If this parlor has matched games. */
+    public boolean matched;
+
+    /** If this is a server parlor. */
+    public boolean server;
 
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
@@ -38,13 +44,5 @@ public class ParlorInfo extends SimpleStreamableObject
     {
         ParlorInfo oinfo = (ParlorInfo)other;
         return creator.equals(oinfo.creator) && type == oinfo.type && occupants == oinfo.occupants;
-    }
-
-    /**
-     * Helper function to see if we're in matched mode.
-     */
-    public boolean isMatched ()
-    {
-        return type == Type.MATCH;
     }
 }

@@ -85,7 +85,7 @@ public class ParlorController extends PlaceController
     // documentation inherited from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent event)
     {
-        if (_parobj.info.isMatched()) {
+        if (_parobj.info.matched) {
             return;
         }
         if (event.getName().equals(ParlorObject.PLAYER_OIDS)) {

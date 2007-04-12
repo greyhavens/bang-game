@@ -26,12 +26,12 @@ public class SaloonMarshaller extends InvocationMarshaller
     public static final int CREATE_PARLOR = 1;
 
     // from interface SaloonService
-    public void createParlor (Client arg1, ParlorInfo.Type arg2, String arg3, InvocationService.ResultListener arg4)
+    public void createParlor (Client arg1, ParlorInfo.Type arg2, String arg3, boolean arg4, InvocationService.ResultListener arg5)
     {
-        InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
-        listener4.listener = arg4;
+        InvocationMarshaller.ResultMarshaller listener5 = new InvocationMarshaller.ResultMarshaller();
+        listener5.listener = arg5;
         sendRequest(arg1, CREATE_PARLOR, new Object[] {
-            arg2, arg3, listener4
+            arg2, arg3, Boolean.valueOf(arg4), listener5
         });
     }
 

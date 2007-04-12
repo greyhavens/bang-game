@@ -228,11 +228,9 @@ public class ParlorList extends BContainer
         } else if (user.pardners.containsKey(info.creator)) {
             weight += 1000;
         } else if (info.type == ParlorInfo.Type.RECRUITING) {
-            weight += ((user.gangId <= 0 || user.canRecruit()) ? +750 : -750);
+            weight += ((user.gangId <= 0 || user.canRecruit()) ? +250 : -250);
         } else if (info.type == ParlorInfo.Type.SOCIAL) {
             weight += 500;
-        } else if (info.type == ParlorInfo.Type.MATCH) {
-            weight += 400;
         } else if (info.type == ParlorInfo.Type.NORMAL) {
             weight += 100;
         } else if (info.type == ParlorInfo.Type.PARDNERS_ONLY) {
@@ -240,6 +238,9 @@ public class ParlorList extends BContainer
         }
         if (info.occupants == 0) {
             weight -= 900;
+        }
+        if (info.server) {
+            weight += 5000;
         }
         return weight;
     }
@@ -251,7 +252,8 @@ public class ParlorList extends BContainer
 
         public ParlorRow (ParlorInfo info) {
             MessageBundle msgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
-            String lbl = msgs.get("m.parlor_name", info.creator);
+            String lbl = info.server ? msgs.get("m.server_parlor") :
+                    msgs.get(info.matched ? "m.matched_name" : "m.parlor_name", info.creator);
             _name = new BLabel(lbl, "parlor_label");
             _name.setFit(BLabel.Fit.SCALE);
             _icon = new BLabel("");

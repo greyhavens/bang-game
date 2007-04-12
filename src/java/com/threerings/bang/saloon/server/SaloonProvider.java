@@ -21,7 +21,7 @@ public interface SaloonProvider extends InvocationProvider
     /**
      * Handles a {@link SaloonService#createParlor} request.
      */
-    public void createParlor (ClientObject caller, ParlorInfo.Type arg1, String arg2, InvocationService.ResultListener arg3)
+    public void createParlor (ClientObject caller, ParlorInfo.Type arg1, String arg2, boolean arg3, InvocationService.ResultListener arg4)
         throws InvocationException;
 
     /**
