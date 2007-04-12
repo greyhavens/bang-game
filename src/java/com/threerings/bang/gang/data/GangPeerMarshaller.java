@@ -99,8 +99,30 @@ public class GangPeerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #memberEnteredHideout} requests. */
+    public static final int MEMBER_ENTERED_HIDEOUT = 7;
+
+    // from interface GangPeerService
+    public void memberEnteredHideout (Client arg1, Handle arg2, AvatarInfo arg3)
+    {
+        sendRequest(arg1, MEMBER_ENTERED_HIDEOUT, new Object[] {
+            arg2, arg3
+        });
+    }
+
+    /** The method id used to dispatch {@link #memberLeftHideout} requests. */
+    public static final int MEMBER_LEFT_HIDEOUT = 8;
+
+    // from interface GangPeerService
+    public void memberLeftHideout (Client arg1, Handle arg2)
+    {
+        sendRequest(arg1, MEMBER_LEFT_HIDEOUT, new Object[] {
+            arg2
+        });
+    }
+
     /** The method id used to dispatch {@link #processOutfits} requests. */
-    public static final int PROCESS_OUTFITS = 7;
+    public static final int PROCESS_OUTFITS = 9;
 
     // from interface GangPeerService
     public void processOutfits (Client arg1, Handle arg2, OutfitArticle[] arg3, boolean arg4, boolean arg5, InvocationService.ResultListener arg6)
@@ -113,7 +135,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #removeFromGang} requests. */
-    public static final int REMOVE_FROM_GANG = 8;
+    public static final int REMOVE_FROM_GANG = 10;
 
     // from interface GangPeerService
     public void removeFromGang (Client arg1, Handle arg2, Handle arg3, InvocationService.ConfirmListener arg4)
@@ -126,7 +148,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #sendSpeak} requests. */
-    public static final int SEND_SPEAK = 9;
+    public static final int SEND_SPEAK = 11;
 
     // from interface GangPeerService
     public void sendSpeak (Client arg1, Handle arg2, String arg3, byte arg4)
@@ -137,7 +159,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setAvatar} requests. */
-    public static final int SET_AVATAR = 10;
+    public static final int SET_AVATAR = 12;
 
     // from interface GangPeerService
     public void setAvatar (Client arg1, int arg2, AvatarInfo arg3)
@@ -148,7 +170,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setBuckle} requests. */
-    public static final int SET_BUCKLE = 11;
+    public static final int SET_BUCKLE = 13;
 
     // from interface GangPeerService
     public void setBuckle (Client arg1, Handle arg2, BucklePart[] arg3, InvocationService.ConfirmListener arg4)
@@ -161,7 +183,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setStatement} requests. */
-    public static final int SET_STATEMENT = 12;
+    public static final int SET_STATEMENT = 14;
 
     // from interface GangPeerService
     public void setStatement (Client arg1, Handle arg2, String arg3, String arg4, InvocationService.ConfirmListener arg5)

@@ -235,7 +235,7 @@ public class HideoutView extends ShopView
         _bcont.add(createButton("leave"));
 
         // add the tabs and gang chat (the first selected tab)
-        _gcview = new GangChatView(_ctx, _hideoutobj, _gangobj, _status);
+        _gcview = new GangChatView(_ctx, _gangobj, _status);
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
             MEMBER_TABS, true, 145, 15) {
             protected void tabSelected (int index) {

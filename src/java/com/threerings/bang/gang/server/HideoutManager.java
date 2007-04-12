@@ -20,6 +20,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.Badge;
+import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.BangNodeObject;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
@@ -416,12 +417,37 @@ public class HideoutManager extends MatchHostManager
         }
     }
 
-    @Override // from ShopManager
-    protected boolean checkShopEnabled (PlayerObject user)
+    @Override // from PlaceManager
+    protected void bodyEntered (int bodyOid)
     {
-        // TEMP: only admins can access the Hideout in ITP
-        return super.checkShopEnabled(user) &&
-            (ServerConfig.townIndex == 0 || user.tokens.isAdmin());
+        super.bodyEntered(bodyOid);
+        PlayerObject user = (PlayerObject)BangServer.omgr.getObject(bodyOid);
+        if (user.gangId <= 0) {
+            return;
+        }
+        try {
+            BangOccupantInfo boi = (BangOccupantInfo)getOccupantInfo(bodyOid);
+            BangServer.gangmgr.requireGangPeerProvider(user.gangId).memberEnteredHideout(
+                null, user.handle, boi.avatar);
+        } catch (InvocationException e) {
+            // an exception will have been logged already
+        }
+    }
+
+    @Override // from PlaceManager
+    protected void bodyLeft (int bodyOid)
+    {
+        super.bodyLeft(bodyOid);
+        PlayerObject user = (PlayerObject)BangServer.omgr.getObject(bodyOid);
+        if (user.gangId <= 0) {
+            return;
+        }
+        try {
+            BangServer.gangmgr.requireGangPeerProvider(user.gangId).memberLeftHideout(
+                null, user.handle);
+        } catch (InvocationException e) {
+            // an exception will have been logged already
+        }
     }
 
     @Override // from MatchHostManager

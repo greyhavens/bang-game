@@ -84,6 +84,20 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case GangPeerMarshaller.MEMBER_ENTERED_HIDEOUT:
+            ((GangPeerProvider)provider).memberEnteredHideout(
+                source,
+                (Handle)args[0], (AvatarInfo)args[1]
+            );
+            return;
+
+        case GangPeerMarshaller.MEMBER_LEFT_HIDEOUT:
+            ((GangPeerProvider)provider).memberLeftHideout(
+                source,
+                (Handle)args[0]
+            );
+            return;
+
         case GangPeerMarshaller.PROCESS_OUTFITS:
             ((GangPeerProvider)provider).processOutfits(
                 source,

@@ -2088,7 +2088,7 @@ hideout_members {
 }
 
 hideout_members_title {
-  font: "Dom Casual" plain 20;
+  font: "Dom Casual" plain 18;
   color: #88582A;
   text-align: center;
 }

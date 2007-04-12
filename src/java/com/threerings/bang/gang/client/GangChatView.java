@@ -6,30 +6,35 @@ package com.threerings.bang.gang.client;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
+import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetAdapter;
-
-import com.threerings.crowd.client.OccupantAdapter;
-import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Handle;
+import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
+
+import com.threerings.bang.chat.client.ComicChatView;
 import com.threerings.bang.chat.client.PlaceChatView;
 
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
-import com.threerings.bang.gang.data.HideoutObject;
 
 /**
  * Displays the gang chat, along with a list of gang members in the hideout.
@@ -37,34 +42,25 @@ import com.threerings.bang.gang.data.HideoutObject;
 public class GangChatView extends BContainer
     implements HideoutCodes
 {
-    public GangChatView (
-        BangContext ctx, HideoutObject hideoutobj, GangObject gangobj, StatusLabel status)
+    public GangChatView (BangContext ctx, GangObject gangobj, StatusLabel status)
     {
         super(GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;
-        _hideoutobj = hideoutobj;
         _gangobj = gangobj;
         _status = status;
 
-        BContainer pcont = new BContainer(
-            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP, GroupLayout.NONE));
-        pcont.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, "m.hideout_members"),
-            "hideout_members_title"));
-        pcont.add(_mcont = new BContainer(new TableLayout(2)));
-        BScrollPane spane = new BScrollPane(pcont);
+        BScrollPane spane = new BScrollPane(_mcont = new BContainer(
+            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP, GroupLayout.NONE)));
         spane.setStyleClass("hideout_members");
         add(spane);
 
-        add(_pcview = new PlaceChatView(_ctx, _ctx.xlate(HIDEOUT_MSGS, "m.gang_chat")) {
-            public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed) {
-                // drop messages from users in other towns
-                boolean elsewhere = (msg instanceof UserMessage &&
-                    msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE) &&
-                    _ctx.getOccupantDirector().getOccupantInfo(
-                        ((UserMessage)msg).speaker) == null);
-                return (elsewhere ? false : super.displayMessage(msg, alreadyDisplayed));
-            }
-        });
+        add(_pcview = new PlaceChatView(_ctx, _ctx.xlate(HIDEOUT_MSGS, "m.gang_chat"),
+            new ComicChatView(_ctx, PlaceChatView.TAB_SIZE, true) {
+                protected AvatarInfo getSpeakerAvatar (Handle speaker) {
+                    GangMemberEntry entry = _gangobj.members.get(speaker);
+                    return (entry == null) ? null : entry.avatar;
+                }
+            }));
         _pcview.setPreferredSize(new Dimension(420, 358));
         _pcview.setSpeakService(_gangobj.speakService);
     }
@@ -82,7 +78,6 @@ public class GangChatView extends BContainer
     protected void wasAdded ()
     {
         super.wasAdded();
-        _ctx.getOccupantDirector().addOccupantObserver(_occlist);
         _gangobj.addListener(_memberlist);
         updateMembersInHideout();
     }
@@ -91,7 +86,6 @@ public class GangChatView extends BContainer
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        _ctx.getOccupantDirector().removeOccupantObserver(_occlist);
         _gangobj.removeListener(_memberlist);
     }
 
@@ -101,44 +95,52 @@ public class GangChatView extends BContainer
     protected void updateMembersInHideout ()
     {
         _mcont.removeAll();
-        for (OccupantInfo info : _hideoutobj.occupantInfo) {
-            GangMemberEntry member = _gangobj.members.get(info.username);
-            if (member != null) {
-                _mcont.add(new MemberLabel(_ctx, member, true, _status, "hideout_members_entry"));
+
+        // start with members in the current town, then do the others
+        int ownIdx = BangUtil.getTownIndex(_ctx.getUserObject().townId);
+        addTownMembers(ownIdx);
+        for (int ii = 0; ii < BangCodes.TOWN_IDS.length; ii++) {
+            if (ii != ownIdx) {
+                _mcont.add(new Spacer(1, 5));
+                addTownMembers(ii);
             }
         }
     }
 
+    /**
+     * Adds the display of members in the specified town's Hideout.
+     */
+    protected void addTownMembers (int townIdx)
+    {
+        BContainer cont = new BContainer(new TableLayout(2));
+        for (GangMemberEntry member : _gangobj.members) {
+            if (member.townIdx == townIdx && member.avatar != null) {
+                cont.add(new MemberLabel(_ctx, member, true, _status, "hideout_members_entry"));
+            }
+        }
+        if (cont.getComponentCount() > 0) {
+            String msg = MessageBundle.compose(
+                "m.hideout_members", "m." + BangCodes.TOWN_IDS[townIdx]);
+            _mcont.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, msg), "hideout_members_title"));
+            _mcont.add(cont);
+        }
+    }
+
     protected BangContext _ctx;
-    protected HideoutObject _hideoutobj;
     protected GangObject _gangobj;
     protected StatusLabel _status;
 
     protected BContainer _mcont;
     protected PlaceChatView _pcview;
 
-    /** Listens to the hideout object for changes in occupants. */
-    protected OccupantAdapter _occlist = new OccupantAdapter() {
-        public void occupantEntered (OccupantInfo info) {
-            if (_gangobj.members.containsKey(info.username)) {
-                updateMembersInHideout();
-            }
-        }
-        public void occupantLeft (OccupantInfo info) {
-            if (_gangobj.members.containsKey(info.username)) {
-                updateMembersInHideout();
-            }
-        }
-    };
-
-    /** Listens to the gang object for changes in membership. */
+    /** Listens to the gang object for changes in membership and avatar updates. */
     protected SetAdapter _memberlist = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {
             if (!event.getName().equals(GangObject.MEMBERS)) {
                 return;
             }
             GangMemberEntry entry = (GangMemberEntry)event.getEntry();
-            if (_hideoutobj.getOccupantInfo(entry.handle) != null) {
+            if (entry.avatar != null) {
                 updateMembersInHideout();
             }
         }
@@ -147,7 +149,17 @@ public class GangChatView extends BContainer
                 return;
             }
             GangMemberEntry entry = (GangMemberEntry)event.getOldEntry();
-            if (_hideoutobj.getOccupantInfo(entry.handle) != null) {
+            if (entry.avatar != null) {
+                updateMembersInHideout();
+            }
+        }
+        public void entryUpdated (EntryUpdatedEvent event) {
+            if (!event.getName().equals(GangObject.MEMBERS)) {
+                return;
+            }
+            GangMemberEntry oentry = (GangMemberEntry)event.getOldEntry(),
+                nentry = (GangMemberEntry)event.getEntry();
+            if ((oentry.avatar == null) != (nentry.avatar == null)) {
                 updateMembersInHideout();
             }
         }

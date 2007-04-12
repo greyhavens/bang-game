@@ -32,6 +32,9 @@ public class PlaceChatView extends TabbedChatView
      * chat view as opposed to the {@link SystemChatView}. */
     public static final String PLACE_CHAT_VIEW_TYPE = "placeChatView";
 
+    /** The size of the chat tabs. */
+    public static final Dimension TAB_SIZE = new Dimension(400, 400);
+
     public PlaceChatView (BangContext ctx, String title)
     {
         this(ctx, title, false);
@@ -202,6 +205,4 @@ public class PlaceChatView extends TabbedChatView
 
     protected SpeakService _spsvc;
     protected ChatTab _pchat;
-
-    protected static final Dimension TAB_SIZE = new Dimension(400, 400);
 }

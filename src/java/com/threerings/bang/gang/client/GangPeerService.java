@@ -29,6 +29,16 @@ public interface GangPeerService extends InvocationService
     public void setAvatar (Client client, int playerId, AvatarInfo info);
 
     /**
+     * Called when a member enters the Hideout on any server.
+     */
+    public void memberEnteredHideout (Client client, Handle handle, AvatarInfo info);
+
+    /**
+     * Called when a member leaves the Hideout on any server.
+     */
+    public void memberLeftHideout (Client client, Handle handle);
+
+    /**
      * Invites a user into the gang.
      */
     public void inviteMember (

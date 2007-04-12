@@ -9,6 +9,7 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
@@ -39,6 +40,9 @@ public class GangMemberEntry extends SimpleStreamableObject
 
     /** Whether or not the member has logged in recently. */
     public boolean wasActive;
+
+    /** The member's avatar, if they're in the Hideout (on any server). */
+    public AvatarInfo avatar;
 
     /** On the server, the time of the member's last session. */
     public transient long lastSession;

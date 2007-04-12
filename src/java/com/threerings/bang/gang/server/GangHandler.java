@@ -44,6 +44,8 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.util.PersistingUnit;
 
+import com.threerings.crowd.server.PlaceManager;
+
 import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.chat.server.SpeakProvider;
@@ -54,6 +56,7 @@ import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
+import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
@@ -384,6 +387,13 @@ public class GangHandler
             user.commitTransaction();
         }
 
+        // if they're in the Hideout already, set their avatar
+        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.location);
+        if (plmgr instanceof HideoutManager) {
+            BangOccupantInfo boi = (BangOccupantInfo)plmgr.getOccupantInfo(user.getOid());
+            getPeerProvider().memberEnteredHideout(null, user.handle, boi.avatar);
+        }
+
         // if they're the senior leader, start tracking their avatar
         updateAvatar(user);
     }
@@ -522,6 +532,36 @@ public class GangHandler
             _gangobj.setAvatar(info);
             _avatarId = playerId;
         }
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void memberEnteredHideout (ClientObject caller, Handle handle, AvatarInfo info)
+    {
+        // make sure it comes from this server or a peer
+        GangMemberEntry member = null;
+        try {
+            verifyLocalOrPeer(caller);
+            member = verifyInGang(handle);
+        } catch (InvocationException e) {
+            return;
+        }
+        member.avatar = info;
+        _gangobj.updateMembers(member);
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void memberLeftHideout (ClientObject caller, Handle handle)
+    {
+        // make sure it comes from this server or a peer
+        GangMemberEntry member = null;
+        try {
+            verifyLocalOrPeer(caller);
+            member = verifyInGang(handle);
+        } catch (InvocationException e) {
+            return;
+        }
+        member.avatar = null;
+        _gangobj.updateMembers(member);
     }
 
     // documentation inherited from interface GangPeerProvider

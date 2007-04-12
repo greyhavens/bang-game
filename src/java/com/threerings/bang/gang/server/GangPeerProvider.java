@@ -55,6 +55,16 @@ public interface GangPeerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link GangPeerService#memberEnteredHideout} request.
+     */
+    public void memberEnteredHideout (ClientObject caller, Handle arg1, AvatarInfo arg2);
+
+    /**
+     * Handles a {@link GangPeerService#memberLeftHideout} request.
+     */
+    public void memberLeftHideout (ClientObject caller, Handle arg1);
+
+    /**
      * Handles a {@link GangPeerService#processOutfits} request.
      */
     public void processOutfits (ClientObject caller, Handle arg1, OutfitArticle[] arg2, boolean arg3, boolean arg4, InvocationService.ResultListener arg5)
