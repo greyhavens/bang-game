@@ -100,7 +100,7 @@ public class RepairViz extends ParticleEffectViz
 
             localTranslation.set(target.getLocalTranslation());
 
-            System.out.println("activate " + target.getPiece());
+            //System.out.println("activate " + target.getPiece());
         }
 
         public void updateWorldData (float time)
