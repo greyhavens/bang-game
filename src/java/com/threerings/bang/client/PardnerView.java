@@ -43,6 +43,7 @@ import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
@@ -83,7 +84,8 @@ public class PardnerView extends IconPalette
         layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
         layout.setGap(10);
         BContainer acont = new BContainer(layout);
-        if (ctx.getUserObject().tokens.isAnonymous()) {
+        PlayerObject user = ctx.getUserObject();
+        if (user.tokens.isAnonymous() || user.handle instanceof GuestHandle) {
             acont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_anonymous")));
         } else {
             acont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));

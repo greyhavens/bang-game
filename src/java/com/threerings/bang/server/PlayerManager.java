@@ -323,7 +323,7 @@ public class PlayerManager
     {
         // make sure we're not anonymous (the client should prevent this)
         final PlayerObject inviter = (PlayerObject)caller;
-        if (inviter.tokens.isAnonymous()) {
+        if (inviter.tokens.isAnonymous() || inviter.handle instanceof GuestHandle) {
             throw new InvocationException(INTERNAL_ERROR);
 
         // make sure it's not the player himself, that it's not already
