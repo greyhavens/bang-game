@@ -1875,10 +1875,11 @@ public class TerrainNode extends Node
 
                 for (int jj = 0, tidx = 0; jj < splats; jj++, lidx++) {
                     int code = layers[lidx] - 1;
-                    Texture gtex = getGroundTexture(code).createSimpleClone();
+                    Texture gtex = getGroundTexture(code);
                     if (gtex == null) {
                         continue; // something's funny, skip it
                     }
+                    gtex = gtex.createSimpleClone();
                     tstate.setTexture(gtex, tidx);
                     sstate.setUniform("splatTextures[" + tidx + "]", tidx++);
 
