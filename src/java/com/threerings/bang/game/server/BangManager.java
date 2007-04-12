@@ -2375,7 +2375,7 @@ public class BangManager extends GameManager
             }
             // deduct 150% if you shoot yourself; otherwise, give the scenario
             // a chance to modify the damage
-            if (ii == pidx) {
+            if (_bangobj.getTeam(ii) == _bangobj.getTeam(pidx)) {
                 ddone = -3 * ddone / 2;
             } else {
                 ddone = _scenario.modifyDamageDone(pidx, ii, ddone);
