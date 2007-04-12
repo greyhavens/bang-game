@@ -46,14 +46,14 @@
   <text message="logging_robots4" step="3"/>
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
              location="18,19"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
 
   <text message="waves1" step="4"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
   <text message="waves2" step="4"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
   <text message="waves3" step="4"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
 
   <text message="more_kinds1" step="5"/>
   <wait event="text_clicked"/>
@@ -78,11 +78,11 @@
   <wait event="effect:frontier_town/bonus/pickedup"/>
 
   <text message="fetishes5" step="6"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
   <text message="fetishes6" step="6"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
   <text message="fetishes7" step="6"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
 
   <text message="scoring1" step="7"/>
   <wait event="text_clicked"/>
