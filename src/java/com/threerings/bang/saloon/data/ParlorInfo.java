@@ -16,7 +16,7 @@ public class ParlorInfo extends SimpleStreamableObject
     implements DSet.Entry
 {
     /** Indicates the type of this parlor. */
-    public enum Type { NORMAL, SOCIAL, RECRUITING, PARDNERS_ONLY, PASSWORD };
+    public enum Type { SOCIAL, RECRUITING, NORMAL, PARDNERS_ONLY, PASSWORD };
 
     /** The player that created the parlor. */
     public Handle creator;

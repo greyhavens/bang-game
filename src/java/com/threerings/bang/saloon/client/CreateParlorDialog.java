@@ -69,6 +69,7 @@ public class CreateParlorDialog extends BDecoratedWindow
         row.add(label = new BLabel(_msgs.get("m.use_matched")));
         label.setTooltipText(_msgs.get("m.parlor_matched_tip"));
         row.add(_matched = new BCheckBox(null));
+        _matched.setSelected(true);
         params.add(row);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
