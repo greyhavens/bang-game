@@ -29,6 +29,8 @@
   <!-- have them turn on the help window, explain it -->
   <text message="show_help" step="3"/>
   <wait event="text_clicked"/>
+  <text message="show_help_2"/>
+  <wait event="text_clicked" allowAttack="true"/>
 
   <!-- add a ramblin' bonus, have them inspect and activate it -->
   <text message="ramblin_intro"/>
@@ -39,11 +41,13 @@
   <text message="ramblin_effect"/>
   <wait event="unit_selected"/>
   <text message="right_click_clear"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
 
   <!-- show the player status view, explain it -->
   <text message="player_status_intro" step="4"/>
   <show_view name="player_status"/>
+  <wait event="text_clicked"/>
+  <text message="player_status_intro_2"/>
   <wait event="text_clicked"/>
 
   <!-- add a card bonus, have them activate it -->
@@ -54,6 +58,8 @@
 
   <!-- explain cards and how to activate them -->
   <text message="card_detail"/>
+  <wait event="text_clicked"/>
+  <text message="card_detail_2"/>
   <wait event="card_selected"/>
   <center_on what="piece" id="2000"/>
   <text message="activate_card"/>
@@ -63,6 +69,10 @@
   <text message="done"/>
   <wait event="text_clicked"/>
   <text message="done2"/>
+  <wait event="text_clicked"/>
+  <text message="done3"/>
+  <wait event="text_clicked"/>
+  <text message="done4"/>
   <wait event="text_clicked"/>
 
 </tutorial>

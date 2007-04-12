@@ -29,19 +29,23 @@
   <text message="observe_ticks"/>
   <wait event="text_clicked"/>
   <text message="move_again"/>
+  <wait event="text_clicked"/>
+  <text message="move_again_2"/>
   <wait event="unit_moved"/>
 
   <!-- explain preloaded moves, have them preload a move -->
   <text message="preload_move"/>
   <wait event="text_clicked"/>
-  <text message="preload_move2"/>
+  <text message="preload_move_2"/>
+  <wait event="text_clicked"/>
+  <text message="preload_move_3"/>
   <wait event="unit_ordered_move"/>
 
   <!-- have them look at the preloaded move indicator -->
   <text message="examine_pending"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
   <text message="redo_order"/>
-  <wait event="text_clicked"/>
+  <wait event="text_clicked" allowAttack="true"/>
 
   <!-- add an enemy unit and show them how to shoot it -->
   <add_piece what="unit" id="1001" type="frontier_town/artillery"
@@ -51,6 +55,8 @@
   <wait event="unit_selected" allowAttack="true"/>
 
   <text message="click_to_attack"/>
+  <wait event="text_clicked"/>
+  <text message="click_to_attack_2" step="4"/>
   <wait event="effect:bang" allowAttack="true"/>
 
   <text message="move_and_attack"/>
@@ -67,6 +73,8 @@
   <text message="damage_and_respawn2"/>
   <wait event="text_clicked"/>
   <text message="damage_and_respawn3"/>
+  <wait event="text_clicked"/>
+  <text message="damage_and_respawn4"/>
   <wait event="text_clicked"/>
 
   <!-- wrap up and end the tutorial -->

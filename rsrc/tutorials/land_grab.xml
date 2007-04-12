@@ -11,10 +11,16 @@
   <center_on what="special" id="0"/>
   <text message="homestead_intro" step="1"/>
   <wait event="text_clicked"/>
+  <text message="homestead_intro2"/>
+  <wait event="text_clicked"/>
+  <text message="homestead_intro3"/>
+  <wait event="text_clicked"/>
 
   <!-- show them an unclaimed homestead -->
   <center_on what="special" id="-1"/>
-  <text message="homestead_claiming" step="1"/>
+  <text message="homestead_claiming"/>
+  <wait event="text_clicked"/>
+  <text message="homestead_claiming2"/>
   <wait event="text_clicked"/>
 
   <!-- add their bigshot to the board and set them to claimin' -->
@@ -36,18 +42,24 @@
   <center_on what="special" id="1"/>
   <text message="enemy_homestead" step="3"/>
   <wait event="text_clicked"/>
+  <text message="enemy_homestead2"/>
+  <wait event="text_clicked"/>
 
   <!-- have them destroy the enemy homestead -->
   <center_on what="piece" id="1002" arrow="false"/>
-  <text message="destroy_homestead" step="3"/>
+  <text message="destroy_homestead"/>
   <wait event="unit_killed:.*" allowAttack="true"/>
 
   <!-- then claim it for themselves -->
-  <text message="reclaim_homestead" step="3"/>
+  <text message="reclaim_homestead"/>
+  <wait event="text_clicked"/>
+  <text message="reclaim_homestead2"/>
   <wait event="effect:frontier_town/homestead/claimed"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done"/>
+  <wait event="text_clicked"/>
+  <text message="done2"/>
   <wait event="text_clicked"/>
 
 </tutorial>
