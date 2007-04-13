@@ -277,9 +277,10 @@ public class WantedPosterView extends BContainer
 
     protected void addRankRow (BContainer box, String name, int rank)
     {
-        BLabel scenario = new BLabel(name + ":", "poster_rank_scenario");
-        scenario.setPreferredSize(new Dimension(160, 20));
-        box.add(scenario);
+        BLabel label = new BLabel(name + ":", "poster_rank_scenario");
+        label.setPreferredSize(new Dimension(160, 20));
+        label.setTooltipText(_ctx.xlate(BangCodes.BANG_MSGS, "m.poster_rank_tip"));
+        box.add(label);
 
         String rankStyle;
         switch(rank) {
@@ -296,7 +297,9 @@ public class WantedPosterView extends BContainer
         }
         String rankName = "m.poster_rank_" + (rank + 1);
         rankName = _ctx.xlate(BangCodes.BANG_MSGS, rankName);
-        box.add(new BLabel(rankName, "poster_rank_standing_" + rankStyle));
+        label = new BLabel(rankName, "poster_rank_standing_" + rankStyle);
+        label.setTooltipText(_ctx.xlate(BangCodes.BANG_MSGS, "m.poster_rank_tip"));
+        box.add(label);
     }
 
     protected BComponent buildAvatarView ()
