@@ -322,7 +322,7 @@ public class GangHandler
         // we need to forward the broadcast to all members on this server who aren't in the Hideout
         UserMessage umsg = (UserMessage)msg;
         for (GangMemberEntry member : _gangobj.members) {
-            if (member.townIdx == ServerConfig.townIndex && member.avatar == null) {
+            if (member.townIdx == ServerConfig.townIndex && !member.isInHideout()) {
                 PlayerObject user = BangServer.lookupPlayer(member.playerId);
                 if (user != null) {
                     BangServer.chatprov.deliverTell(user, umsg);

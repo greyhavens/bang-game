@@ -137,7 +137,7 @@ public class FolkCell extends BContainer
         public void actionPerformed (ActionEvent event)
         {
             if ("chat".equals(event.getAction())) {
-                _chat.openUserTab(_handle, getAvatar(), true);
+                _chat.openUserTab(_handle, true);
 
             } else if ("remove".equals(event.getAction())) {
                 OccupantInfo info = _ctx.getOccupantDirector().getOccupantInfo(_handle);

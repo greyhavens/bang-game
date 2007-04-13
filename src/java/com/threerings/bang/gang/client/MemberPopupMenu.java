@@ -19,6 +19,7 @@ import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.gang.data.GangCodes;
@@ -76,6 +77,13 @@ public class MemberPopupMenu extends PlayerPopupMenu
         String statstr = _member.isActive() ?
             (_member.isOnline() ? "m.online" : "m.offline") : "m.inactive";
         _slabel.setText(_ctx.xlate(HIDEOUT_MSGS, statstr));
+
+        // add a chat option for online members (except for pardners, who have one already)
+        PlayerObject user = _ctx.getUserObject();
+        if (member.isOnline() && !user.pardners.containsKey(member.handle) &&
+                !user.handle.equals(member.handle)) {
+            addMenuItem(new BMenuItem(_ctx.xlate(HIDEOUT_MSGS, "m.chat_member"), "chat_pardner"));
+        }
 
         if (!_member.canChangeStatus(_ctx.getUserObject())) {
             return;

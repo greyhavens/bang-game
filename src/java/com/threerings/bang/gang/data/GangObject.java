@@ -214,9 +214,8 @@ public class GangObject extends DObject
     public void applyToListeners (SpeakObject.ListenerOp op)
     {
         for (GangMemberEntry member : members) {
-            // if their avatars are non-null, they're in the Hideout and subscribed
-            // to the gang object
-            if (member.avatar != null) {
+            // if they're in the Hideout, then they're subscribed to the gang object
+            if (member.isInHideout()) {
                 op.apply(member.handle);
             }
         }

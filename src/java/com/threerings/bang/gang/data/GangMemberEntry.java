@@ -96,6 +96,14 @@ public class GangMemberEntry extends SimpleStreamableObject
     }
 
     /**
+     * Checks whether the member is currently in the Hideout.
+     */
+    public boolean isInHideout ()
+    {
+        return (avatar != null);
+    }
+
+    /**
      * Determines whether the specified player can expel this member from the
      * gang, change his rank, etc., assuming that the player is in the same
      * gang.

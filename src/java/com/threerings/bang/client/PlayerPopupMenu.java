@@ -140,10 +140,7 @@ public class PlayerPopupMenu extends BPopupMenu
             });
 
         } else if ("chat_pardner".equals(event.getAction())) {
-            PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
-            if (entry != null) {
-                _ctx.getBangClient().getPardnerChatView().display(entry.handle, entry.avatar, true);
-            }
+            _ctx.getBangClient().getPardnerChatView().display(_handle, true);
 
         } else if ("watch_pardner".equals(event.getAction())) {
             PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);

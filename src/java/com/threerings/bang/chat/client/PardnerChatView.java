@@ -64,9 +64,9 @@ public class PardnerChatView extends BDecoratedWindow
      *
      * @return true if we managed to display the view, false if we can't at the moment
      */
-    public boolean display (Handle pardner, AvatarInfo avatar, boolean grabFocus)
+    public boolean display (Handle pardner, boolean grabFocus)
     {
-        return _tabView.openUserTab(pardner, avatar, grabFocus) != null;
+        return _tabView.openUserTab(pardner, grabFocus) != null;
     }
 
     /**
@@ -76,9 +76,9 @@ public class PardnerChatView extends BDecoratedWindow
      * focused. If false, the tab will be added if it does not exist but will not be made current,
      * nor will focus be moved to the input field.
      */
-    public UserTab openUserTab (Handle handle, AvatarInfo avatar, boolean focus)
+    public UserTab openUserTab (Handle handle, boolean focus)
     {
-        return _tabView.openUserTab(handle, avatar, focus);
+        return _tabView.openUserTab(handle, focus);
     }
 
     /**
@@ -162,7 +162,7 @@ public class PardnerChatView extends BDecoratedWindow
                     return false;
                 }
                 Handle handle = (Handle)pmsg.speaker;
-                UserTab tab = openUserTab(handle, pmsg.avatar, false);
+                UserTab tab = openUserTab(handle, false);
                 if (tab == null) {
                     return false;
                 }
@@ -189,11 +189,11 @@ public class PardnerChatView extends BDecoratedWindow
          * be focused. If false, the tab will be added if it does not exist but will not be made
          * current, nor will focus be moved to the input field.
          */
-        public UserTab openUserTab (Handle handle, AvatarInfo avatar, boolean focus)
+        public UserTab openUserTab (Handle handle, boolean focus)
         {
             UserTab tab = _users.get(handle);
             if (tab == null) {
-                tab = new UserTab(_ctx, handle, avatar);
+                tab = new UserTab(_ctx, handle);
                 if (isAdded() || _placeChat == null) {
                     _pane.addTab(handle.toString(), tab, true);
                     tab.setTabbedPane(_pane);
@@ -201,8 +201,6 @@ public class PardnerChatView extends BDecoratedWindow
                     _placeChat.addUserTab(handle.toString(), tab, focus);
                 }
                 _users.put(handle, tab);
-            } else {
-                tab.setAvatar(avatar);
             }
 
             // if we are delegating to a place chat, do that now

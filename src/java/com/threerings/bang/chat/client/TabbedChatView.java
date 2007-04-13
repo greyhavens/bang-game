@@ -23,6 +23,7 @@ import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.chat.data.PlayerMessage;
@@ -172,11 +173,10 @@ public class TabbedChatView extends BContainer
      */
     protected class UserTab extends ComicChatView
     {
-        public UserTab (BangContext ctx, Handle user, AvatarInfo avatar)
+        public UserTab (BangContext ctx, Handle user)
         {
             super(ctx, _tabSize, false);
             _user = user;
-            _avatar = avatar;
         }
 
         /**
@@ -227,6 +227,16 @@ public class TabbedChatView extends BContainer
         public void setTabbedPane (TabbedPane pane)
         {
             _myPane = pane;
+        }
+
+        @Override // documentation inherited
+        public void appendReceived (UserMessage msg)
+        {
+            // set/update the avatar before appending
+            if (msg instanceof PlayerMessage && msg.speaker.equals(_user)) {
+                _avatar = ((PlayerMessage)msg).avatar;
+            }
+            super.appendReceived(msg);
         }
 
         @Override // documentation inherited

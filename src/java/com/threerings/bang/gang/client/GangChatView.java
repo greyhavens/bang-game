@@ -114,7 +114,7 @@ public class GangChatView extends BContainer
     {
         BContainer cont = new BContainer(new TableLayout(2));
         for (GangMemberEntry member : _gangobj.members) {
-            if (member.townIdx == townIdx && member.avatar != null) {
+            if (member.townIdx == townIdx && member.isInHideout()) {
                 cont.add(new MemberLabel(_ctx, member, true, _status, "hideout_members_entry"));
             }
         }
@@ -140,7 +140,7 @@ public class GangChatView extends BContainer
                 return;
             }
             GangMemberEntry entry = (GangMemberEntry)event.getEntry();
-            if (entry.avatar != null) {
+            if (entry.isInHideout()) {
                 updateMembersInHideout();
             }
         }
@@ -149,7 +149,7 @@ public class GangChatView extends BContainer
                 return;
             }
             GangMemberEntry entry = (GangMemberEntry)event.getOldEntry();
-            if (entry.avatar != null) {
+            if (entry.isInHideout()) {
                 updateMembersInHideout();
             }
         }
@@ -159,7 +159,7 @@ public class GangChatView extends BContainer
             }
             GangMemberEntry oentry = (GangMemberEntry)event.getOldEntry(),
                 nentry = (GangMemberEntry)event.getEntry();
-            if ((oentry.avatar == null) != (nentry.avatar == null)) {
+            if (oentry.isInHideout() != nentry.isInHideout()) {
                 updateMembersInHideout();
             }
         }
