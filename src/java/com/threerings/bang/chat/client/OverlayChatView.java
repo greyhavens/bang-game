@@ -148,6 +148,8 @@ public class OverlayChatView extends BWindow
             UserMessage umsg = (UserMessage) msg;
             if (umsg instanceof TellFeedbackMessage) {
                 appendTellFeedback(umsg.speaker, umsg.message);
+            } else if (umsg.mode == ChatCodes.BROADCAST_MODE) {
+                appendBroadcast(umsg.speaker, umsg.message);
             } else if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
                 appendMessage(umsg.speaker, umsg.message, true);
             } else {
@@ -185,6 +187,12 @@ public class OverlayChatView extends BWindow
             color = JPIECE_COLORS[colorLookup[pidx + 1]];
         }
         appendMessage(_msgs.xlate(_msgs.tcompose("m.told_format", speaker, message)), color);
+    }
+
+    protected void appendBroadcast (Name speaker, String message)
+    {
+        ColorRGBA color = ColorRGBA.white;
+        appendMessage(_msgs.xlate(_msgs.tcompose("m.broadcast_format", speaker, message)), color);
     }
 
     protected void appendMessage (Name speaker, String message, boolean tell)
