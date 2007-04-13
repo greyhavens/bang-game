@@ -128,6 +128,16 @@ public class PlayerPopupMenu extends BPopupMenu
                 }
             }
 
+        } else if ("support_boot".equals(event.getAction())) {
+            String msg = MessageBundle.tcompose("m.confirm_boot", _handle);
+            OptionDialog.showConfirmDialog(
+                _ctx, BangCodes.BANG_MSGS, msg, new OptionDialog.ResponseReceiver() {
+                public void resultPosted (int button, Object result) {
+                    if (button == OptionDialog.OK_BUTTON) {
+                        bootPlayer();
+                    }
+                }
+            });
 
         } else if ("chat_pardner".equals(event.getAction())) {
             PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
@@ -250,6 +260,10 @@ public class PlayerPopupMenu extends BPopupMenu
             String mute = muted ? "unmute" : "mute";
             addMenuItem(new BMenuItem(msgs.get("m.pm_" + mute), mute));
         }
+
+        if(self.tokens.isSupport()) {
+            addMenuItem(new BMenuItem(msgs.get("m.pm_support_boot"), "support_boot"));
+        }
     }
 
     /**
@@ -258,6 +272,20 @@ public class PlayerPopupMenu extends BPopupMenu
     protected boolean shouldShowGangInvite ()
     {
         return _ctx.getUserObject().canRecruit();
+    }
+
+    protected void bootPlayer ()
+    {
+        PlayerService psvc = ((PlayerService)_ctx.getClient().requireService(PlayerService.class));
+        psvc.bootPlayer(_ctx.getClient(), _handle, new PlayerService.ConfirmListener() {
+            public void requestProcessed () {
+                String msg = MessageBundle.tcompose("m.player_booted", _handle);
+                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
+            }
+            public void requestFailed (String cause) {
+                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, cause);
+            }
+        });
     }
 
     protected void removePardner ()

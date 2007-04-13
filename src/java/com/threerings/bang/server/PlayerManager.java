@@ -38,6 +38,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.chat.data.ChatCodes;
@@ -903,6 +904,34 @@ public class PlayerManager
             }
             protected String _errmsg;
         });
+    }
+
+    // documentation inherited from PlayerProvider
+    public void bootPlayer (
+            ClientObject client, Handle handle, PlayerService.ConfirmListener listener)
+        throws InvocationException
+    {
+        PlayerObject user = (PlayerObject)client;
+        if (!user.tokens.isSupport()) {
+            log.warning("Attempting to boot player from non-support user [who=" +
+                    user.who() + "].");
+            throw new InvocationException(ACCESS_DENIED);
+        }
+
+        PlayerObject target = BangServer.lookupPlayer(handle);
+        if (target == null) {
+            log.warning("Unable to find target to boot [handle=" + handle + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        PresentsClient pclient = BangServer.clmgr.getClient(target.username);
+        if (pclient == null) {
+            log.warning("Unable to find client to boot [target=" + target.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        pclient.endSession();
+        listener.requestProcessed();
     }
 
     /**

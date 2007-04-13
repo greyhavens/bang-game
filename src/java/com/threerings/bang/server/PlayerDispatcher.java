@@ -40,6 +40,13 @@ public class PlayerDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case PlayerMarshaller.BOOT_PLAYER:
+            ((PlayerProvider)provider).bootPlayer(
+                source,
+                (Handle)args[0], (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
         case PlayerMarshaller.CREATE_ACCOUNT:
             ((PlayerProvider)provider).createAccount(
                 source,

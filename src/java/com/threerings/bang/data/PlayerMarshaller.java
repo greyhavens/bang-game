@@ -21,8 +21,21 @@ import com.threerings.util.Name;
 public class PlayerMarshaller extends InvocationMarshaller
     implements PlayerService
 {
+    /** The method id used to dispatch {@link #bootPlayer} requests. */
+    public static final int BOOT_PLAYER = 1;
+
+    // from interface PlayerService
+    public void bootPlayer (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, BOOT_PLAYER, new Object[] {
+            arg2, listener3
+        });
+    }
+
     /** The method id used to dispatch {@link #createAccount} requests. */
-    public static final int CREATE_ACCOUNT = 1;
+    public static final int CREATE_ACCOUNT = 2;
 
     // from interface PlayerService
     public void createAccount (Client arg1, String arg2, String arg3, String arg4, String arg5, long arg6, InvocationService.ConfirmListener arg7)
@@ -35,7 +48,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #destroyItem} requests. */
-    public static final int DESTROY_ITEM = 2;
+    public static final int DESTROY_ITEM = 3;
 
     // from interface PlayerService
     public void destroyItem (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
@@ -48,7 +61,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #getPosterInfo} requests. */
-    public static final int GET_POSTER_INFO = 3;
+    public static final int GET_POSTER_INFO = 4;
 
     // from interface PlayerService
     public void getPosterInfo (Client arg1, Handle arg2, InvocationService.ResultListener arg3)
@@ -61,7 +74,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #invitePardner} requests. */
-    public static final int INVITE_PARDNER = 4;
+    public static final int INVITE_PARDNER = 5;
 
     // from interface PlayerService
     public void invitePardner (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
@@ -74,7 +87,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #noteFolk} requests. */
-    public static final int NOTE_FOLK = 5;
+    public static final int NOTE_FOLK = 6;
 
     // from interface PlayerService
     public void noteFolk (Client arg1, int arg2, int arg3, InvocationService.ConfirmListener arg4)
@@ -87,7 +100,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #pickFirstBigShot} requests. */
-    public static final int PICK_FIRST_BIG_SHOT = 6;
+    public static final int PICK_FIRST_BIG_SHOT = 7;
 
     // from interface PlayerService
     public void pickFirstBigShot (Client arg1, String arg2, Name arg3, InvocationService.ConfirmListener arg4)
@@ -100,7 +113,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playBountyGame} requests. */
-    public static final int PLAY_BOUNTY_GAME = 7;
+    public static final int PLAY_BOUNTY_GAME = 8;
 
     // from interface PlayerService
     public void playBountyGame (Client arg1, String arg2, String arg3, InvocationService.InvocationListener arg4)
@@ -113,7 +126,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playComputer} requests. */
-    public static final int PLAY_COMPUTER = 8;
+    public static final int PLAY_COMPUTER = 9;
 
     // from interface PlayerService
     public void playComputer (Client arg1, int arg2, String[] arg3, String arg4, boolean arg5, InvocationService.InvocationListener arg6)
@@ -126,7 +139,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playPractice} requests. */
-    public static final int PLAY_PRACTICE = 9;
+    public static final int PLAY_PRACTICE = 10;
 
     // from interface PlayerService
     public void playPractice (Client arg1, String arg2, InvocationService.InvocationListener arg3)
@@ -139,7 +152,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playTutorial} requests. */
-    public static final int PLAY_TUTORIAL = 10;
+    public static final int PLAY_TUTORIAL = 11;
 
     // from interface PlayerService
     public void playTutorial (Client arg1, String arg2, InvocationService.InvocationListener arg3)
@@ -152,7 +165,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #prepSongForDownload} requests. */
-    public static final int PREP_SONG_FOR_DOWNLOAD = 11;
+    public static final int PREP_SONG_FOR_DOWNLOAD = 12;
 
     // from interface PlayerService
     public void prepSongForDownload (Client arg1, String arg2, InvocationService.ResultListener arg3)
@@ -165,7 +178,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #registerComplaint} requests. */
-    public static final int REGISTER_COMPLAINT = 12;
+    public static final int REGISTER_COMPLAINT = 13;
 
     // from interface PlayerService
     public void registerComplaint (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
@@ -178,7 +191,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #removePardner} requests. */
-    public static final int REMOVE_PARDNER = 13;
+    public static final int REMOVE_PARDNER = 14;
 
     // from interface PlayerService
     public void removePardner (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
@@ -191,7 +204,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #respondToNotification} requests. */
-    public static final int RESPOND_TO_NOTIFICATION = 14;
+    public static final int RESPOND_TO_NOTIFICATION = 15;
 
     // from interface PlayerService
     public void respondToNotification (Client arg1, Comparable arg2, int arg3, InvocationService.ConfirmListener arg4)
@@ -204,7 +217,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #updatePosterInfo} requests. */
-    public static final int UPDATE_POSTER_INFO = 15;
+    public static final int UPDATE_POSTER_INFO = 16;
 
     // from interface PlayerService
     public void updatePosterInfo (Client arg1, int arg2, String arg3, int[] arg4, InvocationService.ConfirmListener arg5)

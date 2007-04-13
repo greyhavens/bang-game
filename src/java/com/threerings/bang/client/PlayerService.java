@@ -107,4 +107,9 @@ public interface PlayerService extends InvocationService
      */
     public void createAccount (Client client, String username, String password, String email,
             String affiliate, long birthday, ConfirmListener listener);
+
+    /**
+     * Boots a player from the game.
+     */
+    public void bootPlayer (Client client, Handle handle, ConfirmListener listener);
 }
