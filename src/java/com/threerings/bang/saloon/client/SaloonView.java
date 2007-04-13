@@ -46,7 +46,7 @@ public class SaloonView extends ShopView
 
         add(_parlist = new ParlorList(ctx), PARLIST_RECT);
 
-        add(_crview = new CriterionView(ctx) {
+        add(_crview = new CriterionView(ctx, "saloon") {
             protected void findMatch (Criterion criterion) {
                 _ctrl.findMatch(criterion);
             }

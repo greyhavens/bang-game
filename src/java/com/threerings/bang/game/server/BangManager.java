@@ -134,7 +134,7 @@ public class BangManager extends GameManager
         public Purse purse;
         public int[] finishedTick;
 
-        public DSet<Rating> ratings;
+        public HashMap<String,Rating> ratings;
         public HashMap<String,Rating> nratings = new HashMap<String,Rating>();
 
         public PlayerObject user;
@@ -908,7 +908,7 @@ public class BangManager extends GameManager
 
             if (isAI(ii)) {
                 prec.playerId = -1;
-                prec.ratings = new DSet<Rating>();
+                prec.ratings = new HashMap<String, Rating>();
                 pinfo[ii].avatar = ((BangAI)_AIs[ii]).avatar;
 
             } else if (isActivePlayer(ii)) {
@@ -2765,11 +2765,7 @@ public class BangManager extends GameManager
                         player.addToInventory(_tickets[pidx]);
                     }
                     for (Rating rating : _precords[pidx].nratings.values()) {
-                        if (player.ratings.containsKey(rating.scenario)) {
-                            player.updateRatings(rating);
-                        } else {
-                            player.addToRatings(rating);
-                        }
+                        player.ratings.put(rating.scenario, rating);
                     }
                 }
             }

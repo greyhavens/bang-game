@@ -108,10 +108,10 @@ public class RatingRepository extends SimpleRepository
     /**
      * Loads the ratings for the specified player.
      */
-    public ArrayList<Rating> loadRatings (final int playerId)
+    public HashMap<String, Rating> loadRatings (final int playerId)
         throws PersistenceException
     {
-        final ArrayList<Rating> rats = new ArrayList<Rating>();
+        final HashMap<String, Rating> rats = new HashMap<String, Rating>();
         final String query = "select SCENARIO, RATING, EXPERIENCE " +
             "from RATINGS where PLAYER_ID = " + playerId;
         execute(new Operation<Object>() {
@@ -126,7 +126,7 @@ public class RatingRepository extends SimpleRepository
                         rat.scenario = rs.getString(1);
                         rat.rating = rs.getInt(2);
                         rat.experience = rs.getInt(3);
-                        rats.add(rat);
+                        rats.put(rat.scenario, rat);
                     }
                 } finally {
                     JDBCUtil.close(stmt);

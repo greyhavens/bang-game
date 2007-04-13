@@ -1078,11 +1078,10 @@ public class PlayerManager
      * Converts a players {@link Rating}s records into ranking levels for inclusion in their poster
      * info.
      */
-    protected StreamableHashMap<String, Integer> buildRankings (
-        Iterable<Rating> ratings)
+    protected StreamableHashMap<String, Integer> buildRankings (HashMap<String, Rating> ratings)
     {
         StreamableHashMap<String, Integer> map = new StreamableHashMap<String,Integer>();
-        for (Rating rating : ratings) {
+        for (Rating rating : ratings.values()) {
             map.put(rating.scenario, BangServer.ratingmgr.getRank(rating.scenario, rating.rating));
         }
         return map;

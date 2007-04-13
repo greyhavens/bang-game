@@ -68,7 +68,7 @@ public class ParlorView extends ShopView
 
         // create our config view, but we'll add it later
         _gconfig = new ParlorGameConfigView(_ctx, _status);
-        _crview = new CriterionView(_ctx) {
+        _crview = new CriterionView(_ctx, "saloon") {
             protected void findMatch (Criterion criterion) {
                 _ctrl.findSaloonMatch(criterion);
             }

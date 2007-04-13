@@ -196,8 +196,7 @@ public class BangClientResolver extends CrowdClientResolver
         }
 
         // load up this player's ratings
-        ArrayList<Rating> ratings = BangServer.ratingrepo.loadRatings(buser.playerId);
-        buser.ratings = new DSet<Rating>(ratings.iterator());
+        buser.ratings = BangServer.ratingrepo.loadRatings(buser.playerId);
 
         // load up this player's avatar looks and modify any looks that have now expired articles
         ArrayList<Look> looks = BangServer.lookrepo.loadLooks(player.playerId);

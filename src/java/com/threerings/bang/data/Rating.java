@@ -13,7 +13,7 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
  * Contains the player's ratings and experience for a particular game scenario.
  */
 public class Rating extends SimpleStreamableObject
-    implements DSet.Entry, Cloneable
+    implements Cloneable
 {
     /** The minimum rating value. */
     public static final int MINIMUM_RATING = 1000;
@@ -161,7 +161,7 @@ public class Rating extends SimpleStreamableObject
         }
         trat = MathUtil.bound(MINIMUM_RATING, trat / ratings.length,
             MAXIMUM_RATING);
-        
+
         // compute the K value. Low exp players get to move more quickly.
         float K;
         if (ratings[pidx].experience < 20) {
@@ -184,7 +184,7 @@ public class Rating extends SimpleStreamableObject
         // make sure the rating remains within a valid range
         return MathUtil.bound(MINIMUM_RATING, nrat, MAXIMUM_RATING);
     }
-    
+
     /**
      * Returns true if this rating is provisional (experience < 20).
      */
@@ -203,9 +203,9 @@ public class Rating extends SimpleStreamableObject
         }
     }
 
-    // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    @Override // documentation inherited
+    public int hashCode ()
     {
-        return scenario;
+        return scenario.hashCode();
     }
 }

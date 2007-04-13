@@ -4,6 +4,7 @@
 package com.threerings.bang.data;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import com.threerings.util.Name;
 
@@ -65,9 +66,6 @@ public class PlayerObject extends BodyObject
 
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
-
-    /** The field name of the <code>ratings</code> field. */
-    public static final String RATINGS = "ratings";
 
     /** The field name of the <code>poses</code> field. */
     public static final String POSES = "poses";
@@ -133,9 +131,6 @@ public class PlayerObject extends BodyObject
     /** Statistics tracked for this player. */
     public StatSet stats;
 
-    /** Contains all ratings earned by this player. */
-    public DSet<Rating> ratings;
-
     /** This player's configured avatar poses. See {@link Look.Pose}. */
     public String[] poses;
 
@@ -160,9 +155,12 @@ public class PlayerObject extends BodyObject
     /** The last board played by this player. */
     public int lastBoardId = -1;
 
+    /** Contains all ratings earned by this player. */
+    public transient HashMap<String, Rating> ratings;
+
     /**
-     * Returns the player's rating for the specified scenario. This method will
-     * never return null.
+     * Returns the player's rating for the specified scenario. Do NOT call this on the client.
+     * This method will never return null.
      */
     public Rating getRating (String scenario)
     {
@@ -667,54 +665,6 @@ public class PlayerObject extends BodyObject
         @SuppressWarnings("unchecked") StatSet clone =
             (value == null) ? null : (StatSet)value.clone();
         this.stats = clone;
-    }
-
-    /**
-     * Requests that the specified entry be added to the
-     * <code>ratings</code> set. The set will not change until the event is
-     * actually propagated through the system.
-     */
-    public void addToRatings (Rating elem)
-    {
-        requestEntryAdd(RATINGS, ratings, elem);
-    }
-
-    /**
-     * Requests that the entry matching the supplied key be removed from
-     * the <code>ratings</code> set. The set will not change until the
-     * event is actually propagated through the system.
-     */
-    public void removeFromRatings (Comparable key)
-    {
-        requestEntryRemove(RATINGS, ratings, key);
-    }
-
-    /**
-     * Requests that the specified entry be updated in the
-     * <code>ratings</code> set. The set will not change until the event is
-     * actually propagated through the system.
-     */
-    public void updateRatings (Rating elem)
-    {
-        requestEntryUpdate(RATINGS, ratings, elem);
-    }
-
-    /**
-     * Requests that the <code>ratings</code> field be set to the
-     * specified value. Generally one only adds, updates and removes
-     * entries of a distributed set, but certain situations call for a
-     * complete replacement of the set value. The local value will be
-     * updated immediately and an event will be propagated through the
-     * system to notify all listeners that the attribute did
-     * change. Proxied copies of this object (on clients) will apply the
-     * value change when they received the attribute changed notification.
-     */
-    public void setRatings (DSet<com.threerings.bang.data.Rating> value)
-    {
-        requestAttributeChange(RATINGS, value, this.ratings);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.Rating> clone =
-            (value == null) ? null : value.typedClone();
-        this.ratings = clone;
     }
 
     /**

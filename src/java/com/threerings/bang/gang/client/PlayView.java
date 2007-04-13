@@ -43,7 +43,7 @@ public class PlayView extends BContainer
 
         setStyleClass("play_view");
 
-        add(_crview = new CriterionView(ctx) { {
+        add(_crview = new CriterionView(ctx, "hideout") { {
                 BContainer cont = GroupLayout.makeVBox(GroupLayout.TOP);
                 add(cont, BorderLayout.NORTH);
                 cont.add(new BLabel(_msgs.get("m.game_tip"), "play_tip"));
