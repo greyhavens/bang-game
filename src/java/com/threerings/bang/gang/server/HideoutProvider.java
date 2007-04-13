@@ -26,6 +26,12 @@ public interface HideoutProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link HideoutService#broadcastToMembers} request.
+     */
+    public void broadcastToMembers (ClientObject caller, String arg1, InvocationService.ConfirmListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link HideoutService#buyGangGood} request.
      */
     public void buyGangGood (ClientObject caller, String arg1, Object[] arg2, InvocationService.ConfirmListener arg3)

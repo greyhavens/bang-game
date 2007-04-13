@@ -11,6 +11,7 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
@@ -345,6 +346,32 @@ public class HideoutManager extends MatchHostManager
         // pass it on to the gang handler
         BangServer.gangmgr.requireGangPeerProvider(user.gangId).buyGangGood(
             null, user.handle, type, args, user.tokens.isAdmin(), listener);
+    }
+
+    // documentation inherited from interface HideoutProvider
+    public void broadcastToMembers (ClientObject caller, String message,
+                                    HideoutService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // ignore empty messages
+        if (StringUtil.isBlank(message)) {
+            listener.requestProcessed();
+            return;
+        }
+
+        // make sure the message is under the length limit
+        if (message.length() > MAX_BROADCAST_LENGTH) {
+            log.warning("Overlong broadcast message [who=" + user.who() + ", message=" +
+                message + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).broadcastToMembers(
+            null, user.handle, message, listener);
     }
 
     @Override // from ShopManager

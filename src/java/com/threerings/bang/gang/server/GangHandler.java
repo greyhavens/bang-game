@@ -36,6 +36,8 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.ObjectDeathListener;
 import com.threerings.presents.dobj.ObjectDestroyedEvent;
+import com.threerings.presents.dobj.MessageEvent;
+import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.peer.data.NodeObject.Lock;
@@ -46,7 +48,10 @@ import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SpeakMarshaller;
+import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.chat.server.SpeakProvider.SpeakerValidator;
@@ -97,8 +102,8 @@ import static com.threerings.bang.Log.*;
  * Manages a single gang from resolution to destruction.
  */
 public class GangHandler
-    implements PlayerObserver, RemotePlayerObserver, AttributeChangeListener, SetListener,
-        ObjectDeathListener, SpeakerValidator, GangPeerProvider, GangCodes
+    implements PlayerObserver, RemotePlayerObserver, MessageListener, AttributeChangeListener,
+        SetListener, ObjectDeathListener, SpeakerValidator, GangPeerProvider, GangCodes
 {
     /**
      * Creates the handler and starts the process of resolving the specified gang.
@@ -302,6 +307,30 @@ public class GangHandler
     public void remotePlayerLoggedOff (int townIndex, BangClientInfo info)
     {
         playerLocationChanged(info.visibleName, -1);
+    }
+
+    // documentation inherited from interface MessageListener
+    public void messageReceived (MessageEvent event)
+    {
+        if (!event.getName().equals(ChatCodes.CHAT_NOTIFICATION)) {
+            return;
+        }
+        ChatMessage msg = (ChatMessage)event.getArgs()[0];
+        if (!(msg instanceof UserMessage) || ((UserMessage)msg).mode != ChatCodes.BROADCAST_MODE) {
+            return;
+        }
+        // we need to forward the broadcast to all members on this server who aren't in the Hideout
+        UserMessage umsg = (UserMessage)msg;
+        for (GangMemberEntry member : _gangobj.members) {
+            if (member.townIdx == ServerConfig.townIndex && member.avatar == null) {
+                PlayerObject user = BangServer.lookupPlayer(member.playerId);
+                if (user != null) {
+                    BangServer.chatprov.deliverTell(user, umsg);
+                } else {
+                    log.warning("Member mistakenly marked as online [member=" + member + "].");
+                }
+            }
+        }
     }
 
     // documentation inherited from interface AttributeChangeListener
@@ -1048,6 +1077,23 @@ public class GangHandler
         provider.start();
     }
 
+    // documentation inherited from interface GangPeerProvider
+    public void broadcastToMembers (
+        ClientObject caller, Handle handle, String message,
+        InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure it comes from this server or a peer
+        verifyLocalOrPeer(caller);
+
+        // make sure it comes from a leader
+        verifyIsLeader(handle);
+
+        // transmit on the gang object and report success
+        SpeakProvider.sendSpeak(_gangobj, handle, null, message, ChatCodes.BROADCAST_MODE);
+        listener.requestProcessed();
+    }
+
     /**
      * Having determined which gang members need parts of the outfit and computed the cost,
      * uses fund from the gang's coffers to buy the outfits.
@@ -1587,8 +1633,6 @@ public class GangHandler
                             _client, ((PlayerObject)caller).handle, message, mode);
                     }
                 }));
-
-        _gangobj.townIdx = ServerConfig.townIndex;
 
         _proxy = PeerUtil.createProviderProxy(
             GangPeerProvider.class, _gangobj.gangPeerService, _client);

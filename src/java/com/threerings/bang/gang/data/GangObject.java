@@ -134,9 +134,6 @@ public class GangObject extends DObject
     /** On servers using this object as a proxy, the oid on the peer server. */
     public transient int remoteOid;
 
-    /** On servers, stores the town index for the benefit of {@link #applyToListeners}. */
-    public transient int townIdx;
-
     /**
      * Returns the name used to identity the gang's entry in the coin database.
      */
@@ -217,7 +214,9 @@ public class GangObject extends DObject
     public void applyToListeners (SpeakObject.ListenerOp op)
     {
         for (GangMemberEntry member : members) {
-            if (member.townIdx == townIdx) {
+            // if their avatars are non-null, they're in the Hideout and subscribed
+            // to the gang object
+            if (member.avatar != null) {
                 op.apply(member.handle);
             }
         }

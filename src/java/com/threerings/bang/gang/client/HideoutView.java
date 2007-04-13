@@ -35,6 +35,7 @@ import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.WalletLabel;
+import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.HackyTabs;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
@@ -120,6 +121,8 @@ public class HideoutView extends ShopView
         } else if (action.equals("purchase_items")) {
             _ctx.getBangClient().displayPopup(
                 new GangStoreDialog(_ctx, _hideoutobj, _gangobj), true, 500);
+        } else if (action.equals("member_broadcast")) {
+            displayBroadcastDialog();
         } else if (action.equals("history")) {
             _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), false, 500);
         } else if (action.equals("leave")) {
@@ -307,9 +310,28 @@ public class HideoutView extends ShopView
         menu.addMenuItem(new BMenuItem(_msgs.get("m.edit_buckle"), "edit_buckle"));
         menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_outfits"), "purchase_outfits"));
         menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_items"), "purchase_items"));
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.member_broadcast"), "member_broadcast"));
         menu.addListener(this);
 
         menu.popup(_options.getAbsoluteX(), _options.getAbsoluteY() + _options.getHeight(), true);
+    }
+
+    /**
+     * Pops up the dialog that lets leaders broadcast to all online members.
+     */
+    protected void displayBroadcastDialog ()
+    {
+        _ctx.getBangClient().displayPopup(
+            new RequestDialog(_ctx, HIDEOUT_MSGS, "m.broadcast_tip", "m.send",
+                "m.cancel", "m.sent", _status) { {
+                    setRequiresString(350, "");
+                    _input.setMaxLength(MAX_BROADCAST_LENGTH);
+                    new EnablingValidator(_input, _buttons[0]);
+                }
+                protected void fireRequest (Object result) {
+                    _hideoutobj.service.broadcastToMembers(_ctx.getClient(), (String)result, this);
+                }
+            }, true, 400);
     }
 
     /**

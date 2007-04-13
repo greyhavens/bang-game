@@ -49,6 +49,13 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case GangPeerMarshaller.BROADCAST_TO_MEMBERS:
+            ((GangPeerProvider)provider).broadcastToMembers(
+                source,
+                (Handle)args[0], (String)args[1], (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
         case GangPeerMarshaller.BUY_GANG_GOOD:
             ((GangPeerProvider)provider).buyGangGood(
                 source,

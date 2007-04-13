@@ -100,4 +100,10 @@ public interface GangPeerService extends InvocationService
     public void buyGangGood (
         Client client, Handle handle, String type, Object[] args, boolean admin,
         ConfirmListener listener);
+
+    /**
+     * Broadcasts a message to all online members.
+     */
+    public void broadcastToMembers (
+        Client client, Handle handle, String message, ConfirmListener listener);
 }
