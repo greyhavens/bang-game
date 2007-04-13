@@ -391,7 +391,7 @@ public class PieceSprite extends Sprite
     public void updated (Piece piece, short tick)
     {
         _piece = (Piece)piece.clone();
-        _tick = tick;
+        _tick = (short)Math.max(_tick, tick);
         
         // update colorizations for dynamically colored pieces when their
         // owners change
