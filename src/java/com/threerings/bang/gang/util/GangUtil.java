@@ -77,9 +77,11 @@ public class GangUtil
     /**
      * Returns a list containing either the leaders or the normal members of the gang.  Leaders
      * are sorted by decreasing seniority, members by decreasing notoriety.
+     *
+     * @param online if true, sort online members before offline ones.
      */
     public static ArrayList<GangMemberEntry> getSortedMembers (
-        Iterable<GangMemberEntry> members, boolean leaders)
+        Iterable<GangMemberEntry> members, final boolean online, final boolean leaders)
     {
         ArrayList<GangMemberEntry> entries = new ArrayList<GangMemberEntry>();
         for (GangMemberEntry entry : members) {
@@ -87,7 +89,22 @@ public class GangUtil
                 entries.add(entry);
             }
         }
-        QuickSort.sort(entries, leaders ? LEADER_COMP : MEMBER_COMP);
+        QuickSort.sort(entries, new Comparator<GangMemberEntry>() {
+            public int compare (GangMemberEntry m1, GangMemberEntry m2) {
+                if (m1.isActive() != m2.isActive()) {
+                    return (m1.isActive() ? -1 : +1);
+                }
+                if (online && (m1.isOnline() != m2.isOnline())) {
+                    return (m1.isOnline() ? -1 : +1);
+                }
+                if (leaders) {
+                    long diff = m1.joined - m2.joined;
+                    return (diff == 0) ? 0 : (diff < 0 ? -1 : +1);
+                } else {
+                    return m2.notoriety - m1.notoriety;
+                }
+            }
+        });
         return entries;
     }
 
@@ -167,27 +184,4 @@ public class GangUtil
             ctx.getChatDirector().filter(statement, null, false);
         return "\"" + fstmt + "\"";
     }
-
-    /** Sorts active members before inactive, then by decreasing seniority. */
-    protected static final Comparator<GangMemberEntry> LEADER_COMP =
-        new Comparator<GangMemberEntry>() {
-            public int compare (GangMemberEntry m1, GangMemberEntry m2) {
-                if (m1.isActive() != m2.isActive()) {
-                    return (m1.isActive() ? -1 : +1);
-                }
-                long diff = m1.joined - m2.joined;
-                return (diff == 0) ? 0 : (diff < 0 ? -1 : +1);
-            }
-        };
-
-    /** Sorts active members before inactive, then by decreasing notoriety. */
-    protected static final Comparator<GangMemberEntry> MEMBER_COMP =
-        new Comparator<GangMemberEntry>() {
-            public int compare (GangMemberEntry m1, GangMemberEntry m2) {
-                if (m1.isActive() != m2.isActive()) {
-                    return (m1.isActive() ? -1 : +1);
-                }
-                return m2.notoriety - m1.notoriety;
-            }
-        };
 }

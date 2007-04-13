@@ -75,7 +75,7 @@ public class GangMemberEntry extends SimpleStreamableObject
      */
     public void updateWasActive ()
     {
-        wasActive = (townIdx != -1 ||
+        wasActive = (isOnline() ||
             (System.currentTimeMillis() - lastSession) < GangCodes.ACTIVITY_DELAY);
     }
 
@@ -84,7 +84,15 @@ public class GangMemberEntry extends SimpleStreamableObject
      */
     public boolean isActive ()
     {
-        return (townIdx != -1 || wasActive);
+        return (isOnline() || wasActive);
+    }
+
+    /**
+     * Determines whether this member is currently online.
+     */
+    public boolean isOnline ()
+    {
+        return (townIdx != -1);
     }
 
     /**

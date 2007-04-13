@@ -163,14 +163,15 @@ public class RosterView extends BContainer
         // add them in sorted order
         BContainer cont = (leaders ? _lcont : _mcont);
         cont.removeAll();
-        for (GangMemberEntry entry : GangUtil.getSortedMembers(_gangobj.members, leaders)) {
+        for (GangMemberEntry entry : GangUtil.getSortedMembers(_gangobj.members, true, leaders)) {
             addMemberEntry(cont, entry);
         }
     }
 
     protected void addMemberEntry (BContainer cont, GangMemberEntry entry)
     {
-        String style = "roster_entry" + (entry.isActive() ? "" : "_inactive");
+        String style = "roster_entry" +
+            (entry.isActive() ? (entry.isOnline() ? "" : "_offline") : "_inactive");
         cont.add(new MemberLabel(_ctx, entry, false, _status, style));
         String nstr = (_ctx.getUserObject().gangRank == LEADER_RANK && entry.notoriety > 0) ?
             ("(" + entry.notoriety + ")") : "";

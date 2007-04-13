@@ -60,6 +60,12 @@ popupmenu_title {
   cursor: "default";
 }
 
+popupmenu_subtitle {
+  font: "Dom Casual" plain 18;
+  color: #5C361D;
+  padding: 5 5 5 5;
+}
+
 tooltip_window {
   background: image "ui/popupmenu/background.png" framexy;
   padding: 10;
@@ -1980,9 +1986,13 @@ roster_entry {
   padding: 0 20 0 0;
   cursor: "hand";
 }
+roster_entry_offline {
+  parent: "roster_entry";
+  color: #9C7D40;
+}
 roster_entry_inactive {
   parent: "roster_entry";
-  color: #90734F;
+  color: #A99A78;
 }
 
 history_view {

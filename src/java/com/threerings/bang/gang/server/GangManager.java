@@ -465,12 +465,13 @@ public class GangManager
 
     /**
      * Creates a member info array containing the leaders or normal members extracted from the
-     * given collection, sorted by the criteria defined in {@link GangUtil}.
+     * given collection, sorted by the criteria defined in {@link GangUtil} (without sorting by
+     * online status).
      */
     protected static GangInfo.Member[] getSortedMembers (
         Iterable<GangMemberEntry> members, boolean leaders)
     {
-        ArrayList<GangMemberEntry> entries = GangUtil.getSortedMembers(members, leaders);
+        ArrayList<GangMemberEntry> entries = GangUtil.getSortedMembers(members, false, leaders);
         GangInfo.Member[] info = new GangInfo.Member[entries.size()];
         for (int ii = 0; ii < info.length; ii++) {
             GangMemberEntry entry = entries.get(ii);

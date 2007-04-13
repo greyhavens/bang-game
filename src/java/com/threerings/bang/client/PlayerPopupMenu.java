@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
@@ -96,8 +97,7 @@ public class PlayerPopupMenu extends BPopupMenu
         setLayer(BangUI.POPUP_MENU_LAYER);
 
         // add their name as a non-menu item
-        String title = "@=u(" + handle.toString() + ")";
-        add(new BLabel(title, "popupmenu_title"));
+        add(createTitle());
 
         // add our menu items
         addMenuItems(isPresent);
@@ -167,6 +167,12 @@ public class PlayerPopupMenu extends BPopupMenu
                 listener.requestFailed(e);
             }
         }
+    }
+
+    protected BComponent createTitle ()
+    {
+        String title = "@=u(" + _handle.toString() + ")";
+        return new BLabel(title, "popupmenu_title");
     }
 
     protected void addMenuItems (boolean isPresent)

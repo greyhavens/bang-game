@@ -3,11 +3,15 @@
 
 package com.threerings.bang.gang.client;
 
+import com.jmex.bui.BComponent;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.BMenuItem;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
@@ -68,6 +72,11 @@ public class MemberPopupMenu extends PlayerPopupMenu
         }
         _hideoutobj = (HideoutObject)plobj;
 
+        // set the status label now that we have access to the entry
+        String statstr = _member.isActive() ?
+            (_member.isOnline() ? "m.online" : "m.offline") : "m.inactive";
+        _slabel.setText(_ctx.xlate(HIDEOUT_MSGS, statstr));
+
         if (!_member.canChangeStatus(_ctx.getUserObject())) {
             return;
         }
@@ -92,6 +101,15 @@ public class MemberPopupMenu extends PlayerPopupMenu
         } else if (action.equals("expel")) {
             expelMember();
         }
+    }
+
+    @Override // documentation inherited
+    protected BComponent createTitle ()
+    {
+        BContainer cont = GroupLayout.makeHBox(GroupLayout.LEFT);
+        cont.add(super.createTitle());
+        cont.add(_slabel = new BLabel("", "popupmenu_subtitle"));
+        return cont;
     }
 
     @Override // documentation inherited
@@ -133,4 +151,6 @@ public class MemberPopupMenu extends PlayerPopupMenu
     protected GangMemberEntry _member;
     protected HideoutObject _hideoutobj;
     protected StatusLabel _status;
+
+    protected BLabel _slabel;
 }
