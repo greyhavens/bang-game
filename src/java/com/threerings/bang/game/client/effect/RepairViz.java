@@ -99,8 +99,6 @@ public class RepairViz extends ParticleEffectViz
             _view.getPieceNode().attachChild(this);
 
             localTranslation.set(target.getLocalTranslation());
-
-            //System.out.println("activate " + target.getPiece());
         }
 
         public void updateWorldData (float time)
@@ -115,8 +113,14 @@ public class RepairViz extends ParticleEffectViz
             // if the target is on screen, determine its location and size in
             // screen space
             BoundingVolume bounds = _target.getWorldBound();
-            if (_target.getLastFrustumIntersection() ==
-                Camera.OUTSIDE_FRUSTUM || bounds == null) {
+            if (bounds == null) {
+                return;
+            }
+            Camera rcam = _ctx.getCameraHandler().getCamera();
+            int pstate = rcam.getPlaneState();
+            int isect = rcam.contains(bounds);
+            rcam.setPlaneState(pstate);
+            if (isect == Camera.OUTSIDE_FRUSTUM) {
                 return;
             }
             bounds.getCenter(_tmp);
@@ -132,7 +136,7 @@ public class RepairViz extends ParticleEffectViz
             } else if (bounds instanceof OrientedBoundingBox) {
                 radius = ((OrientedBoundingBox)bounds).getExtent().length();
             }
-            Camera rcam = _ctx.getCameraHandler().getCamera();
+
             _tmp.scaleAdd(-radius, rcam.getLeft(), _tmp);
             display.getScreenCoordinates(_tmp, _extent);
             radius = _extent.x - _loc.x;

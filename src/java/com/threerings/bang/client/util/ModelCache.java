@@ -207,6 +207,11 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
          */
         public void flush ()
         {
+            if (_original != null) {
+                // we "flush" variants by releasing the reference to the original
+                _original = null;
+                return;
+            }
             if (_lists != null) {
                 for (int list : _lists) {
                     GL11.glDeleteLists(list, 1);
@@ -257,7 +262,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
         }
 
         /** A reference to the default variant (if this isn't it) to keep it from being
-         * collected with this variant is in use. */
+         * collected when this variant is in use. */
         protected Model _original;
 
         /** The VBOs to delete. */
