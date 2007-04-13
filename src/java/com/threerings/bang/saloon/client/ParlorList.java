@@ -228,7 +228,11 @@ public class ParlorList extends BContainer
         } else if (user.pardners.containsKey(info.creator)) {
             weight += 1000;
         } else if (info.type == ParlorInfo.Type.RECRUITING) {
-            weight += ((user.gangId <= 0 || user.canRecruit()) ? +250 : -250);
+            if (user.gangId == info.gangId) {
+                weight += 1000;
+            } else {
+                weight += (user.gangId <= 0) ? +250 : -250;
+            }
         } else if (info.type == ParlorInfo.Type.SOCIAL) {
             weight += 500;
         } else if (info.type == ParlorInfo.Type.NORMAL) {

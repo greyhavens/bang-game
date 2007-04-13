@@ -19,6 +19,11 @@ import com.threerings.presents.server.InvocationProvider;
 public interface ParlorProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link ParlorService#bootPlayer} request.
+     */
+    public void bootPlayer (ClientObject caller, int arg1);
+
+    /**
      * Handles a {@link ParlorService#findSaloonMatch} request.
      */
     public void findSaloonMatch (ClientObject caller, Criterion arg1, InvocationService.ResultListener arg2)

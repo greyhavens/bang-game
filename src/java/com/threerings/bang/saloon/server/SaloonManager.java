@@ -105,6 +105,7 @@ public class SaloonManager extends MatchHostManager
 
         // recruiting gangs are named after the gang
         Handle creator;
+        int id = -1;
         if (type == ParlorInfo.Type.RECRUITING) {
             if (user.gangRank != GangCodes.LEADER_RANK) {
                 log.warning("Non-leader tried to create recruiting parlor [who=" +
@@ -112,6 +113,7 @@ public class SaloonManager extends MatchHostManager
                 throw new InvocationException(INTERNAL_ERROR);
             }
             creator = BangServer.gangmgr.requireGang(user.gangId).getGangObject().name;
+            id = user.gangId;
         } else {
             creator = user.handle;
         }
@@ -121,7 +123,7 @@ public class SaloonManager extends MatchHostManager
             throw new InvocationException(ALREADY_HAVE_PARLOR);
         }
 
-        createParlor(creator, type, password, matched, false, rl);
+        createParlor(creator, type, password, matched, id, false, rl);
     }
 
     // documentation inherited from interface SaloonProvider
@@ -167,7 +169,7 @@ public class SaloonManager extends MatchHostManager
                            BangServer.invmgr.registerDispatcher(new SaloonDispatcher(this)));
 
         // create our default parlor
-        createParlor(new Handle("!!!SERVER!!!"), ParlorInfo.Type.SOCIAL, null, true, true, null);
+        createParlor(new Handle("!!!SERVER!!!"), ParlorInfo.Type.SOCIAL, null, true, 0, true, null);
 
         // start up our top-ranked list refresher interval
         _rankval = new Interval(BangServer.omgr) {
@@ -199,7 +201,7 @@ public class SaloonManager extends MatchHostManager
     }
 
     protected void createParlor (Handle creator, ParlorInfo.Type type, final String password,
-            boolean matched, boolean server, final SaloonService.ResultListener rl)
+            boolean matched, int gangId, boolean server, final SaloonService.ResultListener rl)
     {
         // create the new parlor
         final ParlorInfo info = new ParlorInfo();
@@ -207,6 +209,7 @@ public class SaloonManager extends MatchHostManager
         info.type = type;
         info.matched = matched;
         info.server = server;
+        info.gangId = gangId;
 
         try {
             ParlorManager parmgr = (ParlorManager)BangServer.plreg.createPlace(new ParlorConfig());

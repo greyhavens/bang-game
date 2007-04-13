@@ -223,11 +223,12 @@ public class ParlorView extends ShopView
                 clearMatchView();
             }
 
-            if (_ctx.getUserObject().handle.equals(_parobj.info.creator)) {
-                _settings.setVisible(true);
-            }
         } else {
             clearSaloonMatchView(null);
+        }
+
+        if (_ctx.getUserObject().handle.equals(_parobj.info.creator)) {
+            _settings.setVisible(true);
         }
 
         add(new BLabel(_parobj.info.server ? _msgs.get("m.server_parlor") :

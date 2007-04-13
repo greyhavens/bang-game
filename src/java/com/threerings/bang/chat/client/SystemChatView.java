@@ -92,12 +92,13 @@ public class SystemChatView extends BWindow
     // documentation inherited from interface ChatDisplay
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
-        if (alreadyDisplayed || !msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE)) {
+        if (alreadyDisplayed) {
             return false;
         }
 
         String level = getAttentionLevel(msg);
-        if (level == null || !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
+        if (level == null || !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM) ||
+                (!msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE) && "feedback".equals(level))) {
             return false;
         }
         if (!isAdded()) {
@@ -114,7 +115,17 @@ public class SystemChatView extends BWindow
         if (isAdded()) {
             removeAll();
             _ctx.getRootNode().removeWindow(this);
-            _ctx.getRootNode().removeController(_fctrl);
+        }
+        _ctx.getRootNode().removeController(_fctrl);
+    }
+
+    /**
+     * Checks to see if we should be re-added to the root node.
+     */
+    public void maybeShow ()
+    {
+        if (!isAdded() && getComponentCount() > 0) {
+            _ctx.getRootNode().addWindow(this);
         }
     }
 

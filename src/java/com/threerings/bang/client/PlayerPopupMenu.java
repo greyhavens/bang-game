@@ -26,9 +26,12 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.crowd.data.PlaceObject;
+
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.gang.client.InviteMemberDialog;
+import com.threerings.bang.saloon.data.ParlorObject;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
@@ -115,6 +118,17 @@ public class PlayerPopupMenu extends BPopupMenu
         } else if ("complain".equals(event.getAction())) {
             showComplainDialog();
 
+        } else if ("boot".equals(event.getAction())) {
+            PlaceObject pobj = _ctx.getLocationDirector().getPlaceObject();
+            if (pobj instanceof ParlorObject) {
+                ParlorObject parlor = (ParlorObject)pobj;
+                BangOccupantInfo boi = (BangOccupantInfo)parlor.getOccupantInfo(_handle);
+                if (boi != null) {
+                    parlor.service.bootPlayer(_ctx.getClient(), boi.getBodyOid());
+                }
+            }
+
+
         } else if ("chat_pardner".equals(event.getAction())) {
             PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
             if (entry != null) {
@@ -196,6 +210,15 @@ public class PlayerPopupMenu extends BPopupMenu
         // add an item for viewing their wanted poster
         if (isPresent) {
             addMenuItem(new BMenuItem(msgs.get("m.pm_register_complaint"), "complain"));
+
+            // if we're in a parlor, we may be able to boot the player
+            PlaceObject pobj = _ctx.getLocationDirector().getPlaceObject();
+            if (pobj instanceof ParlorObject) {
+                ParlorObject parlor = (ParlorObject)pobj;
+                if (parlor.info.powerUser(self) && parlor.getOccupantInfo(_handle) != null) {
+                    addMenuItem(new BMenuItem(msgs.get("m.pm_boot"), "boot"));
+                }
+            }
         }
 
         // if they're our pardner, add some pardner-specific items

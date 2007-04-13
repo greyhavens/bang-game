@@ -41,6 +41,13 @@ public class ParlorDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case ParlorMarshaller.BOOT_PLAYER:
+            ((ParlorProvider)provider).bootPlayer(
+                source,
+                ((Integer)args[0]).intValue()
+            );
+            return;
+
         case ParlorMarshaller.FIND_SALOON_MATCH:
             ((ParlorProvider)provider).findSaloonMatch(
                 source,

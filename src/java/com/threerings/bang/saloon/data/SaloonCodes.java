@@ -30,6 +30,9 @@ public interface SaloonCodes extends InvocationCodes
     /** An error code used by the back parlor services. */
     public static final String CREATOR_NOT_ONLINE = "m.creator_not_online";
 
+    /** An error code used by the back parlor services. */
+    public static final String BOOTED = "m.booted";
+
     /** An error code reported when new games are not allowed. */
     public static final String NEW_GAMES_DISABLED =
         MessageBundle.qualify(SALOON_MSGS, "m.new_games_disabled");

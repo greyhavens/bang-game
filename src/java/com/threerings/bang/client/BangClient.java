@@ -1264,6 +1264,7 @@ public class BangClient extends BasicClient
         // now add the main view
         _mview = view;
         _ctx.getRootNode().addWindow(_mview);
+        _scview.maybeShow();
 
         if (!(view instanceof BangView)) {
             // if this is not the game view, play the town theme

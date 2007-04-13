@@ -23,8 +23,10 @@ import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
+import com.threerings.crowd.chat.server.SpeakProvider;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
+import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -75,14 +77,18 @@ public class ParlorManager extends PlaceManager
     public void ratifyEntry (PlayerObject user, String password)
         throws InvocationException
     {
-        // if this player is the creator, or an admin/support, let 'em in regardless
-        if (user.handle.equals(_parobj.info.creator) || user.tokens.isSupport()) {
-            return;
-        }
-
         // if the parlor is shutting down or not yet initialized, fail
         if (_parobj == null || _parobj.info == null) {
             throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // if they're a power user, they're always allowed in
+        if (_parobj.info.powerUser(user)) {
+            return;
+        }
+
+        if (_bootSet.contains(user.playerId)) {
+            throw new InvocationException(BOOTED);
         }
 
         switch (_parobj.info.type) {
@@ -242,6 +248,32 @@ public class ParlorManager extends PlaceManager
     public void leaveSaloonMatch (ClientObject caller, int matchOid)
     {
         _salmgr.leaveMatch(caller, matchOid);
+    }
+
+    // documentation inherited from interface ParlorProvider
+    public void bootPlayer (ClientObject caller, int bodyOid)
+    {
+        PlayerObject user = (PlayerObject)caller;
+
+        // only power users can boot
+        if (!_parobj.info.powerUser(user)) {
+            return;
+        }
+
+        BangOccupantInfo boi = (BangOccupantInfo)getOccupantInfo(bodyOid);
+        if (boi == null) {
+            return;
+        }
+
+        PlayerObject other = BangServer.lookupPlayer(boi.playerId);
+        // and you can't boot a power user
+        if (_parobj.info.powerUser(other)) {
+            return;
+        }
+
+        SpeakProvider.sendAttention(other, SALOON_MSGS, "m.booted");
+        BangServer.plreg.locprov.moveBody(other, _salmgr.getPlaceObject().getOid());
+        _bootSet.add(boi.playerId);
     }
 
     /**
@@ -487,4 +519,5 @@ public class ParlorManager extends PlaceManager
     protected Interval _starter;
     protected Throttle _throttle = new Throttle(1, 10);
     protected ArrayIntSet _activeGames = new ArrayIntSet();
+    protected ArrayIntSet _bootSet = new ArrayIntSet();
 }

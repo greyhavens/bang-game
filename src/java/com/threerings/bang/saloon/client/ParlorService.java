@@ -41,4 +41,7 @@ public interface ParlorService extends InvocationService
 
     /** Requests that we leave our currently pending match. */
     public void leaveSaloonMatch (Client client, int matchOid);
+
+    /** Requests that a player be booted from a back parlor. */
+    public void bootPlayer (Client client, int bodyOid);
 }
