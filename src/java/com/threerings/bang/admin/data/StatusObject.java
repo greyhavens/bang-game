@@ -124,11 +124,12 @@ public class StatusObject extends DObject
      * Massages and updates the players online count (rounding to the nearest 5 when >1000 players
      * to avoid super frequent updates).
      */
-    public void updatePlayersOnline (int playersOnline)
+    public void updatePlayersOnline (int players)
     {
-        if (playersOnline > 1000) {
-            playersOnline = 5 * (int)Math.round(playersOnline/5f);
+        if (players > 1000) {
+            players = 5 * (int)Math.round(players/5f);
         }
+        setPlayersOnline(players);
     }
 
     /**
