@@ -61,7 +61,15 @@ public class ServerStatusView extends BDecoratedWindow
         BangBootstrapData bbd = (BangBootstrapData)ctx.getClient().getBootstrapData();
         _safesub = new SafeSubscriber<StatusObject>(bbd.statusOid, this);
 
-        BContainer grid = new BContainer(new TableLayout(2, 5, 25));
+        BContainer grid = new BContainer(new TableLayout(2, 5, 25)) {
+            protected Dimension computePreferredSize (int whint, int hhint) {
+                Dimension d = super.computePreferredSize(whint, hhint);
+                _maxWidth = Math.max(d.width, _maxWidth); // never shrink in width
+                d.width = _maxWidth;
+                return d;
+            }
+            protected int _maxWidth;
+        };
         add(grid, GroupLayout.FIXED);
 
         // the first row has general stats and conmgr stats
