@@ -262,6 +262,7 @@ public class ParlorList extends BContainer
             _name.setFit(BLabel.Fit.SCALE);
             _icon = new BLabel("");
             _occs = new BLabel("");
+            _occs.setFit(BLabel.Fit.SCALE);
             _enter = new BButton(msgs.get("m.enter"), ParlorList.this, "enter");
             _enter.setStyleClass("alt_button");
             _enter.setPreferredSize(new Dimension(110,-1));
