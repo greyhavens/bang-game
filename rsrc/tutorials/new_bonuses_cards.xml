@@ -57,6 +57,8 @@
   <wait event="card_selected"/>
   <center_on what="piece" id="2000"/>
   <text message="activate_card"/>
+  <wait event="text_clicked"/>
+  <text message="activate_card2"/>
   <wait event="effect:bang"/>
 
   <!-- wrap up and end the tutorial -->
