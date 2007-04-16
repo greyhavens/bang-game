@@ -77,14 +77,56 @@ public class GangRepository extends JORARepository
         _buckleMask.setModified("buckle");
         _buckleMask.setModified("bucklePrint");
 
-        // TEMP: delete the barren (gangs without members)
-        int count = update("delete from GANGS using GANGS left join GANG_MEMBERS on " +
-            "GANGS.GANG_ID = GANG_MEMBERS.GANG_ID where GANG_MEMBERS.GANG_ID is NULL");
-        if (count > 0) {
-            log.info("Deleted " + count + " empty gang records.");
-        }
-        // END TEMP
+        // TEMP: init command orders based on join dates
+        BangServer.transitrepo.transition(GangRepository.class, "init_command_orders",
+            new TransitionRepository.Transition() {
+                public void run () throws PersistenceException {
+                    initCommandOrders();
+                }
+            });
     }
+
+    protected void initCommandOrders ()
+        throws PersistenceException
+    {
+        // get a list of all the gangs by id
+        final ArrayIntSet gangIds = new ArrayIntSet();
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery("select GANG_ID from GANGS");
+                    while (rs.next()) {
+                        gangIds.add(rs.getInt(1));
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+
+        // update each one
+        int gcount = 0, lcount = 0;
+        for (Integer gangId : gangIds) {
+            update("set @commandOrder = -1");
+            int count = update("update GANG_MEMBERS set COMMAND_ORDER = " +
+                "(@commandOrder := @commandOrder + 1) where GANG_ID = " + gangId + " and RANK = " +
+                GangCodes.LEADER_RANK + " order by JOINED");
+            if (count > 0) {
+                gcount++;
+                lcount += count;
+            }
+        }
+        if (gcount > 0) {
+            log.info("Initialized command order fields for " + lcount + " leaders of " + gcount +
+                " gangs.");
+        }
+    }
+    // END TEMP
 
     /**
      * Loads directory entries for all active gangs.
@@ -272,6 +314,28 @@ public class GangRepository extends JORARepository
     }
 
     /**
+     * Notes a gang member's donation to the coffers.
+     */
+    public void recordDonation (int userId, int scrip, int coins)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANG_MEMBERS set SCRIP_DONATED = SCRIP_DONATED + " + scrip +
+                      ", COINS_DONATED = COINS_DONATED + " + coins + " where PLAYER_ID = " +
+                      userId, 1);
+    }
+
+    /**
+     * Subtracts a gang member's previously recorded donation.
+     */
+    public void retractDonation (int userId, int scrip, int coins)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANG_MEMBERS set SCRIP_DONATED = SCRIP_DONATED - " + scrip +
+                      ", COINS_DONATED = COINS_DONATED - " + coins + " where PLAYER_ID = " +
+                      userId, 1);
+    }
+
+    /**
      * Adds aces to the gang's coffers.
      */
     public void grantAces (int gangId, int aces)
@@ -395,11 +459,11 @@ public class GangRepository extends JORARepository
     /**
      * Changes the specified user's rank.
      */
-    public void updateRank (int playerId, byte rank)
+    public void updateRank (int playerId, byte rank, int commandOrder)
         throws PersistenceException
     {
-        checkedUpdate("update GANG_MEMBERS set RANK = " + rank +
-                      " where PLAYER_ID = " + playerId, 1);
+        checkedUpdate("update GANG_MEMBERS set RANK = " + rank + ", COMMAND_ORDER = " +
+                      commandOrder + " where PLAYER_ID = " + playerId, 1);
     }
 
     /**
@@ -642,9 +706,9 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         final ArrayList<GangMemberEntry> list = new ArrayList<GangMemberEntry>();
-        final String query = "select HANDLE, GANG_MEMBERS.PLAYER_ID, RANK, " +
-            "JOINED, NOTORIETY, LAST_SESSION from GANG_MEMBERS, PLAYERS " +
-            "where GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
+        final String query = "select HANDLE, GANG_MEMBERS.PLAYER_ID, RANK, COMMAND_ORDER, " +
+            "JOINED, NOTORIETY, SCRIP_DONATED, COINS_DONATED, LAST_SESSION from GANG_MEMBERS, " +
+            "PLAYERS where GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -654,9 +718,9 @@ public class GangRepository extends JORARepository
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
                         list.add(new GangMemberEntry(
-                            new Handle(rs.getString(1)), rs.getInt(2),
-                            rs.getByte(3), rs.getTimestamp(4), rs.getInt(5),
-                            rs.getTimestamp(6)));
+                            new Handle(rs.getString(1)), rs.getInt(2), rs.getByte(3), rs.getInt(4),
+                            rs.getTimestamp(5), rs.getInt(6), rs.getInt(7), rs.getInt(8),
+                            rs.getTimestamp(9)));
                     }
                     return null;
 
@@ -689,21 +753,25 @@ public class GangRepository extends JORARepository
             "PRIMARY KEY (GANG_ID)",
         }, "");
 
-        // TEMP: add aces, weight class, buckle print columns
-        JDBCUtil.addColumn(conn, "GANGS", "ACES", "INTEGER NOT NULL", "SCRIP");
-        JDBCUtil.addColumn(conn, "GANGS", "WEIGHT_CLASS", "TINYINT NOT NULL", "URL");
-        JDBCUtil.addColumn(conn, "GANGS", "BUCKLE_PRINT", "BLOB NOT NULL", "BUCKLE");
-        // END TEMP
-
         JDBCUtil.createTableIfMissing(conn, "GANG_MEMBERS", new String[] {
             "PLAYER_ID INTEGER NOT NULL",
             "GANG_ID INTEGER NOT NULL",
             "RANK TINYINT NOT NULL",
+            "COMMAND_ORDER INTEGER NOT NULL",
             "JOINED DATETIME NOT NULL",
             "NOTORIETY INTEGER NOT NULL",
+            "SCRIP_DONATED INTEGER NOT NULL",
+            "COINS_DONATED INTEGER NOT NULL",
             "PRIMARY KEY (PLAYER_ID)",
             "INDEX (GANG_ID)",
         }, "");
+
+        // TEMP: add command order, scrip donated, coins donated columns
+        JDBCUtil.addColumn(conn, "GANG_MEMBERS", "COMMAND_ORDER", "INTEGER NOT NULL", "RANK");
+        JDBCUtil.addColumn(conn, "GANG_MEMBERS", "SCRIP_DONATED", "INTEGER NOT NULL", "NOTORIETY");
+        JDBCUtil.addColumn(conn, "GANG_MEMBERS", "COINS_DONATED", "INTEGER NOT NULL",
+            "SCRIP_DONATED");
+        // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_INVITES", new String[] {
             "INVITER_ID INTEGER NOT NULL",

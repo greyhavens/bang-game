@@ -12,19 +12,29 @@ public class GangMemberRecord
 {
     /** The member's player id. */
     public int playerId;
-        
+
     /** The id of the gang to which the player belongs. */
     public int gangId;
-        
+
     /** The player's rank in the gang. */
     public byte rank;
-        
+
+    /** The command order, for leaders (0 for the founder, 1 for the first member promoted to
+     * leader, etc.) */
+    public int commandOrder;
+
     /** The time at which the player joined the gang. */
     public Timestamp joined;
-        
+
     /** The player's total contribution to the gang's notoriety. */
     public int notoriety;
-        
+
+    /** The amount of scrip donated by this member. */
+    public int scripDonated;
+
+    /** The number of coins donated by this member. */
+    public int coinsDonated;
+
     /** Used when adding new members. */
     public GangMemberRecord (int playerId, int gangId, byte rank)
     {
@@ -38,7 +48,7 @@ public class GangMemberRecord
     {
         this.playerId = playerId;
     }
-        
+
     /** Used when loading records from the database. */
     public GangMemberRecord ()
     {

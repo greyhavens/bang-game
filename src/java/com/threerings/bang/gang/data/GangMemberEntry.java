@@ -29,11 +29,21 @@ public class GangMemberEntry extends SimpleStreamableObject
     /** The member's gang rank. */
     public byte rank;
 
+    /** The command order, for leaders (0 for the founder, 1 for the first member promoted to
+     * leader, etc.) */
+    public int commandOrder;
+
     /** The time at which the member joined the gang. */
     public long joined;
 
     /** The member's notoriety. */
     public int notoriety;
+
+    /** The amount of scrip donated by the member. */
+    public int scripDonated;
+
+    /** The number of coins donated by the member. */
+    public int coinsDonated;
 
     /** The index of the town that the member is logged into, or -1 if the member is offline. */
     public byte townIdx = -1;
@@ -51,13 +61,17 @@ public class GangMemberEntry extends SimpleStreamableObject
      * Constructor for entries loaded from the database.
      */
     public GangMemberEntry (
-        Handle handle, int playerId, byte rank, Date joined, int notoriety, Date lastSession)
+        Handle handle, int playerId, byte rank, int commandOrder, Date joined, int notoriety,
+        int scripDonated, int coinsDonated, Date lastSession)
     {
         this.handle = handle;
         this.playerId = playerId;
         this.rank = rank;
+        this.commandOrder = commandOrder;
         this.joined = joined.getTime();
         this.notoriety = notoriety;
+        this.scripDonated = scripDonated;
+        this.coinsDonated = coinsDonated;
         this.lastSession = lastSession.getTime();
         updateWasActive();
     }
@@ -110,16 +124,16 @@ public class GangMemberEntry extends SimpleStreamableObject
      */
     public boolean canChangeStatus (PlayerObject player)
     {
-        return canChangeStatus(player.gangRank, player.joinedGang);
+        return canChangeStatus(player.gangRank, player.gangCommandOrder);
     }
 
     /**
-     * Determines whether the specified menber can expel this member from the
+     * Determines whether the specified member can expel this member from the
      * gang, change his rank, etc.
      */
     public boolean canChangeStatus (GangMemberEntry member)
     {
-        return canChangeStatus(member.rank, member.joined);
+        return canChangeStatus(member.rank, member.commandOrder);
     }
 
     @Override // documentation inherited
@@ -138,9 +152,9 @@ public class GangMemberEntry extends SimpleStreamableObject
         return handle;
     }
 
-    protected boolean canChangeStatus (byte rank, long joined)
+    protected boolean canChangeStatus (byte rank, int commandOrder)
     {
         return (rank == GangCodes.LEADER_RANK &&
-            (this.rank != GangCodes.LEADER_RANK || joined < this.joined));
+            (this.rank != GangCodes.LEADER_RANK || commandOrder < this.commandOrder));
     }
 }

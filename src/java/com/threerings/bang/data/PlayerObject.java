@@ -49,6 +49,9 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>gangRank</code> field. */
     public static final String GANG_RANK = "gangRank";
 
+    /** The field name of the <code>gangCommandOrder</code> field. */
+    public static final String GANG_COMMAND_ORDER = "gangCommandOrder";
+
     /** The field name of the <code>joinedGang</code> field. */
     public static final String JOINED_GANG = "joinedGang";
 
@@ -112,6 +115,9 @@ public class PlayerObject extends BodyObject
 
     /** The user's rank in the gang. */
     public byte gangRank;
+
+    /** The user's command order in the gang. */
+    public int gangCommandOrder;
 
     /** The date upon which the user joined the gang. */
     public long joinedGang;
@@ -505,6 +511,22 @@ public class PlayerObject extends BodyObject
         requestAttributeChange(
             GANG_RANK, Byte.valueOf(value), Byte.valueOf(ovalue));
         this.gangRank = value;
+    }
+
+    /**
+     * Requests that the <code>gangCommandOrder</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setGangCommandOrder (int value)
+    {
+        int ovalue = this.gangCommandOrder;
+        requestAttributeChange(
+            GANG_COMMAND_ORDER, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.gangCommandOrder = value;
     }
 
     /**

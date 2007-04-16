@@ -410,6 +410,7 @@ public class GangHandler
             }
             user.setGangId(_gangId);
             user.setGangRank(entry.rank);
+            user.setGangCommandOrder(entry.commandOrder);
             user.setJoinedGang(entry.joined);
             user.setGangOid(_gangobj.getOid());
         } finally {
@@ -482,7 +483,13 @@ public class GangHandler
         if (user == null || user.gangRank == entry.rank) {
             return;
         }
-        user.setGangRank(entry.rank);
+        user.startTransaction();
+        try {
+            user.setGangRank(entry.rank);
+            user.setGangCommandOrder(entry.commandOrder);
+        } finally {
+            user.commitTransaction();
+        }
     }
 
     // documentation inherited from interface ObjectDeathListener
@@ -842,6 +849,7 @@ public class GangHandler
             protected String persistentAction () {
                 try {
                     BangServer.gangrepo.grantScrip(_gangId, scrip);
+                    BangServer.gangrepo.recordDonation(entry.playerId, scrip, coins);
                     _entryId = BangServer.gangrepo.insertHistoryEntry(_gangId,
                         MessageBundle.compose(
                             "m.donation_entry",
@@ -861,6 +869,7 @@ public class GangHandler
             protected void rollbackPersistentAction ()
                 throws PersistenceException {
                 BangServer.gangrepo.spendScrip(_gangId, scrip);
+                BangServer.gangrepo.retractDonation(entry.playerId, scrip, coins);
                 if (_entryId > 0) {
                     BangServer.gangrepo.deleteHistoryEntry(_entryId);
                 }
@@ -869,10 +878,16 @@ public class GangHandler
             protected void actionCompleted () {
                 log.info("Added to gang coffers [gang=" + GangHandler.this + ", member=" + handle +
                          ", scrip=" + scrip + ", coins=" + coins + "].");
+                GangMemberEntry member = _gangobj.members.get(handle);
                 _gangobj.startTransaction();
                 try {
                     _gangobj.setScrip(_gangobj.scrip + scrip);
                     _gangobj.setCoins(_gangobj.coins + coins);
+                    if (member != null) {
+                        member.scripDonated += scrip;
+                        member.coinsDonated += coins;
+                        _gangobj.updateMembers(member);
+                    }
                 } finally {
                     _gangobj.commitTransaction();
                 }
@@ -953,11 +968,22 @@ public class GangHandler
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // for leaders, the command order will be one more than the highest current order
+        int highestOrder = -1;
+        if (rank == LEADER_RANK) {
+            for (GangMemberEntry member : _gangobj.members) {
+                if (member.rank == LEADER_RANK) {
+                    highestOrder = Math.max(highestOrder, member.commandOrder);
+                }
+            }
+        }
+        final int commandOrder = highestOrder + 1;
+
         // post to the database
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
                 throws PersistenceException {
-                BangServer.gangrepo.updateRank(entry.playerId, rank);
+                BangServer.gangrepo.updateRank(entry.playerId, rank, commandOrder);
                 BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
                     MessageBundle.tcompose("m.auto_promotion_entry", target) :
                     MessageBundle.compose(
@@ -969,6 +995,7 @@ public class GangHandler
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(target);
                 member.rank = rank;
+                member.commandOrder = commandOrder;
                 _gangobj.updateMembers(member);
                 listener.requestProcessed();
             }
@@ -1778,8 +1805,8 @@ public class GangHandler
                     handle, _gangobj.name));
         }
         if (mrec != null) {
-            GangMemberEntry entry =
-                new GangMemberEntry(handle, playerId, MEMBER_RANK, mrec.joined, 0, mrec.joined);
+            GangMemberEntry entry = new GangMemberEntry(
+                handle, playerId, MEMBER_RANK, 0, mrec.joined, 0, 0, 0, mrec.joined);
             initTownIndex(entry);
             _gangobj.addToMembers(entry);
             if (entry.townIdx == -1) {

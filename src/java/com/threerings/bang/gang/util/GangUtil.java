@@ -76,7 +76,7 @@ public class GangUtil
 
     /**
      * Returns a list containing either the leaders or the normal members of the gang.  Leaders
-     * are sorted by decreasing seniority, members by decreasing notoriety.
+     * are sorted by increasing command order, members by decreasing notoriety.
      *
      * @param online if true, sort online members before offline ones.
      */
@@ -98,8 +98,7 @@ public class GangUtil
                     return (m1.isOnline() ? -1 : +1);
                 }
                 if (leaders) {
-                    long diff = m1.joined - m2.joined;
-                    return (diff == 0) ? 0 : (diff < 0 ? -1 : +1);
+                    return m1.commandOrder - m2.commandOrder;
                 } else {
                     return m2.notoriety - m1.notoriety;
                 }

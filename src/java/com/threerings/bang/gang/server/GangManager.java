@@ -338,7 +338,8 @@ public class GangManager
                 _gangrepo.insertHistoryEntry(
                     _grec.gangId, MessageBundle.tcompose("m.founded_entry", user.handle));
                 _grec.members.add(new GangMemberEntry(
-                    user.handle, user.playerId, LEADER_RANK, _mrec.joined, 0, _mrec.joined));
+                    user.handle, user.playerId, LEADER_RANK, 0, _mrec.joined, 0, 0, 0,
+                    _mrec.joined));
                 _grec.avatar = avatar;
 
                 // set the buckle parts' owner ids before inserting them, then note their
