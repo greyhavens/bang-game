@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
- *   may be used to endorse or promote products derived from this software
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
+ *   may be used to endorse or promote products derived from this software 
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -281,10 +281,10 @@ public class LWJGLDisplaySystem extends DisplaySystem {
         if ( headlessDisplay == null ) {
             return Display.isCloseRequested();
         }
-
-        return false;
+       
+        return false;        
     }
-
+    
     @Override
     public boolean isActive()
     {
@@ -380,16 +380,7 @@ public class LWJGLDisplaySystem extends DisplaySystem {
         // get all the modes, and find one that matches our width, height, bpp.
         DisplayMode[] modes;
         try {
-            DisplayMode[] amodes = Display.getAvailableDisplayModes();
-            DisplayMode cmode = Display.getDisplayMode();
-            if (cmode == null) {
-                modes = amodes;
-            } else {
-                // make sure the current mode is in the list
-                modes = new DisplayMode[amodes.length + 1];
-                modes[0] = cmode;
-                System.arraycopy(amodes, 0, modes, 1, amodes.length);
-            }
+            modes = Display.getAvailableDisplayModes();
         } catch ( LWJGLException e ) {
             e.printStackTrace();
             return null;
@@ -535,7 +526,7 @@ public class LWJGLDisplaySystem extends DisplaySystem {
             LoggingSystem.getLogger().warning( "Unable to apply gamma/brightness/contrast settings: " + e.getMessage() );
         }
     }
-
+    
     /**
      * @see com.jme.system.DisplaySystem#setIcon(com.jme.image.Image[])
      * @author Tony Vera
@@ -552,8 +543,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
         			throw new JmeException("Your icon is in a format that could not be converted to RGBA8888", jmeE);
         		}
         	}
-
-        	iconData[i] = iconImages[i].getData();
+    		
+        	iconData[i] = iconImages[i].getData();    
         	iconData[i].rewind();
         }
         Display.setIcon(iconData);
@@ -583,7 +574,7 @@ public class LWJGLDisplaySystem extends DisplaySystem {
     public RenderContext getCurrentContext() {
         return currentContext;
     }
-
+    
     public RenderContext switchContext(Object contextKey) {
         currentContext = contextStore.get(contextKey);
         if (currentContext == null) {
