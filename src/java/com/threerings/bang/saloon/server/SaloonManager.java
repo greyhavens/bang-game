@@ -107,8 +107,8 @@ public class SaloonManager extends MatchHostManager
         Handle creator;
         int id = -1;
         if (type == ParlorInfo.Type.RECRUITING) {
-            if (user.gangRank != GangCodes.LEADER_RANK) {
-                log.warning("Non-leader tried to create recruiting parlor [who=" +
+            if (!user.canRecruit()) {
+                log.warning("Non-recruiter tried to create recruiting parlor [who=" +
                     user.who() + "].");
                 throw new InvocationException(INTERNAL_ERROR);
             }
