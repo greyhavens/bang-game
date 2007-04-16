@@ -29,14 +29,10 @@
   <text message="observe_ticks"/>
   <wait event="text_clicked"/>
   <text message="move_again"/>
-  <wait event="text_clicked"/>
-  <text message="move_again_2"/>
   <wait event="unit_moved"/>
 
   <!-- explain preloaded moves, have them preload a move -->
   <text message="preload_move"/>
-  <wait event="text_clicked"/>
-  <text message="preload_move_2"/>
   <wait event="unit_ordered_move"/>
 
   <!-- have them look at the preloaded move indicator -->
