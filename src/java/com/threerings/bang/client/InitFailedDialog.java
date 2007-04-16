@@ -58,9 +58,11 @@ public class InitFailedDialog extends JFrame
         // can install new ones
         boolean canReport = true;
         String errmsg = (error.getMessage() == null) ? "" : error.getMessage();
-        if (errmsg.indexOf("valid pixel format") != -1) {
+        boolean drivers = (errmsg.indexOf("valid pixel format") != -1),
+            mode = (errmsg.indexOf("Cannot find display mode") != -1);
+        if (drivers || mode) {
             canReport = false;
-            content.add(createLabel(msgs.get("m.init_failed_drivers")));
+            content.add(createLabel(msgs.get("m.init_failed_" + (drivers ? "drivers" : "mode"))));
             final String driverPage = msgs.get("url.init_failed_drivers");
             AbstractAction showDriverPage = new AbstractAction() {
                 public void actionPerformed (ActionEvent event) {
