@@ -8,9 +8,9 @@
 
   <!-- add two gunslingers -->
   <add_piece what="unit" id="1000" type="frontier_town/gunslinger"
-             location="18,16" owner="0"/>
+             location="17,15" owner="0"/>
   <add_piece what="unit" id="2000" type="frontier_town/gunslinger"
-             location="18,18" owner="1"/>
+             location="17,20" owner="1"/>
   <center_on what="piece" id="1000"/>
 
   <!-- have the player shoot one with the other -->
