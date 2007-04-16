@@ -22,7 +22,7 @@
   <!-- add a repair bonus and have them activate it -->
   <text message="repair_intro"/>
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
-             location="16,16"/>
+             location="16,18"/>
   <center_on what="piece" id="3000"/>
   <wait event="bonus_activated"/>
 
@@ -33,7 +33,7 @@
   <!-- add a ramblin' bonus, have them inspect and activate it -->
   <text message="ramblin_intro"/>
   <add_piece what="bonus" id="3001" type="frontier_town/ramblin"
-             location="16,14"/>
+             location="16,16"/>
   <center_on what="piece" id="3001"/>
   <wait event="bonus_activated"/>
   <text message="ramblin_effect"/>
