@@ -14,7 +14,7 @@
 
   <!-- show them a unit and have them click to select it -->
   <add_piece what="unit" id="1000" type="frontier_town/gunslinger"
-             location="16,16" owner="0"/>
+             location="17,18" owner="0"/>
   <center_on what="piece" id="1000"/>
   <text message="show_unit" step="3"/>
   <wait event="text_clicked"/>
@@ -47,7 +47,7 @@
 
   <!-- add an enemy unit and show them how to shoot it -->
   <add_piece what="unit" id="1001" type="frontier_town/artillery"
-             location="1000" owner="1"/>
+             location="17,20" owner="1"/>
   <center_on what="piece" id="1001"/>
   <text message="click_to_highlight_attacks" step="4"/>
   <wait event="unit_selected" allowAttack="true"/>
