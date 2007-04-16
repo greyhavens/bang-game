@@ -21,6 +21,7 @@ import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.TellFeedbackMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.client.MainView;
@@ -39,6 +40,9 @@ public class SystemChatView extends BWindow
      */
     public static String getAttentionLevel (ChatMessage msg)
     {
+        if (msg instanceof TellFeedbackMessage) {
+            return "feedback";
+        }
         if (msg instanceof UserMessage) {
             return ((UserMessage)msg).mode == BROADCAST_MODE ? "attention" : null;
         }
@@ -60,7 +64,7 @@ public class SystemChatView extends BWindow
      */
     public static String format (BangContext ctx, ChatMessage msg)
     {
-        if (!(msg instanceof UserMessage)) {
+        if (!(msg instanceof UserMessage) || msg instanceof TellFeedbackMessage) {
             return msg.message;
         }
         UserMessage umsg = (UserMessage)msg;

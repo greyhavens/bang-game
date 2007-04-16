@@ -23,6 +23,7 @@ import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.TellFeedbackMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.avatar.data.Look;
@@ -116,13 +117,11 @@ public class TabbedChatView extends BContainer
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
         if (isAdded() && // don't intercept feedback if we're not showing
-            msg instanceof SystemMessage &&
-            SystemMessage.FEEDBACK == ((SystemMessage)msg).attentionLevel) {
-            // we also have to handle feedback messages because that's how tell failures are
-            // reported
-            Object tab = _pane.getSelectedTab();
-            if (tab instanceof UserTab) {
-                ((UserTab)tab).appendSystem(msg);
+            msg instanceof TellFeedbackMessage && // we also have to handle tell failures
+            ((TellFeedbackMessage)msg).isFailure()) {
+            UserTab tab = _users.get(((TellFeedbackMessage)msg).speaker);
+            if (tab != null) {
+                tab.appendSystem(msg);
                 return true;
             }
         }
