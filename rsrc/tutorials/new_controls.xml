@@ -1,0 +1,78 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="new_controls" board="Controls" players="2">
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- show them how to move the camera around -->
+  <text message="camera_pan" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="camera_zoom" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- show them a unit and have them click to select it -->
+  <add_piece what="unit" id="1000" type="frontier_town/gunslinger"
+             location="16,16" owner="0"/>
+  <center_on what="piece" id="1000"/>
+  <text message="show_unit" step="3"/>
+  <wait event="text_clicked"/>
+  <text message="click_unit"/>
+  <wait event="unit_selected"/>
+
+  <!-- explain the potential move indicators and have them click to move -->
+  <text message="click_to_move"/>
+  <wait event="unit_moved"/>
+
+  <!-- explain the ticks until next move, have them move again -->
+  <text message="observe_ticks"/>
+  <wait event="text_clicked"/>
+  <text message="move_again"/>
+  <wait event="text_clicked"/>
+  <text message="move_again_2"/>
+  <wait event="unit_moved"/>
+
+  <!-- explain preloaded moves, have them preload a move -->
+  <text message="preload_move"/>
+  <wait event="text_clicked"/>
+  <text message="preload_move_2"/>
+  <wait event="unit_ordered_move"/>
+
+  <!-- have them look at the preloaded move indicator -->
+  <text message="examine_pending"/>
+  <wait event="text_clicked" allowAttack="true"/>
+  <text message="redo_order"/>
+  <wait event="text_clicked" allowAttack="true"/>
+
+  <!-- add an enemy unit and show them how to shoot it -->
+  <add_piece what="unit" id="1001" type="frontier_town/artillery"
+             location="1000" owner="1"/>
+  <center_on what="piece" id="1001"/>
+  <text message="click_to_highlight_attacks" step="4"/>
+  <wait event="unit_selected" allowAttack="true"/>
+
+  <text message="click_to_attack"/>
+  <wait event="effect:bang" allowAttack="true"/>
+
+  <text message="move_and_attack"/>
+  <wait event="text_clicked"/>
+  <text message="move_and_attack2"/>
+  <wait event="effect:bang" allowAttack="true"/>
+
+  <text message="move_double_click"/>
+  <wait event="text_clicked"/>
+
+  <!-- explain damage and unit respawnning -->
+  <text message="damage_and_respawn" step="5"/>
+  <wait event="text_clicked"/>
+  <text message="damage_and_respawn2"/>
+  <wait event="unit_killed:1001" allowAttack="true"/>
+  <text message="damage_and_respawn3"/>
+  <wait event="text_clicked"/>
+
+  <!-- wrap up and end the tutorial -->
+  <text message="done"/>
+  <wait event="text_clicked"/>
+
+</tutorial>
