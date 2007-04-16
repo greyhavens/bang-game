@@ -336,14 +336,13 @@ public class LWJGLTextureState extends TextureState {
                     int height = Math.max(1, image.getHeight() >> m);
 
                     data.position(pos);
+                    data.limit(data.position() + mipSizes[m]);
 
                     if (image.isCompressedType()) {
                         ARBTextureCompression.glCompressedTexImage2DARB(
                                 GL11.GL_TEXTURE_2D, m, imageComponents[image
-                                        .getType()], width, height, 0,
-                                mipSizes[m], data);
+                                        .getType()], width, height, 0, data);
                     } else {
-                        data.limit(data.position() + mipSizes[m]);
                         GL11.glTexImage2D(GL11.GL_TEXTURE_2D, m,
                                 imageComponents[image.getType()], width,
                                 height, 0, imageFormats[image.getType()],
