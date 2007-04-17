@@ -13,7 +13,7 @@
   <wait event="text_clicked"/>
 
   <!-- show them a unit and have them click to select it -->
-  <add_piece what="unit" id="1000" type="frontier_town/gunslinger"
+  <add_piece what="unit" id="1000" type="frontier_town/codger"
              location="17,18" owner="0"/>
   <center_on what="piece" id="1000"/>
   <text message="show_unit" step="3"/>
