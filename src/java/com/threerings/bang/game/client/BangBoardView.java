@@ -229,10 +229,6 @@ public class BangBoardView extends BoardView
      */
     public void doInterRoundMarqueeFade ()
     {
-        // create a marquee, but keep it hidden
-        createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.round_over"));
-        _marquee.setAlpha(0f);
-
         if (noActions()) {
             showInterRoundMarquee();
         } else {
@@ -242,6 +238,9 @@ public class BangBoardView extends BoardView
 
     protected void showInterRoundMarquee ()
     {
+        createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.round_over"));
+        _marquee.setAlpha(0f);
+
         // fade in the marquee
         new ComponentFader(_marquee, new LinearTimeFunction(0f, 1f, 2f)) {
             public void fadeComplete () {
@@ -281,10 +280,6 @@ public class BangBoardView extends BoardView
      */
     public void doPostGameMarqueeFade ()
     {
-        // create a marquee, but keep it hidden
-        createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.game_over"));
-        _marquee.setAlpha(0f);
-
         if (noActions()) {
             showPostGameMarquee();
         } else {
@@ -294,6 +289,9 @@ public class BangBoardView extends BoardView
 
     protected void showPostGameMarquee ()
     {
+        createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.game_over"));
+        _marquee.setAlpha(0f);
+
         // fade in the marquee
         new ComponentFader(_marquee, new LinearTimeFunction(0f, 1f, 3f)) {
             public void fadeComplete () {

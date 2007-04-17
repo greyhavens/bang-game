@@ -1377,7 +1377,11 @@ public class BoardView extends BComponent
             return;
         }
         if (fadeTime > 0f) {
-            new ComponentFader(_marquee, new LinearTimeFunction(1f, 0f, fadeTime)).start();
+            new ComponentFader(_marquee, new LinearTimeFunction(1f, 0f, fadeTime)) {
+                public void fadeComplete () {
+                    removeMarquee(_marquee);
+                }
+            }.start();
         } else {
             removeMarquee(_marquee);
         }
