@@ -64,14 +64,16 @@ public class Tutorial extends Scenario
         _config = TutorialUtil.loadTutorial(BangServer.rsrcmgr, bconfig.getScenario(0));
 
         // make sure the player does not hose themself
-        registerDelegate(new RespawnDelegate(2, false) {
-            public void pieceWasKilled (
-                BangObject bangobj, Piece piece, int shooter) {
-                if (piece.owner == 0) {
-                    super.pieceWasKilled(bangobj, piece, shooter);
+        if (_config.respawn) {
+            registerDelegate(new RespawnDelegate(2, false) {
+                public void pieceWasKilled (
+                    BangObject bangobj, Piece piece, int shooter) {
+                    if (piece.owner == 0) {
+                        super.pieceWasKilled(bangobj, piece, shooter);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // create the various delegates we might need
         if (_config.ident.equals("cattle_rustling")) {

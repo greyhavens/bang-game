@@ -148,6 +148,9 @@ public class TutorialConfig
      * players will be computer controlled. */
     public int players;
 
+    /** If this is a respawning tutorial. */
+    public boolean respawn = true;
+
     /** Returns an array containing the actions for this tutorial. */
     public Action getAction (int index)
     {
