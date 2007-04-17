@@ -25,7 +25,7 @@
 
   <!-- explain attack penalty -->
   <text message="gunslinger" step="2"/>
-  <wait event="unit_selected"/>
+  <wait event="unit_selected" allowAttack="true"/>
   <text message="gunslinger2"/>
   <wait event="text_clicked"/>
   <text message="gunslinger3"/>
@@ -40,7 +40,7 @@
 
   <!-- explain attack bonus -->
   <text message="codger" step="3"/>
-  <wait event="unit_selected"/>
+  <wait event="unit_selected" allowAttack="true"/>
   <text message="codger2"/>
   <wait event="text_clicked"/>
   <text message="codger3"/>
@@ -51,7 +51,7 @@
   <!-- get the repair bonus -->
   <text message="get repair" step="4"/>
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
-             location="1000"/>
+             location="22,15"/>
   <center_on what="piece" id="3000"/>
   <wait event="bonus_activated"/>
 
@@ -75,12 +75,14 @@
   <text message="artillery"/>
   <wait event="text_clicked"/>
   <text message="artillery2"/>
-  <wait event="unit_selected"/>
+  <wait event="unit_selected allowAttack="true""/>
   <text message="artillery3"/>
-  <wait event="unit_killed:2000"/>
+  <wait event="unit_killed:2000" allowAttack="true"/>
 
   <!-- wrap it up -->
   <text message="done" step="6"/>
+  <wait event="text_clicked"/>
+  <text message="done2"/>
   <wait event="text_clicked"/>
 
 </tutorial>
