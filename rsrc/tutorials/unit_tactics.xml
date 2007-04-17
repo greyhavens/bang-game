@@ -1,0 +1,86 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="unit_tactics" board="On the Road" players="2">
+  <show_view name="player_status"/>
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- add gang of bandits -->
+  <add_piece what="unit" id="2000" type="frontier_town/artillery"
+             location="25,15" owner="1"/>
+  <add_piece what="unit" id="2001" type="frontier_town/dirigible"
+             location="22,15" owner="1"/>
+  <center_on what="piece" id="2001"/>
+
+  <!-- explain the basics -->
+  <text message="intro"/>
+  <wait event="text_clicked"/>
+
+  <!-- add your gunslinger -->
+  <add_piece what="unit" id="1000" type="frontier_town/gunslinger"
+             location="20,17" owner="0"/>
+  <center_on what="piece" id="1000"/>
+
+  <!-- explain attack penalty -->
+  <text message="gunslinger" step="2"/>
+  <wait event="unit_selected"/>
+  <text message="gunslinger2"/>
+  <wait event="text_clicked"/>
+  <text message="gunslinger3"/>
+  <wait event="effect:bang" allowAttack="true"/>
+  <text message="gunslinger4"/>
+  <wait event="text_clicked"/>
+
+  <!-- add your codger -->
+  <add_piece what="unit" id="1001" type="frontier_town/codger"
+             location="21,17" owner="0"/>
+  <center_on what="piece" id="1001"/>
+
+  <!-- explain attack bonus -->
+  <text message="codger" step="3"/>
+  <wait event="unit_selected"/>
+  <text message="codger2"/>
+  <wait event="text_clicked"/>
+  <text message="codger3"/>
+  <wait event="effect:bang" allowAttack="true"/>
+  <text message="codger4"/>
+  <wait event="text_clicked"/>
+
+  <!-- get the repair bonus -->
+  <text message="get repair" step="4"/>
+  <add_piece what="bonus" id="3000" type="frontier_town/repair"
+             location="1000"/>
+  <center_on what="piece" id="3000"/>
+  <wait event="bonus_activated"/>
+
+  <!-- kill the gunslinger -->
+  <move_unit id="2000" target="1000"/>
+  <text message="barrage"/>
+  <wait event="text_clicked"/>
+  <move_unit id="2000" target="1000"/>
+  <text message="barrage2"/>
+  <wait event="unit_killed:1000"/>
+
+  <!-- have the artillery get shot -->
+  <center_on what="piece" id="1000"/>
+  <text message="full_attack" step="5"/>
+  <wait event="effect:bang" allowAttack="true"/>
+  <text message="full_attack2"/>
+  <wait event="text_clicked"/>
+
+  <!-- have the artillery shoot back -->
+  <move_unit id="2000" target="1001"/>
+  <text message="artillery"/>
+  <wait event="text_clicked"/>
+  <text message="artillery2"/>
+  <wait event="unit_selected"/>
+  <text message="artillery3"/>
+  <wait event="unit_killed:2000"/>
+
+  <!-- wrap it up -->
+  <text message="done" step="6"/>
+  <wait event="text_clicked"/>
+
+</tutorial>
