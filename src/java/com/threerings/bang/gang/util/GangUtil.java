@@ -67,7 +67,7 @@ public class GangUtil
         GangMemberEntry senior = null;
         for (GangMemberEntry entry : members) {
             if (entry.rank == LEADER_RANK && entry.isActive() &&
-                (senior == null || entry.joined < senior.joined)) {
+                (senior == null || entry.commandOrder < senior.commandOrder)) {
                 senior = entry;
             }
         }
