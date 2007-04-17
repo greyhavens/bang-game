@@ -44,12 +44,15 @@
   <wait event="text_clicked" allowAttack="true"/>
 
   <!-- add an enemy unit and show them how to shoot it -->
-  <add_piece what="unit" id="1001" type="frontier_town/steamgunman"
+  <add_piece what="unit" id="1001" type="frontier_town/artillery"
              location="1000" owner="1"/>
   <center_on what="piece" id="1001"/>
   <text message="click_to_highlight_attacks" step="4"/>
   <wait event="text_clicked"/>
+  <move_unit id="1001" target="1000"/>
   <text message="click_to_highlight_attacks2"/>
+  <wait event="text_clicked"/>
+  <text message="click_to_highlight_attacks3"/>
   <wait event="unit_selected" allowAttack="true"/>
 
   <text message="click_to_attack"/>
