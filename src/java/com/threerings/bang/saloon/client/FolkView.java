@@ -155,23 +155,8 @@ public class FolkView extends BContainer
     {
         _folkList.removeAll();
         _folks.clear();
-        for (PardnerEntry entry : _user.pardners) {
-            // list any pardner who is in our saloon
-            BangOccupantInfo boi = (BangOccupantInfo)_pobj.getOccupantInfo(entry.handle);
-            if (boi != null) {
-                insertCell(new FolkCell(_ctx, entry.handle, true, false,
-                    _showGangMembership && boi.gangId > 0));
-            }
-        }
         for (OccupantInfo info : _pobj.occupantInfo) {
-            // if they're our friend but not yet listed, do list them
-            BangOccupantInfo boi = (BangOccupantInfo)info;
-            boolean ff = _user.isFriend(boi.playerId);
-            if ((!_ffOnly || ff) &&  !_folks.containsKey(info.username)) {
-                Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, handle, false, _ffOnly && ff,
-                    _showGangMembership && boi.gangId > 0));
-            }
+            maybeInsertCell((BangOccupantInfo)info);
         }
 
         // if we added folks or this is not ff only, great, we're done
