@@ -2,15 +2,17 @@
 
 <tutorial ident="new_bonuses_cards" board="Craggy Pass" players="2">
 
+  <!-- add bad gunslinger -->
+  <add_piece what="unit" id="2000" type="frontier_town/gunslinger"
+             location="17,20" owner="1"/>
+
   <!-- start them off with a friendly welcome -->
   <text message="welcome" step="1"/>
   <wait event="text_clicked"/>
 
-  <!-- add two gunslingers -->
+  <!-- add your gunslinger -->
   <add_piece what="unit" id="1000" type="frontier_town/gunslinger"
              location="17,15" owner="0"/>
-  <add_piece what="unit" id="2000" type="frontier_town/gunslinger"
-             location="17,20" owner="1"/>
   <center_on what="piece" id="1000"/>
 
   <!-- have the player shoot one with the other -->
