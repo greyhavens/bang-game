@@ -24,6 +24,7 @@ import com.samskivert.velocity.Logic;
 
 import com.threerings.user.OOOUserManager;
 
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BangStatRepository;
 import com.threerings.bang.server.persist.PlayerStatRepository;
@@ -129,4 +130,7 @@ public class OfficeApp extends Application
 
     protected PlayerStatRepository _playrepo;
     protected BangStatRepository _statrepo;
+
+    /** Pay no attention to the man behind the curtain frobbing static initializers. */
+    protected static final StatType INIT_STATS = StatType.UNUSED;
 }

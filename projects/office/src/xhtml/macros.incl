@@ -1,7 +1,7 @@
 ##
 ## Macros used by the Office webapp
 
-#macro(last_session $header $sessions)
+#macro(player_summary $header $sessions)
   <tr><th colspan="2">$i18n.xlate("index.$header")</th></tr>
   <tr><td>$i18n.xlate("index.period")</td><td>$i18n.xlate("index.players")</td></tr>
   #set ($total = 0)

@@ -10,7 +10,7 @@ $form.option("type", "$type.code()", "$type", "1")
 $form.submit("Go")
 </form>
 
-#if ($stats.size() > 0)
+#if ($stats && ($stats.size() > 0))
 #if ($pctiles)
 <p> <u>Percentiles:</u>
 <table style="border-collapse: collapse" cellpadding=4 border=1><tr>

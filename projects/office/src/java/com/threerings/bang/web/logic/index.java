@@ -26,9 +26,8 @@ public class index extends AdminLogic
         throws Exception
     {
         regenerateReports(app);
-        ctx.put("sessbyday", _lastSessionsByDay);
-        ctx.put("sessbyweek", _lastSessionsByWeek);
-        ctx.put("sessbymonth", _lastSessionsByMonth);
+        ctx.put("first", _byFirstSession);
+        ctx.put("last", _byLastSession);
     }
 
     protected synchronized void regenerateReports (OfficeApp app)
@@ -40,6 +39,13 @@ public class index extends AdminLogic
         }
         _lastReportGen = now;
 
+        summarizePlayers(now, app.getPlayerRepository().summarizePlayerCreation(), _byFirstSession);
+        summarizePlayers(now, app.getPlayerRepository().summarizeLastSessions(), _byLastSession);
+    }
+
+    protected void summarizePlayers (long now, Map<Date,Integer> data, PlayerSummary summary)
+        throws Exception
+    {
         // obtain the week and year number of this week and the previous three
         Calendar cal = Calendar.getInstance();
         int[] weeks = new int[4], years = new int[4];
@@ -49,20 +55,20 @@ public class index extends AdminLogic
             cal.add(Calendar.WEEK_OF_YEAR, -1);
         }
 
+        summary.daily = new TreeMap<Date,Integer>(Collections.reverseOrder());
+        summary.weekly = new TreeMap<Date,Integer>(Collections.reverseOrder());
+        summary.monthly = new TreeMap<Date,Integer>(Collections.reverseOrder());
+
         // obtain our per-day summary and consolidate it such that this week is accumulated daily,
         // the previous three accumulated weekly and the rest accumulated monthly
-        _lastSessionsByDay = new TreeMap<Date,Integer>(Collections.reverseOrder());
-        _lastSessionsByWeek = new TreeMap<Date,Integer>(Collections.reverseOrder());
-        _lastSessionsByMonth = new TreeMap<Date,Integer>(Collections.reverseOrder());
-        for (Map.Entry<Date,Integer> entry :
-                 app.getPlayerRepository().summarizeLastSessions().entrySet()) {
+        for (Map.Entry<Date,Integer> entry : data.entrySet()) {
             cal.setTime(entry.getKey());
             int week = cal.get(Calendar.WEEK_OF_YEAR);
             int year = cal.get(Calendar.YEAR);
 
             // see if it's in the last week
             if (now - entry.getKey().getTime() < ONE_WEEK_MILLIS) {
-                _lastSessionsByDay.put(entry.getKey(), entry.getValue());
+                summary.daily.put(entry.getKey(), entry.getValue());
             }
 
             // see if it's in the last month
@@ -75,16 +81,16 @@ public class index extends AdminLogic
             }
             if (thisMonth) {
                 Date wkey = toWeek(entry.getKey());
-                Integer ovalue = _lastSessionsByWeek.get(wkey);
+                Integer ovalue = summary.weekly.get(wkey);
                 int nvalue = (ovalue == null) ? entry.getValue() : (entry.getValue() + ovalue);
-                _lastSessionsByWeek.put(wkey, nvalue);
+                summary.weekly.put(wkey, nvalue);
             }
 
             // also accumulate monthly
             Date mkey = toMonth(entry.getKey());
-            Integer ovalue = _lastSessionsByMonth.get(mkey);
+            Integer ovalue = summary.monthly.get(mkey);
             int nvalue = (ovalue == null) ? entry.getValue() : (entry.getValue() + ovalue);
-            _lastSessionsByMonth.put(mkey, nvalue);
+            summary.monthly.put(mkey, nvalue);
         }
     }
 
@@ -106,10 +112,16 @@ public class index extends AdminLogic
         return new Date(cal.getTimeInMillis());
     }
 
+    protected static class PlayerSummary
+    {
+        public Map<Date,Integer> daily;
+        public Map<Date,Integer> weekly;
+        public Map<Date,Integer> monthly;
+    }
+
     protected static long _lastReportGen;
-    protected static Map<Date,Integer> _lastSessionsByDay;
-    protected static Map<Date,Integer> _lastSessionsByWeek;
-    protected static Map<Date,Integer> _lastSessionsByMonth;
+    protected static PlayerSummary _byFirstSession = new PlayerSummary();
+    protected static PlayerSummary _byLastSession = new PlayerSummary();
 
     protected static final long REPORT_REGEN_INTERVAL = 60 * 1000L;
     protected static final long ONE_WEEK_MILLIS = 7 * 24 * 60 * 60 * 1000L;

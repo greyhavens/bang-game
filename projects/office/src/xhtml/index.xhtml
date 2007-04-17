@@ -8,13 +8,27 @@ $form.submit("submit", $i18n.xlate("player.find"))
 </form>
 
 <h3>$i18n.xlate("index.stats")</h3>
-$i18n.xlate("index.last_session_summary")
 
+<table><tr><td valign="top">
+
+$i18n.xlate("index.creation_summary")
 <p/>
 <table cellpadding=2 cellspacing=2 border=1 style="border-collapse: collapse">
-#last_session("byday" $sessbyday)
-#last_session("byweek" $sessbyweek)
-#last_session("bymonth" $sessbymonth)
+#player_summary("byday" $first.daily)
+#player_summary("byweek" $first.weekly)
+#player_summary("bymonth" $first.monthly)
 </table>
+
+</td><td>&nbsp;</td><td valign="top">
+
+$i18n.xlate("index.last_session_summary")
+<p/>
+<table cellpadding=2 cellspacing=2 border=1 style="border-collapse: collapse">
+#player_summary("byday" $last.daily)
+#player_summary("byweek" $last.weekly)
+#player_summary("bymonth" $last.monthly)
+</table>
+
+</td></tr></table>
 
 #import("/footer.incl")
