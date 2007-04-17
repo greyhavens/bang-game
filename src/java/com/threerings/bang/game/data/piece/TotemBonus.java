@@ -80,7 +80,7 @@ public class TotemBonus extends Bonus
      */
     public static boolean isHolding (Unit unit)
     {
-        return (unit.holding != null && 
+        return (unit.holding != null &&
                 unit.holding.startsWith("indian_post/totem"));
     }
 
@@ -104,7 +104,6 @@ public class TotemBonus extends Bonus
     public Point getDropLocation (BangObject bangobj)
     {
         // try not to drop a totem bonus next to a totem base
-        ArrayList<Point> points = bangobj.board.getOccupiableSpots(50, x, y, 3);
         PointSet reserved = new PointSet();
         for (Piece piece : bangobj.pieces) {
             if (piece instanceof TotemBase) {
@@ -113,11 +112,6 @@ public class TotemBonus extends Bonus
                 }
             }
         }
-        for (Point pt : points) {
-            if (!reserved.contains(pt.x, pt.y)) {
-                return pt;
-            }
-        }
-        return (points.size() > 0 ? points.get(0) : null);
+        return bangobj.board.getOccupiableSpot(x, y, 1, 10, null, reserved);
     }
 }

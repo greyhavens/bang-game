@@ -221,7 +221,7 @@ public class Bonus extends Piece
      */
     public Point getDropLocation (BangObject bangobj)
     {
-        return bangobj.board.getOccupiableSpot(x, y, 3);
+        return bangobj.board.getOccupiableSpot(x, y, 10);
     }
 
     @Override // documentation inherited

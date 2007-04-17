@@ -657,6 +657,22 @@ public class BangBoard extends SimpleStreamableObject
     public ArrayList<Point> getOccupiableSpots (
         int count, int cx, int cy, int mindist, int maxdist, Random rnd)
     {
+        return getOccupiableSpots(count, cx, cy, mindist, maxdist, rnd, null);
+    }
+
+    /**
+     * Returns a set of coordinates for locations near to the specified coordinates into which a
+     * piece can be spawned. First the coordinates immediately surrounding the location are
+     * searched, then one unit away, and so on. Within a particular "shell" the coordinates are
+     * searched randomly. The list may be fewer than the requested count if an insufficient number
+     * of spots could be located within the specified maximum distance.
+     *
+     * @param rnd a random number generator, or <code>null</code> to use the default
+     * @param reserved a set of points that are not valid
+     */
+    public ArrayList<Point> getOccupiableSpots (
+        int count, int cx, int cy, int mindist, int maxdist, Random rnd, PointSet reserved)
+    {
         ArrayList<Point> ospots = new ArrayList<Point>();
         PointSet spots = new PointSet();
       SEARCH:
@@ -671,7 +687,7 @@ public class BangBoard extends SimpleStreamableObject
             }
             for (int ii = 0; ii < coords.length; ii++) {
                 int hx = PointSet.decodeX(coords[ii]), hy = PointSet.decodeY(coords[ii]);
-                if (isOccupiable(hx, hy)) {
+                if (isOccupiable(hx, hy) && (reserved == null || !reserved.contains(hx, hy))) {
                     ospots.add(new Point(hx, hy));
                     if (ospots.size() == count) {
                         break SEARCH;
@@ -703,7 +719,22 @@ public class BangBoard extends SimpleStreamableObject
      */
     public Point getOccupiableSpot (int cx, int cy, int mindist, int maxdist, Random rnd)
     {
-        ArrayList<Point> spots = getOccupiableSpots(1, cx, cy, mindist, maxdist, rnd);
+        return getOccupiableSpot (cx, cy, mindist, maxdist, rnd, null);
+    }
+
+    /**
+     * Returns the coordinates of a location near to the specified coordinates into which a piece
+     * can be spawned. First the coordinates immediately surrounding the location are searched,
+     * then one unit away, and so on. Within a particular "shell" the coordinates are searched
+     * randomly. Returns null if no occupiable spot could be located.
+     *
+     * @param rnd a random number generator, or <code>null</code> to use the default
+     * @param reserved a set of points that are not valid
+     */
+    public Point getOccupiableSpot (
+            int cx, int cy, int mindist, int maxdist, Random rnd, PointSet reserved)
+    {
+        ArrayList<Point> spots = getOccupiableSpots(1, cx, cy, mindist, maxdist, rnd, reserved);
         return (spots.size() > 0) ? spots.get(0) : null;
     }
 
