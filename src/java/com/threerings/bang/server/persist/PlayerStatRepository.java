@@ -40,13 +40,33 @@ public class PlayerStatRepository extends PlayerRepository
     public TreeMap<Date,Integer> summarizeLastSessions ()
         throws PersistenceException
     {
+        return summarizePlayers("LAST_SESSION");
+    }
+
+    /**
+     * Computes a summary of account creation information, reporting a date and the number of
+     * players who first logged in on that date. The first element of the list will be today's date
+     * and it will proceed backward in time from there.
+     */
+    public TreeMap<Date,Integer> summarizePlayerCreation ()
+        throws PersistenceException
+    {
+        return summarizePlayers("CREATED");
+    }
+
+    /**
+     * Helper function for {@link #summarizeLastSessions} and {@link #summarizePlayerCreation}.
+     */
+    protected TreeMap<Date,Integer> summarizePlayers (String column)
+        throws PersistenceException
+    {
+        final String query = "select DATE(" + column + ") as SOMEDAY, count(PLAYER_ID) " +
+            "from PLAYERS group by SOMEDAY order by SOMEDAY desc";
         final TreeMap<Date,Integer> summary = new TreeMap<Date,Integer>();
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException {
                 Statement stmt = conn.createStatement();
-                String query = "select DATE(LAST_SESSION) as LAST_PLAYED, count(PLAYER_ID) " +
-                    "from PLAYERS group by LAST_PLAYED order by LAST_PLAYED desc";
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
