@@ -77,18 +77,18 @@ public class Tutorial extends Scenario
         if (_config.ident.equals("cattle_rustling")) {
             registerDelegate(new CattleDelegate());
             registerDelegate(new CattleRustling.RustlingPostDelegate());
-        } else if (_config.ident.equals("claim_jumping")) {
+        } else if (_config.ident.endsWith("claim_jumping")) {
             registerDelegate(
                 new NuggetDelegate(true, ClaimJumping.NUGGET_COUNT));
-        } else if (_config.ident.equals("gold_rush")) {
+        } else if (_config.ident.endsWith("gold_rush")) {
             registerDelegate(new NuggetDelegate(false, 0));
-        } else if (_config.ident.equals("land_grab")) {
+        } else if (_config.ident.endsWith("land_grab")) {
             registerDelegate(new HomesteadDelegate());
-        } else if (_config.ident.equals("totem_building")) {
+        } else if (_config.ident.endsWith("totem_building")) {
             registerDelegate(new TotemBaseDelegate());
-        } else if (_config.ident.equals("wendigo_attack")) {
+        } else if (_config.ident.endsWith("wendigo_attack")) {
             registerDelegate(_wendel = new WendigoDelegate());
-        } else if (_config.ident.equals("forest_guardians")) {
+        } else if (_config.ident.endsWith("forest_guardians")) {
             registerDelegate(new LoggingRobotDelegate());
             registerDelegate(_treedel = new TreeBedDelegate());
         }
