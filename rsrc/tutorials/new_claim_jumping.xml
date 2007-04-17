@@ -22,12 +22,14 @@
   <add_piece what="unit" id="1001" type="frontier_town/gunslinger"
              location="16,16" owner="0"/>
   <add_piece what="unit" id="2002" type="frontier_town/steamgunman"
-             location="16,17" owner="0"/>
+             location="16,14" owner="0"/>
   <text message="pick_up_nugget" step="2"/>
   <wait event="bonus_activated"/>
 
   <!-- tell them to drop the nugget in their claim -->
   <text message="got_nugget"/>
+  <wait event="text_clicked"/>
+  <text message="got_nugget2"/>
   <wait event="effect:frontier_town/nugget/added"/>
   <text message="deposited_nugget"/>
   <wait event="text_clicked"/>
