@@ -136,6 +136,18 @@ public class GangMemberEntry extends SimpleStreamableObject
         return canChangeStatus(member.rank, member.commandOrder);
     }
 
+    /**
+     * Returns an array containing the amount of scrip and number of coins that must be reimbursed
+     * to this member if he is expelled.
+     */
+    public int[] getDonationReimbursement ()
+    {
+        return new int[] {
+            (scripDonated * GangCodes.DONATION_REIMBURSEMENT_PCT) / 100,
+            (coinsDonated * GangCodes.DONATION_REIMBURSEMENT_PCT) / 100
+        };
+    }
+
     @Override // documentation inherited
     public Object clone ()
     {

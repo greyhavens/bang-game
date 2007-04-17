@@ -381,6 +381,29 @@ public class PlayerRepository extends JORARepository
         return playerId;
     }
 
+    /**
+     * Returns the account name of the identified player, or <code>null</code> if no such player
+     * exists.
+     */
+    public String getAccountName (int playerId)
+        throws PersistenceException
+    {
+        final String query = "select ACCOUNT_NAME from PLAYERS where PLAYER_ID = " + playerId;
+        return executeUpdate(new Operation<String>() {
+            public String invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    return (rs.next() ? rs.getString(1) : null);
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+    }
+
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
     protected void updateScrip (String where, int amount, String type)
         throws PersistenceException

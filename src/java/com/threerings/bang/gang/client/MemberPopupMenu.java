@@ -26,6 +26,7 @@ import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
+import com.threerings.bang.gang.util.GangUtil;
 
 import static com.threerings.bang.Log.*;
 
@@ -146,8 +147,16 @@ public class MemberPopupMenu extends PlayerPopupMenu
 
     protected void expelMember ()
     {
-        String confirm = MessageBundle.tcompose("m.confirm_expel", _member.handle),
-            success = MessageBundle.tcompose("m.expelled", _member.handle);
+        int[] refund = _member.getDonationReimbursement();
+        String warning = (refund[0] == 0 && refund[1] == 0) ?
+            MessageBundle.taint("") :
+            MessageBundle.compose("m.expel_reimburse",
+                MessageBundle.taint(DONATION_REIMBURSEMENT_PCT),
+                GangUtil.getMoneyDesc(refund[0], refund[1], 0));
+
+        String confirm = MessageBundle.compose("m.confirm_expel",
+            MessageBundle.taint(_member.handle), warning);
+        String success = MessageBundle.tcompose("m.expelled", _member.handle);
         _ctx.getBangClient().displayPopup(
             new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
                 protected void fireRequest (Object result) {

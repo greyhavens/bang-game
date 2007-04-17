@@ -261,6 +261,28 @@ public class GangHandler
         }.start();
     }
 
+    /**
+     * Requests to leave the gang.  The peer on which the user is logged in needs to know when
+     * users are leaving voluntarily, as opposed to being expelled.
+     */
+    public void leaveGang (
+        final PlayerObject user, final InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        _leaverIds.add(user.playerId);
+        getPeerProvider().removeFromGang(null, null, user.handle,
+            new InvocationService.ConfirmListener() {
+                public void requestProcessed () {
+                    _leaverIds.remove(user.playerId);
+                    listener.requestProcessed();
+                }
+                public void requestFailed (String cause) {
+                    _leaverIds.remove(user.playerId);
+                    listener.requestFailed(cause);
+                }
+            });
+    }
+
     @Override // documentation inherited
     public String toString ()
     {
@@ -449,17 +471,28 @@ public class GangHandler
         // make sure we're tracking the right avatar
         updateAvatar(null);
 
-        // clear the user's gang fields and purge his looks if he's online
+        // clear the user's gang fields, reimburse part of his donation (if he's getting kicked
+        // out), and purge his looks if he's online
         Handle handle = (Handle)event.getKey();
         PlayerObject user = BangServer.lookupPlayer(handle);
         if (user == null) {
             return;
+        }
+        int[] refund = ((GangMemberEntry)event.getOldEntry()).getDonationReimbursement();
+        if (_leaverIds.contains(user.playerId)) {
+            refund[0] = refund[1] = 0;
         }
         ArrayList<Look> modified = stripLooks(user.inventory, user.looks);
         user.startTransaction();
         try {
             user.setGangId(0);
             user.setGangOid(0);
+            if (refund[0] > 0) {
+                user.setScrip(user.scrip + refund[0]);
+            }
+            if (refund[1] > 0) {
+                user.setCoins(user.coins + refund[1]);
+            }
             for (Look look : modified) {
                 user.updateLooks(look);
             }
@@ -927,20 +960,73 @@ public class GangHandler
         // delete the gang if they're the last member
         _deleting = (_gangobj.members.size() == 1);
 
-        // post to the database
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent () throws PersistenceException {
+        // figure out how much we have to give back (nothing if they leave of their own free will)
+        int[] refund = entry.getDonationReimbursement();
+        if (handle == null) {
+            refund[0] = refund[1] = 0;
+        }
+        new GangFinancialAction(_gangobj, false, refund[0], refund[1], 0) {
+            protected int getCoinType () {
+                return CoinTransaction.GANG_MEMBER_REIMBURSEMENT;
+            }
+            protected String getCoinDescrip () {
+                return "m.gang_member_reimbursement";
+            }
+
+            protected String persistentAction ()
+                throws PersistenceException {
+                if (_coinCost > 0) {
+                    _playerAccount = BangServer.playrepo.getAccountName(entry.playerId);
+                }
                 if (_deleting) {
                     BangServer.gangrepo.deleteGang(_gangId);
                 } else {
                     deleteFromGang(entry.playerId);
-                    BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
+                    _entryId = BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
                         MessageBundle.tcompose("m.left_entry", entry.handle) :
                         MessageBundle.tcompose("m.expelled_entry", handle, entry.handle));
                 }
+                return null;
+            }
+            protected void spendCash ()
+                throws PersistenceException {
+                super.spendCash();
+                if (_scripCost > 0) {
+                    BangServer.playrepo.grantScrip(entry.playerId, _scripCost);
+                }
+            }
+            protected void grantCash ()
+                throws PersistenceException {
+                super.grantCash();
+                if (_scripCost > 0) {
+                    BangServer.playrepo.spendScrip(entry.playerId, _scripCost);
+                }
+            }
+            protected boolean spendCoins (int reservationId)
+                throws PersistenceException {
+                return BangServer.coinmgr.getCoinRepository().transferCoins(
+                    reservationId, _playerAccount, CoinTransaction.GANG_MEMBER_REIMBURSEMENT,
+                    "m.gang_member_reimbursement", "m.gang_member_reimbursement");
+            }
+            protected void rollbackPersistentAction ()
+                throws PersistenceException {
+                if (_deleting) {
+                    // this should never happen, because the only thing that can cause this is if
+                    // we fail to transfer the coins, and we won't be transferring any coins to the
+                    // last guy out the door
+                    log.warning("Gang cannot be resurrected for rollback [gang=" +
+                        GangHandler.this + ", leaver=" + target + "].");
+                } else {
+                    BangServer.gangrepo.insertMember(new GangMemberRecord(
+                        entry.playerId, _gangId, entry.rank, entry.commandOrder, entry.joined,
+                        entry.notoriety, entry.scripDonated, entry.coinsDonated));
+                }
+                if (_entryId > 0) {
+                    BangServer.gangrepo.deleteHistoryEntry(_entryId);
+                }
             }
 
-            public void handleSuccess () {
+            protected void actionCompleted () {
                 _gangobj.removeFromMembers(entry.handle);
                 if (_deleting) {
                     // remove from Hideout directory and shut down immediately
@@ -951,16 +1037,14 @@ public class GangHandler
                 }
                 listener.requestProcessed();
             }
-
-            public void handleFailure (PersistenceException error) {
-                super.handleFailure(error);
+            protected void actionFailed (String cause) {
                 _deleting = false;
+                listener.requestFailed(cause);
             }
-            public String getFailureMessage () {
-                return "Failed to remove member from gang [gang=" + GangHandler.this + ", handle=" +
-                    handle + ", entry=" + entry + ", deleting=" + _deleting + "].";
-            }
-        });
+
+            protected String _playerAccount;
+            protected int _entryId;
+        }.start();
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1928,6 +2012,9 @@ public class GangHandler
 
     /** Set when deleting the gang to prevent us from accepting any new members. */
     protected boolean _deleting;
+
+    /** Stores the player ids of users in the process of leaving the gang voluntarily. */
+    protected ArrayIntSet _leaverIds = new ArrayIntSet();
 
     /** The frequency with which we update the top-ranked member lists. */
     protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;

@@ -188,8 +188,7 @@ public class HideoutManager extends MatchHostManager
         PlayerObject user = requireShopEnabled(caller);
 
         // pass it off to the gang handler
-        BangServer.gangmgr.requireGangPeerProvider(user.gangId).removeFromGang(
-            null, null, user.handle, listener);
+        BangServer.gangmgr.requireGang(user.gangId).leaveGang(user, listener);
     }
 
     // documentation inherited from interface HideoutProvider

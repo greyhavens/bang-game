@@ -43,6 +43,21 @@ public class GangMemberRecord
         this.rank = rank;
     }
 
+    /** Used when rolling back deletions. */
+    public GangMemberRecord (
+        int playerId, int gangId, byte rank, int commandOrder, long joined, int notoriety,
+        int scripDonated, int coinsDonated)
+    {
+        this.playerId = playerId;
+        this.gangId = gangId;
+        this.rank = rank;
+        this.commandOrder = commandOrder;
+        this.joined = new Timestamp(joined);
+        this.notoriety = notoriety;
+        this.scripDonated = scripDonated;
+        this.coinsDonated = coinsDonated;
+    }
+
     /** Used when forming queries. */
     public GangMemberRecord (int playerId)
     {
