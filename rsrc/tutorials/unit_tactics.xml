@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="unit_tactics" board="On the Road" players="2">
+<tutorial ident="unit_tactics" board="On the Road" players="2" respawn="false">
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
@@ -75,7 +75,7 @@
   <text message="artillery"/>
   <wait event="text_clicked"/>
   <text message="artillery2"/>
-  <wait event="unit_selected allowAttack="true""/>
+  <wait event="unit_selected allowAttack="true"/>
   <text message="artillery3"/>
   <wait event="unit_killed:2000" allowAttack="true"/>
 
