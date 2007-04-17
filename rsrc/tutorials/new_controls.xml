@@ -32,7 +32,7 @@
   <wait event="unit_moved"/>
 
   <!-- explain preloaded moves, have them preload a move -->
-  <text message="preload_move"/
+  <text message="preload_move"/>
   <wait event="text_clicked"/>
   <text message="preload_move2"/>
   <wait event="unit_ordered_move"/>
