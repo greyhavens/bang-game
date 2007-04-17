@@ -40,7 +40,7 @@ import static com.threerings.bang.Log.log;
 public class FolkView extends BContainer
     implements SetListener, AttributeChangeListener, ElementUpdateListener
 {
-    public FolkView (BangContext ctx, PlaceObject pobj, boolean ffOnly)
+    public FolkView (BangContext ctx, PlaceObject pobj, boolean ffOnly, boolean showGangMembership)
     {
         super(new BorderLayout());
 
@@ -48,6 +48,7 @@ public class FolkView extends BContainer
         _pobj = pobj;
         _user = ctx.getUserObject();
         _ffOnly = ffOnly;
+        _showGangMembership = showGangMembership;
 
         TableLayout listLayout = new TableLayout(2, 2, 10);
         listLayout.setEqualRows(true);
@@ -68,19 +69,14 @@ public class FolkView extends BContainer
         if (PlayerObject.PARDNERS.equals(eae.getName())) {
             PardnerEntry entry = (PardnerEntry) eae.getEntry();
             // if our new pardner is here with us, add to display
-            if (_pobj.getOccupantInfo((Handle) entry.getKey()) != null) {
-                insertCell(new FolkCell(_ctx, entry.handle, true, false));
+            BangOccupantInfo info = (BangOccupantInfo)_pobj.getOccupantInfo(entry.handle);
+            if (info != null) {
+                maybeInsertCell(info);
             }
 
         } else if (PlaceObject.OCCUPANT_INFO.equals(eae.getName())) {
-            BangOccupantInfo info = (BangOccupantInfo) eae.getEntry();
-            // if the new occupant is a friend of pardner, add to display
-            boolean pard = _user.pardners.containsKey(info.username);
-            boolean ff = _user.isFriend(info.playerId);
-            if (pard || !_ffOnly || ff) {
-                Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, handle, pard, _ffOnly && ff));
-            }
+            // if the new occupant is a friend or pardner, add to display
+            maybeInsertCell((BangOccupantInfo)eae.getEntry());
         }
     }
 
@@ -107,7 +103,9 @@ public class FolkView extends BContainer
     // from interface SetListener
     public void entryUpdated (EntryUpdatedEvent eue)
     {
-        // we are unaffected by updates
+        if (PlaceObject.OCCUPANT_INFO.equals(eue.getName())) {
+            maybeInsertCell((BangOccupantInfo)eue.getEntry());
+        }
     }
 
     // from interface AttributeChangeListener
@@ -159,16 +157,20 @@ public class FolkView extends BContainer
         _folks.clear();
         for (PardnerEntry entry : _user.pardners) {
             // list any pardner who is in our saloon
-            if (_pobj.getOccupantInfo(entry.handle) != null) {
-                insertCell(new FolkCell(_ctx, entry.handle, true, false));
+            BangOccupantInfo boi = (BangOccupantInfo)_pobj.getOccupantInfo(entry.handle);
+            if (boi != null) {
+                insertCell(new FolkCell(_ctx, entry.handle, true, false,
+                    _showGangMembership && boi.gangId > 0));
             }
         }
         for (OccupantInfo info : _pobj.occupantInfo) {
             // if they're our friend but not yet listed, do list them
-            boolean ff = _user.isFriend(((BangOccupantInfo) info).playerId);
+            BangOccupantInfo boi = (BangOccupantInfo)info;
+            boolean ff = _user.isFriend(boi.playerId);
             if ((!_ffOnly || ff) &&  !_folks.containsKey(info.username)) {
                 Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, handle, false, _ffOnly && ff));
+                insertCell(new FolkCell(_ctx, handle, false, _ffOnly && ff,
+                    _showGangMembership && boi.gangId > 0));
             }
         }
 
@@ -192,6 +194,19 @@ public class FolkView extends BContainer
         String msg = _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.folks_howto");
         hbox.add(new BLabel(msg, "folk_howto"), BorderLayout.CENTER);
         _folkList.add(hbox);
+    }
+
+    /**
+     * Inserts or updates a cell for the described occupant if appropriate.
+     */
+    protected void maybeInsertCell (BangOccupantInfo info)
+    {
+        boolean pard = _user.pardners.containsKey(info.username);
+        boolean ff = _user.isFriend(info.playerId);
+        if (pard || !_ffOnly || ff) {
+            insertCell(new FolkCell(_ctx, (Handle)info.username, pard,
+                _ffOnly && ff, _showGangMembership && info.gangId > 0));
+        }
     }
 
     /**
@@ -243,6 +258,9 @@ public class FolkView extends BContainer
 
     /** Are we showing only friendly folks? */
     protected boolean _ffOnly;
+
+    /** Are we indicating gang membership? */
+    protected boolean _showGangMembership;
 
     /** Maps handles of displayed people to their display cells */
     protected HashMap<Handle, FolkCell> _folks = new HashMap<Handle, FolkCell>();

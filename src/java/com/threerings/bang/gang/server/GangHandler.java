@@ -417,11 +417,17 @@ public class GangHandler
             user.commitTransaction();
         }
 
-        // if they're in the Hideout already, set their avatar
+        // if they're in a place, update their occupant info
         PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.location);
-        if (plmgr instanceof HideoutManager) {
+        if (plmgr != null) {
             BangOccupantInfo boi = (BangOccupantInfo)plmgr.getOccupantInfo(user.getOid());
-            getPeerProvider().memberEnteredHideout(null, user.handle, boi.avatar);
+            boi.gangId = _gangId;
+            plmgr.updateOccupantInfo(boi);
+
+            // if they're in the Hideout, update their avatar
+            if (plmgr instanceof HideoutManager) {
+                getPeerProvider().memberEnteredHideout(null, user.handle, boi.avatar);
+            }
         }
 
         // if they're the senior leader, start tracking their avatar
@@ -459,6 +465,14 @@ public class GangHandler
             }
         } finally {
             user.commitTransaction();
+        }
+
+        // if they're in a place, update their occupant info
+        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.location);
+        if (plmgr != null) {
+            BangOccupantInfo boi = (BangOccupantInfo)plmgr.getOccupantInfo(user.getOid());
+            boi.gangId = 0;
+            plmgr.updateOccupantInfo(boi);
         }
     }
 

@@ -98,7 +98,7 @@ public class PaperView extends BContainer
     {
         _salobj = salobj;
         // create the folkview now that we have our saloon object
-        _folks.add(0, new FolkView(_ctx, _salobj, true), GroupLayout.FIXED);
+        _folks.add(0, new FolkView(_ctx, _salobj, true, false), GroupLayout.FIXED);
     }
 
     /**

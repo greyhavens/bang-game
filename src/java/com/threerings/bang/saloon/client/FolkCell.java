@@ -45,7 +45,8 @@ import static com.threerings.bang.Log.log;
 public class FolkCell extends BContainer
     implements Comparable<FolkCell>
 {
-    public FolkCell (BangContext ctx, Handle handle, boolean isPardner, boolean isFriend)
+    public FolkCell (
+        BangContext ctx, Handle handle, boolean isPardner, boolean isFriend, boolean isGangMember)
     {
         super(GroupLayout.makeHoriz(GroupLayout.LEFT));
         setPreferredSize(new Dimension(200, 18));
@@ -63,6 +64,9 @@ public class FolkCell extends BContainer
             BLabel pardIcon = new BLabel("", "folk_pardner");
             pardIcon.setIcon(new ImageIcon(_ctx.loadImage("ui/saloon/pardners_only.png")));
             add(pardIcon);
+        }
+        if (isGangMember) {
+            add(new BLabel(new ImageIcon(_ctx.loadImage("ui/saloon/recruiting.png"))));
         }
     }
 

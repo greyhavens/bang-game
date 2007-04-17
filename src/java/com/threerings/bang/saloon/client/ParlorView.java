@@ -235,7 +235,8 @@ public class ParlorView extends ShopView
                         _msgs.get(_parobj.info.matched ? "m.matched_name" : "m.parlor_name",
                         _parobj.info.creator), "parlor_label"),
                 new Point(165, 263));
-        add(new FolkView(_ctx, plobj, false), new Rectangle(95, 119, 407, 130));
+        add(new FolkView(_ctx, plobj, false, _parobj.info.gangId > 0),
+            new Rectangle(95, 119, 407, 130));
     }
 
     @Override // documentation inherited

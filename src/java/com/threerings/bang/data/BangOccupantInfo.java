@@ -18,6 +18,9 @@ public class BangOccupantInfo extends OccupantInfo
     /** The player id */
     public int playerId;
 
+    /** The player's gang id. */
+    public int gangId;
+
     /** Creates an instance for the specified user. */
     public BangOccupantInfo (PlayerObject user)
     {
@@ -28,6 +31,7 @@ public class BangOccupantInfo extends OccupantInfo
             avatar = look.getAvatar(user);
         }
         playerId = user.playerId;
+        gangId = user.gangId;
     }
 
     /** Creates a blank instance for unserialization. */
