@@ -49,7 +49,7 @@
   <wait event="text_clicked"/>
 
   <!-- get the repair bonus -->
-  <text message="get repair" step="4"/>
+  <text message="get_repair" step="4"/>
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
              location="22,15"/>
   <center_on what="piece" id="3000"/>
