@@ -37,6 +37,7 @@ printf("%-17s %5s %5s %s\n", "Bounty", "Plays", "Wins", "Pct");
 foreach $bounty (sort { $bounties{$b}{"plays"} - $bounties{$a}{"plays"} } keys %bounties) {
     my $plays = $bounties{$bounty}{"plays"};
     my $wins = $bounties{$bounty}{"wins"};
+    $wins = 0 unless (defined $wins);
     printf("%-17s %5d %5d %2d%%", $bounty, $plays, $wins, 100*$wins/$plays);
 
     my %games = %{$bounties{$bounty}{"games"}};
