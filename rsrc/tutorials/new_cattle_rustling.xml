@@ -20,15 +20,15 @@
   <center_on what="piece" id="1002"/>
   <text message="cattle_intro" step="2"/>
   <wait event="text_clicked"/>
-  <text message="cattle_intro_2" step="2"/>
+  <text message="cattle_intro_2"/>
   <wait event="effect:frontier_town/cow/branded"/>
 
   <!-- point out their score -->
-  <text message="cattle_scoring" step="2"/>
+  <text message="cattle_scoring"/>
   <wait event="text_clicked"/>
 
   <!-- explain that cattle can be rebranded -->
-  <text message="cattle_rebranding" step="2"/>
+  <text message="cattle_rebranding"/>
   <add_piece what="unit" id="1003" type="frontier_town/cavalry" location="1002" owner="1"/>
   <center_on what="piece" id="1003"/>
   <wait event="text_clicked"/>
@@ -36,7 +36,7 @@
   <!-- have the AI rebrand the cattle, have the player rebrand it back -->
   <center_on what="piece" id="1002" arrow="false"/>
   <move_unit_and_wait id="1003" target="1002" event="effect:frontier_town/cow/branded"/>
-  <text message="cattle_rerebranding" step="2"/>
+  <text message="cattle_rerebranding"/>
   <wait event="effect:bang" allowAttack="true"/>
   <text message="cattle_rerebranding_2"/>
   <wait event="effect:frontier_town/cow/branded"/>
