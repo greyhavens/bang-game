@@ -1603,7 +1603,8 @@ public class GangHandler
             return;
         }
 
-        // find the senior active member, breaking if we find an active leader
+        // find the most notorious active member (breaking ties by seniority),
+        // returning if we find an active leader
         GangMemberEntry senior = null;
         for (GangMemberEntry entry : _gangobj.members) {
             if (!entry.isActive()) {
@@ -1611,7 +1612,8 @@ public class GangHandler
             }
             if (entry.rank == LEADER_RANK) {
                 return;
-            } else if (senior == null || entry.joined < senior.joined) {
+            } else if (senior == null || entry.notoriety > senior.notoriety ||
+                (entry.notoriety == senior.notoriety && entry.joined < senior.joined)) {
                 senior = entry;
             }
         }
