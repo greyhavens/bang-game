@@ -75,7 +75,7 @@
   <text message="artillery"/>
   <wait event="text_clicked"/>
   <text message="artillery2"/>
-  <wait event="unit_selected allowAttack="true"/>
+  <wait event="unit_selected" allow Attack="true"/>
   <text message="artillery3"/>
   <wait event="unit_killed:2000" allowAttack="true"/>
 
