@@ -138,6 +138,13 @@ public class TutorialConfig
         private static final long serialVersionUID = 1;
     }
 
+    public static class SetCard extends Action
+    {
+        public String type;
+
+        private static final long serialVersionUID = 1;
+    }
+
     /** The identifier for this tutorial, which defines its message bundle. */
     public String ident;
 

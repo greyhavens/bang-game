@@ -248,6 +248,9 @@ public class TutorialController
         } else if (action instanceof TutorialConfig.WaitAction) {
             // we'll handle this later
 
+        } else if (action instanceof TutorialConfig.SetCard) {
+            // currently nothing to do here
+
         } else {
             log.warning("Unknown action " + action);
         }

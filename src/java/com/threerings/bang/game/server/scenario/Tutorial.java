@@ -33,6 +33,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.game.data.scenario.TutorialInfo;
 import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
@@ -298,6 +299,9 @@ public class Tutorial extends Scenario
             } else if (type.equals("reset_trees")) {
                 _treedel.resetTrees(_bangobj, 0);
             }
+
+        } else if (action instanceof TutorialConfig.SetCard) {
+            ((TutorialInfo)_bangobj.scenario).cardType = ((TutorialConfig.SetCard)action).type;
         }
 
         return (action instanceof TutorialConfig.WaitAction);

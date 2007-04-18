@@ -58,7 +58,7 @@ public abstract class Card extends SimpleStreamableObject
     {
         if (bangobj != null && bangobj.scenario instanceof TutorialInfo) {
             // we always return missile cards in the tutorial
-            return new Missile().getType();
+            return ((TutorialInfo)bangobj.scenario).cardType;
 
         } else {
             // if in a game, retrieve the player's point factor

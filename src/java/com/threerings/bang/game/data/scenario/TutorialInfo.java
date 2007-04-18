@@ -15,6 +15,9 @@ public class TutorialInfo extends ScenarioInfo
     /** The string identifier for this scenario. */
     public static final String IDENT = "tu";
 
+    /** Used for random cards during the tutorial. */
+    public transient String cardType = "missile";
+
     @Override // from ScenarioInfo
     public String getIdent ()
     {
