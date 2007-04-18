@@ -74,6 +74,9 @@
     <file name="lib/hemiptera.jar"/>
   </filelist>
 
+  <!-- declare the libraries in dist.libs needed only at build time and are not to be packaged. -->
+  <property name="build.only.libs" value="ant.jar,proguard.jar,s3lib.jar,s3upload.jar"/>
+
   <!-- declare our classpath -->
   <path id="classpath">
     <pathelement location="${deploy.dir}/classes"/>
