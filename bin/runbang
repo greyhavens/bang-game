@@ -100,7 +100,7 @@ cd $BANG_HOME
 if [ $NODE = "frontier_town" ]; then
     if [ ! -z "`find $BANG_HOME/rsrc/boards -name \*.board`" ] ; then
         echo "Rebuilding board database:" >>$LOGFILE
-        antt boards >>$LOGFILE 2>&1
+        ant boards >>$LOGFILE 2>&1
         # delete the board files; they're in the database now and need not be
         # reloaded until the next release and we need to prevent stale boards
         # from lingering on the production servers
