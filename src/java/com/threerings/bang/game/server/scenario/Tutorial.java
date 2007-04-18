@@ -77,7 +77,7 @@ public class Tutorial extends Scenario
         }
 
         // create the various delegates we might need
-        if (_config.ident.equals("cattle_rustling")) {
+        if (_config.ident.endsWith("cattle_rustling")) {
             registerDelegate(new CattleDelegate());
             registerDelegate(new CattleRustling.RustlingPostDelegate());
         } else if (_config.ident.endsWith("claim_jumping")) {
