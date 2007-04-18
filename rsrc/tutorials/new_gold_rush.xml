@@ -1,0 +1,105 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="gold_rush" board="Gold Rush" players="2">
+  <show_view name="player_status"/>
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- introduce the tactician -->
+  <add_piece what="unit" id="1001" type="frontier_town/tactician"
+             location="20,22" owner="0"/>
+  <center_on what="piece" id="1001"/>
+  <text message="tactician"/>
+  <wait event="text_clicked"/>
+
+  <!-- show them their claim -->
+  <center_on what="special" id="0"/>
+  <text message="claim_intro"/>
+  <wait event="text_clicked"/>
+
+  <!-- add a nugget to the board and show them that -->
+  <add_piece what="bonus" id="1000" type="frontier_town/nugget"
+             location="22,22"/>
+  <center_on what="piece" id="1000"/>
+  <text message="nugget_intro" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="nugget_intro2"/>
+  <wait event="bonus_activated"/>
+
+  <!-- add sharpshooter -->
+  <add_piece what="unit" id="2000" type="frontier_town/sharpshooter"
+             location="21,20" owner="1"/>
+  <text message="get_nugget"/>
+  <wait event="text_clicked"/>
+
+  <!-- sharpshooter shoots out nugget -->
+  <move_unit id="2000" target="1001"/>
+  <text message="got_shot"/>
+  <wait event="text_clicked"/>
+
+  <!-- add a repair, and tell to get repair and shoot -->
+  <add_piece what="bonus" id="3002" type="frontier_town/repair" 
+             location="22,21"/>
+  <center_on what="piece" id="3002"/>
+  <text message="repair"/>
+  <wait event="text_clicked"/>
+  <text message="repair2"/>
+  <wait event="bonus_activated"/>
+  <text message="kill"/>
+  <wait event="unit_killed:2000" allowAttack="true"/>
+
+  <!-- pickup and deposit nugget -->
+  <text message="got_nugget" step="3"/>
+  <wait event="bonus_activated"/>
+  <text message="got_nugget2"/>
+  <wait event="effect:frontier_town/nugget/added"/>
+
+  <!-- add another nugget to the board  -->
+   <add_piece what="bonus" id="5000" type="frontier_town/nugget"
+             location="22,21"/>
+
+  <text message="deposited_nugget"/>
+  <wait event="text_clicked"/>
+  <text message="deposited_nugget2"/>
+  <wait event="text_clicked"/>
+
+  <!-- tell them about nuggets appearing around the board -->
+  <text message="lodes" step="4"/>
+  <wait event="text_clicked"/>
+
+  <center_on what="piece" id="5000"/>
+  <text message="lodes2"/>
+  <wait event="text_clicked"/>
+
+  <!-- pickup new nugget -->
+  <text message="new_nugget"/>
+  <wait event="bonus_activated"/>
+
+  <!-- add gunslinger and attack -->
+  <add_piece what="unit" id="2002" type="frontier_town/gunslinger"
+             location="21,20" owner="1"/>
+  <move_unit id="2002" target="1001"/>
+
+  <text message="gunslinger"/>
+  <wait event="text_clicked"/>
+
+  <!-- add an iron plate bonus -->
+  <add_piece what="bonus" id="3002" type="frontier_town/repair" 
+             location="22,21"/>
+
+  <text message="iron_plate"/>
+  <wait event="bonus_activated"/>
+  <text message="iron_plate2"/>
+  <wait event="text_clicked"/>
+
+  <!-- deposit the new nugget -->
+  <text message="deposit_again"/>
+  <wait event="effect:frontier_town/nugget/added"/>
+
+  <!-- wrap up and end the tutorial -->
+  <text message="done" step="5"/>
+  <wait event="text_clicked"/>
+
+</tutorial>
