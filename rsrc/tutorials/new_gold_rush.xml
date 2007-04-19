@@ -21,7 +21,7 @@
 
   <!-- add a nugget to the board and show them that -->
   <add_piece what="bonus" id="1000" type="frontier_town/nugget"
-             location="22,22"/>
+             location="21,22"/>
   <center_on what="piece" id="1000"/>
   <text message="nugget_intro" step="2"/>
   <wait event="text_clicked"/>
@@ -46,7 +46,7 @@
   <text message="repair"/>
   <wait event="text_clicked"/>
   <text message="repair2"/>
-  <wait event="bonus_activated"/>
+  <wait event="bonus_activated" allowAttack="true"/>
   <text message="kill"/>
   <wait event="unit_killed:2000" allowAttack="true"/>
 
@@ -58,7 +58,7 @@
 
   <!-- add another nugget to the board  -->
    <add_piece what="bonus" id="5000" type="frontier_town/nugget"
-             location="22,21"/>
+             location="22,21s"/>
 
   <text message="deposited_nugget"/>
   <wait event="text_clicked"/>
@@ -66,11 +66,8 @@
   <wait event="text_clicked"/>
 
   <!-- tell them about nuggets appearing around the board -->
-  <text message="lodes" step="4"/>
-  <wait event="text_clicked"/>
-
   <center_on what="piece" id="5000"/>
-  <text message="lodes2"/>
+  <text message="lodes" step="4"/>
   <wait event="text_clicked"/>
 
   <!-- pickup new nugget -->
@@ -86,8 +83,8 @@
   <wait event="text_clicked"/>
 
   <!-- add an iron plate bonus -->
-  <add_piece what="bonus" id="3002" type="frontier_town/repair" 
-             location="22,21"/>
+  <add_piece what="bonus" id="3002" type="frontier_town/iron_plate" 
+             location="20,22"/>
 
   <text message="iron_plate"/>
   <wait event="bonus_activated"/>
