@@ -35,7 +35,7 @@
   <text message="spawning" step="2"/>
   <wait event="text_clicked"/>
   <add_piece what="unit" id="1002" type="frontier_town/artillery"
-             location="24,18" owner="0"/>
+             location="24,17" owner="0"/>
   <text message="spawned" step="2"/>
   <wait event="text_clicked"/>
 
@@ -83,10 +83,9 @@
   <!-- take out artillery -->
   <move_unit id="5001" targetLoc="24,19"/>
   <text message="takedown2"/>
-  <wait event="unit_killed:5002" allowAttack="true"/>
+  <wait event="unit_killed:5001" allowAttack="true"/>
   <text message="done"/>
   <wait event="text_clicked"/>
-
 
   <!-- then claim it for themselves -->
   <text message="reclaim_homestead"/>
