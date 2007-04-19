@@ -48,24 +48,24 @@
   <text message="codger4"/>
   <wait event="text_clicked"/>
 
-  <!-- get the repair bonus -->
-  <text message="get_repair" step="4"/>
-  <add_piece what="bonus" id="3000" type="frontier_town/repair"
-             location="22,15"/>
-  <center_on what="piece" id="3000"/>
-  <wait event="bonus_activated"/>
-
   <!-- kill the gunslinger -->
   <move_unit id="2000" target="1000"/>
   <text message="barrage"/>
   <wait event="text_clicked"/>
   <move_unit id="2000" target="1000"/>
   <text message="barrage2"/>
-  <wait event="unit_killed:1000"/>
+  <wait event="text_clicked"/>
+
+  <!-- get the repair bonus -->
+  <text message="get_repair"/>
+  <add_piece what="bonus" id="3000" type="frontier_town/repair"
+             location="22,15"/>
+  <center_on what="piece" id="3000"/>
+  <wait event="bonus_activated"/>
 
   <!-- have the artillery get shot -->
   <center_on what="piece" id="1000"/>
-  <text message="full_attack" step="5"/>
+  <text message="full_attack" step="4"/>
   <wait event="effect:bang" allowAttack="true"/>
   <text message="full_attack2"/>
   <wait event="text_clicked"/>
@@ -80,7 +80,7 @@
   <wait event="unit_killed:2000" allowAttack="true"/>
 
   <!-- wrap it up -->
-  <text message="done" step="6"/>
+  <text message="done" step="5"/>
   <wait event="text_clicked"/>
   <text message="done2"/>
   <wait event="text_clicked"/>
