@@ -262,9 +262,21 @@ public class Tutorial extends Scenario
             Unit unit = (Unit)_bangobj.pieces.get(mua.id);
             int tx = mua.location[0], ty = mua.location[1];
             int targetId = mua.target;
+            Piece target = null;
 
+            // see if we're finding a target by location
+            if (targetId == 0 && mua.targetLoc[0] != Short.MAX_VALUE) {
+                int dx = mua.targetLoc[0], dy = mua.targetLoc[1];
+                for (Piece piece : _bangobj.pieces) {
+                    if (piece.x == dx && piece.y == dy && piece.isTargetable()) {
+                        targetId = piece.pieceId;
+                        target = piece;
+                    }
+                }
+            } else {
+                target = _bangobj.pieces.get(targetId);
+            }
             // if the target is not shootable, we want just to move next to it
-            Piece target = _bangobj.pieces.get(targetId);
             if (target != null && !unit.validTarget(_bangobj, target, false)) {
                 targetId = -1;
                 tx = target.x;
