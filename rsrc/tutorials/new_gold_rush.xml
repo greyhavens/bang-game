@@ -58,7 +58,7 @@
 
   <!-- add another nugget to the board  -->
    <add_piece what="bonus" id="5000" type="frontier_town/nugget"
-             location="22,21s"/>
+             location="22,21"/>
 
   <text message="deposited_nugget"/>
   <wait event="text_clicked"/>
