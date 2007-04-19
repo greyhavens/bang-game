@@ -41,7 +41,7 @@
 
   <!-- add a repair, and tell to get repair and shoot -->
   <add_piece what="bonus" id="3002" type="frontier_town/repair" 
-             location="22,21"/>
+             location="20,20"/>
   <center_on what="piece" id="3002"/>
   <text message="repair"/>
   <wait event="text_clicked"/>
@@ -88,6 +88,10 @@
 
   <text message="iron_plate"/>
   <wait event="bonus_activated"/>
+
+  <!-- gunslinger attacks right after picking up the iron plate -->
+  <move_unit id="2002" target="1001"/>
+
   <text message="iron_plate2"/>
   <wait event="text_clicked"/>
 

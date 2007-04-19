@@ -1,0 +1,103 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="new_land_grab" board="West Ho!" players="2">
+  <show_view name="player_status"/>
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- show them their homestead -->
+  <center_on what="special" id="0"/>
+  <text message="homestead_intro" step="1"/>
+  <wait event="text_clicked"/>
+  <text message="homestead_intro2"/>
+  <wait event="text_clicked"/>
+  <text message="homestead_intro3"/>
+  <wait event="text_clicked"/>
+
+  <!-- show them an unclaimed homestead -->
+  <center_on what="special" id="-1"/>
+  <text message="homestead_claiming"/>
+  <wait event="text_clicked"/>
+  <text message="homestead_claiming2"/>
+  <wait event="text_clicked"/>
+
+  <!-- add their bigshot to the board and set them to claimin' -->
+  <add_piece what="unit" id="1001" type="frontier_town/tactician"
+             location="21,18" owner="0"/>
+  <text message="claim_homestead"/>
+  <wait event="effect:frontier_town/homestead/claimed"/>
+  <text message="claimed"/>
+  <wait event="text_clicked"/>
+
+  <!-- add another unit near their homestead; explain spawning -->
+  <text message="spawning" step="2"/>
+  <wait event="text_clicked"/>
+  <add_piece what="unit" id="1002" type="frontier_town/artillery"
+             location="24,18" owner="0"/>
+  <text message="spawned" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- show them the enemy homestead; explain attacking homesteads -->
+  <center_on what="special" id="1"/>
+  <text message="enemy_homestead" step="3"/>
+  <wait event="text_clicked"/>
+  <text message="enemy_homestead2"/>
+  <wait event="text_clicked"/>
+
+  <!-- have them destroy the enemy homestead -->
+  <center_on what="piece" id="1002" arrow="false"/>
+  <text message="destroy_homestead"/>
+  <wait event="unit_killed:.*" allowAttack="true"/>
+  <text message="lose_points"/>
+  <wait event="text_clicked"/>
+
+  <!-- add and enemy artillery and shotgunner -->
+  <add_piece what="unit" id="5001" type="frontier_town/artillery"
+             location="27,21" owner="1"/>
+  <add_piece what="unit" id="5002" type="frontier_town/shotgunner"
+             location="25,21" owner="1"/>
+
+  <!-- have them take down that stead -->
+  <move_unit id="5001" targetLoc="24,19"/>
+  <move_unit id="5002" targetLoc="24,19"/>
+
+  <text message="lose_stead" step="4"/>
+  <wait event="effect:frontier_town/homestead/claimed"/>
+
+  <!-- enemy artillery shoots your tactician -->
+  <move_unit id="5001" target="1001"/>
+  <text message="bounce"/>
+  <wait event="text_clicked"/>
+
+  <!-- enemy shotgunner shoots your tactician -->
+  <move_unit id="5002" target="1001"/>
+  <text message="shotty"/>
+  <wait event="text_clicked"/>
+
+  <!-- take out shotgunner -->
+  <text message="takedown"/>
+  <wait event="unit_killed:5002" allowAttack="true"/>
+
+  <!-- take out artillery -->
+  <move_unit id="5001" targetLoc="24,19"/>
+  <text message="takedown2"/>
+  <wait event="unit_killed:5002" allowAttack="true"/>
+  <text message="done"/>
+  <wait event="text_clicked"/>
+
+
+  <!-- then claim it for themselves -->
+  <text message="reclaim_homestead"/>
+  <wait event="text_clicked"/>
+  <text message="reclaim_homestead2"/>
+  <wait event="effect:frontier_town/homestead/claimed"/>
+
+  <!-- wrap up and end the tutorial -->
+  <text message="done" step="5"/>
+  <wait event="text_clicked"/>
+  <text message="done2"/>
+  <wait event="text_clicked"/>
+
+</tutorial>
