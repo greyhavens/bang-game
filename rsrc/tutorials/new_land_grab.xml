@@ -84,8 +84,6 @@
   <move_unit id="5001" targetLoc="24,19"/>
   <text message="takedown2"/>
   <wait event="unit_killed:5001" allowAttack="true"/>
-  <text message="done"/>
-  <wait event="text_clicked"/>
 
   <!-- then claim it for themselves -->
   <text message="reclaim_homestead"/>
