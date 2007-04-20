@@ -20,39 +20,39 @@
   <wait event="effect:bang" allowAttack="true"/>
   <text message="took_damage"/>
   <wait event="text_clicked"/>
--
+
   <!-- add a repair bonus and have them activate it -->
   <text message="repair_intro"/>
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
              location="16,18"/>
   <center_on what="piece" id="3000"/>
   <wait event="bonus_activated"/>
-
-  <!-- have them turn on the help window, explain it -->
-  <text message="show_help" step="3"/>
-  <wait event="text_clicked" allowAttack="true"/>
-
-  <!-- add a ramblin' bonus, have them inspect and activate it -->
-  <text message="ramblin_intro"/>
-  <add_piece what="bonus" id="3001" type="frontier_town/ramblin"
-             location="16,16"/>
-  <center_on what="piece" id="3001"/>
-  <wait event="bonus_activated"/>
-  <text message="ramblin_effect"/>
-  <wait event="unit_selected"/>
-  <text message="right_click_clear"/>
-  <wait event="text_clicked" allowAttack="true"/>
+  <text message="repair_outro"/>
+  <wait event="text_clicked"/>
 
   <!-- show the player status view, explain it -->
-  <text message="player_status_intro" step="4"/>
+  <text message="player_status_intro" step="3"/>
   <show_view name="player_status"/>
   <wait event="text_clicked"/>
 
+  <!-- add a ramblin' bonus, have them inspect and activate it -->
+  <add_piece what="bonus" id="3001" type="frontier_town/ramblin"
+             location="16,16"/>
+  <center_on what="piece" id="3001"/>
+  <text message="ramblin"/>
+  <wait event="text_clicked"/>
+  <text message="ramblin_intro"/>
+  <wait event="bonus_activated"/>
+  <text message="ramblin_effect"/>
+  <wait event="unit_selected" allowAttack="true"/>
+
   <!-- add a card bonus, have them activate it -->
   <set_card type="missile"/>
-  <text message="card_intro"/>
-  <add_piece what="bonus" id="3002" type="frontier_town/card" location="1000"/>
+  <add_piece what="bonus" id="3002" type="frontier_town/card" location="20,16"/>
   <center_on what="piece" id="3002"/>
+  <text message="card_pop" step="4"/>
+  <wait event="text_clicked"/>
+  <text message="card_intro"/>
   <wait event="bonus_activated"/>
 
   <!-- explain cards and how to activate them -->
