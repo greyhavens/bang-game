@@ -46,8 +46,6 @@
   <wait event="text_clicked"/>
   <text message="winner"/>
   <wait event="text_clicked"/>
-  <text message="winner_kill"/>
-  <wait event="effect:bang" allowAttack="true"/>
   <text message="winner_2" step="4"/>
   <wait event="text_clicked"/>
 
