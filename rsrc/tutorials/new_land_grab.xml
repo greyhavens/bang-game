@@ -86,10 +86,8 @@
   <wait event="unit_killed:5001" allowAttack="true"/>
 
   <!-- then claim it for themselves -->
-  <text message="reclaim_homestead"/>
+  <text message="all_clear"/>
   <wait event="text_clicked"/>
-  <text message="reclaim_homestead2"/>
-  <wait event="effect:frontier_town/homestead/claimed"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done" step="5"/>
