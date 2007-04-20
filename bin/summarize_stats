@@ -47,9 +47,9 @@ while (<>) {
     chomp;
     if (/(\S+) (\S+) log_opened /) {
         $datedir = $1;
-    } elsif (/first_timer (\S+)/) {
+    } elsif (/first_timer (\d+) (\S+)/) {
         $firsttimers{$1} = $1;
-    } elsif (/session_end (\S+) ctime:(\d+)/) {
+    } elsif (/session_end (\d+) ctime:(\d+) node:(\S+)/) {
         $usertime{$1} += $2;
         $usersess{$1}++;
         $tottime += $2;
@@ -59,11 +59,12 @@ while (<>) {
             $newsess++;
         }
 
-    } elsif (/game_ended t:(\d+) (g:SALOON)? s:(\S+) ts:(\d+) r:(\S+) (.*)/) {
+    } elsif (/game_ended t:(\d+) (g:SALOON)? s:(\S+) ts:(\d+) r:(\S+) a:(\S+) (.*)/) {
         my $gsecs = $1;
         my $tsize = $4;
         my $rated = $5;
-        my $info = $6;
+        my $aces = $6;
+        my $info = $7;
         my @scens = split(/,/, $3);
         my $rcount = scalar @scens;
         my $rtype = ($rated eq "true") ? "rated" : "unrated";
@@ -72,8 +73,8 @@ while (<>) {
         my @pinfos = split(/,/, $info);
         foreach $pinfo (@pinfos) {
             my @bits = split(/:/, $pinfo);
-            my $username = $bits[0];
-            $humans++ unless ($username =~ /\(tin_can\)/);
+            my $playerid = $bits[0];
+            $humans++ unless ($playerid == -2);
         }
 
         my $tutorial = 0;
@@ -109,17 +110,17 @@ while (<>) {
 
         foreach $pinfo (@pinfos) {
             my @bits = split(/:/, $pinfo);
-            my $username = $bits[0];
-            next if ($username =~ /\(tin_can\)/);
+            my $playerid = $bits[0];
+            next if ($playerid == -2);
 
             # track stats on who leaves games early (or disconnects)
-            if ($username =~ s/\#$//) {
+            if ($bits[1] eq "#") {
                 note_leaver(\%leavers, $humans, $tutorial);
             }
-            if ($username =~ s/!$//) {
+            if ($bits[1] eq "!") {
                 note_leaver(\%discons, $humans, $tutorial);
             }
-            if ($username =~ s/\*$//) {
+            if ($bits[1] eq "*") {
                 note_leaver(\%logoffs, $humans, $tutorial);
             }
 
@@ -130,7 +131,7 @@ while (<>) {
                 $userrounds{"versus"}{$username} += $rcount;
                 $userrounds{"rated"}{$username} += $rcount
                     if ($rtype eq "rated");
-                my $earnings = (@bits > 2) ? $bits[2] : 0;
+                my $earnings = (@bits > 3) ? $bits[3] : 0;
                 $userearn{$username} += $earnings;
                 $totearn += $earnings;
                 if (defined $firsttimers{$username}) {
@@ -149,11 +150,11 @@ while (<>) {
         my $info = $3;
         # TODO: log anything for practice games?
 
-    } elsif (/game_ended t:(\d+) g:BOUNTY bid:(\S+) gid:(\S+) (.*)/) {
+    } elsif (/game_ended t:(\d+) g:BOUNTY bid:(\S+) gid:(\S+) won:(\S+) (.*)/) {
         my $gsecs = $1;
         my $bounty = $2;
         my $game = $3;
-        my $info = $4;
+        my $info = $5;
         # TODO: log anything for bounty games?
 
     } elsif (/game_ended t:(\d+) g:TUTORIAL s:(\S+) (.*)/) {

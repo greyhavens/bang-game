@@ -6,12 +6,13 @@ my %bounties;
 
 while (<>) {
     chomp;
-    if (m/game_ended t:(\d+) g:BOUNTY bid:(\S+)\/(\S+) gid:(\S+) (\S+)/) {
+    if (m/game_ended t:(\d+) g:BOUNTY bid:(\S+)\/(\S+) gid:(\S+) won:(\S+) (\S+)/) {
         my $time = $1;
         my $diff = $2;
         my $bounty = $3;
         my $game = $4;
-        my $info = $5;
+        my $won = $5;
+        my $info = $6;
 
         # my $key = "$diff-$bounty";
         my $key = "$bounty";
@@ -19,17 +20,16 @@ while (<>) {
         my @pinfos = split(/,/, $info);
         my $pinfo = $pinfos[0];
         my @bits = split(/:/, $pinfo);
-        my $username = $bits[0];
-        my $rank = $bits[1];
+        my $playerId = $bits[0];
 
         $bounties{$key}{"diff"} = "$diff";
         $bounties{$key}{"plays"}++;
         $bounties{$key}{"games"}{$game}{"plays"}++;
-        if ($rank == 0) {
+        if ($won eq "true") {
             $bounties{$key}{"wins"}++;
             $bounties{$key}{"games"}{$game}{"wins"}++;
         }
-        # print "$bounty ($diff) $game $time $username $rank\n";
+        # print "$bounty ($diff) $game $time $playerId $won\n";
     }
 }
 
