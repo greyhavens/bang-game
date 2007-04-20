@@ -94,7 +94,7 @@ public class RuntimeConfig
 
             // admins are allowed to change things, but let's log it
             BangServer.generalLog(
-                "admin_config changed " + user.playerId + " " +
+                "admin_config changed " + user.username + " " +
                 object.getClass().getName() + " " + event);
             return true;
         }

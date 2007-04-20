@@ -119,7 +119,7 @@ public class BangClientResolver extends CrowdClientResolver
                 }
             }
             BangServer.generalLog(
-                    "first_timer " + player.playerId + (anonymous ? "anon" : "account"));
+                    "first_timer " + player.playerId + (anonymous ? " anon" : " account"));
         }
 
         buser.playerId = player.playerId;
