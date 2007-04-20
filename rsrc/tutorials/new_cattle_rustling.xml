@@ -31,15 +31,15 @@
   <text message="cattle_rebranding"/>
   <add_piece what="unit" id="1003" type="frontier_town/cavalry" location="1002" owner="1"/>
   <center_on what="piece" id="1003"/>
-  <wait event="text_clicked"/>
+  <wait event="effect:bang" allowAttack="true"/>
 
   <!-- have the AI rebrand the cattle, have the player rebrand it back -->
   <center_on what="piece" id="1002" arrow="false"/>
   <move_unit_and_wait id="1003" target="1002" event="effect:frontier_town/cow/branded"/>
   <text message="cattle_rerebranding"/>
-  <wait event="effect:bang" allowAttack="true"/>
-  <text message="cattle_rerebranding_2"/>
   <wait event="effect:frontier_town/cow/branded"/>
+  <text message="cattle_rerebranding_2"/>
+  <wait event="effect:bang" allowAttack="true"/>
 
   <text message="timer" step="3"/>
   <show_view name="round_timer"/>
