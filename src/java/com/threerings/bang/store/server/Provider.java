@@ -11,6 +11,7 @@ import com.threerings.presents.data.InvocationCodes;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.persist.FinancialAction;
 
 import com.threerings.bang.store.data.Good;
@@ -66,12 +67,25 @@ public abstract class Provider extends FinancialAction
     protected void actionCompleted ()
     {
         _listener.requestProcessed();
+        super.actionCompleted();
     }
 
     @Override // documentation inherited
     protected void actionFailed (String cause)
     {
         _listener.requestFailed(cause);
+    }
+
+    @Override // documentation inherited
+    protected String getPurchaseType ()
+    {
+        return "store";
+    }
+
+    // documentation inherited
+    protected String getGoodType ()
+    {
+        return _good.getClass().getSimpleName();
     }
 
     protected Good _good;

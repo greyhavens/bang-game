@@ -20,6 +20,7 @@ import com.threerings.user.AccountActionRepository;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.persist.PlayerRecord;
 
 import static com.threerings.bang.Log.log;
 
@@ -129,7 +130,7 @@ public class AccountActionManager
             break;
 
         case AccountAction.INITIAL_COIN_PURCHASE:
-            // TODO anything?
+            logInitialCoinPurchase(aa.accountName);
             break;
 
         case AccountAction.ACCOUNT_DELETED:
@@ -151,6 +152,38 @@ public class AccountActionManager
         if (player != null) {
             BangServer.coinmgr.updateCoinCount(player);
         }
+    }
+
+    /**
+     * Logs that a user made an initial coin purchase.
+     */
+    protected void logInitialCoinPurchase (final String accountName)
+    {
+        // if this player is online, update their coin count
+        PlayerObject player = BangServer.lookupByAccountName(new Name(accountName));
+        if (player != null) {
+            BangServer.coinmgr.coinlog.log("first_coins " + player.playerId);
+            return;
+        }
+
+        // if they're not online, we'll need to load them from the database
+        BangServer.invoker.postUnit(new Invoker.Unit("logInitialCoinPurchase") {
+            public boolean invoke () {
+                try {
+                    _user = BangServer.playrepo.loadPlayer(accountName);
+                    return _user != null;
+                } catch (PersistenceException pe) {
+                    log.warning("Failed to load user! [cause=" + pe + "].");
+                }
+                return false;
+            }
+
+            public void handleResult () {
+                BangServer.coinmgr.coinlog.log("first_coins " + _user.playerId);
+            }
+
+            protected PlayerRecord _user;
+        });
     }
 
     /**

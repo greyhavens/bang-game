@@ -41,6 +41,16 @@ public abstract class ProxyFinancialAction extends FinancialAction
         super(user, scripCost, coinCost);
     }
 
+    @Override // documentation inherited
+    protected void actionCompleted () {
+        // we'll log this on the server which performs the action
+    }
+
+    protected String getGoodType ()
+    {
+        return null;
+    }
+
     /**
      * Forwards the request to the peer with this object as its listener.
      */

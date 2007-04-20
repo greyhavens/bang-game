@@ -206,9 +206,17 @@ public class StationManager extends ShopManager
         protected void actionCompleted () {
             _user.addToInventory(_ticket);
             _listener.requestProcessed();
+            super.actionCompleted();
         }
         protected void actionFailed (String cause) {
             _listener.requestFailed(cause);
+        }
+
+        protected String getPurchaseType () {
+            return "station";
+        }
+        protected String getGoodType () {
+            return "Ticket";
         }
 
         protected TrainTicket _ticket;

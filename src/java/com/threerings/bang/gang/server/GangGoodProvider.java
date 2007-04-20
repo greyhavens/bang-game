@@ -82,12 +82,18 @@ public abstract class GangGoodProvider extends GangFinancialAction
     protected void actionCompleted ()
     {
         _listener.requestProcessed();
+        super.actionCompleted();
     }
 
     @Override // documentation inherited
     protected void actionFailed (String cause)
     {
         _listener.requestFailed(cause);
+    }
+
+    protected String getGoodType ()
+    {
+        return _good.getClass().getSimpleName();
     }
 
     protected Handle _handle;

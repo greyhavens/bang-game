@@ -487,7 +487,7 @@ public class BangManager extends GameManager
         ClientObject caller, String board, String driver, int[] perfhisto)
     {
         PlayerObject user = (PlayerObject)caller;
-        BangServer.perfLog("client_perf u:" + user.username + " b:" + board + " d:" + driver +
+        BangServer.perfLog("client_perf u:" + user.playerId + " b:" + board + " d:" + driver +
                            " h:" + StringUtil.toString(perfhisto));
     }
 
@@ -1828,15 +1828,15 @@ public class BangManager extends GameManager
             // determine whether this bounty game's criteria were met, and if so, whether the
             // entire bounty is now completed
             if (_bconfig.type == BangConfig.Type.BOUNTY) {
-                int failed = 0;
+                _failed = 0;
                 for (Criterion crit : _bconfig.criteria) {
                     if (!crit.isMet(_bangobj, rank)) {
-                        failed++;
+                        _failed++;
                     }
                 }
                 // the player must survive a no-respawn game
                 if (_bconfig.respawnUnits == false) {
-                    failed++;
+                    _failed++;
                     int pidx = 0;
                     for (int ii = 0; ii < _bangobj.playerInfo.length; ii++) {
                         if (_bangobj.playerInfo[ii].playerId != -1) {
@@ -1846,7 +1846,7 @@ public class BangManager extends GameManager
                     }
                     for (Piece p : _bangobj.getPieceArray()) {
                         if (p instanceof Unit && p.isAlive() && p.owner == pidx) {
-                            failed--;
+                            _failed--;
                             break;
                         }
                     }
@@ -1854,10 +1854,10 @@ public class BangManager extends GameManager
 
                 // leaving a game early constitutes a bounty failure
                 if (_bangobj.tick < _bangobj.lastTick) {
-                    failed++;
+                    _failed++;
                 }
 
-                if (failed == 0) {
+                if (_failed == 0) {
                     user.stats.addToSetStat(StatType.BOUNTY_GAMES_COMPLETED,
                                             _bounty.getStatKey(_bangobj.bountyGameId));
                     if (!user.stats.containsValue(StatType.BOUNTIES_COMPLETED, _bounty.ident) &&
@@ -2630,6 +2630,7 @@ public class BangManager extends GameManager
             case BOUNTY:
                 buf.append(" bid:").append(_bounty.ident);
                 buf.append(" gid:").append(_bangobj.bountyGameId);
+                buf.append(" won:").append(_failed == 0);
                 break;
             }
 
@@ -2641,14 +2642,15 @@ public class BangManager extends GameManager
 
                 // record the player in this position
                 if (isAI(ii)) {
-                    buf.append("(tin_can)");
+                    buf.append("-2"); // tin can
                     continue;
                 }
                 if (_precords == null || _precords[ii] == null || _precords[ii].user == null) {
-                    buf.append("(never_arrived)");
+                    buf.append("-1"); // never arrived
                     continue;
                 }
-                buf.append(_precords[ii].user.username);
+                buf.append(_precords[ii].playerId);
+                buf.append(":");
 
                 // note players that left the game early
                 if (!isActivePlayer(ii)) {
@@ -2660,6 +2662,8 @@ public class BangManager extends GameManager
                     } else {
                         buf.append("#"); // online and active
                     }
+                } else {
+                    buf.append("@"); // stayed til the end
                 }
 
                 // record their awards if we have any
@@ -3224,6 +3228,9 @@ public class BangManager extends GameManager
 
     /** Store the round id here as the BangObject doesn't track it the way we want. */
     protected int _activeRoundId;
+
+    /** Track failed bounty criteria. */
+    protected int _failed = 1;
 
     /** Marks a piece currently in a move from moveUnit. */
     protected Piece _onTheMove;

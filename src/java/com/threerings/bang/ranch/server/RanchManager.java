@@ -137,9 +137,17 @@ public class RanchManager extends ShopManager
         protected void actionCompleted () {
             _user.addToInventory(_unit);
             _listener.requestProcessed(_unit);
+            super.actionCompleted();
         }
         protected void actionFailed (String cause) {
             _listener.requestFailed(cause);
+        }
+
+        protected String getPurchaseType () {
+            return "ranch";
+        }
+        protected String getGoodType () {
+            return "Ticket";
         }
 
         protected BigShotItem _unit;

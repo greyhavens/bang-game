@@ -374,9 +374,18 @@ public class GangManager
                 if (user.isActive()) {
                     _gangs.put(_grec.gangId, new GangHandler(_grec, user, listener));
                 }
+                BangServer.generalLog("joined_gang " + user.playerId + " g:" + _grec.gangId);
+                super.actionCompleted();
             }
             protected void actionFailed (String cause) {
                 listener.requestFailed(cause);
+            }
+
+            protected String getPurchaseType () {
+                return "gang";
+            }
+            protected String getGoodType () {
+                return "Gang";
             }
 
             protected GangRecord _grec = new GangRecord(name);

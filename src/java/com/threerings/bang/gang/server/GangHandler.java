@@ -938,7 +938,15 @@ public class GangHandler
                 } finally {
                     _gangobj.commitTransaction();
                 }
+                StringBuffer buf = (new StringBuffer("gang_transfer ")).append(_playerId);
+                buf.append(" g:").append(_gangobj.gangId).append(" s:").append(scrip);
+                buf.append(" c:").append(coins);
+                BangServer.itemLog(buf.toString());
                 super.actionCompleted();
+            }
+
+            protected String getGoodType () {
+                return null;
             }
 
             protected int _entryId;
@@ -1036,10 +1044,18 @@ public class GangHandler
                     maybeScheduleUnload();
                 }
                 listener.requestProcessed();
+                StringBuffer buf = (new StringBuffer("gang_refund ")).append(entry.playerId);
+                buf.append(" g:").append(_gangobj.gangId).append(" s:").append(_scripCost);
+                buf.append(" c:").append(_coinCost);
+                BangServer.itemLog(buf.toString());
             }
             protected void actionFailed (String cause) {
                 _deleting = false;
                 listener.requestFailed(cause);
+            }
+
+            protected String getGoodType () {
+                return null;
             }
 
             protected String _playerAccount;
@@ -1278,9 +1294,14 @@ public class GangHandler
                     BangServer.playmgr.deliverItem(item, source);
                 }
                 listener.requestProcessed(new int[] { _memberCount, _items.size() });
+                super.actionCompleted();
             }
             protected void actionFailed (String cause) {
                 listener.requestFailed(cause);
+            }
+
+            protected String getGoodType () {
+                return "Outfits";
             }
 
             protected ArrayList<Item> _items = new ArrayList<Item>();
@@ -1916,6 +1937,7 @@ public class GangHandler
             }
         }
         listener.requestProcessed();
+        BangServer.generalLog("joined_gang " + playerId + " g:" + _gangobj.gangId);
     }
 
     /**

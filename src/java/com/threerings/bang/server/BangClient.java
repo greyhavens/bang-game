@@ -74,8 +74,8 @@ public class BangClient extends CrowdClient
 
         // generate an audit log entry
         BangCredentials creds = (BangCredentials)getCredentials();
-        BangServer.generalLog("session_start " + user.username +
-                              " ip:" + getInetAddress() + " id:" + creds.ident);
+        BangServer.generalLog("session_start " + user.playerId + " ip:" + getInetAddress() +
+                " id:" + creds.ident + " node:" + ServerConfig.nodename);
 
         // register the player with their handle
         BangServer.registerPlayer(user);
@@ -112,7 +112,7 @@ public class BangClient extends CrowdClient
         super.sessionWillResume();
 
         // generate an audit log entry
-        BangServer.generalLog("session_resume " + ((PlayerObject)_clobj).username +
+        BangServer.generalLog("session_resume " + ((PlayerObject)_clobj).playerId +
                               " ip:" + getInetAddress());
     }
 
@@ -129,7 +129,8 @@ public class BangClient extends CrowdClient
         recordEndedSession();
 
         // generate an audit log recording this session
-        BangServer.generalLog("session_end " + user.username + " ctime:" + _connectTime);
+        BangServer.generalLog("session_end " + user.playerId + " ctime:" + _connectTime +
+                " node:" + ServerConfig.nodename);
     }
 
     /**

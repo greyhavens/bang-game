@@ -468,10 +468,18 @@ public class BarberManager extends ShopManager
         protected void actionCompleted () {
             _user.setPosesAt(_look.name, Look.Pose.DEFAULT.ordinal());
             _listener.requestProcessed();
+            super.actionCompleted();
         }
         protected void actionFailed (String cause) {
             _user.removeFromLooks(_look.getKey());
             _listener.requestFailed(cause);
+        }
+
+        protected String getPurchaseType () {
+            return "barber";
+        }
+        protected String getGoodType () {
+            return "Look";
         }
 
         protected Look _look;
@@ -514,9 +522,17 @@ public class BarberManager extends ShopManager
             _user.setHandle(_handle);
             BangServer.updatePlayer(_user, ohandle);
             _listener.requestProcessed();
+            super.actionCompleted();
         }
         protected void actionFailed (String cause) {
             _listener.requestFailed(cause);
+        }
+
+        protected String getPurchaseType () {
+            return "barber";
+        }
+        protected String getGoodType () {
+            return "Handle";
         }
 
         protected Handle _ohandle, _handle;

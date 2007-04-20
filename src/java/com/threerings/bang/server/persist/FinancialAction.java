@@ -170,6 +170,10 @@ public abstract class FinancialAction extends Invoker.Unit
      */
     protected void actionCompleted ()
     {
+        StringBuffer buf = (new StringBuffer(getPurchaseType())).append("_purchase ");
+        buf.append(_user.playerId).append(" t:").append(getGoodType());
+        buf.append(" s:").append(_scripCost).append(" c:").append(_coinCost);
+        BangServer.itemLog(buf.toString());
     }
 
     /**
@@ -327,6 +331,19 @@ public abstract class FinancialAction extends Invoker.Unit
         return BangServer.coinmgr.getCoinRepository().spendCoins(
             reservationId, getCoinType(), getCoinDescrip());
     }
+
+    /**
+     * The type of purchases being made.
+     */
+    protected String getPurchaseType ()
+    {
+        return "generic";
+    }
+
+    /**
+     * The type of good being purchased.
+     */
+    protected abstract String getGoodType ();
 
     protected void toString (StringBuffer buf)
     {

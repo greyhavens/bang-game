@@ -25,6 +25,7 @@ import com.threerings.coin.server.CoinExchangeManager;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.server.persist.PlayerRecord;
 
 import static com.threerings.bang.Log.log;
 
@@ -33,8 +34,8 @@ import static com.threerings.bang.Log.log;
  */
 public class BangCoinExchangeManager extends CoinExchangeManager
 {
-    /** Entities that will publish the coin exchange offers should implement this interface and 
-     * register themselves with the coin exchange manager to be informed when they should reread 
+    /** Entities that will publish the coin exchange offers should implement this interface and
+     * register themselves with the coin exchange manager to be informed when they should reread
      * and updated their list of published offers. */
     public interface OfferPublisher
     {
@@ -89,7 +90,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     {
         _publishers.add(publisher);
 
-        // trigger a full published info update; ideally we'd only inform the newly registered 
+        // trigger a full published info update; ideally we'd only inform the newly registered
         // publisher, but there's only really ever one publisher anyway, so it's a wash
         updatePublishedInfo(true, true, _lastPrice);
     }
@@ -103,7 +104,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     }
 
     /**
-     * Returns a two element array containing the outstanding buy and sell offers (in that order) 
+     * Returns a two element array containing the outstanding buy and sell offers (in that order)
      * for the specified player. The returned arrays may be zero length but will not be null.
      */
     public CoinExOfferInfo[][] getPlayerOffers (PlayerObject player)
@@ -177,7 +178,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
                     BangServer.playrepo.grantScrip(info.accountName, currency);
                     return true;
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to grant scrip to player " + "[offer=" + info + 
+                    log.log(Level.WARNING, "Failed to grant scrip to player " + "[offer=" + info +
                             ", amount=" + currency + ", type=" + msg + "].", pe);
                     return false;
                 }
@@ -228,6 +229,35 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             }
 
             protected PersistenceException _error;
+        });
+    }
+
+    @Override // documentation inherited
+    protected void tradeCompleted (int price, int vol, String seller, final String buyer)
+    {
+        super.tradeCompleted(price, vol, seller, buyer);
+        PlayerObject player = BangServer.lookupByAccountName(new Name(buyer));
+        if (player != null) {
+            _audit.log("bought_excoins " + player.playerId);
+        }
+
+        // if they're not online, we'll need to load them from the database
+        _invoker.postUnit(new Invoker.Unit("tradeCompleted") {
+            public boolean invoke () {
+                try {
+                    _user = BangServer.playrepo.loadPlayer(buyer);
+                    return _user != null;
+                } catch (PersistenceException pe) {
+                    log.warning("Failed to load user! [cause=" + pe + "].");
+                }
+                return false;
+            }
+
+            public void handleResult () {
+                _audit.log("bought_excoins " + _user.playerId);
+            }
+
+            protected PlayerRecord _user;
         });
     }
 

@@ -84,6 +84,11 @@ public abstract class PeerFinancialAction extends FinancialAction
         buf.append(", coins=").append(_coinCost);
     }
 
+    protected String getGoodType ()
+    {
+        return null;
+    }
+
     protected String _coinAccount;
     protected int _playerId;
     protected InvocationService.ConfirmListener _listener;

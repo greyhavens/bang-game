@@ -94,6 +94,21 @@ public abstract class GangFinancialAction extends FinancialAction
     }
 
     @Override // documentation inherited
+    protected void actionCompleted ()
+    {
+        StringBuffer buf = (new StringBuffer(getPurchaseType())).append("_purchase ");
+        buf.append(_gang.gangId).append(" t:").append(getGoodType());
+        buf.append(" s:").append(_scripCost).append(" c:").append(_coinCost);
+        BangServer.itemLog(buf.toString());
+    }
+
+    @Override // documentation inherited
+    protected String getPurchaseType ()
+    {
+        return "gang";
+    }
+
+    @Override // documentation inherited
     protected void toString (StringBuffer buf)
     {
         buf.append("type=").append(getClass().getName());
