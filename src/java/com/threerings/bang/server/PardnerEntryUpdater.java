@@ -26,6 +26,8 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 
+import static com.threerings.bang.Log.*;
+
 /**
  * Listens to users with pardners, updating their pardner list entries.
  */
@@ -109,7 +111,12 @@ public class PardnerEntryUpdater extends SetAdapter
         for (PardnerEntry pard : _player.pardners) {
             PlayerObject pardner = BangServer.lookupPlayer(pard.handle);
             if (pardner != null) {
-                pardner.updatePardners(entry);
+                if (pardner.pardners.containsKey(entry.handle)) {
+                    pardner.updatePardners(entry);
+                } else {
+                    log.warning("Pardnership is non-mutual [player=" + _player.who() +
+                        ", pardner=" + pardner.who() + "].");
+                }
             }
         }
     }
