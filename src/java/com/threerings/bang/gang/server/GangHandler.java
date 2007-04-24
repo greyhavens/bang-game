@@ -1786,7 +1786,8 @@ public class GangHandler
             GangPeerProvider.class, _gangobj.gangPeerService, _client);
 
         _client.addClientObserver(_unsubber = new ClientAdapter() {
-            public void clientDidLogoff () {
+            @Override // documentation inherited
+            public void clientDidLogoff (Client client) {
                 unsubscribeFromPeer();
             }
         });
