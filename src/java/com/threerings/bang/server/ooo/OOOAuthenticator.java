@@ -95,13 +95,7 @@ public class OOOAuthenticator extends BangAuthenticator
             return NAME_IN_USE;
         }
 
-        // figure out the siteId
-        int siteId;
-        try {
-            siteId = Integer.decode(affiliate);
-        } catch (Exception e) {
-            siteId = _siteident.getSiteId(affiliate);
-        }
+        int siteId = getSiteId(affiliate);
 
         try {
             // make sure that this machine identifier is allowed to create a new account
@@ -364,8 +358,10 @@ public class OOOAuthenticator extends BangAuthenticator
         // as that username will later be stuffed into their user object
         if (!anonymous) {
             creds.setUsername(new Name(user.username));
+            creds.affiliate = String.valueOf(user.siteId);
         } else {
             creds.setUsername(new Name(username));
+            creds.affiliate = String.valueOf(getSiteId(creds.affiliate));
         }
 
         // log.info("User logged on [user=" + user.username + "].");
@@ -450,6 +446,21 @@ public class OOOAuthenticator extends BangAuthenticator
 
         // finally tack it's game data onto their list
         prec.rewards.add(info.data);
+    }
+
+    /**
+     * Helper function for getting the site id of a user.
+     */
+    protected int getSiteId (String affiliate)
+    {
+        // figure out the siteId
+        int siteId;
+        try {
+            siteId = Integer.decode(affiliate);
+        } catch (Exception e) {
+            siteId = _siteident.getSiteId(affiliate);
+        }
+        return siteId;
     }
 
     protected JDBCTableSiteIdentifier _siteident;

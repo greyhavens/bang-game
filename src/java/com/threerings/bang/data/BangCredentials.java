@@ -19,6 +19,9 @@ public class BangCredentials extends UsernamePasswordCreds
     /** If the client is asking for anonymous access. */
     public boolean anonymous;
 
+    /** The affiliate for anonymous access users. */
+    public String affiliate;
+
     /**
      * Creates credentials with the specified username and password.
      * {@link #ident} should be set before logging in.

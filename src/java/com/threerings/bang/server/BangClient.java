@@ -75,7 +75,8 @@ public class BangClient extends CrowdClient
         // generate an audit log entry
         BangCredentials creds = (BangCredentials)getCredentials();
         BangServer.generalLog("session_start " + user.playerId + " ip:" + getInetAddress() +
-                " id:" + creds.ident + " node:" + ServerConfig.nodename);
+                " id:" + creds.ident + " node:" + ServerConfig.nodename +
+                " sid:" + creds.affiliate);
 
         // register the player with their handle
         BangServer.registerPlayer(user);

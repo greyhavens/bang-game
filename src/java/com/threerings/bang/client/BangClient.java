@@ -856,6 +856,9 @@ public class BangClient extends BasicClient
         if (creds.ident != null && !creds.ident.matches("S[A-Za-z0-9/+]{32}")) {
             creds.ident = "C" + creds.ident;
         }
+        if (creds.anonymous) {
+            creds.affiliate = getAffiliateFromInstallFile();
+        }
         return creds;
     }
 
