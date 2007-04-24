@@ -41,6 +41,7 @@ import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.peer.data.NodeObject.Lock;
+import com.threerings.presents.peer.server.PeerManager.DroppedLockObserver;
 import com.threerings.presents.peer.util.PeerUtil;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
@@ -102,8 +103,9 @@ import static com.threerings.bang.Log.*;
  * Manages a single gang from resolution to destruction.
  */
 public class GangHandler
-    implements PlayerObserver, RemotePlayerObserver, MessageListener, AttributeChangeListener,
-        SetListener, ObjectDeathListener, SpeakerValidator, GangPeerProvider, GangCodes
+    implements DroppedLockObserver, PlayerObserver, RemotePlayerObserver, MessageListener,
+        AttributeChangeListener, SetListener, ObjectDeathListener, SpeakerValidator,
+        GangPeerProvider, GangCodes
 {
     /**
      * Creates the handler and starts the process of resolving the specified gang.
@@ -146,7 +148,6 @@ public class GangHandler
         // add a listener to initialize the player and report success
         getGangObject(new ResultListener<GangObject>() {
             public void requestCompleted (GangObject result) {
-                initPlayer(creator);
                 listener.requestProcessed();
             }
             public void requestFailed (Exception cause) {
@@ -289,16 +290,26 @@ public class GangHandler
         return (_gangobj == null ? "" : (_gangobj.name + " ")) + "(" + _gangId + ")";
     }
 
+    // documentation inherited from interface DroppedLockObserver
+    public void droppedLock (Lock lock)
+    {
+        // if we lose the lock, we have to shut down immediately and re-resolve
+        if (lock.type.equals("gang") && ((Integer)lock.id) == _gangId) {
+            shutdown();
+            BangServer.gangmgr.resolveGang(_gangId);
+        }
+    }
+
     // documentation inherited from interface PlayerObserver
     public void playerLoggedOn (PlayerObject user)
     {
-        playerLocationChanged(user.handle, ServerConfig.townIndex);
+        playerLocationChanged(user.handle, -1, ServerConfig.townIndex);
     }
 
     // documentation inherited from interface PlayerObserver
     public void playerLoggedOff (PlayerObject user)
     {
-        playerLocationChanged(user.handle, -1);
+        playerLocationChanged(user.handle, ServerConfig.townIndex, -1);
     }
 
     // documentation inherited from interface PlayerObserver
@@ -322,13 +333,13 @@ public class GangHandler
     // documentation inherited from interface RemotePlayerObserver
     public void remotePlayerLoggedOn (int townIndex, BangClientInfo info)
     {
-        playerLocationChanged(info.visibleName, townIndex);
+        playerLocationChanged(info.visibleName, -1, townIndex);
     }
 
     // documentation inherited from interface RemotePlayerObserver
     public void remotePlayerLoggedOff (int townIndex, BangClientInfo info)
     {
-        playerLocationChanged(info.visibleName, -1);
+        playerLocationChanged(info.visibleName, townIndex, -1);
     }
 
     // documentation inherited from interface MessageListener
@@ -387,7 +398,7 @@ public class GangHandler
 
         // set the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
-        PlayerObject user = BangServer.lookupPlayer(entry.handle);
+        PlayerObject user = BangServer.lookupPlayer(entry.playerId);
         if (user != null) {
             initPlayer(user, entry);
         }
@@ -526,7 +537,7 @@ public class GangHandler
 
         // update the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
-        PlayerObject user = BangServer.lookupPlayer(entry.handle);
+        PlayerObject user = BangServer.lookupPlayer(entry.playerId);
         if (user == null || user.gangRank == entry.rank) {
             return;
         }
@@ -1535,6 +1546,7 @@ public class GangHandler
         BangServer.addPlayerObserver(this);
         if (BangServer.peermgr != null) {
             BangServer.peermgr.addPlayerObserver(this);
+            BangServer.peermgr.addDroppedLockObserver(this);
         }
 
         // register the service for peers
@@ -1667,18 +1679,20 @@ public class GangHandler
     /**
      * Called when a player logs in or out of a town server.
      */
-    protected void playerLocationChanged (Name name, int townIndex)
+    protected void playerLocationChanged (Name name, int oldTownIndex, int newTownIndex)
     {
         GangMemberEntry entry = (name == null) ? null : _gangobj.members.get(name);
-        if (entry == null) {
+        if (entry == null || (newTownIndex == -1 && entry.townIdx != oldTownIndex)) {
+            // when moving between towns, make sure that we don't count the "logging off"
+            // of the old town after moving to the new
             return;
         }
-        if ((entry.townIdx = (byte)townIndex) == -1) {
+        if ((entry.townIdx = (byte)newTownIndex) == -1) {
             entry.wasActive = true;
             entry.lastSession = System.currentTimeMillis();
         }
         _gangobj.updateMembers(entry);
-        if (townIndex == -1) {
+        if (newTownIndex == -1) {
             maybeScheduleUnload();
         } else {
             maybeCancelUnload();
@@ -1725,10 +1739,10 @@ public class GangHandler
             new ResultListener<String>() {
                 public void requestCompleted (String result) {
                     _releasing = null;
-                    if (result == null) {
-                        shutdown();
-                    } else {
+                    if (ServerConfig.nodename.equals(result)) {
                         maybeScheduleUnload();
+                    } else {
+                        shutdown();
                     }
                 }
                 public void requestFailed (Exception cause) {
@@ -1801,6 +1815,15 @@ public class GangHandler
      */
     protected void didInit ()
     {
+        // initialize any players already online
+        GangMemberEntry[] members = _gangobj.members.toArray(
+            new GangMemberEntry[_gangobj.members.size()]);
+        for (GangMemberEntry member : members) {
+            PlayerObject user = BangServer.lookupPlayer(member.playerId);
+            if (user != null) {
+                initPlayer(user, member);
+            }
+        }
         _gangobj.addListener(this);
         BangServer.gangmgr.mapGang(_gangobj.name, this);
         _listeners.requestCompleted(_gangobj);
@@ -1830,6 +1853,17 @@ public class GangHandler
 
         log.info("Unsubscribed from gang " + this + ".");
         BangServer.gangmgr.unmapGang(_gangId, _gangobj.name);
+
+        // if there are members still online, we will have to re-resolve; hopefully
+        // this will happen so quickly that no one will notice
+        for (GangMemberEntry member : _gangobj.members) {
+            if (BangServer.lookupPlayer(member.playerId) != null) {
+                log.warning("Proxied gang vanished while members still online [gang=" +
+                    this + "].");
+                BangServer.gangmgr.resolveGang(_gangId);
+                return;
+            }
+        }
     }
 
     /**
@@ -1844,6 +1878,7 @@ public class GangHandler
         BangServer.removePlayerObserver(this);
         if (BangServer.peermgr != null) {
             BangServer.peermgr.removePlayerObserver(this);
+            BangServer.peermgr.removeDroppedLockObserver(this);
         }
 
         BangServer.invmgr.clearDispatcher(_gangobj.gangPeerService);
@@ -1947,7 +1982,7 @@ public class GangHandler
      */
     protected void initTownIndex (GangMemberEntry entry)
     {
-        PlayerObject user = BangServer.lookupPlayer(entry.handle);
+        PlayerObject user = BangServer.lookupPlayer(entry.playerId);
         if (user != null) {
             entry.townIdx = (byte)ServerConfig.townIndex;
             return;

@@ -102,19 +102,19 @@ public class GangMemberEntry extends SimpleStreamableObject
     }
 
     /**
+     * Checks whether the member is currently in the Hideout.
+     */
+    public boolean isInHideout ()
+    {
+        return (isOnline() && avatar != null);
+    }
+
+    /**
      * Determines whether this member is currently online.
      */
     public boolean isOnline ()
     {
         return (townIdx != -1);
-    }
-
-    /**
-     * Checks whether the member is currently in the Hideout.
-     */
-    public boolean isInHideout ()
-    {
-        return (avatar != null);
     }
 
     /**

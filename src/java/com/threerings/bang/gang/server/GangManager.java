@@ -89,15 +89,24 @@ public class GangManager
 
     /**
      * Resolves the specified gang, either loading it from the database (if it has not been
-     * loaded on any other servers), or subscribing to it through another server.
+     * loaded on any other servers), or subscribing to it through another server, and
+     * provides the {@link GangObject} to the provided listener on completion.
      */
     public void resolveGang (int gangId, ResultListener<GangObject> listener)
+    {
+        resolveGang(gangId).getGangObject(listener);
+    }
+
+    /**
+     * Resolves the specified gang.
+     */
+    public GangHandler resolveGang (int gangId)
     {
         GangHandler gang = _gangs.get(gangId);
         if (gang == null) {
             _gangs.put(gangId, gang = new GangHandler(gangId));
         }
-        gang.getGangObject(listener);
+        return gang;
     }
 
     /**
