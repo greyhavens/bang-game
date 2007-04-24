@@ -37,6 +37,8 @@ import com.samskivert.util.SystemInfo;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
+import com.threerings.clientstep.TrackingUtil;
+
 import com.threerings.presents.client.Client;
 
 import com.threerings.jme.JmeApp;
@@ -150,6 +152,12 @@ public class BangApp extends JmeApp
     @Override // documentation inherited
     public boolean init ()
     {
+        // Initilize our tracking system
+        String csid = System.getProperty("csid");
+        TrackingUtil.init(csid, BANGHOWDY_CSID, CS_URL_BASE);
+        if (BangPrefs.firstTimeUser()) {
+            TrackingUtil.track("client_start", "Client Started");
+        }
         try {
             checkJavaVersion();
         } catch (Throwable t) {
@@ -342,4 +350,8 @@ public class BangApp extends JmeApp
 
     /** Used to configure the renderer appropriately when profiling. */
     protected boolean _profiling = "true".equalsIgnoreCase(System.getProperty("profiling"));
+
+    /** Our Clientstep customer id. */
+    public static final String BANGHOWDY_CSID = "012BR";
+    public static final String CS_URL_BASE = "http://www.banghowdy.com/game/";
 }

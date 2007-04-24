@@ -12,6 +12,7 @@ import com.jme.system.JmeException;
 import com.jme.system.PropertiesIO;
 
 import com.samskivert.util.PrefsConfig;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.crowd.chat.client.CurseFilter;
 
@@ -36,6 +37,15 @@ public class BangPrefs
 
     /** Contains our client-side preferences. */
     public static PrefsConfig config = new PrefsConfig("bang");
+
+    /**
+     * Returns true if no logon information is set.
+     */
+    public static boolean firstTimeUser ()
+    {
+        return (StringUtil.isBlank(BangPrefs.config.getValue("username", "")) &&
+                StringUtil.isBlank(BangPrefs.config.getValue("anonymous", "")));
+    }
 
     /**
      * Configures props with a display setting.

@@ -38,6 +38,8 @@ import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.clientstep.TrackingUtil;
+
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.LogonException;
@@ -159,6 +161,7 @@ public class LogonView extends BWindow
             btn1 = "m.new_player";
             btn2 = "m.have_account";
             act2 = "have_account";
+            TrackingUtil.track("new_logon_shown", "New Logon Shown");
         } else if (account) {
             btn1 = "m.have_account";
             act1 = "have_account";
@@ -372,6 +375,9 @@ public class LogonView extends BWindow
         public void clientDidLogon (Client client) {
             _status.setStatus(_msgs.get("m.logged_on"), false);
             PlayerObject user = (PlayerObject)client.getClientObject();
+            if (BangPrefs.firstTimeUser()) {
+                TrackingUtil.track("first_logon", "Successful First Logon");
+            }
             BangPrefs.config.setValue(
                     user.tokens.isAnonymous() ? "anonymous" : "username", user.username.toString());
         }
