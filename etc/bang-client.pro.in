@@ -29,7 +29,8 @@
 -injars ../dist/lib/jme-gamestates.jar(!META-INF/*)
 -injars ../dist/lib/jme-scene.jar(!META-INF/*)
 -injars ../dist/lib/jme-bui.jar(!META-INF/*,!**/tests/**)
--injars ../dist/lib/threerings.jar(**/coin/data/**,**/IdentUtil*.class,**/TrackingUtil.class)
+-injars ../dist/lib/threerings.jar(
+  **/coin/data/**,**/IdentUtil*.class,**/TrackingUtil.class,**/Log.class)
 -injars ../dist/lib/hemiptera.jar(!**/web/**,!**/persist/**,!install.properties)
 -injars ../dist/lib/jorbis-0.0.12.jar(!META-INF/*)
 -injars ../dist/lib/jogg-0.0.5.jar(!META-INF/*)
