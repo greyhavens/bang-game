@@ -5,7 +5,7 @@
 <param name="appname" value="@APPNAME@" />
 <param name="bgimage" value="@IMGPATH@" />
 <param name="installer" value="<!--#echo var="affiliate"-->" />
-<!--#if expr="$HTTP_COOKIE = /net\.instadia\.clientstep\.persist\.1=.*\/([a-zA-Z0-9]+);/" -->
+<!--#if expr="$HTTP_COOKIE = /net\.instadia\.clientstep\.persist\.1=[^;\s]*\/([a-zA-Z0-9]+)/" -->
   <!--#set var="csid" value="$1" -->
   <param name="properties" value="-Dapp.csid=<!--#echo var="csid" -->" />
 <!--#endif -->
