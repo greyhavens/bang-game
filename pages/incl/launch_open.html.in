@@ -1,10 +1,14 @@
-<object classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" width="490" height="364" codebase="http://java.sun.com/update/1.5.0/jinstall-1_5-windows-i586.cab" type="application/x-java-applet;jpi-version=1.4"> 
+<object classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" width="490" height="364" codebase="http://java.sun.com/update/1.5.0/jinstall-1_5-windows-i586.cab" type="application/x-java-applet;jpi-version=1.4">
 <param name="code" value="com.threerings.getdown.launcher.GetdownApplet"/>
 <param name="archive" value="/client/getdown-retro-pro.jar"/>
 <param name="appbase" value="@APPBASE@" />
 <param name="appname" value="@APPNAME@" />
 <param name="bgimage" value="@IMGPATH@" />
 <param name="installer" value="<!--#echo var="affiliate"-->" />
+<!--#if expr="$HTTP_COOKIE = /net\.instadia\.clientstep\.persist\.1=.*\/([a-zA-Z0-9]+);/" -->
+  <!--#set var="csid" value="$1" -->
+  <param name="properties" value="-Dapp.csid=<!--#echo var="csid" -->" />
+<!--#endif -->
 <!--[if !IE]>-->
 <comment>
 <!--<object classid="java:com.threerings.getdown.launcher.GetdownApplet.class" archive="/client/getdown-pro.jar" width="490" height="364">-->
