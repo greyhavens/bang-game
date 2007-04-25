@@ -1,0 +1,24 @@
+<!-- loads bang's boards into the database (used in production) -->
+<project name="bang-boards" default="boards" basedir="..">
+
+  <!-- no hardcoded directories! -->
+  <property name="deploy.dir" value="dist"/>
+
+  <!-- declare a classpath for tool tasks -->
+  <path id="tool.classpath">
+    <pathelement location="${deploy.dir}"/>
+    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+    <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
+    <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
+  </path>
+
+  <!-- loads our boards into the database -->
+  <target name="boards">
+    <taskdef name="loadboard" classpathref="tool.classpath"
+             classname="com.threerings.bang.tools.LoadBoardTask"/>
+    <loadboard home=".">
+      <fileset dir="rsrc/boards" includes="**/*.board"/>
+    </loadboard>
+  </target>
+
+</project>

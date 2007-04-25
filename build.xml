@@ -340,11 +340,7 @@
 
   <!-- loads our boards into the database -->
   <target name="boards">
-    <taskdef name="loadboard" classpathref="tool.classpath"
-             classname="com.threerings.bang.tools.LoadBoardTask"/>
-    <loadboard home=".">
-      <fileset dir="rsrc/boards" includes="**/*.board"/>
-    </loadboard>
+    <ant antfile="etc/build-boards.xml" inheritAll="false"/>
   </target>
 
   <!-- compiles our tutorial XML definitions -->
@@ -1047,12 +1043,9 @@
       <fileset dir="rsrc" includes="boards/**/*.board"/>
     </copy>
     <copy file="log/README" todir="${pkg.base}/log"/>
-    <copy file="build.xml" todir="${pkg.base}"/>
     <copy file="rsrc/config/resource/manager.properties"
           todir="${pkg.base}/${deploy.dir}/rsrc/config/resource/"/>
-    <copy file="build/etc/build-support.xml" todir="${pkg.base}/build/etc"/>
-    <copy file="build/lib/java/ant-contrib.jar" todir="${pkg.base}/build/lib/java"/>
-    <copy file="build/lib/java/groovy-all-1.0.jar" todir="${pkg.base}/build/lib/java"/>
+    <copy file="etc/build-boards.xml" todir="${pkg.base}/build/etc"/>
     <copy file="tools/lib/perl/GrindUtil.pm" todir="${pkg.base}/tools/lib/perl"/>
     <antcall target="copywithperms">
       <param name="copy.perms" value="755"/>
