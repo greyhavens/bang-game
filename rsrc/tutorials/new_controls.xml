@@ -70,7 +70,7 @@
   <text message="damage_and_respawn" step="5"/>
   <wait event="text_clicked"/>
   <text message="damage_and_respawn2"/>
-  <wait event="unit_killed:1001" allowAttack="true"/>
+  <wait event="unit_killed" id="1001" allowAttack="true"/>
   <text message="damage_and_respawn3"/>
   <wait event="text_clicked"/>
 

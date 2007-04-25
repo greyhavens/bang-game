@@ -77,7 +77,7 @@
   <text message="artillery2"/>
   <wait event="unit_selected" allowAttack="true"/>
   <text message="artillery3"/>
-  <wait event="unit_killed:2000" allowAttack="true"/>
+  <wait event="unit_killed" id="2000" allowAttack="true"/>
 
   <!-- wrap it up -->
   <text message="done" step="5"/>

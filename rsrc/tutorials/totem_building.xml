@@ -91,7 +91,7 @@
   <wait event="unit_moved"/>
 
   <text message="attack_again" step="3"/>
-  <wait event="unit_killed:.*" allowAttack="true"/>
+  <wait event="unit_killed" allowAttack="true"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done"/>

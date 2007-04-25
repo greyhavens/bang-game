@@ -40,7 +40,7 @@
   <wait event="text_clicked"/>
 
   <!-- add a repair, and tell to get repair and shoot -->
-  <add_piece what="bonus" id="3002" type="frontier_town/repair" 
+  <add_piece what="bonus" id="3002" type="frontier_town/repair"
              location="20,20"/>
   <center_on what="piece" id="3002"/>
   <text message="repair"/>
@@ -48,7 +48,7 @@
   <text message="repair2"/>
   <wait event="bonus_activated" allowAttack="true"/>
   <text message="kill"/>
-  <wait event="unit_killed:2000" allowAttack="true"/>
+  <wait event="unit_killed" id="2000" allowAttack="true"/>
 
   <!-- pickup and deposit nugget -->
   <text message="got_nugget" step="3"/>
@@ -83,7 +83,7 @@
   <wait event="text_clicked"/>
 
   <!-- add an iron plate bonus -->
-  <add_piece what="bonus" id="3002" type="frontier_town/iron_plate" 
+  <add_piece what="bonus" id="3002" type="frontier_town/iron_plate"
              location="20,22"/>
 
   <text message="iron_plate"/>
