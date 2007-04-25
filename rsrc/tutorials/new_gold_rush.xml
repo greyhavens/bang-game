@@ -43,7 +43,7 @@
   <wait event="text_clicked"/>
 
   <!-- sharpshooter gets the nugget -->
-  <move_unit id="2000" targetLoc="19,21"/>
+  <move_unit id="2000" location="19,21"/>
 
   <!-- add a repair, and tell to get repair and shoot -->
   <add_piece what="bonus" id="3002" type="frontier_town/repair" 

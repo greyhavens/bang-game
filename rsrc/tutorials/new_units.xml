@@ -28,7 +28,7 @@
   <wait event="text_clicked"/>
 
   <!-- move arillery next to BR -->
-  <move_unit id="2000" targetLoc="22,17"/>
+  <move_unit id="2000" location="22,17"/>
 
   <text message="ram3"/>
   <wait event="effect:bang" allowAttack="true"/>
@@ -38,7 +38,6 @@
              location="20,19" owner="1"/>
   <move_unit id="2001" target="1000"/>
   <move_unit id="2000" target="1000"/>
-  <center_on what="piece" id="2001"/>
 
   <text message="ram4"/>
   <wait event="unit_selected" allowAttack="true"/>
