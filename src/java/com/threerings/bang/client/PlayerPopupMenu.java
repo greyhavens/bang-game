@@ -30,6 +30,7 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.chat.client.PardnerChatView;
 import com.threerings.bang.gang.client.InviteMemberDialog;
 import com.threerings.bang.saloon.data.ParlorObject;
 
@@ -140,7 +141,10 @@ public class PlayerPopupMenu extends BPopupMenu
             });
 
         } else if ("chat_pardner".equals(event.getAction())) {
-            _ctx.getBangClient().getPardnerChatView().display(_handle, true);
+            PardnerChatView pchat = _ctx.getBangClient().getPardnerChatView();
+            if (pchat.display(_handle, true) && !pchat.isAdded()) {
+                _ctx.getBangClient().clearPopup(_parentWindow, true);
+            }
 
         } else if ("watch_pardner".equals(event.getAction())) {
             PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);

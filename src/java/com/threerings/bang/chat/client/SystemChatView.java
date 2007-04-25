@@ -77,7 +77,7 @@ public class SystemChatView extends BWindow
         super(ctx.getStyleSheet(), new TableLayout(3, 20, 20));
         setStyleClass("system_chat_view");
         _ctx = ctx;
-        _ctx.getChatDirector().addChatDisplay(this);
+        ((BangChatDirector)_ctx.getChatDirector()).addSystemDisplay(this);
         setBounds(0, 0, ctx.getDisplay().getWidth(), ctx.getDisplay().getHeight());
         setLayer(2);
     }

@@ -119,9 +119,9 @@ public class TabbedChatView extends BContainer
         if (isAdded() && // don't intercept feedback if we're not showing
             msg instanceof TellFeedbackMessage && // we also have to handle tell failures
             ((TellFeedbackMessage)msg).isFailure()) {
-            UserTab tab = _users.get(((TellFeedbackMessage)msg).speaker);
-            if (tab != null) {
-                tab.appendSystem(msg);
+            Object tab = _pane.getSelectedTab();
+            if (tab instanceof UserTab) {
+                ((UserTab)tab).appendSystem(msg);
                 return true;
             }
         }
@@ -135,17 +135,7 @@ public class TabbedChatView extends BContainer
         if (src == _send || (src == _input && _send.isEnabled())) {
             String msg = _input.getText().trim();
             _input.setText("");
-            if (msg.startsWith("/")) {
-                String error = _ctx.getChatDirector().requestChat(null, msg, true);
-                if (!ChatCodes.SUCCESS.equals(error)) {
-                    SystemMessage sysmsg = new SystemMessage(
-                        _ctx.xlate(BangCodes.CHAT_MSGS, error), null, SystemMessage.FEEDBACK);
-                    ((UserTab)_pane.getSelectedTab()).appendSystem(sysmsg);
-                }
-
-            } else {
-                ((UserTab)_pane.getSelectedTab()).requestTell(msg);
-            }
+            ((UserTab)_pane.getSelectedTab()).requestTell(msg);
         }
     }
 
@@ -191,14 +181,17 @@ public class TabbedChatView extends BContainer
          */
         public void requestTell (final String msg)
         {
-            _ctx.getChatDirector().requestTell(_user, msg, new ResultListener<Name>() {
-                public void requestCompleted (Name result) {
-                    appendSent(msg);
+            if (msg.startsWith("/")) {
+                String error = ((BangChatDirector)_ctx.getChatDirector()).requestTellCommand(
+                    _user, msg);
+                if (!ChatCodes.SUCCESS.equals(error)) {
+                    SystemMessage sysmsg = new SystemMessage(
+                        _ctx.xlate(BangCodes.CHAT_MSGS, error), null, SystemMessage.FEEDBACK);
+                    appendSystem(sysmsg);
                 }
-                public void requestFailed (Exception cause) {
-                    // will be reported in a feedback message
-                }
-            });
+            } else {
+                _ctx.getChatDirector().requestTell(_user, msg, null);
+            }
         }
 
         /**

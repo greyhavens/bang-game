@@ -4,6 +4,7 @@
 package com.threerings.bang.chat.client;
 
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import com.threerings.presents.dobj.MessageEvent;
 
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.client.SpeakService;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.UserMessage;
@@ -27,6 +29,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.game.data.BangObject;
+import java.util.HashMap;
 
 /**
  * Handles custom chat bits for Bang.
@@ -70,6 +73,30 @@ public class BangChatDirector extends ChatDirector
                 return SUCCESS;
             }
         });
+    }
+
+    @Override // documentation inherited
+    public void addChatDisplay (ChatDisplay display)
+    {
+        // keep system displays at the end of the list as a catch all
+        _displays.add(_displays.size() - _systems.size(), display);
+    }
+
+    @Override // documentation inherited
+    public void removeChatDisplay (ChatDisplay display)
+    {
+        super.removeChatDisplay(display);
+        _systems.remove(display);
+    }
+
+    /**
+     * Adds the supplied chat display to the end of the chat display list.  It will be kept at
+     * the end of the list until another call to addSystemDisplay.
+     */
+    public void addSystemDisplay (ChatDisplay display)
+    {
+        super.addChatDisplay(display);
+        _systems.add(display);
     }
 
     /**
@@ -119,6 +146,31 @@ public class BangChatDirector extends ChatDirector
             BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
         }
         return rv;
+    }
+
+    /**
+     * Special handling for doing a command while engaged in tell chat.
+     */
+    public String requestTellCommand (Name target, String msg)
+    {
+        String command = msg.substring(1).toLowerCase();
+        String args = null;
+        int sidx = msg.indexOf(" ");
+        if (sidx != -1) {
+            command = msg.substring(1, sidx).toLowerCase();
+            args = msg.substring(sidx+1).trim();
+        }
+
+        HashMap<String,CommandHandler> possibleCommands = getCommandHandlers(command);
+        if (args != null && possibleCommands.size() == 1) {
+            CommandHandler cmd = possibleCommands.values().iterator().next();
+            if (cmd instanceof SpeakHandler || cmd instanceof EmoteHandler ||
+                    cmd instanceof ThinkHandler) {
+                requestTell(target, args, null);
+            }
+
+        }
+        return requestChat(null, msg, true);
     }
 
     @Override // documentation inherited
@@ -205,6 +257,9 @@ public class BangChatDirector extends ChatDirector
 
     /** We throttle chat for non support users. */
     protected Throttle _chatThrottle = new Throttle(4, 10000);
+
+    /** Any system level displays. */
+    protected ArrayList<ChatDisplay> _systems = new ArrayList<ChatDisplay>();
 
     /** The total number of chat messages we store before dumping the oldest */
     protected static final int MESSAGE_HISTORY_LIMIT = 50;

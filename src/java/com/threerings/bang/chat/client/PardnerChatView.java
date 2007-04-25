@@ -17,6 +17,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.TellFeedbackMessage;
 
 import com.threerings.bang.chat.data.PlayerMessage;
 import com.threerings.bang.chat.client.TabbedChatView.UserTab;
@@ -66,7 +67,7 @@ public class PardnerChatView extends BDecoratedWindow
      */
     public boolean display (Handle pardner, boolean grabFocus)
     {
-        return _tabView.openUserTab(pardner, grabFocus) != null;
+        return (_tabView.openUserTab(pardner, grabFocus) != null);
     }
 
     /**
@@ -176,6 +177,21 @@ public class PardnerChatView extends BDecoratedWindow
                     }
                 }
                 tab.appendReceived(pmsg);
+                return true;
+            } else if (msg instanceof TellFeedbackMessage &&
+                    !((TellFeedbackMessage)msg).isFailure()) {
+                TellFeedbackMessage tmsg = (TellFeedbackMessage)msg;
+                // let players inside a game chat to each other directly
+                PlaceObject plobj = _ctx.getLocationDirector().getPlaceObject();
+                if (plobj instanceof BangObject && plobj.getOccupantInfo(tmsg.speaker) != null) {
+                    return false;
+                }
+                Handle handle = (Handle)tmsg.speaker;
+                UserTab tab = openUserTab(handle, false);
+                if (tab == null) {
+                    return false;
+                }
+                tab.appendSent(tmsg.message);
                 return true;
             }
 
