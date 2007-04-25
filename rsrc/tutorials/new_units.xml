@@ -28,7 +28,7 @@
   <wait event="text_clicked"/>
 
   <!-- move arillery next to BR -->
-  <move_unit id="2000" target="22,17"/>
+  <move_unit id="2000" targetLoc="22,17"/>
 
   <text message="ram3"/>
   <wait event="effect:bang" allowAttack="true"/>
@@ -59,7 +59,7 @@
   <wait event="text_clicked"/>
 
   <!-- add a holowpoint bonus and have them activate it -->
-  <add_piece what="bonus" id="3000" type="indian_post/firestarter"
+  <add_piece what="bonus" id="3000" type="indian_post/firestarter"/>
   <text message="swoop"/>
   <wait event="bonus_activated"/>
 
