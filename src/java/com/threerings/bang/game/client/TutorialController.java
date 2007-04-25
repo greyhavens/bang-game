@@ -118,14 +118,14 @@ public class TutorialController
      * deselected, etc.) or from our event handler when an eventful game object event has arrived
      * (unit moved, etc.).
      */
-    public void handleEvent (String event)
+    public void handleEvent (String event, int id)
     {
         // increment this event's counter
         int count = getEventCount(event)+1;
         _events.put(event, count);
 
         if (_pending == null || !event.matches(_pending.getEvent()) ||
-            count < _pending.getCount()) {
+            count < _pending.getCount() || (_pending.getId() != -1 && _pending.getId() != id)) {
             log.info("Ignoring tutorial event: " + event + " (" + count + ").");
             return;
         }
@@ -331,7 +331,7 @@ public class TutorialController
             if (_click.isEnabled()) {
                 _click.setText("");
                 _view.tutwin.setBackground(BComponent.DEFAULT, _default);
-                handleEvent(TutorialCodes.TEXT_CLICKED);
+                handleEvent(TutorialCodes.TEXT_CLICKED, -1);
             }
         }
     };

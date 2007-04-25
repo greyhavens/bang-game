@@ -994,7 +994,7 @@ public class BangBoardView extends BoardView
         // if this is not a unit, we can stop here
         if (!(piece instanceof Unit)) {
             // report to our tutorial controller that a piece was added
-            _ctrl.postEvent(TutorialCodes.PIECE_ADDED);
+            _ctrl.postEvent(TutorialCodes.PIECE_ADDED, piece.pieceId);
             return;
         }
 
@@ -1015,7 +1015,7 @@ public class BangBoardView extends BoardView
         }
 
         // report to our tutorial controller that a unit was added
-        _ctrl.postEvent(TutorialCodes.UNIT_ADDED);
+        _ctrl.postEvent(TutorialCodes.UNIT_ADDED, piece.pieceId);
     }
 
     /**
@@ -1142,7 +1142,7 @@ public class BangBoardView extends BoardView
         checkForSelectionInfluence();
 
         // just report the effect to the controller in case the tutorial cares
-        _ctrl.postEvent(TutorialCodes.EFFECT_PREFIX + effect);
+        _ctrl.postEvent(TutorialCodes.EFFECT_PREFIX + effect, piece.pieceId);
     }
 
     /** Called by the {@link EffectHandler} when a piece has moved. */
@@ -1163,7 +1163,7 @@ public class BangBoardView extends BoardView
         }
 
         // let the controller know that a unit moved
-        _ctrl.postEvent(TutorialCodes.UNIT_MOVED);
+        _ctrl.postEvent(TutorialCodes.UNIT_MOVED, piece.pieceId);
     }
 
     /** Called by the {@link EffectHandler} when a piece was killed. */
@@ -1187,7 +1187,7 @@ public class BangBoardView extends BoardView
         }
 
         // report that a piece was killed
-        _ctrl.postEvent(TutorialCodes.UNIT_KILLED + ":" + pieceId);
+        _ctrl.postEvent(TutorialCodes.UNIT_KILLED, pieceId);
     }
 
     /** Handles a left mouse button click. */
@@ -1610,7 +1610,7 @@ public class BangBoardView extends BoardView
         highlightMovementTiles(_moveSet, _goalSet, getHighlightColor(piece));
 
         // report that the user took an action (for tutorials)
-        _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
+        _ctrl.postEvent(TutorialCodes.UNIT_SELECTED, piece.pieceId);
     }
 
     protected boolean checkForSelectionInfluence ()
@@ -1717,7 +1717,7 @@ public class BangBoardView extends BoardView
                 psprite.detachChild(_cursor);
             }
             _selection = null;
-            _ctrl.postEvent(TutorialCodes.UNIT_DESELECTED);
+            _ctrl.postEvent(TutorialCodes.UNIT_DESELECTED, -1);
         }
         clearMoveSet();
 
@@ -1788,7 +1788,7 @@ public class BangBoardView extends BoardView
         PieceSprite sprite = _pieces.get(pieceId);
         if (sprite instanceof BonusSprite) {
             // if this was a bonus, note that it was activated
-            _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED);
+            _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED, pieceId);
         }
         if (sprite instanceof ActiveSprite) {
             ActiveSprite asprite = (ActiveSprite)sprite;

@@ -117,11 +117,11 @@ public class BangController extends GameController
      * passed along to the tutorial controller if one is active, so that it can
      * respond to such things.
      */
-    public void postEvent (String event)
+    public void postEvent (String event, int id)
     {
         if (_tutcont != null) {
             try {
-                _tutcont.handleEvent(event);
+                _tutcont.handleEvent(event, id);
             } catch (Exception e) {
                 log.log(Level.WARNING, "Tutorial controller choked on '" +
                         event + "'.", e);
@@ -375,7 +375,7 @@ public class BangController extends GameController
 
     /** Handles a request to move a piece. */
     public void moveAndFire (
-        int pieceId, final int tx, final int ty, final int targetId)
+        final int pieceId, final int tx, final int ty, final int targetId)
     {
         final Unit unit = (Unit)_bangobj.pieces.get(pieceId);
         BangService.ResultListener rl = new BangService.ResultListener() {
@@ -384,11 +384,11 @@ public class BangController extends GameController
                 if (code == GameCodes.EXECUTED_ORDER) {
                     // report to the tutorial controller
                     if (targetId == -1) {
-                        postEvent(TutorialCodes.UNIT_MOVED);
+                        postEvent(TutorialCodes.UNIT_MOVED, pieceId);
                     } else if (tx == Short.MAX_VALUE) {
-                        postEvent(TutorialCodes.UNIT_ATTACKED);
+                        postEvent(TutorialCodes.UNIT_ATTACKED, pieceId);
                     } else {
-                        postEvent(TutorialCodes.UNIT_MOVE_ATTACKED);
+                        postEvent(TutorialCodes.UNIT_MOVE_ATTACKED, pieceId);
                     }
 
                 } else if (code == GameCodes.QUEUED_ORDER) {
@@ -397,11 +397,11 @@ public class BangController extends GameController
 
                     // report to the tutorial controller
                     if (targetId == -1) {
-                        postEvent(TutorialCodes.UNIT_ORDERED_MOVE);
+                        postEvent(TutorialCodes.UNIT_ORDERED_MOVE, pieceId);
                     } else if (tx == Short.MAX_VALUE) {
-                        postEvent(TutorialCodes.UNIT_ORDERED_ATTACK);
+                        postEvent(TutorialCodes.UNIT_ORDERED_ATTACK, pieceId);
                     } else {
-                        postEvent(TutorialCodes.UNIT_ORDERED_MOVE_ATTACK);
+                        postEvent(TutorialCodes.UNIT_ORDERED_MOVE_ATTACK, pieceId);
                     }
 
                 } else {
@@ -462,7 +462,7 @@ public class BangController extends GameController
         } else if (card.owner == _pidx) {
             // instruct the board view to activate placement mode
             _view.view.placeCard(card);
-            postEvent(TutorialCodes.CARD_SELECTED);
+            postEvent(TutorialCodes.CARD_SELECTED, cardId);
         }
     }
 
@@ -479,7 +479,7 @@ public class BangController extends GameController
     }
 
     /** Handles a request to activate a card. */
-    public void activateCard (int cardId, Object target)
+    public void activateCard (final int cardId, Object target)
     {
         _view.view.clearPlacingCard();
         if (_bangobj.cards.get(cardId) == null) {
@@ -487,7 +487,7 @@ public class BangController extends GameController
         } else {
             BangService.ConfirmListener cl = new BangService.ConfirmListener() {
                 public void requestProcessed () {
-                    postEvent(TutorialCodes.CARD_PLAYED);
+                    postEvent(TutorialCodes.CARD_PLAYED, cardId);
                 }
                 public void requestFailed (String reason) {
                     _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, reason);

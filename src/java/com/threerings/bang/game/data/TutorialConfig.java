@@ -21,6 +21,8 @@ public class TutorialConfig
         public int getCount ();
 
         public boolean allowAttack ();
+
+        public int getId ();
     }
 
     public static class Action implements Serializable
@@ -54,6 +56,7 @@ public class TutorialConfig
         implements WaitAction
     {
         public String event;
+        public int id = -1;
         public int count;
         public boolean allowAttack;
 
@@ -67,6 +70,10 @@ public class TutorialConfig
 
         public boolean allowAttack () {
             return allowAttack;
+        }
+
+        public int getId () {
+            return id;
         }
 
         private static final long serialVersionUID = 1;
@@ -84,6 +91,10 @@ public class TutorialConfig
         public String getEvent () {
             return (what.equals("unit") || what.equals("bigshot")) ?
                 TutorialCodes.UNIT_ADDED : TutorialCodes.PIECE_ADDED;
+        }
+
+        public int getId () {
+            return id;
         }
 
         private static final long serialVersionUID = 1;
@@ -120,6 +131,10 @@ public class TutorialConfig
 
         public boolean allowAttack () {
             return allowAttack;
+        }
+
+        public int getId () {
+            return -1;
         }
 
         private static final long serialVersionUID = 1;
