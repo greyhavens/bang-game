@@ -9,7 +9,7 @@
 
   <!-- introduce the tactician -->
   <add_piece what="unit" id="1001" type="frontier_town/tactician"
-             location="20,22" owner="0"/>
+             location="19,23" owner="0"/>
   <center_on what="piece" id="1001"/>
   <text message="tactician"/>
   <wait event="text_clicked"/>
@@ -21,7 +21,7 @@
 
   <!-- add a nugget to the board and show them that -->
   <add_piece what="bonus" id="1000" type="frontier_town/nugget"
-             location="21,22"/>
+             location="19,20"/>
   <center_on what="piece" id="1000"/>
   <text message="nugget_intro" step="2"/>
   <wait event="text_clicked"/>
@@ -30,7 +30,7 @@
 
   <!-- add sharpshooter -->
   <add_piece what="unit" id="2000" type="frontier_town/sharpshooter"
-             location="21,20" owner="1"/>
+             location="20,21" owner="1"/>
   <text message="get_nugget"/>
   <wait event="text_clicked"/>
 
@@ -39,16 +39,22 @@
   <text message="got_shot"/>
   <wait event="text_clicked"/>
 
-  <!-- add a repair, and tell to get repair and shoot -->
-  <add_piece what="bonus" id="3002" type="frontier_town/repair"
-             location="20,20"/>
-  <center_on what="piece" id="3002"/>
   <text message="repair"/>
   <wait event="text_clicked"/>
+
+  <!-- sharpshooter gets the nugget -->
+  <move_unit id="2000" target="19,21"/>
+
+  <!-- add a repair, and tell to get repair and shoot -->
+  <add_piece what="bonus" id="3002" type="frontier_town/repair" 
+             location="20,21"/>
+  <center_on what="piece" id="3002"/>
   <text message="repair2"/>
-  <wait event="bonus_activated" allowAttack="true"/>
+  <wait event="text_clicked"/>
+  <text message="repair3"/>
+  <wait event="bonus_activated" id="3002" allowAttack="true"/>
   <text message="kill"/>
-  <wait event="unit_killed" id="2000" allowAttack="true"/>
+  <wait event="unit_killed:2000" allowAttack="true"/>
 
   <!-- pickup and deposit nugget -->
   <text message="got_nugget" step="3"/>
@@ -83,7 +89,7 @@
   <wait event="text_clicked"/>
 
   <!-- add an iron plate bonus -->
-  <add_piece what="bonus" id="3002" type="frontier_town/iron_plate"
+  <add_piece what="bonus" id="3002" type="frontier_town/iron_plate" 
              location="20,22"/>
 
   <text message="iron_plate"/>
