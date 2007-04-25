@@ -6,6 +6,7 @@
 #
 # The base URL for downloading and patching the client and the document root
 # for said server
+# *IMPORTANT* This file is shipped to the client. Be careful what you put in here.
 
 root_url = http://localhost
 web_dir = pages
