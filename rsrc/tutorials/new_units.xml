@@ -1,0 +1,117 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="new_units" board="Wood's Edge" players="2" respawn="false">
+  <show_view name="player_status"/>
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- add your buffalo rider -->
+  <add_piece what="unit" id="1000" type="indian_post/buffalo_rider"
+             location="16,17" owner="0"/>
+  <center_on what="piece" id="1000"/>
+
+  <!-- explain br attack -->
+  <text message="intro" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- add enemy arillery and ram him-->
+  <add_piece what="unit" id="2000" type="frontier_town/artillery"
+             location="22,17" owner="1"/>
+  <center_on what="piece" id="2001"/>
+
+  <text message="ram"/>
+  <wait event="effect:bang" allowAttack="true"/>
+
+  <text message="ram2"/>
+  <wait event="text_clicked"/>
+
+  <!-- move arillery next to BR -->
+  <move_unit id="2000" target="22,17"/>
+
+  <text message="ram3"/>
+  <wait event="effect:bang" allowAttack="true"/>
+
+  <!-- add enemy Tbird that attacks -->
+  <add_piece what="unit" id="2001" type="indian_post/thunderbird"
+             location="20,19" owner="1"/>
+  <move_unit id="2001" target="1000"/>
+  <move_unit id="2000" target="1000"/>
+  <center_on what="piece" id="2001"/>
+
+  <text message="ram4"/>
+  <wait event="unit_selected" allowAttack="true"/>
+
+  <text message="ram5"/>
+  <wait event="text_clicked"/>
+
+  <!-- enemies both attack -->
+  <move_unit id="2001" target="1000"/>
+  <move_unit id="2000" target="1000"/>
+
+  <!-- add your Thunderbird -->
+  <add_piece what="unit" id="1001" type="indian_post/thunderbird"
+             location="19,17" owner="0"/>
+  <center_on what="piece" id="1001"/>
+
+  <text message="tbird" step="3"/>
+  <wait event="text_clicked"/>
+
+  <!-- add a holowpoint bonus and have them activate it -->
+  <add_piece what="bonus" id="3000" type="indian_post/firestarter"
+  <text message="swoop"/>
+  <wait event="bonus_activated"/>
+
+  <text message="swoop2"/>
+  <wait event="effect:bang" allowAttack="true"/>
+
+  <!-- enemy tbird attacks back -->
+  <move_unit id="2001" target="1001"/>
+
+  <text message="swoop3"/>
+  <wait event="text_clicked"/>
+
+  <!-- add enemy Dreamcatcher that attacks -->
+  <add_piece what="unit" id="2003" type="indian_post/dreamcatcher"
+             location="1002" owner="1"/>
+  <center_on what="piece" id="2003"/>
+
+  <text message="dreamcatcher" step="3"/>
+  <wait event="effect:bang" allowAttack="true"/>
+
+  <move_unit id="2003" target="1002"/>
+
+  <text message="scared"/>
+  <wait event="text_clicked"/>
+
+  <!-- add an enemy codger that attacks -->
+  <add_piece what="unit" id="2004" type="frontier_town/codger"
+             location="1001" owner="1"/>
+  <move_unit id="2004" target="1001"/>
+
+  <text message="codger"/>
+  <wait event="text_clicked"/>
+
+ <!-- add your Dog Soldier -->
+ <add_piece what="unit" id="1003" type="indian_post/dogsoldier"
+             location="2003" owner="0"/>
+  <center_on what="piece" id="1003"/>
+
+  <text message="soldier" step="4"/>
+  <wait event="text_clicked"/>
+
+  <!-- enemy Dreamcatcher attacks -->
+  <move_unit id="2003" target="1002"/>
+
+  <text message="fearless"/>
+  <wait event="effect:bang" allowAttack="true"/>
+
+  <text message="slash"/>
+  <wait event="text_clicked"/>
+
+  <!-- wrap it up -->
+  <text message="done" step="5"/>
+  <wait event="text_clicked"/>
+
+</tutorial>
