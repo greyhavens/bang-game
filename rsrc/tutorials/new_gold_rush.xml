@@ -54,7 +54,7 @@
   <text message="repair3"/>
   <wait event="bonus_activated" id="3002" allowAttack="true"/>
   <text message="kill"/>
-  <wait event="unit_killed:2000" allowAttack="true"/>
+  <wait event="unit_killed" id="2000" allowAttack="true"/>
 
   <!-- pickup and deposit nugget -->
   <text message="got_nugget" step="3"/>
