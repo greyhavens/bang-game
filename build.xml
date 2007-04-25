@@ -1045,7 +1045,7 @@
     <copy file="log/README" todir="${pkg.base}/log"/>
     <copy file="rsrc/config/resource/manager.properties"
           todir="${pkg.base}/${deploy.dir}/rsrc/config/resource/"/>
-    <copy file="etc/build-boards.xml" todir="${pkg.base}/build/etc"/>
+    <copy file="etc/build-boards.xml" todir="${pkg.base}/etc"/>
     <copy file="tools/lib/perl/GrindUtil.pm" todir="${pkg.base}/tools/lib/perl"/>
     <antcall target="copywithperms">
       <param name="copy.perms" value="755"/>
