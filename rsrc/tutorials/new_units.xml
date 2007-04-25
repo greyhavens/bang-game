@@ -19,7 +19,7 @@
   <!-- add enemy arillery and ram him-->
   <add_piece what="unit" id="2000" type="frontier_town/artillery"
              location="22,17" owner="1"/>
-  <center_on what="piece" id="2001"/>
+  <center_on what="piece" id="2000"/>
 
   <text message="ram"/>
   <wait event="effect:bang" allowAttack="true"/>
