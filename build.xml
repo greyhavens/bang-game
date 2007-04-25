@@ -792,10 +792,12 @@
     <!-- otherwise blow its top due to some heap size wackiness -->
     <exec executable="ant" dir="${basedir}" failonerror="true">
       <env key="ANT_OPTS" value="-mx128M"/>
+      <arg line="-Dtowns=${towns}"/>
       <arg line="avatars"/>
     </exec>
     <exec executable="ant" dir="${basedir}" failonerror="true">
       <env key="ANT_OPTS" value="-mx128M"/>
+      <arg line="-Dtowns=${towns}"/>
       <arg line="models"/>
     </exec>
 
@@ -921,7 +923,18 @@
   </target>
 
   <!-- rebuilds everything and extra bits for packaging -->
-  <target name="distpkg" depends="distall">
+  <target name="distpkg">
+    <!-- don't include boom_town bundles in production builds -->
+    <if><equals arg1="${props.dist}" arg2="production"/>
+      <then>
+        <antcall target="distall">
+          <param name="towns" value="frontier_town,indian_post"/>
+        </antcall>
+      </then>
+    <else>
+      <antcall target="distall"/>
+    </else></if>
+
     <if><istrue value="${build.docs}"/><then>
       <antcall target="javadoc"/>
     </then></if>
