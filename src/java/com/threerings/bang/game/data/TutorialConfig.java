@@ -79,6 +79,14 @@ public class TutorialConfig
         private static final long serialVersionUID = 1;
     }
 
+    public static class WaitHolding extends Wait
+    {
+        public String holding;
+        public int holderId;
+
+        private static final long serialVersionUID = 1;
+    }
+
     public static class AddPiece extends Action
         implements WaitAction
     {

@@ -48,5 +48,6 @@ public class TutorialConfigParser extends CompiledConfigParser
         "scenario_action", TutorialConfig.ScenarioAction.class.getName(),
         "move_unit_and_wait", TutorialConfig.MoveUnitAndWait.class.getName(),
         "set_card", TutorialConfig.SetCard.class.getName(),
+        "wait_holding", TutorialConfig.WaitHolding.class.getName(),
     };
 }

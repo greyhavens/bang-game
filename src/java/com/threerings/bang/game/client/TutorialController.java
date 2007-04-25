@@ -38,6 +38,7 @@ import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Homestead;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import static com.threerings.bang.Log.log;
@@ -126,7 +127,7 @@ public class TutorialController
 
         if (_pending == null || !event.matches(_pending.getEvent()) ||
             count < _pending.getCount() || (_pending.getId() != -1 && _pending.getId() != id)) {
-            log.info("Ignoring tutorial event: " + event + " (" + count + ").");
+            log.info("Ignoring tutorial event: " + event + " (" + count + "), id=" + id +".");
             return;
         }
         log.info("Matched tutorial event: " + event + " (" + count + ").");
@@ -261,9 +262,18 @@ public class TutorialController
 
             log.info("Waiting [event=" + _pending.getEvent() + ", action=" + _pending + "].");
 
+            boolean completed = false;
+
+            if (action instanceof TutorialConfig.WaitHolding) {
+                TutorialConfig.WaitHolding whaction = (TutorialConfig.WaitHolding)action;
+                Piece piece = _bangobj.pieces.get(whaction.holderId);
+                completed = (piece != null && piece instanceof Unit &&
+                        whaction.holding.equals(((Unit)piece).holding));
+            }
+
             // if an event's count is already satified, turn it into a "Click to continue..." event
-            if (_pending.getCount() > 0 &&
-                getEventCount(_pending.getEvent()) >= _pending.getCount()) {
+            if (completed || (_pending.getCount() > 0 &&
+                getEventCount(_pending.getEvent()) >= _pending.getCount())) {
                 log.info("Converting to TEXT_CLICKED....");
                 TutorialConfig.Wait wait = new TutorialConfig.Wait();
                 wait.event = TutorialCodes.TEXT_CLICKED;
