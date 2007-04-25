@@ -44,6 +44,14 @@ webapp_dir = /export/threerings/webapps
 server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
 
 #
+# S3 client upload configuration
+
+# client_s3enable = true
+# client_s3bucket = s3download.banghowdy.com
+# client_s3id = AWS ID
+# client_s3key = SECRET KEY
+
+#
 # Auto-restart server if code changes (used on dev server)
 
 # auto_restart = false
