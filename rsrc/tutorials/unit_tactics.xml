@@ -9,9 +9,9 @@
 
   <!-- add gang of bandits -->
   <add_piece what="unit" id="2000" type="frontier_town/artillery"
-             location="25,15" owner="1"/>
+             location="21,12" owner="1"/>
   <add_piece what="unit" id="2001" type="frontier_town/dirigible"
-             location="22,15" owner="1"/>
+             location="21,15" owner="1"/>
   <center_on what="piece" id="2001"/>
 
   <!-- explain the basics -->
@@ -20,7 +20,7 @@
 
   <!-- add your gunslinger -->
   <add_piece what="unit" id="1000" type="frontier_town/gunslinger"
-             location="20,17" owner="0"/>
+             location="20,18" owner="0"/>
   <center_on what="piece" id="1000"/>
 
   <!-- explain attack penalty -->
@@ -33,9 +33,17 @@
   <text message="gunslinger4"/>
   <wait event="text_clicked"/>
 
+  <!-- kill the gunslinger -->
+  <move_unit id="2000" target="1000"/>
+  <text message="barrage"/>
+  <wait event="text_clicked"/>
+  <move_unit id="2000" target="1000"/>
+  <text message="barrage2"/>
+  <wait event="text_clicked"/>
+
   <!-- add your codger -->
   <add_piece what="unit" id="1001" type="frontier_town/codger"
-             location="21,17" owner="0"/>
+             location="21,18" owner="0"/>
   <center_on what="piece" id="1001"/>
 
   <!-- explain attack bonus -->
@@ -45,16 +53,13 @@
   <wait event="text_clicked"/>
   <text message="codger3"/>
   <wait event="effect:bang" allowAttack="true"/>
+
+  <!-- explain attack bonus -->
   <text message="codger4"/>
   <wait event="text_clicked"/>
 
-  <!-- kill the gunslinger -->
-  <move_unit id="2000" target="1000"/>
-  <text message="barrage"/>
-  <wait event="text_clicked"/>
-  <move_unit id="2000" target="1000"/>
-  <text message="barrage2"/>
-  <wait event="text_clicked"/>
+  <!-- shoot the codger and move in range -->
+  <move_unit id="2000" location="21,14" target="1001"/>
 
   <!-- get the repair bonus -->
   <text message="get_repair"/>
