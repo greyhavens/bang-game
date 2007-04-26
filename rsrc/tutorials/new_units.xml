@@ -24,10 +24,13 @@
   <text message="ram"/>
   <wait event="effect:bang" allowAttack="true"/>
 
+  <!-- add a repair for the artillery -->
+  <add_piece what="bonus" id="3005" type="frontier_town/repair"/>
+
   <text message="ram2"/>
   <wait event="text_clicked"/>
 
-  <!-- move arillery next to BR -->
+  <!-- move arillery next to BR onto that repair-->
   <move_unit id="2000" location="22,17"/>
 
   <text message="ram3"/>
