@@ -43,26 +43,26 @@
 
   <!-- have them look at the preloaded move indicator -->
   <text message="examine_pending"/>
-  <wait event="text_clicked" allowAttack="true"/>
+  <wait event="text_clicked" allowAttack="0"/>
   <text message="redo_order"/>
-  <wait event="text_clicked" allowAttack="true"/>
+  <wait event="text_clicked" allowAttack="0"/>
 
   <!-- add an enemy unit and show them how to shoot it -->
   <add_piece what="unit" id="1001" type="frontier_town/artillery"
              location="1000" owner="1"/>
   <center_on what="piece" id="1001"/>
   <text message="click_to_highlight_attacks" step="4"/>
-  <wait event="unit_selected" allowAttack="true"/>
+  <wait event="unit_selected" allowAttack="0"/>
 
   <text message="click_to_attack"/>
   <wait event="text_clicked"/>
   <text message="click_to_attack_2" step="4"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
 
   <text message="move_and_attack"/>
   <wait event="text_clicked"/>
   <text message="move_and_attack2"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
 
   <text message="move_double_click"/>
   <wait event="text_clicked"/>

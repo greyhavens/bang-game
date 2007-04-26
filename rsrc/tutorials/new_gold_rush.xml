@@ -4,14 +4,14 @@
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
-  <text message="welcome" step="1"/>
+  <text message="welcome" step="1" avatar="units/frontier_town/codger/portrait.png"/>
   <wait event="text_clicked"/>
 
   <!-- introduce the tactician -->
   <add_piece what="unit" id="1001" type="frontier_town/tactician"
              location="19,23" owner="0"/>
   <center_on what="piece" id="1001"/>
-  <text message="tactician"/>
+  <text message="tactician" avatar="units/frontier_town/tactician/portrait.png"/>
   <wait event="text_clicked"/>
 
   <!-- show them their claim -->
@@ -35,7 +35,7 @@
   <wait event="text_clicked"/>
 
   <!-- add a repair in order to block the nugget landing there-->
-  <add_piece what="bonus" id="3002" type="frontier_town/repair" 
+  <add_piece what="bonus" id="3002" type="frontier_town/repair"
              location="20,20"/>
 
   <!-- sharpshooter shoots out nugget -->
@@ -53,9 +53,9 @@
   <center_on what="piece" id="3002"/>
   <wait event="text_clicked"/>
   <text message="repair3"/>
-  <wait event="bonus_activated" id="3002" allowAttack="true"/>
+  <wait event="bonus_activated" id="3002" allowAttack="20,20"/>
   <text message="kill"/>
-  <wait event="unit_killed" id="2000" allowAttack="true"/>
+  <wait event="unit_killed" id="2000" allowAttack="0"/>
 
   <!-- pickup and deposit nugget -->
   <text message="got_nugget" step="3"/>
@@ -90,7 +90,7 @@
   <wait event="text_clicked"/>
 
   <!-- add an iron plate bonus -->
-  <add_piece what="bonus" id="3002" type="frontier_town/iron_plate" 
+  <add_piece what="bonus" id="3002" type="frontier_town/iron_plate"
              location="20,22"/>
 
   <text message="iron_plate"/>

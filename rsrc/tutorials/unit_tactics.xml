@@ -25,11 +25,11 @@
 
   <!-- explain attack penalty -->
   <text message="gunslinger" step="2"/>
-  <wait event="unit_selected" allowAttack="true"/>
+  <wait event="unit_selected" allowAttack="0"/>
   <text message="gunslinger2"/>
   <wait event="text_clicked"/>
   <text message="gunslinger3"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
   <text message="gunslinger4"/>
   <wait event="text_clicked"/>
 
@@ -48,11 +48,11 @@
 
   <!-- explain attack bonus -->
   <text message="codger" step="3"/>
-  <wait event="unit_selected" allowAttack="true"/>
+  <wait event="unit_selected" allowAttack="0"/>
   <text message="codger2"/>
   <wait event="text_clicked"/>
   <text message="codger3"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
 
   <!-- explain attack bonus -->
   <text message="codger4"/>
@@ -71,7 +71,7 @@
   <!-- have the artillery get shot -->
   <center_on what="piece" id="1000"/>
   <text message="full_attack" step="4"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
   <text message="full_attack2"/>
   <wait event="text_clicked"/>
 
@@ -80,9 +80,9 @@
   <text message="artillery"/>
   <wait event="text_clicked"/>
   <text message="artillery2"/>
-  <wait event="unit_selected" allowAttack="true"/>
+  <wait event="unit_selected" allowAttack="0"/>
   <text message="artillery3"/>
-  <wait event="unit_killed" id="2000" allowAttack="true"/>
+  <wait event="unit_killed" id="2000" allowAttack="0"/>
 
   <!-- wrap it up -->
   <text message="done" step="5"/>

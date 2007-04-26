@@ -22,7 +22,7 @@
   <center_on what="piece" id="2000"/>
 
   <text message="ram"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
 
   <!-- add a repair for the artillery -->
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
@@ -35,7 +35,7 @@
   <move_unit id="2000" location="22,17"/>
 
   <text message="ram3"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
 
   <!-- add enemy Tbird that attacks -->
   <add_piece what="unit" id="2001" type="indian_post/thunderbird"
@@ -49,7 +49,7 @@
   <move_unit id="2000" target="1000"/>
 
   <text message="ram5"/>
-  <wait event="unit_selected" allowAttack="true"/>
+  <wait event="unit_selected" allowAttack="0"/>
 
   <text message="ram6"/>
   <wait event="text_clicked"/>
@@ -70,10 +70,10 @@
              location="22,17"/>
   <center_on what="piece" id="3000"/>
   <text message="swoop"/>
-  <wait event="bonus_activated" allowAttack="true"/>
+  <wait event="bonus_activated" allowAttack="0"/>
 
   <text message="swoop2"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
 
   <!-- enemy tbird attacks back -->
   <move_unit id="2001" target="1001"/>
@@ -114,7 +114,7 @@
   <move_unit id="2003" target="1003"/>
 
   <text message="fearless"/>
-  <wait event="effect:bang" id="2003" allowAttack="true"/>
+  <wait event="effect:bang" id="2003" allowAttack="0"/>
 
   <text message="slash"/>
   <wait event="text_clicked"/>

@@ -39,7 +39,7 @@
   <add_piece what="cow" id="3002" location="26,17" owner="-1"/>
 
   <text message="start_test"/>
-  <wait event="text_clicked" allowAttack="true"/>
+  <wait event="text_clicked" allowAttack="0"/>
   
   <text message="end_test"/>
   <wait event="text_clicked"/>

@@ -85,13 +85,13 @@
 
   <center_on what="piece" id="1000" arrow="false"/>
   <text message="attack_totem" step="3"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
 
   <text message="back_up" step="3"/>
   <wait event="unit_moved"/>
 
   <text message="attack_again" step="3"/>
-  <wait event="unit_killed" allowAttack="true"/>
+  <wait event="unit_killed" allowAttack="0"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done"/>

@@ -15,7 +15,7 @@
 
   <!-- have the player shoot one with the other -->
   <text message="shoot_gunslinger" step="2"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
   <text message="took_damage"/>
   <wait event="text_clicked"/>
 
@@ -30,7 +30,7 @@
   <text message="show_help" step="3"/>
   <wait event="text_clicked"/>
   <text message="show_help_2"/>
-  <wait event="text_clicked" allowAttack="true"/>
+  <wait event="text_clicked" allowAttack="0"/>
 
   <!-- add a ramblin' bonus, have them inspect and activate it -->
   <text message="ramblin_intro"/>
@@ -41,7 +41,7 @@
   <text message="ramblin_effect"/>
   <wait event="unit_selected"/>
   <text message="right_click_clear"/>
-  <wait event="text_clicked" allowAttack="true"/>
+  <wait event="text_clicked" allowAttack="0"/>
 
   <!-- show the player status view, explain it -->
   <text message="player_status_intro" step="4"/>

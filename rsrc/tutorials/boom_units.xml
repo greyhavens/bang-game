@@ -13,6 +13,6 @@
 
   <center_on what="piece" id="1000"/>
   <text message="test_away" step="1"/>
-  <wait event="text_clicked" allowAttack="true"/>
+  <wait event="text_clicked" allowAttack="0"/>
 
 </tutorial>

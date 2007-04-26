@@ -17,7 +17,7 @@
 
   <!-- have the player shoot one with the other -->
   <text message="shoot_gunslinger" step="2"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" allowAttack="0"/>
   <text message="took_damage"/>
   <wait event="text_clicked"/>
 
@@ -44,7 +44,7 @@
   <text message="ramblin_intro"/>
   <wait event="bonus_activated"/>
   <text message="ramblin_effect"/>
-  <wait event="unit_selected" allowAttack="true"/>
+  <wait event="unit_selected" allowAttack="0"/>
 
   <!-- add a card bonus, have them activate it -->
   <set_card type="missile"/>
