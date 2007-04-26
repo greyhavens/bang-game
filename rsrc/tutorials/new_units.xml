@@ -68,6 +68,7 @@
   <!-- add a firestarter bonus and have them activate it -->
   <add_piece what="bonus" id="3000" type="indian_post/firestarter"
              location="22,17"/>
+  <center_on what="piece" id="3000"/>
   <text message="swoop"/>
   <wait event="bonus_activated" allowAttack="true"/>
 
@@ -85,8 +86,8 @@
              location="1001" owner="1"/>
   <center_on what="piece" id="2003"/>
 
-  <text message="dreamcatcher" step="3"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <text message="dreamcatcher" step="4"/>
+  <wait event="text_clicked"/>
 
   <move_unit id="2003" target="1001"/>
 
@@ -106,20 +107,20 @@
              location="2003" owner="0"/>
   <center_on what="piece" id="1003"/>
 
-  <text message="soldier" step="4"/>
+  <text message="soldier" step="5"/>
   <wait event="text_clicked"/>
 
   <!-- enemy Dreamcatcher attacks -->
   <move_unit id="2003" target="1003"/>
 
   <text message="fearless"/>
-  <wait event="effect:bang" allowAttack="true"/>
+  <wait event="effect:bang" id="2003" allowAttack="true"/>
 
   <text message="slash"/>
   <wait event="text_clicked"/>
 
   <!-- wrap it up -->
-  <text message="done" step="5"/>
+  <text message="done" step="6"/>
   <wait event="text_clicked"/>
 
 </tutorial>
