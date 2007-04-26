@@ -4,7 +4,7 @@
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
-  <text message="welcome" step="1"/>
+  <text message="welcome" step="1" avatar="units/indian_post/revolutionary/portrait.png"/>
 
   <!-- sneakily have our thunderbird pick up a bonus -->
   <add_piece what="unit" id="2000" type="indian_post/thunderbird"

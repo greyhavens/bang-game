@@ -4,7 +4,7 @@
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
-  <text message="welcome" step="1"/>
+  <text message="welcome" step="1" avatar="units/frontier_town/codger/portrait.png"/>
   <wait event="text_clicked"/>
 
   <!-- add gang of bandits -->

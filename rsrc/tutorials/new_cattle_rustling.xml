@@ -4,15 +4,15 @@
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
-  <text message="welcome" step="1"/>
+  <text message="welcome" step="1" avatar="units/frontier_town/codger/portrait.png"/>
   <wait event="text_clicked"/>
 
   <!-- add their bigshot to the board and explain bigshots -->
   <add_piece what="bigshot" id="1001" location="18,12" owner="0"/>
   <center_on what="piece" id="1001"/>
-  <text message="bigshot_intro" step="1"/>
+  <text message="bigshot_intro"/>
   <wait event="text_clicked"/>
-  <text message="bigshot_intro_2" step="1"/>
+  <text message="bigshot_intro_2" avatar="units/frontier_town/cavalry/portrait.png"/>
   <wait event="text_clicked"/>
 
   <!-- add a cow and explain those -->
