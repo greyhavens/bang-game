@@ -69,7 +69,7 @@
   <add_piece what="bonus" id="3000" type="indian_post/firestarter"
              location="22,17"/>
   <text message="swoop"/>
-  <wait event="bonus_activated"/>
+  <wait event="bonus_activated" allowAttack="true"/>
 
   <text message="swoop2"/>
   <wait event="effect:bang" allowAttack="true"/>
@@ -88,7 +88,7 @@
   <text message="dreamcatcher" step="3"/>
   <wait event="effect:bang" allowAttack="true"/>
 
-  <move_unit id="2003" target="1002"/>
+  <move_unit id="2003" target="1001"/>
 
   <text message="scared"/>
   <wait event="text_clicked"/>
@@ -110,7 +110,7 @@
   <wait event="text_clicked"/>
 
   <!-- enemy Dreamcatcher attacks -->
-  <move_unit id="2003" target="1002"/>
+  <move_unit id="2003" target="1003"/>
 
   <text message="fearless"/>
   <wait event="effect:bang" allowAttack="true"/>
