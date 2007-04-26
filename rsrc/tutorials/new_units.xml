@@ -25,7 +25,8 @@
   <wait event="effect:bang" allowAttack="true"/>
 
   <!-- add a repair for the artillery -->
-  <add_piece what="bonus" id="3005" type="frontier_town/repair"/>
+  <add_piece what="bonus" id="3000" type="frontier_town/repair"
+             location="22,17"/>
 
   <text message="ram2"/>
   <wait event="text_clicked"/>
@@ -55,13 +56,14 @@
   <!-- add your Thunderbird -->
   <add_piece what="unit" id="1001" type="indian_post/thunderbird"
              location="19,17" owner="0"/>
-  <center_on what="piece" id="1001"/>
 
   <text message="tbird" step="3"/>
+  <center_on what="piece" id="1001"/>
   <wait event="text_clicked"/>
 
-  <!-- add a holowpoint bonus and have them activate it -->
-  <add_piece what="bonus" id="3000" type="indian_post/firestarter"/>
+  <!-- add a firestarter bonus and have them activate it -->
+  <add_piece what="bonus" id="3000" type="indian_post/firestarter"
+             location="22,18"/>
   <text message="swoop"/>
   <wait event="bonus_activated"/>
 
