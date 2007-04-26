@@ -40,17 +40,21 @@
   <!-- add enemy Tbird that attacks -->
   <add_piece what="unit" id="2001" type="indian_post/thunderbird"
              location="20,19" owner="1"/>
-  <move_unit id="2001" target="1000"/>
-  <move_unit id="2000" target="1000"/>
 
   <text message="ram4"/>
-  <wait event="unit_selected" allowAttack="true"/>
-
-  <text message="ram5"/>
   <wait event="text_clicked"/>
 
   <!-- enemies both attack -->
   <move_unit id="2001" target="1000"/>
+  <move_unit id="2000" target="1000"/>
+
+  <text message="ram5"/>
+  <wait event="unit_selected" allowAttack="true"/>
+
+  <text message="ram6"/>
+  <wait event="text_clicked"/>
+
+  <!-- enemy artillery kills brider -->
   <move_unit id="2000" target="1000"/>
 
   <!-- add your Thunderbird -->
@@ -63,7 +67,7 @@
 
   <!-- add a firestarter bonus and have them activate it -->
   <add_piece what="bonus" id="3000" type="indian_post/firestarter"
-             location="22,18"/>
+             location="22,17"/>
   <text message="swoop"/>
   <wait event="bonus_activated"/>
 
@@ -78,7 +82,7 @@
 
   <!-- add enemy Dreamcatcher that attacks -->
   <add_piece what="unit" id="2003" type="indian_post/dreamcatcher"
-             location="1002" owner="1"/>
+             location="1001" owner="1"/>
   <center_on what="piece" id="2003"/>
 
   <text message="dreamcatcher" step="3"/>
