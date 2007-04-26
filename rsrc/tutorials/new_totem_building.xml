@@ -15,30 +15,33 @@
 
   <wait event="text_clicked"/>
 
+  <text message="welcome2"/>
+  <wait event="text_clicked"/>
+
   <!-- show them a totem base -->
   <center_on what="special" id="1926"/>
-  <text message="totem_base" step="1"/>
+  <text message="totem_base"/>
   <wait event="text_clicked"/>
 
   <!-- add a totem piece and show that to 'em -->
   <add_piece what="bonus" id="1010" type="indian_post/totem_medium"
              location="17,26" owner="-1"/>
   <center_on what="piece" id="1010"/>
-  <text message="totem_piece" step="1"/>
+  <text message="totem_piece"/>
   <wait event="text_clicked"/>
 
   <!-- add a buffalo rider and have them pick up the totem -->
   <add_piece what="unit" id="1000" type="indian_post/buffalo_rider"
              location="14,26" owner="0"/>
-  <text message="pick_up_totem" step="1"/>
+  <text message="pick_up_totem"/>
   <wait event="effect:indian_post/totem/pickedup"/>
 
   <!-- tell them to stack the totem onto the base -->
-  <text message="got_totem" step="1"/>
+  <text message="got_totem"/>
   <wait event="effect:indian_post/totem/added"/>
 
   <!-- explain totem scoring -->
-  <text message="built_totem" step="1"/>
+  <text message="built_totem"/>
   <wait event="text_clicked"/>
 
   <!-- explain different sizes -->
@@ -46,7 +49,7 @@
   <wait event="text_clicked"/>
 
   <!-- start to explain scoring -->
-  <text message="score_one" step="2"/>
+  <text message="score_one"/>
   <wait event="text_clicked"/>
 
   <add_piece what="bonus" id="1011" type="indian_post/totem_small"
@@ -54,22 +57,22 @@
   <center_on what="piece" id="1011"/>
   <text message="score_two" step="2"/>
   <wait event="effect:indian_post/totem/pickedup"/>
-  <text message="score_two_a" step="2"/>
+  <text message="score_two_a"/>
   <wait event="effect:indian_post/totem/added"/>
 
-  <text message="score_three" step="2"/>
+  <text message="score_three"/>
   <wait event="text_clicked"/>
 
-  <text message="score_four" step="2"/>
+  <text message="score_four"/>
   <wait event="text_clicked"/>
 
-  <text message="score_four_a" step="2"/>
+  <text message="score_four_a"/>
   <wait event="text_clicked"/>
-  <text message="score_five" step="2"/>
+  <text message="score_five"/>
   <wait event="text_clicked"/>
-  <text message="score_five_a" step="2"/>
+  <text message="score_five_a"/>
   <wait event="text_clicked"/>
-  <text message="score_six" step="2"/>
+  <text message="score_six"/>
   <wait event="text_clicked"/>
 
   <!-- add a huslte bonus to get the br out of there -->
@@ -90,17 +93,17 @@
   <wait event="text_clicked"/>
 
   <center_on what="piece" id="1000" arrow="false"/>
-  <text message="attack_totem" step="3"/>
+  <text message="attack_totem"/>
   <wait event="effect:bang" allowAttack="0"/>
 
-  <text message="back_up" step="3"/>
+  <text message="back_up"/>
   <wait event="unit_moved"/>
 
-  <text message="attack_again" step="3"/>
+  <text message="attack_again"/>
   <wait event="unit_killed" allowAttack="0"/>
 
   <!-- wrap up and end the tutorial -->
-  <text message="done"/>
+  <text message="done" step="4"/>
   <wait event="text_clicked"/>
 
 </tutorial>
