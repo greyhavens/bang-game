@@ -2198,7 +2198,8 @@ public class BangManager extends GameManager
 
         // make sure we are alive, and are ready to move
         int steps = unit.getDistance(x, y);
-        if (!unit.isAlive() || unit.ticksUntilMovable(_bangobj.tick) > 0) {
+        if (!unit.isAlive() ||
+                (!(_scenario instanceof Tutorial) && unit.ticksUntilMovable(_bangobj.tick) > 0)) {
             log.info("Unit no longer movable [unit=" + unit + ", alive=" + unit.isAlive() +
                      ", mticks=" + unit.ticksUntilMovable(_bangobj.tick) + "].");
             throw new InvocationException(MOVER_NO_LONGER_VALID);
