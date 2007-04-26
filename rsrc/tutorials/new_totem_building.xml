@@ -80,11 +80,12 @@
   <wait event="bonus_activated"/>
 
   <!-- explain attacking totems -->
-  <center_on what="special" id="2326"/>
+  <center_on what="special" id="1926"/>
   <text message="fight_bases" step="3"/>
   <wait event="text_clicked"/>
 
-  <move_unit id="2000" location="20,25"/>
+  <!-- the enemy tbird puts the totem piece on -->
+  <move_unit id="2000" location="19,25"/>
   <text message="attacking" step="3"/>
   <wait event="text_clicked"/>
 
