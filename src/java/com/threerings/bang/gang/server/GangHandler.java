@@ -1088,9 +1088,8 @@ public class GangHandler
 
         // make sure it's not the same rank
         if (rank == entry.rank) {
-            log.warning("Tried to change to same rank [gang=" + this + ", handle=" + handle +
-                ", target=" + entry + "].");
-            throw new InvocationException(INTERNAL_ERROR);
+            listener.requestProcessed();
+            return;
         }
 
         // for leaders, the command order will be one more than the highest current order
