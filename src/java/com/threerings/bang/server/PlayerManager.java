@@ -84,6 +84,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.EntryReplacedEvent;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
@@ -243,6 +244,12 @@ public class PlayerManager
             }
             public void updateEntry (PardnerEntry entry) {
                 player.updatePardners(entry);
+            }
+            public void renameEntry (PardnerEntry oldEntry, Handle newHandle) {
+                PardnerEntry newEntry = (PardnerEntry)oldEntry.clone();
+                newEntry.handle = newHandle;
+                BangServer.omgr.postEvent(new EntryReplacedEvent<PardnerEntry>(
+                    player, PlayerObject.PARDNERS, oldEntry.handle, newEntry));
             }
             public String toString () {
                 return player.who();

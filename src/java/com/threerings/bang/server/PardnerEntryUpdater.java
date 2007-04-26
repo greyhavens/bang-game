@@ -53,9 +53,27 @@ public class PardnerEntryUpdater extends SetAdapter
     // documentation inherited from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent ace)
     {
-        if (ace.getName().equals(PlayerObject.LOCATION)) {
+        String name = ace.getName();
+        if (name.equals(PlayerObject.LOCATION)) {
             updateStatus();
             updateEntries();
+        } else if (name.equals(PlayerObject.HANDLE)) {
+            // rename the entry in all of our pardners' lists
+            PardnerEntry oentry = entry;
+            entry = (PardnerEntry)oentry.clone();
+            entry.handle = _player.handle;
+            for (PardnerEntry pard : _player.pardners) {
+                PlayerObject pardner = BangServer.lookupPlayer(pard.handle);
+                if (pardner != null) {
+                    pardner.startTransaction();
+                    try {
+                        pardner.removeFromPardners(oentry.handle);
+                        pardner.addToPardners(entry);
+                    } finally {
+                        pardner.commitTransaction();
+                    }
+                }
+            }
         }
     }
 

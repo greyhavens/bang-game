@@ -12,6 +12,7 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.Tuple;
+import com.threerings.util.StreamableTuple;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -62,14 +63,19 @@ public class BangPeerManager extends CrowdPeerManager
     public static interface RemotePlayerObserver
     {
         /**
-         * Called when a player logs on to this or one of our peer servers.
+         * Called when a player logs on to one of our peer servers.
          */
         public void remotePlayerLoggedOn (int townIndex, BangClientInfo info);
 
         /**
-         * Called when a player logs off of this or one of our peer servers.
+         * Called when a player logs off of one of our peer servers.
          */
         public void remotePlayerLoggedOff (int townIndex, BangClientInfo info);
+
+        /**
+         * Called when a remote player changes his handle.
+         */
+        public void remotePlayerChangedHandle (int townIndex, Handle oldHandle, Handle newHandle);
     }
 
     public BangPeerManager (ConnectionProvider conprov, Invoker invoker)
@@ -275,10 +281,42 @@ public class BangPeerManager extends CrowdPeerManager
         super.didInit();
 
         // stuff our town information into our node object
-        BangNodeObject bnodeobj = (BangNodeObject)_nodeobj;
+        final BangNodeObject bnodeobj = (BangNodeObject)_nodeobj;
         bnodeobj.setTownId(ServerConfig.townId);
         bnodeobj.setBangPeerService(
             (BangPeerMarshaller)BangServer.invmgr.registerDispatcher(new BangPeerDispatcher(this)));
+
+        // subscribe to server for handle change notifications
+        BangServer.addPlayerObserver(new BangServer.PlayerObserver() {
+            public void playerLoggedOn (PlayerObject user) {
+                // no-op
+            }
+            public void playerLoggedOff (PlayerObject user) {
+                // no-op
+            }
+            public void playerChangedHandle (PlayerObject user, Handle oldHandle) {
+                bnodeobj.startTransaction();
+                try {
+                    // "log off" the old handle
+                    BangClientInfo info = (BangClientInfo)bnodeobj.clients.get(oldHandle);
+                    if (info != null) {
+                        bnodeobj.removeFromClients(oldHandle);
+                    }
+
+                    // broadcast the change on our node object
+                    bnodeobj.setChangedHandle(
+                        new StreamableTuple<Handle, Handle>(oldHandle, user.handle));
+
+                    // "log on" with the new
+                    if (info != null) {
+                        info.visibleName = user.handle;
+                        bnodeobj.addToClients(info);
+                    }
+                } finally {
+                    bnodeobj.commitTransaction();
+                }
+            }
+        });
     }
 
     /**
@@ -304,6 +342,21 @@ public class BangPeerManager extends CrowdPeerManager
         _remobs.apply(new ObserverList.ObserverOp<RemotePlayerObserver>() {
             public boolean apply (RemotePlayerObserver observer) {
                 observer.remotePlayerLoggedOff(townIndex, info);
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Called when a player changes his handle on one of our peer servers.
+     */
+    protected void remotePlayerChangedHandle (
+        final int townIndex, final Handle oldHandle, final Handle newHandle)
+    {
+        // notify our remote player observers
+        _remobs.apply(new ObserverList.ObserverOp<RemotePlayerObserver>() {
+            public boolean apply (RemotePlayerObserver observer) {
+                observer.remotePlayerChangedHandle(townIndex, oldHandle, newHandle);
                 return true;
             }
         });
@@ -378,6 +431,10 @@ public class BangPeerManager extends CrowdPeerManager
                 BangServer.hideoutmgr.activateGangLocal((Handle)event.getValue());
             } else if (name.equals(BangNodeObject.REMOVED_GANG)) {
                 BangServer.hideoutmgr.removeGangLocal((Handle)event.getValue());
+            } else if (name.equals(BangNodeObject.CHANGED_HANDLE)) {
+                @SuppressWarnings("unchecked") Tuple<Handle, Handle> tuple =
+                    (Tuple<Handle, Handle>)event.getValue();
+                remotePlayerChangedHandle(townIndex, tuple.left, tuple.right);
             }
         }
 

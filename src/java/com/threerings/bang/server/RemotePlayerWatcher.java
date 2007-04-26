@@ -16,6 +16,7 @@ import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.data.BangClientInfo;
+import com.threerings.bang.data.EntryReplacedEvent;
 import com.threerings.bang.data.Handle;
 
 import static com.threerings.bang.Log.log;
@@ -36,6 +37,8 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
         public T getEntry (Handle key);
 
         public void updateEntry (T entry);
+
+        public void renameEntry (T entry, Handle newHandle);
     }
 
     /**
@@ -58,6 +61,26 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
     public void remotePlayerLoggedOff (int townIndex, BangClientInfo info)
     {
         updateRemotePlayer(info, -1, "off");
+    }
+
+    // from interface BangPeerManager.RemotePlayerObserver
+    public void remotePlayerChangedHandle (int townIndex, Handle oldHandle, Handle newHandle)
+    {
+        ArrayList<Container<T>> containers = _mapping.remove(oldHandle);
+        if (containers == null) {
+            return;
+        }
+        _mapping.put(newHandle, containers);
+
+        for (Container<T> cont : containers) {
+            T entry = cont.getEntry(oldHandle);
+            if (entry == null) {
+                log.warning("Player registered but missing entry [cont=" + cont +
+                            ", oldHandle=" + oldHandle + ", newHandle=" + newHandle + "].");
+                continue; // weirdness?
+            }
+            cont.renameEntry(entry, newHandle);
+        }
     }
 
     /**
@@ -114,7 +137,9 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
         }
 
         public void entryAdded (EntryAddedEvent event) {
-            if (event.getName().equals(getSetName())) {
+            // replacement handles will have already been mapped
+            if (event.getName().equals(getSetName()) &&
+                    !(event instanceof EntryReplacedEvent.ReplacementAddedEvent)) {
                 @SuppressWarnings("unchecked") T entry = (T)event.getEntry();
                 mapPlayer(entry);
             }
@@ -123,7 +148,9 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
             // nothing doing
         }
         public void entryRemoved (EntryRemovedEvent event) {
-            if (event.getName().equals(getSetName())) {
+            // replaced handles will have already been cleared
+            if (event.getName().equals(getSetName()) &&
+                    !(event instanceof EntryReplacedEvent)) {
                 @SuppressWarnings("unchecked") T entry = (T)event.getOldEntry();
                 clearPlayer(entry);
             }
@@ -154,6 +181,8 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
             } else if (!list.remove(_container)) { // remove and sanity check
                 log.warning("Missing player when clearing mapping [entry=" + entry.getKey() +
                             ", container=" + _container + "].");
+            } else if (list.isEmpty()) {
+                _mapping.remove(entry.getKey());
             }
         }
 

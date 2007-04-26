@@ -16,7 +16,7 @@ import com.threerings.bang.data.Handle;
  * An entry in the list of pardners.
  */
 public class PardnerEntry
-    implements DSet.Entry, Comparable
+    implements DSet.Entry, Comparable, Cloneable
 {
     /** The pardner is not logged in. */
     public static final byte OFFLINE = 0;
@@ -137,6 +137,16 @@ public class PardnerEntry
 
         } else {
             return handle.compareTo(oentry.handle);
+        }
+    }
+
+    @Override // documentation inherited
+    public Object clone ()
+    {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null; // will not happen
         }
     }
 

@@ -65,6 +65,7 @@ import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
+import com.threerings.bang.data.EntryReplacedEvent;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
@@ -315,19 +316,8 @@ public class GangHandler
     // documentation inherited from interface PlayerObserver
     public void playerChangedHandle (PlayerObject user, Handle oldHandle)
     {
-        // TODO: handle this for remote members
-        GangMemberEntry entry = _gangobj.members.get(oldHandle);
-        if (entry != null) {
-            _gangobj.startTransaction();
-            try {
-                _gangobj.removeFromMembers(oldHandle);
-                entry = (GangMemberEntry)entry.clone();
-                entry.handle = user.handle;
-                _gangobj.addToMembers(entry);
-            } finally {
-                _gangobj.commitTransaction();
-            }
-        }
+        // we handle this the same way for local and remote users
+        remotePlayerChangedHandle(ServerConfig.townIndex, oldHandle, user.handle);
     }
 
     // documentation inherited from interface RemotePlayerObserver
@@ -340,6 +330,18 @@ public class GangHandler
     public void remotePlayerLoggedOff (int townIndex, BangClientInfo info)
     {
         playerLocationChanged(info.visibleName, townIndex, -1);
+    }
+
+    // documentation inherited from interface RemotePlayerObserver
+    public void remotePlayerChangedHandle (int townIndex, Handle oldHandle, Handle newHandle)
+    {
+        GangMemberEntry oldEntry = _gangobj.members.get(oldHandle);
+        if (oldEntry != null) {
+            GangMemberEntry newEntry = (GangMemberEntry)oldEntry.clone();
+            newEntry.handle = newHandle;
+            BangServer.omgr.postEvent(new EntryReplacedEvent<GangMemberEntry>(
+                _gangobj, GangObject.MEMBERS, oldHandle, newEntry));
+        }
     }
 
     // documentation inherited from interface MessageListener
@@ -395,6 +397,9 @@ public class GangHandler
         }
         // invalidate any cached gang info
         gangInfoChanged();
+        if (event instanceof EntryReplacedEvent.ReplacementAddedEvent) {
+            return; // no need to reset gang fields for handle change
+        }
 
         // set the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
@@ -470,8 +475,8 @@ public class GangHandler
     // documentation inherited from interface SetListener
     public void entryRemoved (EntryRemovedEvent event)
     {
-        if (!event.getName().equals(GangObject.MEMBERS)) {
-            return;
+        if (!event.getName().equals(GangObject.MEMBERS) || event instanceof EntryReplacedEvent) {
+            return; // no need to react to handle changes
         }
         // invalidate any cached gang info
         gangInfoChanged();
