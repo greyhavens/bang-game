@@ -1001,12 +1001,12 @@ public class PlayerManager
     /**
      * Adds a pardner entry to the specified player if he is online (on any server).
      */
-    public void responseToPardnerInvite (
+    public void respondToPardnerInvite (
         Handle inviter, Handle invitee, boolean accept, boolean full)
     {
         PlayerObject user = BangServer.lookupPlayer(inviter);
         if (user != null) {
-            responseToPardnerInviteLocal(user, invitee, accept, full);
+            respondToPardnerInviteLocal(user, invitee, accept, full);
         } else if (BangServer.peermgr != null) {
             BangServer.peermgr.forwardPardnerInviteResponse(inviter, invitee, accept, full);
         }
@@ -1015,7 +1015,7 @@ public class PlayerManager
     /**
      * Adds a pardner entry to the specified player (on this server only).
      */
-    public void responseToPardnerInviteLocal (
+    public void respondToPardnerInviteLocal (
         PlayerObject inviter, Handle invitee, boolean accept, boolean full)
     {
         if (accept) {
@@ -1235,7 +1235,7 @@ public class PlayerManager
         boolean[] full, InvocationService.ConfirmListener listener)
     {
         // if the inviter is online on any server, update and send a notification
-        responseToPardnerInvite(inviter, user.handle, accept, full != null && full[1]);
+        respondToPardnerInvite(inviter, user.handle, accept, full != null && full[1]);
 
         // update the invitee
         if (user.isActive()) {

@@ -169,7 +169,7 @@ public class BangPeerManager extends CrowdPeerManager
     {
         PlayerObject user = BangServer.lookupPlayer(inviter);
         if (user != null) {
-            BangServer.playmgr.responseToPardnerInviteLocal(user, invitee, accept, full);
+            BangServer.playmgr.respondToPardnerInviteLocal(user, invitee, accept, full);
         }
     }
 
