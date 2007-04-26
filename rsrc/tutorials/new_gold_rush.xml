@@ -34,10 +34,6 @@
   <text message="get_nugget"/>
   <wait event="text_clicked"/>
 
-  <!-- add a repair in order to block the nugget landing there-->
-  <add_piece what="bonus" id="3002" type="frontier_town/repair"
-             location="20,20"/>
-
   <!-- sharpshooter shoots out nugget -->
   <move_unit id="2000" target="1001"/>
   <text message="got_shot"/>
@@ -48,6 +44,10 @@
 
   <!-- sharpshooter gets the nugget -->
   <move_unit id="2000" location="19,21"/>
+
+  <!-- add a repair -->
+  <add_piece what="bonus" id="3002" type="frontier_town/repair"
+             location="20,20"/>
 
   <text message="repair2"/>
   <center_on what="piece" id="3002"/>
