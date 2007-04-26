@@ -395,7 +395,11 @@ public class PlayerManager
         // transfer control to the handler, removing the notification on success
         notification.handler.handleResponse(resp, new PlayerService.ConfirmListener() {
             public void requestProcessed () {
-                player.removeFromNotifications(key);
+                // make sure the note is still there, as there are situations where notes will be
+                // cleared en masse
+                if (player.notifications.containsKey(key)) {
+                    player.removeFromNotifications(key);
+                }
                 listener.requestProcessed();
             }
             public void requestFailed (String cause) {
