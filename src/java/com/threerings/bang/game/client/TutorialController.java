@@ -84,8 +84,8 @@ public class TutorialController
                 ImageBackground.FRAME_XY, _ctx.loadImage("ui/tutorials/bubble.png"));
         _glow = new ImageBackground(
                 ImageBackground.FRAME_XY, _ctx.loadImage("ui/tutorials/bubble_glow.png"));
-        _tdefault = new ImageIcon(_ctx.loadImage("ui/tutorials/tail.png"));
-        _tglow = new ImageIcon(_ctx.loadImage("ui/tutorials/tail_glow.png"));
+        _talk = new TutorialTalkBackground(_ctx.loadImage("ui/tutorials/bubble_tail.png"));
+        _talkglow = new TutorialTalkBackground(_ctx.loadImage("ui/tutorials/bubble_tail_glow.png"));
 
         BContainer north = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.CONSTRAIN));
@@ -116,9 +116,6 @@ public class TutorialController
         _tutavatar = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch());
         _tutavatar.setLayer(1);
         _tutavatar.add(_avatarLabel = new BLabel(new BlankIcon(135, 160)));
-        _tuttail = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch());
-        _tuttail.setLayer(1);
-        _tuttail.add(_tailLabel = new BLabel(_tdefault));
     }
 
     /** Called from {@link BangController#willEnterPlace}. */
@@ -185,7 +182,6 @@ public class TutorialController
         }
         if (_tutavatar.isAdded()) {
             _ctx.getRootNode().removeWindow(_tutavatar);
-            _ctx.getRootNode().removeWindow(_tuttail);
         }
 
         // display the WhereToView so they can pick a new tutorial or go back to town
@@ -201,7 +197,6 @@ public class TutorialController
         }
         if (_tutavatar.isAdded()) {
             _ctx.getRootNode().removeWindow(_tutavatar);
-            _ctx.getRootNode().removeWindow(_tuttail);
         }
         if (_bangobj != null) {
             _bangobj.removeListener(_acl);
@@ -323,9 +318,8 @@ public class TutorialController
             // let them know if we're waiting for them to click
             if (TutorialCodes.TEXT_CLICKED.matches(_pending.getEvent())) {
                 _click.setText(_gmsgs.get("m.tutorial_click"));
-                _view.tutwin.setBackground(BComponent.DEFAULT, _glow);
-                _view.tutwin.setBackground(BComponent.HOVER, null);
-                _tailLabel.setIcon(_tglow);
+                _bubbleGlow = true;
+                updateBubbleBackground();
                 // disable the ability to move their units at this time (unless we override that
                 // with allow attack which is sort of a hack but does the job)
                 if (attackEnabled != null) {
@@ -353,36 +347,50 @@ public class TutorialController
         // display our window the first time we need it
         if (!_view.tutwin.isAdded()) {
             _ctx.getRootNode().addWindow(_view.tutwin);
+            _view.tutwin.setBackground(BComponent.HOVER, null);
         }
-        int width = _ctx.getDisplay().getWidth();
-        int height = _ctx.getDisplay().getHeight();
-        // take up all the space between the two player status views
-        _view.tutwin.pack(width - 2*(246+10), -1);
-        int x = (width - _view.tutwin.getWidth())/2;
-        _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2, 2);
 
+        // see if our avatar has changed
         if (avatar != _currentAvatar) {
             _currentAvatar = avatar;
             _avatarLabel.setIcon(avatar == null ?
                     new BlankIcon(135, 160) : new ImageIcon(_ctx.loadImage(avatar)));
             if (avatar != null && !_tutavatar.isAdded()) {
                 _ctx.getRootNode().addWindow(_tutavatar);
-                _ctx.getRootNode().addWindow(_tuttail);
-                _tuttail.setAlpha(0.5f);
                 _tutavatar.pack(135, 160);
-                _tuttail.pack(28, 18);
+                _bubbleTalk = true;
 
             } else if (avatar == null && _tutavatar.isAdded()) {
                 _ctx.getRootNode().removeWindow(_tutavatar);
-                _ctx.getRootNode().removeWindow(_tuttail);
+                _bubbleTalk = false;
             }
+            updateBubbleBackground();
         }
+
+        int width = _ctx.getDisplay().getWidth();
+        int height = _ctx.getDisplay().getHeight();
+        // take up all the space between the two player status views
+        _view.tutwin.pack(width - 2*(246+10), -1);
+        _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2, 2);
+
         if (_tutavatar.isAdded()) {
             int y = (_showingStatus) ? 69 : 0;
-            _tutavatar.setLocation((x - 135 - 28), y);
-            y = Math.min(y + 80, _view.tutwin.getHeight() - 40);
-            _tuttail.setLocation(x - 25, y);
+            _tutavatar.setLocation(100, y);
+            y += 80;
+            _talkglow.setTailPosition(y);
+            _talk.setTailPosition(y);
         }
+    }
+
+    /**
+     * A helper function that updates the background for our text bubble.
+     */
+    protected void updateBubbleBackground ()
+    {
+        _view.tutwin.setBackground(BComponent.DEFAULT,
+                (_bubbleTalk ? (_bubbleGlow ? _talkglow : _talk) :
+                               (_bubbleGlow ? _glow : _default)));
+        _view.tutwin.getInsets().left = (_bubbleTalk ? 50 : 25);
     }
 
     protected void processedAction (int index)
@@ -401,8 +409,8 @@ public class TutorialController
         public void mousePressed (MouseEvent event) {
             if (_click.isEnabled()) {
                 _click.setText("");
-                _view.tutwin.setBackground(BComponent.DEFAULT, _default);
-                _tailLabel.setIcon(_tdefault);
+                _bubbleGlow = false;
+                updateBubbleBackground();
                 handleEvent(TutorialCodes.TEXT_CLICKED, -1);
             }
         }
@@ -427,10 +435,10 @@ public class TutorialController
     protected BLabel _title, _info, _click, _steps;
     protected BButton _back, _forward;
     protected ImageBackground _default, _glow;
-    protected BLabel _avatarLabel, _tailLabel;
-    protected BWindow _tutavatar, _tuttail;
-    protected ImageIcon _tdefault, _tglow;
-    protected boolean _showingStatus;
+    protected TutorialTalkBackground _talk, _talkglow;
+    protected BLabel _avatarLabel;
+    protected BWindow _tutavatar;
+    protected boolean _showingStatus, _bubbleTalk, _bubbleGlow;
 
     protected TutorialConfig _config;
     protected TutorialConfig.WaitAction _pending;
