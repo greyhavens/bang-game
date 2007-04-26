@@ -619,6 +619,9 @@ public class Badge extends Item
             }
         },
 
+        // tutorial badges
+        TUTORIAL_ALL_FT,
+
         UNUSED;
 
         /** Returns a new blank stat instance of the specified type. */
@@ -732,6 +735,9 @@ public class Badge extends Item
         Type.BOUNTY_DYNAMITE, Type.BOUNTY_SANCHO, null, null, Type.BOUNTY_ALL_FT_TOWN,
         Type.BOUNTY_MAUDE, Type.BOUNTY_CALAVERA, Type.BOUNTY_MUSTACHE, Type.BOUNTY_SHARK,
         Type.BOUNTY_ALL_FT,
+
+        // tutorial badges
+        Type.TUTORIAL_ALL_FT, null, null, null, null,
 
         // general non-series (wacky) badges
         Type.IRON_HORSE, Type.SAINT_NICK,
