@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,14 +13,18 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BWindow;
 import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
@@ -79,6 +84,8 @@ public class TutorialController
                 ImageBackground.FRAME_XY, _ctx.loadImage("ui/tutorials/bubble.png"));
         _glow = new ImageBackground(
                 ImageBackground.FRAME_XY, _ctx.loadImage("ui/tutorials/bubble_glow.png"));
+        _tdefault = new ImageIcon(_ctx.loadImage("ui/tutorials/tail.png"));
+        _tglow = new ImageIcon(_ctx.loadImage("ui/tutorials/tail_glow.png"));
 
         BContainer north = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.CONSTRAIN));
@@ -105,6 +112,13 @@ public class TutorialController
 
         _view.tutwin.addListener(_clicklist);
         _info.addListener(_clicklist);
+
+        _tutavatar = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch());
+        _tutavatar.setLayer(1);
+        _tutavatar.add(_avatarLabel = new BLabel(new BlankIcon(135, 160)));
+        _tuttail = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch());
+        _tuttail.setLayer(1);
+        _tuttail.add(_tailLabel = new BLabel(_tdefault));
     }
 
     /** Called from {@link BangController#willEnterPlace}. */
@@ -157,7 +171,7 @@ public class TutorialController
             return;
         }
         TutorialConfig.Text text = _history.get(_hidx);
-        displayMessage(text.message, text.step);
+        displayMessage(text.message, text.step, text.avatar);
         _back.setEnabled(_hidx > 0);
         _forward.setEnabled(_hidx < _history.size() - 1);
         _click.setEnabled(!_forward.isEnabled());
@@ -168,6 +182,10 @@ public class TutorialController
     {
         if (_view.tutwin.isAdded()) {
             _ctx.getRootNode().removeWindow(_view.tutwin);
+        }
+        if (_tutavatar.isAdded()) {
+            _ctx.getRootNode().removeWindow(_tutavatar);
+            _ctx.getRootNode().removeWindow(_tuttail);
         }
 
         // display the WhereToView so they can pick a new tutorial or go back to town
@@ -181,6 +199,10 @@ public class TutorialController
         if (_view.tutwin.isAdded()) {
             _ctx.getRootNode().removeWindow(_view.tutwin);
         }
+        if (_tutavatar.isAdded()) {
+            _ctx.getRootNode().removeWindow(_tutavatar);
+            _ctx.getRootNode().removeWindow(_tuttail);
+        }
         if (_bangobj != null) {
             _bangobj.removeListener(_acl);
             _bangobj = null;
@@ -192,7 +214,15 @@ public class TutorialController
         TutorialConfig.Action action = _config.getAction(actionId);
         if (action instanceof TutorialConfig.Text) {
             TutorialConfig.Text text = (TutorialConfig.Text)action;
-            displayMessage(text.message, text.step);
+            if (text.avatar == null) {
+                text.avatar = _avatar;
+            } else if (StringUtil.isBlank(text.avatar)) {
+                text.avatar = null;
+                _avatar = null;
+            } else {
+                _avatar = text.avatar;
+            }
+            displayMessage(text.message, text.step, text.avatar);
             _hidx = _history.size();
             _history.add(text);
             _back.setEnabled(_hidx > 0);
@@ -236,6 +266,7 @@ public class TutorialController
         } else if (action instanceof TutorialConfig.ShowView) {
             String name = ((TutorialConfig.ShowView)action).name;
             if (name.equals("player_status")) {
+                _showingStatus = true;
                 _view.showPlayerStatus();
             } else if (name.equals("unit_status")) {
                 _view.showUnitStatus();
@@ -282,16 +313,22 @@ public class TutorialController
             }
 
             // only allow attacking for actions that allow it
-            _view.view._attackEnabled = _pending.allowAttack();
+            int[] allowAttack = _pending.allowAttack();
+            Point attackEnabled = null;
+            if (allowAttack.length == 2) {
+                attackEnabled = new Point(allowAttack[0], allowAttack[1]);
+            }
+            _view.view._attackEnabled = attackEnabled;
 
             // let them know if we're waiting for them to click
             if (TutorialCodes.TEXT_CLICKED.matches(_pending.getEvent())) {
                 _click.setText(_gmsgs.get("m.tutorial_click"));
                 _view.tutwin.setBackground(BComponent.DEFAULT, _glow);
                 _view.tutwin.setBackground(BComponent.HOVER, null);
+                _tailLabel.setIcon(_tglow);
                 // disable the ability to move their units at this time (unless we override that
                 // with allow attack which is sort of a hack but does the job)
-                if (!_pending.allowAttack()) {
+                if (attackEnabled != null) {
                     _view.view.setInteractive(false);
                 }
             }
@@ -301,7 +338,7 @@ public class TutorialController
         return false;
     }
 
-    protected void displayMessage (String message, int step)
+    protected void displayMessage (String message, int step, String avatar)
     {
         String titkey = "m." + message + "_title";
         if (_msgs.exists(titkey)) {
@@ -321,7 +358,31 @@ public class TutorialController
         int height = _ctx.getDisplay().getHeight();
         // take up all the space between the two player status views
         _view.tutwin.pack(width - 2*(246+10), -1);
+        int x = (width - _view.tutwin.getWidth())/2;
         _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2, 2);
+
+        if (avatar != _currentAvatar) {
+            _currentAvatar = avatar;
+            _avatarLabel.setIcon(avatar == null ?
+                    new BlankIcon(135, 160) : new ImageIcon(_ctx.loadImage(avatar)));
+            if (avatar != null && !_tutavatar.isAdded()) {
+                _ctx.getRootNode().addWindow(_tutavatar);
+                _ctx.getRootNode().addWindow(_tuttail);
+                _tuttail.setAlpha(0.5f);
+                _tutavatar.pack(135, 160);
+                _tuttail.pack(28, 18);
+
+            } else if (avatar == null && _tutavatar.isAdded()) {
+                _ctx.getRootNode().removeWindow(_tutavatar);
+                _ctx.getRootNode().removeWindow(_tuttail);
+            }
+        }
+        if (_tutavatar.isAdded()) {
+            int y = (_showingStatus) ? 69 : 0;
+            _tutavatar.setLocation((x - 135 - 28), y);
+            y = Math.min(y + 80, _view.tutwin.getHeight() - 40);
+            _tuttail.setLocation(x - 25, y);
+        }
     }
 
     protected void processedAction (int index)
@@ -341,6 +402,7 @@ public class TutorialController
             if (_click.isEnabled()) {
                 _click.setText("");
                 _view.tutwin.setBackground(BComponent.DEFAULT, _default);
+                _tailLabel.setIcon(_tdefault);
                 handleEvent(TutorialCodes.TEXT_CLICKED, -1);
             }
         }
@@ -365,6 +427,10 @@ public class TutorialController
     protected BLabel _title, _info, _click, _steps;
     protected BButton _back, _forward;
     protected ImageBackground _default, _glow;
+    protected BLabel _avatarLabel, _tailLabel;
+    protected BWindow _tutavatar, _tuttail;
+    protected ImageIcon _tdefault, _tglow;
+    protected boolean _showingStatus;
 
     protected TutorialConfig _config;
     protected TutorialConfig.WaitAction _pending;
@@ -373,5 +439,6 @@ public class TutorialController
     protected HashMap<String,Integer> _events = new HashMap<String,Integer>();
 
     protected ArrayList<TutorialConfig.Text> _history = new ArrayList<TutorialConfig.Text>();
+    protected String _avatar, _currentAvatar;
     protected int _hidx = -1;
 }

@@ -1298,29 +1298,15 @@ public class BangBoardView extends BoardView
         clearAttackSet();
 
         // reduce the highlighted move tiles to just the selected tile
+        clearHighlights();
         PointSet moves = new PointSet();
         moves.add(tx, ty);
         highlightMovementTiles(moves, _goalSet, getHighlightColor(_selection));
 
-        // this is a bit hacky, but if the character is heading to a
-        // teleporter, they don't get to attack
-        boolean willTeleport = false;
-        /* Removed to test post shot teleportation
-        if (_selection.getMinFireDistance() > 0) {
-            for (Piece piece : _bangobj.pieces) {
-                if (piece.x == tx && piece.y == ty &&
-                        piece instanceof Teleporter) {
-                    willTeleport = true;
-                    break;
-                }
-            }
-        }
-        */
-
         // potentially display our potential attacks (if shift is held down, we
         // don't generate an attack set which causes us to move immediately to
         // our clicked destination without attacking)
-        if (!_shiftDown && _attackEnabled && !willTeleport) {
+        if (!_shiftDown && canAttack(tx, ty)) {
             pruneAttackSet(moves, _attackSet, true);
         }
 
@@ -1343,6 +1329,11 @@ public class BangBoardView extends BoardView
             highlightTiles(attackRange, ATTACK_RANGE_COLOR, _rngstate, false);
         }
         return true;
+    }
+
+    protected boolean canAttack (int x, int y)
+    {
+        return _attackEnabled == null || (_attackEnabled.x == x && _attackEnabled.y == y);
     }
 
     /** Handles a click that indicates the coordinates of a piece we'd
@@ -1593,7 +1584,7 @@ public class BangBoardView extends BoardView
 
         // highlight our potential moves and attackable pieces
         piece.computeMoves(_bangobj.board, _moveSet, null);
-        if (_attackEnabled) {
+        if (canAttack(piece.x, piece.y)) {
             _attackSet.clear();
             pruneAttackSet(_moveSet, _attackSet, false);
             highlightPossibleAttacks();
@@ -2218,9 +2209,8 @@ public class BangBoardView extends BoardView
     protected Node _cursor, _pointer;
     protected Unit _selection;
 
-    /** This is disabled by the tutorial controller when the player is not allowed to attack during
-     * a tutorial. */
-    protected boolean _attackEnabled = true;
+    /** The only valid location to attack from or null if you can attack from anywhere. */
+    protected java.awt.Point _attackEnabled;
 
     protected PointSet _moveSet = new PointSet();
     protected PointSet _goalSet = new PointSet();

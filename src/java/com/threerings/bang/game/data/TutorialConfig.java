@@ -14,13 +14,16 @@ import com.samskivert.util.StringUtil;
 public class TutorialConfig
     implements Serializable
 {
+    /** an impossible location to attack from. */
+    public static final int[] NO_ATTACK = new int[] {0, 0};
+
     public interface WaitAction
     {
         public String getEvent ();
 
         public int getCount ();
 
-        public boolean allowAttack ();
+        public int[] allowAttack ();
 
         public int getId ();
     }
@@ -33,8 +36,8 @@ public class TutorialConfig
             return -1;
         }
 
-        public boolean allowAttack () {
-            return false;
+        public int[] allowAttack () {
+            return NO_ATTACK;
         }
 
         public String toString () {
@@ -47,6 +50,7 @@ public class TutorialConfig
     public static class Text extends Action
     {
         public String message;
+        public String avatar;
         public int step;
 
         private static final long serialVersionUID = 1;
@@ -58,7 +62,7 @@ public class TutorialConfig
         public String event;
         public int id = -1;
         public int count;
-        public boolean allowAttack;
+        public int[] allowAttack = NO_ATTACK;
 
         public String getEvent () {
             return event;
@@ -68,7 +72,7 @@ public class TutorialConfig
             return count;
         }
 
-        public boolean allowAttack () {
+        public int[] allowAttack () {
             return allowAttack;
         }
 
@@ -131,13 +135,13 @@ public class TutorialConfig
         implements WaitAction
     {
         public String event;
-        public boolean allowAttack;
+        public int[] allowAttack = NO_ATTACK;
 
         public String getEvent () {
             return event;
         }
 
-        public boolean allowAttack () {
+        public int[] allowAttack () {
             return allowAttack;
         }
 
