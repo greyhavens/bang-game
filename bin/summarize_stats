@@ -111,7 +111,7 @@ while (<>) {
         foreach $pinfo (@pinfos) {
             my @bits = split(/:/, $pinfo);
             my $playerid = $bits[0];
-            next if ($playerid == -2);
+            next if ($playerid < 0);
 
             # track stats on who leaves games early (or disconnects)
             if ($bits[1] eq "#") {
@@ -126,15 +126,15 @@ while (<>) {
 
             # track rounds played and earnings per player
             if ($tutorial) {
-                $userrounds{"tutorial"}{$username} += $rcount;
+                $userrounds{"tutorial"}{$playerid} += $rcount;
             } else {
-                $userrounds{"versus"}{$username} += $rcount;
-                $userrounds{"rated"}{$username} += $rcount
+                $userrounds{"versus"}{$playerid} += $rcount;
+                $userrounds{"rated"}{$playerid} += $rcount
                     if ($rtype eq "rated");
                 my $earnings = (@bits > 3) ? $bits[3] : 0;
-                $userearn{$username} += $earnings;
+                $userearn{$playerid} += $earnings;
                 $totearn += $earnings;
-                if (defined $firsttimers{$username}) {
+                if (defined $firsttimers{$playerid}) {
                     $newearn += $earnings;
                     $newrounds += $rcount;
                 }
