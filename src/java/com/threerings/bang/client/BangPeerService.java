@@ -20,14 +20,26 @@ public interface BangPeerService extends InvocationService
      */
     public void deliverPardnerInvite (
         Client client, Handle invitee, Handle inviter, String message);
-    
+
+    /**
+     * Notifies the server that one of its online users has received a response to a pardner
+     * request.
+     */
+    public void deliverPardnerInviteResponse (
+        Client client, Handle inviter, Handle invitee, boolean accept, boolean full);
+
+    /**
+     * Notifies the server that one of its online users has lost a pardner.
+     */
+    public void deliverPardnerRemoval (Client client, Handle removee, Handle remover);
+
     /**
      * Notifies the server that one of its online users has received a request to be a member of
      * someone's gang.
      */
     public void deliverGangInvite (
         Client client, Handle invitee, Handle inviter, int gangId, Handle name, String message);
-    
+
     /**
      * Notifies the server that one of its online users has received an item.
      *
@@ -37,6 +49,6 @@ public interface BangPeerService extends InvocationService
 
     /**
      * Requests the oid of a gang for which this peer holds a lock.
-     */    
+     */
     public void getGangOid (Client client, int gangId, ResultListener listener);
 }

@@ -427,12 +427,7 @@ public class PlayerManager
             }
             public void handleSuccess () {
                 player.removeFromPardners(handle);
-                PlayerObject pardobj = BangServer.lookupPlayer(handle);
-                if (pardobj != null) {
-                    pardobj.removeFromPardners(player.handle);
-                    String msg = MessageBundle.tcompose("m.pardner_ended", player.handle);
-                    SpeakProvider.sendInfo(pardobj, BANG_MSGS, msg);
-                }
+                removePardner(handle, player.handle);
                 listener.requestProcessed();
             }
             public String getFailureMessage () {
@@ -1004,6 +999,59 @@ public class PlayerManager
     }
 
     /**
+     * Adds a pardner entry to the specified player if he is online (on any server).
+     */
+    public void responseToPardnerInvite (
+        Handle inviter, Handle invitee, boolean accept, boolean full)
+    {
+        PlayerObject user = BangServer.lookupPlayer(inviter);
+        if (user != null) {
+            responseToPardnerInviteLocal(user, invitee, accept, full);
+        } else if (BangServer.peermgr != null) {
+            BangServer.peermgr.forwardPardnerInviteResponse(inviter, invitee, accept, full);
+        }
+    }
+
+    /**
+     * Adds a pardner entry to the specified player (on this server only).
+     */
+    public void responseToPardnerInviteLocal (
+        PlayerObject inviter, Handle invitee, boolean accept, boolean full)
+    {
+        if (accept) {
+            inviter.addOrUpdatePardner(getPardnerEntry(invitee, new Date()));
+            if (full) {
+                clearPardnerInvites(inviter);
+            }
+        }
+        String msg = accept ? "m.pardner_accepted" : "m.pardner_rejected";
+        SpeakProvider.sendInfo(inviter, BANG_MSGS, MessageBundle.tcompose(msg, invitee));
+    }
+
+    /**
+     * Removes a pardner entry from the specified player if he is online (on any server).
+     */
+    public void removePardner (Handle removee, Handle remover)
+    {
+        PlayerObject user = BangServer.lookupPlayer(removee);
+        if (user != null) {
+            removePardnerLocal(user, remover);
+        } else if (BangServer.peermgr != null) {
+            BangServer.peermgr.forwardPardnerRemoval(removee, remover);
+        }
+    }
+
+    /**
+     * Removes a pardner entry from the specified player (on this server only).
+     */
+    public void removePardnerLocal (PlayerObject removee, Handle remover)
+    {
+        removee.removeFromPardners(remover);
+        String msg = MessageBundle.tcompose("m.pardner_ended", remover);
+        SpeakProvider.sendInfo(removee, BANG_MSGS, msg);
+    }
+
+    /**
      * Checks for any players that should be purged from the system.
      */
     public void purgeExpiredPlayers ()
@@ -1186,18 +1234,8 @@ public class PlayerManager
         PlayerObject user, Handle inviter, Date lastSession, boolean accept,
         boolean[] full, InvocationService.ConfirmListener listener)
     {
-        // if the inviter is online, update and send a notification
-        PlayerObject invobj = BangServer.lookupPlayer(inviter);
-        if (invobj != null) {
-            if (accept) {
-                invobj.addOrUpdatePardner(getPardnerEntry(user.handle, null));
-                if (full[1]) {
-                    clearPardnerInvites(invobj);
-                }
-            }
-            String msg = accept ? "m.pardner_accepted" : "m.pardner_rejected";
-            SpeakProvider.sendInfo(invobj, BANG_MSGS, MessageBundle.tcompose(msg, user.handle));
-        }
+        // if the inviter is online on any server, update and send a notification
+        responseToPardnerInvite(inviter, user.handle, accept, full != null && full[1]);
 
         // update the invitee
         if (user.isActive()) {

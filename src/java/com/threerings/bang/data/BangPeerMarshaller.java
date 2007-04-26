@@ -54,8 +54,30 @@ public class BangPeerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #deliverPardnerInviteResponse} requests. */
+    public static final int DELIVER_PARDNER_INVITE_RESPONSE = 4;
+
+    // from interface BangPeerService
+    public void deliverPardnerInviteResponse (Client arg1, Handle arg2, Handle arg3, boolean arg4, boolean arg5)
+    {
+        sendRequest(arg1, DELIVER_PARDNER_INVITE_RESPONSE, new Object[] {
+            arg2, arg3, Boolean.valueOf(arg4), Boolean.valueOf(arg5)
+        });
+    }
+
+    /** The method id used to dispatch {@link #deliverPardnerRemoval} requests. */
+    public static final int DELIVER_PARDNER_REMOVAL = 5;
+
+    // from interface BangPeerService
+    public void deliverPardnerRemoval (Client arg1, Handle arg2, Handle arg3)
+    {
+        sendRequest(arg1, DELIVER_PARDNER_REMOVAL, new Object[] {
+            arg2, arg3
+        });
+    }
+
     /** The method id used to dispatch {@link #getGangOid} requests. */
-    public static final int GET_GANG_OID = 4;
+    public static final int GET_GANG_OID = 6;
 
     // from interface BangPeerService
     public void getGangOid (Client arg1, int arg2, InvocationService.ResultListener arg3)

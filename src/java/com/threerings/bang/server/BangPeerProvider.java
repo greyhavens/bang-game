@@ -33,6 +33,16 @@ public interface BangPeerProvider extends InvocationProvider
     public void deliverPardnerInvite (ClientObject caller, Handle arg1, Handle arg2, String arg3);
 
     /**
+     * Handles a {@link BangPeerService#deliverPardnerInviteResponse} request.
+     */
+    public void deliverPardnerInviteResponse (ClientObject caller, Handle arg1, Handle arg2, boolean arg3, boolean arg4);
+
+    /**
+     * Handles a {@link BangPeerService#deliverPardnerRemoval} request.
+     */
+    public void deliverPardnerRemoval (ClientObject caller, Handle arg1, Handle arg2);
+
+    /**
      * Handles a {@link BangPeerService#getGangOid} request.
      */
     public void getGangOid (ClientObject caller, int arg1, InvocationService.ResultListener arg2)

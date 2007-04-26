@@ -61,6 +61,20 @@ public class BangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case BangPeerMarshaller.DELIVER_PARDNER_INVITE_RESPONSE:
+            ((BangPeerProvider)provider).deliverPardnerInviteResponse(
+                source,
+                (Handle)args[0], (Handle)args[1], ((Boolean)args[2]).booleanValue(), ((Boolean)args[3]).booleanValue()
+            );
+            return;
+
+        case BangPeerMarshaller.DELIVER_PARDNER_REMOVAL:
+            ((BangPeerProvider)provider).deliverPardnerRemoval(
+                source,
+                (Handle)args[0], (Handle)args[1]
+            );
+            return;
+
         case BangPeerMarshaller.GET_GANG_OID:
             ((BangPeerProvider)provider).getGangOid(
                 source,

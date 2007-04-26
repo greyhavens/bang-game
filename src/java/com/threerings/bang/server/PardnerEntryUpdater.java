@@ -129,11 +129,9 @@ public class PardnerEntryUpdater extends SetAdapter
         for (PardnerEntry pard : _player.pardners) {
             PlayerObject pardner = BangServer.lookupPlayer(pard.handle);
             if (pardner != null) {
+                // this may be missing temporarily due to peer inconsistency
                 if (pardner.pardners.containsKey(entry.handle)) {
                     pardner.updatePardners(entry);
-                } else {
-                    log.warning("Pardnership is non-mutual [player=" + _player.who() +
-                        ", pardner=" + pardner.who() + "].");
                 }
             }
         }

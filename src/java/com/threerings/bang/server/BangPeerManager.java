@@ -145,6 +145,62 @@ public class BangPeerManager extends CrowdPeerManager
     }
 
     /**
+     * Requests to deliver the specified invite response if the inviter is logged into one of our
+     * peer servers.
+     */
+    public void forwardPardnerInviteResponse (
+        Handle inviter, Handle invitee, boolean accept, boolean full)
+    {
+        for (PeerNode peer : _peers.values()) {
+            if (peer.nodeobj == null) {
+                continue;
+            }
+            if (peer.nodeobj.clients.containsKey(inviter)) {
+                ((BangNodeObject)peer.nodeobj).bangPeerService.deliverPardnerInviteResponse(
+                    peer.getClient(), inviter, invitee, accept, full);
+                return;
+            }
+        }
+    }
+
+    // from interface BangPeerProvider
+    public void deliverPardnerInviteResponse (
+        ClientObject caller, Handle inviter, Handle invitee, boolean accept, boolean full)
+    {
+        PlayerObject user = BangServer.lookupPlayer(inviter);
+        if (user != null) {
+            BangServer.playmgr.responseToPardnerInviteLocal(user, invitee, accept, full);
+        }
+    }
+
+    /**
+     * Requests to remove the specified pardner if the removee is logged into one of our peer
+     * servers.
+     */
+    public void forwardPardnerRemoval (Handle removee, Handle remover)
+    {
+        for (PeerNode peer : _peers.values()) {
+            if (peer.nodeobj == null) {
+                continue;
+            }
+            if (peer.nodeobj.clients.containsKey(removee)) {
+                ((BangNodeObject)peer.nodeobj).bangPeerService.deliverPardnerRemoval(
+                    peer.getClient(), removee, remover);
+                return;
+            }
+        }
+    }
+
+    // from interface BangPeerProvider
+    public void deliverPardnerRemoval (ClientObject caller, Handle removee, Handle remover)
+    {
+        PlayerObject user = BangServer.lookupPlayer(removee);
+        if (user != null) {
+            BangServer.playmgr.removePardnerLocal(user, remover);
+        }
+    }
+
+    /**
      * Requests to deliver a gang invite to a player if he's logged into one of our peer servers.
      */
     public void forwardGangInvite (
