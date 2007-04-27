@@ -22,24 +22,24 @@
   <center_on what="piece" id="2000"/>
 
   <text message="ram"/>
-  <wait event="effect:bang" allowAttack="0"/>
+  <wait event="effect:bang" allowAttack="22,17"/>
 
   <!-- add a repair for the artillery -->
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
-             location="23,16"/>
+             location="22,17"/>
 
   <text message="ram2"/>
   <wait event="text_clicked"/>
 
   <!-- move arillery next to BR onto that repair-->
-  <move_unit id="2000" location="23,16"/>
+  <move_unit id="2000" location="22,17"/>
 
   <text message="ram3"/>
-  <wait event="effect:bang" allowAttack="0"/>
+  <wait event="effect:bang" allowAttack="22,17"/>
 
   <!-- add enemy Tbird that attacks -->
   <add_piece what="unit" id="2001" type="indian_post/thunderbird"
-             location="24,17" owner="1"/>
+             location="23,16" owner="1"/>
 
   <text message="ram4"/>
   <wait event="text_clicked"/>
@@ -54,12 +54,12 @@
   <text message="ram6"/>
   <wait event="text_clicked"/>
 
-  <!-- enemy artillery kills brider -->
+  <!-- enemy artillery kills buffalo rider -->
   <move_unit id="2000" target="1000"/>
 
   <!-- add your Thunderbird -->
   <add_piece what="unit" id="1001" type="indian_post/thunderbird"
-             location="24,18" owner="0"/>
+             location="16,17" owner="0"/>
 
   <text message="tbird" step="3"/>
   <center_on what="piece" id="1001"/>
@@ -67,10 +67,10 @@
 
   <!-- add a firestarter bonus and have them activate it -->
   <add_piece what="bonus" id="3000" type="indian_post/firestarter"
-             location="22,15"/>
+             location="20,17"/>
   <center_on what="piece" id="3000"/>
   <text message="swoop"/>
-  <wait event="bonus_activated" allowAttack="0"/>
+  <wait event="bonus_activated" allowAttack="20,17"/>
 
   <text message="swoop2"/>
   <wait event="effect:bang" allowAttack="0"/>
