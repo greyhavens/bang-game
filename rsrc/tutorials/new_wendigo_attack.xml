@@ -35,7 +35,7 @@
   <text message="got_talisman2" step="2"/>
   <wait event="text_clicked"/>
 
-  <!-- add enemy units -- stand on a petroglyph -->
+  <!-- add enemy units stand on a petroglyph -->
   <add_piece what="unit" id="2001" type="indian_post/buffalo_rider"
              location="18,16" owner="1"/>
   <add_piece what="unit" id="2002" type="indian_post/dreamcatcher"
