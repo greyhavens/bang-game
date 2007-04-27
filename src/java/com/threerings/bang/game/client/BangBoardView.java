@@ -1584,11 +1584,26 @@ public class BangBoardView extends BoardView
 
         // highlight our potential moves and attackable pieces
         piece.computeMoves(_bangobj.board, _moveSet, null);
+        _attackSet.clear();
         if (canAttack(piece.x, piece.y)) {
-            _attackSet.clear();
             pruneAttackSet(_moveSet, _attackSet, false);
-            highlightPossibleAttacks();
+        } else if (_attackEnabled != null &&
+                _bangobj.board.getPlayableArea().contains(_attackEnabled)) {
+            if (!_moveSet.contains(_attackEnabled.x, _attackEnabled.y)) {
+                pruneAttackSet(_moveSet, _attackSet, false);
+                if (_attackSet.contains(_attackEnabled.x, _attackEnabled.y)) {
+                    _attackSet.clear();
+                    _attackSet.add(_attackEnabled.x, _attackEnabled.y);
+                } else {
+                    _attackSet.clear();
+                }
+                _moveSet.clear();
+            } else {
+                _moveSet.clear();
+                _moveSet.add(_attackEnabled.x, _attackEnabled.y);
+            }
         }
+        highlightPossibleAttacks();
 
         // find the moves that lead to goals
         _goalSet.clear();
