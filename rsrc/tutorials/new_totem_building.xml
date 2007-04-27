@@ -9,7 +9,7 @@
   <!-- sneakily have our thunderbird pick up a bonus -->
   <add_piece what="unit" id="2000" type="indian_post/thunderbird"
              location="25,20" owner="1"/>
-  <add_piece what="bonus" id="1012" type="indian_post/totem_large"
+  <add_piece what="bonus" id="1012" type="indian_post/totem_medium"
              location="19,20" owner="-1"/>
   <move_unit id="2000" location="19,20"/>
 
@@ -77,7 +77,7 @@
 
   <!-- add a huslte bonus to get the br out of there -->
   <add_piece what="bonus" id="6001" type="frontier_town/hustle"
-             location="25,26"/>
+             location="24,26"/>
   <center_on what="piece" id="6001"/>
   <text message="hustle"/>
   <wait event="bonus_activated"/>
