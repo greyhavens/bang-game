@@ -14,6 +14,11 @@ import com.jmex.bui.event.TextListener;
 public class EnablingValidator
     implements TextListener
 {
+    public static void validate (BTextComponent source, BButton button)
+    {
+        button.setEnabled(checkEnabled(source.getText()));
+    }
+
     /**
      * Creates an enabling validator that will enable or disable the supplied
      * button based on the contents of the supplied text component. The
@@ -26,7 +31,7 @@ public class EnablingValidator
         _source = source;
         _source.addListener(this);
         _button = button;
-        _button.setEnabled(checkEnabled(_source.getText()));
+        validate(source, button);
     }
 
     // documentation inherited from interface TextListener
@@ -36,7 +41,7 @@ public class EnablingValidator
         _button.setEnabled(checkEnabled(text));
     }
 
-    protected boolean checkEnabled (String text)
+    protected static boolean checkEnabled (String text)
     {
         return (text != null) && (text.trim().length() > 0);
     }

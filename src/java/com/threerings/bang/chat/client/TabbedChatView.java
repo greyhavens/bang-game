@@ -65,7 +65,11 @@ public class TabbedChatView extends BContainer
                 _input.setVisible(visible);
                 _input.setEnabled(visible);
                 _send.setVisible(visible);
-                _send.setEnabled(visible);
+                if (!visible) {
+                    _send.setEnabled(visible);
+                } else {
+                    EnablingValidator.validate(_input, _send);
+                }
             }
             protected void tabWasRemoved (BComponent tab, boolean btnClose) {
                 super.tabWasRemoved(tab, btnClose);
