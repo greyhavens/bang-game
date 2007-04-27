@@ -81,8 +81,6 @@
   <text message="wendigo_switches2" step="4"/>
   <wait event="text_clicked"/>
 
-  <!-- cue the wendigo! -->
-  <scenario_action type="wendigo"/>
 
   <text message="trick" step="4"/>
   <wait event="text_clicked"/>
@@ -93,6 +91,9 @@
   <!-- have 'em actually toggle a switch -->
   <text message="wendigo_switches3" step="4"/>
   <wait event="effect:indian_post/switch_toggled"/>
+
+  <!-- cue the wendigo! -->
+  <scenario_action type="wendigo"/>
 
   <text message="switch_toggled" step="4"/>
   <wait event="text_clicked"/>
