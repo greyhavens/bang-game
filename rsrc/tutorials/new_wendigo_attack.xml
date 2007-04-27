@@ -1,0 +1,92 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="new_wendigo_attack" board="Spirit Vale" players="2">
+  <show_view name="player_status"/>
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1" avatar="units/indian_post/revolutionary/portrait.png"/>
+  <wait event="text_clicked"/>
+
+  <!-- add the trickster -->
+  <add_piece what="unit" id="1000" type="indian_post/tricksterraven"
+             location="26,13" owner="0"/>
+  <center_on what="piece" id="1000"/>
+
+  <text message="welcome2" step="1" avatar="units/indian_post/tricksterraven/portrait.png"/>
+  <wait event="text_clicked"/>
+
+  <!-- explain the wendigo and their scariness -->
+  <text message="intro" step="1"/>
+  <wait event="text_clicked"/>
+  <text message="intro2" step="1"/>
+  <wait event="text_clicked"/>
+  <text message="stayin_alive" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- have 'em pick up a talisman -->
+  <add_piece what="bonus" id="1010" type="indian_post/talisman"
+             location="22,13" owner="-1"/>
+  <center_on what="piece" id="1010"/>
+  <text message="talisman" step="2"/>
+  <wait event="effect:indian_post/talisman/pickedup"/>
+
+  <text message="got_talisman" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="got_talisman2" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- add enemy units -- stand on a petroglyph -->
+  <add_piece what="unit" id="2001" type="indian_post/buffalo_rider"
+             location="18,16" owner="1"/>
+  <add_piece what="unit" id="2002" type="indian_post/dreamcatcher"
+             location="17,13" owner="1"/>
+
+  <text message="petroglyph" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- move the BR to a safe spot, the dc can't reach-->
+  <move_unit id="2001" location="20,14"/>
+  <move_unit id="2002" location="19,13"/>
+
+  <text message="petroglyph2" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- cue the wendigo! -->
+  <scenario_action type="wendigo"/>
+  <text message="wendigo_nigh" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="wendigo_nigh2" step="2"/>
+  <wait event="unit_killed" id="2002" count="1"/>
+
+  <text message="wendigo_passed" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- explain scoring -->
+  <center_on what="special" id="2514"/>
+  <text message="wendigo_scoring" step="3"/>
+  <wait event="text_clicked"/>
+  <text message="wendigo_scoring2" step="3"/>
+  <wait event="text_clicked"/>
+
+  <!-- explain switches -->
+  <text message="wendigo_switches" step="4"/>
+  <wait event="text_clicked"/>
+
+  <center_on what="special" id="2217"/>
+  <text message="wendigo_switches2" step="4"/>
+  <wait event="text_clicked"/>
+
+  <!-- have 'em actually toggle a switch -->
+  <text message="wendigo_switches3" step="4"/>
+  <wait event="effect:indian_post/switch_toggled"/>
+
+  <text message="switch_toggled" step="4"/>
+  <wait event="text_clicked"/>
+  <text message="switch_toggled2" step="4"/>
+  <wait event="text_clicked"/>
+
+  <!-- wrap up and end the tutorial -->
+  <text message="done" step="5"/>
+  <wait event="text_clicked"/>
+
+</tutorial>
