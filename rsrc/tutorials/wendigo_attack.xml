@@ -48,7 +48,8 @@
   <text message="wendigo_nigh" step="2"/>
   <wait event="text_clicked"/>
   <text message="wendigo_nigh2" step="2"/>
-  <wait event="unit_killed" id="2000" count="1"/>
+  <wait event="text_clicked"/>
+  <scenario_action type="deploy_wendigo"/>
 
   <text message="wendigo_passed" step="2"/>
   <wait event="text_clicked"/>
