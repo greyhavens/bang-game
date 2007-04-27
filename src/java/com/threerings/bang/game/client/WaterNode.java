@@ -227,6 +227,7 @@ public class WaterNode extends Node
         Texture texture = _ctx.getTextureCache().createTexture();
         RenderUtil.configureTexture(texture,
             new Image(Image.RGBA8888, SPHERE_MAP_SIZE, SPHERE_MAP_SIZE, pbuf));
+        RenderUtil.enableTextureCompression(texture);
         texture.setEnvironmentalMapMode(Texture.EM_SPHERE);
         texture.setApply(Texture.AM_REPLACE);
         _smtstate.setTexture(texture);

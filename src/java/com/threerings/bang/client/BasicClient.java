@@ -109,13 +109,13 @@ public class BasicClient
         _invoker.setLongThresholds(INVOKER_THRESHOLD);
         _invoker.start();
 
-        // create the directors/managers/etc. provided by the context
-        createContextServices(rqueue);
-
         // initialize some static services
         Config.init(_ctx);
         RenderUtil.init(_ctx);
         SoundUtil.init(_ctx);
+
+        // create the directors/managers/etc. provided by the context
+        createContextServices(rqueue);
     }
 
     /**

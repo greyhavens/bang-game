@@ -2041,7 +2041,7 @@ public class TerrainNode extends Node
 
             // set the filter parameters
             texture.setFilter(Texture.FM_LINEAR);
-            texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+            texture.setMipmapState(Texture.MM_LINEAR_NEAREST);
 
             return texture;
         }

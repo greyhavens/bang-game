@@ -51,6 +51,9 @@ public class TerrainConfig
     /** Whether to use this texture in low graphics mode. */
     public boolean lowDetail;
 
+    /** Whether to compress this texture if possible. */
+    public boolean compress;
+
     /**
      * Returns the terrain configuration for the specified terrain type.
      */
@@ -99,11 +102,11 @@ public class TerrainConfig
         config.code = code;
         config.category = Enum.valueOf(Category.class,
             StringUtil.toUSUpperCase(props.getProperty("category", "normal")));
-        config.traversalCost = BangUtil.getIntProperty(type, props,
-            "traversal", BangBoard.BASE_TRAVERSAL);
+        config.traversalCost = BangUtil.getIntProperty(
+            type, props, "traversal", BangBoard.BASE_TRAVERSAL);
         config.scale = BangUtil.getFloatProperty(type, props, "scale", 1f);
-        config.lowDetail = BangUtil.getBooleanProperty(
-                type, props, "low_detail", true);
+        config.lowDetail = BangUtil.getBooleanProperty(type, props, "low_detail", true);
+        config.compress = BangUtil.getBooleanProperty(type, props, "compress", true);
 
         // the default dust color is that of dirt
         float[] dcolor = StringUtil.parseFloatArray(

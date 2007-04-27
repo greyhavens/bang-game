@@ -94,6 +94,8 @@ public class RenderUtil
 
     public static LightState noLights;
 
+    public static TextureState noTexture;
+
     /**
      * Initializes our commonly used render states and terrain textures.
      */
@@ -146,6 +148,9 @@ public class RenderUtil
 
         noLights = renderer.createLightState();
         noLights.setEnabled(false);
+
+        noTexture = renderer.createTextureState();
+        noTexture.setEnabled(false);
     }
 
     /** Rounds the supplied value up to a power of two. */
@@ -194,6 +199,9 @@ public class RenderUtil
                 tex = ctx.getTextureCache().getTexture(
                     path, BangPrefs.isMediumDetail() ? 1f : 0.5f)));
             tex.setScale(new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
+            if (terrain.compress) {
+                enableTextureCompression(tex);
+            }
         }
         return tex;
     }
@@ -357,6 +365,23 @@ public class RenderUtil
             BangPrefs.isMediumDetail() ? Texture.MM_LINEAR_LINEAR : Texture.MM_LINEAR);
         texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
         texture.setImage(image);
+    }
+
+    /**
+     * Attempts to enable S3TC texture compression on the supplied texture.
+     */
+    public static void enableTextureCompression (Texture texture)
+    {
+        if (!noTexture.isS3TCAvailable()) {
+            return;
+        }
+        Image image = texture.getImage();
+        int type = image.getType();
+        if (type == Image.RGB888) {
+            image.setType(Image.RGB888_DXT1);
+        } else if (type == Image.RGBA8888) {
+            image.setType(Image.RGBA8888_DXT5);
+        }
     }
 
     /**
