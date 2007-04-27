@@ -26,6 +26,9 @@ import static com.threerings.bang.Log.log;
  */
 public class TeleportEffect extends Effect
 {
+    /** Indicates that a piece was teleported. */
+    public static final String TELEPORTED = "indian_post/teleported";
+
     /** The id of the teleported piece. */
     public int pieceId;
 
@@ -96,7 +99,7 @@ public class TeleportEffect extends Effect
         if (spot == null) {
             PointSet teleporters = new PointSet();
             for (Piece p : bangobj.pieces) {
-                if (p instanceof Teleporter && 
+                if (p instanceof Teleporter &&
                         bangobj.board.isGroundOccupiable(p.x, p.y)) {
                     for (Teleporter dest : dests) {
                         int dist = dest.getDistance(p);
@@ -152,6 +155,7 @@ public class TeleportEffect extends Effect
         } else {
             // move the piece and report the effect
             moveAndReport(bangobj, _piece, dest[0], dest[1], obs);
+            reportEffect(obs, _piece, TELEPORTED);
         }
 
         // Make sure the teleporter maintains the proper board state
@@ -161,7 +165,7 @@ public class TeleportEffect extends Effect
         }
         return true;
     }
-    
+
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
@@ -177,12 +181,12 @@ public class TeleportEffect extends Effect
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
-        if (damageEffect == null || _piece == null || _piece.owner != pidx || 
+        if (damageEffect == null || _piece == null || _piece.owner != pidx ||
                 pidx == -1) {
             return null;
         }
         return MessageBundle.compose(
-               "m.effect_teleport_death", _piece.getName()); 
+               "m.effect_teleport_death", _piece.getName());
     }
 
     protected transient Piece _piece;
