@@ -116,7 +116,7 @@ public class ParlorManager extends PlaceManager
     public void updateParlorConfig (ClientObject caller, ParlorInfo info, boolean onlyCreatorStart)
     {
         PlayerObject user = (PlayerObject)caller;
-        if (user.handle.equals(_parobj.info.creator)) {
+        if (user.handle.equals(_parobj.info.creator) && info.type != ParlorInfo.Type.RECRUITING) {
             _parobj.startTransaction();
             try {
                 info.creator = _parobj.info.creator;

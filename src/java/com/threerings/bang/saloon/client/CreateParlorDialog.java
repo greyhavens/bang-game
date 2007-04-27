@@ -45,7 +45,7 @@ public class CreateParlorDialog extends BDecoratedWindow
         BLabel label;
         row.add(label = new BLabel(_msgs.get("m.parlor_type")));
         label.setTooltipText(_msgs.get("m.parlor_type_tip"));
-        row.add(_type = new BComboBox(ParlorConfigView.getParlorTypes(ctx)));
+        row.add(_type = new BComboBox(ParlorConfigView.getParlorTypes(ctx, true)));
         _type.selectItem(0);
         _type.addListener(new ActionListener() {
             public void actionPerformed (ActionEvent event) {
