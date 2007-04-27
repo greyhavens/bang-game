@@ -212,6 +212,7 @@ public class BoardView extends BComponent
         setStyleClass("board_view");
         setTooltipRelativeToMouse(true);
         _ctx = ctx;
+        _editorMode = editorMode;
 
         // create our top-level node
         _node = new Node("board_view");
@@ -390,7 +391,8 @@ public class BoardView extends BComponent
 
         // display the tile grid if appropriate
         if (shouldShowGrid()) {
-            if (_grid != null && _grid.getParent() != null) {
+            if (_grid != null) {
+                _grid.cleanup();
                 _grid.removeFromParent();
             }
             _grid = null;
@@ -985,6 +987,9 @@ public class BoardView extends BComponent
         }
         _tnode.cleanup();
         _wnode.cleanup();
+        if (_grid != null) {
+            _grid.cleanup();
+        }
 
         // clean up our sound handler
         if (_sounds != null) {
@@ -1064,9 +1069,10 @@ public class BoardView extends BComponent
     protected void updateGrid ()
     {
         if (_grid == null) {
-            _grid = new GridNode(_board, _tnode);
+            _grid = new GridNode(_ctx, _board, _tnode, _editorMode);
+        } else {
+            _grid.updateVertices();
         }
-        _grid.updateVertices();
         ColorRGBA color = RenderUtil.createColorRGBA(
             _board.getGridColor());
         _grid.getBatch(0).getDefaultColor().set(
@@ -2149,6 +2155,7 @@ public class BoardView extends BComponent
     }
 
     protected BasicContext _ctx;
+    protected boolean _editorMode;
     protected BangObject _bangobj;
     protected BangBoard _board;
     protected Rectangle _bbounds;

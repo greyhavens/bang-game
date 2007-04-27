@@ -506,11 +506,16 @@ public class RenderUtil
     {
         Renderer r = ctx.getRenderer();
         r.deleteVBO(vboinfo.getVBOColorID());
+        vboinfo.setVBOColorID(0);
         r.deleteVBO(vboinfo.getVBOIndexID());
+        vboinfo.setVBOIndexID(0);
         r.deleteVBO(vboinfo.getVBONormalID());
+        vboinfo.setVBONormalID(0);
         r.deleteVBO(vboinfo.getVBOVertexID());
+        vboinfo.setVBOVertexID(0);
         for (int ii = 0; ii < 2; ii++) {
             r.deleteVBO(vboinfo.getVBOTextureID(ii));
+            vboinfo.setVBOTextureID(ii, 0);
         }
     }
 

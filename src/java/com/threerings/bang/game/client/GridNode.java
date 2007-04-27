@@ -10,20 +10,25 @@ import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Line;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.state.LightState;
 import com.jme.util.geom.BufferUtils;
 
-import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.client.Config;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
+
+import com.threerings.bang.game.data.BangBoard;
 
 /**
  * Displays a grid along the tile boundaries.
  */
 public class GridNode extends Line
 {
-    public GridNode (BangBoard board, TerrainNode tnode)
+    public GridNode (BasicContext ctx, BangBoard board, TerrainNode tnode, boolean editorMode)
     {
         super("grid");
+        _ctx = ctx;
         _tnode = tnode;
         _board = board;
 
@@ -40,9 +45,18 @@ public class GridNode extends Line
         setVertexBuffer(0, BufferUtils.createFloatBuffer(vertices * 3));
         generateIndices(0);
         updateVertices();
-        
+
         setModelBound(new BoundingBox());
         updateModelBound();
+
+        if (!editorMode) {
+            if (Config.useVBOs && _ctx.getRenderer().supportsVBO()) {
+                VBOInfo vboinfo = new VBOInfo(true);
+                vboinfo.setVBOIndexEnabled(true);
+                setVBOInfo(vboinfo);
+            }
+            lockBounds();
+        }
     }
 
     /**
@@ -51,6 +65,9 @@ public class GridNode extends Line
      */
     public void updateVertices ()
     {
+        // delete any loaded VBOs
+        cleanup();
+
         Vector3f vertex = new Vector3f();
         FloatBuffer vbuf = getVertexBuffer(0);
         int idx = 0;
@@ -88,6 +105,18 @@ public class GridNode extends Line
         }
     }
 
+    /**
+     * Releases the resources created by this node.
+     */
+    public void cleanup ()
+    {
+        VBOInfo vboinfo = getBatch(0).getVBOInfo();
+        if (vboinfo != null) {
+            RenderUtil.deleteVBOs(_ctx, vboinfo);
+        }
+    }
+
+    protected BasicContext _ctx;
     protected BangBoard _board;
     protected TerrainNode _tnode;
 }
