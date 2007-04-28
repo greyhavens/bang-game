@@ -110,7 +110,7 @@
   <wait event="text_clicked"/>
 
   <text message="teleport"/>
-  <wait event="effect:indian_post/teleported">
+  <wait event="effect:indian_post/teleported/">
 
   <text message="done" step="5"/>
   <wait event="text_clicked"/>
