@@ -76,11 +76,9 @@
   <text message="wendigo_switches" step="4"/>
   <wait event="text_clicked"/>
 
-
-  <center_on what="special" id="2217"/>
+  <center_on what="special" id="2216"/>
   <text message="wendigo_switches2" step="4"/>
   <wait event="text_clicked"/>
-
 
   <text message="trick" step="4"/>
   <wait event="text_clicked"/>
