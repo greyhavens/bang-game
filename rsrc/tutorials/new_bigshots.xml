@@ -59,7 +59,7 @@
              location="27,12" owner="0"/>
   <center_on what="piece" id="1002"/>
 
-  <text message="stormy" step="3" avatar="units/indian_post/stormcaller/portrait.png/>
+  <text message="stormy" step="3" avatar="units/indian_post/stormcaller/portrait.png"/>
   <wait event="text_clicked"/>
 
   <!-- enemies attack the dog soldier and move close-->
@@ -107,6 +107,12 @@
   <center_on what="special" id="2521"/>
 
   <text message="teleporter"/>
+  <wait event="text_clicked"/>
+
+  <text message="teleport"/>
+  <wait event="effect:indian_post/teleported">
+
+  <text message="done" step="5"/>
   <wait event="text_clicked"/>
 
 </tutorial>
