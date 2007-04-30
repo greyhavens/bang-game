@@ -67,7 +67,7 @@
   <move_unit id="2003" location="23,15"/>
 
   <text message="stormy2"/>
-  <wait event="effect:bang" id="1002" allowAttack="23,15"/>
+  <wait event="effect:bang" id="2003" allowAttack="23,15"/>
 
   <text message="stormy3"/>
   <wait event="text_clicked"/>
@@ -81,7 +81,7 @@
   <move_unit id="2002" target="1001"/>
 
   <text message="stormy4"/>
-  <wait event="effect:bang" id="1002" allowAttack="23,15"/>
+  <wait event="effect:bang" id="2003" allowAttack="23,15"/>
 
   <!-- last dirigible flees more-->
   <move_unit id="2002" location="22,22"/>
