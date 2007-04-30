@@ -9,7 +9,7 @@
 
   <!-- add revolutionary -->
   <add_piece what="unit" id="1000" type="indian_post/revolutionary"
-             location="27,12" owner="0"/>
+             location="26,13" owner="0"/>
   <center_on what="piece" id="1000"/>
 
   <!-- introduce revolutionary -->
@@ -26,14 +26,14 @@
 
   <!-- force place of attack -->
   <text message="attack"/>
-  <wait event="effect:bang" allowAttack="26,13"/>
+  <wait event="effect:bang" allowAttack="25,13"/>
 
   <!-- enemy flees, spawn in your Dog Soldier and attack-->
   <move_unit id="2001" location="23,16"/>
 
   <!-- add your dog soldier -->
   <add_piece what="unit" id="1001" type="indian_post/dogsoldier"
-             location="23,13" owner="0"/>
+             location="26,16" owner="0"/>
 
   <text message="offense"/>
   <wait event="effect:bang" allowAttack="23,16"/>
@@ -62,8 +62,10 @@
   <text message="stormy" step="3" avatar="units/indian_post/stormcaller/portrait.png"/>
   <wait event="text_clicked"/>
 
-  <!-- enemies attack the dog soldier and move close-->
-  <move_unit id="2002" location="23,15" target="1001"/>
+  <!-- enemies attack the dog soldier and move close, fleer gets rambling -->
+  <add_piece what="bonus" id="3001" type="frontier_town/ramblin"
+             location="25,16"/>
+  <move_unit id="2002" location="25,16" target="1001"/>
   <move_unit id="2003" location="24,15"/>
 
   <text message="stormy2"/>
@@ -73,18 +75,16 @@
   <wait event="text_clicked"/>
 
   <!-- one dirigible flees, with the help of a rambin bonus -->
-  <add_piece what="bonus" id="3001" type="frontier_town/ramblin"
-             location="22,17"/>
-  <move_unit id="2002" location="22,17"/>
+  <move_unit id="2002" location="25,20"/>
 
   <!-- kill the dog soldier-->
   <move_unit id="2003" target="1001"/>
 
   <text message="stormy4"/>
-  <wait event="effect:bang" id="2003" allowAttack="23,15"/>
+  <wait event="effect:bang" id="2003" allowAttack="24,15"/>
 
   <!-- last dirigible flees more-->
-  <move_unit id="2002" location="21,20"/>
+  <move_unit id="2002" location="22,21"/>
 
   <text message="stormy5"/>
   <wait event="text_clicked"/>
