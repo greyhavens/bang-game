@@ -73,7 +73,7 @@
   <wait event="bonus_activated" allowAttack="22,17"/>
 
   <text message="swoop2"/>
-  <wait event="effect:bang" allowAttack="0"/>
+  <wait event="effect:bang" id="2001" allowAttack="0"/>
 
   <!-- enemy tbird attacks back -->
   <move_unit id="2001" target="1001"/>
