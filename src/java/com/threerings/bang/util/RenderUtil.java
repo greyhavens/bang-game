@@ -531,16 +531,19 @@ public class RenderUtil
     {
         Renderer r = ctx.getRenderer();
         r.deleteVBO(vboinfo.getVBOColorID());
-        vboinfo.setVBOColorID(0);
+        vboinfo.setVBOColorID(-1);
         r.deleteVBO(vboinfo.getVBOIndexID());
-        vboinfo.setVBOIndexID(0);
+        vboinfo.setVBOIndexID(-1);
         r.deleteVBO(vboinfo.getVBONormalID());
-        vboinfo.setVBONormalID(0);
+        vboinfo.setVBONormalID(-1);
         r.deleteVBO(vboinfo.getVBOVertexID());
-        vboinfo.setVBOVertexID(0);
-        for (int ii = 0; ii < 2; ii++) {
-            r.deleteVBO(vboinfo.getVBOTextureID(ii));
-            vboinfo.setVBOTextureID(ii, 0);
+        vboinfo.setVBOVertexID(-1);
+        for (int ii = 0, nn = TextureState.getNumberOfFixedUnits(); ii < nn; ii++) {
+            int vboId = vboinfo.getVBOTextureID(ii);
+            if (vboId > 0) {
+                r.deleteVBO(vboId);
+                vboinfo.setVBOTextureID(ii, -1);
+            }
         }
     }
 
