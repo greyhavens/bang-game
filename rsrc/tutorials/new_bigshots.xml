@@ -21,7 +21,7 @@
 
   <!-- add enemy buffalo -->
   <add_piece what="unit" id="2001" type="indian_post/buffalo_rider"
-             location="25,13" owner="1"/>
+             location="24,13" owner="1"/>
   <center_on what="piece" id="2001"/>
 
   <!-- force place of attack -->
@@ -29,30 +29,34 @@
   <wait event="effect:bang" allowAttack="25,13"/>
 
   <!-- enemy flees, spawn in your Dog Soldier and attack-->
-  <move_unit id="2001" location="23,16"/>
+  <move_unit id="2001" location="23,17"/>
 
   <!-- add your dog soldier -->
   <add_piece what="unit" id="1001" type="indian_post/dogsoldier"
-             location="26,16" owner="0"/>
+             location="23,13" owner="0"/>
 
   <text message="offense"/>
-  <wait event="effect:bang" allowAttack="23,16"/>
+  <wait event="effect:bang" allowAttack="23,17"/>
 
   <text message="icon"/>
   <wait event="text_clicked"/>
 
   <!-- add two enemy dirigibles -->
   <add_piece what="unit" id="2002" type="frontier_town/dirigible"
-             location="22,13" owner="1"/>
+             location="22,14" owner="1"/>
   <add_piece what="unit" id="2003" type="frontier_town/dirigible"
-             location="23,14" owner="1"/>
+             location="22,13" owner="1"/>
 
   <text message="martyr"/>
   <wait event="text_clicked"/>
 
+  <!-- one dirigibe gets a rambin bonus -->
+  <add_piece what="bonus" id="3001" type="frontier_town/ramblin"
+             location="24,13"/>
+
   <!-- enemies both attack to kill the Revolutionary-->
-  <move_unit id="2002" location="25,13" target="1000"/>
-  <move_unit id="2003" location="26,14" target="1000"/>
+  <move_unit id="2002" location="25,14" target="1000"/>
+  <move_unit id="2003" location="24,13" target="1000"/>
 
   <!-- add stormcaller -->
   <add_piece what="unit" id="1002" type="indian_post/stormcaller"
@@ -62,35 +66,36 @@
   <text message="stormy" step="3" avatar="units/indian_post/stormcaller/portrait.png"/>
   <wait event="text_clicked"/>
 
-  <!-- enemies attack the dog soldier and move close, fleer gets rambling -->
-  <add_piece what="bonus" id="3001" type="frontier_town/ramblin"
-             location="25,16"/>
-  <move_unit id="2002" location="25,16" target="1001"/>
-  <move_unit id="2003" location="24,15"/>
+  <!-- enemies attack the dog soldier and move close-->
+  <move_unit id="2002" location="24,16" target="1001"/>
+  <move_unit id="2003" location="24,17"/>
 
   <text message="stormy2"/>
-  <wait event="effect:bang" id="2003" allowAttack="24,15"/>
+  <wait event="effect:bang" id="2003" allowAttack="24,16"/>
 
   <text message="stormy3"/>
   <wait event="text_clicked"/>
 
   <!-- one dirigible flees, with the help of a rambin bonus -->
-  <move_unit id="2002" location="25,20"/>
+  <move_unit id="2002" location="23,20"/>
+
+  <!-- other dirigible moves closer to sc -->
+  <move_unit id="2003" location="23,24"/>
 
   <!-- kill the dog soldier-->
-  <move_unit id="2003" target="1001"/>
+  <move_unit id="2001" target="1001"/>
 
   <text message="stormy4"/>
-  <wait event="effect:bang" id="2003" allowAttack="24,15"/>
+  <wait event="effect:bang" id="2003" allowAttack="0"/>
 
   <!-- last dirigible flees more-->
-  <move_unit id="2002" location="22,21"/>
+  <move_unit id="2002" location="20,21"/>
 
   <text message="stormy5"/>
   <wait event="text_clicked"/>
 
   <!-- last dirigible flees more-->
-  <move_unit id="2002" location="18,21"/>
+  <move_unit id="2002" location="16,21"/>
 
   <!-- add the trickster -->
   <add_piece what="unit" id="1003" type="indian_post/tricksterraven"
@@ -101,7 +106,7 @@
   <wait event="text_clicked"/>
 
   <!-- last dirigible flees more-->
-  <move_unit id="2002" location="15,22"/>
+  <move_unit id="2002" location="14,22"/>
 
   <!-- show them a teleporter -->
   <center_on what="special" id="2521"/>
