@@ -217,7 +217,7 @@ public class PlayerRepository extends JORARepository
     public void spendScrip (int playerId, int amount)
         throws PersistenceException
     {
-        updateScrip("PLAYER_ID = " + playerId, amount, "spend");
+        updateScrip("PLAYER_ID = " + playerId + " and SCRIP >= " + amount, amount, "spend");
     }
 
     /**

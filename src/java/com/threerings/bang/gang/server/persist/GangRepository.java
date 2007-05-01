@@ -310,7 +310,7 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         checkedUpdate("update GANGS set SCRIP = SCRIP - " + scrip +
-                      " where GANG_ID = " + gangId, 1);
+                      " where GANG_ID = " + gangId + " and SCRIP >= " + scrip, 1);
     }
 
     /**
@@ -352,7 +352,7 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         checkedUpdate("update GANGS set ACES = ACES - " + aces +
-                      " where GANG_ID = " + gangId, 1);
+                      " where GANG_ID = " + gangId + " and ACES >= " + aces, 1);
     }
 
     /**
