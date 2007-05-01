@@ -336,7 +336,13 @@ public class BangConfig extends GameConfig
     }
 
     @Override // from GameConfig
-    public String getBundleName ()
+    public int getGameId ()
+    {
+        return 1; // one game to rule them all
+    }
+
+    @Override // from GameConfig
+    public String getGameIdent ()
     {
         return "bang";
     }

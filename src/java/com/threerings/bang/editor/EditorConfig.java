@@ -14,12 +14,6 @@ import com.threerings.bang.game.data.BangConfig;
 public class EditorConfig extends BangConfig
 {
     @Override // documentation inherited
-    public String getBundleName ()
-    {
-        return "bang";
-    }
-
-    @Override // documentation inherited
     public PlaceController createController ()
     {
         return new EditorController();
