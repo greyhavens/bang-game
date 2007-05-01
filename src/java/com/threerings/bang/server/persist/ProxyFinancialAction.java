@@ -20,7 +20,11 @@ public abstract class ProxyFinancialAction extends FinancialAction
         throws InvocationException
     {
         lockAndDeduct();
-        forwardRequest();
+        try {
+            forwardRequest();
+        } catch (InvocationException e) {
+            requestFailed(e.getMessage());
+        }
     }
 
     // documentation inherited from interface InvocationService.ConfirmListener
