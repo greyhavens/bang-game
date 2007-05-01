@@ -275,7 +275,8 @@ public class GangHandler
         getPeerProvider().removeFromGang(null, null, user.handle,
             new InvocationService.ConfirmListener() {
                 public void requestProcessed () {
-                    _leaverIds.remove(user.playerId);
+                    // we will remove the player's id from leaverIds when we receive notification
+                    // that the member entry has been removed
                     listener.requestProcessed();
                 }
                 public void requestFailed (String cause) {
@@ -482,6 +483,10 @@ public class GangHandler
         // make sure we're tracking the right avatar
         updateAvatar(null);
 
+        // determine if the member was leaving voluntarily
+        GangMemberEntry oentry = (GangMemberEntry)event.getOldEntry();
+        boolean leaving = _leaverIds.remove(oentry.playerId);
+
         // clear the user's gang fields, reimburse part of his donation (if he's getting kicked
         // out), and purge his looks if he's online
         Handle handle = (Handle)event.getKey();
@@ -489,8 +494,8 @@ public class GangHandler
         if (user == null) {
             return;
         }
-        int[] refund = ((GangMemberEntry)event.getOldEntry()).getDonationReimbursement();
-        if (_leaverIds.contains(user.playerId)) {
+        int[] refund = oentry.getDonationReimbursement();
+        if (leaving) {
             refund[0] = refund[1] = 0;
         }
         ArrayList<Look> modified = stripLooks(user.inventory, user.looks);
