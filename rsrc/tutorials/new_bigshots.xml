@@ -52,7 +52,7 @@
 
   <!-- one dirigibe gets a rambin bonus -->
   <add_piece what="bonus" id="3001" type="frontier_town/ramblin"
-             location="24,13"/>
+             location="25,14"/>
 
   <!-- enemies both attack to kill the Revolutionary-->
   <move_unit id="2002" location="25,14" target="1000"/>
@@ -67,8 +67,8 @@
   <wait event="text_clicked"/>
 
   <!-- enemies attack the dog soldier and move close-->
-  <move_unit id="2002" location="24,16" target="1001"/>
-  <move_unit id="2003" location="24,17"/>
+  <move_unit id="2002" location="24,17"/>
+  <move_unit id="2003" location="24,16" target="1001"/>
 
   <text message="stormy2"/>
   <wait event="effect:bang" id="2003" allowAttack="24,16"/>
@@ -80,7 +80,7 @@
   <wait event="text_clicked"/>
 
   <!-- other dirigible moves closer to sc -->
-  <move_unit id="2003" location="22,14"/>
+  <move_unit id="2003" location="22,15"/>
 
   <!-- last dirigible flees more-->
   <move_unit id="2002" location="20,21"/>
