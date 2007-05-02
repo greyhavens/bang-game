@@ -58,6 +58,8 @@
   <move_unit id="2002" location="25,14" target="1000"/>
   <move_unit id="2003" location="24,13" target="1000"/>
 
+  <wait event="unit_killed" id="1000"/>
+
   <!-- add stormcaller -->
   <add_piece what="unit" id="1002" type="indian_post/stormcaller"
              location="27,12" owner="0"/>
