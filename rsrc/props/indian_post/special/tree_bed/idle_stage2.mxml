@@ -3,23 +3,6 @@
 <animation frameRate="15">
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -27,7 +10,6 @@
     <transform name="Trunk_Bone03" translation="17.2835, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0265252, 0.916098, 0.283522, 0.282268" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.0593, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-3.45171, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269046, -0.609772" rotation="0.0798113, 0.865379, 0.300145, 0.39327" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.065348, -0.232383, 0.00214316, 0.970424" scale="0.726045, 0.726045, 0.726045"/>
@@ -44,7 +26,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.019714, -0.0852391, 0.0163258, 0.996032" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.106054, 0.712502, 0.681578, 0.128625" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0887641, -0.317334, 0.942771, -0.0510122" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.80636, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.228113, -0.624655, 0.690725, -0.284022" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -52,29 +33,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -82,7 +44,6 @@
     <transform name="Trunk_Bone03" translation="17.3627, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0263003, 0.915106, 0.28712, 0.28187" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.1117, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-3.41209, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609771" rotation="0.0807525, 0.863515, 0.303401, 0.394676" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0641883, -0.231561, 0.00492782, 0.970688" scale="0.726045, 0.726045, 0.726045"/>
@@ -99,7 +60,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.025711, -0.0885308, 0.0213235, 0.995513" scale="0.752474, 0.752473, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937509, -5.49725" rotation="0.104917, 0.71522, 0.678426, 0.13111" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0905277, -0.321496, 0.94115, -0.0517871" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.76674, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227937, -0.627066, 0.688219, -0.284934" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -107,29 +67,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -137,7 +78,6 @@
     <transform name="Trunk_Bone03" translation="17.5801, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0260917, 0.914157, 0.290512, 0.281496" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.2582, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-3.30031, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0815631, 0.861869, 0.306232, 0.395917" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.063015, -0.230743, 0.00773554, 0.970941" scale="0.726045, 0.726045, 0.726045"/>
@@ -154,7 +94,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1148" rotation="-0.030328, -0.0911253, 0.0251629, 0.995059" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.103962, 0.717527, 0.675718, 0.133237" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0921773, -0.325359, 0.939622, -0.0524946" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.65496, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227784, -0.629234, 0.685945, -0.285759" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -162,29 +101,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -192,7 +112,6 @@
     <transform name="Trunk_Bone03" translation="17.9053, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.025899, 0.913253, 0.293691, 0.281147" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.4824, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-3.12694, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609771" rotation="0.082258, 0.860429, 0.30868, 0.397004" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0618386, -0.229937, 0.0105412, 0.971182" scale="0.726045, 0.726045, 0.726045"/>
@@ -209,7 +128,6 @@
     <transform name="Axis24" translation="-2.69491, -12.9738, 78.1149" rotation="-0.033871, -0.0931525, 0.0281042, 0.994679" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.103181, 0.719427, 0.673463, 0.135003" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0937112, -0.328926, 0.938191, -0.0531373" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.48159, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227652, -0.631171, 0.683898, -0.2865" scale="0.287886, 0.3402, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -217,29 +135,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -247,7 +146,6 @@
     <transform name="Trunk_Bone03" translation="18.308, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.025722, 0.9124, 0.296651, 0.280825" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.7682, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-2.90256, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0828508, 0.859178, 0.310783, 0.397949" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0606699, -0.229149, 0.0133195, 0.971408" scale="0.726045, 0.726045, 0.726045"/>
@@ -264,7 +162,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1148" rotation="-0.0366371, -0.0947571, 0.0303975, 0.994361" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937507, -5.49725" rotation="0.102568, 0.720928, 0.671667, 0.136406" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0951278, -0.332199, 0.936861, -0.0537183" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.25721, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227538, -0.63289, 0.682067, -0.287161" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -272,29 +169,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -302,7 +180,6 @@
     <transform name="Trunk_Bone03" translation="18.7578, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0255606, 0.911602, 0.299387, 0.280527" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="24.0992, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-2.63776, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0833543, 0.858098, 0.312581, 0.398764" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0595198, -0.228385, 0.0160451, 0.971617" scale="0.726045, 0.726045, 0.726045"/>
@@ -319,7 +196,6 @@
     <transform name="Axis24" translation="-2.69489, -12.9738, 78.1148" rotation="-0.0389167, -0.0960942, 0.0322854, 0.994087" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937506, -5.49725" rotation="0.102119, 0.722033, 0.670336, 0.137444" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0964257, -0.335181, 0.935636, -0.0542399" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-3.9924, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.22744, -0.634403, 0.680446, -0.287745" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -327,29 +203,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -357,7 +214,6 @@
     <transform name="Trunk_Bone03" translation="19.2246, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0254146, 0.910863, 0.301893, 0.280257" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="24.4593, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-2.34311, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0837803, 0.857172, 0.314112, 0.399464" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0583994, -0.227654, 0.0186921, 0.97181" scale="0.726045, 0.726045, 0.726045"/>
@@ -374,7 +230,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.040996, -0.0973254, 0.0340058, 0.993826" scale="0.752474, 0.752474, 0.752473"/>
     <transform name="Axis16" translation="3.09641, 0.0937507, -5.49725" rotation="0.101831, 0.722745, 0.669473, 0.138116" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0976036, -0.337872, 0.934518, -0.0547045" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-3.69775, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227357, -0.635722, 0.679025, -0.288256" scale="0.287886, 0.3402, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -382,29 +237,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -412,7 +248,6 @@
     <transform name="Trunk_Bone03" translation="19.6778, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0252837, 0.910186, 0.304164, 0.280012" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="24.8322, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-2.02919, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269046, -0.609772" rotation="0.0841405, 0.856379, 0.315412, 0.400063" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.05732, -0.22696, 0.0212355, 0.971984" scale="0.726045, 0.726045, 0.726045"/>
@@ -429,7 +264,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0431576, -0.0986172, 0.0357925, 0.993545" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.101807, 0.722806, 0.669399, 0.138174" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0986605, -0.340276, 0.93351, -0.0551146" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-3.38384, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.227287, -0.636859, 0.677794, -0.288698" scale="0.287886, 0.3402, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -437,29 +271,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -467,7 +282,6 @@
     <transform name="Trunk_Bone03" translation="20.0872, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.025168, 0.909575, 0.306193, 0.279795" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="25.2016, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-1.70658, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0844458, 0.855701, 0.316519, 0.400575" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0562928, -0.22631, 0.0236481, 0.97214" scale="0.726045, 0.726045, 0.726045"/>
@@ -484,7 +298,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.045212, -0.0998562, 0.0374891, 0.993267" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937506, -5.49725" rotation="0.102109, 0.722059, 0.670304, 0.137469" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0995953, -0.342392, 0.932615, -0.0554718" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-3.06123, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227229, -0.637824, 0.676744, -0.289074" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -492,29 +305,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -522,7 +316,6 @@
     <transform name="Trunk_Bone03" translation="20.4225, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0250672, 0.909035, 0.307974, 0.279604" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="25.5514, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-1.38585, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0847068, 0.855116, 0.317469, 0.401017" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0553297, -0.225709, 0.0259059, 0.972277" scale="0.726045, 0.726045, 0.726045"/>
@@ -539,7 +332,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0468026, -0.100823, 0.0388016, 0.993045" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937507, -5.49725" rotation="0.102679, 0.720656, 0.671993, 0.136152" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.100407, -0.344224, 0.931835, -0.0557778" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-2.7405, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227182, -0.63863, 0.675865, -0.289389" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -547,29 +339,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -577,7 +350,6 @@
     <transform name="Trunk_Bone03" translation="20.6533, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0249815, 0.908569, 0.309502, 0.279441" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="25.8653, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-1.07759, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609771" rotation="0.084934, 0.854603, 0.318298, 0.401405" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0544419, -0.225162, 0.0279807, 0.972397" scale="0.726045, 0.726045, 0.726045"/>
@@ -594,7 +366,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0479581, -0.10153, 0.0397544, 0.99288" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937509, -5.49725" rotation="0.103458, 0.71875, 0.674269, 0.134373" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.101095, -0.345772, 0.931172, -0.0560343" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-2.43223, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227143, -0.639286, 0.675147, -0.289646" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -602,29 +373,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -632,7 +384,6 @@
     <transform name="Trunk_Bone03" translation="20.7809, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0249108, 0.908179, 0.310772, 0.279307" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="26.127, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.792357, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0851372, 0.854141, 0.319042, 0.401754" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0536415, -0.224675, 0.0298486, 0.972498" scale="0.726045, 0.726045, 0.726045"/>
@@ -649,7 +400,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0487063, -0.101989, 0.0403712, 0.992772" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.104389, 0.716493, 0.676936, 0.132281" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.101659, -0.347037, 0.930627, -0.0562424" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-2.14701, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.227113, -0.639804, 0.67458, -0.289849" scale="0.287886, 0.3402, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -657,29 +407,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -687,7 +418,6 @@
     <transform name="Trunk_Bone03" translation="20.8319, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0248551, 0.907869, 0.311776, 0.2792" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="26.3204, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.540739, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609771" rotation="0.0852975, 0.853775, 0.31963, 0.402031" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0529399, -0.224252, 0.0314823, 0.972583" scale="0.726045, 0.726045, 0.726045"/>
@@ -704,7 +434,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0490743, -0.102216, 0.0406745, 0.992718" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937507, -5.49725" rotation="0.10541, 0.714038, 0.679803, 0.130026" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.102098, -0.34802, 0.930202, -0.0564031" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-1.89539, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227091, -0.640194, 0.674152, -0.290002" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -712,29 +441,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -742,7 +452,6 @@
     <transform name="Trunk_Bone03" translation="20.8138, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0248147, 0.907642, 0.312509, 0.279122" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="26.4291, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.33331, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0853919, 0.853559, 0.319977, 0.402195" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0523491, -0.2239, 0.0328561, 0.97265" scale="0.726045, 0.726045, 0.726045"/>
@@ -759,7 +468,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0490886, -0.102224, 0.0406862, 0.992716" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.106457, 0.711545, 0.682678, 0.127756" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.102412, -0.348722, 0.929898, -0.0565176" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-1.68796, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227077, -0.640441, 0.67388, -0.290099" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -767,29 +475,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.0, 0.0, -0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -797,7 +486,6 @@
     <transform name="Trunk_Bone03" translation="20.7342, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0247896, 0.9075, 0.312965, 0.279074" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="26.4495, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.180646, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609771" rotation="0.0854237, 0.853485, 0.320094, 0.40225" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0518805, -0.223623, 0.033944, 0.972702" scale="0.726045, 0.726045, 0.726045"/>
@@ -814,7 +502,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.048775, -0.102031, 0.0404278, 0.992762" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937506, -5.49725" rotation="0.107462, 0.709174, 0.68538, 0.125615" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.102601, -0.349143, 0.929715, -0.0565859" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-1.53529, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.227072, -0.640523, 0.67379, -0.290131" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -822,29 +509,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.353553, 0.353553, 0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.353553, 0.353553, -0.612373, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.353553, -0.353553, 0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.353553, -0.353553, -0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -852,7 +520,6 @@
     <transform name="Trunk_Bone03" translation="20.6007, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0247801, 0.907446, 0.313138, 0.279056" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="26.3951, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.0933245, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0853964, 0.853548, 0.319994, 0.402203" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0515459, -0.223426, 0.0347204, 0.972738" scale="0.726045, 0.726045, 0.726045"/>
@@ -869,7 +536,6 @@
     <transform name="Axis24" translation="-2.69491, -12.9738, 78.1149" rotation="-0.0481589, -0.101653, 0.03992, 0.992851" scale="0.752474, 0.752474, 0.752473"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.108351, 0.707091, 0.687727, 0.123749" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.102663, -0.349283, 0.929654, -0.0566086" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-1.44797, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.227077, -0.640441, 0.67388, -0.290099" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -877,29 +543,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.255815, 0.255815, 0.659211, 0.659211" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.255815, 0.255815, -0.659211, 0.659211" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612373, -0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612372, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -907,7 +554,6 @@
     <transform name="Trunk_Bone03" translation="20.4208, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0247865, 0.907482, 0.313023, 0.279068" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="26.2754, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.0819247, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0853131, 0.853739, 0.319688, 0.402058" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0513567, -0.223315, 0.0351591, 0.972757" scale="0.726045, 0.726045, 0.726045"/>
@@ -924,7 +570,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1148" rotation="-0.0472655, -0.101106, 0.0391834, 0.99298" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937509, -5.49725" rotation="0.109051, 0.705464, 0.689544, 0.122302" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.102601, -0.349143, 0.929715, -0.0565859" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-1.43657, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227091, -0.640194, 0.674152, -0.290002" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -932,29 +577,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.0230741, 0.0230741, 0.70673, 0.70673" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0230741, 0.0230741, -0.70673, 0.70673" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -962,7 +588,6 @@
     <transform name="Trunk_Bone03" translation="20.2022, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0248073, 0.907599, 0.312646, 0.279108" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="26.0999, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.156989, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0851769, 0.854051, 0.319187, 0.401822" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0513241, -0.223296, 0.0352345, 0.972761" scale="0.726045, 0.726045, 0.726045"/>
@@ -979,7 +604,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0461197, -0.100407, 0.0382383, 0.993141" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937511, -5.49725" rotation="0.109483, 0.704461, 0.690656, 0.121413" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.102412, -0.348722, 0.929898, -0.0565174" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-1.51164, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227114, -0.639782, 0.674604, -0.28984" scale="0.287886, 0.3402, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -987,29 +611,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.212271, -0.212271, 0.674493, 0.674493" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.212271, -0.212271, -0.674493, 0.674493" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.612372, 0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612373, 0.612372, -0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1017,7 +622,6 @@
     <transform name="Trunk_Bone03" translation="19.9524, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0248407, 0.907788, 0.312037, 0.279172" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="25.878, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.312794, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609771" rotation="0.0849904, 0.854475, 0.318504, 0.401502" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0514593, -0.223375, 0.0349212, 0.972747" scale="0.726045, 0.726045, 0.726045"/>
@@ -1034,7 +638,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0447465, -0.0995745, 0.0371048, 0.993331" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937507, -5.49725" rotation="0.109716, 0.703924, 0.69125, 0.120939" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.102098, -0.34802, 0.930202, -0.0564035" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-1.66744, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227148, -0.639206, 0.675236, -0.289615" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1042,29 +645,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.312856, -0.312856, 0.63413, 0.63413" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.312856, -0.312856, -0.63413, 0.63413" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.707107, -0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1072,7 +656,6 @@
     <transform name="Trunk_Bone03" translation="19.6791, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0248878, 0.908051, 0.311186, 0.279262" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="25.6194, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.535525, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0847563, 0.855005, 0.317649, 0.401102" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.051773, -0.22356, 0.0341937, 0.972713" scale="0.726045, 0.726045, 0.726045"/>
@@ -1089,7 +672,6 @@
     <transform name="Axis24" translation="-2.69491, -12.9738, 78.1149" rotation="-0.0431706, -0.098625, 0.0358033, 0.993543" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.093751, -5.49725" rotation="0.109865, 0.70358, 0.69163, 0.120635" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.101659, -0.347037, 0.930627, -0.0562424" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-1.89017, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227191, -0.638463, 0.676048, -0.289324" scale="0.287886, 0.3402, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1097,29 +679,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.212271, -0.212271, 0.674493, 0.674493" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.212271, -0.212271, -0.674493, 0.674493" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.612372, 0.612372, -0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612373, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1127,7 +690,6 @@
     <transform name="Trunk_Bone03" translation="19.3897, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0249489, 0.908389, 0.310086, 0.279379" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="25.3334, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-0.811365, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0844776, 0.85563, 0.316634, 0.400629" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0522755, -0.223856, 0.0330268, 0.972659" scale="0.726045, 0.726045, 0.726045"/>
@@ -1144,7 +706,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0414169, -0.097576, 0.0343538, 0.993772" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937507, -5.49725" rotation="0.10993, 0.70343, 0.691795, 0.120503" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.101095, -0.345772, 0.931172, -0.0560343" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-2.16601, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.227245, -0.637555, 0.677038, -0.288969" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1152,29 +713,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.0230741, 0.0230741, 0.70673, 0.70673" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0230741, 0.0230741, -0.70673, 0.70673" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.353553, -0.353553, 0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.353553, -0.353553, -0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1182,7 +724,6 @@
     <transform name="Trunk_Bone03" translation="19.0919, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0250249, 0.908805, 0.308728, 0.279524" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="25.0295, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-1.1265, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269046, -0.609772" rotation="0.0841566, 0.856344, 0.31547, 0.40009" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0529768, -0.224275, 0.0313963, 0.972578" scale="0.726045, 0.726045, 0.726045"/>
@@ -1199,7 +740,6 @@
     <transform name="Axis24" translation="-2.69489, -12.9738, 78.1148" rotation="-0.0395104, -0.0964446, 0.0327768, 0.994014" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937507, -5.49725" rotation="0.109911, 0.703474, 0.691747, 0.120541" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.100407, -0.344224, 0.931835, -0.0557779" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-2.48115, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.227311, -0.636478, 0.678206, -0.28855" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1207,29 +747,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.255815, 0.255815, 0.659211, 0.659211" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.255815, 0.255815, -0.659211, 0.659211" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612373, -0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612372, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1237,7 +758,6 @@
     <transform name="Trunk_Bone03" translation="18.7933, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0251165, 0.909299, 0.307105, 0.279697" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="24.7173, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-1.46712, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609771" rotation="0.0837961, 0.857137, 0.314168, 0.39949" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0537672, -0.224751, 0.029555, 0.972483" scale="0.726045, 0.726045, 0.726045"/>
@@ -1254,7 +774,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0374764, -0.0952478, 0.0310928, 0.994262" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.109808, 0.703711, 0.691485, 0.120751" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0995953, -0.342392, 0.932615, -0.0554717" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-2.82177, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227388, -0.635234, 0.679551, -0.288067" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1262,29 +781,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.353553, 0.353553, 0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.353553, 0.353553, -0.612373, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1292,7 +792,6 @@
     <transform name="Trunk_Bone03" translation="18.5014, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0252241, 0.909873, 0.305207, 0.2799" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="24.4063, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-1.81941, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269046, -0.609772" rotation="0.0833985, 0.858002, 0.31274, 0.398836" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0545703, -0.22524, 0.0276809, 0.97238" scale="0.726045, 0.726045, 0.726045"/>
@@ -1309,7 +808,6 @@
     <transform name="Axis24" translation="-2.69491, -12.9738, 78.1148" rotation="-0.0353401, -0.0940023, 0.0293225, 0.994512" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.093751, -5.49725" rotation="0.109621, 0.704142, 0.691009, 0.121131" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0986605, -0.340276, 0.93351, -0.0551146" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-3.17406, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227478, -0.63382, 0.681072, -0.28752" scale="0.287886, 0.340199, 0.3402"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1317,29 +815,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.255815, 0.255815, 0.659211, 0.659211" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.255815, 0.255815, -0.659211, 0.659211" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.612372, 0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612373, 0.612372, -0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1347,7 +826,6 @@
     <transform name="Trunk_Bone03" translation="18.2238, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0253491, 0.910526, 0.303026, 0.280135" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="24.106, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-2.16955, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0829666, 0.858931, 0.311196, 0.398135" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0554449, -0.22578, 0.025636, 0.972261" scale="0.726045, 0.726045, 0.726045"/>
@@ -1364,7 +842,6 @@
     <transform name="Axis24" translation="-2.69491, -12.9738, 78.1149" rotation="-0.0331273, -0.0927243, 0.0274871, 0.994761" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.093751, -5.49725" rotation="0.109351, 0.704767, 0.690318, 0.121683" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0976037, -0.337872, 0.934518, -0.0547046" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-3.5242, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.227581, -0.632235, 0.682765, -0.286909" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1372,29 +849,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.0230741, 0.0230741, 0.70673, 0.70673" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0230741, 0.0230741, -0.70673, 0.70673" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.707107, -0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1402,7 +860,6 @@
     <transform name="Trunk_Bone03" translation="17.9681, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0254925, 0.911259, 0.300553, 0.280401" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.8257, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-2.50374, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609771" rotation="0.0825032, 0.859914, 0.309548, 0.397393" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0564489, -0.226408, 0.0232816, 0.972117" scale="0.726045, 0.726045, 0.726045"/>
@@ -1419,7 +876,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0308638, -0.0914299, 0.025608, 0.995004" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937508, -5.49725" rotation="0.108999, 0.705583, 0.689412, 0.122407" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0964257, -0.335181, 0.935636, -0.0542399" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-3.85838, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.227699, -0.630479, 0.684631, -0.286235" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1427,29 +883,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.212271, -0.212271, 0.674493, 0.674493" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.212271, -0.212271, -0.674493, 0.674493" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.612372, 0.612372, -0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612373, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1457,7 +894,6 @@
     <transform name="Trunk_Bone03" translation="17.7419, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0256552, 0.912072, 0.297781, 0.280702" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.5752, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-2.80815, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0820108, 0.860945, 0.307807, 0.396615" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0576398, -0.227165, 0.0204828, 0.971933" scale="0.726045, 0.726045, 0.726045"/>
@@ -1474,7 +910,6 @@
     <transform name="Axis24" translation="-2.69491, -12.9738, 78.1148" rotation="-0.0285759, -0.0901345, 0.0237067, 0.995237" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937512, -5.49725" rotation="0.108566, 0.70659, 0.688287, 0.123303" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0951278, -0.332199, 0.936861, -0.0537182" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.1628, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227832, -0.628548, 0.686667, -0.285498" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1482,29 +917,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.312856, -0.312856, 0.63413, 0.63413" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.312856, -0.312856, -0.63413, 0.63413" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.353553, -0.353553, 0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.353553, -0.353553, -0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1512,7 +928,6 @@
     <transform name="Trunk_Bone03" translation="17.5527, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0258384, 0.912963, 0.294701, 0.281037" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.3637, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-3.06897, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0814924, 0.862014, 0.305984, 0.395808" scale="0.417541, 0.417541, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0590728, -0.228092, 0.0171023, 0.971695" scale="0.726045, 0.726045, 0.726045"/>
@@ -1529,7 +944,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1148" rotation="-0.02629, -0.0888533, 0.0218054, 0.995459" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.093751, -5.49725" rotation="0.108053, 0.707788, 0.686944, 0.124372" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0937112, -0.328926, 0.938191, -0.0531372" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.42362, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.227982, -0.626441, 0.688871, -0.284697" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1537,29 +951,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.212271, -0.212271, 0.674493, 0.674493" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.212271, -0.212271, -0.674493, 0.674493" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612373, -0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.612372, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1567,7 +962,6 @@
     <transform name="Trunk_Bone03" translation="17.4082, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0260434, 0.913933, 0.291303, 0.281409" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.201, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-3.27239, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0809509, 0.863115, 0.304092, 0.394977" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0608018, -0.229237, 0.0130068, 0.971383" scale="0.726045, 0.726045, 0.726045"/>
@@ -1584,7 +978,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.024033, -0.0876009, 0.0199263, 0.995666" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.093751, -5.49725" rotation="0.107462, 0.709174, 0.68538, 0.125615" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0921773, -0.325359, 0.939622, -0.0524945" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.62704, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74973" rotation="0.22815, -0.624157, 0.69124, -0.283835" scale="0.287886, 0.3402, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1592,29 +985,10 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
   <frame>
-    <transform name="ButterFly01" translation="200.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_01" translation="-34.8571, 14.8644, -320.359" rotation="0.215316, -0.204114, 0.441612, 0.846732" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_02" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="-0.0230741, 0.0230741, 0.70673, 0.70673" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly01_Bone_03" translation="14.1505, -3.99353e-006, -5.84631e-006" rotation="0.0230741, 0.0230741, -0.70673, 0.70673" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_01" translation="2.56984, -3.36413, -303.31" rotation="0.822113, -0.117263, 0.498442, -0.248867" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_02" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="-0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02_Bone_03" translation="14.1505, -2.03853e-006, 1.76561e-006" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root01" translation="2.37134, 57.8025, -418.837" rotation="0.193047, -0.466057, 0.330423, 0.797712" scale="1.0, 1.0, 1.0"/>
-    <transform name="Root02" translation="1.72929, 14.846, -378.929" rotation="-0.297065, -0.134555, 0.046384, 0.944191" scale="0.516273, 1.0, 0.487122"/>
-    <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.0795463, 0.0795462, 0.0795463"/>
-    <transform name="Root03" translation="-59.5323, -15.578, -420.582" rotation="0.309856, -0.176593, 0.891567, -0.27913" scale="1.0, 1.0, 1.0"/>
-    <transform name="Trunk03" translation="-18.5826, -37.8525, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
-    <transform name="Flower01" translation="-10.1569, -23.0034, 69.4923" rotation="0.278771, -0.354943, -0.122049, 0.883972" scale="0.0856247, 0.103583, 0.0235762"/>
-    <transform name="Trunk04" translation="5.10556, 41.4881, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk01" translation="11.0284, -3.26198, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk02" translation="-32.5885, -3.03885, 0.0" rotation="0.0, 0.0, 0.0436194, 0.999048" scale="1.0, 1.0, 1.0"/>
     <transform name="Trunk_Bone01" translation="-25.7521, 5.25513, 0.0" rotation="0.0, -0.707107, 0.0, 0.707107" scale="2.83018, 1.90444, 1.90444"/>
@@ -1622,7 +996,6 @@
     <transform name="Trunk_Bone03" translation="17.316, -17.2288, 120.222" rotation="-0.198347, -0.614515, 0.00727712, 0.763529" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis15" translation="9.60527, 1.19719, -2.93584" rotation="0.0262719, 0.914979, 0.28758, 0.281819" scale="0.285801, 0.251877, 0.198266"/>
     <transform name="Trunk_Bone04" translation="23.0963, -10.7345, 168.167" rotation="-0.170385, -0.847631, -0.0392361, 0.500949" scale="2.83018, 1.90444, 1.90444"/>
-    <transform name="Leaves01" translation="3.24965, -2.9426, -1.90567" rotation="0.152438, 0.879681, -0.235475, -0.384025" scale="0.0152548, 0.00685564, 0.00483395"/>
     <transform name="Trunk_Bone05" translation="-3.40457, 0.387497, 223.066" rotation="-0.0923989, -0.686763, -0.0370651, 0.720031" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Branch01" translation="-1.22363, -0.269045, -0.609772" rotation="0.0803896, 0.864239, 0.302142, 0.39413" scale="0.417541, 0.41754, 0.353335"/>
     <transform name="Axis23" translation="-57.2352, 29.2101, 120.358" rotation="0.0628778, -0.230649, 0.00806351, 0.97097" scale="0.726045, 0.726045, 0.726045"/>
@@ -1639,7 +1012,6 @@
     <transform name="Axis24" translation="-2.6949, -12.9738, 78.1149" rotation="-0.0218319, -0.0863915, 0.0180921, 0.995858" scale="0.752474, 0.752474, 0.752474"/>
     <transform name="Axis16" translation="3.09641, 0.0937512, -5.49725" rotation="0.106795, 0.710746, 0.683592, 0.127032" scale="0.22633, 0.267457, 0.267457"/>
     <transform name="Axis17" translation="7.41697, -3.59773, 1.45515" rotation="0.0905277, -0.321496, 0.94115, -0.0517871" scale="0.224936, 0.26581, 0.26581"/>
-    <transform name="Axis19" translation="12.9883, -1.72704, -5.02249" rotation="0.0224715, 0.709073, 0.0389224, 0.703701" scale="0.000921105, 0.00102292, 0.000759236"/>
     <transform name="Trunk_Bone10" translation="-4.75922, -7.04131, 233.967" rotation="-0.152598, -0.666041, -0.0384481, 0.729126" scale="2.83018, 1.90444, 1.90444"/>
     <transform name="Axis20" translation="-3.94444, -1.62982, 1.74972" rotation="0.228338, -0.621694, 0.693773, -0.28291" scale="0.287886, 0.340199, 0.340199"/>
     <transform name="Trunk_Bone11" translation="-3.22709, 32.9555, -354.539" rotation="0.627367, 0.326207, 0.627367, -0.326207" scale="1.04449, 1.88447, 1.88447"/>
@@ -1647,9 +1019,7 @@
     <transform name="Trunk_Bone13" translation="-2.68462, -69.7609, -361.07" rotation="0.882354, 0.140345, 0.447099, -0.0430952" scale="1.62936, 1.37881, 1.37881"/>
     <transform name="Trunk_Bone14" translation="-8.29147, 28.8167, -349.716" rotation="-0.316959, -0.632089, -0.186763, 0.681997" scale="0.954308, 0.973286, 0.973287"/>
     <transform name="Trunk_Bone15" translation="-7.2048, 34.1219, -348.894" rotation="-0.20398, -0.703384, -0.33363, 0.593577" scale="0.954308, 0.973288, 0.973285"/>
-    <transform name="Flower03" translation="-10.2163, 8.60622, -9.2854" rotation="-0.181615, 0.862734, 0.243243, 0.404399" scale="0.0325075, 0.0325075, 0.0275088"/>
     <transform name="Trunk_Bone16" translation="-11.7271, 23.0481, -363.842" rotation="-0.129645, -0.562213, -0.343996, 0.740793" scale="0.954309, 0.973286, 0.973286"/>
-    <transform name="Leaves02" translation="4.68548, 1.18953, 2.6677" rotation="-0.246054, 0.419559, 0.826413, -0.283671" scale="0.00999602, 0.0131274, 0.00609569"/>
   </frame>
 
 </animation>

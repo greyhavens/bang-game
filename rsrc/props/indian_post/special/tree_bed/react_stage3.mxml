@@ -11,8 +11,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -4.71092e-006, 0.0" rotation="0.353553, -0.353553, 0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -4.71092e-006, 0.0" rotation="-0.353553, -0.353553, -0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -66,8 +64,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -8.55489e-006, 0.0" rotation="0.612373, -0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -8.55489e-006, 0.0" rotation="0.612372, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -121,8 +117,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -3.24795e-006, 0.0" rotation="-0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -3.24795e-006, 0.0" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -176,8 +170,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -9.20167e-006, 0.0" rotation="-0.612372, 0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -9.20167e-006, 0.0" rotation="0.612373, 0.612372, -0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -231,8 +223,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -7.55979e-006, 0.0" rotation="0.707107, -0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -7.55979e-006, 0.0" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -286,8 +276,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -9.60665e-006, 0.0" rotation="-0.612372, 0.612372, -0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -9.60665e-006, 0.0" rotation="0.612372, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -341,8 +329,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, 2.12727e-006, 0.0" rotation="0.353553, -0.353553, 0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, 2.12727e-006, 0.0" rotation="-0.353553, -0.353553, -0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -396,8 +382,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -4.94621e-006, 0.0" rotation="0.612373, -0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -4.94621e-006, 0.0" rotation="0.612372, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -451,8 +435,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -5.22795e-006, 0.0" rotation="-0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -5.22795e-006, 0.0" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -506,8 +488,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -3.98228e-006, 0.0" rotation="0.612372, -0.612372, -0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -3.98228e-006, 0.0" rotation="0.612373, 0.612372, -0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -561,8 +541,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -6.81922e-006, 0.0" rotation="0.707107, -0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -6.81922e-006, 0.0" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -616,8 +594,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -3.88336e-006, 0.0" rotation="-0.612372, 0.612372, -0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -3.88336e-006, 0.0" rotation="0.612373, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -671,8 +647,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -3.12442e-006, 0.0" rotation="0.353553, -0.353553, 0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -3.12442e-006, 0.0" rotation="-0.353553, -0.353553, -0.612372, 0.612372" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -726,8 +700,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -4.94302e-006, 0.0" rotation="0.612373, -0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -4.94302e-006, 0.0" rotation="0.612372, 0.612372, 0.353553, -0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -781,8 +753,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, -1.88594e-006, 0.0" rotation="-0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, -1.88594e-006, 0.0" rotation="0.707107, 0.707107, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
@@ -836,8 +806,6 @@
     <transform name="ButterFly02_Bone_02" translation="14.1505, 1.38153e-006, 0.0" rotation="-0.612372, 0.612372, 0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02_Bone_03" translation="14.1505, 1.38153e-006, 0.0" rotation="0.612373, 0.612372, -0.353553, 0.353553" scale="1.0, 1.0, 1.0"/>
     <transform name="ButterFly02" translation="200.0, -61.2137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Big" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Dead_Stump_Small" translation="0.0, 0.0, -403.347" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Root01" translation="69.8506, 60.9164, -29.6857" rotation="-0.146447, 0.353553, 0.353553, 0.853553" scale="1.0, 1.0, 1.0"/>
     <transform name="Root02" translation="65.0714, -63.3951, -15.5502" rotation="0.12088, 0.489067, -0.289892, 0.813735" scale="1.0, 1.0, 1.0"/>
     <transform name="Flower02" translation="-4.4825, -14.833, 82.4222" rotation="-0.0615634, -0.54454, 0.323384, 0.771433" scale="0.999999, 1.0, 1.0"/>
