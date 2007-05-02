@@ -1,23 +1,23 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="forest_guardians" board="Forest Guardians" players="2">
+<tutorial ident="new_forest_guardians" board="Forest Guardians2" players="2">
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
-  <text message="welcome" step="1"/>
+  <text message="welcome" step="1" avatar="units/indian_post/tricksterraven/portrait.png"/>
   <wait event="text_clicked"/>
 
   <!-- explain the basics -->
   <text message="intro" step="1"/>
   <wait event="text_clicked"/>
 
-  <add_piece what="unit" id="1000" type="indian_post/buffalo_rider"
-             location="24,20" owner="0"/>
+  <add_piece what="unit" id="1000" type="indian_post/tricksterraven"
+             location="18,17" owner="0"/>
 
   <!-- cue the trees -->
   <scenario_action type="reset_trees"/>
   <wait event="piece_added"/>
-  <center_on what="special" id="1919"/>
+  <center_on what="special" id="1517"/>
   <text message="tree_bed" step="2"/>
   <wait event="text_clicked"/>
 
@@ -26,27 +26,34 @@
 
   <text message="growth_phases1" step="2"/>
   <wait event="text_clicked"/>
+
+  <add_piece what="unit" id="1001" type="frontier_town/artillery"
+             location="15,19" owner="0"/>
+
   <text message="growth_phases2" step="2"/>
   <wait event="text_clicked"/>
   <text message="growth_phases3" step="2"/>
   <wait event="text_clicked"/>
 
   <add_piece what="unit" id="1001" type="frontier_town/artillery"
-             location="19,22" owner="0"/>
+             location="15,13" owner="0"/>
+
+  <!-- add a logging robot -->
+  <add_piece what="unit" id="2000" type="indian_post/logging_robot"
+             location="24,20" owner="-1"/>
+  <center_on what="piece" id="2000"/>
 
   <text message="logging_robots1" step="3"/>
   <wait event="text_clicked"/>
-  <text message="logging_robots2" step="3"/>
-  <wait event="text_clicked"/>
   <add_piece what="unit" id="2000" type="indian_post/logging_robot"
              location="24,20" owner="-1"/>
-  <text message="logging_robots3" step="3"/>
+  <text message="logging_robots2" step="3"/>
   <wait event="unit_killed" id="2000" allowAttack="0"/>
 
-  <text message="logging_robots4" step="3"/>
+  <text message="logging_robots3" step="3"/>
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
-             location="18,19"/>
-  <wait event="text_clicked" allowAttack="0"/>
+             location="16,18"/>
+  <wait event="bonus_activated" allowAttack="0"/>
 
   <text message="waves1" step="4"/>
   <wait event="text_clicked" allowAttack="0"/>
@@ -58,7 +65,8 @@
   <text message="more_kinds1" step="5"/>
   <wait event="text_clicked"/>
   <add_piece what="unit" id="2001" type="indian_post/locust_robot"
-             location="19,14" owner="-1"/>
+             location="14,13" owner="-1"/>
+  <center_on what="piece" id="2001"/>
   <text message="more_kinds2" step="5"/>
   <wait event="unit_killed" id="2001" allowAttack="0"/>
   <text message="more_kinds3" step="5"/>
