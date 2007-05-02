@@ -1,0 +1,108 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="forest_guardians" board="Forest Guardians" players="2">
+  <show_view name="player_status"/>
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- explain the basics -->
+  <text message="intro" step="1"/>
+  <wait event="text_clicked"/>
+
+  <add_piece what="unit" id="1000" type="indian_post/buffalo_rider"
+             location="24,20" owner="0"/>
+
+  <!-- cue the trees -->
+  <scenario_action type="reset_trees"/>
+  <wait event="piece_added"/>
+  <center_on what="special" id="1919"/>
+  <text message="tree_bed" step="2"/>
+  <wait event="text_clicked"/>
+
+  <text message="move_grow" step="2"/>
+  <wait event="effect:indian_post/tree_bed/grew"/>
+
+  <text message="growth_phases1" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="growth_phases2" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="growth_phases3" step="2"/>
+  <wait event="text_clicked"/>
+
+  <add_piece what="unit" id="1001" type="frontier_town/artillery"
+             location="19,22" owner="0"/>
+
+  <text message="logging_robots1" step="3"/>
+  <wait event="text_clicked"/>
+  <text message="logging_robots2" step="3"/>
+  <wait event="text_clicked"/>
+  <add_piece what="unit" id="2000" type="indian_post/logging_robot"
+             location="24,20" owner="-1"/>
+  <text message="logging_robots3" step="3"/>
+  <wait event="unit_killed" id="2000" allowAttack="0"/>
+
+  <text message="logging_robots4" step="3"/>
+  <add_piece what="bonus" id="3000" type="frontier_town/repair"
+             location="18,19"/>
+  <wait event="text_clicked" allowAttack="0"/>
+
+  <text message="waves1" step="4"/>
+  <wait event="text_clicked" allowAttack="0"/>
+  <text message="waves2" step="4"/>
+  <wait event="text_clicked" allowAttack="0"/>
+  <text message="waves3" step="4"/>
+  <wait event="text_clicked" allowAttack="0"/>
+
+  <text message="more_kinds1" step="5"/>
+  <wait event="text_clicked"/>
+  <add_piece what="unit" id="2001" type="indian_post/locust_robot"
+             location="19,14" owner="-1"/>
+  <text message="more_kinds2" step="5"/>
+  <wait event="unit_killed" id="2001" allowAttack="0"/>
+  <text message="more_kinds3" step="5"/>
+  <wait event="text_clicked"/>
+
+  <text message="fetishes1" step="6"/>
+  <wait event="text_clicked"/>
+  <text message="fetishes2" step="6"/>
+  <wait event="text_clicked"/>
+  <text message="fetishes3" step="6"/>
+  <wait event="text_clicked"/>
+
+  <add_piece what="bonus" id="1010" type="indian_post/fetish_turtle"
+             location="21,20" owner="-1"/>
+  <center_on what="piece" id="1010"/>
+  <text message="fetishes4" step="6"/>
+  <wait event="effect:frontier_town/bonus/pickedup"/>
+
+  <text message="fetishes5" step="6"/>
+  <wait event="text_clicked" allowAttack="0"/>
+  <text message="fetishes6" step="6"/>
+  <wait event="text_clicked" allowAttack="0"/>
+  <text message="fetishes7" step="6"/>
+  <wait event="text_clicked" allowAttack="0"/>
+
+  <text message="scoring1" step="7"/>
+  <wait event="text_clicked"/>
+  <text message="scoring2" step="7"/>
+  <wait event="text_clicked"/>
+  <text message="scoring3" step="7"/>
+  <wait event="text_clicked"/>
+  <text message="scoring4" step="7"/>
+  <wait event="text_clicked"/>
+  <text message="scoring5" step="7"/>
+  <wait event="text_clicked"/>
+  <text message="scoring6" step="7"/>
+  <wait event="text_clicked"/>
+
+  <!-- wrap up and end the tutorial -->
+  <text message="done1"/>
+  <wait event="text_clicked"/>
+  <text message="done2"/>
+  <wait event="text_clicked"/>
+  <text message="done3"/>
+  <wait event="text_clicked"/>
+
+</tutorial>

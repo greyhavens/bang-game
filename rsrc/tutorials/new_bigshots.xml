@@ -73,23 +73,20 @@
   <text message="stormy2"/>
   <wait event="effect:bang" id="2003" allowAttack="24,16"/>
 
-  <text message="stormy3"/>
-  <wait event="text_clicked"/>
-
   <!-- one dirigible flees, with the help of a rambin bonus -->
   <move_unit id="2002" location="23,20"/>
 
+  <text message="stormy3"/>
+  <wait event="text_clicked"/>
+
   <!-- other dirigible moves closer to sc -->
-  <move_unit id="2003" location="23,24"/>
-
-  <!-- kill the dog soldier-->
-  <move_unit id="2001" target="1001"/>
-
-  <text message="stormy4"/>
-  <wait event="effect:bang" id="2003" allowAttack="0"/>
+  <move_unit id="2003" location="22,14"/>
 
   <!-- last dirigible flees more-->
   <move_unit id="2002" location="20,21"/>
+
+  <text message="stormy4"/>
+  <wait event="effect:bang" id="2003" allowAttack="0"/>
 
   <text message="stormy5"/>
   <wait event="text_clicked"/>
