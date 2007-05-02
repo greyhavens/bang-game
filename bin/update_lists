@@ -7,7 +7,7 @@
 
 BANG_HOME=`dirname $0`
 BANG_HOME=`cd $BANG_HOME/.. ; pwd`
-TOWNS="frontier_town indian_post boom_town ghost_town city_of_gold"
+TOWNS=`echo $1 | sed 's/,/ /g'`
 
 cd $BANG_HOME
 
