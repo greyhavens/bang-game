@@ -88,7 +88,7 @@
   <move_unit id="2002" location="20,21"/>
 
   <text message="stormy4"/>
-  <wait event="effect:bang" id="2003" allowAttack="0"/>
+  <wait event="unit_killed" id="2003" allowAttack="0"/>
 
   <text message="stormy5"/>
   <wait event="text_clicked"/>
@@ -98,7 +98,7 @@
 
   <!-- add the trickster -->
   <add_piece what="unit" id="1003" type="indian_post/tricksterraven"
-             location="25,16" owner="0"/>
+             location="25,17" owner="0"/>
   <center_on what="piece" id="1003"/>
 
   <text message="tricky" step="4" avatar="units/indian_post/tricksterraven/portrait.png"/>
