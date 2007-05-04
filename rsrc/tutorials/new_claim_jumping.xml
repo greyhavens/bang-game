@@ -24,7 +24,7 @@
   <add_piece what="unit" id="2002" type="frontier_town/steamgunman"
              location="16,14" owner="0"/>
   <text message="pick_up_nugget" step="2"/>
-  <wait event="bonus_activated"/>
+  <wait event="bonus_activated" allowAttack="16,18"/>
 
   <!-- tell them to drop the nugget in their claim -->
   <text message="got_nugget"/>
