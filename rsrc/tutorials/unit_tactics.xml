@@ -64,14 +64,17 @@
   <!-- get the repair bonus -->
   <text message="get_repair"/>
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
-             location="21,15"/>
+             location="21,18"/>
   <center_on what="piece" id="3000"/>
-  <wait event="bonus_activated" id="3000" allowAttack="21,15"/>
+  <wait event="bonus_activated" id="3000"/>
 
   <!-- have the artillery get shot -->
   <center_on what="piece" id="1000"/>
   <text message="full_attack" step="4"/>
   <wait event="effect:bang" allowAttack="0"/>
+
+  <text message="damage"/>
+  <wait event="text_clicked"/>
 
   <!-- have the artillery shoot back -->
   <move_unit id="2000" target="1001"/>
