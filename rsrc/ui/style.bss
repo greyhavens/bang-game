@@ -815,11 +815,32 @@ look_upsell {
 }
 
 //
+// Tutorial View styles
+
+tview_title {
+  font: "Dom Casual" bold 36;
+  text-effect: shadow;
+  color: #FFFFFF;
+  effect-color: #6C5237;
+  text-align: center;
+}
+
+tview_desc {
+  parent: "label";
+  color: #754A21;
+}
+
+tview_list {
+  font: "Dom Casual Thin" plain 20;
+  color: #652708;
+}
+
+//
 // Where To View styles
 
 where_title {
   parent: "label";
-  font: "Old Town Wide" plain 32;
+  font: "Dom Casual" bold 32;
   text-effect: shadow;
   color: #FFFFFF;
   effect-color: #6C5237;
@@ -828,7 +849,18 @@ where_title {
 
 where_info {
   parent: "label";
-  font: "Dom Casual" plain 16;
+  font: "Dom Casual Thin" plain 18;
+}
+
+where_bubble {
+  parent: "label";
+  background: image "ui/whereto/bubble.png" framexy 70 140;
+  padding: 15 15 35 15;
+}
+
+where_shop {
+  background: image "ui/whereto/frame_town.png" centerxy;
+  padding: 3 4 4 3;
 }
 
 //

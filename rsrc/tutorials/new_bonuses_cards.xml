@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="new_bonuses_cards" board="Craggy Pass" players="2">
+<tutorial ident="new_bonuses_cards" board="Craggy Pass" players="2" card="repair">
 
   <!-- add bad gunslinger -->
   <add_piece what="unit" id="2000" type="frontier_town/gunslinger"
@@ -31,8 +31,8 @@
   <wait event="text_clicked"/>
 
   <!-- show the player status view, explain it -->
-  <text message="player_status_intro" step="3"/>
   <show_view name="player_status"/>
+  <text message="player_status_intro" step="3"/>
   <wait event="text_clicked"/>
 
   <!-- add a ramblin' bonus, have them inspect and activate it -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="new_gold_rush" board="Gold Rush Hill" players="2">
+<tutorial ident="new_gold_rush" board="Gold Rush Hill" players="2" card="iron_plate">
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="new_cattle_rustling" board="Cattle Rustling" players="2">
+<tutorial ident="new_cattle_rustling" board="Cattle Rustling" players="2" card="lucky_horseshoe">
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
@@ -8,7 +8,7 @@
   <wait event="text_clicked"/>
 
   <!-- add their bigshot to the board and explain bigshots -->
-  <add_piece what="bigshot" id="1001" location="18,12" owner="0"/>
+  <add_piece what="unit" type="frontier_town/cavalry" id="1001" location="18,12" owner="0"/>
   <center_on what="piece" id="1001"/>
   <text message="bigshot_intro"/>
   <wait event="text_clicked"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="new_wendigo_attack" board="Spirit Vale" players="2">
+<tutorial ident="new_wendigo_attack" board="Spirit Vale" players="2" card="snare">
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
@@ -60,7 +60,7 @@
   <wait event="text_clicked"/>
 
   <!-- release the wendigo! -->
-  <scenario_action type="deploy_wendigo"/> 
+  <scenario_action type="deploy_wendigo"/>
 
   <text message="wendigo_passed" step="2"/>
   <wait event="text_clicked"/>
@@ -97,7 +97,7 @@
   <wait event="text_clicked"/>
 
   <!-- release the wendigo! -->
-  <scenario_action type="deploy_wendigo"/> 
+  <scenario_action type="deploy_wendigo"/>
 
   <text message="switch_toggled2" step="4"/>
   <wait event="text_clicked"/>
