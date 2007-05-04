@@ -48,6 +48,8 @@
 
   <!-- have them destroy the enemy homestead -->
   <center_on what="piece" id="1002" arrow="false"/>
+  <text message="shoot_homestead"/>
+  <wait event="effect:bang" allowAttack="0"/>
   <text message="destroy_homestead"/>
   <wait event="unit_killed" allowAttack="0"/>
   <text message="lose_points"/>
@@ -76,14 +78,14 @@
   <text message="shotty"/>
   <wait event="text_clicked"/>
 
-  <!-- take out shotgunner -->
+  <!-- take out one of them -->
   <text message="takedown"/>
-  <wait event="unit_killed" id="5002" allowAttack="0"/>
+  <wait event="unit_killed" allowAttack="0"/>
 
-  <!-- take out artillery -->
+  <!-- take out the other -->
   <move_unit id="5001" targetLoc="24,19"/>
   <text message="takedown2"/>
-  <wait event="unit_killed" id="5001" allowAttack="0"/>
+  <wait event="unit_killed" allowAttack="0"/>
 
   <!-- then claim it for themselves -->
   <text message="all_clear"/>
