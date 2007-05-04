@@ -15,7 +15,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardTripletGood;
@@ -29,7 +29,7 @@ public class GoodsIcon extends PaletteIcon
     /** Contains our randomly selected color ids for colorized goods. */
     public int[] colorIds = new int[3];
 
-    public GoodsIcon (BangContext ctx, DObject entity, Good good)
+    public GoodsIcon (BasicContext ctx, DObject entity, Good good)
     {
         _ctx = ctx;
         _entity = entity;
@@ -70,7 +70,7 @@ public class GoodsIcon extends PaletteIcon
         return insets;
     }
 
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
     protected DObject _entity;
     protected Good _good;
 

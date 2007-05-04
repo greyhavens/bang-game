@@ -61,6 +61,7 @@ public class FKeyPopups
     public static enum Type {
         HELP(KeyInput.KEY_F1, 0, 0, true),
         TUTORIALS(KeyInput.KEY_T, 0, 0, true),
+        WHERETO(KeyInput.KEY_W, 0, 0, true),
         REPORT_BUG(KeyInput.KEY_F2, 0, 0, false),
         CLIENT_LOG(KeyInput.KEY_F3, InputEvent.SHIFT_DOWN_MASK, 0, false),
         CHAT_HISTORY(KeyInput.KEY_F3, 0, 0, false),
@@ -153,6 +154,10 @@ public class FKeyPopups
             popup = createReportBug();
             break;
         case TUTORIALS:
+            popup = new TutorialView(_ctx);
+            whint = TutorialView.WIDTH_HINT;
+            break;
+        case WHERETO:
             popup = new WhereToView(_ctx, false);
             whint = WhereToView.WIDTH_HINT;
             break;

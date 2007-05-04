@@ -18,11 +18,13 @@ import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.BonusConfig;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
 
+import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.TutorialCodes;
@@ -152,6 +154,35 @@ public class Tutorial extends Scenario
     public boolean shouldPayEarnings (PlayerObject user)
     {
         return _firstTime && user.stats.containsValue(StatType.TUTORIALS_COMPLETED, _config.ident);
+    }
+
+    /**
+     * Handles giving an award to the player.
+     */
+    public void grantAward (PlayerObject user, Award award)
+    {
+        if (user == null || !shouldPayEarnings(user)) {
+            return;
+        }
+        award.cashEarned += _config.scrip;
+
+        if (_config.card != null) {
+            CardItem card = null;
+            for (Item item : user.inventory) {
+                if (item instanceof CardItem && ((CardItem)item).getType().equals(_config.card)) {
+                    card = (CardItem)item;
+                    break;
+                }
+            }
+            if (card == null) {
+                card = new CardItem(user.playerId, _config.card);
+            }
+
+            for (int ii = 0; ii < 3; ii++) {
+                card.addCard();
+            }
+            award.item = card;
+        }
     }
 
     @Override // documentation inherited

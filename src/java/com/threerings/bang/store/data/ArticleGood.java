@@ -23,7 +23,7 @@ import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Represents an article of clothing or an accessory for sale.
@@ -51,7 +51,7 @@ public class ArticleGood extends Good
     }
 
     @Override // from Good
-    public ImageIcon createIcon (BangContext ctx, DObject entity, int[] colorIds)
+    public ImageIcon createIcon (BasicContext ctx, DObject entity, int[] colorIds)
     {
         AvatarLogic al = ctx.getAvatarLogic();
         ColorRecord[] crecs = al.pickRandomColors(getColorizationClasses(ctx), entity);
@@ -79,7 +79,7 @@ public class ArticleGood extends Good
     }
 
     @Override // from Good
-    public String[] getColorizationClasses (BangContext ctx)
+    public String[] getColorizationClasses (BasicContext ctx)
     {
         ArticleCatalog.Article article =
             ctx.getAvatarLogic().getArticleCatalog().getArticle(_type);

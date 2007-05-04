@@ -19,7 +19,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Represents a particular good that can be purchased from the general store.
@@ -48,7 +48,7 @@ public abstract class Good extends SimpleStreamableObject
      * @param colorIds if the good is colorizable, this (three element) array will be populated
      * with the color ids of the random colors chosen for the icon.
      */
-    public ImageIcon createIcon (BangContext ctx, DObject entity, int[] colorIds)
+    public ImageIcon createIcon (BasicContext ctx, DObject entity, int[] colorIds)
     {
         return createIcon(ctx, null);
     }
@@ -57,7 +57,7 @@ public abstract class Good extends SimpleStreamableObject
      * Creates a customized icon for this good.  By default, returns an icon containing the image
      * located at {@link #getIconPath}, modified with the supplied colorizations.
      */
-    public ImageIcon createIcon (BangContext ctx, Colorization[] zations)
+    public ImageIcon createIcon (BasicContext ctx, Colorization[] zations)
     {
         BImage img = (zations == null) ?
             ctx.loadImage(getIconPath()) :
@@ -78,7 +78,7 @@ public abstract class Good extends SimpleStreamableObject
      * Returns the names of the colorization classes used by this good, or <code>null</code> for
      * none.
      */
-    public String[] getColorizationClasses (BangContext ctx)
+    public String[] getColorizationClasses (BasicContext ctx)
     {
         return null;
     }

@@ -20,7 +20,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.avatar.client.BuckleView;
 import com.threerings.bang.avatar.data.AvatarCodes;
@@ -71,7 +71,7 @@ public class BucklePartGood extends GangGood
     }
 
     @Override // from Good
-    public ImageIcon createIcon (BangContext ctx, DObject entity, int[] colorIds)
+    public ImageIcon createIcon (BasicContext ctx, DObject entity, int[] colorIds)
     {
         AvatarLogic al = ctx.getAvatarLogic();
         ColorRecord[] crecs = al.pickRandomColors(getColorizationClasses(ctx), entity);
@@ -89,7 +89,7 @@ public class BucklePartGood extends GangGood
     }
 
     @Override // from Good
-    public ImageIcon createIcon (BangContext ctx, Colorization[] zations)
+    public ImageIcon createIcon (BasicContext ctx, Colorization[] zations)
     {
         // clone the colorizations because the character rendering code keeps a reference
         // for caching
@@ -102,7 +102,7 @@ public class BucklePartGood extends GangGood
     }
 
     @Override // from Good
-    public String[] getColorizationClasses (BangContext ctx)
+    public String[] getColorizationClasses (BasicContext ctx)
     {
         AvatarLogic alogic = ctx.getAvatarLogic();
         BucklePartCatalog.Part part = alogic.getBucklePartCatalog().getPart(
@@ -122,7 +122,7 @@ public class BucklePartGood extends GangGood
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.buckle_part_tip");
     }
 
-    protected CharacterComponent getCharacterComponent (BangContext ctx)
+    protected CharacterComponent getCharacterComponent (BasicContext ctx)
     {
         try {
             return ctx.getCharacterManager().getComponentRepository().getComponent(

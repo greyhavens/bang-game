@@ -456,19 +456,17 @@ public class BangClient extends BasicClient
     {
         PlayerObject user = _ctx.getUserObject();
 
-        /*
-        // if this player does not have a name, it's their first time, so pop up the create avatar
-        // view
-        if (user.handle instanceof GuestHandle) {
-            displayPopup(new CreateAvatarView(_ctx), true, 800);
-            return true;
-        }
-        */
-
         // see if we're an anonymous user that wants to sign up
         if (SIGN_UP.equals(_popup)) {
             _popup = null;
             showCreateAccount(false);
+            return true;
+        }
+
+        // if this player does not have a name, and just finished the tutorials, show them the
+        // create avatar view
+        if (user.handle instanceof GuestHandle && CREATE_HANDLE.equals(_popup)) {
+            displayPopup(new CreateAvatarView(_ctx), true, 800);
             return true;
         }
 
@@ -493,6 +491,11 @@ public class BangClient extends BasicClient
 
         // if they've got a free ticket, potentially show it
         if (maybeShowPassDetails()) {
+            return true;
+        }
+
+        if (!skipWhereTo && BangPrefs.shouldShowTutIntro(user)) {
+            displayPopup(new TutorialView(_ctx), true, TutorialView.WIDTH_HINT);
             return true;
         }
 

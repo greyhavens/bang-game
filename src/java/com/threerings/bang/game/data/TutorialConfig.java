@@ -186,6 +186,12 @@ public class TutorialConfig
     /** If this is a respawning tutorial. */
     public boolean respawn = true;
 
+    /** The card reward at the completion of the tutorial. */
+    public String card;
+
+    /** The scrip reward at the completion of the tutorial. */
+    public int scrip = 65;
+
     /** Returns an array containing the actions for this tutorial. */
     public Action getAction (int index)
     {

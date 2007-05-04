@@ -22,8 +22,10 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ItemIcon;
+import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.util.BasicContext;
@@ -33,6 +35,9 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
+
+import com.threerings.bang.store.client.GoodsIcon;
+import com.threerings.bang.store.data.CardTripletGood;
 
 /**
  * Displays end-of-game awards. Used by the {@link GameOverView} and the {@link
@@ -47,7 +52,9 @@ public class AwardView extends BContainer
               setGap(25).setOffAxisPolicy(GroupLayout.STRETCH));
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
-        boolean isBounty = (bconfig.type == BangConfig.Type.BOUNTY);
+        boolean isShort =
+            (bconfig.type == BangConfig.Type.BOUNTY || bconfig.type == BangConfig.Type.TUTORIAL ||
+             bconfig.duration == BangConfig.Duration.PRACTICE);
         boolean isCoop =
             bangobj.roundId == 1 && bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP;
 
@@ -56,11 +63,21 @@ public class AwardView extends BContainer
         add(econt);
 
         String rankstr = msgs.get("m.endgame_rank" + award.rank);
-        String txt= isBounty ?  msgs.get("m.bover_earnings") : (isCoop ?
+        String txt;
+        switch (bconfig.type) {
+        case BOUNTY:
+            txt = msgs.get("m.bover_earnings");
+            break;
+        case TUTORIAL:
+            txt = msgs.get("m.tover_earnings");
+            break;
+        default:
+            txt = (isCoop ?
                 msgs.get("m.endgame_coop_earnings") : msgs.get("m.endgame_earnings", rankstr));
+        }
         econt.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
 
-        _table = new BContainer(new TableLayout(isBounty ? 3 : 7, 5, 5));
+        _table = new BContainer(new TableLayout(isShort ? 3 : 7, 5, 5));
         // we need to center this verticaly
         BContainer vbox = GroupLayout.makeVBox(GroupLayout.CENTER);
         ((GroupLayout)vbox.getLayoutManager()).setGap(0);
@@ -78,12 +95,21 @@ public class AwardView extends BContainer
         }
         econt.add(vbox, BorderLayout.CENTER);
 
-        txt = isBounty ? msgs.get("m.bover_reward") : (isCoop ?
+        switch (bconfig.type) {
+        case BOUNTY:
+            txt = msgs.get("m.bover_reward");
+            break;
+        case TUTORIAL:
+            txt = msgs.get("m.tover_reward");
+            break;
+        default:
+            txt = (isCoop ?
                 msgs.get("m.endgame_coop_reward") : msgs.get("m.endgame_reward", rankstr));
+        }
         _table.add(new BLabel(txt, "endgame_smallheader"));
 
         Purse purse;
-        if (isBounty) {
+        if (isShort) {
             _table.add(new Spacer(70, 1));
             purse = Purse.DEFAULT_PURSE;
         } else {
@@ -107,7 +133,7 @@ public class AwardView extends BContainer
         label.setIcon(BangUI.scripIcon);
         label.setIconTextGap(3);
 
-        if (!isBounty) {
+        if (!isShort) {
             _table.add(new BLabel("+", "endgame_smallcash"));
 
             NumberFormat pfmt = NumberFormat.getPercentInstance();
@@ -148,13 +174,22 @@ public class AwardView extends BContainer
             _item = new BContainer(new BorderLayout());
             _item.setPreferredSize(200, -1);
             _item.setStyleClass("endgame_border");
+            PaletteIcon icon = null;
             if (award.item instanceof Badge) {
                 txt = msgs.get("m.endgame_badge");
+                icon = new ItemIcon(ctx, award.item);
+            } else if (award.item instanceof CardItem) {
+                txt = msgs.get("m.endgame_card");
+                CardItem card = (CardItem)award.item;
+                CardTripletGood ctg = new CardTripletGood(card.getType(), 0, 0, null);
+                ctg.setQuantity(card.getQuantity());
+                icon = new GoodsIcon(ctx, null, ctg);
             } else {
                 txt = msgs.get("m.endgame_item");
+                icon = new ItemIcon(ctx, award.item);
             }
             _item.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
-            _item.add(new ItemIcon(ctx, award.item), BorderLayout.CENTER);
+            _item.add(icon, BorderLayout.CENTER);
             if (award.item instanceof Badge) {
                 String reward = ((Badge)award.item).getReward();
                 if (reward != null) {
@@ -167,7 +202,7 @@ public class AwardView extends BContainer
             }
             add(_item);
 
-        } else if (!bconfig.rated && !isBounty) {
+        } else if (!bconfig.rated && !isShort) {
             BContainer bcont = new BContainer(new BorderLayout());
             bcont.setPreferredSize(200, -1);
             bcont.setStyleClass("endgame_border");

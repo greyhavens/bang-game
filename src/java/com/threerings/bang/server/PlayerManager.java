@@ -450,7 +450,7 @@ public class PlayerManager
         }
 
         // make sure the tutorial is valid for this town
-        int tutIdx = ListUtil.indexOf(TutorialCodes.TUTORIALS[ServerConfig.townIndex], tutId);
+        int tutIdx = ListUtil.indexOf(TutorialCodes.NEW_TUTORIALS[ServerConfig.townIndex], tutId);
         if (!player.tokens.isAdmin() && // allow admin to play test tutorials
             tutIdx == -1) {
             log.warning("Player req'd invalid tutorial [who=" + player.who() +

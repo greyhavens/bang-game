@@ -324,6 +324,24 @@ public class BangPrefs
     }
 
     /**
+     * Used to prevent the Tutorial Intro view from automatically showing up once a user has
+     * requested it not be auto-shown. This is tracked per-town, so the a player will be shown the
+     * view again the first time they visit a new town.
+     */
+    public static boolean shouldShowTutIntro (PlayerObject user)
+    {
+        return !config.getValue(user.username + ".tut_intro." + user.townId, false);
+    }
+
+    /**
+     * Called when the user has requested not to show the Tutorial Intro View.
+     */
+    public static void setNoTutIntro (PlayerObject user)
+    {
+        config.setValue(user.username + ".tut_intro." + user.townId, true);
+    }
+
+    /**
      * Used to prevent a shop popup from showing upon entering said shop.
      */
     public static boolean shouldShowShopPopup (PlayerObject user, String shop)

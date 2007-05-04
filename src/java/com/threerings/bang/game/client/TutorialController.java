@@ -63,6 +63,7 @@ public class TutorialController
 
         // load up the tutorial configuration
         _config = TutorialUtil.loadTutorial(ctx.getResourceManager(), config.getScenario(0));
+        _gconfig = config;
         _msgs = _ctx.getMessageManager().getBundle("tutorials." + _config.ident);
         _gmsgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
@@ -183,10 +184,6 @@ public class TutorialController
         if (_tutavatar.isAdded()) {
             _ctx.getRootNode().removeWindow(_tutavatar);
         }
-
-        // display the WhereToView so they can pick a new tutorial or go back to town
-        _ctx.getBangClient().displayPopup(
-            new WhereToView(_ctx, true), true, WhereToView.WIDTH_HINT);
     }
 
     /** Called from {@link BangController#didLeavePlace}. */
@@ -423,6 +420,10 @@ public class TutorialController
                 while (!processAction(actionId)) {
                     actionId++;
                 }
+
+            } else if (event.getName().equals(BangObject.AWARDS)) {
+                _ctx.getBangClient().displayPopup(new TutorialGameOverView(
+                            _ctx, _config.ident, _gconfig, _bangobj, _ctx.getUserObject()), true);
             }
         }
     };
@@ -442,6 +443,7 @@ public class TutorialController
 
     protected TutorialConfig _config;
     protected TutorialConfig.WaitAction _pending;
+    protected BangConfig _gconfig;
 
     /** Counts up all events received during the tutorial. */
     protected HashMap<String,Integer> _events = new HashMap<String,Integer>();

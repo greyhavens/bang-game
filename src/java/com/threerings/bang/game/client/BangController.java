@@ -807,6 +807,11 @@ public class BangController extends GameController
         if (_config.type == BangConfig.Type.BOUNTY) {
             view = new BountyGameOverView(_ctx, _bangobj.bounty, _bangobj.bountyGameId,
                                           _config, _bangobj, _ctx.getUserObject());
+        } else if (_config.duration == BangConfig.Duration.PRACTICE) {
+            view = new TutorialGameOverView(
+                    _ctx, TutorialCodes.PRACTICE_PREFIX + _config.rounds.get(0).scenario,
+                    _config, _bangobj, _ctx.getUserObject());
+
         } else {
             view = _statsView;
         }

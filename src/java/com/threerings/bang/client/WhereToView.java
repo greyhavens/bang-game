@@ -52,7 +52,7 @@ public class WhereToView extends SteelWindow
     implements ActionListener
 {
     /** The width to hint when laying out this window. */
-    public static final int WIDTH_HINT = 900;
+    public static final int WIDTH_HINT = 800;
 
     public WhereToView (BangContext ctx, boolean postGame)
     {
@@ -67,63 +67,51 @@ public class WhereToView extends SteelWindow
         setModal(true);
         _contents.setStyleClass("padded");
         BContainer horiz = new BContainer(GroupLayout.makeHStretch().setGap(25));
+        _contents.add(new Spacer(0, -10));
         _contents.add(horiz);
 
-        BImage underline = _ctx.loadImage("ui/window/underline.png");
-        BContainer tutcol = new BContainer(
-            GroupLayout.makeVert(GroupLayout.TOP).setGap(5).setOffAxisPolicy(GroupLayout.STRETCH));
-        tutcol.add(new BLabel(_msgs.get("m.whereto_tuts"), "where_title"));
-        tutcol.add(new BLabel(new ImageIcon(underline)));
-        tutcol.add(new BLabel(_msgs.get("m.whereto_intro"), "where_info"));
-
-        boolean enabled = true;
         int townIdx = BangUtil.getTownIndex(self.townId);
-        String[] tutorials = TutorialCodes.TUTORIALS[townIdx];
-        BContainer tuts = new BContainer(new TableLayout(3, 5, 5));
-        if (townIdx == 0) { // frontier town is special
-            enabled = createTutorialButton(tuts, tutorials, 0, enabled, false);
-            enabled = createTutorialButton(tuts, tutorials, 1, enabled, false);
-            for (int ii = 2; ii < tutorials.length; ii += 2) {
-                enabled = createTutorialButton(tuts, tutorials, ii, enabled, true);
-            }
-        } else {
-            for (int ii = 0; ii < tutorials.length; ii += 2) {
-                enabled = createTutorialButton(tuts, tutorials, ii, enabled, true);
-            }
-        }
-        if (self.tokens.isSupport()) {
-            customTutorialButton(tuts);
-        }
-        tutcol.add(tuts);
-        horiz.add(tutcol);
+        BImage underline = _ctx.loadImage("ui/window/underline.png");
+        BContainer tutcol = new BContainer(GroupLayout.makeVert(
+                    GroupLayout.TOP).setGap(5).setOffAxisJustification(GroupLayout.CENTER));
+        BLabel tutbubble = new BLabel(_msgs.get("m.whereto_tuts." + self.townId), "where_bubble");
+        tutbubble.setPreferredSize(new Dimension(300, -1));
+        tutcol.add(new Spacer(0, 15));
+        tutcol.add(tutbubble);
+        tutcol.add(new Spacer(0, -30));
+        tutcol.add(new BLabel(new ImageIcon(_ctx.loadImage(TutorialCodes.TUTORIAL_UNIT[townIdx]))));
+        tutcol.add(new BButton(_msgs.get("m.tut_view"), this, "tutorials"));
+        horiz.add(tutcol, GroupLayout.FIXED);
 
         BContainer bldgs = new BContainer(GroupLayout.makeVStretch().setGap(5));
         for (String ident : BLDGS) {
-            if (bldgs.getComponentCount() > 0) {
-                bldgs.add(new Spacer(0, 15), GroupLayout.FIXED);
-            }
             bldgs.add(new BLabel(_msgs.get("m.bldg_" + ident), "where_title"), GroupLayout.FIXED);
-            bldgs.add(new BLabel(new ImageIcon(underline)), GroupLayout.FIXED);
             BContainer brow = new BContainer(GroupLayout.makeHStretch().setGap(10));
+            BContainer shop = GroupLayout.makeHBox(GroupLayout.LEFT);
+            shop.setStyleClass("where_shop");
             String spath = "ui/" + ident + "/" + _ctx.getUserObject().townId + "/shop.png";
-            brow.add(new BLabel(new ImageIcon(_ctx.loadImage(spath))), GroupLayout.FIXED);
+            shop.add(new BLabel(new ImageIcon(_ctx.loadImage(spath))));
+            brow.add(shop, GroupLayout.FIXED);
             BContainer box = new BContainer(GroupLayout.makeVStretch());
             box.add(new BLabel(_msgs.get("m.bldg_info_" + ident), "where_info"));
             brow.add(box);
             bldgs.add(brow);
-            BButton go = new BButton(_msgs.get("m.bldg_go"), this, "to_" + ident);
+            BButton go = new BButton(_msgs.get("m.bldg_go_" + ident), this, "to_" + ident);
+            go.setStyleClass("big_button");
+            go.setPreferredSize(new Dimension(140, -1));
             // TEMP: disable sheriff's office in ITP
             if (BangCodes.INDIAN_POST.equals(self.townId) && ident.equals("office")) {
                 go.setText(_msgs.get("m.bldg_soon"));
                 go.setEnabled(false);
+                go.setStyleClass("alt_button");
             }
             // END TEMP
-            go.setStyleClass("alt_button");
-            BContainer butrow = GroupLayout.makeHBox(GroupLayout.CENTER);
+            BContainer butrow = GroupLayout.makeHBox(GroupLayout.RIGHT);
             butrow.add(go);
             bldgs.add(butrow, GroupLayout.FIXED);
         }
         horiz.add(bldgs);
+        _contents.add(new Spacer(0, 1));
 
         if (!postGame && BangPrefs.shouldShowWhereTo(_ctx.getUserObject()) &&
             !_ctx.getUserObject().tokens.isDemo()) {
@@ -142,12 +130,8 @@ public class WhereToView extends SteelWindow
     public void actionPerformed (ActionEvent event)
     {
         String action = event.getAction();
-        if (action.equals("dismiss")) {
-            _ctx.getBangClient().clearPopup(this, true);
-
-        } else if (action.startsWith("to_")) {
-            _ctx.getBangClient().clearPopup(this, true);
-
+        _ctx.getBangClient().clearPopup(this, true);
+        if (action.startsWith("to_")) {
             BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
             if (action.equals("to_office")) {
                 _ctx.getLocationDirector().moveTo(bbd.officeOid);
@@ -158,32 +142,9 @@ public class WhereToView extends SteelWindow
                 _ctx.getBangClient().showTownView();
             }
 
-        } else {
-            PlayerService psvc = (PlayerService)
-                _ctx.getClient().requireService(PlayerService.class);
-            ReportingListener rl = new ReportingListener(
-                _ctx, BangCodes.BANG_MSGS, "m.start_tut_failed") {
-                public void requestFailed (String cause) {
-                    super.requestFailed(cause);
-                    enableButtons(true);
-                }
-            };
-            if (action.equals("custom_tut")) {
-                psvc.playTutorial(_ctx.getClient(), _customTut.getText(), rl);
-            } else {
-                psvc.playTutorial(_ctx.getClient(), action, rl);
-            }
-            enableButtons(false);
-        }
-    }
-
-    /**
-     * Helper function to turn on/off tutorial buttons.
-     */
-    protected void enableButtons (boolean enabled)
-    {
-        for (BButton button : _enabledButtons) {
-            button.setEnabled(enabled);
+        } else if (action.startsWith("tutorials")) {
+            _ctx.getBangClient().displayPopup(
+                new TutorialView(_ctx), true, TutorialView.WIDTH_HINT);
         }
     }
 
@@ -199,65 +160,10 @@ public class WhereToView extends SteelWindow
         _ctx.getBangClient().checkShowIntro(true);
     }
 
-    protected boolean createTutorialButton (BContainer box, String[] tutorials, int idx,
-                                            boolean enabled, boolean plusPractice)
-    {
-        String tid = tutorials[idx];
-        BIcon icon;
-        String btext;
-        boolean unplayed = false;
-        if (_ctx.getUserObject().stats.containsValue(StatType.TUTORIALS_COMPLETED, tid)) {
-            icon = BangUI.completed;
-            btext = "m.tut_replay";
-        } else {
-            icon = BangUI.incomplete;
-            btext = "m.tut_play";
-            unplayed = true;
-        }
-
-        BLabel tlabel = new BLabel(_msgs.get("m.tut_" + tid), "tutorial_text");
-        tlabel.setIcon(icon);
-        tlabel.setEnabled(enabled);
-        box.add(tlabel);
-
-        BButton play = new BButton(_msgs.get(btext), this, tid);
-        play.setStyleClass("alt_button");
-        box.add(play);
-        _enabledButtons.add(play);
-
-        if (unplayed) {
-            // practice and labels after the first unplayed tutorial is greyed out
-            enabled = false;
-        }
-
-        if (plusPractice) {
-            BButton practice = new BButton(_msgs.get("m.tut_practice"), this, tutorials[idx+1]);
-            practice.setStyleClass("alt_button");
-            practice.setEnabled(!unplayed);
-            if (!unplayed) {
-                _enabledButtons.add(practice);
-            }
-            box.add(practice);
-        } else {
-            box.add(new BLabel(""));
-        }
-
-        return enabled;
-    }
-
-    protected void customTutorialButton (BContainer box)
-    {
-        box.add(_customTut = new BTextField());
-        BButton play = new BButton(_msgs.get("m.tut_play"), this, "custom_tut");
-        play.setStyleClass("alt_button");
-        box.add(play);
-    }
-
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BCheckBox _nowhere;
     protected BTextField _customTut;
-    protected ArrayList<BButton> _enabledButtons = new ArrayList<BButton>();
 
     protected static final String[] BLDGS = { "office", "saloon" };
 }

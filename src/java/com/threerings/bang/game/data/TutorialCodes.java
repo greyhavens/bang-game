@@ -46,6 +46,41 @@ public interface TutorialCodes
         }
     };
 
+    /** Enumerates the identifiers for our new tutorials and the order in which
+     * they should be displayed and completed. */
+    public static final String[][] NEW_TUTORIALS = {
+        { // frontier town tutorials
+            "new_controls",
+            "new_bonuses_cards",
+            "new_claim_jumping",
+            PRACTICE_PREFIX + ClaimJumpingInfo.IDENT,
+            "new_cattle_rustling",
+            PRACTICE_PREFIX + CattleRustlingInfo.IDENT,
+            "unit_tactics",
+            "new_gold_rush",
+            PRACTICE_PREFIX + GoldRushInfo.IDENT,
+            "new_land_grab",
+            PRACTICE_PREFIX + LandGrabInfo.IDENT,
+        }, { // indian post tutorials
+            "new_units",
+            "new_totem_building",
+            PRACTICE_PREFIX + TotemBuildingInfo.IDENT,
+            "new_wendigo_attack",
+            PRACTICE_PREFIX + WendigoAttackInfo.IDENT,
+            "new_bigshots",
+            "new_forest_guardians",
+            PRACTICE_PREFIX + ForestGuardiansInfo.IDENT,
+        }, { // boom town tutorials
+            "boom_units",
+        }
+    };
+
+    /** Our unit portrait for each town. */
+    public static final String[] TUTORIAL_UNIT = {
+        "units/frontier_town/codger/portrait.png",
+        "units/indian_post/tricksterraven/portrait.png",
+    };
+
     /** An event message sent to the server to let the tutorial scenario know
      * that we've processed a particular action. The index of the action will
      * be passed along with the event. */

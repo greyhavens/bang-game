@@ -21,6 +21,7 @@ import com.threerings.stats.data.StatSet;
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.game.data.card.Card;
+import com.threerings.bang.game.data.TutorialCodes;
 
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
@@ -620,7 +621,11 @@ public class Badge extends Item
         },
 
         // tutorial badges
-        TUTORIAL_ALL_FT,
+        TUTORIAL_ALL_FT {
+            public boolean qualifies (PlayerObject user) {
+                return hasCompletedTutorials(user.stats, BangCodes.FRONTIER_TOWN);
+            }
+        },
 
         UNUSED;
 
@@ -979,6 +984,18 @@ public class Badge extends Item
     {
         for (String bounty : BountyConfig.getBountyIds(townId, type)) {
             if (!stats.containsValue(StatType.BOUNTIES_COMPLETED, bounty)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Used by the all tutorials badges. */
+    protected static boolean hasCompletedTutorials (StatSet stats, String townId)
+    {
+        int townIdx = BangUtil.getTownIndex(townId);
+        for (String tutorial : TutorialCodes.NEW_TUTORIALS[townIdx]) {
+            if (!stats.containsValue(StatType.TUTORIALS_COMPLETED, tutorial)) {
                 return false;
             }
         }

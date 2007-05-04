@@ -1950,10 +1950,18 @@ public class BangManager extends GameManager
                         }
                     }
 
+                } else if (_bconfig.type == BangConfig.Type.TUTORIAL) {
+                    ((Tutorial)_scenario).grantAward(user, award);
+
                 } else {
                     // compute their earnings and scale them based on the scenario duration
                     award.cashEarned = (int)Math.ceil(
                         computeEarnings(ii) * _bconfig.duration.getAdjustment());
+                }
+
+                // if this was a practice tutorial, maybe award them a badge
+                if (!_bconfig.rated && _bconfig.duration == BangConfig.Duration.PRACTICE) {
+                    award.item = Badge.checkQualifies(prec.user);
                 }
 
                 // for now, award one notoriety point for every twenty scrip (with a possibility of
@@ -2722,7 +2730,11 @@ public class BangManager extends GameManager
                     // grant them their award item
                     if (award.item != null) {
                         try {
-                            BangServer.itemrepo.insertItem(award.item);
+                            if (award.item.getItemId() == 0) {
+                                BangServer.itemrepo.insertItem(award.item);
+                            } else {
+                                BangServer.itemrepo.updateItem(award.item);
+                            }
                         } catch (PersistenceException pe) {
                             log.log(Level.WARNING, "Failed to store item " + award.item, pe);
                         }
