@@ -342,7 +342,17 @@ public class BangManager extends GameManager
             }
         }
 
-        BigShotItem bsunit = (BigShotItem)user.inventory.get(bigShotId);
+        BigShotItem bsunit = null;
+        if (bigShotId == -1) {
+            String bstype = _bconfig.plist.get(pidx).bigShot;
+            if (bstype == null) {
+                log.warning("No default bigshot specified [who=" + user.who() + "].");
+                return;
+            }
+            bsunit = new BigShotItem(-1, bstype);
+        } else {
+            bsunit = (BigShotItem)user.inventory.get(bigShotId);
+        }
         // if something strange is going on with their big shot, give them a default
         if (bsunit == null) {
             bsunit = new BigShotItem(-1, "frontier_town/tactician");
@@ -1957,6 +1967,13 @@ public class BangManager extends GameManager
                     // compute their earnings and scale them based on the scenario duration
                     award.cashEarned = (int)Math.ceil(
                         computeEarnings(ii) * _bconfig.duration.getAdjustment());
+
+                    // a little bonus for practice tutorials
+                    if (_bconfig.duration == BangConfig.Duration.PRACTICE) {
+                        if (award.cashEarned > 0) {
+                            award.cashEarned += 5;
+                        }
+                    }
                 }
 
                 // if this was a practice tutorial, maybe award them a badge

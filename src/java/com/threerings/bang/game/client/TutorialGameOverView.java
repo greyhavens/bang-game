@@ -114,6 +114,8 @@ public class TutorialGameOverView extends SteelWindow
 
         if (award.cashEarned > 0) {
             _contents.add(new AwardView(_ctx, bangobj, gconfig, user, award, false));
+        } else {
+            _contents.setStyleClass("padded");
         }
 
         _buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));

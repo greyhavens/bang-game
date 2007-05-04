@@ -468,7 +468,18 @@ public class PlayerManager
         // in lieu of a proper tutorial
         if (tutId.startsWith(TutorialCodes.PRACTICE_PREFIX)) {
             String scenId = tutId.substring(TutorialCodes.PRACTICE_PREFIX.length());
-            config.addRound(scenId, null, null);
+            TutorialCodes.PracticeConfig pconfig = TutorialCodes.PRACTICE_CONFIGS.get(scenId);
+            if (pconfig != null) {
+                config.addRound(scenId, pconfig.board, null);
+                BangConfig.Player pl = config.plist.get(0);
+                pl.bigShot = pconfig.bigshot;
+                if (pconfig.units != null) {
+                    pl.units = pconfig.units;
+                }
+                pl.cards = pconfig.cards;
+            } else {
+                config.addRound(scenId, null, null);
+            }
             config.duration = BangConfig.Duration.PRACTICE;
 
         } else {

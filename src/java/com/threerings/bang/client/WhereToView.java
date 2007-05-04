@@ -52,7 +52,7 @@ public class WhereToView extends SteelWindow
     implements ActionListener
 {
     /** The width to hint when laying out this window. */
-    public static final int WIDTH_HINT = 800;
+    public static final int WIDTH_HINT = 900;
 
     public WhereToView (BangContext ctx, boolean postGame)
     {

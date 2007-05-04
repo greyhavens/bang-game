@@ -65,6 +65,7 @@ public class SelectionView extends SteelWindow
         _bangobj = bangobj;
         _pidx = pidx;
         _tconfigs = new UnitConfig[bangobj.scenario.getTeamSize(config, pidx)];
+        BangConfig.Player player = config.plist.get(pidx);
 
         BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(
@@ -107,10 +108,10 @@ public class SelectionView extends SteelWindow
         // count up their cards and big shots
         int bscount = 0, cardcount = 0;
         for (Item item : _ctx.getUserObject().inventory) {
-            if (item instanceof BigShotItem) {
+            if (player.bigShot == null && item instanceof BigShotItem) {
                 _bigShotId = item.getItemId();
                 bscount++;
-            } else if (item instanceof CardItem) {
+            } else if (player.cards == null && item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
                 Card card = Card.getCard(citem.getType());
                 if (citem.getQuantity() > 0 && card != null && card.isPlayable(_bangobj)) {
@@ -131,6 +132,7 @@ public class SelectionView extends SteelWindow
                 _msgs.get("m.select_" + STEPS[ii]), "pick_subtitle");
             // don't add the labels for steps we're going to skip
             if ((ii == BIGSHOT && bscount <= 1) ||
+                (ii == TEAM && player.units[0] != null) ||
                 (ii == CARDS && cardcount == 0)) {
                 continue;
             }
@@ -158,13 +160,35 @@ public class SelectionView extends SteelWindow
         _units = new UnitPalette(_ctx, _enabler, 4, 2);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
-        _units.setUser(_ctx.getUserObject(), true);
-        _units.selectFirstIcon();
+        if (player.bigShot == null) {
+            _units.setUser(_ctx.getUserObject(), true);
+            _units.selectFirstIcon();
+        } else {
+            UnitConfig conf = UnitConfig.getConfig(player.bigShot, true);
+            _uname.setText(_ctx.xlate(GameCodes.GAME_MSGS, conf.getName()));
+            _uview.setUnit(conf);
+            _utype.setText(_ctx.xlate(GameCodes.GAME_MSGS, conf.getName()));
+            _bigShotId = -1;
+        }
 
         // if they have no big shots, skip that selection mode
         if (bscount > 1) {
             setStep(BIGSHOT, _units);
             updateBigShot();
+
+        } else if (player.units[0] != null) {
+            for (int ii = 0; ii < player.units.length; ii++) {
+                UnitConfig conf = UnitConfig.getConfig(player.units[ii], true);
+                _tconfigs[ii] = conf;
+                _team[ii].setText(_ctx.xlate("units", _tconfigs[ii].getName()));
+                _team[ii].setAlpha(1f);
+            }
+            if (player.cards != null || cardcount == 0) {
+                sendTeamSelection(new int[0]);
+                return;
+            }
+            setPickCardsMode();
+
         } else {
             setPickTeamMode();
         }
@@ -178,6 +202,14 @@ public class SelectionView extends SteelWindow
         };
         _countdown.schedule(1000L, true);
         updateTimer(0L);
+    }
+
+    /**
+     * If we should be added to the UI.
+     */
+    public boolean shouldAdd ()
+    {
+        return !_completed;
     }
 
     // documentation inherited from interface ActionListener
@@ -310,7 +342,11 @@ public class SelectionView extends SteelWindow
         _view.clearOverlay();
 
         // cancel our countdown timer
-        _countdown.cancel();
+        if (_countdown != null) {
+            _countdown.cancel();
+        }
+
+        _completed = true;
     }
 
     protected void updateBigShot ()
@@ -433,6 +469,7 @@ public class SelectionView extends SteelWindow
     protected BButton _ready;
 
     protected int _bigShotId;
+    protected boolean _completed;
 
     protected static final String[] STEPS = { "bigshot", "team", "cards" };
     protected static final int BIGSHOT = 0;

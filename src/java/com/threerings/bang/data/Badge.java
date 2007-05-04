@@ -626,6 +626,11 @@ public class Badge extends Item
                 return hasCompletedTutorials(user.stats, BangCodes.FRONTIER_TOWN);
             }
         },
+        TUTORIAL_ALL_ITP {
+            public boolean qualifies (PlayerObject user) {
+                return hasCompletedTutorials(user.stats, BangCodes.INDIAN_POST);
+            }
+        },
 
         UNUSED;
 
@@ -742,7 +747,7 @@ public class Badge extends Item
         Type.BOUNTY_ALL_FT,
 
         // tutorial badges
-        Type.TUTORIAL_ALL_FT, null, null, null, null,
+        Type.TUTORIAL_ALL_FT, Type.TUTORIAL_ALL_ITP, null, null, null,
 
         // general non-series (wacky) badges
         Type.IRON_HORSE, Type.SAINT_NICK,

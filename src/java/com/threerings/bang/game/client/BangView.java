@@ -133,10 +133,13 @@ public class BangView extends BWindow
         case BangObject.SELECT_PHASE:
             if (_bangobj.isActivePlayer(pidx)) {
                 log.info("Starting Select Phase");
-                setOverlay(new SelectionView(_ctx, this, config, _bangobj, pidx));
-                // because we may be setting it after updating but before rendering, we need make
-                // sure it's valid
-                _oview.validate();
+                SelectionView sview = new SelectionView(_ctx, this, config, _bangobj, pidx);
+                if (sview.shouldAdd()) {
+                    setOverlay(sview);
+                    // because we may be setting it after updating but before rendering, we need
+                    // make sure it's valid
+                    _oview.validate();
+                }
             }
             break;
 

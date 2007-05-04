@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data;
 
+import java.util.HashMap;
+
 import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.data.scenario.ClaimJumpingInfo;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
@@ -14,7 +16,7 @@ import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
 /**
  * Codes and constants related to the in-game tutorials
  */
-public interface TutorialCodes
+public class TutorialCodes
 {
     /** A prefix for tutorials that are not tutorials but rather two player
      * practice games versus an AI. */
@@ -80,6 +82,44 @@ public interface TutorialCodes
         "units/frontier_town/codger/portrait.png",
         "units/indian_post/tricksterraven/portrait.png",
     };
+
+    /** Our practice game configurations. */
+    public static class PracticeConfig {
+        public String board;
+        public String bigshot;
+        public String[] units;
+        public String[] cards;
+
+        public PracticeConfig (String board, String bigshot, String[] units, String[] cards)
+        {
+            this.board = board;
+            this.bigshot = bigshot;
+            this.units = units;
+            this.cards = cards;
+        }
+    }
+
+    public static final HashMap<String, PracticeConfig> PRACTICE_CONFIGS =
+        new HashMap<String, PracticeConfig>();
+    static {
+        PRACTICE_CONFIGS.put(ClaimJumpingInfo.IDENT, new PracticeConfig(
+                    "Hard Luck Rock", "frontier_town/codger",
+                    new String[] {"frontier_town/shotgunner", "frontier_town/artillery"},
+                    new String[0]));
+        PRACTICE_CONFIGS.put(CattleRustlingInfo.IDENT, new PracticeConfig(
+                    "Riverbed Ranch", "frontier_town/cavalry",
+                    new String[] {"frontier_town/dirigible", "frontier_town/gunslinger"}, null));
+        PRACTICE_CONFIGS.put(GoldRushInfo.IDENT, new PracticeConfig(
+                    "Sandy Canyon", "frontier_town/tactician", null, null));
+        PRACTICE_CONFIGS.put(LandGrabInfo.IDENT, new PracticeConfig(
+                    "Desert Crossing", "frontier_town/tactician", null, null));
+        PRACTICE_CONFIGS.put(TotemBuildingInfo.IDENT, new PracticeConfig(
+                    "Echo Bluff", "indian_post/revolutionary", null, null));
+        PRACTICE_CONFIGS.put(WendigoAttackInfo.IDENT, new PracticeConfig(
+                    "Dead Wind Refuge", "indian_post/stormcaller", null, null));
+        PRACTICE_CONFIGS.put(ForestGuardiansInfo.IDENT, new PracticeConfig(
+                    "Honeycomb Copse", "indian_post/tricksterraven", null, null));
+    }
 
     /** An event message sent to the server to let the tutorial scenario know
      * that we've processed a particular action. The index of the action will
