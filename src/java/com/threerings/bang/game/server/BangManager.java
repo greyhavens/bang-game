@@ -2727,9 +2727,9 @@ public class BangManager extends GameManager
 
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
-                for (int pidx = 0; pidx < awards.length; pidx++) {
-                    Award award = awards[pidx];
-                    PlayerRecord prec = _precords[award.pidx];
+                for (Award award : awards) {
+                    int pidx = award.pidx;
+                    PlayerRecord prec = _precords[pidx];
                     if (prec.playerId < 0) {
                         continue; // skip AIs
                     }
