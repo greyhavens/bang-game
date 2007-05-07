@@ -20,23 +20,13 @@
   <center_on what="special" id="-1"/>
   <text message="homestead_claiming"/>
   <wait event="text_clicked"/>
-  <text message="homestead_claiming2"/>
-  <wait event="text_clicked"/>
 
   <!-- add their bigshot to the board and set them to claimin' -->
   <add_piece what="unit" id="1001" type="frontier_town/tactician"
              location="21,18" owner="0"/>
-  <text message="claim_homestead"/>
+  <text message="homestead_claiming2"/>
   <wait event="effect:frontier_town/homestead/claimed"/>
   <text message="claimed"/>
-  <wait event="text_clicked"/>
-
-  <!-- add another unit near their homestead; explain spawning -->
-  <text message="spawning" step="2"/>
-  <wait event="text_clicked"/>
-  <add_piece what="unit" id="1002" type="frontier_town/artillery"
-             location="24,17" owner="0"/>
-  <text message="spawned" step="2"/>
   <wait event="text_clicked"/>
 
   <!-- show them the enemy homestead; explain attacking homesteads -->
@@ -53,6 +43,14 @@
   <text message="destroy_homestead"/>
   <wait event="unit_killed" allowAttack="0"/>
   <text message="lose_points"/>
+  <wait event="text_clicked"/>
+
+  <!-- add another unit near their homestead; explain spawning -->
+  <text message="spawning" step="2"/>
+  <wait event="text_clicked"/>
+  <add_piece what="unit" id="1002" type="frontier_town/artillery"
+             location="24,17" owner="0"/>
+  <text message="spawned" step="2"/>
   <wait event="text_clicked"/>
 
   <!-- add and enemy artillery and shotgunner -->
