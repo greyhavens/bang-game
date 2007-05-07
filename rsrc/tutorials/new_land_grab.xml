@@ -49,7 +49,7 @@
   <text message="spawning" step="2"/>
   <wait event="text_clicked"/>
   <add_piece what="unit" id="1002" type="frontier_town/artillery"
-             location="24,17" owner="0"/>
+             location="23,18" owner="0"/>
   <text message="spawned" step="2"/>
   <wait event="text_clicked"/>
 
