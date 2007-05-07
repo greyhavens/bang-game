@@ -943,6 +943,9 @@ public class BangManager extends GameManager
                         pinfo[ii].victory = null;
                     }
                 }
+                if (prec.gangId > 0) {
+                    BangServer.gangmgr.populatePlayerInfo(pinfo[ii], prec.user);
+                }
             }
         }
         _bangobj.setPlayerInfo(pinfo);
@@ -2015,11 +2018,8 @@ public class BangManager extends GameManager
         // record this game to the server stats log (before we sort the awards)
         recordGame(awards, gameSecs);
 
-        // sort by rank and then stuff the award data into the game object
+        // sort by rank, persist and then stuff the award data into the game object
         Arrays.sort(awards);
-        _bangobj.setAwards(awards);
-
-        // and persist the awards as well
         postGamePersist(awards, gameSecs);
 
         // round point and rank information for debugging
@@ -2802,6 +2802,7 @@ public class BangManager extends GameManager
                         player.ratings.put(rating.scenario, rating);
                     }
                 }
+                _bangobj.setAwards(awards);
             }
         });
     }

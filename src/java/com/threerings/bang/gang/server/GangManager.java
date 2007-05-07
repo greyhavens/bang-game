@@ -44,6 +44,8 @@ import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.avatar.data.Look;
 
+import com.threerings.bang.game.data.BangObject;
+
 import com.threerings.bang.gang.client.GangService;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
@@ -132,6 +134,24 @@ public class GangManager
                 sendGangInviteLocal(player, record.inviter, record.gangId, record.name,
                     record.message);
             }
+        }
+    }
+
+    /**
+     * Populates a gang-related player info.
+     */
+    public void populatePlayerInfo (BangObject.PlayerInfo pinfo, PlayerObject player)
+    {
+        if (player.gangId <= 0) {
+            return;
+        }
+        try {
+            GangObject gangobj = requireGang(player.gangId).getGangObject();
+            pinfo.gang = gangobj.name;
+            pinfo.buckle = gangobj.getBuckleInfo();
+        } catch (InvocationException e) {
+            log.warning("Gang not loaded to populate player info [gangId=" + player.gangId +
+                ", player=" + player.who() + "].");
         }
     }
 

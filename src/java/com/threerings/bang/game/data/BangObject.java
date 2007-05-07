@@ -22,6 +22,8 @@ import com.threerings.stats.data.Stat;
 import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BuckleInfo;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.bounty.data.BountyConfig;
@@ -106,6 +108,12 @@ public class BangObject extends GameObject
 
         /** The player's victory pose. */
         public AvatarInfo victory;
+
+        /** The player's buckle. */
+        public BuckleInfo buckle;
+
+        /** The player's gang name. */
+        public Handle gang;
 
         /** The readyness state of the player. */
         public int readyState;
