@@ -177,15 +177,29 @@ public class BangClientResolver extends CrowdClientResolver
         }
 
         // if they have an expired free ticket, remove it
+        boolean noFreeTicket = true;
         for (Item item : items) {
             if (!(item instanceof FreeTicket)) {
                 continue;
             }
+            noFreeTicket = false;
             FreeTicket ticket = (FreeTicket)item;
             if (ticket.isExpired(System.currentTimeMillis()) ||
                     buser.holdsTicket(ticket.getTownId())) {
                 BangServer.itemrepo.deleteItem(item, "Free Ticket Expired");
                 buser.removeFromInventory(item.getKey());
+            }
+        }
+
+        // Give out a free ticket if a player qualified but never successfully made it to ITP
+        if (noFreeTicket && player.nextTown == null &&
+                buser.stats.containsValue(StatType.FREE_TICKETS, BangCodes.INDIAN_POST) &&
+                !buser.stats.containsValue(StatType.ACTIVATED_TICKETS, BangCodes.INDIAN_POST)) {
+            FreeTicket ticket = FreeTicket.checkQualifies(
+                    buser, BangUtil.getTownIndex(BangCodes.INDIAN_POST));
+            if (ticket != null) {
+                BangServer.itemrepo.insertItem(ticket);
+                buser.addToInventory(ticket);
             }
         }
 
