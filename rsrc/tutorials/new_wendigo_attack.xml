@@ -7,12 +7,12 @@
   <text message="welcome" step="1" avatar="units/indian_post/revolutionary/portrait.png"/>
   <wait event="text_clicked"/>
 
-  <!-- add the trickster -->
-  <add_piece what="unit" id="1000" type="indian_post/tricksterraven"
-             location="26,13" owner="0"/>
+  <!-- add the stormcaller -->
+  <add_piece what="unit" id="1000" type="indian_post/stormcaller"
+             location="24,13" owner="0"/>
   <center_on what="piece" id="1000"/>
 
-  <text message="welcome2" step="1" avatar="units/indian_post/tricksterraven/portrait.png"/>
+  <text message="welcome2" step="1" avatar="units/indian_post/stormcaller/portrait.png"/>
   <wait event="text_clicked"/>
 
   <!-- explain the wendigo and their scariness -->
@@ -25,7 +25,7 @@
 
   <!-- have 'em pick up a talisman -->
   <add_piece what="bonus" id="1010" type="indian_post/talisman"
-             location="22,13" owner="-1"/>
+             location="22,14" owner="-1"/>
   <center_on what="piece" id="1010"/>
   <text message="talisman" step="2"/>
   <wait event="effect:indian_post/talisman/pickedup"/>
@@ -84,7 +84,7 @@
   <wait event="text_clicked"/>
 
   <!-- buffalo rider attacks-->
-  <move_unit id="2001" location="21,13" target="1000"/>
+  <move_unit id="2001" location="21,14" target="1000"/>
 
   <!-- have 'em actually toggle a switch -->
   <text message="wendigo_switches3" step="4"/>
