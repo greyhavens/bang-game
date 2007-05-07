@@ -67,9 +67,9 @@ public class TutorialCodes
             "new_units",
             "new_totem_building",
             PRACTICE_PREFIX + TotemBuildingInfo.IDENT,
+            "new_bigshots",
             "new_wendigo_attack",
             PRACTICE_PREFIX + WendigoAttackInfo.IDENT,
-            "new_bigshots",
             "new_forest_guardians",
             PRACTICE_PREFIX + ForestGuardiansInfo.IDENT,
         }, { // boom town tutorials
