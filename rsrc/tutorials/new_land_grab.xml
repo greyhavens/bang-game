@@ -57,7 +57,7 @@
   <add_piece what="unit" id="5001" type="frontier_town/artillery"
              location="27,21" owner="1"/>
   <add_piece what="unit" id="5002" type="frontier_town/shotgunner"
-             location="25,21" owner="1"/>
+             location="26,19" owner="1"/>
 
   <!-- have them take down that stead -->
   <move_unit id="5001" targetLoc="24,19"/>
