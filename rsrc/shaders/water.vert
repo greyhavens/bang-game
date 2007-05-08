@@ -1,6 +1,8 @@
 //
 // $Id$
 
+#version 110
+
 /** The light direction in model space. */
 uniform vec3 lightVector;
 

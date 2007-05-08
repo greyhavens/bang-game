@@ -1,6 +1,8 @@
 //
 // $Id$
 
+#version 110
+
 /** The splat terrain textures and alpha maps. */
 uniform sampler2D splatTextures[NUM_SPLATS * 2];
 
