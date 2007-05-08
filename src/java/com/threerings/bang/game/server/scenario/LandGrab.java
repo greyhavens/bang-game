@@ -57,6 +57,9 @@ public class LandGrab extends Scenario
                 steads[stead.owner]++;
             }
         }
+        if (bangobj.lastTick < bangobj.duration / 2) {
+            return;
+        }
         int loneClaimerIdx = -1;
         for (int ii = 0; ii < steads.length; ii++) {
             // check to see if one player alone holds all claimed claims

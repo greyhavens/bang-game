@@ -1657,8 +1657,6 @@ public class BangManager extends GameManager
 
         // determine whether we should end the game
         if (tick >= _bangobj.lastTick) {
-            // let the scenario do any end of round business
-            _scenario.roundDidEnd(_bangobj);
 
             // if this is the last round, end the game
             if (_bangobj.roundId == _bconfig.getRounds()) {
@@ -1697,6 +1695,9 @@ public class BangManager extends GameManager
      */
     protected void roundDidEnd (boolean startNext)
     {
+        // let the scenario do any end of round business
+        _scenario.roundDidEnd(_bangobj);
+
         // broadcast our updated statistics
         _bangobj.setStats(_bangobj.stats);
 
@@ -2433,8 +2434,14 @@ public class BangManager extends GameManager
 
         int earnings = 0;
         for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
-            // if the round was not played to at least half it's desired duration, skip it
-            if (_rounds[rr].duration == 0 || _rounds[rr].lastTick < _rounds[rr].duration/2) {
+            // only completed rounds count
+            if (_rounds[rr].duration == 0) {
+                continue;
+            }
+            // only players that stayed til the end (unless they were disconnected) will earn scrip
+            PlayerObject user = (PlayerObject)getPlayer(pidx);
+            if (_bangobj.points[pidx] == 0 &&
+                    (user == null || user.status != OccupantInfo.DISCONNECTED)) {
                 continue;
             }
             earnings += _rounds[rr].scenario.computeEarnings(

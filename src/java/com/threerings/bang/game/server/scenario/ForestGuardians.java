@@ -202,7 +202,7 @@ public class ForestGuardians extends Scenario
 
         _payouts = new int[bangobj.players.length];
         Arrays.fill(_payouts,
-                (maxPoints > 0 ? 60 + (95 - 60) * treePoints / maxPoints : 0));
+                (maxPoints > 0 ? _waveBonus + 60 + (95 - 60) * treePoints / maxPoints : 0));
 
         int[] points = bangobj.perRoundPoints[bangobj.roundId-1];
         int[] spoints = new ArrayIntSet(points).toIntArray();
@@ -246,7 +246,16 @@ public class ForestGuardians extends Scenario
         BangManager.PlayerRecord[] precords, BangManager.RankRecord[] ranks,
         BangManager.RoundRecord[] rounds)
     {
-        return (_payouts == null) ? 0 : _payouts[pidx];
+        if (_payouts == null) {
+            return 0;
+        }
+
+        // if the game ended too early, scale the earnings
+        int duration = rounds[ridx].lastTick;
+        if (rounds[ridx].duration - rounds[ridx].lastTick > MIN_WAVE_TICKS) {
+            duration = rounds[ridx].duration;
+        }
+        return (precords[pidx].finishedTick[ridx] * _payouts[pidx] / duration);
     }
 
     @Override // documentation inherited
@@ -299,8 +308,10 @@ public class ForestGuardians extends Scenario
             return;
         }
 
-        // if at least half the trees were saved, increase the difficulty level
+        // if at least half the trees were saved, increase the difficulty level, give a wave
+        // bonus
         if (grown >= _treedel.getWaveTrees().size() / 2) {
+            _waveBonus += _difficulty + 1;
             _difficulty = Math.min(_difficulty + 1, MAX_DIFFICULTY);
         }
 
@@ -371,6 +382,9 @@ public class ForestGuardians extends Scenario
     /** The tick at which to start the next wave. */
     protected int _nextWaveTick;
 
+    /** The wave completed payout bonus. */
+    protected int _waveBonus;
+
     /** The number of ticks the players must hold the trees at full growth in
      * order to bring on the next wave. */
     protected static final int NEXT_WAVE_TICKS = 2;
@@ -391,7 +405,7 @@ public class ForestGuardians extends Scenario
 
     /** Payout adjustments for rankings in 2/3/4 player games. */
     protected static final int[][] PAYOUT_ADJUSTMENTS = {
-        { -10, +10 }, { -10, 0, +10 }, { -10, -5, +5, +10 } };
+        { -5, +5 }, { -10, 0, +10 }, { -10, -5, +5, +10 } };
 
     protected static final StatType[] ACCUM_STATS = {
         StatType.HARD_ROBOT_KILLS, StatType.PERFECT_WAVES };
