@@ -33,12 +33,14 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.media.image.ImageUtil;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.HackyTabs;
 import com.threerings.bang.client.bui.IconPalette;
@@ -46,12 +48,14 @@ import com.threerings.bang.client.bui.MultiIconButton;
 import com.threerings.bang.client.bui.RequestButton;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
+import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.BuckleUpgrade;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.BuckleView;
+import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.gang.data.GangObject;
@@ -136,6 +140,11 @@ public class BuckleDialog extends BDecoratedWindow
         ccont.add(new Spacer(1, 5), GroupLayout.FIXED);
         ccont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"), GroupLayout.FIXED);
 
+        if (ctx.getUserObject().tokens.isSupport()) {
+            ccont.add(new BButton(_msgs.get("m.buckle_print"), this, "buckle_print"),
+                    GroupLayout.FIXED);
+        }
+
         BContainer pcont = new BContainer(new BorderLayout(0, -8));
         mcont.add(pcont);
 
@@ -190,6 +199,16 @@ public class BuckleDialog extends BDecoratedWindow
             _iicons.get(_buckle[_selidx]).setSelected(false);
         } else if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
+        } else if (action.equals("buckle_print")) {
+            BucklePart[] parts = new BucklePart[_buckle.length];
+            for (int ii = 0; ii < parts.length; ii++) {
+                parts[ii] = _parts.get(_buckle[ii]);
+            }
+            BuckleInfo binfo = GangUtil.getBuckleInfo(parts);
+            if (BangUI.copyToClipboard(StringUtil.toString(binfo.print, "", ""))) {
+                _ctx.getChatDirector().displayFeedback(
+                        BarberCodes.BARBER_MSGS, "m.print_copied");
+            }
         }
     }
 
