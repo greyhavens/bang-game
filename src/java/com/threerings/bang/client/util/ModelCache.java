@@ -21,7 +21,10 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.GeomBatch;
+import com.jme.scene.state.GLSLShaderObjectsState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.util.ShaderAttribute;
 import com.jme.util.geom.BufferUtils;
 
 import com.samskivert.util.ChainedResultListener;
@@ -35,8 +38,10 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.SoftCache;
 
 import com.threerings.jme.model.Model;
+import com.threerings.jme.model.ModelMesh;
 import com.threerings.jme.model.TextureProvider;
 import com.threerings.jme.util.BatchVisitor;
+import com.threerings.jme.util.SpatialVisitor;
 
 import com.threerings.media.image.Colorization;
 
@@ -165,6 +170,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     // documentation inherited
     protected void initPrototype (Model prototype)
     {
+        prototype.configureShaders(_ctx.getShaderCache());
         prototype.lockStaticMeshes(_ctx.getRenderer(), Config.useVBOs,
             Config.useDisplayLists);
         if (!BangPrefs.isMediumDetail()) {
@@ -218,18 +224,25 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
                 }
                 _lists = null;
             }
-            if (_vbois == null) {
+            if (_vbois == null && _sattrs == null) {
                 return;
             }
 
             int[] buffers = null;
-            for (VBOInfo vboi : _vbois) {
-                buffers = maybeAdd(buffers, vboi.getVBOVertexID());
-                buffers = maybeAdd(buffers, vboi.getVBONormalID());
-                buffers = maybeAdd(buffers, vboi.getVBOIndexID());
-                buffers = maybeAdd(buffers, vboi.getVBOColorID());
-                for (int ii = 0, nn = TextureState.getNumberOfTotalUnits(); ii < nn; ii++) {
-                    buffers = maybeAdd(buffers, vboi.getVBOTextureID(ii));
+            if (_vbois != null) {
+                for (VBOInfo vboi : _vbois) {
+                    buffers = maybeAdd(buffers, vboi.getVBOVertexID());
+                    buffers = maybeAdd(buffers, vboi.getVBONormalID());
+                    buffers = maybeAdd(buffers, vboi.getVBOIndexID());
+                    buffers = maybeAdd(buffers, vboi.getVBOColorID());
+                    for (int ii = 0, nn = TextureState.getNumberOfTotalUnits(); ii < nn; ii++) {
+                        buffers = maybeAdd(buffers, vboi.getVBOTextureID(ii));
+                    }
+                }
+            }
+            if (_sattrs != null) {
+                for (ShaderAttribute sattr : _sattrs) {
+                    buffers = maybeAdd(buffers, sattr.vboID);
                 }
             }
             if (buffers != null) {
@@ -237,10 +250,12 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
                     BufferUtils.createIntBuffer(IntListUtil.compact(buffers)));
             }
             _vbois = null;
+            _sattrs = null;
         }
 
         protected void recordResources (Model prototype)
         {
+            // find and store all VBOInfos
             final ArrayList<VBOInfo> vbois = new ArrayList<VBOInfo>();
             new BatchVisitor() {
                 protected void visit (GeomBatch batch) {
@@ -252,7 +267,25 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
                 }
             }.traverse(prototype);
 
+            // and all shader attributes for which VBOs are enabled
+            final ArrayList<ShaderAttribute> sattrs = new ArrayList<ShaderAttribute>();
+            new SpatialVisitor<ModelMesh>(ModelMesh.class) {
+                protected void visit (ModelMesh mesh) {
+                    GLSLShaderObjectsState sstate = (GLSLShaderObjectsState)mesh.getRenderState(
+                        RenderState.RS_GLSL_SHADER_OBJECTS);
+                    if (sstate == null) {
+                        return;
+                    }
+                    for (ShaderAttribute attrib : sstate.attribs.values()) {
+                        if (attrib.useVBO) {
+                            sattrs.add(attrib);
+                        }
+                    }
+                }
+            }.traverse(prototype);
+
             _vbois = vbois.isEmpty() ? null : vbois.toArray(new VBOInfo[vbois.size()]);
+            _sattrs = sattrs.isEmpty() ? null : sattrs.toArray(new ShaderAttribute[sattrs.size()]);
             _lists = (_lists == null) ? null : IntListUtil.compact(_lists);
         }
 
@@ -267,6 +300,9 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
 
         /** The VBOs to delete. */
         protected VBOInfo[] _vbois;
+
+        /** Shader attributes to delete. */
+        protected ShaderAttribute[] _sattrs;
 
         /** The display lists to delete. */
         protected int[] _lists;

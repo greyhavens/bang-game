@@ -55,10 +55,10 @@ import com.samskivert.util.Interator;
 import com.samskivert.util.Invoker;
 
 import com.threerings.media.image.ColorUtil;
+import com.threerings.jme.util.ShaderCache;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
-import com.threerings.bang.client.util.ShaderCache;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;

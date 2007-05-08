@@ -37,6 +37,7 @@ import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.model.Model;
 import com.threerings.jme.util.ImageCache;
+import com.threerings.jme.util.ShaderCache;
 import com.threerings.openal.SoundManager;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
@@ -48,7 +49,6 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.ParticleCache;
-import com.threerings.bang.client.util.ShaderCache;
 import com.threerings.bang.client.util.TextureCache;
 import com.threerings.bang.util.BasicContext;
 
@@ -86,7 +86,7 @@ public abstract class TestApp extends JmeApp
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _icache = new ImageCache(_ctx.getResourceManager());
         _tcache = new TextureCache(_ctx);
-        _scache = new ShaderCache(_ctx);
+        _scache = new ShaderCache(_ctx.getResourceManager());
         _mcache = new ModelCache(_ctx);
         _pcache = new ParticleCache(_ctx);
         _keymgr.init(_ctx);
