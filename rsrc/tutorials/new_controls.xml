@@ -44,7 +44,7 @@
   <wait event="text_clicked" allowAttack="0"/>
 
   <!-- add an enemy unit and show them how to shoot it -->
-  <add_piece what="unit" id="1001" type="frontier_town/artillery"
+  <add_piece what="unit" id="1001" type="frontier_town/steamgunman"
              location="1000" owner="1"/>
   <center_on what="piece" id="1001"/>
   <text message="click_to_highlight_attacks" step="4"/>
