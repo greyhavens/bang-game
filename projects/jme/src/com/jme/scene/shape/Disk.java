@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -49,7 +49,7 @@ import com.jme.util.geom.BufferUtils;
 /**
  * <code>Disk</code> is a flat circle. It is simply defined with a radius. It
  * starts out flat along the Z, with center at the origin.
- * 
+ *
  * @author Mark Powell
  * @version $Id: Disk.java,v 1.11 2006/06/21 20:32:50 nca Exp $
  */
@@ -62,14 +62,14 @@ public class Disk extends TriMesh {
 	private int radialSamples;
 
 	private float radius;
-    
+
     public Disk() {}
 
 	/**
 	 * Creates a flat disk (circle) at the origin flat along the Z. Usually, a
 	 * higher sample number creates a better looking cylinder, but at the cost
 	 * of more vertex information.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the disk.
 	 * @param shellSamples
@@ -94,7 +94,7 @@ public class Disk extends TriMesh {
 		batch.setVertexCount(1 + radialSamples * shellLess);
 		batch.setVertexBuffer(BufferUtils.createVector3Buffer(batch.getVertexCount()));
 		batch.setNormalBuffer(BufferUtils.createVector3Buffer(batch.getVertexCount()));
-		batch.getTextureBuffers().set(0, BufferUtils.createVector3Buffer(batch.getVertexCount()));
+		batch.getTextureBuffers().set(0, BufferUtils.createVector2Buffer(batch.getVertexCount()));
 
 		batch.setTriangleQuantity(radialSamples * (2 * shellLess - 1));
 		batch.setIndexBuffer(BufferUtils.createIntBuffer(3 * batch.getTriangleCount()));
@@ -111,10 +111,10 @@ public class Disk extends TriMesh {
 
 		// center of disk
 	    batch.getVertexBuffer().put(0).put(0).put(0);
-		
+
 		for (int x = 0; x < batch.getVertexCount(); x++)
 		    batch.getNormalBuffer().put(0).put(0).put(1);
-		
+
         batch.getTextureBuffers().get(0).put(.5f).put(.5f);
 
 		float inverseShellLess = 1.0f / shellLess;
@@ -164,7 +164,7 @@ public class Disk extends TriMesh {
 			}
 		}
 	}
-    
+
     public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);

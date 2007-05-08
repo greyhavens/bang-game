@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -31,6 +31,8 @@
  */
 package com.jme.scene.state.lwjgl.records;
 
+import java.util.HashSet;
+
 import com.jme.scene.state.lwjgl.LWJGLShaderObjectsState;
 
 
@@ -39,6 +41,9 @@ public class ShaderObjectsStateRecord extends StateRecord{
 	//XXX will be changed this record simply makes use of the old reference
 	//XXX checking system.
 	LWJGLShaderObjectsState reference = null;
+
+    /** The active arrays attributes. */
+    public HashSet<Integer> attribArrays = new HashSet<Integer>();
 
 	public LWJGLShaderObjectsState getReference() {
 		return reference;

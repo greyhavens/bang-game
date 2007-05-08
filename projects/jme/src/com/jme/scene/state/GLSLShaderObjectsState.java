@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -39,6 +39,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.jme.math.Matrix3f;
 import com.jme.math.Matrix4f;
@@ -48,31 +49,32 @@ import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.Savable;
 
 /**
  * Implementation of the GL_ARB_shader_objects extension.
- * 
+ *
  * @author Thomas Hourdel
  */
 public abstract class GLSLShaderObjectsState extends RenderState {
 
-    public ArrayList<ShaderUniform> uniforms = new ArrayList<ShaderUniform>();
-    public ArrayList<ShaderAttribute> attribs = new ArrayList<ShaderAttribute>();
+    public HashMap<String, ShaderUniform> uniforms = new HashMap<String, ShaderUniform>();
+    public HashMap<String, ShaderAttribute> attribs = new HashMap<String, ShaderAttribute>();
 
     /** Identifier for this program. * */
     protected int programID = -1;
-    
+
     /**
      * <code>isSupported</code> determines if the ARB_shader_objects extension
      * is supported by current graphics configuration.
-     * 
+     *
      * @return if ARB shader objects are supported
      */
     public abstract boolean isSupported();
 
     /**
-     * <code>relinkProgram</code> instructs openGL to relink the associated 
-     * program and sets the attributes.  This should be used after setting 
+     * <code>relinkProgram</code> instructs openGL to relink the associated
+     * program and sets the attributes.  This should be used after setting
      * ShaderAttributes.
      */
     public abstract void relinkProgram();
@@ -84,7 +86,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
     public int getProgramID() {
         return programID;
     }
-    
+
     /**
      * <code>setProgramID</code> sets the program id for this
      * shader.
@@ -93,10 +95,10 @@ public abstract class GLSLShaderObjectsState extends RenderState {
     public void setProgramID(int programID) {
         this.programID = programID;
     }
-    
+
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value
@@ -107,14 +109,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         ShaderUniform object = getShaderUniform(var, ShaderUniform.SU_INT);
         object.vint = new int[1];
         object.vint[0] = value;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value
@@ -125,14 +125,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         ShaderUniform object = getShaderUniform(var, ShaderUniform.SU_FLOAT);
         object.vfloat = new float[1];
         object.vfloat[0] = value;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value1
@@ -146,14 +144,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vint = new int[2];
         object.vint[0] = value1;
         object.vint[1] = value2;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value1
@@ -167,14 +163,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vfloat = new float[2];
         object.vfloat[0] = value1;
         object.vfloat[1] = value2;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value1
@@ -191,14 +185,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vint[0] = value1;
         object.vint[1] = value2;
         object.vint[2] = value3;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value1
@@ -215,14 +207,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vfloat[0] = value1;
         object.vfloat[1] = value2;
         object.vfloat[2] = value3;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value1
@@ -243,14 +233,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vint[1] = value2;
         object.vint[2] = value3;
         object.vint[3] = value4;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value1
@@ -271,14 +259,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vfloat[1] = value2;
         object.vfloat[2] = value3;
         object.vfloat[3] = value4;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value
@@ -294,14 +280,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.matrix2f = new float[4];
         object.matrix2f = value;
         object.transpose = transpose;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value
@@ -314,14 +298,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         ShaderUniform object = getShaderUniform(var, ShaderUniform.SU_MATRIX3);
         object.matrix3f = value;
         object.transpose = transpose;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an uniform value for this shader object.
-     * 
+     *
      * @param var
      *            uniform variable to change
      * @param value
@@ -334,8 +316,6 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         ShaderUniform object = getShaderUniform(var, ShaderUniform.SU_MATRIX4);
         object.matrix4f = value;
         object.transpose = transpose;
-        if (object.uniformID == -1)
-            uniforms.add(object);
         setNeedsRefresh(true);
     }
 
@@ -346,14 +326,10 @@ public abstract class GLSLShaderObjectsState extends RenderState {
     public void clearUniforms() {
         uniforms.clear();
     }
-    
-    
-
-    
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value
@@ -363,14 +339,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
     public void setAttribute(String var, short value) {
         ShaderAttribute object = getShaderAttribute(var, ShaderAttribute.SU_SHORT);
         object.s1 = value;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value
@@ -380,14 +354,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
     public void setAttribute(String var, float value) {
         ShaderAttribute object = getShaderAttribute(var, ShaderAttribute.SU_FLOAT);
         object.f1 = value;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value1
@@ -400,14 +372,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         ShaderAttribute object = getShaderAttribute(var, ShaderAttribute.SU_SHORT2);
         object.s1 = value1;
         object.s2 = value2;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value1
@@ -420,14 +390,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         ShaderAttribute object = getShaderAttribute(var, ShaderAttribute.SU_FLOAT2);
         object.f1 = value1;
         object.f2 = value2;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value1
@@ -443,14 +411,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.s1 = value1;
         object.s2 = value2;
         object.s3 = value3;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value1
@@ -466,14 +432,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.f1 = value1;
         object.f2 = value2;
         object.f3 = value3;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value1
@@ -493,14 +457,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.s2 = value2;
         object.s3 = value3;
         object.s4 = value4;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value1
@@ -520,14 +482,12 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.f2 = value2;
         object.f3 = value3;
         object.f4 = value4;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      * @param value1
@@ -546,18 +506,16 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.b2 = value2;
         object.b3 = value3;
         object.b4 = value4;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute pointer value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      */
-    public void setAttributePointer(String var, int size, boolean normalized, 
+    public void setAttributePointer(String var, int size, boolean normalized,
             int stride, FloatBuffer data) {
         ShaderAttribute object = getShaderAttribute(var, ShaderAttribute.SU_POINTER_FLOAT);
         object.size = size;
@@ -565,18 +523,16 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.stride = stride;
         object.data = data;
         object.bufferType = ShaderAttribute.SB_FLOAT;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute pointer value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      */
-    public void setAttributePointer(String var, int size, boolean normalized, 
+    public void setAttributePointer(String var, int size, boolean normalized,
             boolean unsigned, int stride, ByteBuffer data) {
         ShaderAttribute object = getShaderAttribute(var, ShaderAttribute.SU_POINTER_BYTE);
         object.size = size;
@@ -585,18 +541,16 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.stride = stride;
         object.data = data;
         object.bufferType = ShaderAttribute.SB_BYTE;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute pointer value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      */
-    public void setAttributePointer(String var, int size, boolean normalized, 
+    public void setAttributePointer(String var, int size, boolean normalized,
             boolean unsigned, int stride, IntBuffer data) {
         ShaderAttribute object = getShaderAttribute(var, ShaderAttribute.SU_POINTER_INT);
         object.size = size;
@@ -605,18 +559,16 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.stride = stride;
         object.data = data;
         object.bufferType = ShaderAttribute.SB_INT;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
     /**
      * Set an attribute pointer value for this shader object.
-     * 
+     *
      * @param var
      *            attribute variable to change
      */
-    public void setAttributePointer(String var, int size, boolean normalized, 
+    public void setAttributePointer(String var, int size, boolean normalized,
             boolean unsigned, int stride, ShortBuffer data) {
         ShaderAttribute object = getShaderAttribute(var, ShaderAttribute.SU_POINTER_SHORT);
         object.size = size;
@@ -625,8 +577,6 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.stride = stride;
         object.data = data;
         object.bufferType = ShaderAttribute.SB_SHORT;
-        if (object.attributeID == -1)
-            attribs.add(object);
         setNeedsRefresh(true);
     }
 
@@ -637,8 +587,8 @@ public abstract class GLSLShaderObjectsState extends RenderState {
     public void clearAttributes() {
         attribs.clear();
     }
-    
-    
+
+
     /**
      * @return RS_SHADER_OBJECTS
      * @see com.jme.scene.state.RenderState#getType()
@@ -648,55 +598,68 @@ public abstract class GLSLShaderObjectsState extends RenderState {
     }
 
     private ShaderUniform getShaderUniform(String name, int type) {
-        for (int x = uniforms.size(); --x >= 0; ) {
-            ShaderUniform temp = uniforms.get(x);
-            if (name.equals(temp.name))
-                return temp;
+        ShaderUniform uniform = uniforms.get(name);
+        if (uniform == null) {
+            uniforms.put(name, uniform = new ShaderUniform(name, type));
+        } else {
+            uniform.type = type;
         }
-
-        return new ShaderUniform(name, type);
+        return uniform;
     }
 
     private ShaderAttribute getShaderAttribute(String name, int type) {
-        for (int x = attribs.size(); --x >= 0; ) {
-            ShaderAttribute temp = attribs.get(x);
-            if (name.equals(temp.name))
-                return temp;
+        ShaderAttribute attrib = attribs.get(name);
+        if (attrib == null) {
+            attribs.put(name, attrib = new ShaderAttribute(name, type));
+        } else {
+            attrib.type = type;
         }
-
-        return new ShaderAttribute(name, type);
+        return attrib;
     }
-        
+
     /**
      * <code>load</code> loads the shader object from the specified file. The
      * program must be in ASCII format. We delegate the loading to each
      * implementation because we do not know in what format the underlying API
      * wants the data.
-     * 
+     *
      * @param vert
      *            text file containing the vertex shader object
      * @param frag
      *            text file containing the fragment shader object
      */
     public abstract void load(URL vert, URL frag);
-    
+
     public abstract void load(String vert, String frag);
-    
+
     public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
-        capsule.writeSavableArrayList(uniforms,"uniforms", new ArrayList<ShaderUniform>());
-        capsule.writeSavableArrayList(attribs,"attribs", new ArrayList<ShaderAttribute>());
+        Savable[] uarray = uniforms.values().toArray(new Savable[0]);
+        capsule.write(uarray,"uniforms", new Savable[0]);
+        Savable[] aarray = attribs.values().toArray(new Savable[0]);
+        capsule.write(aarray,"attribs", new Savable[0]);
     }
 
-    @SuppressWarnings("unchecked")
 	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
-        uniforms = capsule.readSavableArrayList("uniforms", new ArrayList<ShaderUniform>());
-        attribs = capsule.readSavableArrayList("attribs", new ArrayList<ShaderAttribute>());
+
+        uniforms.clear();
+        Savable[] uarray = capsule.readSavableArray("uniforms", new Savable[0]);
+        for (Savable savable : uarray) {
+            ShaderUniform uniform = (ShaderUniform)savable;
+            uniforms.put(uniform.name, uniform);
+        }
+
+        attribs.clear();
+        Savable[] aarray = capsule.readSavableArray("attribs", new Savable[0]);
+        for (Savable savable : aarray) {
+            ShaderAttribute attrib = (ShaderAttribute)savable;
+            attribs.put(attrib.name, attrib);
+        }
     }
-    
+
     public Class getClassTag() {
         return GLSLShaderObjectsState.class;
     }
