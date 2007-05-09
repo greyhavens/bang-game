@@ -78,6 +78,7 @@
   <wait event="text_clicked"/>
 
   <!-- pickup new nugget -->
+  <center_on what="piece" id="1001" arrow="false"/>
   <text message="new_nugget"/>
   <wait event="bonus_activated"/>
 
