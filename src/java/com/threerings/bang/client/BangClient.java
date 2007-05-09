@@ -106,8 +106,8 @@ import com.threerings.bang.util.DeploymentConfig;
 import static com.threerings.bang.Log.log;
 
 /**
- * Takes care of instantiating all of the proper managers and loading up
- * all of the necessary configuration and getting the client bootstrapped.
+ * Takes care of instantiating all of the proper managers and loading up all of the necessary
+ * configuration and getting the client bootstrapped.
  */
 public class BangClient extends BasicClient
     implements ClientObserver, BangCodes
@@ -118,9 +118,8 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Checks the supplied logon failure message for client version related
-     * failure and decodes the necessary business to instruct Getdown to update
-     * the client on the next invocation.
+     * Checks the supplied logon failure message for client version related failure and decodes the
+     * necessary business to instruct Getdown to update the client on the next invocation.
      */
     public static boolean checkForUpgrade (BangContext ctx, String message)
     {
@@ -212,8 +211,7 @@ public class BangClient extends BasicClient
         // fill in a bug report
         PlayerObject user = ctx.getUserObject();
         Report report = new Report();
-        report.submitter = (user == null) ?
-            "<unknown>" : user.username.toString();
+        report.submitter = (user == null) ? "<unknown>" : user.username.toString();
         if (descrip.length() > 255) {
             report.summary = StringUtil.truncate(descrip, 255);
             report.setAttribute("Description", descrip);
@@ -229,12 +227,9 @@ public class BangClient extends BasicClient
         report.setAttribute("GL Version", GL11.glGetString(GL11.GL_VERSION));
         report.setAttribute("GL Vendor", GL11.glGetString(GL11.GL_VENDOR));
         report.setAttribute("GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
-        report.setAttribute("GL Extensions",
-                            GL11.glGetString(GL11.GL_EXTENSIONS));
-        report.setAttribute("GLU Extensions",
-                            GLU.gluGetString(GLU.GLU_EXTENSIONS));
-        report.setAttribute("Graphics Detail",
-                BangPrefs.getDetailLevel().toString());
+        report.setAttribute("GL Extensions", GL11.glGetString(GL11.GL_EXTENSIONS));
+        report.setAttribute("GLU Extensions", GLU.gluGetString(GLU.GLU_EXTENSIONS));
+        report.setAttribute("Graphics Detail", BangPrefs.getDetailLevel().toString());
 
         // and send it along with our debug logs
         URL submitURL = DeploymentConfig.getBugSubmitURL();
@@ -305,8 +300,7 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Initializes a new client and provides it with a frame in which to
-     * display everything.
+     * Initializes a new client and provides it with a frame in which to display everything.
      */
     public void init (BangApp app, boolean failureMode)
     {
@@ -333,12 +327,11 @@ public class BangClient extends BasicClient
         // listen for logon
         _client.addClientObserver(this);
 
-        // create the pardner chat view, which will listen for tells from
-        // pardners and pop up when possible
+        // create the pardner chat view, which will listen for tells from pardners and pop up when
+        // possible
         _pcview = new PardnerChatView(_ctx);
 
-        // create the system chat view, which will display system chat messages
-        // outside of games
+        // create the system chat view, which will display system chat messages outside of games
         _scview = new SystemChatView(_ctx);
 
         // register our global key bindings
@@ -350,9 +343,8 @@ public class BangClient extends BasicClient
         // configure our guest handle name
         GuestHandle.setDefaultName(_ctx.xlate(BangCodes.BANG_MSGS, "m.you"));
 
-        // create and display the logon view; which we do by hand instead of
-        // using setMainView() because we don't want to start the resource
-        // resolution until we're faded in
+        // create and display the logon view; which we do by hand instead of using setMainView()
+        // because we don't want to start the resource resolution until we're faded in
         final LogonView lview = new LogonView(_ctx);
         _mview = lview;
         _ctx.getRootNode().addWindow(_mview);
@@ -372,8 +364,8 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Returns a reference to the context in effect for this client. This
-     * reference is valid for the lifetime of the application.
+     * Returns a reference to the context in effect for this client. This reference is valid for
+     * the lifetime of the application.
      */
     public BangContext getContext ()
     {
@@ -389,9 +381,9 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Returns the player status view; creating the view if necessary (as long
-     * as <code>create</code> is true). We purge the view from memory every
-     * time the main view is switched, but preserve it while in one place.
+     * Returns the player status view; creating the view if necessary (as long as
+     * <code>create</code> is true). We purge the view from memory every time the main view is
+     * switched, but preserve it while in one place.
      */
     public StatusView getStatusView (boolean create)
     {
@@ -446,11 +438,10 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Potentially shows the next phase of the client introduction or tutorial
-     * or displays pending notifications. Basically anything that should be
-     * popped up once a player is in the town view and ready to go is shown.
-     * This is called after first logging on and then at the completion of each
-     * phase of the intro and tutorial.
+     * Potentially shows the next phase of the client introduction or tutorial or displays pending
+     * notifications. Basically anything that should be popped up once a player is in the town view
+     * and ready to go is shown.  This is called after first logging on and then at the completion
+     * of each phase of the intro and tutorial.
      */
     public boolean checkShowIntro (boolean skipWhereTo)
     {
@@ -577,8 +568,8 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Like {@link #displayPopup(BWindow,boolean)} but allows the specification
-     * of a desired width for the popup.
+     * Like {@link #displayPopup(BWindow,boolean)} but allows the specification of a desired width
+     * for the popup.
      */
     public void displayPopup (BWindow popup, boolean animate, int twidth)
     {
@@ -586,8 +577,8 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Like {@link #displayPopup(BWindow,boolean)} but allows the specification
-     * of a desired width for the popup.
+     * Like {@link #displayPopup(BWindow,boolean)} but allows the specification of a desired width
+     * for the popup.
      */
     public void displayPopup (BWindow popup, boolean animate, int twidth, boolean topLayer)
     {
@@ -612,20 +603,18 @@ public class BangClient extends BasicClient
     {
         BangUI.play(BangUI.FeedbackSound.WINDOW_OPEN);
         popup.pack(twidth, -1);
-        int dy = (_mview instanceof BangView) ?
-            ((BangView)_mview).getCenterOffset() : 0;
+        int dy = (_mview instanceof BangView) ? ((BangView)_mview).getCenterOffset() : 0;
         _ctx.getInterface().attachChild(
             new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f, 0, dy));
     }
 
     /**
-     * Displays a popup window that will automatically be cleared if we leave
-     * the current "place". This should be used for any overlay view shown atop
-     * the normal place views.
+     * Displays a popup window that will automatically be cleared if we leave the current
+     * "place". This should be used for any overlay view shown atop the normal place views.
      *
-     * @param animate if true the popup will be {@link BWindow#pack}ed and slid
-     * onto the screen from some direction. Otherwise the caller is responsible
-     * for {@link BWindow#pack}ing and {@link BWindow#center}ing the window.
+     * @param animate if true the popup will be {@link BWindow#pack}ed and slid onto the screen
+     * from some direction. Otherwise the caller is responsible for {@link BWindow#pack}ing and
+     * {@link BWindow#center}ing the window.
      */
     public void displayPopup (BWindow popup, boolean animate)
     {
@@ -656,15 +645,14 @@ public class BangClient extends BasicClient
         }
         if (animate) {
             BangUI.play(BangUI.FeedbackSound.WINDOW_DISMISS);
-            int dy = (_mview instanceof BangView) ?
-                ((BangView)_mview).getCenterOffset() : 0;
+            int dy = (_mview instanceof BangView) ? ((BangView)_mview).getCenterOffset() : 0;
             _ctx.getInterface().attachChild(
                 new WindowSlider(popup, WindowSlider.TO_RIGHT, 0.25f, 0, dy) {
-                    protected void slideComplete () {
-                        super.slideComplete();
-                        _ctx.getRootNode().removeWindow(popup);
-                    }
-                });
+                protected void slideComplete () {
+                    super.slideComplete();
+                    _ctx.getRootNode().removeWindow(popup);
+                }
+            });
         } else {
             _ctx.getRootNode().removeWindow(popup);
         }
@@ -697,8 +685,8 @@ public class BangClient extends BasicClient
      * Queues up the music track with the specified path.
      *
      * @param key the track key (e.g., "frontier_town/post_game0")
-     * @param crossfade if non-zero, the interval over which to fade out the
-     * music previously playing and fade in the new music
+     * @param crossfade if non-zero, the interval over which to fade out the music previously
+     * playing and fade in the new music
      */
     public void queueMusic (String key, boolean loop, float crossfade)
     {
@@ -799,20 +787,17 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Parses some system properties and starts a quick test game vs the
-     * computer. Used by developers.
+     * Parses some system properties and starts a quick test game vs the computer. Used by
+     * developers.
      */
     public void startTestGame (boolean tutorial)
     {
-        ReportingListener rl =
-            new ReportingListener(_ctx, BANG_MSGS, "m.quick_start_failed");
-        PlayerService psvc = (PlayerService)
-            _ctx.getClient().requireService(PlayerService.class);
+        ReportingListener rl = new ReportingListener(_ctx, BANG_MSGS, "m.quick_start_failed");
+        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
 
         // start a tutorial if requested
         if (tutorial) {
-            psvc.playTutorial(_ctx.getClient(),
-                              System.getProperty("tutorial"), rl);
+            psvc.playTutorial(_ctx.getClient(), System.getProperty("tutorial"), rl);
 
         } else {
             // otherwise we're starting a test game versus the computer
@@ -837,15 +822,13 @@ public class BangClient extends BasicClient
                 // hackery to work around shell escaping problems
                 board = board.replace("~", "'");
             }
-            psvc.playComputer(
-                _ctx.getClient(), pcount, scenarios, board,
-                Boolean.parseBoolean(System.getProperty("autoplay")), rl);
+            psvc.playComputer(_ctx.getClient(), pcount, scenarios, board,
+                              Boolean.parseBoolean(System.getProperty("autoplay")), rl);
         }
     }
 
     /**
-     * Creates and initializes credentials that can be used to authenticate
-     * with the server.
+     * Creates and initializes credentials that can be used to authenticate with the server.
      *
      * @param username the username to use when logging in.
      * @param password the cleartext of the password to use when logging in.
@@ -866,30 +849,27 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Logs off of our current server and logs onto the lobby server for the
-     * specified town.
+     * Logs off of our current server and logs onto the lobby server for the specified town.
      */
     public void switchToTown (String townId)
     {
         if (_pendingTownId != null) {
-            log.warning("Refusing to switch to town, we're already headed " +
-                "somewhere [townId=" + townId +
-                ", pTownId=" + _pendingTownId + "].");
+            log.warning("Refusing to switch to town, we're already headed somewhere " +
+                        "[townId=" + townId + ", pTownId=" + _pendingTownId + "].");
             return;
         }
 
         // note that we're switching towns
         _pendingTownId = townId;
 
-        // if we are not logged on (maybe we failed to connect to a town and
-        // now we're trying to go back to the previous town) then try logging
-        // on to the new server immediately
+        // if we are not logged on (maybe we failed to connect to a town and now we're trying to go
+        // back to the previous town) then try logging on to the new server immediately
         if (!_ctx.getClient().isLoggedOn()) {
             clientDidClear(_ctx.getClient());
         } else {
-            // logoff off from our current town; our logged off observer will
-            // then log us onto the pending town (we need to wait until we're
-            // fully logged off before doing, hence this hoop jumping)
+            // logoff off from our current town; our logged off observer will then log us onto the
+            // pending town (we need to wait until we're fully logged off before doing, hence this
+            // hoop jumping)
             _ctx.getClient().logoff(true);
         }
     }
@@ -910,8 +890,7 @@ public class BangClient extends BasicClient
     public void clientDidLogon (Client client)
     {
         // if we were provided with a machine identifier, write it out
-        BangAuthResponseData bard = (BangAuthResponseData)
-            client.getAuthResponseData();
+        BangAuthResponseData bard = (BangAuthResponseData)client.getAuthResponseData();
         if (bard != null && bard.ident != null) {
             IdentUtil.setMachineIdentifier(bard.ident);
         }
@@ -919,8 +898,8 @@ public class BangClient extends BasicClient
         // update our title to contain our username
         PlayerObject user = (PlayerObject)_ctx.getUserObject();
         if (!user.tokens.isAnonymous()) {
-            Display.setTitle(_msgmgr.getBundle(BangCodes.BANG_MSGS).get(
-                                 "m.online_title", user.username));
+            Display.setTitle(
+                _msgmgr.getBundle(BangCodes.BANG_MSGS).get("m.online_title", user.username));
         }
 
         // get a reference to the player service
@@ -1030,9 +1009,8 @@ public class BangClient extends BasicClient
     public void clientDidClear (Client client)
     {
         if (_pendingTownId != null) {
-            _ctx.getClient().setServer(
-                DeploymentConfig.getServerHost(_pendingTownId),
-                DeploymentConfig.getServerPorts(_pendingTownId));
+            _ctx.getClient().setServer(DeploymentConfig.getServerHost(_pendingTownId),
+                                       DeploymentConfig.getServerPorts(_pendingTownId));
             if (!_ctx.getClient().logon()) {
                 log.warning("Trying to connect to " + _pendingTownId +
                             " but we're already logged on!?");
@@ -1050,8 +1028,8 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Pops up a dialog suggesting a lower level of graphical detail to the
-     * user, or saves the suggestion until it can be displayed.
+     * Pops up a dialog suggesting a lower level of graphical detail to the user, or saves the
+     * suggestion until it can be displayed.
      */
     public boolean suggestLowerDetail ()
     {
@@ -1316,14 +1294,12 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Attempts to relaunch Getdown, exiting the application after a short
-     * pause.
+     * Attempts to relaunch Getdown, exiting the application after a short pause.
      *
-     * @return true if Getdown was successfully relaunched, false if we were
-     * unable to do so for a variety of reasons (which will have been logged).
+     * @return true if Getdown was successfully relaunched, false if we were unable to do so for a
+     * variety of reasons (which will have been logged).
      */
-    protected static boolean relaunchGetdown (
-        final BangContext ctx, long exitDelay)
+    protected static boolean relaunchGetdown (final BangContext ctx, long exitDelay)
     {
         File pro = new File(localDataDir("getdown-pro.jar"));
         if (LaunchUtil.mustMonitorChildren() || !pro.exists()) {
@@ -1353,8 +1329,8 @@ public class BangClient extends BasicClient
         return true;
     }
 
-    /** Tracks user idleness and lets the server know when we're idle and
-     * eventually logs us off. */
+    /** Tracks user idleness and lets the server know when we're idle and eventually logs us
+     * off. */
     protected class IdleTracker extends Interval
         implements EventListener
     {
@@ -1409,15 +1385,14 @@ public class BangClient extends BasicClient
         protected long _lastEventStamp;
     }
 
-    /** The context implementation. This provides access to all of the
-     * objects and services that are needed by the operating client. */
+    /** The context implementation. This provides access to all of the objects and services that
+     * are needed by the operating client. */
     protected class BangContextImpl extends BasicContextImpl
         implements BangContext
     {
-        /** Apparently the default constructor has default access, rather
-         * than protected access, even though this class is declared to be
-         * protected. Why, I don't know, but we need to be able to extend
-         * this class elsewhere, so we need this. */
+        /** Apparently the default constructor has default access, rather than protected access,
+         * even though this class is declared to be protected. Why, I don't know, but we need to be
+         * able to extend this class elsewhere, so we need this. */
         protected BangContextImpl () {
         }
 
@@ -1448,12 +1423,10 @@ public class BangClient extends BasicClient
                 pview.center();
             } else {
                 // size the view to fill the display
-                pview.setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                                _ctx.getDisplay().getHeight());
+                pview.setBounds(0, 0, _ctx.getDisplay().getWidth(), _ctx.getDisplay().getHeight());
             }
 
-            // configure the main view; this will fade the previous view out
-            // and fade the new view in
+            // configure the main view; fades the previous view out and fades the new view in
             setMainView(pview);
         }
 
@@ -1521,8 +1494,7 @@ public class BangClient extends BasicClient
         }
     };
 
-    protected GlobalKeyManager.Command _clearPopup =
-        new GlobalKeyManager.Command() {
+    protected GlobalKeyManager.Command _clearPopup = new GlobalKeyManager.Command() {
         public void invoke (int keyCode, int modifiers) {
             if (_popups.size() > 0) {
                 BWindow popup = _popups.get(_popups.size()-1);
@@ -1534,10 +1506,6 @@ public class BangClient extends BasicClient
             }
         }
     };
-    protected FKeyPopups _functionPopup;
-
-    protected BangContextImpl _ctx;
-    protected String _pendingTownId;
 
     protected SetAdapter _nlistener = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {
@@ -1547,6 +1515,9 @@ public class BangClient extends BasicClient
             }
         }
     };
+
+    protected BangContextImpl _ctx;
+    protected String _pendingTownId;
 
     protected BangChatDirector _chatdir;
     protected BoardCache _bcache;
@@ -1558,6 +1529,8 @@ public class BangClient extends BasicClient
     protected PardnerChatView _pcview;
     protected SystemChatView _scview;
     protected StatusView _status;
+
+    protected FKeyPopups _functionPopup;
 
     protected boolean _suggestLowerDetail;
 
