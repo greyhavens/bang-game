@@ -2866,7 +2866,11 @@ public class BangManager extends GameManager
                         player.setScrip(player.scrip + awards[ii].cashEarned);
                     }
                     if (awards[ii].item != null) {
-                        player.addToInventory(awards[ii].item);
+                        if (player.inventory.contains(awards[ii].item)) {
+                            player.updateInventory(awards[ii].item);
+                        } else {
+                            player.addToInventory(awards[ii].item);
+                        }
                     }
                     if (_tickets[pidx] != null) {
                         player.addToInventory(_tickets[pidx]);

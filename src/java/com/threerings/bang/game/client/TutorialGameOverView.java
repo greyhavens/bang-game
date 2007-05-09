@@ -6,6 +6,7 @@ package com.threerings.bang.game.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
@@ -118,6 +119,7 @@ public class TutorialGameOverView extends SteelWindow
         _contents.add(center);
 
         if (award.cashEarned > 0) {
+            _contents.add(new Spacer(1, 1));
             _contents.add(new AwardView(_ctx, bangobj, gconfig, user, award, false));
         } else {
             _contents.setStyleClass("padded");
