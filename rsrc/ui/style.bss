@@ -2440,6 +2440,11 @@ endgame_border {
   padding: 16 32;
 }
 
+endgame_item_border {
+  parent: "endgame_border";
+  padding: 16;
+}
+
 endgame_player_big {
   font: "Dom Casual" plain 24;
   text-align: center;
