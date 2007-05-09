@@ -1310,6 +1310,16 @@ public class BangClient extends BasicClient
         String[] args = new String[] {
             LaunchUtil.getJVMPath(appdir), "-jar", pro.toString(), appdir.getPath()
         };
+
+        // if we were passed a username and password on the command line, tack those on as well (we
+        // have to use -Dapp.name to get Getdown to pass them back to us when we're launched)
+        String uname = System.getProperty("username"), pass = System.getProperty("password");
+        if (!StringUtil.isBlank(uname) && !StringUtil.isBlank(pass)) {
+            args = ArrayUtil.concatenate(args, new String[] { 
+                "-Dapp.username=" + uname, "-Dapp.password=" + pass
+            });
+        }
+
         log.info("Running " + StringUtil.join(args, "\n  "));
         try {
             Runtime.getRuntime().exec(args, null);
