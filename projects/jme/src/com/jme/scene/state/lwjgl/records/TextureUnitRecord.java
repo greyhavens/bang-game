@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -56,6 +56,6 @@ public class TextureUnitRecord {
     public int combOpAlpha0 = -1, combOpAlpha1 = -1, combOpAlpha2 = -1;
 
     public TextureUnitRecord() {
-        blendColor = new ColorRGBA(1,1,1,1);
+        blendColor = new ColorRGBA(0,0,0,0);
     }
 }
