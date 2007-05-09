@@ -9,7 +9,7 @@
 
   <!-- add your buffalo rider -->
   <add_piece what="unit" id="1000" type="indian_post/buffalo_rider"
-             location="16,17" owner="0"/>
+             location="13,14" owner="0"/>
   <center_on what="piece" id="1000"/>
 
   <!-- explain br attack -->
@@ -18,35 +18,35 @@
 
   <!-- add enemy arillery and ram him-->
   <add_piece what="unit" id="2000" type="frontier_town/artillery"
-             location="22,17" owner="1"/>
+             location="19,14" owner="1"/>
   <center_on what="piece" id="2000"/>
 
   <text message="ram"/>
-  <wait event="effect:bang" allowAttack="22,17"/>
+  <wait event="effect:bang" allowAttack="19,14"/>
 
   <!-- add a repair for the artillery -->
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
-             location="22,17"/>
+             location="19,14"/>
 
   <text message="ram2"/>
   <wait event="text_clicked"/>
 
   <!-- move arillery next to BR onto that repair-->
-  <move_unit id="2000" location="22,17"/>
+  <move_unit id="2000" location="19,14"/>
 
   <text message="ram3"/>
-  <wait event="effect:bang" allowAttack="22,17"/>
+  <wait event="effect:bang" allowAttack="19,14"/>
 
   <!-- add enemy Tbird that attacks -->
   <add_piece what="unit" id="2001" type="indian_post/thunderbird"
-             location="23,16" owner="1"/>
+             location="19,13" owner="1"/>
 
   <text message="ram4"/>
   <wait event="text_clicked"/>
 
   <!-- enemies both attack -->
-  <move_unit id="2001" location="19,17" target="1000"/>
-  <move_unit id="2000" target="1000"/>
+  <move_unit id="2001" location="16,15" target="1000"/>
+  <move_unit id="2000" location="20,13" target="1000"/>
 
   <text message="ram5"/>
   <wait event="unit_selected" allowAttack="0"/>
@@ -59,7 +59,7 @@
 
   <!-- add your Thunderbird -->
   <add_piece what="unit" id="1001" type="indian_post/thunderbird"
-             location="18,17" owner="0"/>
+             location="14,15" owner="0"/>
 
   <text message="tbird" step="3"/>
   <center_on what="piece" id="1001"/>
@@ -67,10 +67,10 @@
 
   <!-- add a firestarter bonus and have them activate it -->
   <add_piece what="bonus" id="3000" type="indian_post/firestarter"
-             location="22,17"/>
+             location="18,15"/>
   <center_on what="piece" id="3000"/>
   <text message="swoop"/>
-  <wait event="bonus_activated" allowAttack="22,17"/>
+  <wait event="bonus_activated" allowAttack="18,15"/>
 
   <text message="swoop2"/>
   <wait event="effect:bang" id="2001" allowAttack="0"/>
