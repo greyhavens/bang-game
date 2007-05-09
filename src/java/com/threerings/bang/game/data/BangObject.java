@@ -698,6 +698,21 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Returns an adjusted round points array where players that have resigned from the game are
+     * adjusted to zero.
+     */
+    public int [] getFilteredRoundPoints (int ridx)
+    {
+        int [] apoints = perRoundPoints[ridx].clone();
+        for (int ii = 0; ii < apoints.length; ii++) {
+            if (!isActivePlayer(ii)) {
+                apoints[ii] = Math.min(apoints[ii], 0);
+            }
+        }
+        return apoints;
+    }
+
+    /**
      * Returns the current index into any round-related array. Because the {@link #roundId} field
      * is updated at slightly wonky times, this method has to do some figuring out to return the
      * proper index.

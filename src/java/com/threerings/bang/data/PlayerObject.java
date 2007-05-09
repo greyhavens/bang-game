@@ -93,6 +93,9 @@ public class PlayerObject extends BodyObject
 
     /** The field name of the <code>lastBoardId</code> field. */
     public static final String LAST_BOARD_ID = "lastBoardId";
+
+    /** The field name of the <code>quitter</code> field. */
+    public static final String QUITTER = "quitter";
     // AUTO-GENERATED: FIELDS END
 
     /** This user's persistent unique id. */
@@ -160,6 +163,9 @@ public class PlayerObject extends BodyObject
 
     /** The last board played by this player. */
     public int lastBoardId = -1;
+
+    /** Quitter level. */
+    public int quitter;
 
     /** Contains all ratings earned by this player. */
     public transient HashMap<String, Rating> ratings;
@@ -962,6 +968,22 @@ public class PlayerObject extends BodyObject
         requestAttributeChange(
             LAST_BOARD_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.lastBoardId = value;
+    }
+
+    /**
+     * Requests that the <code>quitter</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setQuitter (int value)
+    {
+        int ovalue = this.quitter;
+        requestAttributeChange(
+            QUITTER, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.quitter = value;
     }
     // AUTO-GENERATED: METHODS END
 }

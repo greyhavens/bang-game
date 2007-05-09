@@ -78,6 +78,10 @@ public class Rating extends SimpleStreamableObject
             }
             float W = (scores[ii] == scores[pidx]) ? 0.5f :
                 (scores[ii] > scores[pidx] ? 0f : 1f);
+            // a score of 0 will always be considered a loss
+            if (scores[pidx] == 0) {
+                W = 0f;
+            }
             dR += computeAdjustment(W, opprat, ratings[pidx]);
             opponents++;
         }

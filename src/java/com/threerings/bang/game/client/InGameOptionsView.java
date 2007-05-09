@@ -25,6 +25,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.bounty.data.OfficeCodes;
+import com.threerings.bang.client.BangPrefs;
 
 /**
  * Displays options while a player is in a game.
@@ -41,6 +42,7 @@ public class InGameOptionsView extends BDecoratedWindow
         _modal = true;
         _ctx = ctx;
         _bangobj = bangobj;
+        _config = config;
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(
             BangCodes.OPTS_MSGS);
@@ -89,11 +91,28 @@ public class InGameOptionsView extends BDecoratedWindow
         add(box, GroupLayout.FIXED);
     }
 
+    public void clearPopup ()
+    {
+        if (_warning != null && _warning.isAdded()) {
+            _ctx.getBangClient().clearPopup(_warning, true);
+        } else {
+            _ctx.getBangClient().clearPopup(this, true);
+        }
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
         String action = event.getAction();
-        if ("to_town".equals(action)) {
+        if (_config.rated && _bangobj.isInPlay() && action.startsWith("to_") &&
+                BangPrefs.shouldShowQuitterWarning(_ctx.getUserObject())) {
+            if (_warning == null) {
+                _warning = new QuitterWarningView(_ctx, this);
+            }
+            _warning.setTown(action.equals("to_town"));
+            _ctx.getBangClient().displayPopup(_warning, true, QuitterWarningView.WIDTH_HINT);
+
+        } else if ("to_town".equals(action)) {
             if (_ctx.getLocationDirector().leavePlace()) {
                 _ctx.getBangClient().clearPopup(this, true);
                 _ctx.getBangClient().showTownView();
@@ -137,5 +156,7 @@ public class InGameOptionsView extends BDecoratedWindow
 
     protected BangContext _ctx;
     protected BangObject _bangobj;
+    protected BangConfig _config;
     protected BLabel _title;
+    protected QuitterWarningView _warning;
 }

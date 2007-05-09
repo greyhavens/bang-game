@@ -1889,24 +1889,39 @@ public class BangManager extends GameManager
         int gameSecs = (int)(System.currentTimeMillis() - _startStamp) / 1000;
 
         // update ratings if appropriate
-        if (_bconfig.rated && !_bconfig.getScenario(0).equals(TutorialInfo.IDENT) &&
-            gameSecs >= MIN_RATED_DURATION) {
-            int[] fpoints = _bangobj.getFilteredPoints();
+        if (_bconfig.rated && !_bconfig.getScenario(0).equals(TutorialInfo.IDENT)) {
+            // if we reached the minimum time, rate the matches
+            if (gameSecs >= MIN_RATED_DURATION) {
+                int[] fpoints = _bangobj.getFilteredPoints();
 
-            // update each player's per-scenario ratings, subtracting from the total any points
-            // earned in coop rounds
-            for (int ii = 0; ii < _bconfig.getRounds(); ii++) {
-                int[] rpoints = _bangobj.perRoundPoints[ii];
-                computeRatings(_bconfig.getScenario(ii), rpoints);
-                if (_rounds[ii].wasCoop()) {
-                    for (int jj = 0; jj < fpoints.length; jj++) {
-                        fpoints[jj] = Math.max(0, fpoints[jj] - Math.max(0, rpoints[jj]));
+                // update each player's per-scenario ratings, subtracting from the total any points
+                // earned in coop rounds
+                boolean allCoop = true;
+                for (int ii = 0; ii < _bconfig.getRounds(); ii++) {
+                    int[] rpoints = _bangobj.getFilteredRoundPoints(ii);
+                    computeRatings(_bconfig.getScenario(ii), rpoints);
+                    if (_rounds[ii].wasCoop()) {
+                        for (int jj = 0; jj < fpoints.length; jj++) {
+                            fpoints[jj] = Math.max(0, fpoints[jj] - Math.max(0, rpoints[jj]));
+                        }
+                    } else {
+                        allCoop = false;
                     }
                 }
-            }
 
-            // update each player's overall rating
-            computeRatings(ScenarioInfo.OVERALL_IDENT, fpoints);
+                // update each player's overall rating
+                if (!allCoop) {
+                    computeRatings(ScenarioInfo.OVERALL_IDENT, fpoints);
+                }
+
+            // if not, those who left early will still be penalized
+            } else {
+                for (int ii = 0; ii < _bconfig.getRounds(); ii++) {
+                    int[] rpoints = _bangobj.getFilteredRoundPoints(ii);
+                    computePenalizedRatings(_bconfig.getScenario(ii), _bangobj.getFilteredPoints());
+                }
+                computePenalizedRatings(ScenarioInfo.OVERALL_IDENT, _bangobj.getFilteredPoints());
+            }
         }
 
         // these will track awarded cash and badges
@@ -1971,6 +1986,9 @@ public class BangManager extends GameManager
                     // compute their earnings and scale them based on the scenario duration
                     award.cashEarned = (int)Math.ceil(
                         computeEarnings(ii) * _bconfig.duration.getAdjustment());
+                    if (_bconfig.rated && prec.user.quitter > 2) {
+                        award.cashEarned /= (prec.user.quitter - 1);
+                    }
 
                     // a little bonus for practice tutorials
                     if (_bconfig.duration == BangConfig.Duration.PRACTICE) {
@@ -2433,19 +2451,27 @@ public class BangManager extends GameManager
         }
 
         int earnings = 0;
-        for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
-            // only completed rounds count
-            if (_rounds[rr].duration == 0) {
-                continue;
+        // only players that stayed til the end (unless they were disconnected) will earn scrip
+        PlayerObject user = (PlayerObject)getPlayer(pidx);
+        if (_bangobj.points[pidx] == 0 &&
+                (user == null || user.status != OccupantInfo.DISCONNECTED)) {
+            if (_bconfig.rated && user != null && !isActivePlayer(pidx)) {
+                // up their quitter level
+                user.setQuitter(user.quitter + 2);
             }
-            // only players that stayed til the end (unless they were disconnected) will earn scrip
-            PlayerObject user = (PlayerObject)getPlayer(pidx);
-            if (_bangobj.points[pidx] == 0 &&
-                    (user == null || user.status != OccupantInfo.DISCONNECTED)) {
-                continue;
+        } else {
+            for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
+                // only completed rounds count
+                if (_rounds[rr].duration == 0) {
+                    continue;
+                }
+                earnings += _rounds[rr].scenario.computeEarnings(
+                    _bangobj, pidx, rr, _precords, _ranks, _rounds);
             }
-            earnings += _rounds[rr].scenario.computeEarnings(
-                _bangobj, pidx, rr, _precords, _ranks, _rounds);
+            if (_bconfig.rated && user != null && user.quitter > 0) {
+                // they completed a full game, reduce their quitter level
+                user.setQuitter(user.quitter - 1);
+            }
         }
 
         // and scale earnings based on their purse
@@ -2464,20 +2490,13 @@ public class BangManager extends GameManager
                         ScenarioInfo.Teams.COOP);
         int avgscore = coop ? getAverageScore(scores) : 0;
 
-        // filter AIs from the scores; the ratings computations below will ignore players whose
-        // score is set to zero
-        scores = scores.clone();
-        for (int ii = 0; ii < scores.length; ii++) {
-            if (isAI(ii)) {
-                scores[ii] = 0;
-            }
-        }
-
         // collect each player's rating for this scenario
         Rating[] ratings = new Rating[getPlayerSlots()];
         for (int pidx = 0; pidx < ratings.length; pidx++) {
             ratings[pidx] = _precords[pidx].getRating(scenario);
         }
+
+        scores = removeAIScores(scores);
 
         // now compute the adjusted ratings
         int pctile = coop ?
@@ -2488,6 +2507,37 @@ public class BangManager extends GameManager
                 Rating.computeRating(scores, ratings, pidx);
         }
 
+        storeRatings(ratings, nratings);
+    }
+
+    /**
+     * Computes updated ratings for the specified scneario for players that left the game early and
+     * stores them in the appropriate {@link PlayerRecord}.
+     */
+    protected void computePenalizedRatings (String scenario, int[] scores)
+    {
+        // collect each player's rating for this scenario
+        Rating[] ratings = new Rating[getPlayerSlots()];
+        for (int pidx = 0; pidx < ratings.length; pidx++) {
+            ratings[pidx] = _precords[pidx].getRating(scenario);
+        }
+
+        scores = removeAIScores(scores);
+
+        int[] nratings = new int[ratings.length];
+        for (int pidx = 0; pidx < ratings.length; pidx++) {
+            nratings[pidx] = (isActivePlayer(pidx)) ? -1 :
+                Rating.computeRating(scores, ratings, pidx);
+        }
+
+        storeRatings(ratings, nratings);
+    }
+
+    /**
+     * Helper function that updates player ratings.
+     */
+    protected void storeRatings (Rating[] ratings, int[] nratings)
+    {
         // finally store the adjusted ratings back in the ratings objects and record the increased
         // experience
         for (int pidx = 0; pidx < ratings.length; pidx++) {
@@ -2499,6 +2549,22 @@ public class BangManager extends GameManager
             ratings[pidx].experience++;
             _precords[pidx].nratings.put(ratings[pidx].scenario, ratings[pidx]);
         }
+    }
+
+    /**
+     * Helper function that nullifies ai scores.
+     */
+    protected int[] removeAIScores (int [] scores)
+    {
+        // filter AIs from the scores; the ratings computations below will ignore players whose
+        // score is set below zero
+        scores = scores.clone();
+        for (int ii = 0; ii < scores.length; ii++) {
+            if (isAI(ii)) {
+                scores[ii] = -1;
+            }
+        }
+        return scores;
     }
 
     /**

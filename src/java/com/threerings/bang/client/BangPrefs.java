@@ -374,6 +374,22 @@ public class BangPrefs
     }
 
     /**
+     * Check if we should show the leaving game early warnings.
+     */
+    public static boolean shouldShowQuitterWarning (PlayerObject user)
+    {
+        return !config.getValue(user.username + ".quitter_warning", false);
+    }
+
+    /**
+     * Called when the user doesn't want to be warned about leaving early.
+     */
+    public static void setNoQuitterWarning (PlayerObject user)
+    {
+        config.setValue(user.username + ".quitter_warning", true);
+    }
+
+    /**
      * Returns the id of the last town to which the specified user logged on. If the user has never
      * logged on, the default town (Frontier Town) will be returned.
      */

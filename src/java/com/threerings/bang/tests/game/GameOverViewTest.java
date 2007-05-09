@@ -14,6 +14,7 @@ import com.threerings.util.Name;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.Badge;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
@@ -52,6 +53,7 @@ public class GameOverViewTest extends TestApp
         user.handle = new Handle("Wild Annie");
         user.inventory = new DSet<Item>(new Purse[] { new Purse(-1, 1) });
         user.scrip = 1000;
+        user.quitter = 3;
 
         BangConfig bconfig = new BangConfig();
         bconfig.rated = false;
@@ -79,9 +81,10 @@ public class GameOverViewTest extends TestApp
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
-//             if (bangobj.awards[ii].pidx == 2) {
-//                 bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
-//             }
+            if (bangobj.awards[ii].pidx == 2) {
+                //bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
+                bangobj.awards[ii].item = new CardItem(0, "repair");
+            }
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
             bangobj.awards[ii].acesEarned = 5;

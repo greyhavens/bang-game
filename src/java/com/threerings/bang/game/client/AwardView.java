@@ -82,6 +82,12 @@ public class AwardView extends BContainer
         BContainer vbox = GroupLayout.makeVBox(GroupLayout.CENTER);
         ((GroupLayout)vbox.getLayoutManager()).setGap(0);
         vbox.add(_table);
+        if (user.quitter > 2) {
+            vbox.add(_quitter = new BLabel(msgs.get("m.endgame_quitter"), "endgame_text"));
+            if (animate) {
+                _quitter.setAlpha(0f);
+            }
+        }
         if (award.acesEarned > 0) {
             vbox.add(_aces = GroupLayout.makeHBox(GroupLayout.CENTER));
             _aces.add(new BLabel(msgs.get("m.endgame_aces_pre"), "endgame_text"));
@@ -172,8 +178,8 @@ public class AwardView extends BContainer
 
         if (award.item != null) {
             _item = new BContainer(new BorderLayout());
-            _item.setPreferredSize(200, -1);
-            _item.setStyleClass("endgame_border");
+            _item.setPreferredSize(250, -1);
+            _item.setStyleClass("endgame_item_border");
             PaletteIcon icon = null;
             if (award.item instanceof Badge) {
                 txt = msgs.get("m.endgame_badge");
@@ -184,6 +190,7 @@ public class AwardView extends BContainer
                 CardTripletGood ctg = new CardTripletGood(card.getType(), 0, 0, null);
                 ctg.setQuantity(card.getQuantity());
                 icon = new GoodsIcon(ctx, null, ctg);
+                icon.setEnabled(false);
             } else {
                 txt = msgs.get("m.endgame_item");
                 icon = new ItemIcon(ctx, award.item);
@@ -243,6 +250,9 @@ public class AwardView extends BContainer
                     _scrip.setText(_cfmt.format(user.scrip));
                     BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
                     _done = true;
+                    if (_quitter != null) {
+                        _quitter.setAlpha(1f);
+                    }
                     if (_aces != null) {
                         _aces.setAlpha(1f);
                     }
@@ -270,7 +280,7 @@ public class AwardView extends BContainer
     }
 
     protected BContainer _table;
-    protected BLabel _scrip;
+    protected BLabel _scrip, _quitter;
     protected BContainer _item, _aces;
     protected NumberFormat _cfmt = NumberFormat.getInstance();
 
