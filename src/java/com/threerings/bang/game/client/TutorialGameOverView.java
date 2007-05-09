@@ -15,6 +15,7 @@ import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.TutorialView;
 import com.threerings.bang.client.bui.SteelWindow;
@@ -102,12 +103,16 @@ public class TutorialGameOverView extends SteelWindow
             _start.setStyleClass("big_button");
             list.add(_start);
 
-        } else if (townIdx == 0 && user.handle instanceof GuestHandle) {
-            list.add(new BLabel(new ImageIcon(ctx.loadImage("ui/tutorials/star_big.png"))));
-            list.add(new BLabel(msgs.get("m.tut_choose"), "tview_list"));
-            _start = new BButton(msgs.get("m.lets_go"), this, "choose");
-            _start.setStyleClass("big_button");
-            list.add(_start);
+        } else {
+            // we're done with the tutorials, we can turn off the auto pop-up
+            BangPrefs.setNoTutIntro(user);
+            if (townIdx == 0 && user.handle instanceof GuestHandle) {
+                list.add(new BLabel(new ImageIcon(ctx.loadImage("ui/tutorials/star_big.png"))));
+                list.add(new BLabel(msgs.get("m.tut_choose"), "tview_list"));
+                _start = new BButton(msgs.get("m.lets_go"), this, "choose");
+                _start.setStyleClass("big_button");
+                list.add(_start);
+            }
         }
 
         _contents.add(center);
