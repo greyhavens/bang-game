@@ -175,15 +175,20 @@ public class TutorialView extends SteelWindow
             currentTut = tid;
             if (icon != BangUI.completed) {
                 break;
+            } else {
+                currentTut = self.townId;
             }
         }
 
         desc.setText(_msgs.get("m.tut_" + currentTut + ".desc"));
 
         _contents.add(center, BorderLayout.CENTER);
-        _contents.add(new BLabel(
-                    _msgs.get("m.tut_title", _msgs.get("m.tut_" + currentTut)), "tview_title"),
-                BorderLayout.NORTH);
+        if (currentTut != self.townId) {
+            currentTut = _msgs.get("m.tut_title", _msgs.get("m.tut_" + currentTut));
+        } else {
+            currentTut = _msgs.get("m.tut_" + currentTut);
+        }
+        _contents.add(new BLabel(currentTut, "tview_title"), BorderLayout.NORTH);
 
         _buttons.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
     }

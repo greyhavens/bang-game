@@ -28,6 +28,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Rectangle;
+import com.jmex.bui.util.Point;
 
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
@@ -177,6 +178,9 @@ public class LogonView extends BWindow
         add(cont, new Rectangle(40, 200, 365, 80));
         _anon.setEnabled(_initialized);
         _account.setEnabled(_initialized);
+        _action = new BButton("", this, "");
+        _action.setStyleClass("logon_new");
+        add(_action, new Point(325, 200));
 
         showStatus();
     }
