@@ -141,6 +141,7 @@ public class TutorialView extends SteelWindow
         BContainer center = new BContainer(GroupLayout.makeHoriz(
                     GroupLayout.CENTER).setOffAxisJustification(GroupLayout.TOP).setGap(30));
         center.add(new UnitView(_ctx, TutorialCodes.TUTORIAL_UNIT[_townIdx]));
+        center.setStyleClass("padded");
         BContainer right = new BContainer(GroupLayout.makeVert(
                     GroupLayout.TOP).setOffAxisJustification(GroupLayout.CENTER).setGap(20));
         right.setPreferredSize(new Dimension(400, -1));
@@ -159,7 +160,8 @@ public class TutorialView extends SteelWindow
             String btext, bstyle;
             if (self.stats.containsValue(StatType.TUTORIALS_COMPLETED, tid)) {
                 icon = BangUI.completed;
-                btext = "m.tut_replay";
+                btext = (tid.startsWith(TutorialCodes.PRACTICE_PREFIX) ?
+                        "m.tut_practice" : "m.tut_replay");
                 bstyle = "alt_button";
             } else {
                 icon = new ImageIcon(_ctx.loadImage("ui/tutorials/star_small.png"));
