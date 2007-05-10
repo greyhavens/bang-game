@@ -81,7 +81,7 @@
   <wait event="unit_killed" allowAttack="0"/>
 
   <!-- take out the other -->
-  <move_unit id="5001" targetLoc="24,19"/>
+  <move_unit id="5001" targetLoc="24,19" noWarning="true"/>
   <text message="takedown2"/>
   <wait event="unit_killed" allowAttack="0"/>
 
