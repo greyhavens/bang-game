@@ -47,7 +47,7 @@
 
   <text message="logging_robots3" step="3"/>
   <add_piece what="bonus" id="3000" type="frontier_town/repair"
-             location="1000"/>
+             location="179"/>
   <wait event="bonus_activated" allowAttack="0"/>
 
   <text message="waves1" step="4"/>
