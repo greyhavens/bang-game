@@ -104,7 +104,9 @@ public class InGameOptionsView extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         String action = event.getAction();
-        if (_config.rated && _bangobj.isInPlay() && action.startsWith("to_") &&
+        int pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
+        if (_bangobj.isActivePlayer(pidx) && _config.rated && _bangobj.isInPlay() &&
+                action.startsWith("to_") &&
                 BangPrefs.shouldShowQuitterWarning(_ctx.getUserObject())) {
             if (_warning == null) {
                 _warning = new QuitterWarningView(_ctx, this);

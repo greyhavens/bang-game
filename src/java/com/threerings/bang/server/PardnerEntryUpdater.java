@@ -194,10 +194,14 @@ public class PardnerEntryUpdater extends SetAdapter
             if (plobj instanceof BangObject) {
                 if (((BangObject)plobj).bounty != null) {
                     entry.status = PardnerEntry.IN_BOUNTY;
+                } else if (((BangObject)plobj).actionId != -1) {
+                    entry.status = PardnerEntry.IN_TUTORIAL;
                 } else {
                     entry.status = PardnerEntry.IN_GAME;
                 }
-                entry.gameOid = plobj.getOid();
+                if (entry.status != PardnerEntry.IN_TUTORIAL) {
+                    entry.gameOid = plobj.getOid();
+                }
             } else if (plobj instanceof SaloonObject) {
                 entry.status = PardnerEntry.IN_SALOON;
             } else {

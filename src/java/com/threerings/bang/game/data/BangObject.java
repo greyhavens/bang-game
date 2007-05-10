@@ -307,7 +307,7 @@ public class BangObject extends GameObject
     public Effect effect;
 
     /** The currently executing action (only used in the tutorial). */
-    public int actionId;
+    public int actionId = -1;
 
     /** Total points earned by each player. */
     public int[] points;

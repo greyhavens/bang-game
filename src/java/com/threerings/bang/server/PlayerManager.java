@@ -493,7 +493,10 @@ public class PlayerManager
             config.type = BangConfig.Type.TUTORIAL;
         }
 
-        playComputer(player, config, false);
+        BangObject bangobj = playComputer(player, config, false);
+        if (bangobj != null) {
+            bangobj.actionId = 0;
+        }
     }
 
     // documentation inherited from interface PlayerProvider
@@ -1113,7 +1116,7 @@ public class PlayerManager
     /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
-    protected void playComputer (PlayerObject player, BangConfig config, boolean autoplay)
+    protected BangObject playComputer (PlayerObject player, BangConfig config, boolean autoplay)
         throws InvocationException
     {
         HashSet<String> names = new HashSet<String>();
@@ -1137,6 +1140,7 @@ public class PlayerManager
             if (autoplay) {
                 ParlorSender.gameIsReady(player, bangobj.getOid());
             }
+            return bangobj;
 
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating game " +

@@ -33,6 +33,9 @@ public class PardnerEntry
     /** The pardner is doing a bounty. */
     public static final byte IN_BOUNTY = 4;
 
+    /** The pardner is in a tutorial. */
+    public static final byte IN_TUTORIAL = 5;
+
     /** The pardner's handle. */
     public Handle handle;
 
@@ -99,7 +102,7 @@ public class PardnerEntry
      */
     public boolean isAvailable ()
     {
-        return status != OFFLINE && status != IN_GAME && status != IN_BOUNTY;
+        return status == ONLINE || status == IN_SALOON;
     }
 
     /**

@@ -294,6 +294,9 @@ public class PardnerView extends IconPalette
               case PardnerEntry.IN_BOUNTY:
                 locpath += "in_bounty.png";
                 break;
+              case PardnerEntry.IN_TUTORIAL:
+                locpath += "in_tutorial.png";
+                break;
               default:
                 locpath = entry.getTownIndex() == -1 ? null :
                     locpath + BangCodes.TOWN_IDS[entry.getTownIndex()] + ".png";

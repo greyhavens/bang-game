@@ -54,13 +54,7 @@ public class TutorialGameOverView extends SteelWindow
         MessageBundle msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
         int townIdx = BangUtil.getTownIndex(user.townId);
 
-        int pidx = 0;
-        for (int ii = 0; ii < bangobj.playerInfo.length; ii++) {
-            if (bangobj.playerInfo[ii].playerId != -1) {
-                pidx = ii;
-                break;
-            }
-        }
+        int pidx = bangobj.getPlayerIndex(user.getVisibleName());
         // locate our award
         Award award = null;
         for (Award a : bangobj.awards) {
@@ -118,7 +112,7 @@ public class TutorialGameOverView extends SteelWindow
 
         _contents.add(center);
 
-        if (award.cashEarned > 0) {
+        if (award != null && award.cashEarned > 0) {
             _contents.add(new Spacer(1, 1));
             _contents.add(new AwardView(_ctx, bangobj, gconfig, user, award, false));
         } else {
