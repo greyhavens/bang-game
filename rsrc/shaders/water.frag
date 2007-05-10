@@ -1,7 +1,7 @@
+#version 110
+
 //
 // $Id$
-
-#version 110
 
 /** The color of the water as configured in the board. */
 uniform vec4 waterColor;
