@@ -314,7 +314,7 @@ public class Tutorial extends Scenario
                         break;
                     }
                 }
-                if (!foundMove) {
+                if (!foundMove && !mua.noWarning) {
                     log.warning("Unable to locate spot near target [tut=" + _config.ident +
                                 ", unit=" + unit + ", target=" + target + "].");
                 }
@@ -323,7 +323,9 @@ public class Tutorial extends Scenario
             try {
                 _bangmgr.executeOrder(unit, tx, ty, targetId, true);
             } catch (InvocationException ie) {
-                log.warning("Unable to execute action " + mua + ":" + ie.getMessage());
+                if (!mua.noWarning) {
+                    log.warning("Unable to execute action " + mua + ":" + ie.getMessage());
+                }
             }
 
         } else if (action instanceof TutorialConfig.ScenarioAction) {

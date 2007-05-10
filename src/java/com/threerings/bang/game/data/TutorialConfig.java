@@ -127,6 +127,7 @@ public class TutorialConfig
         public int[] location = { Short.MAX_VALUE, Short.MAX_VALUE };
         public int target;
         public int[] targetLoc = { Short.MAX_VALUE, Short.MAX_VALUE };
+        public boolean noWarning;
 
         private static final long serialVersionUID = 1;
     }
