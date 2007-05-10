@@ -44,6 +44,7 @@ public class PlayerSlot extends AvatarView
 
         // AvatarView sets a preferred size, but we want to override that
         setPreferredSize(null);
+        setText(_ctx.xlate(SaloonCodes.SALOON_MSGS, "m.waiting_for_player"));
     }
 
     /**
