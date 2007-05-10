@@ -170,12 +170,13 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     // documentation inherited
     protected void initPrototype (Model prototype)
     {
-        prototype.configureShaders(_ctx.getShaderCache());
-        prototype.lockStaticMeshes(_ctx.getRenderer(), Config.useVBOs,
-            Config.useDisplayLists);
-        if (!BangPrefs.isMediumDetail()) {
+        if (BangPrefs.isMediumDetail()) {
+            prototype.configureShaders(_ctx.getShaderCache());
+        } else {
             prototype.setAnimationMode(Model.AnimationMode.MORPH);
         }
+        prototype.lockStaticMeshes(_ctx.getRenderer(), Config.useVBOs,
+            Config.useDisplayLists);
     }
 
     // documentation inherited
