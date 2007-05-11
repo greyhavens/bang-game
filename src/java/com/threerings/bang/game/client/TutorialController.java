@@ -144,11 +144,6 @@ public class TutorialController
         }
         log.info("Matched tutorial event: " + event + " (" + count + ").");
 
-        // if we were waiting for text clicked, reenable movement
-        if (TutorialCodes.TEXT_CLICKED.equals(event)) {
-            _view.view.setInteractive(true);
-        }
-
         // process the action
         processedAction(((TutorialConfig.Action)_pending).index);
         _pending = null;
@@ -311,6 +306,7 @@ public class TutorialController
                 attackEnabled = new Point(allowAttack[0], allowAttack[1]);
             }
             _view.view._attackEnabled = attackEnabled;
+            _view.view.setInteractive(true);
 
             // let them know if we're waiting for them to click
             if (TutorialCodes.TEXT_CLICKED.matches(_pending.getEvent())) {

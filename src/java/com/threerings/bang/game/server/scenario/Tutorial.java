@@ -342,6 +342,13 @@ public class Tutorial extends Scenario
 
         } else if (action instanceof TutorialConfig.SetCard) {
             ((TutorialInfo)_bangobj.scenario).cardType = ((TutorialConfig.SetCard)action).type;
+
+        } else if (action instanceof TutorialConfig.WaitAction) {
+            TutorialConfig.WaitAction wait = (TutorialConfig.WaitAction)action;
+            if (TutorialCodes.TEXT_CLICKED.matches(wait.getEvent()) &&
+                    wait.allowAttack().length == 2) {
+                _bangmgr.clearOrders();
+            }
         }
 
         return (action instanceof TutorialConfig.WaitAction);
