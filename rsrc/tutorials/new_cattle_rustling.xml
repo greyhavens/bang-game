@@ -19,7 +19,7 @@
   <text message="enemy"/>
   <add_piece what="unit" id="1003" type="frontier_town/cavalry" location="21,14" owner="1"/>
   <center_on what="piece" id="1003"/>
-  <wait event="text_clicked"/>
+  <wait event="unit_selected"  allowAttack="0"/>
 
   <text message="squares"/>
   <wait event="effect:bang" allowAttack="0"/>
