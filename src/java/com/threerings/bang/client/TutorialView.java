@@ -122,12 +122,13 @@ public class TutorialView extends SteelWindow
             showTutorialIntro();
         }
 
-        if (BangPrefs.shouldShowTutIntro(self)) {
+        if (BangPrefs.shouldShowTutIntro(self) &&
+            // don't allow demo accounts to disable the tutorial popup
+            !_ctx.getUserObject().tokens.isDemo()) {
             BContainer checkbox = GroupLayout.makeHBox(GroupLayout.CENTER);
             checkbox.add(_notuts = new BCheckBox(_msgs.get("m.no_tuts")));
             _contents.add(checkbox, BorderLayout.SOUTH);
         }
-
     }
 
     public void showTutorialList ()
