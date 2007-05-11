@@ -8,45 +8,51 @@
   <wait event="text_clicked"/>
 
   <!-- add their bigshot to the board and explain bigshots -->
-  <add_piece what="unit" type="frontier_town/cavalry" id="1001" location="18,12" owner="0"/>
+  <add_piece what="unit" type="frontier_town/cavalry" id="1001" location="15,14" owner="0"/>
   <center_on what="piece" id="1001"/>
-  <text message="bigshot_intro"/>
+  <text message="bigshot_intro" step="2"/>
   <wait event="text_clicked"/>
   <text message="bigshot_intro_2" avatar="units/frontier_town/cavalry/portrait.png"/>
   <wait event="text_clicked"/>
 
-  <!-- add a cow and explain those -->
-  <add_piece what="cow" id="1002" location="18,14" owner="-1"/>
-  <center_on what="piece" id="1002"/>
-  <text message="cattle_intro" step="2"/>
+  <!-- add an enemy rustler -->
+  <text message="enemy"/>
+  <add_piece what="unit" id="1003" type="frontier_town/cavalry" location="21,14" owner="1"/>
+  <center_on what="piece" id="1003"/>
   <wait event="text_clicked"/>
-  <text message="cattle_intro_2"/>
+
+  <text message="squares"/>
+  <wait event="effect:bang" allowAttack="0"/>
+
+  <!-- add a cow and explain those -->
+  <add_piece what="cow" id="1002" location="18,15" owner="-1"/>
+  <center_on what="piece" id="1002"/>
+  <text message="cattle_intro" step="3"/>
+  <wait event="text_clicked"/>
+
+  <!-- have the AI brand the cattle, have the player rebrand it back -->
+  <move_unit_and_wait id="1003" target="1002" event="effect:frontier_town/cow/branded"/>
+  <text message="enemy_brand"/>
+  <center_on what="piece" id="1002" arrow="false"/>
+  <wait event="text_clicked"/>
+
+  <text message="brand_it"/>
   <wait event="effect:frontier_town/cow/branded"/>
 
   <!-- point out their score -->
   <text message="cattle_scoring"/>
   <wait event="text_clicked"/>
 
-  <!-- explain that cattle can be rebranded -->
-  <text message="cattle_rebranding"/>
-  <add_piece what="unit" id="1003" type="frontier_town/cavalry" location="1002" owner="1"/>
-  <center_on what="piece" id="1003"/>
+  <!-- have the player kill the enemy -->
+  <text message="kill"/>
   <wait event="effect:bang" allowAttack="0"/>
 
-  <!-- have the AI rebrand the cattle, have the player rebrand it back -->
-  <center_on what="piece" id="1002" arrow="false"/>
-  <move_unit_and_wait id="1003" target="1002" event="effect:frontier_town/cow/branded"/>
-  <text message="cattle_rerebranding"/>
-  <wait event="effect:frontier_town/cow/branded"/>
-  <text message="cattle_rerebranding_2"/>
-  <wait event="effect:bang" allowAttack="0"/>
-
-  <text message="timer" step="3"/>
+  <text message="timer" step="4"/>
   <show_view name="round_timer"/>
   <wait event="text_clicked"/>
   <text message="winner"/>
   <wait event="text_clicked"/>
-  <text message="winner_2" step="4"/>
+  <text message="winner_2" step="5"/>
   <wait event="text_clicked"/>
 
   <!-- wrap up and end the tutorial -->
