@@ -170,11 +170,10 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     // documentation inherited
     protected void initPrototype (Model prototype)
     {
-        // temporarily disable hardware skinning on ATI cards
         if (BangPrefs.isMediumDetail()) {
-            // temporarily disable hardware skinning on ATI cards
-            String renderer = GL11.glGetString(GL11.GL_VENDOR);
-            if (!renderer.startsWith("ATI")) {
+            // for now, only use hardware skinning on Nvidia cards
+            String vendor = GL11.glGetString(GL11.GL_VENDOR);
+            if (vendor.startsWith("NVIDIA")) {
                 prototype.configureShaders(_ctx.getShaderCache());
             }
         } else {
