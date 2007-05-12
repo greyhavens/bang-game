@@ -22,7 +22,6 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
-import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Table;
 
@@ -55,16 +54,6 @@ public class PlayerRepository extends JORARepository
         super(conprov, PLAYER_DB_IDENT);
         _byNameMask = _ptable.getFieldMask();
         _byNameMask.setModified("accountName");
-
-        // TEMP: fix the scrip of players who fell into the negative because of a gang refund bug
-        BangServer.transitrepo.transition(PlayerRepository.class, "reset_negative_scrip",
-            new TransitionRepository.Transition() {
-                public void run () throws PersistenceException {
-                    int count = update("UPDATE PLAYERS set SCRIP = 0 where SCRIP < 0");
-                    log.info("Reset " + count + " negative scrip fields.");
-                }
-            });
-        // END TEMP
     }
 
     /**
