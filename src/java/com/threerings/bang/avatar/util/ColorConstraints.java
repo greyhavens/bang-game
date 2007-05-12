@@ -58,7 +58,6 @@ public class ColorConstraints
                         "[class=" + colorClass + ", which=" + entity.which() + "].");
             return colors;
         }
-        log.info("looking up colorClass " + colorClass);
 
         HashMap<String,Predicate<DObject>> preds = _preds.get(colorClass);
         Iterator iter = clrec.colors.values().iterator();
