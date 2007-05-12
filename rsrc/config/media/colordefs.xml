@@ -277,4 +277,68 @@
     <color colorId="24" name="purple" offsets="0.22, 0, -0.2"/>
   </class>
 
+  <!-- familiar armadillo recolorations -->
+  <class classId="17" name="armadillo_t" source="#778791" range="0.05, 0.8, 0.6">
+    <color colorId="1" name="old_gold" offsets="0.58, 0.54, -0.075"/>
+    <color colorId="2" name="silver" offsets="-0.11, -0.09, 0.14"/>
+    <color colorId="3" name="bronze" offsets="-0.48, 0.05, 0"/>
+    <color colorId="4" name="greencopper" offsets="-0.366, -0.05, 0"/>
+    <color colorId="5" name="old" offsets="-0.5, -0.94, -0.14"/>
+    <color colorId="6" name="bluesteel" offsets="0, -0.05, 0"/>
+    <color colorId="7" name="white" offsets="0, -1, 0.054"/>
+    <color colorId="8" name="dkbrn" offsets="0.56, 0.29, -0.01"/>
+    <color colorId="9" name="brown" offsets="0.54, 0.48, -0.21"/>
+    <color colorId="10" name="grey" offsets="0.63, -0.3, -0.25"/>
+    <color colorId="11" name="black" offsets="1, -0.15, -0.45"/>
+    <color colorId="12" name="purple" offsets="0.22, 0, -0.2"/>
+  </class>
+
+  <!-- primary raccoon recolorations -->
+  <class classId="18" name="raccoon_p" source="#922226" range="0.07, 0.4, 1">
+    <color colorId="1" name="dkbrn" offsets="-0.91, -0.2, -0.4"/>
+    <color colorId="2" name="leather" offsets="0.08, 0.2, -0.3"/>
+    <color colorId="3" name="brown" offsets="-0.91, -0.2, -0.2"/>
+    <color colorId="4" name="beige" offsets="0.13, -0.4, -0.1"/>
+    <color colorId="5" name="orange" offsets="0.08, -0.1, 0.05"/>
+    <color colorId="6" name="gold" offsets="0.125, -0.2, 0.1"/>
+    <color colorId="7" name="yellow" offsets="-0.83, -0.4, 0.1"/>
+    <color colorId="8" name="moss" offsets="0.25, -0.7, -0.15"/>
+    <color colorId="9" name="olive" offsets="0.25, -0.5, -0.4"/>
+    <color colorId="10" name="slate" offsets="0.6, -0.4, -0.3"/>
+    <color colorId="11" name="white" offsets="0, -1, 0.1"/>
+    <color colorId="12" name="grey" offsets="0, -1, -0.2"/>
+    <color colorId="13" name="black" offsets="0, -1, -0.6"/>
+  </class>
+
+  <!-- secondary raccoon recolorations -->
+  <class classId="19" name="raccoon_s" source="#57AC6A" range="0.1, 0.6, 1">
+    <color colorId="1" name="leather" offsets="0.7, 0.2, -0.2"/>
+    <color colorId="2" name="brown" offsets="-0.28, -0.37, -0.1"/>
+    <color colorId="3" name="beige" offsets="0.78, -0.4, 0"/>
+    <color colorId="4" name="orange" offsets="0.72, -0.1, -0.252"/>
+    <color colorId="5" name="gold" offsets="0.76, 0.6, 0.14"/>
+    <color colorId="6" name="yellow" offsets="0.81, -0.4, 0.2"/>
+    <color colorId="7" name="moss" offsets="0.9, -0.7, 0"/>
+    <color colorId="8" name="slate" offsets="0.23, -0.4, -0.15"/>
+    <color colorId="9" name="grey" offsets="0.2, -1, 0"/>
+    <color colorId="10" name="black" offsets="0.72, -1, -0.4"/>
+  </class>
+
+  <!-- primary buzzard recolorations -->
+  <class classId="20" name="buzzard_p" source="#922226" range="0.07, 0.4, 1">
+    <color colorId="1" name="leather" offsets="0.08, 0.2, -0.3"/>
+    <color colorId="2" name="brown" offsets="-0.91, -0.2, -0.2"/>
+    <color colorId="3" name="beige" offsets="0.13, -0.4, -0.1"/>
+    <color colorId="4" name="pink" offsets="0.95, -0.4, 0.15"/>
+    <color colorId="5" name="red" offsets="0, 0, 0"/>
+    <color colorId="6" name="maroon" offsets="0, 0.1, -0.3"/>
+    <color colorId="7" name="orange" offsets="0.08, -0.2, 0.05"/>
+    <color colorId="8" name="gold" offsets="0.125, -0.3, 0.1"/>
+    <color colorId="9" name="olive" offsets="0.25, -0.35, -0.4"/>
+    <color colorId="10" name="blue" offsets="-0.4, -0.4, 0.1"/>
+    <color colorId="11" name="slate" offsets="0.6, -0.4, -0.3"/>
+    <color colorId="12" name="violet" offsets="0.83, -0.25, -0.15"/>
+    <color colorId="13" name="grey" offsets="0, -1, -0.2"/>
+  </class>
+
 </colors>
