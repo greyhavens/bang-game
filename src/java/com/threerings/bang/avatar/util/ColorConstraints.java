@@ -58,6 +58,7 @@ public class ColorConstraints
                         "[class=" + colorClass + ", which=" + entity.which() + "].");
             return colors;
         }
+        log.info("looking up colorClass " + colorClass);
 
         HashMap<String,Predicate<DObject>> preds = _preds.get(colorClass);
         Iterator iter = clrec.colors.values().iterator();
@@ -307,6 +308,68 @@ public class ColorConstraints
         preds.put("violet", new Normal());
         preds.put("purple", new Normal());
         preds.put("black", new Disabled());
+        preds.put("grey", new Normal());
+
+        _preds.put("armadillo_t",
+                preds = new HashMap<String,Predicate<DObject>>());
+        preds.put("old_gold", new Normal());
+        preds.put("silver", new Normal());
+        preds.put("bronze", new Normal());
+        preds.put("greencopper", new Normal());
+        preds.put("old", new Normal());
+        preds.put("bluesteel", new Normal());
+        preds.put("white", new Normal());
+        preds.put("dkbrn", new Normal());
+        preds.put("brown", new Normal());
+        preds.put("grey", new Normal());
+        preds.put("black", new Normal());
+        preds.put("purple", new Normal());
+
+        _preds.put("raccoon_p",
+                preds = new HashMap<String,Predicate<DObject>>());
+        preds.put("dkbrn", new Normal());
+        preds.put("leather", new Normal());
+        preds.put("brown", new Normal());
+        preds.put("beige", new Normal());
+        preds.put("orange", new Normal());
+        preds.put("gold", new Normal());
+        preds.put("yellow", new Normal());
+        preds.put("moss", new Normal());
+        preds.put("olive", new Normal());
+        preds.put("slate", new Normal());
+        preds.put("white", new Normal());
+        preds.put("grey", new Normal());
+        preds.put("black", new Normal());
+
+        _preds.put("raccoon_s",
+                preds = new HashMap<String,Predicate<DObject>>());
+        preds.put("leather", new Normal());
+        preds.put("brown", new Normal());
+        preds.put("beige", new Normal());
+        preds.put("orange", new Normal());
+        preds.put("gold", new Normal());
+        preds.put("yellow", new Normal());
+        preds.put("moss", new Normal());
+        preds.put("olive", new Normal());
+        preds.put("slate", new Normal());
+        preds.put("white", new Normal());
+        preds.put("grey", new Normal());
+        preds.put("black", new Normal());
+
+        _preds.put("buzzard_p",
+                preds = new HashMap<String,Predicate<DObject>>());
+        preds.put("leather", new Normal());
+        preds.put("brown", new Normal());
+        preds.put("beige", new Normal());
+        preds.put("pink", new Normal());
+        preds.put("red", new Normal());
+        preds.put("maroon", new Normal());
+        preds.put("orange", new Normal());
+        preds.put("gold", new Normal());
+        preds.put("olive", new Normal());
+        preds.put("blue", new Normal());
+        preds.put("slate", new Normal());
+        preds.put("violet", new Normal());
         preds.put("grey", new Normal());
     }
 }
