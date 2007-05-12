@@ -14,7 +14,6 @@ import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.RandomUtil;
-import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.servlet.JDBCTableSiteIdentifier;
 import com.samskivert.servlet.user.InvalidUsernameException;
 import com.samskivert.servlet.user.Password;

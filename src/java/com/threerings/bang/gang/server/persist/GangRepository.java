@@ -19,7 +19,6 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
-import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Table;
 
@@ -76,17 +75,10 @@ public class GangRepository extends JORARepository
         _buckleMask = _gtable.getFieldMask();
         _buckleMask.setModified("buckle");
         _buckleMask.setModified("bucklePrint");
-
-        // TEMP: init command orders based on join dates
-        BangServer.transitrepo.transition(GangRepository.class, "init_command_orders",
-            new TransitionRepository.Transition() {
-                public void run () throws PersistenceException {
-                    initCommandOrders();
-                }
-            });
     }
 
-    protected void initCommandOrders ()
+    // TEMP
+    public void initCommandOrders ()
         throws PersistenceException
     {
         // get a list of all the gangs by id

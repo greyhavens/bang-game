@@ -19,7 +19,6 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.SimpleRepository;
-import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Interator;
 import com.samskivert.util.StringUtil;

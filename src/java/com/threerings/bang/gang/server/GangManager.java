@@ -12,6 +12,7 @@ import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryListenerUnit;
+import com.samskivert.jdbc.TransitionRepository;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.ResultListener;
@@ -87,6 +88,15 @@ public class GangManager
                     }
                 });
         }
+
+        // TEMP: init command orders based on join dates
+        BangServer.transitrepo.transition(GangRepository.class, "init_command_orders",
+            new TransitionRepository.Transition() {
+                public void run () throws PersistenceException {
+                    _gangrepo.initCommandOrders();
+                }
+            });
+        // END TEMP
     }
 
     /**
