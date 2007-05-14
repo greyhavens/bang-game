@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -40,11 +40,11 @@ import com.jme.math.Matrix4f;
 /**
  * An utily class to store shader's uniform variables content. Used by the
  * <code>ShaderObjectsState</code> class.
- * 
+ *
  * @author Thomas Hourdel
  * @see com.jme.scene.state.ShaderObjectsState
  */
-public class ShaderUniform {
+public class ShaderUniform implements Cloneable {
 
     public final static int SU_INT = 0;
 
@@ -94,12 +94,12 @@ public class ShaderUniform {
 
     /** Used to transpose the matrix if wanted. * */
     public boolean transpose;
-    
+
     public FloatBuffer matrixBuffer = null;
 
     /**
      * Create a new uniform object.
-     * 
+     *
      * @param name
      *            uniform's name
      * @param type
@@ -108,6 +108,22 @@ public class ShaderUniform {
     public ShaderUniform(String name, int type) {
         this.name = name;
         this.type = type;
+    }
+
+    public Object clone () {
+        ShaderUniform other = null;
+        try {
+            other = (ShaderUniform)super.clone();
+            other.vint = (vint == null) ? null : (int[])vint.clone();
+            other.vfloat = (vfloat == null) ? null : (float[])vfloat.clone();
+            other.matrix2f = (matrix2f == null) ? null : (float[])matrix2f.clone();
+            other.matrix3f = (matrix3f == null) ? null : new Matrix3f(matrix3f);
+            other.matrix4f = (matrix4f == null) ? null : new Matrix4f(matrix4f);
+
+        } catch (CloneNotSupportedException e) {
+            // will not happen
+        }
+        return other;
     }
 
     public boolean equals(Object obj) {

@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -40,6 +40,7 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.state.CullState;
+import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
@@ -54,11 +55,11 @@ import com.jme.util.SortUtil;
  * spatials in the ortho bucket are rendered in ortho mode from highest to
  * lowest Z order. As a user, you shouldn't need to use this class directly. All
  * you'll need to do is call SceneElement.setRenderQueueMode .
- * 
+ *
  * @author Joshua Slack
  * @author Jack Lindamood (javadoc + SceneElementList only)
  * @see com.jme.scene.SceneElement#setRenderQueueMode(int)
- *  
+ *
  */
 public class RenderQueue {
 
@@ -76,19 +77,19 @@ public class RenderQueue {
 
     /** The renderer. */
     private Renderer renderer;
-    
+
     /** CullState for two pass transparency rendering. */
     private CullState tranCull;
-    
+
     /** ZBufferState for two pass transparency rendering. */
     private ZBufferState tranZBuff;
-    
+
     /** boolean for enabling / disabling two pass transparency rendering. */
     private boolean twoPassTransparent = true;
 
     /**
      * Creates a new render queue that will work with the given renderer.
-     * 
+     *
      * @param r
      */
     public RenderQueue(Renderer r) {
@@ -105,24 +106,24 @@ public class RenderQueue {
      * the TRANSPARENT queue will be rendered in two passes. On the first pass,
      * objects are rendered with front faces culled. On the second pass, objects
      * are rendered with back faces culled.
-     * 
+     *
      * This allows complex transparent objects to be rendered whole without
      * concern as to the order of the faces drawn.
-     * 
+     *
      * @param enabled
      *            set true to turn on two pass transparency rendering
      */
     public void setTwoPassTransparency(boolean enabled) {
         twoPassTransparent = enabled;
     }
-    
+
     /**
      * @return true if two pass transparency rendering is enabled.
      */
     public boolean isTwoPassTransparency() {
         return twoPassTransparent;
     }
-    
+
     /**
      * Creates the buckets needed.
      */
@@ -139,7 +140,7 @@ public class RenderQueue {
      * Add a given SceneElement to the RenderQueue. This is how jME adds data tothe
      * render queue. As a user, in 99% of casees you'll want to use the function
      * Spatail.setRenderQueueMode and let jME add the item to the queue itself.
-     * 
+     *
      * @param s
      *            SceneElement to add.
      * @param bucket
@@ -168,7 +169,7 @@ public class RenderQueue {
     /**
      * Calculates the distance from a spatial to the camera. Distance is a
      * squared distance.
-     * 
+     *
      * @param spat
      *            SceneElement to distancize.
      * @return Distance from SceneElement to camera.
@@ -243,7 +244,7 @@ public class RenderQueue {
     private void renderTransparentBucket() {
         transparentBucket.sort();
             for (int i = 0; i < transparentBucket.listSize; i++) {
-                SceneElement obj = transparentBucket.list[i]; 
+                SceneElement obj = transparentBucket.list[i];
 
                 if (twoPassTransparent && obj instanceof GeomBatch) {
                     GeomBatch batch = (GeomBatch)obj;
@@ -255,8 +256,8 @@ public class RenderQueue {
                     // first render back-facing tris only
                     tranCull.setCullMode(CullState.CS_FRONT);
                     obj.draw(renderer);
-                    
-                    
+
+
                     // then render front-facing tris only
                     batch.states[RenderState.RS_ZBUFFER] = oldZState;
                     tranCull.setCullMode(CullState.CS_BACK);
@@ -290,7 +291,7 @@ public class RenderQueue {
     /**
      * This class is a special function list of SceneElement objects for render
      * queueing.
-     * 
+     *
      * @author Jack Lindamood
      * @author Three Rings - better sorting alg.
      */
@@ -312,7 +313,7 @@ public class RenderQueue {
 
         /**
          * Adds a spatial to the list. List size is doubled if there is no room.
-         * 
+         *
          * @param s
          *            The spatial to add.
          */
@@ -359,7 +360,7 @@ public class RenderQueue {
             if ((o1.getType() & SceneElement.GEOMBATCH & o2.getType()) != 0) {
                 return compareByStates((GeomBatch) o1, (GeomBatch) o2);
             }
-            
+
             float d1 = distanceToCam(o1);
             float d2 = distanceToCam(o2);
             if (d1 == d2)
@@ -367,7 +368,7 @@ public class RenderQueue {
             else if (d1 < d2)
                 return -1;
             else
-                return 1;           
+                return 1;
         }
 
         /**
@@ -376,16 +377,28 @@ public class RenderQueue {
          * states as well, such as lighting or material.
          */
         private int compareByStates(GeomBatch g1, GeomBatch g2) {
+            GLSLShaderObjectsState ss1 = (GLSLShaderObjectsState)g1.states[RenderState.RS_GLSL_SHADER_OBJECTS];
+            GLSLShaderObjectsState ss2 = (GLSLShaderObjectsState)g2.states[RenderState.RS_GLSL_SHADER_OBJECTS];
+            if (ss1 != ss2) {
+                if (ss1 == null && ss2 != null) return -1;
+                else if (ss2 == null && ss1 != null) return 1;
+                int pid1 = ss1.getProgramID();
+                int pid2 = ss2.getProgramID();
+                if (pid1 != pid2) {
+                    return (pid1 < pid2) ? -1 : 1;
+                }
+            }
+
             TextureState ts1 = (TextureState)g1.states[RenderState.RS_TEXTURE];
             TextureState ts2 = (TextureState)g2.states[RenderState.RS_TEXTURE];
             if (ts1 == ts2) return 0;
             else if (ts1 == null && ts2 != null) return -1;
             else if (ts2 == null && ts1 != null) return  1;
-            
+
             for (int x = 0, nots = Math.min(ts1.getNumberOfSetTextures(), ts2.getNumberOfSetTextures()); x < nots; x++) {
-            	
+
             	int tid1 = ts1.getTextureID(x);
-            	int tid2 = ts2.getTextureID(x);            	
+            	int tid2 = ts2.getTextureID(x);
             	if (tid1 == tid2)
             		continue;
             	else if (tid1 < tid2)
