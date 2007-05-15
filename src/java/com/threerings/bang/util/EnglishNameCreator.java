@@ -443,6 +443,7 @@ public class EnglishNameCreator extends NameCreator
 
         CollectionUtil.addAll(GANG_SUFF_TABLE, GANG_SUFFIXES);
         CollectionUtil.addAll(AI_GANG_TABLE, AI_GANG_NAMES);
+        CollectionUtil.addAll(GANG_TABLE, GANG_NAMES);
 
         CollectionUtil.addAll(FAMILY_TABLE, SHARED_FAMILY);
         for (char cc = 'A'; cc <= 'Z'; cc++) {

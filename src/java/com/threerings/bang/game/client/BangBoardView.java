@@ -798,7 +798,7 @@ public class BangBoardView extends BoardView
                 new Rectangle(0, 340, BangUI.MIN_WIDTH, 30));
         if (_bconfig.rated) {
             _pmarquees.add(new BLabel(msgs.get("m.ranked"), "marquee_subtitle"),
-                    new Rectangle(0, 284, BangUI.MIN_WIDTH, 30));
+                    new Rectangle(0, 224, BangUI.MIN_WIDTH, 30));
         }
 
         // add the marquee window

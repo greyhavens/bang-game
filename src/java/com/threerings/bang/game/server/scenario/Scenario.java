@@ -393,7 +393,7 @@ public abstract class Scenario
         // scale the player's earnings based on the percentage of the round
         // they completed
         return (precords[pidx].finishedTick[ridx] * BASE_EARNINGS[defeated] /
-            rounds[ridx].duration - 1);
+            (rounds[ridx].duration - 1));
     }
 
     /**
