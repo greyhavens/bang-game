@@ -172,8 +172,8 @@
     <component cclass="male/familiar" name="buzzard"/>
   </article>
 
-  <article name="male_armadillo" townId="frontier_town" slot="familiar" scrip="3000" coins="2" qualifier="familiar" colors="armadillo_p">
-    <component cclass="male/familiar" name="armadillo_t"/>
+  <article name="male_armadillo" townId="frontier_town" slot="familiar" scrip="3000" coins="2" qualifier="familiar" colors="armadillo_t">
+    <component cclass="male/familiar" name="armadillo"/>
   </article>
 
 
@@ -632,8 +632,8 @@
     <component cclass="female/familiar" name="buzzard"/>
   </article>
 
-  <article name="female_armadillo" townId="frontier_town" slot="familiar" scrip="3000" coins="2" qualifier="familiar" colors="armadillo_p">
-    <component cclass="female/familiar" name="armadillo_t"/>
+  <article name="female_armadillo" townId="frontier_town" slot="familiar" scrip="3000" coins="2" qualifier="familiar" colors="armadillo_t">
+    <component cclass="female/familiar" name="armadillo"/>
   </article>
 
 
