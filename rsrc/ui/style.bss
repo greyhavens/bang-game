@@ -1162,9 +1162,12 @@ info_chat_label {
 
 //
 // Pre-game styles
-
 player_marquee_cont {
   padding: 10;
+}
+
+team_marquee_cont {
+  padding: 5;
 }
 
 player_marquee_label {
@@ -1209,6 +1212,100 @@ player_marquee_label6 {
 player_marquee_label7 {
   parent: "player_marquee_label";
   background: image "ui/frames/big_scroll7.png" centerx;
+}
+
+marquee_vs {
+  font: "Old Town" bold 58;
+  color: #FFFFFF;
+  text-effect: outline;
+  effect-color: #000000;
+  padding: 0 0 26 0;
+}
+
+team_marquee_scroll1 {
+  font: "Dom Casual" plain 22;
+  color: #FFFFFF;
+  text-align:center;
+  vertical-align: center;
+  background: image "ui/frames/team_scroll1.png" centerx;
+  padding: 0 0 7 0;
+}
+
+team_marquee_scroll2 {
+  parent: "team_marquee_scroll1";
+  background: image "ui/frames/team_scroll2.png" centerx;
+}
+
+team_marquee_scroll3 {
+  parent: "team_marquee_scroll1";
+  background: image "ui/frames/team_scroll3.png" centerx;
+}
+
+team_marquee_scroll4 {
+  parent: "team_marquee_scroll1";
+  background: image "ui/frames/team_scroll4.png" centerx;
+}
+
+team_marquee_scroll5 {
+  parent: "team_marquee_scroll1";
+  background: image "ui/frames/team_scroll5.png" centerx;
+  padding: 0 11 7 11;
+}
+
+team_marquee_scroll6 {
+  parent: "team_marquee_scroll5";
+  background: image "ui/frames/team_scroll6.png" centerx;
+}
+
+team_marquee_scroll7 {
+  parent: "team_marquee_scroll5";
+  background: image "ui/frames/team_scroll7.png" centerx;
+}
+
+team_marquee_label {
+  font: "Dom Casual" plain 22;
+  color: #FFFFFF;
+  text-align:center;
+  vertical-align: center;
+}
+
+gang_marquee_label1 {
+  font: "Dom Casual" plain 16;
+  color: #FFFFFF;
+  background: image "ui/frames/small_scroll1.png" centerx;
+  text-align: center;
+  vertical-align: center;
+  padding: 0 7 5 7;
+}
+
+gang_marquee_label2 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/small_scroll2.png" centerx;
+}
+
+gang_marquee_label3 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/small_scroll3.png" centerx;
+}
+
+gang_marquee_label4 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/small_scroll4.png" centerx;
+}
+
+gang_marquee_label5 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/gang_scroll5.png" centerx;
+}
+
+gang_marquee_label6 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/gang_scroll6.png" centerx;
+}
+
+gang_marquee_label7 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/gang_scroll7.png" centerx;
 }
 
 pick_subtitle {
@@ -1260,7 +1357,10 @@ marquee_title {
 
 marquee_subtitle {
   font: "Dom Casual" bold 24;
+  text-align: center;
   color: #FFFFFF;
+  text-effect: shadow;
+  effect-color: #000000;
 }
 
 marquee {
