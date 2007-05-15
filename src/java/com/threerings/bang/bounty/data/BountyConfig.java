@@ -18,6 +18,7 @@ import com.threerings.stats.data.StringSetStat;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Badge;
+import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Star;
@@ -64,6 +65,12 @@ public class BountyConfig extends SimpleStreamableObject
 
         /** The avatar for this opponent. */
         public AvatarInfo avatar = new AvatarInfo();
+
+        /** This opponent's gang. */
+        public String gang;
+
+        /** The buckle for this opponent. */
+        public BuckleInfo buckle = new BuckleInfo();
     }
 
     /** Defines a speaker and text for a quote. */
@@ -153,6 +160,12 @@ public class BountyConfig extends SimpleStreamableObject
 
     /** An avatar for the outlaw. */
     public AvatarInfo outlaw = new AvatarInfo();
+
+    /** The gang name for the outlaw. */
+    public String gang;
+
+    /** The buckle for the outlaw. */
+    public BuckleInfo buckle = new BuckleInfo();
 
     /** Whether to show bars over the outlaw when completed. */
     public boolean showBars = true;
@@ -274,6 +287,8 @@ public class BountyConfig extends SimpleStreamableObject
         Opponent outop = new Opponent();
         outop.name = title;
         outop.avatar = outlaw;
+        outop.gang = gang;
+        outop.buckle = buckle;
         return outop;
     }
 
@@ -293,9 +308,15 @@ public class BountyConfig extends SimpleStreamableObject
         if (opp != null) {
             oppai.handle = new Handle(opp.name);
             oppai.avatar = opp.avatar;
+            if (opp.gang != null) {
+                oppai.gang = new Handle(opp.gang);
+                oppai.buckle = opp.buckle;
+            }
         } else if (index == players-1) {
             oppai.handle = new Handle(title);
             oppai.avatar = outlaw;
+            oppai.gang = new Handle(gang);
+            oppai.buckle = buckle;
         }
 
         // don't let a malformed avatarInfo sneak through
@@ -368,9 +389,12 @@ public class BountyConfig extends SimpleStreamableObject
         config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);
         config.outlaw.print = StringUtil.parseIntArray(props.getProperty("outlaw_print", ""));
         config.outlaw.image = getImageProperty(which, props, "outlaw_image");
+        config.buckle.print = StringUtil.parseIntArray(props.getProperty("buckle_print", ""));
+        config.buckle.image = getImageProperty(which, props, "buckle_image");
         config.showBars = !BangUtil.getBooleanProperty(which, props, "no_bars", false);
         config.title = props.getProperty("title", "");
         config.description = props.getProperty("descrip", "");
+        config.gang = props.getProperty("gang", "");
 
         for (String game : StringUtil.parseStringArray(props.getProperty("games", ""))) {
             GameInfo info = new GameInfo();
@@ -382,11 +406,19 @@ public class BountyConfig extends SimpleStreamableObject
                 String name = props.getProperty(prefix + ".name");
                 if (name != null) {
                     info.opponents[ii] = new Opponent();
-                    info.opponents[ii].name =  name;
+                    info.opponents[ii].name = name;
                     info.opponents[ii].avatar.print =
                         StringUtil.parseIntArray(props.getProperty(prefix + ".print", ""));
                     info.opponents[ii].avatar.image =
                         getImageProperty(which, props, prefix + ".image");
+                    String gang = props.getProperty(prefix + ".gang");
+                    if (gang != null) {
+                        info.opponents[ii].gang = gang;
+                        info.opponents[ii].buckle.print = StringUtil.parseIntArray(
+                                props.getProperty(prefix + ".buckle_print", ""));
+                        info.opponents[ii].buckle.image =
+                            getImageProperty(which, props, prefix + ".buckle_image");
+                    }
                 }
             }
             info.preGameQuote = parseQuote(which, props, game + ".pregame");

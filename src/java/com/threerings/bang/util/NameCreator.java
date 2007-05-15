@@ -14,6 +14,9 @@ public abstract class NameCreator
      * name. For example: "Robo" Pete, "Tick-tock" Bart, "Clanky" Bob, etc. */
     public abstract HashSet<String> getAIPrefixes (boolean isMale);
 
+    /** Returns a set of gang names for AIs */
+    public abstract HashSet<String> getAIGangs ();
+
     /** Returns a set of prefixes that can be prepended to a root to make a
      * Big Shot name. For example: "Handy" Jack, "Faithful" Alfred, etc. */
     public abstract HashSet<String> getBigShotPrefixes (boolean isMale);
@@ -41,4 +44,7 @@ public abstract class NameCreator
     /** Returns a set of suffixes that can be appended to a root to make a
      * gang name. For example: The Dalton "Gang", The Hatfield "Clan", etc. */
     public abstract HashSet<String> getGangSuffixes ();
+
+    /** Returns a set of gang names. */
+    public abstract HashSet<String> getGangNames ();
 }

@@ -62,9 +62,11 @@ import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.GuestHandle;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.Rating;
@@ -73,6 +75,7 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
+import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangAI;
@@ -919,7 +922,10 @@ public class BangManager extends GameManager
             if (isAI(ii)) {
                 prec.playerId = -1;
                 prec.ratings = new HashMap<String, Rating>();
-                pinfo[ii].avatar = ((BangAI)_AIs[ii]).avatar;
+                BangAI ai = (BangAI)_AIs[ii];
+                pinfo[ii].avatar = ai.avatar;
+                pinfo[ii].gang = ai.gang;
+                pinfo[ii].buckle = ai.buckle;
 
             } else if (isActivePlayer(ii)) {
                 prec.user = (PlayerObject)getPlayer(ii);
@@ -945,6 +951,10 @@ public class BangManager extends GameManager
                 }
                 if (prec.gangId > 0) {
                     BangServer.gangmgr.populatePlayerInfo(pinfo[ii], prec.user);
+                } else {
+                    pinfo[ii].gang =
+                        new Handle(NameFactory.getCreator().getGangNames().iterator().next());
+                    pinfo[ii].buckle = new BuckleInfo(UNAFFIL_BUCKLE);
                 }
             }
         }
@@ -3379,4 +3389,7 @@ public class BangManager extends GameManager
     protected static final StatType[] MAX_STATS = {
         StatType.CONSEC_KILLS, StatType.CONSEC_KILLS,
     };
+
+    /** The buckle print for unaffiliated cowpokes. */
+    protected static final String UNAFFIL_BUCKLE = "ui/status/unaffiliated_buckle.png";
 }

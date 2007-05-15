@@ -19,6 +19,12 @@ public class EnglishNameCreator extends NameCreator
     }
 
     @Override // documentation inherited
+    public HashSet<String> getAIGangs ()
+    {
+        return AI_GANG_TABLE;
+    }
+
+    @Override // documentation inherited
     public HashSet<String> getBigShotPrefixes (boolean isMale)
     {
         return BSHOT_PREF_TABLE;
@@ -60,6 +66,12 @@ public class EnglishNameCreator extends NameCreator
         return GANG_SUFF_TABLE;
     }
 
+    @Override // documentation inherited
+    public HashSet<String> getGangNames ()
+    {
+        return GANG_TABLE;
+    }
+
     protected static HashSet<String> MALE_PREF_TABLE = new HashSet<String>();
     protected static HashSet<String> MALE_ROOT_TABLE = new HashSet<String>();
     protected static HashSet<String> MALE_SUFF_TABLE = new HashSet<String>();
@@ -75,6 +87,8 @@ public class EnglishNameCreator extends NameCreator
     protected static HashSet<String> BSHOT_PREF_TABLE = new HashSet<String>();
 
     protected static HashSet<String> GANG_SUFF_TABLE = new HashSet<String>();
+    protected static HashSet<String> GANG_TABLE = new HashSet<String>();
+    protected static HashSet<String> AI_GANG_TABLE = new HashSet<String>();
 
     protected static final String[] SHARED_PREFIXES = {
         "Anasazi",
@@ -401,6 +415,14 @@ public class EnglishNameCreator extends NameCreator
         "Tribe",
     };
 
+    protected static final String[] GANG_NAMES = {
+        "Drifter",
+    };
+
+    protected static final String[] AI_GANG_NAMES = {
+        "Bucket Heads",
+    };
+
     static {
         CollectionUtil.addAll(MALE_PREF_TABLE, SHARED_PREFIXES);
         CollectionUtil.addAll(MALE_PREF_TABLE, MALE_PREFIXES);
@@ -420,6 +442,7 @@ public class EnglishNameCreator extends NameCreator
         CollectionUtil.addAll(BSHOT_PREF_TABLE, BIG_SHOT_PREFIXES);
 
         CollectionUtil.addAll(GANG_SUFF_TABLE, GANG_SUFFIXES);
+        CollectionUtil.addAll(AI_GANG_TABLE, AI_GANG_NAMES);
 
         CollectionUtil.addAll(FAMILY_TABLE, SHARED_FAMILY);
         for (char cc = 'A'; cc <= 'Z'; cc++) {

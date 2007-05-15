@@ -3,9 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
@@ -48,6 +46,7 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Interval;
@@ -77,6 +76,7 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.avatar.client.BuckleView;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.bui.WindowFader;
@@ -737,8 +737,16 @@ public class BangBoardView extends BoardView
             return;
         }
 
-        // create marquees with the avatars of all the participants
-        _pmarquees = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch()) {
+        MessageBundle msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
+
+        // recreate the title marquee so that it is positioned properly
+        clearMarquee(0f);
+        if (_bangobj.marquee != null) {
+            addMarquee(_marquee = createMarqueeLabel(msgs.xlate(_bangobj.marquee)),
+                    _ctx.getRenderer().getWidth()/2, _ctx.getRenderer().getHeight()/2 - 90);
+        }
+
+        _pmarquees = new BWindow(_ctx.getStyleSheet(), new AbsoluteLayout()) {
             public boolean isOverlay () {
                 return true;
             }
@@ -746,33 +754,57 @@ public class BangBoardView extends BoardView
                return null;
             }
         };
+        _pmarquees.setPreferredSize(BangUI.MIN_WIDTH, BangUI.MIN_HEIGHT);
 
-        // set up two rows with two slots each that will hold our marquee bits
-        GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
-        layout.setGap(10);
-        BContainer info = new BContainer(layout);
-        BContainer[] cols = new BContainer[2];
-        _pmarquees.add(cols[0] = new BContainer(layout));
-        _pmarquees.add(info);
-        _pmarquees.add(cols[1] = new BContainer(layout));
-
-        // create avatar displays for each player in the game
-        for (int ii = 0; ii < _bangobj.players.length; ii++) {
-            cols[ii%2].add(createPlayerMarquee(ii));
+        // add the player avatars and gang buckles
+        BContainer players = new BContainer(
+                GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(0));
+        BContainer gangs = new BContainer(
+                GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(2));
+        int pcount = _bangobj.players.length;
+        boolean[] added = new boolean[pcount];
+        boolean coop = true;
+        for (int ii = 1; ii < _bangobj.teams.length; ii++) {
+            if (_bangobj.teams[ii-1] != _bangobj.teams[ii]) {
+                coop = false;
+                break;
+            }
         }
+        for (int ii = 0; ii < _bangobj.players.length; ii++) {
+            if (coop) {
+                players.add(createPlayerMarquee(ii));
+                if (ii > 0) {
+                    gangs.add(new BLabel(msgs.get("m.and"), "marquee_vs"));
+                }
+                gangs.add(createGangMarquee(ii));
+            } else if (!added[_bangobj.teams[ii]]) {
+                players.add(createTeamMarquee(_bangobj.teams[ii]));
+                if (ii > 0) {
+                    gangs.add(new BLabel(msgs.get("m.vs"), "marquee_vs"));
+                }
+                gangs.add(createTeamGangMarquee(_bangobj.teams[ii]));
+                added[_bangobj.teams[ii]] = true;
+            }
+        }
+        _pmarquees.add(players, new Rectangle(0, 368, BangUI.MIN_WIDTH, 350));
+        _pmarquees.add(gangs, new Rectangle(0, 50, BangUI.MIN_WIDTH, 180));
 
         // add some additional information in the center colum
+        BContainer info = GroupLayout.makeVBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(
             "m.marquee_header", MessageBundle.taint(String.valueOf((_bangobj.roundId + 1))),
             _bangobj.scenario.getName());
-        info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, msg), "marquee_subtitle"));
-        info.add(new Spacer(25, 100));
+        _pmarquees.add(new BLabel(msgs.xlate(msg), "marquee_subtitle"),
+                new Rectangle(0, 340, BangUI.MIN_WIDTH, 30));
         if (_bconfig.rated) {
-            info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, "m.ranked"), "marquee_subtitle"));
+            _pmarquees.add(new BLabel(msgs.get("m.ranked"), "marquee_subtitle"),
+                    new Rectangle(0, 284, BangUI.MIN_WIDTH, 30));
         }
 
-        // create and add the marquees and the whole window
-        _pmarquees.setBounds(0, 0, _ctx.getDisplay().getWidth(), _ctx.getDisplay().getHeight());
+        // add the marquee window
+        int x = (_ctx.getDisplay().getWidth() - BangUI.MIN_WIDTH) / 2,
+            y = (_ctx.getDisplay().getHeight() - BangUI.MIN_HEIGHT) / 2;
+        _pmarquees.setBounds(x, y, BangUI.MIN_WIDTH, BangUI.MIN_HEIGHT);
         _ctx.getRootNode().addWindow(_pmarquees);
     }
 
@@ -876,16 +908,85 @@ public class BangBoardView extends BoardView
     protected BContainer createPlayerMarquee (int pidx)
     {
         // create the marquee
-        BContainer marquee = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER));
-        ((GroupLayout)marquee.getLayoutManager()).setGap(-1);
-        marquee.setStyleClass("player_marquee_cont");
+        BContainer marquee = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).setGap(-1));
+        marquee.setStyleClass("team_marquee_cont");
         if (_bangobj.playerInfo[pidx].avatar != null) {
-            AvatarView aview = new AvatarView(_ctx, 2, false, false);
+            AvatarView aview = new AvatarView(_ctx, 0.5f*0.85f);
             aview.setAvatar(_bangobj.playerInfo[pidx].avatar);
             marquee.add(aview);
         }
         marquee.add(new BLabel(_bangobj.players[pidx].toString(),
-                    "player_marquee_label" + colorLookup[pidx + 1]));
+                    "team_marquee_scroll" + colorLookup[pidx + 1]));
+        return marquee;
+    }
+
+    /**
+     * Creates and resturns a team view for the opening marquee.
+     */
+    protected BContainer createTeamMarquee (int tidx)
+    {
+        int color = 0;
+        int pcount = _bangobj.players.length;
+        for (int ii = 0; ii < pcount; ii++) {
+            if (_bangobj.teams[ii] == tidx) {
+                color = Math.max(color, colorLookup[ii + 1]);
+            }
+        }
+        BContainer marquee = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).setGap(-1));
+        marquee.setStyleClass("team_marquee_cont");
+        BContainer avatars = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(0));
+        BContainer names = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(10));
+        names.setStyleClass("team_marquee_scroll" + color);
+        for (int ii = 0; ii < pcount; ii++) {
+            if (_bangobj.teams[ii] == tidx) {
+                AvatarView aview = new AvatarView(_ctx, 0.5f*0.85f);
+                aview.setAvatar(_bangobj.playerInfo[ii].avatar);
+                avatars.add(aview);
+                BLabel name = new BLabel(_bangobj.players[ii].toString(), "team_marquee_label");
+                name.setFit(BLabel.Fit.SCALE);
+                name.setPreferredSize(226, 27);
+                names.add(name);
+            }
+        }
+        marquee.add(avatars);
+        marquee.add(names);
+        return marquee;
+    }
+
+    /**
+     * Creates and returns a team gang view for the opening marquee.
+     */
+    protected BContainer createTeamGangMarquee (int tidx)
+    {
+        int color = 0;
+        int pidx = 0;
+        for (int ii = 0; ii < _bangobj.teams.length; ii++) {
+            if (_bangobj.teams[ii] == tidx) {
+                if (colorLookup[ii + 1] > color) {
+                    color = colorLookup[ii + 1];
+                    pidx = ii;
+                }
+            }
+        }
+        return createGangMarquee(pidx);
+    }
+    /**
+     * Creates and returns a gang view for the opening marquee.
+     */
+    protected BContainer createGangMarquee (int pidx)
+    {
+        BContainer marquee = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER));
+        marquee.setStyleClass("team_marquee_cont");
+        if (_bangobj.playerInfo[pidx].buckle != null) {
+            BuckleView bview = new BuckleView(_ctx, 2);
+            bview.setBuckle(_bangobj.playerInfo[pidx].buckle);
+            marquee.add(bview);
+        }
+        BLabel gangLabel = new BLabel(_bangobj.playerInfo[pidx].gang.toString(),
+                    "gang_marquee_label" + colorLookup[pidx + 1]);
+        gangLabel.setFit(BLabel.Fit.SCALE);
+        gangLabel.setPreferredSize(145, 19);
+        marquee.add(gangLabel);
         return marquee;
     }
 

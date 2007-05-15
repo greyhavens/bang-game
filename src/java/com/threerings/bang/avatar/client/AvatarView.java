@@ -111,6 +111,14 @@ public class AvatarView extends BaseAvatarView
         setPreferredSize(new Dimension(pwid, phei));
     }
 
+    public AvatarView (BasicContext ctx, float scale)
+    {
+        super(ctx, scale);
+        setStyleClass("avatar_view");
+
+        setPreferredSize(new Dimension((int)(WIDTH*scale), (int)(HEIGHT*scale)));
+    }
+
     /**
      * Sets the avatar to display.
      */

@@ -25,6 +25,12 @@ public class BuckleInfo extends BaseAvatarInfo
         this.print = print;
     }
 
+    /** Creates an info record with only an image. */
+    public BuckleInfo (String image)
+    {
+        this.image = image;
+    }
+
     // documentation inherited
     public CharacterDescriptor decodePrint (BasicContext ctx)
     {

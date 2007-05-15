@@ -51,6 +51,17 @@ public abstract class BaseAvatarView extends BLabel
         BasicContext ctx, final BaseAvatarInfo avatar, final int reduction,
         final ResultListener<BImage> receiver)
     {
+        getFramableImage(ctx, avatar, 1f/reduction, receiver);
+    }
+
+    /**
+     * Obtains a framable (skinnier) image for the specified avatar, scaled by one over the
+     * specified factor.
+     */
+    public static void getFramableImage (
+        BasicContext ctx, final BaseAvatarInfo avatar, final float reduction,
+        final ResultListener<BImage> receiver)
+    {
         getImage(ctx, avatar, new ResultListener<BufferedImage>() {
             public void requestCompleted (BufferedImage base) {
                 // scale our crop frame to the size of the image we got back (which might not be
@@ -62,8 +73,8 @@ public abstract class BaseAvatarView extends BLabel
                 BufferedImage cropped = base.getSubimage(
                     (base.getWidth()-fwidth)/2, (base.getHeight()-fheight)/2, fwidth, fheight);
                 // compute our reduction based on the canonical width/height
-                int sw = avatar.getFramedWidth()/reduction,
-                    sh = avatar.getFramedHeight()/reduction;
+                int sw = (int)(avatar.getFramedWidth() * reduction),
+                    sh = (int)(avatar.getFramedHeight() * reduction);
                 receiver.requestCompleted(
                     new BImage(cropped.getScaledInstance(sw, sh, BufferedImage.SCALE_SMOOTH)));
             }
@@ -143,9 +154,14 @@ public abstract class BaseAvatarView extends BLabel
 
     public BaseAvatarView (BasicContext ctx, int scale)
     {
+        this(ctx, 1f / scale);
+    }
+
+    public BaseAvatarView (BasicContext ctx, float scale)
+    {
         super("");
         _ctx = ctx;
-        _scale = scale;
+        _fscale = scale;
 
         setOrientation(VERTICAL);
         setFit(Fit.SCALE);
@@ -175,7 +191,7 @@ public abstract class BaseAvatarView extends BLabel
         // if we have a custom image, just use that directly
         String ipath = _avatar.getImage();
         if (ipath != null) {
-            setImage(_ctx.getImageCache().getBImage(ipath, 2f/_scale, false));
+            setImage(_ctx.getImageCache().getBImage(ipath, 2f*_fscale, false));
 
         } else if (_avatar.isValid()) {
             ResultListener<BImage> rl = new ResultListener<BImage>() {
@@ -186,10 +202,10 @@ public abstract class BaseAvatarView extends BLabel
                 }
             };
             if (_frame != null) {
-                getFramableImage(_ctx, avatar, _scale, rl);
+                getFramableImage(_ctx, avatar, _fscale, rl);
             } else {
-                getImage(_ctx, avatar, avatar.getWidth()/_scale, avatar.getHeight()/_scale,
-                    _mirror, rl);
+                getImage(_ctx, avatar, (int)(avatar.getWidth()*_fscale),
+                        (int)(avatar.getHeight()*_fscale), _mirror, rl);
             }
         }
     }
@@ -354,7 +370,7 @@ public abstract class BaseAvatarView extends BLabel
     protected BasicContext _ctx;
     protected BImage _frame, _scroll, _image;
     protected BaseAvatarInfo _avatar;
-    protected int _scale;
+    protected float _fscale;
     protected boolean _mirror;
 
     /** A mapping of active resolvers. */

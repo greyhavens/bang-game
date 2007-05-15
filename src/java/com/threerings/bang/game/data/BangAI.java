@@ -12,6 +12,7 @@ import com.threerings.parlor.game.data.GameAI;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.NameFactory;
+import com.threerings.bang.data.BuckleInfo;
 
 /**
  * Contains configuration parameters for our AIs.
@@ -26,6 +27,12 @@ public class BangAI extends GameAI
 
     /** This AI's name. */
     public Handle handle;
+
+    /** The buckle for this AI. */
+    public BuckleInfo buckle;
+
+    /** The gang name. */
+    public Handle gang;
 
     /** A blank constructor for serialization. */
     public BangAI ()
@@ -59,6 +66,11 @@ public class BangAI extends GameAI
 
         // pick a random avatar finger print
         ai.avatar = getAvatar(ai.isMale);
+
+        // pick a gang name
+        HashSet<String> gangs = NameFactory.getCreator().getAIGangs();
+        ai.gang = new Handle(RandomUtil.pickRandom(gangs));
+        ai.buckle = new BuckleInfo(AI_BUCKLE);
 
         return ai;
     }
@@ -156,4 +168,6 @@ public class BangAI extends GameAI
          { 166, 85, 97, 104, 124, 205, 209, 67108955, 302841936 },
         }*/
     };
+
+    protected static final String AI_BUCKLE = "ui/status/tin_cans_buckle.png";
 }
