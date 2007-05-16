@@ -893,7 +893,9 @@
   <!-- cleans JME which doesn't fit into our standard scheme -->
   <target name="cleanjme">
     <echo>Cleaning in jme...</echo>
-    <ant dir="${projects.dir}/jme" target="clean" inheritAll="false"/>
+    <delete dir="${projects.dir}/jme/build"/>
+    <delete dir="${projects.dir}/jme/data/doc"/>
+    <delete><fileset dir="${projects.dir}/jme/target" includes="jme*.jar"/></delete>
   </target>
 
   <!-- rebuilds JME which doesn't fit into our standard scheme -->
