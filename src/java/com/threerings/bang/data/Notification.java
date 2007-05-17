@@ -97,6 +97,14 @@ public abstract class Notification
     }
 
     /**
+     * Returns the delay in seconds before the buttons become active.
+     */
+    public int getEnabledDelay ()
+    {
+        return 0;
+    }
+
+    /**
      * Returns the index of the response to use when automatically denying
      * notifications from muted sources.
      */

@@ -94,6 +94,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.data.Warning;
 
 import com.threerings.bang.server.persist.FolkRecord;
 import com.threerings.bang.server.persist.PardnerRecord;
@@ -1065,6 +1066,21 @@ public class PlayerManager
     }
 
     /**
+     * Sends a warning message to the specified player.
+     */
+    public void sendWarningMessage (
+        final PlayerObject user, boolean tempBan, String message)
+    {
+        user.addToNotifications(
+            new Warning(tempBan ? Warning.TEMP_BAN : Warning.WARNING, message,
+                new Warning.ResponseHandler() {
+            public void handleResponse (int resp, InvocationService.ConfirmListener listener) {
+                handleWarningResponse(user, listener);
+            }
+        }));
+    }
+
+    /**
      * Checks for any players that should be purged from the system.
      */
     public void purgeExpiredPlayers ()
@@ -1283,6 +1299,27 @@ public class PlayerManager
         } finally {
             player.commitTransaction();
         }
+    }
+
+    /**
+     * Processes the response to a warning message.
+     */
+    protected void handleWarningResponse (
+        final PlayerObject user, final InvocationService.ConfirmListener listener)
+    {
+        // update the database
+        BangServer.invoker.postUnit(new PersistingUnit("handleWarningResponse", listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                _playrepo.clearWarning(user.playerId);
+            }
+            public void handleSuccess () {
+                listener.requestProcessed();
+            }
+            public String getFailureMessage () {
+                return "Failed to clear warning [who=" + user.who() + "]";
+            }
+        });
     }
 
     /**

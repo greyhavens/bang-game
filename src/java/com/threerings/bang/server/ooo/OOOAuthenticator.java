@@ -315,6 +315,13 @@ public class OOOAuthenticator extends BangAuthenticator
             return;
         }
 
+        if (prec != null && prec.banExpires != null &&
+                prec.banExpires.after(new Date(System.currentTimeMillis()))) {
+            log.info("Rejecting temp banned account [who=" + username + "].");
+            rdata.code = TEMP_BANNED + prec.banExpires.getTime() + "|" + prec.warning;
+            return;
+        }
+
         // check whether we're restricting non-insider login
         if (!RuntimeConfig.server.openToPublic && (anonymous ||
                     (!user.holdsToken(OOOUser.INSIDER) && !user.holdsToken(OOOUser.TESTER) &&

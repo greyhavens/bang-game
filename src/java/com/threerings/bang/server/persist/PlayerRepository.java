@@ -405,6 +405,48 @@ public class PlayerRepository extends JORARepository
         });
     }
 
+    /**
+     * Sets a temp ban expiration date and reason on an account.
+     */
+    public void setTempBan (String accountName, Timestamp expires, String warning)
+        throws PersistenceException
+    {
+        String query = "update PLAYERS set BAN_EXPIRES = '" + expires + "', WARNING = " +
+            JDBCUtil.escape(warning) + " where ACCOUNT_NAME = " + JDBCUtil.escape(accountName);
+        checkedUpdate(query, 1);
+    }
+
+    /**
+     * Sets a warning on an account.
+     */
+    public void setWarning (String accountName, String warning)
+        throws PersistenceException
+    {
+        String query = "update PLAYERS set WARNING = " + JDBCUtil.escape(warning) +
+            " where ACCOUNT_NAME = " + JDBCUtil.escape(accountName);
+        checkedUpdate(query, 1);
+    }
+
+    /**
+     * Clears a temp ban from an account.
+     */
+    public void clearTempBan (int playerId)
+        throws PersistenceException
+    {
+        String query = "update PLAYERS set BAN_EXPIRES = NULL where PLAYER_ID = " + playerId;
+        checkedUpdate(query, 1);
+    }
+
+    /**
+     * Clears a warning from an account.
+     */
+    public void clearWarning (int playerId)
+        throws PersistenceException
+    {
+        String query = "update PLAYERS set WARNING = NULL where PLAYER_ID = " + playerId;
+        checkedUpdate(query, 1);
+    }
+
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
     protected void updateScrip (String where, int amount, String type)
         throws PersistenceException
@@ -448,6 +490,8 @@ public class PlayerRepository extends JORARepository
             "SESSION_MINUTES INTEGER NOT NULL",
             "LAST_SESSION DATETIME NOT NULL",
             "FLAGS INTEGER NOT NULL",
+            "BAN_EXPIRES DATETIME DEFAULT NULL",
+            "WARNING VARCHAR(255)",
             "PRIMARY KEY (PLAYER_ID)",
             "UNIQUE (ACCOUNT_NAME)",
             "INDEX (LAST_SESSION)",
@@ -491,6 +535,13 @@ public class PlayerRepository extends JORARepository
 
         // TEMP: add PLAYERS.LAST_SESSION index
         JDBCUtil.addIndexToTable(conn, "PLAYERS", "LAST_SESSION", "LAST_SESSION_INDEX");
+        // END TEMP
+
+        // TEMP: add temp ban columns
+        if (!JDBCUtil.tableContainsColumn(conn, "PLAYERS", "BAN_EXPIRES")) {
+            JDBCUtil.addColumn(conn, "PLAYERS", "BAN_EXPIRES", "DATETIME DEFAULT NULL", "FLAGS");
+            JDBCUtil.addColumn(conn, "PLAYERS", "WARNING", "VARCHAR(255)", "BAN_EXPIRES");
+        }
         // END TEMP
     }
 

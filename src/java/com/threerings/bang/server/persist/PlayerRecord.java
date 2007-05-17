@@ -76,6 +76,12 @@ public class PlayerRecord
     /** Various one bit data (gender, etc.). */
     public int flags;
 
+    /** The time at which a player's temp ban will expire. */
+    public Timestamp banExpires;
+
+    /** A warning message to the user. */
+    public String warning;
+
     /** Contains age information during the authentication process. */
     public transient boolean isOver13;
 

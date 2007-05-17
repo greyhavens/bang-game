@@ -101,6 +101,14 @@ public class DeploymentConfig
     }
 
     /**
+     * Returns the URL for the terms of service page.
+     */
+    public static URL getTosURL ()
+    {
+        return getURL("terms_of_service_url", null);
+    }
+
+    /**
      * Returns the URL for the billing page.
      */
     public static URL getBillingURL (BangContext ctx)

@@ -233,6 +233,15 @@ public class BangClientResolver extends CrowdClientResolver
         // initialize the set of notifications
         buser.notifications = new DSet<Notification>();
 
+        // send any warning messages
+        if (player.warning != null) {
+            BangServer.playmgr.sendWarningMessage(buser, player.banExpires != null, player.warning);
+            // clear out stale temp ban information
+            if (player.banExpires != null) {
+                BangServer.playrepo.clearTempBan(player.playerId);
+            }
+        }
+
         // load up this player's pardners
         _precords = BangServer.playmgr.getPardnerRepository().getPardnerRecords(player.playerId);
 

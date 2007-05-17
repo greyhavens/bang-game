@@ -1167,7 +1167,7 @@ public class BangClient extends BasicClient
 
         OptionDialog.showConfirmDialog(
             _ctx, notification.getBundle(), notification.getTitle(), notification.getText(),
-            buttons, new OptionDialog.ResponseReceiver() {
+            buttons, notification.getEnabledDelay(), new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 if (button >= notification.getResponses().length) { // ignore the pesky bugger
                     _ctx.getMuteDirector().setMuted(source, true);
@@ -1315,7 +1315,7 @@ public class BangClient extends BasicClient
         // have to use -Dapp.name to get Getdown to pass them back to us when we're launched)
         String uname = System.getProperty("username"), pass = System.getProperty("password");
         if (!StringUtil.isBlank(uname) && !StringUtil.isBlank(pass)) {
-            args = ArrayUtil.concatenate(args, new String[] { 
+            args = ArrayUtil.concatenate(args, new String[] {
                 "-Dapp.username=" + uname, "-Dapp.password=" + pass
             });
         }

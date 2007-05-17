@@ -4,7 +4,10 @@
 package com.threerings.bang.client;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.EnumSet;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import java.net.ConnectException;
 import java.net.URL;
@@ -47,6 +50,7 @@ import com.threerings.presents.client.LogonException;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.bui.EnablingValidator;
+import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangCodes;
@@ -92,6 +96,8 @@ public class LogonView extends BWindow
             // change the new account button to server status for certain response codes
             if (msg.equals(BangAuthCodes.UNDER_MAINTENANCE)) {
                 connectionFailure = true;
+            } else if (msg.startsWith(BangAuthCodes.TEMP_BANNED)) {
+                msg = BangAuthCodes.TEMP_BANNED;
             }
 
         } else {
@@ -375,6 +381,25 @@ public class LogonView extends BWindow
         }
     }
 
+    protected void showTempBanDialog (String reason, long time)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d yyyy, hh:mm aaa z");
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
+        cal.setTimeInMillis(time);
+        String expires = sdf.format(cal.getTime());
+        OptionDialog.showConfirmDialog(_ctx, BangAuthCodes.AUTH_MSGS, "m.tb_title",
+                MessageBundle.tcompose("m.tb_info", reason, expires),
+                new String[] { "m.exit", "m.tb_tos" }, new OptionDialog.ResponseReceiver() {
+            public void resultPosted (int button, Object result) {
+                if (button == 1) {
+                    BrowserUtil.browseURL(
+                        _shownURL = DeploymentConfig.getTosURL(), _browlist);
+                }
+                _ctx.getApp().stop();
+            }
+        });
+    }
+
     protected ClientAdapter _listener = new ClientAdapter() {
         public void clientDidLogon (Client client) {
             _status.setStatus(_msgs.get("m.logged_on"), false);
@@ -391,13 +416,14 @@ public class LogonView extends BWindow
             if (msg.right) {
                 switchToServerStatus();
             }
+
             _status.setStatus(_msgs.xlate(msg.left), true);
 
             // if we got a NO_TICKET message, reset our last town id just to be sure
-            if (cause.getMessage() == null) {
+            String cmsg = cause.getMessage();
+            if (cmsg == null) {
                 return;
             }
-            String cmsg = cause.getMessage();
             if (cmsg.indexOf(BangAuthCodes.NO_TICKET) != -1) {
                 BangPrefs.setLastTownId(_username.getText(), BangCodes.FRONTIER_TOWN);
 
@@ -410,6 +436,21 @@ public class LogonView extends BWindow
             // if we got a no anonymous user message, change to user login mode
             } else if (cmsg.indexOf(BangAuthCodes.NO_ANONYMOUS_ACCESS) != -1) {
                 showLoginView();
+
+            // see if we are temp banned
+            } else if (cmsg.startsWith(BangAuthCodes.TEMP_BANNED)) {
+                String params = cmsg.substring(BangAuthCodes.TEMP_BANNED.length());
+                int idx = params.indexOf("|");
+                if (idx != -1) {
+                    try {
+                        long time = Long.parseLong(params.substring(0, idx));
+                        String reason = params.substring(idx + 1);
+                        showTempBanDialog(reason, time);
+                    } catch (NumberFormatException nfe) {
+                        log.warning("Unable to read time from temp banned message [cmsg="
+                                + cmsg + ".");
+                    }
+                }
             }
         }
     };
