@@ -588,7 +588,7 @@ public class AvatarLogic
         compids.toIntArray(look.aspects, 1);
 
         cost[0] = scrip;
-        cost[1] = coins;
+        cost[1] = user.holdsGoldPass(user.townId) ? 0 : coins;
         return look;
     }
 

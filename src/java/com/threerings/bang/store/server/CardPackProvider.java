@@ -34,7 +34,7 @@ public class CardPackProvider extends Provider
         // create a random selection of cards
         _cards = new String[((CardPackGood)good).getSize()];
         for (int ii = 0; ii < _cards.length; ii++) {
-            _cards[ii] = Card.selectRandomCard(user.townId, null, -1);
+            _cards[ii] = Card.selectRandomCard(good.getTownId(), null, -1);
         }
 
         // now determine which of those cards are already held by the player

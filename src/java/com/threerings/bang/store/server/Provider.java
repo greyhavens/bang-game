@@ -36,7 +36,7 @@ public abstract class Provider extends FinancialAction
     {
         // admins and support get things for free
         super(user, user.tokens.isSupport() ? 0 : good.getScripCost(),
-              user.tokens.isSupport() ? 0 : good.getCoinCost());
+              user.tokens.isSupport() ? 0 : good.getCoinCost(user));
         _good = good;
         _args = args;
     }

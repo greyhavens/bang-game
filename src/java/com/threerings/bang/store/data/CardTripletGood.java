@@ -19,10 +19,10 @@ public class CardTripletGood extends Good
     /**
      * Creates a good representing the specified card.
      */
-    public CardTripletGood (String cardType, int scripCost, int coinCost,
+    public CardTripletGood (String cardType, String townId, int scripCost, int coinCost,
                             Badge.Type qualifier)
     {
-        super("card_trip_" + cardType, scripCost, coinCost, CARD_TRIPLET_PRIORITY);
+        super("card_trip_" + cardType, townId, scripCost, coinCost, CARD_TRIPLET_PRIORITY);
         _cardType = cardType;
         _qualifier = qualifier;
     }
@@ -53,6 +53,12 @@ public class CardTripletGood extends Good
     public String getIconPath ()
     {
         return Card.newCard(_cardType).getIconPath("card_pack");
+    }
+
+    @Override // from Good
+    public boolean isGoldPassFree ()
+    {
+        return true;
     }
 
     @Override // from Good

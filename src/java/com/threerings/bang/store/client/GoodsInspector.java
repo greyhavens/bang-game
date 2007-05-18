@@ -176,7 +176,7 @@ public class GoodsInspector extends BContainer
 
     protected void updateCostLabel ()
     {
-        _cost.setMoney(_good.getScripCost(), _good.getCoinCost(), false);
+        _cost.setMoney(_good.getScripCost(), _good.getCoinCost(_ctx.getUserObject()), false);
     }
 
     protected void boughtGood ()

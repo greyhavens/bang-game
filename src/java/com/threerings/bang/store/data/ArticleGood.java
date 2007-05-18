@@ -33,10 +33,10 @@ public class ArticleGood extends Good
     /**
      * Creates a good representing the specified article.
      */
-    public ArticleGood (
-            String type, int scripCost, int coinCost, String qualifier, Date start, Date stop)
+    public ArticleGood (String type, String townId, int scripCost, int coinCost,
+            String qualifier, Date start, Date stop)
     {
-        super(type, scripCost, coinCost, ARTICLE_PRIORITY);
+        super(type, townId, scripCost, coinCost, ARTICLE_PRIORITY);
         _qualifier = qualifier;
         _dstart = start;
         _dstop = stop;
@@ -84,6 +84,12 @@ public class ArticleGood extends Good
         ArticleCatalog.Article article =
             ctx.getAvatarLogic().getArticleCatalog().getArticle(_type);
         return (article == null) ? null : ctx.getAvatarLogic().getColorizationClasses(article);
+    }
+
+    @Override // from Good
+    public boolean isGoldPassFree ()
+    {
+        return true;
     }
 
     @Override // from Good

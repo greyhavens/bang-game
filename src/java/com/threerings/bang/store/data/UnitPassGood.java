@@ -19,9 +19,9 @@ public class UnitPassGood extends Good
     /**
      * Creates a good representing a pass for the specified unit.
      */
-    public UnitPassGood (String unit, int scripCost, int coinCost)
+    public UnitPassGood (String unit, String townId, int scripCost, int coinCost)
     {
-        super(unit + "_pass", scripCost, coinCost, UNIT_PASS_PRIORITY);
+        super(unit + "_pass", townId, scripCost, coinCost, UNIT_PASS_PRIORITY);
     }
 
     /** A constructor only used during serialization. */
@@ -55,6 +55,12 @@ public class UnitPassGood extends Good
         String msg = UnitConfig.getName(getUnitType());
         msg = MessageBundle.compose("m.unit_pass_tip", msg);
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+    }
+
+    @Override // from Good
+    public boolean isGoldPassFree ()
+    {
+        return true;
     }
 
     @Override // documentation inherited

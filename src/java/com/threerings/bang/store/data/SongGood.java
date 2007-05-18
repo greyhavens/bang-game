@@ -26,9 +26,9 @@ public class SongGood extends Good
     /**
      * Creates a song good for the specified song.
      */
-    public SongGood (String song)
+    public SongGood (String song, String townId)
     {
-        super("song_" + song, SCRIP_COST, COIN_COST, SONG_PRIORITY);
+        super("song_" + song, townId, SCRIP_COST, COIN_COST, SONG_PRIORITY);
     }
 
     /**

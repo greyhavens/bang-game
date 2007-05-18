@@ -216,6 +216,14 @@ public class UnitConfig
     }
 
     /**
+     * Returns the coin cost for this unit, possibly modified by a Gold Pass.
+     */
+    public int getCoinCost (PlayerObject user)
+    {
+        return user.holdsGoldPass(getTownId()) ? 0 : coinCost;
+    }
+
+    /**
      * Computes and returns the damage adjustment to be used when a unit
      * of this type attacks a unit of the specified type.
      */

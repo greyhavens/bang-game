@@ -178,7 +178,7 @@ public class UnitInspector extends BContainer
         if (config.rank == UnitConfig.Rank.BIGSHOT) {
             if (_itemId == -1) {
                 showRecruit = true;
-                _cost.setMoney(config.scripCost, config.coinCost, false);
+                _cost.setMoney(config.scripCost, config.getCoinCost(_ctx.getUserObject()), false);
             } else {
                 showPractice = true;
                 showCustomize = true;

@@ -76,7 +76,7 @@ public class NewLookView extends BContainer
 
         BImage icon = _ctx.loadImage("ui/barber/caption_name.png");
         add(new BLabel(new ImageIcon(icon)), new Point(726, 135));
-        add(_name = new BTextField("", BarberCodes.MAX_LOOK_NAME_LENGTH), 
+        add(_name = new BTextField("", BarberCodes.MAX_LOOK_NAME_LENGTH),
                 new Rectangle(786, 135, 164, 29));
 
         BContainer cost = GroupLayout.makeHBox(GroupLayout.LEFT);
@@ -326,6 +326,11 @@ public class NewLookView extends BContainer
 
         // update the avatar and cost displays
         _avatar.setAvatar(new AvatarInfo(avatar));
+
+        // no coin cost for gold pass holders
+        if (user.holdsGoldPass(user.townId)) {
+            coins = 0;
+        }
         if (_cost != null) {
             _cost.setMoney(scrip, coins, false);
         }

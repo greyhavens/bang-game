@@ -5,6 +5,7 @@ package com.threerings.bang.store.data;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
@@ -25,8 +26,8 @@ public class PurseGood extends Good
      */
     public PurseGood (int townIndex)
     {
-        super(Purse.PURSE_TYPES[townIndex+1], SCRIP_COST[townIndex], COIN_COST[townIndex],
-                PURSE_PRIORITY);
+        super(Purse.PURSE_TYPES[townIndex+1], BangCodes.TOWN_IDS[townIndex],
+                SCRIP_COST[townIndex], COIN_COST[townIndex], PURSE_PRIORITY);
         // annoyingly Purse maintains townIndex+1 not actual townIndex
         _townIndex = townIndex+1;
     }
@@ -46,6 +47,12 @@ public class PurseGood extends Good
     public String getTip ()
     {
         return Purse.getDescrip(_townIndex);
+    }
+
+    @Override // from Good
+    public boolean isGoldPassFree ()
+    {
+        return true;
     }
 
     @Override // documentation inherited

@@ -64,7 +64,7 @@ public class RecruitDialog extends BDecoratedWindow
 
         row = new BContainer(GroupLayout.makeHStretch());
         MoneyLabel cost = new MoneyLabel(ctx);
-        cost.setMoney(config.scripCost, config.coinCost, false);
+        cost.setMoney(config.scripCost, config.getCoinCost(_ctx.getUserObject()), false);
         row.add(cost, GroupLayout.FIXED);
         row.add(new Spacer(1, 1));
         row.add(new BButton(_msgs.get("m.cancel"), this, "cancel"),
@@ -95,7 +95,7 @@ public class RecruitDialog extends BDecoratedWindow
     {
         if ("random".equals(event.getAction())) {
             _name.setText(_config.pickRandomName());
-            
+
         } else if ("cancel".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
 

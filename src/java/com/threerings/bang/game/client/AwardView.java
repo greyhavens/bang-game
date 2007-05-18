@@ -187,7 +187,8 @@ public class AwardView extends BContainer
             } else if (award.item instanceof CardItem) {
                 txt = msgs.get("m.endgame_card");
                 CardItem card = (CardItem)award.item;
-                CardTripletGood ctg = new CardTripletGood(card.getType(), 0, 0, null);
+                CardTripletGood ctg =
+                    new CardTripletGood(card.getType(), null, 0, 0, null);
                 ctg.setQuantity(card.getQuantity());
                 icon = new GoodsIcon(ctx, null, ctg);
                 icon.setEnabled(false);

@@ -67,9 +67,10 @@ public class GoodsCatalog
         // register our packs of cards
         ProviderFactory pf = new CardProviderFactory();
         for (int ii = 0; ii < PACK_PRICES.length; ii += 3) {
-            registerGood("", // register card packs for all towns
-                         new CardPackGood(PACK_PRICES[ii], PACK_PRICES[ii+1],
-                                          PACK_PRICES[ii+2]), pf);
+            for (int townIdx = 0; townIdx < BangCodes.TOWN_IDS.length; townIdx++) {
+                registerGood(new CardPackGood(PACK_PRICES[ii], BangCodes.TOWN_IDS[townIdx],
+                                 PACK_PRICES[ii+1], PACK_PRICES[ii+2]), pf);
+            }
         }
         for (Card card : Card.getCards()) {
             // not all cards are for sale individually
@@ -77,8 +78,8 @@ public class GoodsCatalog
                 continue;
             }
             Good good = new CardTripletGood(
-                card.getType(), card.getScripCost(), 0, card.getQualifier());
-            registerGood(card.getTownId(), good, pf);
+                card.getType(), card.getTownId(), card.getScripCost(), 0, card.getQualifier());
+            registerGood(good, pf);
         }
 
         // use the avatar article catalog to create goods for all avatar articles
@@ -88,9 +89,9 @@ public class GoodsCatalog
                 continue;
             }
             ArticleGood good = new ArticleGood(
-                    article.townId + "/" + article.name, article.scrip, article.coins,
-                    article.qualifier, article.start, article.stop);
-            registerGood(article.townId, good, pf);
+                    article.townId + "/" + article.name, article.townId, article.scrip,
+                    article.coins, article.qualifier, article.start, article.stop);
+            registerGood(good, pf);
         }
 
         // the remainder of the goods can generate their own items
@@ -98,7 +99,7 @@ public class GoodsCatalog
 
         // register our purses
         for (int townIdx = 0; townIdx < BangCodes.TOWN_IDS.length; townIdx++) {
-            registerGood(BangCodes.TOWN_IDS[townIdx], new PurseGood(townIdx), pf);
+            registerGood(new PurseGood(townIdx), pf);
         }
 
         // register our unit passes
@@ -106,9 +107,9 @@ public class GoodsCatalog
         for (int ii = 0; ii < units.length; ii++) {
             UnitConfig uc = units[ii];
             if (uc.badgeCode != 0 && uc.scripCost > 0) {
-                UnitPassGood good =
-                    new UnitPassGood(uc.type, uc.scripCost, uc.coinCost);
-                registerGood(uc.getTownId(), good, pf);
+                UnitPassGood good = new UnitPassGood(
+                        uc.type, uc.getTownId(), uc.scripCost, uc.coinCost);
+                registerGood(good, pf);
             }
         }
 
@@ -120,20 +121,20 @@ public class GoodsCatalog
                 if (diff == Star.Difficulty.EASY) { // no easy star
                     continue;
                 }
-                registerGood(BangCodes.TOWN_IDS[townIdx], new StarGood(townIdx, diff), pf);
+                registerGood(new StarGood(townIdx, diff), pf);
             }
         }
 
         // register our music
-        registerGood(BangCodes.FRONTIER_TOWN, new SongGood(BangCodes.FRONTIER_TOWN), pf);
-        registerGood(BangCodes.FRONTIER_TOWN, new SongGood(ClaimJumpingInfo.IDENT), pf);
-        registerGood(BangCodes.FRONTIER_TOWN, new SongGood(CattleRustlingInfo.IDENT), pf);
-        registerGood(BangCodes.FRONTIER_TOWN, new SongGood(GoldRushInfo.IDENT), pf);
+        registerGood(new SongGood(BangCodes.FRONTIER_TOWN, BangCodes.FRONTIER_TOWN), pf);
+        registerGood(new SongGood(ClaimJumpingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
+        registerGood(new SongGood(CattleRustlingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
+        registerGood(new SongGood(GoldRushInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
 
-        registerGood(BangCodes.INDIAN_POST, new SongGood(BangCodes.INDIAN_POST), pf);
-        registerGood(BangCodes.INDIAN_POST, new SongGood(TotemBuildingInfo.IDENT), pf);
-        registerGood(BangCodes.INDIAN_POST, new SongGood(WendigoAttackInfo.IDENT), pf);
-        registerGood(BangCodes.INDIAN_POST, new SongGood(ForestGuardiansInfo.IDENT), pf);
+        registerGood(new SongGood(BangCodes.INDIAN_POST, BangCodes.INDIAN_POST), pf);
+        registerGood(new SongGood(TotemBuildingInfo.IDENT, BangCodes.INDIAN_POST), pf);
+        registerGood(new SongGood(WendigoAttackInfo.IDENT, BangCodes.INDIAN_POST), pf);
+        registerGood(new SongGood(ForestGuardiansInfo.IDENT, BangCodes.INDIAN_POST), pf);
     }
 
     /**
@@ -142,7 +143,7 @@ public class GoodsCatalog
     public ArrayList<Good> getGoods (String townId)
     {
         ArrayList<Good> goods = new ArrayList<Good>();
-        goods.addAll(_tgoods.get("")); // global goods
+        //goods.addAll(_tgoods.get("")); // global goods
         goods.addAll(_tgoods.get(townId)); // goods for sale in this town
         return goods;
     }
@@ -164,12 +165,12 @@ public class GoodsCatalog
     /**
      * Registers a Good -> ProviderFactory mapping for the specified town.
      */
-    protected void registerGood (String townId, Good good, ProviderFactory factory)
+    protected void registerGood (Good good, ProviderFactory factory)
     {
         _providers.put(good, factory);
-        ArrayList<Good> goods = _tgoods.get(townId);
+        ArrayList<Good> goods = _tgoods.get(good.getTownId());
         if (goods == null) {
-            _tgoods.put(townId, goods = new ArrayList<Good>());
+            _tgoods.put(good.getTownId(), goods = new ArrayList<Good>());
         }
         goods.add(good);
     }

@@ -18,6 +18,20 @@ public abstract class GangGood extends Good
     }
 
     /**
+     * The coin cost for this good.
+     */
+    public int getCoinCost ()
+    {
+        return _coinCost;
+    }
+
+    @Override // documentation inherited
+    public int getCoinCost (PlayerObject user)
+    {
+        return _coinCost;
+    }
+
+    /**
      * Returns the cost of this good in aces. This is in addition to the scrip and coin costs.
      */
     public int getAceCost ()
@@ -39,7 +53,7 @@ public abstract class GangGood extends Good
     /** Creates a gang good of the specified type. */
     protected GangGood (String type, int scripCost, int coinCost, int aceCost)
     {
-        super(type, scripCost, coinCost, 0);
+        super(type, null, scripCost, coinCost, 0);
         _aceCost = aceCost;
     }
 

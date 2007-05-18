@@ -29,7 +29,7 @@ public class StarGood extends Good
     public StarGood (int townIdx, Star.Difficulty difficulty)
     {
         super("star_" + BangCodes.TOWN_IDS[townIdx] + "_" +
-                StringUtil.toUSLowerCase(difficulty.toString()),
+                StringUtil.toUSLowerCase(difficulty.toString()), BangCodes.TOWN_IDS[townIdx],
               difficulty.ordinal() * SCRIP_COST, COIN_COST, STAR_PRIORITY);
         _townIdx = townIdx;
         _difficulty = difficulty;
@@ -62,6 +62,12 @@ public class StarGood extends Good
     public int getCoinType ()
     {
         return CoinTransaction.STAR_PURCHASE;
+    }
+
+    @Override // from Good
+    public boolean isGoldPassFree ()
+    {
+        return true;
     }
 
     @Override // documentation inherited

@@ -244,6 +244,14 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns true if this player holds a gold pass for the specified town.
+     */
+    public boolean holdsGoldPass (String townId)
+    {
+        return holdsEquivalentItem(new GoldPass(-1, townId));
+    }
+
+    /**
      * Returns true if the player holds a ticket to the specified town.
      */
     public boolean holdsTicket (String townId)

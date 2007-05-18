@@ -21,9 +21,9 @@ public class CardPackGood extends Good
     /**
      * Creates a good representing a pack of cards of the specified size.
      */
-    public CardPackGood (int size, int scripCost, int coinCost)
+    public CardPackGood (int size, String townId, int scripCost, int coinCost)
     {
-        super("card_pack" + size, scripCost, coinCost, CARD_PACK_PRIORITY);
+        super("card_pack" + size, townId, scripCost, coinCost, CARD_PACK_PRIORITY);
         _size = size;
     }
 
@@ -44,6 +44,12 @@ public class CardPackGood extends Good
     public String getIconPath ()
     {
         return "goods/cards/" + _type + ".png";
+    }
+
+    @Override // from Good
+    public boolean isGoldPassFree ()
+    {
+        return true;
     }
 
     @Override // from Good

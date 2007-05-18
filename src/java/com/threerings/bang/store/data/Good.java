@@ -41,6 +41,14 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
+     * Returns the town id where this good can be purchased.
+     */
+    public String getTownId ()
+    {
+        return _townId;
+    }
+
+    /**
      * Creates the initial icon for this good.  By default, returns an icon containing the image
      * located at {@link #getIconPath}, but subclasses can override to customize the icon.
      *
@@ -119,9 +127,17 @@ public abstract class Good extends SimpleStreamableObject
      * Returns the cost of this good in coins. This is in addition to the scrip cost ({@link
      * #getScripCost}).
      */
-    public int getCoinCost ()
+    public int getCoinCost (PlayerObject user)
     {
-        return _coinCost;
+        return (isGoldPassFree() && user.holdsGoldPass(_townId)) ? 0 :  _coinCost;
+    }
+
+    /**
+     * Returns true if this item is free due to a Gold Pass.
+     */
+    public boolean isGoldPassFree ()
+    {
+        return false;
     }
 
     /**
@@ -187,15 +203,17 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /** Creates a good of the specified type. */
-    protected Good (String type, int scripCost, int coinCost, int priority)
+    protected Good (String type, String townId, int scripCost, int coinCost, int priority)
     {
         _type = type;
+        _townId = townId;
         _scripCost = scripCost;
         _coinCost = coinCost;
         _priority = priority;
     }
 
     protected String _type;
+    protected String _townId;
     protected int _scripCost;
     protected int _coinCost;
     protected int _priority;

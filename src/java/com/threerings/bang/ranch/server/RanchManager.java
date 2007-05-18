@@ -113,7 +113,7 @@ public class RanchManager extends ShopManager
         public RecruitBigShotAction (PlayerObject user, UnitConfig config, BigShotItem unit,
                                      RanchService.ResultListener listener)
         {
-            super(user, config.scripCost, config.coinCost);
+            super(user, config.scripCost, config.getCoinCost(user));
             _unit = unit;
             _listener = listener;
         }
