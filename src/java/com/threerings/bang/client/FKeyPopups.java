@@ -68,6 +68,7 @@ public class FKeyPopups
         SERVER_STATUS(KeyInput.KEY_F4, 0, BangTokenRing.SUPPORT, false),
         SERVER_CONFIG(KeyInput.KEY_F5, 0, BangTokenRing.ADMIN, false),
         CLIENT_CONFIG(KeyInput.KEY_F6, CTRL_SHIFT, 0, false),
+        AVATAR_SHOT(KeyInput.KEY_F11, CTRL_SHIFT, BangTokenRing.ADMIN, false),
         SCREEN_SHOT(KeyInput.KEY_F12, 0, 0, false);
 
         public int keyCode () {
