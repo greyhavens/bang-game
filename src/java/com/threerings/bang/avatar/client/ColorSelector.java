@@ -67,6 +67,12 @@ public class ColorSelector extends BComponent
             dy = 144;
         } else if (colorClass.equals("buckle_back_s")) {
             dy = 120;
+        } else if (colorClass.equals("armadillo_t")) {
+            dy = 216;
+        } else if (colorClass.equals("buzzard_p")) {
+            dy = 168;
+        } else if (colorClass.equals("racoon_s")) {
+            dy = 192;
         } else if (colorClass.endsWith("_s")) {
             dy = 24;
         } else if (colorClass.endsWith("_t")) {
