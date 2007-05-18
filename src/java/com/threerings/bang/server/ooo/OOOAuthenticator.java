@@ -302,7 +302,7 @@ public class OOOAuthenticator extends BangAuthenticator
         switch (vc) {
         case OOOUserRepository.ACCOUNT_BANNED:
             log.info("Rejecting banned account [who=" + username + "].");
-            rdata.code = BANNED;
+            rdata.code = BANNED + (prec != null && prec.warning != null ? prec.warning : "");
             return;
         case OOOUserRepository.DEADBEAT:
             log.info("Rejecting deadbeat account [who=" + username + "].");

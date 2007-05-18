@@ -98,6 +98,8 @@ public class LogonView extends BWindow
                 connectionFailure = true;
             } else if (msg.startsWith(BangAuthCodes.TEMP_BANNED)) {
                 msg = BangAuthCodes.TEMP_BANNED;
+            } else if (msg.startsWith(BangAuthCodes.BANNED)) {
+                msg = BangAuthCodes.BANNED;
             }
 
         } else {
@@ -400,6 +402,17 @@ public class LogonView extends BWindow
         });
     }
 
+    protected void showBannedDialog (String reason)
+    {
+        OptionDialog.showConfirmDialog(_ctx, BangAuthCodes.AUTH_MSGS, "m.ban_title",
+                MessageBundle.tcompose("m.ban_info", reason),
+                new String[] { "m.exit" }, new OptionDialog.ResponseReceiver() {
+            public void resultPosted (int button, Object result) {
+                _ctx.getApp().stop();
+            }
+        });
+    }
+
     protected ClientAdapter _listener = new ClientAdapter() {
         public void clientDidLogon (Client client) {
             _status.setStatus(_msgs.get("m.logged_on"), false);
@@ -424,6 +437,7 @@ public class LogonView extends BWindow
             if (cmsg == null) {
                 return;
             }
+
             if (cmsg.indexOf(BangAuthCodes.NO_TICKET) != -1) {
                 BangPrefs.setLastTownId(_username.getText(), BangCodes.FRONTIER_TOWN);
 
@@ -451,6 +465,11 @@ public class LogonView extends BWindow
                                 + cmsg + ".");
                     }
                 }
+
+            } else if (cmsg.startsWith(BangAuthCodes.BANNED) &&
+                    cmsg.length() > BangAuthCodes.BANNED.length()) {
+                String reason = cmsg.substring(BangAuthCodes.BANNED.length());
+                showBannedDialog(reason);
             }
         }
     };

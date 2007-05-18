@@ -337,7 +337,7 @@ public class PlayerPopupMenu extends BPopupMenu
     protected void submitComplaint (String reason)
     {
         PlayerService psvc = ((PlayerService)_ctx.getClient().requireService(PlayerService.class));
-        PlayerService.ConfirmListener listener =new PlayerService.ConfirmListener() {
+        PlayerService.ConfirmListener listener = new PlayerService.ConfirmListener() {
             public void requestProcessed () {
                 String msg = MessageBundle.tcompose("m.comp_submitted", _handle);
                 _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
