@@ -1387,6 +1387,7 @@ player_status_cont {
 player_status_ff {
   background: image "ui/pstatus/folks/circle_normal.png" centerxy;
   padding: 7 7 7 7;
+  cursor: hand;
 }
 
 player_status_ff:hover {
@@ -2551,10 +2552,20 @@ endgame_player_big {
   color: #FFFFFF;
 }
 
+endgame_player_big_hand {
+  parent: "endgame_player_big";
+  cursor: "hand";
+}
+
 endgame_player_small {
   font: "Dom Casual" plain 14;
   text-align: center;
   color: #FFFFFF;
+}
+
+endgame_player_small_hand {
+  parent: "endgame_player_small";
+  cursor: "hand";
 }
 
 endgame_wave_header {
