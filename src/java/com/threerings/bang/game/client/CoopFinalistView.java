@@ -22,6 +22,8 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.bang.client.PlayerPopupMenu;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.avatar.client.AvatarView;
@@ -53,6 +55,7 @@ public class CoopFinalistView extends BContainer
         String scid = bangobj.scenario.getIdent();
 
         _players = bangobj.awards.length;
+        _ctx = ctx;
 
         // load up our background
         Colorization[] zations = {
@@ -62,8 +65,8 @@ public class CoopFinalistView extends BContainer
         _background = ctx.getImageCache().createColorizedBImage(
                 "ui/postgame/background.png", zations, false);
         _frame = ctx.loadImage("ui/postgame/coop_frame" + _players + ".png");
-        _medal = ctx.loadImage("ui/postgame/" + scid + slot + ".png"); 
-        
+        _medal = ctx.loadImage("ui/postgame/" + scid + slot + ".png");
+
         _avatars = new BIcon[_players];
         // start with a blank avatar
         int scale = 4;
@@ -89,8 +92,11 @@ public class CoopFinalistView extends BContainer
             ImageIcon ribbon = new ImageIcon(ctx.loadImage(
                         "ui/postgame/small_scroll_coop" + colorLookup[ii + 1] + ".png"));
             add(new BLabel(ribbon), new Point(RIBBON_OFFSET[ii] + ax, 20));
-            BLabel handle = new BLabel(bangobj.players[ii].toString(), 
-                        "endgame_player_small");
+            Handle phandle = (bangobj.playerInfo[ii].playerId > 0) ?
+                (Handle)bangobj.players[ii] : null;
+            String sclass = phandle == null ? "endgame_player_small" : "endgame_player_small_hand";
+            BLabel handle = FinalistView.createPopupLabel(
+                    _ctx, bangobj.players[ii].toString(), phandle, "endgame_player_small");
             handle.setFit(BLabel.Fit.SCALE);
             add(handle, new Rectangle(NAME_OFFSET[ii] + ax, 28, 136, 17));
             if (ctx instanceof BangContext) {
@@ -153,11 +159,11 @@ public class CoopFinalistView extends BContainer
     @Override // documentation inherited
     protected void renderBackground (Renderer renderer)
     {
-        super.renderBackground(renderer);   
+        super.renderBackground(renderer);
         int ax = (710 - _frame.getWidth()) / 2, ay = 36;
         int bwidth = _frame.getWidth() - 34;
         _background.render(renderer, ax+17, ay+20, bwidth, 154, _alpha);
-        int adelta = _avatars[0].getWidth() - 
+        int adelta = _avatars[0].getWidth() -
             (_avatars[0].getWidth()*_players - bwidth)/(_players - 1);
         int avx = ax+17;
         for (int ii = 0; ii < _players; ii++) {
@@ -173,7 +179,7 @@ public class CoopFinalistView extends BContainer
         super.renderComponent(renderer);
         int width = _medal.getWidth();
         int offX = Math.min(
-                _titleLabel.getAbsoluteX() - getAbsoluteX() - width - 20, 
+                _titleLabel.getAbsoluteX() - getAbsoluteX() - width - 20,
                         (710 - _frame.getWidth() - width) / 2 + 10);
         _medal.render(renderer, offX, 90, _alpha);
     }
@@ -189,6 +195,7 @@ public class CoopFinalistView extends BContainer
         _avatars[idx] = avatar;
     }
 
+    protected BasicContext _ctx;
     protected BIcon[] _avatars;
     protected BImage _background, _frame, _medal;
     protected int _players;

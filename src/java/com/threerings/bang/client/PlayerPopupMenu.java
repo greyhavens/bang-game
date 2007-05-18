@@ -31,6 +31,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.chat.client.PardnerChatView;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.gang.client.InviteMemberDialog;
 import com.threerings.bang.saloon.data.ParlorObject;
 
@@ -165,11 +166,11 @@ public class PlayerPopupMenu extends BPopupMenu
 
         } else if ("invite_pardner".equals(event.getAction())) {
             _ctx.getBangClient().displayPopup(
-                new InvitePardnerDialog(_ctx, null, _handle), true, 400);
+                new InvitePardnerDialog(_ctx, null, _handle), true, 400, true);
 
         } else if ("invite_member".equals(event.getAction())) {
             _ctx.getBangClient().displayPopup(
-                new InviteMemberDialog(_ctx, null, _handle), true, 400);
+                new InviteMemberDialog(_ctx, null, _handle), true, 400, true);
 
         } else if ("view_poster".equals(event.getAction())) {
             WantedPosterView.displayWantedPoster(_ctx, _handle);
@@ -204,9 +205,15 @@ public class PlayerPopupMenu extends BPopupMenu
     {
         MessageBundle msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
         PlayerObject self = _ctx.getUserObject();
+        // if we're in a parlor, we may be able to boot the player
+        PlaceObject pobj = _ctx.getLocationDirector().getPlaceObject();
+        boolean isParlor = (pobj instanceof ParlorObject);
+        boolean isGame = (pobj instanceof BangObject);
 
         // add an item for viewing their wanted poster
-        addMenuItem(new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
+        if (!isGame) {
+            addMenuItem(new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
+        }
 
         // if we're an admin/support, add a link to their admin account page
         if (self.tokens.isSupport()) {
@@ -223,8 +230,7 @@ public class PlayerPopupMenu extends BPopupMenu
             addMenuItem(new BMenuItem(msgs.get("m.pm_register_complaint"), "complain"));
 
             // if we're in a parlor, we may be able to boot the player
-            PlaceObject pobj = _ctx.getLocationDirector().getPlaceObject();
-            if (pobj instanceof ParlorObject) {
+            if (isParlor) {
                 ParlorObject parlor = (ParlorObject)pobj;
                 if (parlor.info.powerUser(self) && parlor.getOccupantInfo(_handle) != null) {
                     addMenuItem(new BMenuItem(msgs.get("m.pm_boot"), "boot"));
@@ -235,10 +241,10 @@ public class PlayerPopupMenu extends BPopupMenu
         // if they're our pardner, add some pardner-specific items
         PardnerEntry entry = self.pardners.get(_handle);
         if (entry != null) {
-            if (entry.isAvailable()) {
+            if (!isGame && entry.isAvailable()) {
                 addMenuItem(new BMenuItem(msgs.get("m.pm_chat_pardner"), "chat_pardner"));
             }
-            if (entry.gameOid > 0) {
+            if (!isGame && entry.gameOid > 0) {
                 addMenuItem(new BMenuItem(msgs.get("m.pm_watch_pardner"), "watch_pardner"));
             }
             addMenuItem(new BMenuItem(msgs.get("m.pm_remove_pardner"), "remove_pardner"));
@@ -262,7 +268,7 @@ public class PlayerPopupMenu extends BPopupMenu
             addMenuItem(new BMenuItem(msgs.get("m.pm_" + mute), mute));
         }
 
-        if(self.tokens.isSupport()) {
+        if (self.tokens.isSupport()) {
             addMenuItem(new BMenuItem(msgs.get("m.pm_support_boot"), "support_boot"));
         }
     }
@@ -331,7 +337,7 @@ public class PlayerPopupMenu extends BPopupMenu
         // disable the submit button until a reason is entered
 
         new EnablingValidator(reason, submit);
-        _ctx.getBangClient().displayPopup(cdiag, true, 600);
+        _ctx.getBangClient().displayPopup(cdiag, true, 600, true);
     }
 
     protected void submitComplaint (String reason)

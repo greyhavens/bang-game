@@ -173,7 +173,7 @@ public class BangController extends GameController
                     displayStatsView();
                 }
             }
-        }, 2);
+        }, 3);
 
         mapCommand(KeyInput.KEY_SPACE, "StartChat");
         mapCommand(KeyInput.KEY_RETURN, "StartChat");
@@ -540,6 +540,7 @@ public class BangController extends GameController
                     AvatarView.getImage(_ctx, _bangobj.playerInfo[pidx].victory,
                             new ResultListener.NOOP<BufferedImage>());
                 }
+                _postRoundMultex.satisfied(Multex.CONDITION_THREE);
 
             // for bounties, we need to wait until we get the awards before advancing our post
             // game multex
@@ -648,6 +649,7 @@ public class BangController extends GameController
         if (!_view.setPhase(BangObject.POST_ROUND)) {
             storeStats();
             _postRoundMultex.satisfied(Multex.CONDITION_ONE);
+            _postRoundMultex.satisfied(Multex.CONDITION_THREE);
             return;
         }
 
@@ -712,6 +714,7 @@ public class BangController extends GameController
     protected void interRoundMarqueeFadeComplete ()
     {
         _postRoundMultex.satisfied(Multex.CONDITION_ONE);
+        _postRoundMultex.satisfied(Multex.CONDITION_THREE);
     }
 
     /**

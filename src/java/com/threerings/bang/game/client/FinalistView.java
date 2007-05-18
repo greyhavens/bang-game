@@ -10,6 +10,7 @@ import com.jme.renderer.Renderer;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.event.BEvent;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
@@ -24,7 +25,9 @@ import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.Handle;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
@@ -38,6 +41,20 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class FinalistView extends BContainer
 {
+    public static BLabel createPopupLabel (
+            final BasicContext ctx, String name, final Handle handle, String styleClass)
+    {
+        return new BLabel(name, styleClass) {
+            public boolean dispatchEvent (BEvent event) {
+                boolean handled = false;
+                if (handle != null && ctx instanceof BangContext) {
+                    handled = PlayerPopupMenu.checkPopup(
+                            (BangContext)ctx, getWindow(), event, handle, true);
+                }
+                return handled || super.dispatchEvent(event);
+            }
+        };
+    }
     /**
      * Creates a view for the specified player, rank, etc.
      *
@@ -48,7 +65,7 @@ public class FinalistView extends BContainer
      * @param rank the plaer's rank at the end of the game. If their rank is zero (1st place) the
      * view will be in the large format, otherwise it will be in the small format.
      */
-    public FinalistView (BasicContext ctx, BangObject bangobj, 
+    public FinalistView (BasicContext ctx, BangObject bangobj,
             BangController ctrl, int pidx, int rank)
     {
         super(new AbsoluteLayout());
@@ -95,20 +112,24 @@ public class FinalistView extends BContainer
         _banner = new ImageIcon(ctx.loadImage(prefix + "scroll" + colorLookup[pidx + 1] + ".png"));
 
         // create a label for their name
-        String sclass = "endgame_player_" + (winner ? "big" : "small");
-        BLabel handle = new BLabel(name.toString(), sclass);
+        BangContext bctx = (ctx instanceof BangContext) ? (BangContext)ctx : null;
+        int myidx = -1;
+        if (bctx != null) {
+            myidx = bangobj.getPlayerIndex(bctx.getUserObject().getVisibleName());
+        }
+
+        Handle phandle = (myidx != -1 && myidx != pidx && bangobj.playerInfo[pidx].playerId > 0) ?
+            (Handle)bangobj.players[pidx] : null;
+        String sclass = "endgame_player_" + (winner ? "big" : "small") +
+            (phandle == null ? "" : "_hand");
+        BLabel handle = createPopupLabel(ctx, name.toString(), phandle, sclass);
         handle.setFit(BLabel.Fit.SCALE);
         add(handle, NAME_RECTS[winner ? 0 : 1]);
-        if (ctx instanceof BangContext) {
-            BangContext bctx = (BangContext)ctx;
-            int myidx = bangobj.getPlayerIndex(
-                    bctx.getUserObject().getVisibleName());
-            if (myidx != -1 && myidx != pidx) {
-                BangConfig config = (BangConfig)ctrl.getPlaceConfig();
-                if (config.ais[pidx] == null) {
-                    add(new FriendlyFolkButton(bctx, bangobj, pidx), 
-                            FF_POS[winner ? 0 : 1]);
-                }
+        if (bctx != null && myidx != -1 && myidx != pidx) {
+            BangConfig config = (BangConfig)ctrl.getPlaceConfig();
+            if (config.ais[pidx] == null) {
+                add(new FriendlyFolkButton(bctx, bangobj, pidx),
+                        FF_POS[winner ? 0 : 1]);
             }
         }
     }
@@ -150,7 +171,7 @@ public class FinalistView extends BContainer
         super.renderBackground(renderer);
 
         int ax = (_width - _avatar.getWidth())/2, ay = _banner.getHeight()/2;
-        _background.render(renderer, ax, ay, 
+        _background.render(renderer, ax, ay,
                 _avatar.getWidth(), _avatar.getHeight(), _alpha);
         _avatar.render(renderer, ax, ay, _alpha);
         _frame.render(renderer, ax-(_frame.getWidth()-_avatar.getWidth())/2,
