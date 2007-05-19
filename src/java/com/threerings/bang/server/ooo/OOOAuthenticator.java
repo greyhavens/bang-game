@@ -423,17 +423,6 @@ public class OOOAuthenticator extends BangAuthenticator
         PlayerRecord prec, String machIdent, RewardRecord record, ArrayList<RewardRecord> records)
         throws PersistenceException
     {
-        // if too many associated accounts (two) have already redeemed this reward, sorry charlie
-        int otherRedeemers = 0;
-        for (RewardRecord rrec : records) {
-            if (rrec.rewardId == record.rewardId && !rrec.account.equals(prec.accountName)) {
-                otherRedeemers++;
-            }
-        }
-        if (otherRedeemers > MAX_RELATED_REDEEMERS) {
-            return;
-        }
-
         // otherwise load up the reward info
         RewardInfo info = _rewards.get(record.rewardId);
         if (info == null) {
@@ -445,6 +434,19 @@ public class OOOAuthenticator extends BangAuthenticator
         }
         if (info == null || info.data == null || !info.data.toLowerCase().startsWith("bang:")) {
             return; // reward is expired (and purged) or not bang related
+        }
+
+        // if this is not a billing reward, then we limit it to 2 redeemers on related accounts
+        if (!info.data.toLowerCase().startsWith("bang:billing:")) {
+            int otherRedeemers = 0;
+            for (RewardRecord rrec : records) {
+                if (rrec.rewardId == record.rewardId && !rrec.account.equals(prec.accountName)) {
+                    otherRedeemers++;
+                }
+            }
+            if (otherRedeemers > MAX_RELATED_REDEEMERS) {
+                return;
+            }
         }
 
         // note this reward as redeemed

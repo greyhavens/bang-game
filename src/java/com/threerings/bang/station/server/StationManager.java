@@ -61,7 +61,7 @@ public class StationManager extends ShopManager
 
         // create the ticket and make sure no funny business is afoot
         TrainTicket ticket = new TrainTicket(user.playerId, ticketTownIdx);
-        if (ticket.getCoinCost() < 0 && !user.tokens.isAdmin()) {
+        if (ticket.getCoinCost(user) < 0 && !user.tokens.isAdmin()) {
             log.warning("Rejecting request to buy unavailable ticket [who=" + user.who() +
                         ", ticket=" + ticket + "].");
             throw new InvocationException(INTERNAL_ERROR);
@@ -176,7 +176,7 @@ public class StationManager extends ShopManager
         public BuyTicketAction (PlayerObject user, TrainTicket ticket,
                                 StationService.ConfirmListener listener)
         {
-            super(user, ticket.getScripCost(), ticket.getCoinCost());
+            super(user, ticket.getScripCost(), ticket.getCoinCost(user));
             _ticket = ticket;
             _listener = listener;
         }

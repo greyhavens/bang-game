@@ -18,6 +18,7 @@ import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.ArrayIntSet;
@@ -84,6 +85,7 @@ import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.EntryReplacedEvent;
+import com.threerings.bang.data.GoldPass;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
@@ -271,6 +273,23 @@ public class PlayerManager
                     log.info("Granting coin reward [account=" + player.username +
                              ", coins=" + coins + "].");
                     BangServer.coinmgr.grantRewardCoins(player, coins);
+
+                }  else if (data[1].equalsIgnoreCase("billing") &&
+                        data[2].equalsIgnoreCase("goldpass")) {
+                    String townId = null;
+                    for (String id : BangCodes.TOWN_IDS) {
+                        if (id.equals(data[3])) {
+                            townId = id;
+                            break;
+                        }
+                    }
+                    if (townId == null) {
+                        throw new Exception("Invalid townId");
+                    }
+
+                    log.info("Granting Gold Pass reward [account=" + player.username +
+                            ", townId=" + townId + "].");
+                    giveGoldPass(player, townId);
                 }
 
             } catch (Exception e) {
@@ -1465,6 +1484,28 @@ public class PlayerManager
                 }
             }
         }
+    }
+
+    /**
+     * Helper function that gives a player a gold pass.
+     */
+    protected void giveGoldPass (final PlayerObject user, String townId)
+    {
+        final GoldPass pass = new GoldPass(user.playerId, townId);
+
+        // stick the new item in the database and in their inventory
+        BangServer.invoker.postUnit(new RepositoryUnit("giveGoldPass") {
+            public void invokePersist () throws Exception {
+                BangServer.itemrepo.insertItem(pass);
+            }
+            public void handleSuccess () {
+                user.addToInventory(pass);
+            }
+            public void handleFailure (Exception err) {
+                log.log(Level.WARNING, "Failed to add gold pass to repository " +
+                    "[who=" + user.who() + ", item=" + pass + "]", err);
+            }
+        });
     }
 
     /** Provides access to the pardner database. */

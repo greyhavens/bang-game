@@ -52,9 +52,11 @@ public class TrainTicket extends Item
     /**
      * Returns the cost of this ticket in coins.
      */
-    public int getCoinCost ()
+    public int getCoinCost (PlayerObject user)
     {
-        return StationCodes.TICKET_COINS[getTownIndex()];
+        int prevTownIdx = Math.max(0, getTownIndex() - 1);
+        return user.holdsGoldPass(BangCodes.TOWN_IDS[prevTownIdx]) ?
+            0 : StationCodes.TICKET_COINS[getTownIndex()];
     }
 
     @Override // documentation inherited

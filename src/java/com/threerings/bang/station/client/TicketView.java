@@ -92,8 +92,11 @@ public class TicketView extends BContainer
                     BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
                     row.add(new BLabel(msgs.get("l.price"), "price_label"));
                     MoneyLabel cost = new MoneyLabel(ctx, true);
-                    cost.setMoney(StationCodes.TICKET_SCRIP[ticketTownIdx],
-                                  StationCodes.TICKET_COINS[ticketTownIdx], false);
+                    int prevTownIdx = Math.max(0, ticketTownIdx - 1);
+                    int coinCost =
+                        ctx.getUserObject().holdsGoldPass(BangCodes.TOWN_IDS[prevTownIdx]) ?
+                            0 : StationCodes.TICKET_COINS[ticketTownIdx];
+                    cost.setMoney(StationCodes.TICKET_SCRIP[ticketTownIdx], coinCost, false);
                     row.add(cost);
                     add(row, new Rectangle(0, 80, 160, 23));
                 }
