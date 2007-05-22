@@ -3,7 +3,7 @@
 <project name="library-dependencies">
   <filelist dir="${libs.dir}" id="office.libs">
     <file name="commons-collections.jar"/>
-    <file name="mysql-connector-java-3.1.12-bin.jar"/>
+    <file name="mysql-connector-java-5.0.4-bin.jar"/>
     <file name="narya-base.jar"/>
     <file name="narya-distrib.jar"/>
     <file name="vilya-parlor.jar"/>
