@@ -176,14 +176,14 @@
     <taskdef name="dobj" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenDObjectTask"/>
     <!-- make sure the dobject class files are all compiled -->
-    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Object.java"/>
     </javac>
     <!-- now generate the associated files -->
     <dobj classpathref="classpath">
-      <fileset dir="src/java" includes="**/*Object.java"/>
+      <fileset dir="${src.dir}" includes="**/*Object.java"/>
     </dobj>
   </target>
 
@@ -193,14 +193,14 @@
     <taskdef name="service" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenServiceTask"/>
     <!-- make sure the service class files are all compiled -->
-    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Service.java"/>
     </javac>
     <!-- now generate the associated files -->
     <service header="lib/SOURCE_HEADER" classpathref="classpath">
-      <fileset dir="src/java" includes="**/*Service.java"/>
+      <fileset dir="${src.dir}" includes="**/*Service.java"/>
     </service>
   </target>
 
@@ -210,7 +210,7 @@
     <taskdef name="receiver" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenReceiverTask"/>
     <!-- make sure the receiver class files are all compiled -->
-    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Receiver.java"/>
@@ -218,7 +218,7 @@
     </javac>
     <!-- now generate the associated files -->
     <receiver header="lib/SOURCE_HEADER" classpathref="classpath">
-      <fileset dir="src/java" includes="**/*Receiver.java" excludes="**/InvocationReceiver.java"/>
+      <fileset dir="${src.dir}" includes="**/*Receiver.java" excludes="**/InvocationReceiver.java"/>
     </receiver>
   </target>
 
