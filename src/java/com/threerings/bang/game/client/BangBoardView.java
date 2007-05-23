@@ -757,19 +757,28 @@ public class BangBoardView extends BoardView
         _pmarquees.setPreferredSize(BangUI.MIN_WIDTH, BangUI.MIN_HEIGHT);
 
         // add the player avatars and gang buckles
-        BContainer players = new BContainer(
-                GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(0));
-        BContainer gangs = new BContainer(
-                GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(2));
-        int pcount = _bangobj.players.length;
+        int pcount = _bangobj.players.length, tcount = 0;
         boolean[] added = new boolean[pcount];
         boolean coop = true;
         for (int ii = 1; ii < _bangobj.teams.length; ii++) {
+            tcount++;
             if (_bangobj.teams[ii-1] != _bangobj.teams[ii]) {
                 coop = false;
-                break;
+            }
+            for (int jj = 0; jj < ii; jj++) {
+                if (_bangobj.teams[ii] == _bangobj.teams[jj]) {
+                    tcount--;
+                    break;
+                }
             }
         }
+        if (coop) {
+            tcount = pcount;
+        }
+        BContainer players = new BContainer(
+                GroupLayout.makeHoriz(GroupLayout.CENTER).setGap((pcount - tcount) * 10));
+        BContainer gangs = new BContainer(
+                GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(2));
         for (int ii = 0; ii < _bangobj.players.length; ii++) {
             if (coop) {
                 players.add(createPlayerMarquee(ii));
@@ -980,9 +989,6 @@ public class BangBoardView extends BoardView
             BuckleView bview = new BuckleView(_ctx, 2);
             bview.setBuckle(_bangobj.playerInfo[pidx].buckle);
             marquee.add(bview);
-        }
-        if (_bangobj.playerInfo[pidx].gang == null) {
-            log.warning("Gang name null!! [pidx=" + pidx + "]");
         }
         BLabel gangLabel = new BLabel(_bangobj.playerInfo[pidx].gang.toString(),
                     "gang_marquee_label" + colorLookup[pidx + 1]);
