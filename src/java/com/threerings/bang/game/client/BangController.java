@@ -540,13 +540,13 @@ public class BangController extends GameController
                     AvatarView.getImage(_ctx, _bangobj.playerInfo[pidx].victory,
                             new ResultListener.NOOP<BufferedImage>());
                 }
-                _postRoundMultex.satisfied(Multex.CONDITION_THREE);
 
             // for bounties, we need to wait until we get the awards before advancing our post
             // game multex
-            } else if (_config.type == BangConfig.Type.BOUNTY) {
+            } else {
                 _postRoundMultex.satisfied(Multex.CONDITION_TWO);
             }
+            _postRoundMultex.satisfied(Multex.CONDITION_THREE);
 
         // regenerate our color lookup when the teams change
         } else if (event.getName().equals(BangObject.TEAMS)) {
