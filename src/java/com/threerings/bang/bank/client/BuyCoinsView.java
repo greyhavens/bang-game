@@ -42,12 +42,6 @@ public class BuyCoinsView extends BContainer
         MessageBundle msgs =
             ctx.getMessageManager().getBundle(BankCodes.BANK_MSGS);
 
-        BContainer lcont = new BContainer(
-            GroupLayout.makeHoriz(GroupLayout.LEFT));
-        lcont.setPreferredSize(new Dimension(310, 50));
-        lcont.add(new BLabel(msgs.get("m.great_offers"), "bank_title"));
-        add(lcont, GroupLayout.FIXED);
-
         TableLayout tlay = new TableLayout(3, 5, 15);
         tlay.setHorizontalAlignment(TableLayout.CENTER);
         BContainer ocont = new BContainer(tlay);

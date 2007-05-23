@@ -67,6 +67,7 @@ public class FullTransact extends BContainer
             _offers[ii] = new OfferLabel(offers);
         }
         _offers[0].setNoOffers();
+        offers.setStyleClass("offer_cont");
         add(offers, new Rectangle(12, 215, 310, 75));
 
         add(new BLabel(_msgs.get(msg + "_post_offer"), "bank_post_title"),
@@ -91,7 +92,9 @@ public class FullTransact extends BContainer
         add(new BLabel(_msgs.get("m.your_offers"), "bank_title"),
             new Point(0, 86));
         _myoffers = new BContainer(new TableLayout(5, 3, 8));
-        add(new BScrollPane(_myoffers), new Rectangle(12, 0, 310, 82));
+        BScrollPane offerpane = new BScrollPane(_myoffers);
+        offerpane.setStyleClass("offer_cont");
+        add(offerpane, new Rectangle(12, 0, 310, 82));
     }
 
     public void init (BankObject bankobj)
