@@ -128,6 +128,7 @@
     <copy todir="${deploy.dir}/rsrc/goods">
       <fileset dir="rsrc/goods">
         <include name="cards/**/*.png"/>
+        <include name="gold/**/*.png"/>
         <include name="passes/**/*.png"/>
         <include name="purses/**/*.png"/>
         <include name="tickets/**/*.png"/>
