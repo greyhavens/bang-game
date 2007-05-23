@@ -145,7 +145,7 @@ big_button:down {
 }
 
 huge_button {
-  color: #FFFFFF;
+  color: #FEFF8B;
   background: image "ui/buttons/huge_normal.png" framex;
   font: "Old Town Wide" plain 24;
   text-align: center;
@@ -157,7 +157,7 @@ huge_button {
 }
 huge_button:disabled {
   background: image "ui/buttons/huge_disabled.png" framex;
-  color: #FFFFFF4C;
+  color: #FEFF8B4C;
 }
 huge_button:hover {
   background: image "ui/buttons/huge_hover.png" framex;
@@ -165,6 +165,29 @@ huge_button:hover {
 huge_button:down {
   background: image "ui/buttons/huge_down.png" framex;
   padding: 2 26 0 24;
+}
+
+massive_button {
+  color: #FEFF8B;
+  background: image "ui/buttons/massive_normal.png" framex;
+  font: "Old Town Wide" plain 36;
+  text-align: center;
+  text-effect: shadow;
+  effect-color: #000000;
+  vertical-align: center;
+  padding: 0 35;
+  cursor: "hand";
+}
+massive_button:disabled {
+  background: image "ui/buttons/massive_disabled.png" framex;
+  color: #FEFF8B4C;
+}
+massive_button:hover {
+  background: image "ui/buttons/massive_hover.png" framex;
+}
+massive_button:down {
+  background: image "ui/buttons/massive_down.png" framex;
+  padding: 3 36 0 34;
 }
 
 alt_button {
@@ -1694,6 +1717,27 @@ offer_unavail {
 offer_right {
   parent: "label";
   color: #FFFFFF;
+}
+
+offer_cont {
+  background: image "ui/bank/field.png" centerxy;
+}
+
+bank_divider {
+  background: image "ui/bank/divider.png" framex;
+}
+
+bank_only {
+  font: "Dom Casual" bold 24;
+  color: #4C2602;
+//  border: 1 solid #FFFFFF;
+}
+
+pass_cost {
+  font:"Dom Casual" bold 32;
+  color: #FFFFFF;
+  text-effect: outline;
+  effect-color: #4C2602;
 }
 
 //
