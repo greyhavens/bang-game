@@ -1875,6 +1875,12 @@ match_label {
   text-align: right;
 }
 
+match_info {
+  font: "Dom Casual" plain 20;
+  color: #524129;
+  text-align: center;
+}
+
 match_header {
   parent: match_label;
   text-align: center;
