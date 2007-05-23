@@ -18,6 +18,7 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
@@ -156,10 +157,16 @@ public class Match
             }
         }
 
+        // We'll use the forest guardians ident now for matching rank in coop games since it's
+        // currently the only coop scenario.  When we add another coop scenario, we'll make an
+        // overall rating for coop games.
+        String ident = mode == Criterion.COOP ?
+            ForestGuardiansInfo.IDENT : ScenarioInfo.OVERALL_IDENT;
+
         // now make sure the joining player satisfies our rating range requirements: the joiner
         // must fall within our desired range of the average rating and the min and max rating must
         // fall within the joiner's criterion-specified range
-        Rating prating = player.getRating(ScenarioInfo.OVERALL_IDENT);
+        Rating prating = player.getRating(ident);
         if (criterion.range < Criterion.OPEN) {
             int range = (criterion.range == Criterion.TIGHT ?
                     RuntimeConfig.server.nearRankRange : RuntimeConfig.server.looseRankRange);
@@ -167,7 +174,7 @@ public class Match
                 if (players[ii] == null) {
                     continue;
                 }
-                Rating rating = players[ii].getRating(ScenarioInfo.OVERALL_IDENT);
+                Rating rating = players[ii].getRating(ident);
                 if (Math.abs(rating.rating - prating.rating) > range) {
                     return false;
                 }
