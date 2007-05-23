@@ -479,35 +479,9 @@ public class HideoutManager extends MatchHostManager
     @Override // from MatchHostManager
     protected void checkCriterion (Criterion criterion)
     {
-        // we never allow ais
-        criterion.allowAIs = 1;
         super.checkCriterion(criterion);
-    }
 
-    @Override // from MatchHostManager
-    protected Match createMatch (PlayerObject user, Criterion criterion)
-    {
-        return new Match(user, criterion) {
-            public boolean join (PlayerObject player, Criterion criterion) {
-                // ranked games require every player to be in a different gang (until we have team
-                // games); unranked games require every player to be in the same gang
-                boolean ranked = _criterion.getDesiredRankedness();
-                for (PlayerObject oplayer : players) {
-                    if (oplayer != null && ranked == (player.gangId == oplayer.gangId)) {
-                        return false;
-                    }
-                }
-                return super.join(player, criterion);
-            }
-            public BangConfig createConfig () {
-                // grant aces for rated (competition) games
-                BangConfig config = super.createConfig();
-                if (config.rated) {
-                    config.grantAces = true;
-                }
-                return config;
-            }
-        };
+        criterion.gang = true;
     }
 
     protected void refreshTopRanked ()

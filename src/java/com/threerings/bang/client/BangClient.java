@@ -82,6 +82,7 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.bounty.data.OfficeObject;
 import com.threerings.bang.gang.data.HideoutObject;
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonObject;
 
@@ -815,7 +816,7 @@ public class BangClient extends BasicClient
                 Arrays.fill(scenarios, scenario);
             } else {
                 scenarios = ScenarioInfo.selectRandomIds(
-                    _ctx.getUserObject().townId, rounds, pcount, null, false);
+                    _ctx.getUserObject().townId, rounds, pcount, null, false, Criterion.ANY);
             }
             String board = System.getProperty("board");
             if (board != null) {

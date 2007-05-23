@@ -65,16 +65,16 @@ public abstract class CriterionView extends BContainer
         }
         table.add(row);
 
-        addRankedControl(msgs, table);
-        _ranked.selectItem(0);
-        new StateSaver(saver + ".ranked", _ranked);
+        addModeControl(msgs, table);
+        if (_mode != null) {
+            _mode.selectItem(0);
+            new StateSaver(saver + ".mode", _mode);
+        }
 
         table.add(BangUI.createLabel(msgs, "m.range", "match_label"));
         table.add(_range = new BComboBox(xlate(msgs, RANGE)));
         _range.selectItem(0);
         new StateSaver(saver + ".range", _range);
-
-        addAIControls(msgs, table);
 
         _prev = new BCheckBox(msgs.get("m.allow_previous"));
         _prev.setSelected(false);
@@ -105,33 +105,14 @@ public abstract class CriterionView extends BContainer
         reenable();
     }
 
-    protected void addRankedControl (MessageBundle msgs, BContainer table)
+    protected void addModeControl (MessageBundle msgs, BContainer table)
     {
-        table.add(BangUI.createLabel(msgs, "m.rankedness", "match_label"));
-        table.add(_ranked = new BComboBox(xlate(msgs, RANKED)));
-    }
-
-    protected int getRankedStatus (int index)
-    {
-        return Criterion.compose((index == 0 || index == 1), (index == 0 || index == 2), false);
-    }
-
-    protected void addAIControls (MessageBundle msgs, BContainer table)
-    {
-        table.add(BangUI.createLabel(msgs, "m.opponents", "match_label"));
-        BContainer row = new BContainer(GroupLayout.makeHStretch());
-        for (int ii = 0; ii < _aiopps.length; ii++) {
-            row.add(_aiopps[ii] = new BCheckBox("" + ii));
-            _aiopps[ii].setSelected(ii < 2);
-            new StateSaver(_saver + ".tincans." + ii, _aiopps[ii]);
+        table.add(BangUI.createLabel(msgs, "m.game_mode", "match_label"));
+        if (!_ctx.getUserObject().townId.equals(BangCodes.FRONTIER_TOWN)) {
+            table.add(_mode = new BComboBox(xlate(msgs, MODE)));
+        } else {
+            table.add(BangUI.createLabel(msgs, "m." + MODE[1], "match_info"));
         }
-        table.add(row);
-    }
-
-    protected int getAllowAIs ()
-    {
-        return Criterion.compose(_aiopps[0].isSelected(), _aiopps[1].isSelected(),
-            _aiopps[2].isSelected());
     }
 
     /**
@@ -148,6 +129,21 @@ public abstract class CriterionView extends BContainer
         return tmsgs;
     }
 
+    protected int getModeSelection ()
+    {
+        if (_mode == null) {
+            return Criterion.COMP;
+        }
+        switch (_mode.getSelectedIndex()) {
+        case 0:
+            return Criterion.ANY;
+        case 2:
+            return Criterion.COOP;
+        default:
+            return Criterion.COMP;
+        }
+    }
+
     protected ActionListener _golist = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             // create a criterion instance from our UI configuration
@@ -158,9 +154,8 @@ public abstract class CriterionView extends BContainer
             criterion.players = Criterion.compose(
                 _players[0].isSelected(), _players[1].isSelected(),
                 _players[2].isSelected());
-            criterion.ranked = getRankedStatus(_ranked.getSelectedIndex());
+            criterion.mode = getModeSelection();
             criterion.range = _range.getSelectedIndex();
-            criterion.allowAIs = getAllowAIs();
             criterion.allowPreviousTowns =
                 _prev.isAdded() ? _prev.isSelected() : true;
 
@@ -176,11 +171,11 @@ public abstract class CriterionView extends BContainer
     protected BCheckBox[] _rounds = new BCheckBox[GameCodes.MAX_ROUNDS];
     protected BCheckBox[] _players = new BCheckBox[GameCodes.MAX_PLAYERS-1];
     protected BCheckBox[] _aiopps = new BCheckBox[GameCodes.MAX_PLAYERS-1];
-    protected BComboBox _ranked, _range;
+    protected BComboBox _mode, _range;
     protected BCheckBox _prev;
     protected BButton _go;
 
+    protected static final String[] MODE = { "any", "comp", "coop" };
     protected static final String[] RANKED = { "both", "ranked", "unranked" };
     protected static final String[] RANGE = { "tight", "loose", "open" };
-    protected static final String[] ALLOW_AIS = { "allow", "disallow", "both" };
 }

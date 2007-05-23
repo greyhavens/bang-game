@@ -27,6 +27,7 @@ import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 
@@ -116,15 +117,30 @@ public abstract class ScenarioInfo
      * included in the selection.
      * @param prevScids a list of scenario ids the players have played recently.  Used to weight
      * the likelyhood of a scenario being chosen.
+     * @param mode the game mode specified in Criterion
      */
     public static String[] selectRandomIds (String townId, int count,
-            int players, String[] prevScids, boolean includePrior)
+            int players, String[] prevScids, boolean includePrior, int mode)
     {
         ArrayList<ScenarioInfo> scens = getScenarios(townId, includePrior);
 
-        // prune out scenarios that don't support the specified player count
+        // prune out scenarios that don't support the specified player count or mode
         for (Iterator<ScenarioInfo> iter = scens.iterator(); iter.hasNext(); ) {
             ScenarioInfo info = iter.next();
+            switch (info.getTeams()) {
+            case INDIVIDUAL:
+                if (mode == Criterion.COOP) {
+                    iter.remove();
+                    continue;
+                }
+                break;
+            case COOP:
+                if (mode == Criterion.COMP || mode == Criterion.TEAM_2V2) {
+                    iter.remove();
+                    continue;
+                }
+                break;
+            }
             if (!info.supportsPlayers(players)) {
                 iter.remove();
             }

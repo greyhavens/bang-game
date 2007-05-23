@@ -68,9 +68,8 @@ public abstract class MatchView extends BContainer
         // this will contain our current criterion
         _info.add(_rounds = new BLabel("", "match_label"));
         _info.add(_players = new BLabel("", "match_label"));
-        _info.add(_ranked = new BLabel("", "match_label"));
+        _info.add(_mode = new BLabel("", "match_label"));
         _info.add(_range = new BLabel("", "match_label"));
-        _info.add(_opponents = new BLabel("", "match_label"));
         _info.add(_prevscen = new BLabel("", "match_label"));
         _info.add(_starting = new BLabel("", "starting_label"));
 
@@ -190,19 +189,12 @@ public abstract class MatchView extends BContainer
         _players.setText(_msgs.get("m.cr_players", value));
         value = _mobj.criterion.getRoundString();
         _rounds.setText(_msgs.get("m.cr_rounds", value));
-        updateRanked();
-        value = _mobj.criterion.getAIString();
-        _opponents.setText(_msgs.get("m.cr_aiopps", value));
+        value = _mobj.criterion.getModeString();
+        _mode.setText(_msgs.get(value));
         value = "m." + CriterionView.RANGE[_mobj.criterion.range];
         _range.setText(_msgs.get(value));
         _prevscen.setText(_mobj.criterion.allowPreviousTowns ?
                           _msgs.get("m.cr_allscens") : "");
-    }
-
-    protected void updateRanked ()
-    {
-        _ranked.setText(_msgs.get(_mobj.criterion.getDesiredRankedness() ?
-                                  "m.ranked" : "m.unranked"));
     }
 
     protected void updateStarting ()
@@ -231,8 +223,7 @@ public abstract class MatchView extends BContainer
     protected SafeSubscriber<MatchObject> _msub;
     protected MatchObject _mobj;
 
-    protected BLabel _players, _rounds, _ranked, _range, _prevscen;
-    protected BLabel _opponents, _starting;
+    protected BLabel _players, _rounds, _range, _prevscen, _starting, _mode;
     protected BButton _bye;
 
     protected BContainer _left, _right, _info;

@@ -1928,7 +1928,7 @@ public class BangManager extends GameManager
             } else {
                 for (int ii = 0; ii < _bconfig.getRounds(); ii++) {
                     int[] rpoints = _bangobj.getFilteredRoundPoints(ii);
-                    computePenalizedRatings(_bconfig.getScenario(ii), _bangobj.getFilteredPoints());
+                    computePenalizedRatings(_bconfig.getScenario(ii), rpoints);
                 }
                 computePenalizedRatings(ScenarioInfo.OVERALL_IDENT, _bangobj.getFilteredPoints());
             }

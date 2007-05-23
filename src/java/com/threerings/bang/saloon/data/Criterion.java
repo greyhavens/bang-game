@@ -25,21 +25,28 @@ public class Criterion extends SimpleStreamableObject
     /** Controls ranking closeness when matchmaking. */
     public static final int OPEN = 2;
 
+    /** Controls the game mode. */
+    public static final int ANY = 0;
+    public static final int COMP = 1;
+    public static final int TEAM_2V2 = 2; // Not currently supported
+    public static final int COOP = 3;
+
     /** A bitmask indicating which round counts to allow. */
     public int rounds;
 
     /** A bitmask indicating which player counts to allow. */
     public int players;
 
-    /** A bitmask indicating which rankednesses to allow. */
-    public int ranked;
-
     /** Indicates the ranking range to allow when matchmaking, one of {@link
      * #TIGHT}, {@link #LOOSE} or {@link #OPEN}. */
     public int range;
 
-    /** A bitmask indicating how many AIs to allow. */
-    public int allowAIs;
+    /** Indicates the game mode when matchmaking, one of {@link #ANY}, {@link #COMP},
+     * {@link #TEAM_2V2} or {@link #COOP}. */
+    public int mode;
+
+    /** Indicated the game must be a gang match. */
+    public boolean gang;
 
     /** Whether to allow previous towns' scenarios. */
     public boolean allowPreviousTowns = true;
@@ -72,9 +79,7 @@ public class Criterion extends SimpleStreamableObject
     {
         return (rounds & other.rounds) != 0 &&
             (players & other.players) != 0 &&
-            (ranked & other.ranked) != 0 &&
-            (allowAIs == other.allowAIs || (allowAIs & other.allowAIs) != 0) &&
-            (allowPreviousTowns || !other.allowPreviousTowns);
+            (mode == other.mode || mode == ANY || other.mode == ANY);
     }
 
     /**
@@ -86,10 +91,10 @@ public class Criterion extends SimpleStreamableObject
     {
         rounds &= other.rounds;
         players &= other.players;
-        ranked &= other.ranked;
         range = Math.min(range, other.range);
-        allowAIs &= other.allowAIs;
         allowPreviousTowns &= other.allowPreviousTowns;
+        gang &= other.gang;
+        mode = Math.max(mode, other.mode);
     }
 
     /**
@@ -97,16 +102,7 @@ public class Criterion extends SimpleStreamableObject
      */
     public boolean couldStart (int playerCount)
     {
-        // a ranked game can never start with just one player
-        if (!isBitSet(ranked, 1) && playerCount == 1) {
-            return false;
-        }
-        for (int ii = 1, ll = getAllowedAIs(); ii <= ll; ii++) {
-            if (isBitSet(players, playerCount-2 + ii)) {
-                return true;
-            }
-        }
-        return isBitSet(players, playerCount-2);
+        return playerCount > 1 && isBitSet(players, playerCount-2);
     }
 
     /**
@@ -123,22 +119,6 @@ public class Criterion extends SimpleStreamableObject
     public int getDesiredRounds ()
     {
         return highestBitIndex(rounds);
-    }
-
-    /**
-     * Returns the desired ranked setting, favoring ranked games over unranked.
-     */
-    public boolean getDesiredRankedness ()
-    {
-        return (ranked & 1) != 0;
-    }
-
-    /**
-     * Returns the largest allow AI count.
-     */
-    public int getAllowedAIs ()
-    {
-        return Math.max(0, highestBitIndex(allowAIs)-1);
     }
 
     /**
@@ -170,17 +150,18 @@ public class Criterion extends SimpleStreamableObject
     }
 
     /**
-     * Returns a string describing the allowable AI counts.
+     * Returns the translation key for the game mode.
      */
-    public String getAIString ()
+    public String getModeString ()
     {
-        ArrayList<String> values = new ArrayList<String>();
-        for (int ii = 0; ii < GameCodes.MAX_PLAYERS-1; ii++) {
-            if (isBitSet(allowAIs, ii)) {
-                values.add(String.valueOf(ii));
-            }
+        switch (mode) {
+        case ANY:
+            return "m.any";
+        case COOP:
+            return "m.coop";
+        default:
+            return "m.comp";
         }
-        return values.size() > 0 ? join(values) : Integer.toString(0);
     }
 
     protected boolean isBitSet (int mask, int bit)

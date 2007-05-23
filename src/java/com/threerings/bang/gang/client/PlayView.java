@@ -16,6 +16,7 @@ import com.threerings.parlor.client.GameReadyObserver;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.StatusLabel;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.client.CriterionView;
@@ -49,18 +50,25 @@ public class PlayView extends BContainer
                 cont.add(new BLabel(_msgs.get("m.game_tip"), "play_tip"));
                 cont.add(new Spacer(1, -20));
             }
-            protected void addRankedControl (MessageBundle msgs, BContainer table) {
-                table.add(BangUI.createLabel(_msgs, "m.game_mode", "match_label"));
-                table.add(_ranked = new BComboBox(xlate(_msgs, GAME_MODE)));
+            protected void addModeControl (MessageBundle msgs, BContainer table) {
+                table.add(BangUI.createLabel(msgs, "m.game_mode", "match_label"));
+                if (!_ctx.getUserObject().townId.equals(BangCodes.FRONTIER_TOWN)) {
+                    table.add(_mode = new BComboBox(xlate(msgs, GAME_MODE)));
+                } else {
+                    table.add(BangUI.createLabel(msgs, "m." + GAME_MODE[0], "match_info"));
+                }
             }
-            protected int getRankedStatus (int index) {
-                return Criterion.compose(index == 0, index == 1, false);
-            }
-            protected void addAIControls (MessageBundle msgs, BContainer table) {
-                // nada
-            }
-            protected int getAllowAIs () {
-                return 1; // none
+            protected int getModeSelection ()
+            {
+                if (_mode == null) {
+                    return Criterion.COMP;
+                }
+                switch (_mode.getSelectedIndex()) {
+                    case 1:
+                        return Criterion.COOP;
+                    default:
+                        return Criterion.COMP;
+                }
             }
             protected void findMatch (Criterion criterion) {
                 PlayView.this.findMatch(criterion);
@@ -119,11 +127,6 @@ public class PlayView extends BContainer
         add(_mview = new MatchView(_ctx, matchOid, false) { {
                 ((GroupLayout)getLayoutManager()).setGap(10);
                 setStyleClass("hideout_match_view");
-                _info.remove(_opponents);
-            }
-            protected void updateRanked () {
-                _ranked.setText(PlayView.this._msgs.get(
-                    _mobj.criterion.getDesiredRankedness() ? "m.compete" : "m.practice"));
             }
             protected void leaveMatch (int matchOid) {
                 PlayView.this.leaveMatch(matchOid);
@@ -166,5 +169,5 @@ public class PlayView extends BContainer
 
     protected boolean _gameStarting;
 
-    protected static final String[] GAME_MODE = { "compete", "practice" };
+    protected static final String[] GAME_MODE = { "comp", "coop" };
 }

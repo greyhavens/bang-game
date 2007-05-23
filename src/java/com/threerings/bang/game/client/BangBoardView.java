@@ -796,10 +796,9 @@ public class BangBoardView extends BoardView
             _bangobj.scenario.getName());
         _pmarquees.add(new BLabel(msgs.xlate(msg), "marquee_subtitle"),
                 new Rectangle(0, 340, BangUI.MIN_WIDTH, 30));
-        if (_bconfig.rated) {
-            _pmarquees.add(new BLabel(msgs.get("m.ranked"), "marquee_subtitle"),
-                    new Rectangle(0, 224, BangUI.MIN_WIDTH, 30));
-        }
+        msg = _bconfig.rated ? (_bconfig.grantAces ? "m.gang" : "m.ranked") : "m.unranked";
+        _pmarquees.add(new BLabel(msgs.get(msg), "marquee_subtitle"),
+                new Rectangle(0, 224, BangUI.MIN_WIDTH, 30));
 
         // add the marquee window
         int x = (_ctx.getDisplay().getWidth() - BangUI.MIN_WIDTH) / 2,
@@ -981,6 +980,9 @@ public class BangBoardView extends BoardView
             BuckleView bview = new BuckleView(_ctx, 2);
             bview.setBuckle(_bangobj.playerInfo[pidx].buckle);
             marquee.add(bview);
+        }
+        if (_bangobj.playerInfo[pidx].gang == null) {
+            log.warning("Gang name null!! [pidx=" + pidx + "]");
         }
         BLabel gangLabel = new BLabel(_bangobj.playerInfo[pidx].gang.toString(),
                     "gang_marquee_label" + colorLookup[pidx + 1]);

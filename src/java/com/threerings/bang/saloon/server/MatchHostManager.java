@@ -162,15 +162,17 @@ public abstract class MatchHostManager extends ShopManager
      */
     protected void checkCriterion (Criterion criterion)
     {
-        // force at least 2 players, 1 round, and match zero AIs if nothing was selected
+        // force at least 2 players and 1 round if nothing was selected
         if (criterion.players == 0) {
             criterion.players = 1;
         }
         if (criterion.rounds == 0) {
             criterion.rounds = 1;
         }
-        if (criterion.allowAIs == 0) {
-            criterion.allowAIs = 1;
+
+        // 2 v 2 games are not currently supported in match play
+        if (criterion.mode == Criterion.TEAM_2V2) {
+            criterion.mode = Criterion.COMP;
         }
     }
 
@@ -282,7 +284,7 @@ public abstract class MatchHostManager extends ShopManager
         BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
     }
 
-    protected HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
+    protected static HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
 
     /** The delay between reporting that we're going to start a match and the
      * time that we actually start it. */

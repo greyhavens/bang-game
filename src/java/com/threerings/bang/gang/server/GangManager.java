@@ -153,6 +153,7 @@ public class GangManager
     public void populatePlayerInfo (BangObject.PlayerInfo pinfo, PlayerObject player)
     {
         if (player.gangId <= 0) {
+            log.info("Can't populate player info [gangId=" + player.gangId + "].");
             return;
         }
         try {

@@ -134,15 +134,24 @@ public class Match
             return false;
         }
 
-        // make sure we're not a foe of theirs and none of them one of ours and that we're not
-        // somehow already in this match
-        for (int i = 0; i < players.length; i ++) {
-            if (players[i] != null) {
+        // make sure we're not a foe of theirs and none of them one of ours, that we're not
+        // somehow already in this match and that gang teams are proper
+        int mode = Math.max(criterion.mode, _criterion.mode);
+        boolean gang = criterion.gang || _criterion.gang;
+        for (PlayerObject oplayer : players) {
+            if (oplayer != null) {
                 // if we're already in this match, we can just return true at this point
-                if (players[i].playerId == player.playerId) {
+                if (oplayer.playerId == player.playerId) {
                     return true;
-                } else if (players[i].isFoe(player.playerId) || player.isFoe(players[i].playerId)) {
+                } else if (oplayer.isFoe(player.playerId) || player.isFoe(oplayer.playerId)) {
                     return false;
+                } else if (gang) {
+                    if (mode == Criterion.COOP && oplayer.gangId != player.gangId) {
+                        return false;
+                    } else if (mode == Criterion.COMP && oplayer.gangId != 0 && player.gangId != 0
+                            && oplayer.gangId == player.gangId) {
+                        return false;
+                    }
                 }
             }
         }
@@ -306,31 +315,22 @@ public class Match
     public BangConfig createConfig ()
     {
         BangConfig config = new BangConfig();
-        int pcount = Math.min(GameCodes.MAX_PLAYERS, getPlayerCount() + _criterion.getAllowedAIs());
+        int pcount = Math.min(GameCodes.MAX_PLAYERS, getPlayerCount());
         config.init(pcount, TEAM_SIZES[pcount-2]);
         config.players = new Name[pcount];
 
         // add our human players
-        int idx = 0, humans = 0;
+        int idx = 0;
         for (int ii = 0; ii < players.length; ii++) {
             if (players[ii] != null) {
                 config.players[idx++] = players[ii].handle;
-                humans++;
             }
         }
 
-        // add our ais (if any)
         config.ais = new BangAI[pcount];
-        HashSet<String> names = new HashSet<String>();
-        for (int ii = idx; ii < config.ais.length; ii++) {
-            // TODO: sort out personality and skill
-            BangAI ai = BangAI.createAI(1, 50, names);
-            config.ais[ii] = ai;
-            config.players[ii] = ai.handle;
-        }
 
         idx = 0;
-        String[] lastScenIds = new String[humans];
+        String[] lastScenIds = new String[pcount];
         for (int ii = 0; ii < players.length; ii++) {
             if (players[ii] != null) {
                 lastScenIds[idx] = players[ii].lastScenId;
@@ -338,17 +338,79 @@ public class Match
             }
         }
 
-        // only games versus at least one other human are rated
-        config.rated = (humans > 1) ? _criterion.getDesiredRankedness() : false;
+        // all matched games are rated
+        config.rated = true;
 
         // configure our rounds
-        for (String scenId : ScenarioInfo.selectRandomIds(
+        String[] scenIds = ScenarioInfo.selectRandomIds(
                  ServerConfig.townId, _criterion.getDesiredRounds(), pcount, lastScenIds,
-                 _criterion.allowPreviousTowns)) {
+                 _criterion.allowPreviousTowns, _criterion.mode);
+        for (String scenId : scenIds) {
             config.addRound(scenId, null, null);
         }
 
+        config.grantAces = _criterion.gang || isGangCompatible(scenIds);
+
         return config;
+    }
+
+    /**
+     * Checks that this match is a valid gang match.
+     */
+    protected boolean isGangCompatible (String[] scenIds)
+    {
+        int mode = _criterion.mode;
+        // make sure all the scenarios are either competitive or cooperative
+        if (mode == Criterion.ANY) {
+            for (String scenId : scenIds) {
+                ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenId);
+                if (info.getTeams() == ScenarioInfo.Teams.COOP) {
+                    if (mode != Criterion.ANY && mode != Criterion.COOP) {
+                        return false;
+                    }
+                    mode = Criterion.COOP;
+                } else {
+                    if (mode != Criterion.ANY && mode != Criterion.COMP) {
+                        return false;
+                    }
+                    mode = Criterion.COMP;
+                }
+            }
+        }
+
+        // now check that the players are in all different gangs for competitive games or are all
+        // on the same gang for cooperative games
+        switch (mode) {
+        case Criterion.COMP:
+            for (PlayerObject player1 : players) {
+                if (player1 == null || player1.gangId == 0) {
+                    continue;
+                }
+                for (PlayerObject player2 : players) {
+                    if (player2 == null || player2.gangId == 0) {
+                        continue;
+                    }
+                    if (player1.playerId != player2.playerId && player1.gangId == player2.gangId) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        case Criterion.COOP:
+            int gangId = -1;
+            for (PlayerObject player : players) {
+                if (player == null) {
+                    continue;
+                }
+                if (gangId < 0) {
+                    gangId = player.gangId;
+                } else if (gangId != player.gangId) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
