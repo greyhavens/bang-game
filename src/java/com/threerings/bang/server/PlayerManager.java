@@ -1500,6 +1500,7 @@ public class PlayerManager
             }
             public void handleSuccess () {
                 user.addToInventory(pass);
+                BangServer.itemLog("gold_pass " + user.playerId + " t:" + pass.getTownId());
             }
             public void handleFailure (Exception err) {
                 log.log(Level.WARNING, "Failed to add gold pass to repository " +
