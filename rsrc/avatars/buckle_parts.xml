@@ -43,8 +43,41 @@
   <!-- buckle icons -->
   <class name="icon">
     <part name="bull_head" coins="4" aces="350"/>
+    <part name="bull_head_sm" coins="3" aces="250"/>
     <part name="bull_skull" coins="5" aces="500"/>
+    <part name="bull_skull_sm" coins="3" aces="300"/>
+    <part name="buffalo_left" coins="5" aces="500"/>
+    <part name="buffalo_right" coins="5" aces="500"/>
+    <part name="eagle_swoop" coins="6" aces="550"/>
+    <part name="feather_left" coins="2" aces="150"/>
+    <part name="feather_right" coins="2" aces="150"/>
+    <part name="feather_left_sm" coins="1" aces="100"/>
+    <part name="feather_right_sm" coins="1" aces="100"/>
+    <part name="feather_up_left" coins="2" aces="150"/>
+    <part name="feather_up_right" coins="2" aces="150"/>
+    <part name="feather_up_left_sm" coins="1" aces="100"/>
+    <part name="feather_up_right_sm" coins="1" aces="100"/>
+    <part name="flower_sm" coins="2" aces="200"/>
+    <part name="flower_tiny" coins="1" aces="100"/>
+    <part name="hat_left" coins="2" aces="200"/>
+    <part name="hat_right" coins="2" aces="200"/>
+    <part name="headdress_left" coins="5" aces="600"/>
+    <part name="headdress_right" coins="5" aces="600"/>
+    <part name="headdress_left_sm" coins="4" aces="400"/>
+    <part name="headdress_right_sm" coins="4" aces="400"/>
+    <part name="horse_run_left" coins="6" aces="650"/>
+    <part name="horse_run_right" coins="6" aces="650"/>
+    <part name="horseshoe" coins="4" aces="400"/>
+    <part name="horseshoe_pair" coins="5" aces="450"/>
+    <part name="horseshoe_sm" coins="3" aces="300"/>
+    <part name="horseshoe_left_sm" coins="3" aces="300"/>
+    <part name="horseshoe_right_sm" coins="3" aces="300"/>
+    <part name="thunderbird_front" coins="8" aces="700"/>
+    <part name="thunderbird_head_left" coins="6" aces="500"/>
+    <part name="thunderbird_head_right" coins="6" aces="500"/>
+    <part name="trickster_mask" coins="5" aces="500"/>
     <part name="star_small" coins="2" aces="100"/>
+    <part name="star_tiny" coins="1" aces="75"/>
     <part name="chamber" coins="6" aces="550"/>
     <part name="counter" coins="5" aces="450"/>
     <part name="gear_fat" coins="6" aces="500"/>
