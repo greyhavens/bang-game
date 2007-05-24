@@ -13,6 +13,8 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.coin.server.CoinExOffer;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.PlayerObject;
@@ -134,6 +136,18 @@ public class BankManager extends ShopManager
 
         // register with the coin exchange manager
         BangServer.coinexmgr.registerPublisher(this);
+    }
+
+    @Override // from ShopManager
+    protected PlayerObject requireShopEnabled (ClientObject caller)
+        throws InvocationException
+    {
+        PlayerObject user = super.requireShopEnabled(caller);
+        if (!user.canExchange()) {
+            throw new InvocationException(MessageBundle.qualify(
+                        BankCodes.BANK_MSGS, "e.require_exchange_pass"));
+        }
+        return user;
     }
 
     protected BankObject _bankobj;

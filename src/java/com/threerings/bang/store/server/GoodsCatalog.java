@@ -42,6 +42,7 @@ import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardPackGood;
 import com.threerings.bang.store.data.CardTripletGood;
+import com.threerings.bang.store.data.ExchangePassGood;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.PurseGood;
 import com.threerings.bang.store.data.SongGood;
@@ -97,9 +98,10 @@ public class GoodsCatalog
         // the remainder of the goods can generate their own items
         pf = new ItemProviderFactory();
 
-        // register our purses
+        // register our purses and exchange pass
         for (int townIdx = 0; townIdx < BangCodes.TOWN_IDS.length; townIdx++) {
             registerGood(new PurseGood(townIdx), pf);
+            registerGood(new ExchangePassGood(BangCodes.TOWN_IDS[townIdx]), pf);
         }
 
         // register our unit passes

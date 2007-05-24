@@ -8,6 +8,7 @@ import java.net.URL;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -33,6 +34,7 @@ import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -121,7 +123,11 @@ public class BankView extends ShopView
         if ("get_pass".equals(event.getAction())) {
             BrowserUtil.browseURL(_shownURL = DeploymentConfig.getBillingURL(_ctx), _browlist);
         } else if ("exchange".equals(event.getAction())) {
-            showExchangeView();
+            if (_ctx.getUserObject().canExchange()) {
+                showExchangeView();
+            } else {
+                _ctx.getBangClient().displayPopup(new ExchangeInfoWindow(), true, 500);
+            }
         }
     }
 
@@ -157,7 +163,8 @@ public class BankView extends ShopView
         _contents.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/bank/heading_gold_coins.png"))),
                     new Point(60, 128));
 
-        _contents.add(new BLabel(_msgs.get("m.great_offers"), "bank_title"),
+        String msg = _ctx.getUserObject().canExchange() ? "m.exchange_offers" : "m.great_offers";
+        _contents.add(new BLabel(_msgs.get(msg), "bank_title"),
                     new Rectangle(80, 65, 250, 50));
         _contents.add(new BButton(_msgs.get("m.exchange"), this, "exchange"), new Point(115, 25));
 
@@ -196,6 +203,39 @@ public class BankView extends ShopView
         initBank();
     }
 
+    protected class ExchangeInfoWindow extends BDecoratedWindow
+        implements ActionListener
+    {
+        public ExchangeInfoWindow ()
+        {
+            super(_ctx.getStyleSheet(), _msgs.get("m.einfo_title"));
+            setModal(true);
+            ((GroupLayout)getLayoutManager()).setGap(20);
+            BContainer cont = new BContainer(GroupLayout.makeHoriz(GroupLayout.LEFT).setGap(10));
+
+            cont.add(new BLabel(new ImageIcon(_ctx.loadImage("goods/passes/exchange.png"))));
+            BLabel info = new BLabel(_msgs.get("m.einfo_info"));
+            info.setPreferredSize(320, -1);
+            cont.add(info);
+            add(cont);
+
+            BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
+            ((GroupLayout)bcont.getLayoutManager()).setGap(25);
+            bcont.add(new BButton(_msgs.get("m.to_store"), this, "to_store"));
+            bcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
+            add(bcont, GroupLayout.FIXED);
+        }
+
+        // from interface ActionListener
+        public void actionPerformed (ActionEvent event)
+        {
+            _ctx.getBangClient().clearPopup(this, true);
+            if ("to_store".equals(event.getAction())) {
+                BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
+                _ctx.getLocationDirector().moveTo(bbd.storeOid);
+            }
+        }
+    }
     protected ResultListener _browlist = new ResultListener() {
         public void requestCompleted (Object result) {
         }

@@ -297,6 +297,14 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns true if the player has an exchange pass.
+     */
+    public boolean canExchange ()
+    {
+        return holdsEquivalentItem(new ExchangePass(-1));
+    }
+
+    /**
      * Returns true if the player holds an item that is equivalent in content to the one specified.
      */
     public boolean holdsEquivalentItem (Item item)
