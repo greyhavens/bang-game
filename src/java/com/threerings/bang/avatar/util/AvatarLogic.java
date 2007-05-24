@@ -477,13 +477,13 @@ public class AvatarLogic
         }
 
         // if we weren't provided with classes, use the values from the component class record
-        HashSet<String> colset = new HashSet<String>();
+        ArrayList<String> cols = new ArrayList<String>();
         if (colors == null) {
-            CollectionUtil.addAll(colset, ccomp.componentClass.colors);
-            CollectionUtil.addAll(colset, _artcat.getColorOverrides(
+            CollectionUtil.addAll(cols, ccomp.componentClass.colors);
+            CollectionUtil.addAll(cols, _artcat.getColorOverrides(
                                       ccomp.componentClass.name, ccomp.name));
         } else {
-            CollectionUtil.addAll(colset, colors);
+            CollectionUtil.addAll(cols, colors);
         }
 
         // decode the colorization color id values
@@ -493,7 +493,7 @@ public class AvatarLogic
 
         // look up the actual colorizations from those
         Colorization[] zations = new Colorization[5];
-        for (String color : colset) {
+        for (String color : cols) {
             if (color.equals(SKIN)) {
                 zations[3] = _globals[0];
             } else if (color.equals(HAIR)) {
