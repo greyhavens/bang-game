@@ -35,6 +35,7 @@ import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -59,7 +60,8 @@ public class BankView extends ShopView
 
         add(new BLabel(_msgs.get("m.welcome"), "shop_status"), new Rectangle(200, 655, 625, 40));
 
-        String townId = _ctx.getUserObject().townId;
+        PlayerObject user = _ctx.getUserObject();
+        String townId = user.townId;
         add(new BLabel(_msgs.get("m.name_" + townId), "shopkeep_name_label"),
             new Rectangle(12, 513, 155, 25));
 
@@ -72,7 +74,11 @@ public class BankView extends ShopView
         add(createHelpButton(), new Point(790, 20));
         add(new TownButton(ctx), new Point(880, 20));
 
-        showPassView();
+        if (user.canExchange() && user.holdsGoldPass(townId)) {
+            showExchangeView();
+        } else {
+            showPassView();
+        }
     }
 
     // documentation inherited from interface PlaceView
@@ -85,7 +91,7 @@ public class BankView extends ShopView
 
     public void initBank ()
     {
-        if (_qbuy != null) {
+        if (_qbuy != null && _bankobj != null) {
             _qbuy.init(_bankobj);
             _qsell.init(_bankobj);
             _fbuy.init(_bankobj);
@@ -139,7 +145,8 @@ public class BankView extends ShopView
 
     protected void showPassView ()
     {
-        String townId = _ctx.getUserObject().townId;
+        PlayerObject user = _ctx.getUserObject();
+        String townId = user.townId;
 
         _contents.add(new BLabel(new BlankIcon(800, 24), "bank_divider"), new Point(30, 534));
         _contents.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/bank/heading_gold_pass.png"))),
@@ -151,6 +158,9 @@ public class BankView extends ShopView
                             "ui/bank/" + townId + "/never_need.png"))), new Point(470, 348));
         BButton pass = new BButton(_msgs.get("m.get_pass"), this, "get_pass");
         pass.setStyleClass("massive_button");
+        if (user.holdsGoldPass(townId)) {
+            pass.setEnabled(false);
+        }
         _contents.add(pass, new Point(507, 233));
         BContainer cost = new BContainer(GroupLayout.makeHoriz(
                     GroupLayout.CENTER).setOffAxisJustification(GroupLayout.BOTTOM).setGap(10));
@@ -163,7 +173,7 @@ public class BankView extends ShopView
         _contents.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/bank/heading_gold_coins.png"))),
                     new Point(60, 128));
 
-        String msg = _ctx.getUserObject().canExchange() ? "m.exchange_offers" : "m.great_offers";
+        String msg = user.canExchange() ? "m.exchange_offers" : "m.great_offers";
         _contents.add(new BLabel(_msgs.get(msg), "bank_title"),
                     new Rectangle(80, 65, 250, 50));
         _contents.add(new BButton(_msgs.get("m.exchange"), this, "exchange"), new Point(115, 25));

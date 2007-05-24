@@ -13,6 +13,7 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.BuckleUpgrade;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.ExchangePass;
 import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.GoldPass;
 import com.threerings.bang.data.Item;
@@ -111,6 +112,7 @@ public class ItemFactory
         registerItemClass(WeightClassUpgrade.class);
         registerItemClass(BuckleUpgrade.class);
         registerItemClass(GoldPass.class);
+        registerItemClass(ExchangePass.class);
         // end of registration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 
