@@ -105,8 +105,9 @@ public class GangInfoView extends BContainer
         rcont.add(ncont, GroupLayout.FIXED);
 
         BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
-        scont.add(_statement = new BLabel(GangUtil.quoteStatement(_ctx, _gangobj.statement),
+        scont.add(_statement = new BLabel(GangUtil.quoteStatement(_ctx, _gangobj.statement, true),
             "gang_statement"));
+        _statement.setTooltipText(GangUtil.quoteStatement(_ctx, _gangobj.statement, false));
         BContainer pcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         pcont.add(_page = new BButton(_msgs.get("m.home_page"), this, "page"));
         _page.setStyleClass("alt_button");
@@ -189,7 +190,8 @@ public class GangInfoView extends BContainer
             if (name.equals(GangObject.NOTORIETY)) {
                 _notoriety.setText(getNotorietyDesc());
             } else if (name.equals(GangObject.STATEMENT)) {
-                _statement.setText(GangUtil.quoteStatement(_ctx, _gangobj.statement));
+                _statement.setText(GangUtil.quoteStatement(_ctx, _gangobj.statement, true));
+                _statement.setTooltipText(GangUtil.quoteStatement(_ctx, _gangobj.statement, false));
             } else if (name.equals(GangObject.URL)) {
                 _page.setVisible(_gangobj.getURL() != null);
             } else if (name.equals(GangObject.BUCKLE)) {

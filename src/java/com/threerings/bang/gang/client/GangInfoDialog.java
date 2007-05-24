@@ -150,7 +150,7 @@ public class GangInfoDialog extends BWindow
         scont.add(createLabel("underline_short"));
 
         scont.add(new Spacer(1, 8));
-        scont.add(new BLabel(GangUtil.quoteStatement(_ctx, info.statement),
+        scont.add(new BLabel(GangUtil.quoteStatement(_ctx, info.statement, false),
             "gang_info_statement"));
         scont.add(new Spacer(1, 15));
 

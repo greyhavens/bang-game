@@ -183,10 +183,14 @@ public class GangUtil
      * Puts a statement in quotes, substituting "..." if it's empty and running it through the
      * chat filter if not.
      */
-    public static String quoteStatement (BangContext ctx, String statement)
+    public static String quoteStatement (BangContext ctx, String statement, boolean crop)
     {
-        String fstmt = (statement.trim().length() == 0) ? "..." :
-            ctx.getChatDirector().filter(statement, null, false);
-        return "\"" + fstmt + "\"";
+        String fstmt = statement.trim();
+        if (fstmt.length() == 0) {
+            fstmt = "...";
+        } else if (crop && fstmt.length() > 120) {
+            fstmt = fstmt.substring(0, 120) + "...";
+        }
+        return "\"" + ctx.getChatDirector().filter(fstmt, null, false) + "\"";
     }
 }
