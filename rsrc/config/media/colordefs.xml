@@ -313,7 +313,7 @@
   <!-- secondary raccoon recolorations -->
   <class classId="19" name="raccoon_s" source="#57AC6A" range="0.1, 0.6, 1">
     <color colorId="1" name="leather" offsets="0.7, 0.2, -0.2"/>
-    <color colorId="2" name="brown" offsets="-0.28, -0.37, -0.1"/>
+    <color colorId="2" name="brown" offsets="-0.28, -0.37, 0"/>
     <color colorId="3" name="beige" offsets="0.78, -0.4, 0"/>
     <color colorId="4" name="orange" offsets="0.72, -0.1, -0.252"/>
     <color colorId="5" name="gold" offsets="0.76, 0.6, 0.14"/>
