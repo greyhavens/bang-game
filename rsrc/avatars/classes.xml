@@ -46,9 +46,9 @@
          renderPriority="200" shadow="male/shadow"/>
   <class name="male/hat_band" colors="clothes_s,clothes_t"
          renderPriority="210"/>
-  <class name="male/familiar" colors="familiar_p,familiar_s,familiar_t"
-         renderPriority="220"/>
   <class name="male/clothing_front" colors="skin,clothes_p,clothes_s,clothes_t"
+         renderPriority="220"/>
+  <class name="male/familiar" colors="familiar_p,familiar_s,familiar_t"
          renderPriority="230"/>
 
   <!-- female component classes -->
@@ -89,10 +89,10 @@
          renderPriority="170" shadow="female/shadow"/>
   <class name="female/hat_band" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="180"/>
-  <class name="female/familiar" colors="familiar_p,familiar_s,familiar_t"
-         renderPriority="190"/>
   <class name="female/clothing_front"
          colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="190"/>
+  <class name="female/familiar" colors="familiar_p,familiar_s,familiar_t"
+         renderPriority="200"/>
 
   <!-- buckle component classes -->
   <class name="buckle/background" colors="buckle_back_p,buckle_back_s" mask="buckle/border"
