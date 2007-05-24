@@ -342,16 +342,14 @@ public class ColorConstraints
 
         _preds.put("raccoon_s",
                 preds = new HashMap<String,Predicate<DObject>>());
-        preds.put("leather", new Normal());
-        preds.put("brown", new Normal());
+        preds.put("redbrown", new Normal());
+        preds.put("greybrown", new Normal());
         preds.put("beige", new Normal());
+        preds.put("brown", new Normal());
         preds.put("orange", new Normal());
-        preds.put("gold", new Normal());
-        preds.put("yellow", new Normal());
+        preds.put("tan", new Normal());
         preds.put("moss", new Normal());
-        preds.put("olive", new Normal());
         preds.put("slate", new Normal());
-        preds.put("white", new Normal());
         preds.put("grey", new Normal());
         preds.put("black", new Normal());
 
