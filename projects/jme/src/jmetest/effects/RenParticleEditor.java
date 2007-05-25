@@ -113,7 +113,7 @@ import com.jmex.effects.particles.SwarmInfluence;
 
 /**
  * <code>RenParticleControlFrame</code>
- * 
+ *
  * @author Joshua Slack
  * @author Andrzej Kapolka - additions for multiple layers, save/load from jme
  *         format
@@ -163,7 +163,7 @@ public class RenParticleEditor extends JFrame {
 
     /**
      * Main Entry point...
-     * 
+     *
      * @param args
      *            String[]
      */
@@ -610,15 +610,6 @@ public class RenParticleEditor extends JFrame {
         });
     }
 
-    private void setLocationOverride(final File parent) {
-        TextureKey.setLocationOverride(new TextureKey.LocationOverride() {
-            public URL getLocation(String file)
-                throws MalformedURLException {
-                return new URL(parent.toURL(), file);
-            }  
-        });
-    }
-    
     private void saveAs(File file) {
         if (file == null) {
             fileChooser.setSelectedFile(openFile == null ? new File("")
@@ -693,52 +684,6 @@ public class RenParticleEditor extends JFrame {
         return path.toString();
     }
 
-    private void setTexturePathsRelative (
-        Spatial spatial, File parent, boolean relative) {
-        TextureState tstate =
-            (TextureState)spatial.getRenderState(RenderState.RS_TEXTURE);
-        if (tstate != null) {
-            Texture tex = tstate.getTexture();
-            if (tex != null && tex.getTextureKey() != null && "file".equals(
-                    tex.getTextureKey().getLocation().getProtocol())) {
-                String tfile = tex.getTextureKey().getLocation().getFile();
-                try {
-                    if (relative) {
-                        String path = relativize(new File(tfile),
-                            parent).replace(File.separatorChar, '/');
-                        tex.getTextureKey().setLocation(new URL("file:" + path));
-                    } else {
-                        tex.getTextureKey().setLocation(
-                            new File(parent, tfile).getCanonicalFile().toURL());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                setTexturePathsRelative(node.getChild(ii), parent, relative);
-            }
-        }
-    }
-    
-    private String relativize(File absolute, File parent) {
-        String abspath = absolute.toString(); 
-        StringBuffer path = new StringBuffer();
-        while (!abspath.startsWith(parent.toString())) {
-            path.append("..").append(File.separatorChar);
-            if ((parent = parent.getParentFile()) == null) {
-                return abspath; // different roots
-            }
-        }
-        String pstr = parent.toString();
-        path.append(abspath.substring(pstr.length() +
-            (pstr.endsWith(File.separator) ? 0 : 1)));
-        return path.toString();
-    }
-    
     private void showBackgroundDialog() {
         final Color bg = JColorChooser.showDialog(this,
                 "Choose Background Color", makeColor(impl.getRenderer()
@@ -1053,7 +998,7 @@ public class RenParticleEditor extends JFrame {
 
     /**
      * updateManager
-     * 
+     *
      * @param particles
      *            number of particles to reset manager with.
      */
