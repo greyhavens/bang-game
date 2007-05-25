@@ -41,6 +41,7 @@ import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
+import com.threerings.bang.saloon.data.ParlorGameConfig.Slot;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorMarshaller;
 import com.threerings.bang.saloon.data.ParlorObject;
@@ -173,11 +174,12 @@ public class ParlorManager extends PlaceManager
 
         } else {
             // sanity check the configuration
-            int minPlayers = (game.tinCans > 0) ? 1 : 2;
-            game.players = MathUtil.bound(minPlayers, game.players, GameCodes.MAX_PLAYERS);
+            game.slots[0] = Slot.HUMAN;
+            if (game.getCount(Slot.TINCAN) == 0 && game.getCount(Slot.HUMAN) < 2) {
+                game.slots[1] = Slot.HUMAN;
+            }
             game.rounds = MathUtil.bound(1, game.rounds, GameCodes.MAX_ROUNDS);
             game.teamSize = MathUtil.bound(1, game.teamSize, GameCodes.MAX_TEAM_SIZE);
-            game.tinCans = MathUtil.bound(0, game.tinCans, GameCodes.MAX_PLAYERS - game.players);
             if (game.scenarios == null || game.scenarios.length == 0) {
                 game.scenarios = ScenarioInfo.getScenarioIds(ServerConfig.townId, false);
             }
@@ -191,7 +193,7 @@ public class ParlorManager extends PlaceManager
             }
 
             // create a playerOids array and stick the starter in slot zero
-            int[] playerOids = new int[game.players];
+            int[] playerOids = new int[game.getCount(Slot.HUMAN)];
             playerOids[0] = caller.getOid();
             _parobj.setPlayerOids(playerOids);
 
@@ -440,7 +442,9 @@ public class ParlorManager extends PlaceManager
         BangConfig config = new BangConfig();
 
         // we can use these values directly as we sanity checked them earlier
-        config.init(_parobj.game.players + _parobj.game.tinCans, _parobj.game.teamSize);
+        int players = _parobj.game.getCount(Slot.HUMAN);
+        int tinCans = _parobj.game.getCount(Slot.TINCAN);
+        config.init(players + tinCans, _parobj.game.teamSize);
         config.players = new Handle[config.plist.size()];
         config.duration = _parobj.game.duration;
         config.speed = _parobj.game.speed;
@@ -451,27 +455,35 @@ public class ParlorManager extends PlaceManager
             config.addRound(RandomUtil.pickRandom(_parobj.game.scenarios), null, _bdata);
         }
 
-        // fill in the human players
-        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            PlayerObject user = (PlayerObject)BangServer.omgr.getObject(_parobj.playerOids[ii]);
-            if (user == null) {
-                log.warning("Zoiks! Missing player for parlor match [game=" + _parobj.game +
-                            ", oid=" + _parobj.playerOids[ii] + "].");
-                // clear our now non-existant player from the match
-                clearPlayer(_parobj.playerOids[ii]);
-                return; // abandon ship
-            }
-            config.players[ii] = user.handle;
-        }
-
-        // add our ais (if any)
+        // fill in the human and ai players
         config.ais = new BangAI[config.players.length];
         HashSet<String> names = new HashSet<String>();
-        for (int ii = _parobj.playerOids.length; ii < config.ais.length; ii++) {
-            // TODO: sort out personality and skill
-            BangAI ai = BangAI.createAI(1, 50, names);
-            config.ais[ii] = ai;
-            config.players[ii] = ai.handle;
+        int pidx = 0, idx = 0;
+        for (Slot slot : _parobj.game.slots) {
+            switch (slot) {
+            case HUMAN:
+                PlayerObject user = (PlayerObject)BangServer.omgr.getObject(_parobj.playerOids[pidx]);
+                if (user == null) {
+                    log.warning("Zoiks! Missing player for parlor match [game=" + _parobj.game +
+                                ", oid=" + _parobj.playerOids[pidx] + "].");
+                    // clear our now non-existant player from the match
+                    clearPlayer(_parobj.playerOids[pidx]);
+                    return; // abandon ship
+                }
+                config.players[idx] = user.handle;
+                pidx++;
+                idx++;
+                break;
+            case TINCAN:
+                // TODO: sort out personality and skill
+                BangAI ai = BangAI.createAI(1, 50, names);
+                config.ais[idx] = ai;
+                config.players[idx] = ai.handle;
+                idx++;
+                break;
+            default:
+                // nothing doing
+            }
         }
 
         try {

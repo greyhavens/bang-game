@@ -20,6 +20,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 
@@ -121,9 +122,11 @@ public class ParlorMatchView extends BContainer
 
     protected void updateCriterion ()
     {
-        _players.setText(_msgs.get("m.cr_players", "" + _parobj.game.players));
+        _players.setText(_msgs.get("m.cr_players", "" +
+                    _parobj.game.getCount(ParlorGameConfig.Slot.HUMAN)));
         _rounds.setText(_msgs.get("m.cr_rounds", "" + _parobj.game.rounds));
-        _opponents.setText(_msgs.get("m.cr_aiopps", "" + _parobj.game.tinCans));
+        _opponents.setText(_msgs.get("m.cr_aiopps", "" +
+                    _parobj.game.getCount(ParlorGameConfig.Slot.TINCAN)));
         _teams.setText(_msgs.get("m.cr_teamsize", "" + _parobj.game.teamSize));
 // TODO
 //         _scenarios.setText(_msgs.get("m.cr_scenarios", "" + TODO));
