@@ -276,12 +276,12 @@ dice_button:disabled {
 n_state_button {
   text-align: center;
   vertical-align: center;
-  background: image "ui/buttons/n_state_normal.png" framex;
+  background: image "ui/buttons/n_state_normal0.png" framex;
   cursor: "hand";
 }
 
 n_state_button:hover {
-  background: image "ui/buttons/n_state_hover.png" framex;
+  background: image "ui/buttons/n_state_hover0.png" framex;
 }
 
 tabbedpane {
