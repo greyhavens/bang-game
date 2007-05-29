@@ -160,19 +160,19 @@
 
 
   <!-- male familiars: frontier town -->
-    <article name="male_mini_blimp" townId="frontier_town" slot="familiar" scrip="3000" coins="3" qualifier="familiar" colors="clothes_t">
+    <article name="male_mini_blimp" townId="frontier_town" slot="familiar" scrip="30000" coins="3" qualifier="familiar" colors="clothes_t">
     <component cclass="male/familiar" name="mini_blimp"/>
   </article>
 
-  <article name="male_raccoon" townId="frontier_town" slot="familiar" scrip="3000" coins="3" qualifier="familiar" colors="raccoon_p,raccoon_s,iris_t">
+  <article name="male_raccoon" townId="frontier_town" slot="familiar" scrip="30000" coins="3" qualifier="familiar" colors="raccoon_p,raccoon_s,iris_t">
     <component cclass="male/familiar" name="raccoon"/>
   </article>
 
-  <article name="male_buzzard" townId="frontier_town" slot="familiar" scrip="3000" coins="3" qualifier="familiar" colors="buzzard_p,raccoon_s,iris_t">
+  <article name="male_buzzard" townId="frontier_town" slot="familiar" scrip="30000" coins="3" qualifier="familiar" colors="buzzard_p,raccoon_s,iris_t">
     <component cclass="male/familiar" name="buzzard"/>
   </article>
 
-  <article name="male_armadillo" townId="frontier_town" slot="familiar" scrip="3000" coins="2" qualifier="familiar" colors="armadillo_t">
+  <article name="male_armadillo" townId="frontier_town" slot="familiar" scrip="30000" coins="2" qualifier="familiar" colors="armadillo_t">
     <component cclass="male/familiar" name="armadillo"/>
   </article>
 
@@ -620,19 +620,19 @@
 
 
   <!-- female familiars: frontier town -->
-  <article name="female_mini_blimp" townId="frontier_town" slot="familiar" scrip="3000" coins="3" qualifier="familiar" colors="clothes_t">
+  <article name="female_mini_blimp" townId="frontier_town" slot="familiar" scrip="30000" coins="3" qualifier="familiar" colors="clothes_t">
     <component cclass="female/familiar" name="mini_blimp"/>
   </article>
 
-  <article name="female_raccoon" townId="frontier_town" slot="familiar" scrip="3000" coins="3" qualifier="familiar" colors="raccoon_p,raccoon_s,iris_t">
+  <article name="female_raccoon" townId="frontier_town" slot="familiar" scrip="30000" coins="3" qualifier="familiar" colors="raccoon_p,raccoon_s,iris_t">
     <component cclass="female/familiar" name="raccoon"/>
   </article>
 
-  <article name="female_buzzard" townId="frontier_town" slot="familiar" scrip="3000" coins="3" qualifier="familiar" colors="buzzard_p,raccoon_s,iris_t">
+  <article name="female_buzzard" townId="frontier_town" slot="familiar" scrip="30000" coins="3" qualifier="familiar" colors="buzzard_p,raccoon_s,iris_t">
     <component cclass="female/familiar" name="buzzard"/>
   </article>
 
-  <article name="female_armadillo" townId="frontier_town" slot="familiar" scrip="3000" coins="2" qualifier="familiar" colors="armadillo_t">
+  <article name="female_armadillo" townId="frontier_town" slot="familiar" scrip="30000" coins="2" qualifier="familiar" colors="armadillo_t">
     <component cclass="female/familiar" name="armadillo"/>
   </article>
 
