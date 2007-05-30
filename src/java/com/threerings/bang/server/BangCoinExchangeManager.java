@@ -10,6 +10,7 @@ import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.QuickSort;
 import com.samskivert.util.ResultListener;
@@ -81,6 +82,13 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     {
         init(BangServer.coinmgr, BangServer.invoker, BangCoinManager.coinlog,
              BangCodes.COINEX_OFFERS_SHOWN);
+
+        // schedule an interval to clean out old offers periodically
+        new Interval(BangServer.omgr) {
+            public void expired () {
+                periodicDeleteOffers();
+            }
+        }.schedule(PERIODIC_DELETE_START_INTERVAL, PERIODIC_DELETE_REPEAT_INTERVAL);
     }
 
     /**
