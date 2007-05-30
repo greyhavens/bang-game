@@ -246,6 +246,7 @@ public class BankView extends ShopView
             }
         }
     }
+
     protected ResultListener _browlist = new ResultListener() {
         public void requestCompleted (Object result) {
         }

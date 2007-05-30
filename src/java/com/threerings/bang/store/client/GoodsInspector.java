@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
@@ -23,6 +24,8 @@ import com.jmex.bui.util.Rectangle;
 
 import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
+
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
@@ -57,6 +60,7 @@ public class GoodsInspector extends BContainer
         super(new AbsoluteLayout());
         _ctx = ctx;
         _palette = palette;
+        _msgs = _ctx.getMessageManager().getBundle(StoreCodes.STORE_MSGS);
 
         add(_icon = new BLabel(""), new Rectangle(0, 0, 136, 156));
         int offset = getControlGapOffset();
@@ -66,9 +70,9 @@ public class GoodsInspector extends BContainer
 
         // we'll add these later
         _ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        _ccont.add(new BLabel(_ctx.xlate(StoreCodes.STORE_MSGS, "m.price"), "table_data"));
+        _ccont.add(new BLabel(_msgs.get("m.price"), "table_data"));
         _ccont.add(_cost = createCostLabel());
-        _buy = new BButton(_ctx.xlate(StoreCodes.STORE_MSGS, "m.buy"), this, "buy");
+        _buy = new BButton(_msgs.get("m.buy"), this, "buy");
         _buy.setStyleClass("big_button");
     }
 
@@ -152,7 +156,11 @@ public class GoodsInspector extends BContainer
                 }
                 public void requestFailed (String cause) {
                     _buy.setEnabled(true);
-                    _descrip.setText(_ctx.xlate(StoreCodes.STORE_MSGS, cause));
+                    _descrip.setText(_msgs.xlate(cause));
+                    if (BangCodes.E_INSUFFICIENT_FUNDS.equals(cause) &&
+                            _good.getCoinCost(_ctx.getUserObject()) > _ctx.getUserObject().coins) {
+                        _ctx.getBangClient().displayPopup(new BankInfoWindow(), true, 350);
+                    }
                 }
             };
             _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
@@ -207,7 +215,7 @@ public class GoodsInspector extends BContainer
             msg += "_song";
         }
 
-        _descrip.setText(_ctx.xlate(StoreCodes.STORE_MSGS, msg));
+        _descrip.setText(_msgs.get(msg));
         BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
     }
 
@@ -232,7 +240,7 @@ public class GoodsInspector extends BContainer
 
         case TRY:
             if (_try == null) {
-                _try = new BButton(_ctx.xlate(StoreCodes.STORE_MSGS, "m.try"), this, "try");
+                _try = new BButton(_msgs.get("m.try"), this, "try");
                 _try.setStyleClass("big_button");
             }
             add(_try, new Point(300 + offset, 10));
@@ -241,7 +249,7 @@ public class GoodsInspector extends BContainer
         case DOWNLOAD:
             if (_download == null) {
                 _download = new BButton(
-                    _ctx.xlate(StoreCodes.STORE_MSGS, "m.download"), this, "download");
+                    _msgs.get("m.download"), this, "download");
             }
             add(_download, new Point(300 + offset, 10));
             break;
@@ -276,6 +284,37 @@ public class GoodsInspector extends BContainer
         _icon.setIcon(_good.createIcon(_ctx, _zations));
     }
 
+    protected class BankInfoWindow extends BDecoratedWindow
+        implements ActionListener
+    {
+        public BankInfoWindow ()
+        {
+            super(_ctx.getStyleSheet(), _msgs.get("m.binfo_title"));
+            setModal(true);
+            ((GroupLayout)getLayoutManager()).setGap(20);
+
+            BLabel info = new BLabel(_msgs.get("m.binfo_info"));
+            add(info);
+
+            BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
+            ((GroupLayout)bcont.getLayoutManager()).setGap(25);
+            bcont.add(new BButton(_msgs.get("m.to_bank"), this, "to_bank"));
+            bcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
+            add(bcont, GroupLayout.FIXED);
+        }
+
+        // from interface ActionListener
+        public void actionPerformed (ActionEvent event)
+        {
+            _ctx.getBangClient().clearPopup(this, true);
+            if ("to_bank".equals(event.getAction())) {
+                BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
+                _ctx.getLocationDirector().moveTo(bbd.bankOid);
+            }
+        }
+    }
+
+
     protected ActionListener _colorpal = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             ColorSelector colorsel = (ColorSelector)event.getSource();
@@ -289,6 +328,7 @@ public class GoodsInspector extends BContainer
     };
 
     protected BangContext _ctx;
+    protected MessageBundle _msgs;
     protected GoodsObject _goodsobj;
     protected Good _good;
     protected GoodsIcon _gicon;
