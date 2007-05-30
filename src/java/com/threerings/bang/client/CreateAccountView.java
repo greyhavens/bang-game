@@ -55,7 +55,7 @@ public class CreateAccountView extends SteelWindow
         _contents.add(new BLabel(_msgs.get("m.account_info"), "dialog_text"));
         BContainer grid = new BContainer(new TableLayout(2, 5, 5));
         grid.add(new BLabel(_msgs.get("m.username"), "right_label"));
-        grid.add(_username = new BTextField(24));
+        grid.add(_username = new BTextField(12));
         _username.setPreferredWidth(150);
         grid.add(new BLabel(_msgs.get("m.password"), "right_label"));
         grid.add(_password = new BPasswordField(32));
