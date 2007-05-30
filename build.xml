@@ -7,7 +7,7 @@
   <property name="var.dir"        value="var"/>
   <property name="app.name"       value="bang"/>
   <property name="extlibs.dir"    value="extlibs/java"/>
-  <property name="savedoc.dir"    value="docs"/>
+  <property name="javadoc.title"  value="Bang! Howdy API"/>
   <property name="build.optimize" value="on"/>
   <property name="nartool.path"   value="${basedir}/projects/narya/bin"/>
   <property name="towns"          value="frontier_town,indian_post,boom_town"/>
@@ -466,28 +466,7 @@
   </target>
 
   <!-- build the javadoc documentation -->
-  <target name="javadoc" depends="prepare">
-    <property name="copy.holder" value="Three Rings Design, Inc."/>
-    <javadoc sourcepath="${src.dir}"
-             packagenames="com.threerings.bang.*"
-             windowtitle="Bang! Howdy API"
-             doctitle="Bang! Howdy API"
-             bottom="Copyright &#169; 2006 ${copy.holder}. All Rights Reserved."
-             destdir="${deploy.dir}/docs"
-             additionalparam="-breakiterator">
-      <classpath refid="classpath"/>
-      <link href="http://build.earth.threerings.net/docs/java/java1.5/"/>
-    </javadoc>
-  </target>
-
-  <!-- builds the javadocs and stuffs them in a directory where they -->
-  <!-- won't be blown away when we do "clean" next time -->
-  <target name="savedoc" depends="javadoc">
-    <delete dir="${savedoc.dir}/api"/>
-    <copy todir="${savedoc.dir}/api">
-      <fileset dir="${deploy.dir}/docs" includes="**/*"/>
-    </copy>
-  </target>
+  <target name="javadoc" depends="prepare,common-javadoc"/>
 
   <!-- helper target for client and devclient -->
   <target name="baseclient">
