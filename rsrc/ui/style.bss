@@ -572,6 +572,10 @@ padded {
   padding: 10 20;
 }
 
+side_padded {
+  padding: 0 10;
+}
+
 shop_view {
   color: #3E1B00;
 }
@@ -1318,15 +1322,30 @@ gang_marquee_label4 {
 
 gang_marquee_label5 {
   parent: "gang_marquee_label1";
-  background: image "ui/frames/gang_scroll5.png" centerx;
+  background: image "ui/frames/small_scroll5.png" centerx;
 }
 
 gang_marquee_label6 {
   parent: "gang_marquee_label1";
-  background: image "ui/frames/gang_scroll6.png" centerx;
+  background: image "ui/frames/small_scroll6.png" centerx;
 }
 
 gang_marquee_label7 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/small_scroll7.png" centerx;
+}
+
+gang_team_label5 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/gang_scroll5.png" centerx;
+}
+
+gang_team_label6 {
+  parent: "gang_marquee_label1";
+  background: image "ui/frames/gang_scroll6.png" centerx;
+}
+
+gang_team_label7 {
   parent: "gang_marquee_label1";
   background: image "ui/frames/gang_scroll7.png" centerx;
 }
@@ -1956,6 +1975,54 @@ match_slot {
   text-align: center;
   vertical-align: bottom;
   padding: 0 12 5 12;
+}
+
+match_slot_white {
+  parent: match_slot;
+  color: #FFFFFF;
+}
+
+tin_can_slot0 {
+  font: "Dom Casual" plain 13;
+  text-align: center;
+  color: #FFFFFF;
+  background: image "ui/frames/tiny_scroll0.png" centerxy;
+  padding: 0 0 3;
+}
+
+tin_can_slot1 {
+  parent: "tin_can_slot0";
+  background: image "ui/frames/tiny_scroll1.png" centerxy;
+}
+
+tin_can_slot2 {
+  parent: "tin_can_slot0";
+  background: image "ui/frames/tiny_scroll2.png" centerxy;
+}
+
+tin_can_slot3 {
+  parent: "tin_can_slot0";
+  background: image "ui/frames/tiny_scroll3.png" centerxy;
+}
+
+tin_can_slot4 {
+  parent: "tin_can_slot0";
+  background: image "ui/frames/tiny_scroll4.png" centerxy;
+}
+
+tin_can_slot5 {
+  parent: "tin_can_slot0";
+  background: image "ui/frames/tiny_scroll5.png" centerxy;
+}
+
+tin_can_slot6 {
+  parent: "tin_can_slot0";
+  background: image "ui/frames/tiny_scroll6.png" centerxy;
+}
+
+tin_can_slot7 {
+  parent: "tin_can_slot0";
+  background: image "ui/frames/tiny_scroll7.png" centerxy;
 }
 
 match_chat_header {
