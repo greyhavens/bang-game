@@ -131,9 +131,9 @@ public abstract class MatchView extends BContainer
         _slots = new PlayerSlot[_mobj.playerInfo.length];
         for (int ii = 0; ii < _slots.length; ii++) {
             if (ii % 2 == 0) {
-                _left.add(_slots[ii] = new PlayerSlot(_ctx));
+                _left.add(_slots[ii] = new PlayerSlot(_ctx, 0));
             } else {
-                _right.add(_slots[ii] = new PlayerSlot(_ctx));
+                _right.add(_slots[ii] = new PlayerSlot(_ctx, 0));
             }
         }
 

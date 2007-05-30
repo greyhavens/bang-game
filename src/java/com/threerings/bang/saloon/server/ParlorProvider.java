@@ -35,6 +35,11 @@ public interface ParlorProvider extends InvocationProvider
     public void joinMatch (ClientObject caller);
 
     /**
+     * Handles a {@link ParlorService#joinMatchSlot} request.
+     */
+    public void joinMatchSlot (ClientObject caller, int arg1);
+
+    /**
      * Handles a {@link ParlorService#leaveMatch} request.
      */
     public void leaveMatch (ClientObject caller);

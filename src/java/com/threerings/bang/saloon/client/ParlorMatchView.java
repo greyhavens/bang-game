@@ -5,12 +5,18 @@ package com.threerings.bang.saloon.client;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -51,36 +57,99 @@ public class ParlorMatchView extends BContainer
 
         // create our player slots
         _slots = new PlayerSlot[_parobj.playerOids.length];
-        for (int ii = 0; ii < _slots.length; ii++) {
-            if (ii % 2 == 0) {
-                _left.add(_slots[ii] = new PlayerSlot(_ctx));
+        boolean team = _parobj.game.mode == ParlorGameConfig.Mode.TEAM_2V2;
+        if (team) {
+            _joins = new BButton[_parobj.playerOids.length];
+        }
+        int idx = 0, pidx = 0;
+        for (ParlorGameConfig.Slot slot : _parobj.game.slots) {
+            int color = team ? TEAM_COLORS[idx] : idx + 1;
+            BComponent comp = null;
+            switch (slot) {
+            case HUMAN:
+                _slots[pidx] = new PlayerSlot(_ctx, color);
+                if (team) {
+                    BContainer cont = new BContainer(new AbsoluteLayout());
+                    cont.add(_slots[pidx], new Point(0, 0));
+                    _joins[pidx] = new BButton(_msgs.get("m.join"), this, "join_" + pidx);
+                    _joins[pidx].setStyleClass("alt_button");
+                    cont.add(_joins[pidx], new Rectangle(0, 0, 120, 23));
+                    comp = cont;
+                } else {
+                    comp = _slots[pidx];
+                }
+                idx++;
+                pidx++;
+                break;
+            case TINCAN:
+                BContainer cont =
+                    new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).setGap(-3));
+                cont.add(new Spacer(96, 20));
+                cont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/saloon/tin_can.png"))));
+                cont.add(new BLabel(_msgs.get("m.tin_can"), "tin_can_slot" + color));
+                comp = cont;
+                idx++;
+                break;
+            default:
+                continue;
+            }
+            if ((team && idx <= 2) || (!team && idx % 2 == 1)) {
+                _left.add(comp);
             } else {
-                _right.add(_slots[ii] = new PlayerSlot(_ctx));
+                _right.add(comp);
             }
         }
 
         // this will contain our game configuration
+        _info.add(_mode = new BLabel("", "match_label"));
         _info.add(_rounds = new BLabel("", "match_label"));
-        _info.add(_players = new BLabel("", "match_label"));
-        _info.add(_opponents = new BLabel("", "match_label"));
         _info.add(_teams = new BLabel("", "match_label"));
+        _info.add(_duration = new BLabel("", "match_label"));
+        _info.add(_speed = new BLabel("", "match_label"));
         _info.add(_scenarios = new BLabel("", "match_label"));
         _info.add(_starting = new BLabel("", "starting_label"));
 
-        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
+        _buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         String action = isJoined() ? "leave" : "join";
         _action = new BButton(_msgs.get("m." + action), this, action);
         _action.setStyleClass("big_button");
-        buttons.add(_action);
-        add(buttons, BorderLayout.SOUTH);
+        if (team) {
+            if (isJoined()) {
+                for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+                    _joins[ii].setVisible(false);
+                }
+                _buttons.add(_action);
+            } else {
+                for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+                    if (_parobj.playerOids[ii] != 0) {
+                        _joins[ii].setVisible(false);
+                    }
+                }
+                _buttons.add(_joinBtn = new BLabel(new ImageIcon(
+                                _ctx.loadImage("ui/saloon/click_a_join_button.png"))));
+            }
+        } else {
+            _buttons.add(_action);
+        }
+        add(_buttons, BorderLayout.SOUTH);
     }
 
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        if ("join".equals(event.getAction())) {
+        String action = event.getAction();
+        if ("join".equals(action)) {
             _parobj.service.joinMatch(_ctx.getClient());
-        } else if ("leave".equals(event.getAction())) {
+
+        } else if (action.startsWith("join_")) {
+            try {
+                int slot = Integer.parseInt(action.substring(5));
+                _parobj.service.joinMatchSlot(_ctx.getClient(), slot);
+            } catch (NumberFormatException nfe) {
+                _parobj.service.joinMatch(_ctx.getClient());
+            }
+
+        } else if ("leave".equals(action)) {
             _parobj.service.leaveMatch(_ctx.getClient());
         }
     }
@@ -122,12 +191,13 @@ public class ParlorMatchView extends BContainer
 
     protected void updateCriterion ()
     {
-        _players.setText(_msgs.get("m.cr_players", "" +
-                    _parobj.game.getCount(ParlorGameConfig.Slot.HUMAN)));
         _rounds.setText(_msgs.get("m.cr_rounds", "" + _parobj.game.rounds));
-        _opponents.setText(_msgs.get("m.cr_aiopps", "" +
-                    _parobj.game.getCount(ParlorGameConfig.Slot.TINCAN)));
         _teams.setText(_msgs.get("m.cr_teamsize", "" + _parobj.game.teamSize));
+        _mode.setText(_msgs.xlate(_msgs.compose(
+                        "m.cr_mode", MODES[_parobj.game.mode.ordinal()])));
+        _duration.setText(_msgs.xlate(_msgs.compose(
+                        "m.cr_duration", _parobj.game.duration.key())));
+        _speed.setText(_msgs.xlate(_msgs.compose("m.cr_speed", _parobj.game.speed.key())));
 // TODO
 //         _scenarios.setText(_msgs.get("m.cr_scenarios", "" + TODO));
     }
@@ -139,8 +209,19 @@ public class ParlorMatchView extends BContainer
 
     protected void updateDisplay ()
     {
+        boolean visible = !isJoined();
         for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
             _slots[ii].setPlayerOid(_parobj.playerOids[ii]);
+            if (_joins != null) {
+                _joins[ii].setVisible(visible && _parobj.playerOids[ii] == 0);
+            }
+        }
+        if (visible && !_joinBtn.isAdded()) {
+            _buttons.removeAll();
+            _buttons.add(_joinBtn);
+        } else if (!visible && !_action.isAdded()) {
+            _buttons.removeAll();
+            _buttons.add(_action);
         }
     }
 
@@ -162,10 +243,15 @@ public class ParlorMatchView extends BContainer
     protected MessageBundle _msgs;
     protected ParlorObject _parobj;
     protected BButton _action;
+    protected BContainer _buttons;
 
     protected BContainer _left, _right, _info;
     protected PlayerSlot[] _slots;
+    protected BButton[] _joins;
 
-    protected BLabel _players, _rounds, _opponents, _teams, _scenarios;
-    protected BLabel _starting;
+    protected BLabel _rounds, _teams, _mode, _duration, _speed, _scenarios;
+    protected BLabel _starting, _joinBtn;
+
+    protected static final String[] MODES = { "m.mode_normal", "m.mode_2v2" };
+    protected static final int[] TEAM_COLORS = { 1, 6, 2, 5 };
 }

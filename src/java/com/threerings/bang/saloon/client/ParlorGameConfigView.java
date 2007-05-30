@@ -294,6 +294,8 @@ public class ParlorGameConfigView extends BContainer
                 _slots[ii].setMax(Slot.values()[Math.min(ii, 2)]);
                 _slots[ii].setBackground(BComponent.DEFAULT,
                         new ImageBackground(ImageBackground.FRAME_X, _slotbgs[0]));
+                _slots[ii].setBackground(BComponent.DISABLED,
+                        new ImageBackground(ImageBackground.FRAME_X, _slotbgs[0]));
                 _slots[ii].setBackground(BComponent.HOVER,
                         new ImageBackground(ImageBackground.FRAME_X, _slothbgs[0]));
             }
@@ -307,6 +309,8 @@ public class ParlorGameConfigView extends BContainer
             for (int ii = 0; ii < _slots.length; ii++) {
                 _slots[ii].setMax(Slot.values()[Math.min(ii, 1)]);
                 _slots[ii].setBackground(BComponent.DEFAULT,
+                        new ImageBackground(ImageBackground.FRAME_X, _slotbgs[ii / 2 + 1]));
+                _slots[ii].setBackground(BComponent.DISABLED,
                         new ImageBackground(ImageBackground.FRAME_X, _slotbgs[ii / 2 + 1]));
                 _slots[ii].setBackground(BComponent.HOVER,
                         new ImageBackground(ImageBackground.FRAME_X, _slothbgs[ii / 2 + 1]));

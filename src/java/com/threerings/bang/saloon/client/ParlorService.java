@@ -33,6 +33,9 @@ public interface ParlorService extends InvocationService
     /** Requests that we join the currently pending match. */
     public void joinMatch (Client client);
 
+    /** Requests that we join the currently pending match at a specific slot. */
+    public void joinMatchSlot (Client client, int slot);
+
     /** Requests that we leave the currently pending match. */
     public void leaveMatch (Client client);
 

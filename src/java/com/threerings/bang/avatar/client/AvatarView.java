@@ -34,7 +34,7 @@ public class AvatarView extends BaseAvatarView
     {
         getImage(ctx, avatar, new ResultListener<BufferedImage>() {
             public void requestCompleted (BufferedImage base) {
-                int sw = WIDTH/reduction, sh = HEIGHT/reduction;
+                int sw = WIDTH/reduction, sh = FRAMED_HEIGHT/reduction;
                 receiver.requestCompleted(
                     new BImage(base.getScaledInstance(sw, sh, BufferedImage.SCALE_SMOOTH)));
             }

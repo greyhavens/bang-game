@@ -108,33 +108,63 @@ public class GameOverView extends SteelWindow
             }
 
         } else {
-            _contents.add(new Spacer(1, -50)); // kids, don't try this at home
             GroupLayout gl = GroupLayout.makeHoriz(GroupLayout.CENTER);
             gl.setGap(15);
-            BContainer who = new BContainer(gl);
             GroupLayout vl = GroupLayout.makeVert(GroupLayout.CENTER);
             vl.setGap(15);
             BContainer split = new BContainer(vl);
+            BContainer who = new BContainer(gl);
             BContainer losers = new BContainer(gl);
-            for (int ii = 0; ii < bangobj.awards.length; ii++) {
-                int apidx = bangobj.awards[ii].pidx;
-                if (pidx == apidx) {
-                    award = bangobj.awards[ii];
-                    _cueidx = award.rank;
-                }
-                FinalistView view =
-                    new FinalistView(ctx, bangobj, ctrl, apidx, bangobj.awards[ii].rank);
-                if (ii == 0) {
-                    who.add(view);
-                    who.add(split);
-                    if (bangobj.roundId > 1) {
-                        split.add(new Spacer(1, 20));
+            _contents.add(new Spacer(1, -50)); // kids, don't try this at home
+            if (bangobj.isTeamGame()) {
+                int rank = 0;
+                boolean[] added = new boolean[bangobj.awards.length];
+                for (int ii = 0; ii < bangobj.awards.length; ii++) {
+                    int apidx = bangobj.awards[ii].pidx;
+                    int tidx = bangobj.teams[apidx];
+                    if (!added[tidx]) {
+                        added[tidx] = true;
+                        TeamFinalistView view = new TeamFinalistView(ctx, bangobj, ctrl, tidx, rank);
+                        if (rank == 0) {
+                            who.add(view);
+                            who.add(split);
+                            if (bangobj.roundId > 1) {
+                                split.add(new Spacer(1, 20));
+                            }
+                            split.add(losers);
+                        } else {
+                            losers.add(view);
+                        }
+                        rank++;
                     }
-                    split.add(losers);
-                } else {
-                    losers.add(view);
+                    if (pidx == apidx) {
+                        award = bangobj.awards[ii];
+                        _cueidx = award.rank;
+                    }
+                }
+
+            } else {
+                for (int ii = 0; ii < bangobj.awards.length; ii++) {
+                    int apidx = bangobj.awards[ii].pidx;
+                    if (pidx == apidx) {
+                        award = bangobj.awards[ii];
+                        _cueidx = award.rank;
+                    }
+                    FinalistView view =
+                        new FinalistView(ctx, bangobj, ctrl, apidx, bangobj.awards[ii].rank);
+                    if (ii == 0) {
+                        who.add(view);
+                        who.add(split);
+                        if (bangobj.roundId > 1) {
+                            split.add(new Spacer(1, 20));
+                        }
+                        split.add(losers);
+                    } else {
+                        losers.add(view);
+                    }
                 }
             }
+            _contents.add(who);
 
             // display a summary of your round ranks for a multi-round game
             if (bangobj.roundId > 1 && pidx > -1) {
@@ -161,7 +191,6 @@ public class GameOverView extends SteelWindow
                 ranks.add(new BLabel(msg, "endgame_desc"));
                 split.add(ranks);
             }
-            _contents.add(who);
         }
 
         // display our earnings and awarded badge (if any)

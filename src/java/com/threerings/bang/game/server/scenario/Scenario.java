@@ -363,9 +363,13 @@ public abstract class Scenario
         // scale their earnings by the number of players they defeated in
         // each round
         int defeated = 0, aisDefeated = 0;
+        boolean team = bangobj.isTeamGame();
         for (int ii = ranks.length-1; ii >= 0; ii--) {
             // stop when we get to our record
-            if (ranks[ii].pidx == pidx) {
+            if (team && bangobj.teams[ranks[ii].pidx] == bangobj.teams[pidx]) {
+                defeated++;
+                break;
+            } else if (!team && ranks[ii].pidx == pidx) {
                 break;
             }
 

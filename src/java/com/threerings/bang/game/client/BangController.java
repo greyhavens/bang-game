@@ -849,18 +849,26 @@ public class BangController extends GameController
             return;
         }
 
+
+        // for team games, futz around with the ranks
+        boolean team = _bangobj.isTeamGame();
+        int[] points = team ? _bangobj.getTeamPoints(_bangobj.points) : _bangobj.points;
+
         // determine each player's rank based on those points
-        int[] spoints = _bangobj.points.clone();
+        int[] spoints = points.clone();
         Arrays.sort(spoints);
         ArrayUtil.reverse(spoints);
         int rank = -1;
         for (int rr = 0; rr < spoints.length; rr++) {
-            rank++;
+                rank++;
             if (rr > 0 && spoints[rr] == spoints[rr-1]) {
+                if (team) {
+                    rank--;
+                }
                 continue;
             }
-            for (int ii = 0; ii < _bangobj.points.length; ii++) {
-                if (_bangobj.points[ii] == spoints[rr]) {
+            for (int ii = 0; ii < points.length; ii++) {
+                if (points[ii] == spoints[rr]) {
                     _view.pstatus[ii].setRank(rank);
                     // update our criteria view if one is showing
                     if (ii == 0 && _view.critview != null) {

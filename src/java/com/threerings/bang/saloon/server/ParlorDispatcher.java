@@ -61,6 +61,13 @@ public class ParlorDispatcher extends InvocationDispatcher
             );
             return;
 
+        case ParlorMarshaller.JOIN_MATCH_SLOT:
+            ((ParlorProvider)provider).joinMatchSlot(
+                source,
+                ((Integer)args[0]).intValue()
+            );
+            return;
+
         case ParlorMarshaller.LEAVE_MATCH:
             ((ParlorProvider)provider).leaveMatch(
                 source                

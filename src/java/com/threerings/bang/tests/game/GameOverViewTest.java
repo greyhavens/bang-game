@@ -77,10 +77,12 @@ public class GameOverViewTest extends TestApp
             { 0, 1, 2, 3 },
             { 155, 155, 155, 155 }
         };
+        bangobj.teams = new int[] { 0, 0, 1, 1 };
+        //bangobj.teams = new int[] { 0, 1, 2, 3 };
         bangobj.state = BangObject.GAME_OVER;
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
-            bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
+            bangobj.awards[ii].pidx = ii;
             if (bangobj.awards[ii].pidx == 2) {
                 //bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
                 bangobj.awards[ii].item = new CardItem(0, "repair");

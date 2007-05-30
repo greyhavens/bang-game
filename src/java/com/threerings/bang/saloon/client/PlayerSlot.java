@@ -29,10 +29,10 @@ import static com.threerings.bang.Log.log;
  */
 public class PlayerSlot extends AvatarView
 {
-    public PlayerSlot (BangContext ctx)
+    public PlayerSlot (BangContext ctx, int color)
     {
-        super(ctx, 8, false, true);
-        setStyleClass("match_slot");
+        super(ctx, 8, false, true, color);
+        setStyleClass(color > 0 ? "match_slot_white" : "match_slot");
         _ctx = ctx;
 
         // we want our icon to overlap our text

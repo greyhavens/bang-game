@@ -178,6 +178,14 @@ public class ParlorManager extends PlaceManager
             if (game.getCount(Slot.TINCAN) == 0 && game.getCount(Slot.HUMAN) < 2) {
                 game.slots[1] = Slot.HUMAN;
             }
+            if (game.mode == ParlorGameConfig.Mode.TEAM_2V2) {
+                for (int ii = 0; ii < game.slots.length; ii++) {
+                    if (game.slots[ii] == Slot.NONE) {
+                        game.slots[ii] = Slot.TINCAN;
+                    }
+                }
+
+            }
             game.rounds = MathUtil.bound(1, game.rounds, GameCodes.MAX_ROUNDS);
             game.teamSize = MathUtil.bound(1, game.teamSize, GameCodes.MAX_TEAM_SIZE);
             if (game.scenarios == null || game.scenarios.length == 0) {
@@ -227,6 +235,33 @@ public class ParlorManager extends PlaceManager
             _parobj.playerOids[idx] = user.getOid();
             _parobj.setPlayerOids(_parobj.playerOids);
         }
+
+        // start a "start the game" timer if we're ready to go
+        checkStart();
+    }
+
+    // documentation inherited from interface ParlorProvider
+    public void joinMatchSlot (ClientObject caller, int slot)
+    {
+        // make sure the match wasn't cancelled
+        if (_parobj.playerOids == null) {
+            return;
+        }
+
+        // make sure the spot they're trying to take is still available
+        if (slot < 0 || slot >= _parobj.playerOids.length || _parobj.playerOids[slot] != 0) {
+            return;
+        }
+        PlayerObject user = (PlayerObject)caller;
+        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+            if (_parobj.playerOids[ii] == user.getOid()) {
+                // abort!
+                return;
+            }
+        }
+
+        _parobj.playerOids[slot] = user.getOid();
+        _parobj.setPlayerOids(_parobj.playerOids);
 
         // start a "start the game" timer if we're ready to go
         checkStart();
@@ -483,6 +518,15 @@ public class ParlorManager extends PlaceManager
                 break;
             default:
                 // nothing doing
+            }
+        }
+
+        // configure teams if necessary
+        if (_parobj.game.mode == ParlorGameConfig.Mode.TEAM_2V2) {
+            idx = 0;
+            for (BangConfig.Player player : config.plist) {
+                player.teamIdx = (idx < 2 ? 0 : 1);
+                idx++;
             }
         }
 

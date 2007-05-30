@@ -37,48 +37,60 @@ public class BangConfig extends GameConfig
     /** Used to adjust the duration of the rounds. */
     public static enum Duration {
         /** Used for practice tutorials. Super ultra short. */
-        PRACTICE(0.5f),
+        PRACTICE(0.5f, "m.dur_practice"),
 
         /** 70% of the duration of a normal game. */
-        QUICK(0.7f),
+        QUICK(0.7f, "m.dur_quick"),
 
         /** The standard duration. */
-        NORMAL(1f),
+        NORMAL(1f, "m.dur_normal"),
 
         /** 130% of the duration of a normal game. */
-        LONG(1.3f);
+        LONG(1.3f, "m.dur_long");
 
         public float getAdjustment () {
             return _adjustment;
         }
 
-        Duration (float adjustment) {
+        public String key () {
+            return _xlate;
+        }
+
+        Duration (float adjustment, String xlate) {
             _adjustment = adjustment;
+            _xlate = xlate;
         }
 
         protected float _adjustment;
+        protected String _xlate;
     };
 
     /** Used to adjust the speed of the ticks. */
     public static enum Speed {
         /** 70% of the inter-tick time of a normal game. */
-        FAST(0.7f),
+        FAST(0.7f, "m.sp_fast"),
 
         /** The standard speed. */
-        NORMAL(1f),
+        NORMAL(1f, "m.sp_normal"),
 
         /** 150% of the inter-tick time of a normal game. */
-        SLOW(1.5f);
+        SLOW(1.5f, "m.sp_slow");
 
         public float getAdjustment () {
             return _adjustment;
         }
 
-        Speed (float adjustment) {
+        public String key () {
+            return _xlate;
+        }
+
+        Speed (float adjustment, String xlate) {
             _adjustment = adjustment;
+            _xlate = xlate;
         }
 
         protected float _adjustment;
+        protected String _xlate;
     };
 
     /** Represents a particular player's configuration. */

@@ -408,7 +408,18 @@ public class PlayerStatusView extends BContainer
 
     protected void updatePoints ()
     {
-        _points.setText("" + _bangobj.points[_pidx]);
+        int points = 0;
+        if (!_bangobj.isTeamGame()) {
+            points = _bangobj.points[_pidx];
+        } else {
+            int tidx = _bangobj.teams[_pidx];
+            for (int ii = 0; ii < _bangobj.teams.length; ii++) {
+                if (tidx == _bangobj.teams[ii]) {
+                    points += _bangobj.points[ii];
+                }
+            }
+        }
+        _points.setText("" + points);
     }
 
     protected void updateStatus ()

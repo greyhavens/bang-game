@@ -55,6 +55,15 @@ public class FinalistView extends BContainer
             }
         };
     }
+
+    public static ImageIcon getMedalIcon (BasicContext ctx, int pidx, int rank)
+    {
+        // load up our medal image and extract the appropriate colored tile
+        BufferedImage medal = ctx.getImageCache().getBufferedImage(
+            "ui/postgame/medals" + rank + ".png");
+        int mwidth = MEDAL_SIZE[rank].width, mheight = MEDAL_SIZE[rank].height;
+        return new ImageIcon(new BImage(medal.getSubimage(mwidth * pidx, 0, mwidth, mheight)));
+    }
     /**
      * Creates a view for the specified player, rank, etc.
      *
@@ -72,11 +81,6 @@ public class FinalistView extends BContainer
 
         Name name = bangobj.players[pidx];
 
-        // load up our medal image and extract the appropriate colored tile
-        BufferedImage medal = ctx.getImageCache().getBufferedImage(
-            "ui/postgame/medals" + rank + ".png");
-        int mwidth = MEDAL_SIZE[rank].width, mheight = MEDAL_SIZE[rank].height;
-        _medal = new ImageIcon(new BImage(medal.getSubimage(mwidth * pidx, 0, mwidth, mheight)));
 
         // load up our background
         Colorization[] zations = {
@@ -84,6 +88,8 @@ public class FinalistView extends BContainer
         };
         _background = ctx.getImageCache().createColorizedBImage(
             "ui/postgame/background.png", zations, false);
+
+        _medal = getMedalIcon(ctx, pidx, rank);
 
         // create our avatar imagery
         boolean winner = (rank == 0);

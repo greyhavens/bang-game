@@ -112,6 +112,7 @@ import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
+import com.threerings.bang.data.Handle;
 
 /**
  * Displays the main game board.
@@ -756,8 +757,8 @@ public class BangBoardView extends BoardView
         };
         _pmarquees.setPreferredSize(BangUI.MIN_WIDTH, BangUI.MIN_HEIGHT);
 
-        // add the player avatars and gang buckles
-        int pcount = _bangobj.players.length, tcount = 0;
+        // we want to add more spacing between teams (when there are teams)
+        int pcount = _bangobj.players.length, tcount = 1;
         boolean[] added = new boolean[pcount];
         boolean coop = true;
         for (int ii = 1; ii < _bangobj.teams.length; ii++) {
@@ -779,13 +780,15 @@ public class BangBoardView extends BoardView
                 GroupLayout.makeHoriz(GroupLayout.CENTER).setGap((pcount - tcount) * 10));
         BContainer gangs = new BContainer(
                 GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(2));
+
+        // add the player avatars and gang buckles
         for (int ii = 0; ii < _bangobj.players.length; ii++) {
             if (coop) {
                 players.add(createPlayerMarquee(ii));
                 if (ii > 0) {
                     gangs.add(new BLabel(msgs.get("m.and"), "marquee_vs"));
                 }
-                gangs.add(createGangMarquee(ii));
+                gangs.add(createGangMarquee(ii, false));
             } else if (!added[_bangobj.teams[ii]]) {
                 players.add(createTeamMarquee(_bangobj.teams[ii]));
                 if (ii > 0) {
@@ -968,20 +971,42 @@ public class BangBoardView extends BoardView
     {
         int color = 0;
         int pidx = 0;
+        boolean mult = true;
+        Handle gang = null;
+        // if we're all on the same gang, just show the one buckle
         for (int ii = 0; ii < _bangobj.teams.length; ii++) {
             if (_bangobj.teams[ii] == tidx) {
+                // let bounties combine team gangs always
+                if (_bangobj.bounty == null) {
+                    if (gang == null) {
+                        gang = _bangobj.playerInfo[ii].gang;
+                    } else if (!gang.equals(_bangobj.playerInfo[ii].gang)) {
+                        mult = false;
+                        break;
+                    }
+                }
                 if (colorLookup[ii + 1] > color) {
                     color = colorLookup[ii + 1];
                     pidx = ii;
                 }
             }
         }
-        return createGangMarquee(pidx);
+        if (mult) {
+            return createGangMarquee(pidx, true);
+        }
+        BContainer cont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
+        for (int ii = 0; ii < _bangobj.teams.length; ii++) {
+            if (_bangobj.teams[ii] == tidx) {
+                cont.add(createGangMarquee(ii, false));
+            }
+        }
+        return cont;
     }
+
     /**
      * Creates and returns a gang view for the opening marquee.
      */
-    protected BContainer createGangMarquee (int pidx)
+    protected BContainer createGangMarquee (int pidx, boolean mult)
     {
         BContainer marquee = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER));
         marquee.setStyleClass("team_marquee_cont");
@@ -990,8 +1015,9 @@ public class BangBoardView extends BoardView
             bview.setBuckle(_bangobj.playerInfo[pidx].buckle);
             marquee.add(bview);
         }
-        BLabel gangLabel = new BLabel(_bangobj.playerInfo[pidx].gang.toString(),
-                    "gang_marquee_label" + colorLookup[pidx + 1]);
+        int color = colorLookup[pidx + 1];
+        String style = (color > 4 && mult ? "gang_team_label" : "gang_marquee_label") + color;
+        BLabel gangLabel = new BLabel(_bangobj.playerInfo[pidx].gang.toString(), style);
         gangLabel.setFit(BLabel.Fit.SCALE);
         gangLabel.setPreferredSize(145, 19);
         marquee.add(gangLabel);

@@ -611,6 +611,42 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Returns true if this is a non-bounty team game.
+     */
+    public boolean isTeamGame ()
+    {
+        if (bounty != null) {
+            return false;
+        }
+        int numTeams = teams.length;
+        for (int ii = 0; ii < teams.length; ii++) {
+            for (int jj = ii + 1; jj < teams.length; jj++) {
+                if (teams[ii] == teams[jj]) {
+                    numTeams--;
+                    break;
+                }
+            }
+        }
+        return (numTeams > 1 && numTeams < teams.length);
+    }
+
+    /**
+     * Returns an array with points calculated by teams.
+     */
+    public int[] getTeamPoints (int[] points)
+    {
+        int[] tpoints = points.clone();
+        for (int ii = 0; ii < points.length; ii++) {
+            for (int jj = 0; jj < teams.length; jj++) {
+                if (ii != jj && teams[ii] == teams[jj]) {
+                    tpoints[ii] += points[jj];
+                }
+            }
+        }
+        return tpoints;
+    }
+
+    /**
      * Updates the {@link #gdata} and {@link #pdata} information.
      */
     public void updateData ()

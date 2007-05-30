@@ -321,7 +321,7 @@ public class BuckleDialog extends BDecoratedWindow
                 }
             };
             iicon.setStyleClass("buckle_palette_icon");
-            _palette.addIcon(iicon);
+            _palette.addIcon(0, iicon);
             _iicons.put(part.getItemId(), iicon);
             if (IntListUtil.contains(_buckle, part.getItemId())) {
                 iicon.setSelected(true);
