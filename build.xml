@@ -97,7 +97,6 @@
   <target name="prepare" depends="copydistlibs,copydistprops,lists">
     <mkdir dir="${deploy.dir}"/>
     <mkdir dir="${deploy.dir}/tmp"/>
-    <mkdir dir="${deploy.dir}/docs"/>
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/rsrc"/>
