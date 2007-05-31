@@ -42,6 +42,10 @@
 
   <!-- buckle icons -->
   <class name="icon">
+    <part name="axe_left" coins="4" aces="250"/>
+    <part name="axe_right" coins="4" aces="250"/>
+    <part name="axe_right_sm" coins="2" aces="150"/>
+    <part name="axe_left_sm" coins="2" aces="150"/>
     <part name="bull_head" coins="4" aces="350"/>
     <part name="bull_head_sm" coins="3" aces="250"/>
     <part name="bull_skull" coins="5" aces="500"/>
@@ -67,6 +71,12 @@
     <part name="headdress_right_sm" coins="4" aces="400"/>
     <part name="horse_run_left" coins="6" aces="650"/>
     <part name="horse_run_right" coins="6" aces="650"/>
+    <part name="horse_run_right_sm" coins="4" aces="450"/>
+    <part name="horse_run_left_sm" coins="4" aces="450"/>
+    <part name="horse_rearing_left" coins="6" aces="650"/>
+    <part name="horse_rearing_right" coins="6" aces="650"/>
+    <part name="horse_rearing_right_sm" coins="4" aces="450"/>
+    <part name="horse_rearing_left_sm" coins="4" aces="450"/>
     <part name="horseshoe" coins="4" aces="400"/>
     <part name="horseshoe_pair" coins="5" aces="450"/>
     <part name="horseshoe_sm" coins="3" aces="300"/>
@@ -76,8 +86,11 @@
     <part name="thunderbird_head_left" coins="6" aces="500"/>
     <part name="thunderbird_head_right" coins="6" aces="500"/>
     <part name="trickster_mask" coins="5" aces="500"/>
+    <part name="totem_eagle" coins="5" aces="500"/>
+    <part name="totem_orca" coins="5" aces="400"/>
     <part name="star_small" coins="2" aces="100"/>
     <part name="star_tiny" coins="1" aces="75"/>
+    <part name="warrior_shield" coins="8" aces="700"/>
     <part name="chamber" coins="6" aces="550"/>
     <part name="counter" coins="5" aces="450"/>
     <part name="gear_fat" coins="6" aces="500"/>
