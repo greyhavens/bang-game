@@ -1,4 +1,4 @@
-650
+663
 buckle/background := bullzeye := 539
 buckle/background := checker := 540
 buckle/background := clockwork := 571
@@ -29,6 +29,10 @@ buckle/border := round_10_studs := 545
 buckle/border := round_2_gears := 546
 buckle/border := round_2_studs := 547
 buckle/border := scrolls := 548
+buckle/icon := axe_left := 651
+buckle/icon := axe_left_sm := 652
+buckle/icon := axe_right := 653
+buckle/icon := axe_right_sm := 654
 buckle/icon := banner := 562
 buckle/icon := boot := 563
 buckle/icon := buffalo_left := 618
@@ -67,8 +71,14 @@ buckle/icon := headdress_right := 637
 buckle/icon := headdress_right_sm := 638
 buckle/icon := hole_bullet := 552
 buckle/icon := hole_key := 553
+buckle/icon := horse_rearing_left := 655
+buckle/icon := horse_rearing_left_sm := 656
+buckle/icon := horse_rearing_right := 657
+buckle/icon := horse_rearing_right_sm := 658
 buckle/icon := horse_run_left := 639
+buckle/icon := horse_run_left_sm := 659
 buckle/icon := horse_run_right := 640
+buckle/icon := horse_run_right_sm := 660
 buckle/icon := horseshoe := 641
 buckle/icon := horseshoe_left_sm := 642
 buckle/icon := horseshoe_pair := 643
@@ -102,7 +112,10 @@ buckle/icon := suit_spade := 560
 buckle/icon := thunderbird_front := 647
 buckle/icon := thunderbird_head_left := 648
 buckle/icon := thunderbird_head_right := 649
+buckle/icon := totem_eagle := 661
+buckle/icon := totem_orca := 662
 buckle/icon := trickster_mask := 650
+buckle/icon := warrior_shield := 663
 buckle/icon := washer := 561
 buckle/icon := watch := 570
 buckle/icon := wrench_crossed_02_left := 589
