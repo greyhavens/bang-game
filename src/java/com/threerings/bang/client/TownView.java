@@ -76,6 +76,7 @@ import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.game.util.BoardFile;
 
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
@@ -162,12 +163,16 @@ public class TownView extends BWindow
         // if we're an admin add some temporary buttons
         if (ctx.getUserObject().tokens.isSupport()) {
             add(_admin = GroupLayout.makeHBox(GroupLayout.CENTER));
-            ActionListener fire = new ActionListener() {
-                public void actionPerformed (ActionEvent event) {
-                    fireCommand(event.getAction());
-                }
-            };
             _admin.add(new BButton("Tournaments", this, "tourney"));
+            // allow admins to go to the sheriff's office in ITP, etc. to make bounties
+            if (!ctx.getUserObject().townId.equals(BangCodes.FRONTIER_TOWN)) {
+                ActionListener fire = new ActionListener() {
+                    public void actionPerformed (ActionEvent event) {
+                        fireCommand(event.getAction());
+                    }
+                };
+                _admin.add(new BButton("Sheriff's Office", fire, "office"));
+            }
         }
     }
 
@@ -235,8 +240,7 @@ public class TownView extends BWindow
             StatusView.showStatusTab(_bctx, StatusView.PARDNERS_TAB);
 
         } else if ("tourney".equals(cmd)) {
-            _bctx.getBangClient().displayPopup(
-                    new TourneyListView(_bctx), true, 500);
+            _bctx.getBangClient().displayPopup(new TourneyListView(_bctx), true, 500);
         }
     }
 

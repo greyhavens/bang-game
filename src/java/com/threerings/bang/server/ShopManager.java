@@ -101,6 +101,11 @@ public abstract class ShopManager extends PlaceManager
      */
     protected boolean checkShopEnabled (PlayerObject user)
     {
+        // admins are always allowed in
+        if (user.tokens.isAdmin()) {
+            return true;
+        }
+
         try {
             Field field = RuntimeConfig.server.getClass().getField(getIdent() + "Enabled");
             return (Boolean)field.get(RuntimeConfig.server);
