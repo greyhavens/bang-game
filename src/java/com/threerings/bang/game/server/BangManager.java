@@ -1842,18 +1842,18 @@ public class BangManager extends GameManager
                                         TutorialCodes.PRACTICE_PREFIX + _bconfig.getScenario(0));
             }
 
-            // determine the player's rank
-            int rank = 0;
-            for (int rr = 0; rr < _ranks.length; rr++) {
-                if (_ranks[rr].pidx == 0) { // bounty player is always zeroth
-                    rank = rr;
-                    break;
-                }
-            }
-
             // determine whether this bounty game's criteria were met, and if so, whether the
             // entire bounty is now completed
             if (_bconfig.type == BangConfig.Type.BOUNTY) {
+                // determine the player's rank
+                int rank = 0;
+                for (int rr = 0; rr < _ranks.length; rr++) {
+                    if (_ranks[rr].pidx == 0) { // bounty player is always zeroth
+                        rank = rr;
+                        break;
+                    }
+                }
+
                 _failed = 0;
                 for (Criterion crit : _bconfig.criteria) {
                     if (!crit.isMet(_bangobj, rank)) {
@@ -1957,12 +1957,12 @@ public class BangManager extends GameManager
             if (_ranks != null) {
                 int rank = 0, pts = _ranks[0].points;
                 for (int rr = 0; rr < _ranks.length; rr++) {
-                    if (!team || _ranks[rr].points < pts) {
+                    if (teams && _ranks[rr].points < pts) {
                         pts = _ranks[rr].points;
                         rank++;
                     }
                     if (_ranks[rr].pidx == ii) {
-                        award.rank = rank;
+                        award.rank = (teams ? rank : rr);
                         break;
                     }
                 }
