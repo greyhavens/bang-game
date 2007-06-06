@@ -179,7 +179,7 @@ public class TotemBase extends Prop
     }
 
     @Override // documentation inherited
-    public int getGoalRadius (Piece mover)
+    public int getGoalRadius (BangObject bangobj, Piece mover)
     {
         return (mover instanceof Unit && canAddPiece() &&
             TotemEffect.isTotemBonus(((Unit)mover).holding)) ?

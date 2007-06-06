@@ -1957,12 +1957,12 @@ public class BangManager extends GameManager
             if (_ranks != null) {
                 int rank = 0, pts = _ranks[0].points;
                 for (int rr = 0; rr < _ranks.length; rr++) {
-                    if (teams && _ranks[rr].points < pts) {
+                    if (team && _ranks[rr].points < pts) {
                         pts = _ranks[rr].points;
                         rank++;
                     }
                     if (_ranks[rr].pidx == ii) {
-                        award.rank = (teams ? rank : rr);
+                        award.rank = (team ? rank : rr);
                         break;
                     }
                 }

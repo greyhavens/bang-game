@@ -637,7 +637,7 @@ public abstract class Piece
      * @return -1 for no relevance, 0 if the mover scores by landing on this piece, or +1 if the
      * mover scores by landing next to this piece
      */
-    public int getGoalRadius (Piece mover)
+    public int getGoalRadius (BangObject bangobj, Piece mover)
     {
         return -1;
     }

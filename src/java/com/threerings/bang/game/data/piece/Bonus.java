@@ -205,7 +205,7 @@ public class Bonus extends Piece
     }
 
     @Override // documentation inherited
-    public int getGoalRadius (Piece mover)
+    public int getGoalRadius (BangObject bangobj, Piece mover)
     {
         return (_config.hidden ? -1 : 0);
     }

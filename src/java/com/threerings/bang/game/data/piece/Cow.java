@@ -72,9 +72,9 @@ public class Cow extends Piece
     }
 
     @Override // documentation inherited
-    public int getGoalRadius (Piece mover)
+    public int getGoalRadius (BangObject bangobj, Piece mover)
     {
-        return (mover.owner != owner && mover instanceof Unit &&
+        return (bangobj.getTeam(mover.owner) != bangobj.getTeam(owner) && mover instanceof Unit &&
             ((Unit)mover).getConfig().rank == UnitConfig.Rank.BIGSHOT) ?
                 +1 : -1;
     }

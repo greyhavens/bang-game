@@ -7,6 +7,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.UnitConfig;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.client.sprite.HomesteadSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -57,7 +58,7 @@ public class Homestead extends Prop
     }
 
     @Override // documentation inherited
-    public int getGoalRadius (Piece mover)
+    public int getGoalRadius (BangObject bangobj, Piece mover)
     {
         return (owner == -1 && mover instanceof Unit &&
             ((Unit)mover).getConfig().rank == UnitConfig.Rank.BIGSHOT) ?

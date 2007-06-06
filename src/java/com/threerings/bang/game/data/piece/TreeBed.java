@@ -33,7 +33,7 @@ public class TreeBed extends Prop
     /** A value computed in the piece tick on the server that represents the
      * vulnerability of this tree to logging robots. */
     public transient int vulnerability;
-    
+
     public TreeBed ()
     {
         damage = 100;
@@ -60,7 +60,7 @@ public class TreeBed extends Prop
     }
 
     @Override // documentation inherited
-    public int getGoalRadius (Piece mover)
+    public int getGoalRadius (BangObject bangobj, Piece mover)
     {
         return (mover.owner != -1 && isAlive() && damage > 0) ? +1 : -1;
     }
@@ -116,7 +116,7 @@ public class TreeBed extends Prop
         // start the vulnerability off at the damage level
         // (except for sprouts, which are invulnerable)
         vulnerability = (growth == 0) ? 0 : damage/5;
-        
+
         // normal units cause the tree to grow; except logging robots
         int dinc = 0, ddec = 0;
         boolean doubleGrowth = false;

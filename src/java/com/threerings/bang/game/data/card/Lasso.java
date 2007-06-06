@@ -37,7 +37,7 @@ public class Lasso extends AreaCard
         }
         for (Piece piece : bangobj.pieces) {
             if (piece instanceof Bonus && piece.intersects(tx, ty) &&
-                ((Bonus)piece).getConfig().cardType != null) {
+                !((Bonus)piece).getConfig().hidden && ((Bonus)piece).getConfig().cardType != null) {
                 return true;
             }
         }

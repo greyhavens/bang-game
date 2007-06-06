@@ -345,7 +345,7 @@ public abstract class ScenarioInfo
     public void getMovementGoals (BangObject bangobj, Piece mover, PointSet moves, PointSet goals)
     {
         for (Piece piece : bangobj.pieces) {
-            int radius = getGoalRadius(mover, piece);
+            int radius = getGoalRadius(bangobj, mover, piece);
             if (radius < 0) {
                 continue;
             }
@@ -373,9 +373,9 @@ public abstract class ScenarioInfo
      * @return -1 for no relevance, 0 if the mover scores by landing on the target, or +1 if the
      * mover scores by landing next to the target
      */
-    protected int getGoalRadius (Piece mover, Piece target)
+    protected int getGoalRadius (BangObject bangobj, Piece mover, Piece target)
     {
-        return target.getGoalRadius(mover);
+        return target.getGoalRadius(bangobj, mover);
     }
 
     /**
