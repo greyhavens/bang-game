@@ -81,8 +81,9 @@ public class RosterView extends BContainer
         bottom.add(_mcont = new BContainer(new TableLayout(4)));
         _mcont.setStyleClass("roster_table");
 
-        BScrollPane rpane = new BScrollPane(rcont);
+        BScrollPane rpane = new BScrollPane(rcont, true, true);
         rpane.setStyleClass("roster_pane");
+        rpane.setShowScrollbarAlways(false);
         add(rpane);
     }
 
