@@ -253,7 +253,13 @@ public class OOOAuthenticator extends BangAuthenticator
             }
         }
 
-        if (user == null && prec != null && !prec.isSet(PlayerRecord.IS_ANONYMOUS)) {
+        // now check their password
+        if (anonymous && prec != null && !prec.isSet(PlayerRecord.IS_ANONYMOUS)) {
+            rdata.code = INVALID_PASSWORD;
+            return;
+        }
+
+        if (!anonymous && !user.password.equals(password)) {
             rdata.code = INVALID_PASSWORD;
             return;
         }
@@ -333,12 +339,6 @@ public class OOOAuthenticator extends BangAuthenticator
         // check whether we're restricting non-admin login
         if (!RuntimeConfig.server.nonAdminsAllowed && (anonymous || !user.isSupportPlus())) {
             rdata.code = UNDER_MAINTENANCE;
-            return;
-        }
-
-        // now check their password
-        if (!anonymous && !user.password.equals(password)) {
-            rdata.code = INVALID_PASSWORD;
             return;
         }
 
