@@ -93,7 +93,7 @@ public class BountyDetailView extends BContainer
                     GroupLayout.FIXED);
             row.add(new BLabel(game.name));
             String pmsg = _ctx.xlate(OfficeCodes.OFFICE_MSGS, completed ? "m.replay" : "m.play");
-            if (!noMorePlay) {
+            if (!noMorePlay || user.tokens.isSupport()) {
                 BButton play = new BButton(pmsg, this, game.ident);
                 if (completed) {
                     play.setStyleClass("alt_button");

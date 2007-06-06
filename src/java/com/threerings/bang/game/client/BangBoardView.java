@@ -788,7 +788,7 @@ public class BangBoardView extends BoardView
                 if (ii > 0) {
                     gangs.add(new BLabel(msgs.get("m.and"), "marquee_vs"));
                 }
-                gangs.add(createGangMarquee(ii, false));
+                gangs.add(createGangMarquee(ii, colorLookup[ii + 1], false));
             } else if (!added[_bangobj.teams[ii]]) {
                 players.add(createTeamMarquee(_bangobj.teams[ii]));
                 if (ii > 0) {
@@ -991,13 +991,17 @@ public class BangBoardView extends BoardView
                 }
             }
         }
+        // in a bounty, the player's buckle is always their team's buckle
+        if (_bangobj.bounty != null && _bangobj.teams[0] == _bangobj.teams[pidx]) {
+            pidx = 0;
+        }
         if (mult) {
-            return createGangMarquee(pidx, true);
+            return createGangMarquee(pidx, color, true);
         }
         BContainer cont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
         for (int ii = 0; ii < _bangobj.teams.length; ii++) {
             if (_bangobj.teams[ii] == tidx) {
-                cont.add(createGangMarquee(ii, false));
+                cont.add(createGangMarquee(ii, colorLookup[ii + 1], false));
             }
         }
         return cont;
@@ -1006,7 +1010,7 @@ public class BangBoardView extends BoardView
     /**
      * Creates and returns a gang view for the opening marquee.
      */
-    protected BContainer createGangMarquee (int pidx, boolean mult)
+    protected BContainer createGangMarquee (int pidx, int color, boolean mult)
     {
         BContainer marquee = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER));
         marquee.setStyleClass("team_marquee_cont");
@@ -1015,7 +1019,6 @@ public class BangBoardView extends BoardView
             bview.setBuckle(_bangobj.playerInfo[pidx].buckle);
             marquee.add(bview);
         }
-        int color = colorLookup[pidx + 1];
         String style = (color > 4 && mult ? "gang_team_label" : "gang_marquee_label") + color;
         BLabel gangLabel = new BLabel(_bangobj.playerInfo[pidx].gang.toString(), style);
         gangLabel.setFit(BLabel.Fit.SCALE);

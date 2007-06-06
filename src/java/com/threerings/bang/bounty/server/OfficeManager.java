@@ -74,7 +74,7 @@ public class OfficeManager extends ShopManager
                         ", bounty=" + bountyId + "].");
             throw new InvocationException(ACCESS_DENIED);
         }
-        if (config.inOrder) {
+        if (config.inOrder && !player.tokens.isSupport()) {
             for (BountyConfig.GameInfo game : config.games) {
                 if (game.ident.equals(gameId)) {
                     break;
