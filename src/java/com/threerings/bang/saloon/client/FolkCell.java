@@ -48,7 +48,7 @@ public class FolkCell extends BContainer
     public FolkCell (
         BangContext ctx, Handle handle, boolean isPardner, boolean isFriend, boolean isGangMember)
     {
-        super(GroupLayout.makeHoriz(GroupLayout.LEFT));
+        super(GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.NONE));
         setPreferredSize(new Dimension(200, 18));
         setStyleClass("def_button");
 
@@ -59,14 +59,17 @@ public class FolkCell extends BContainer
         _isFriend = isFriend;
         _isSelf = _ctx.getUserObject().handle.equals(handle);
 
-        add(new BLabel(_handle.toString(), "folk_label"));
+        BLabel folkLabel = new BLabel(_handle.toString(), "folk_label");
+        folkLabel.setFit(BLabel.Fit.SCALE);
+        add(folkLabel);
         if (_isPardner) {
             BLabel pardIcon = new BLabel("", "folk_pardner");
             pardIcon.setIcon(new ImageIcon(_ctx.loadImage("ui/saloon/pardners_only.png")));
-            add(pardIcon);
+            add(pardIcon, GroupLayout.FIXED);
         }
         if (isGangMember) {
-            add(new BLabel(new ImageIcon(_ctx.loadImage("ui/saloon/recruiting.png"))));
+            add(new BLabel(new ImageIcon(_ctx.loadImage("ui/saloon/recruiting.png"))),
+                    GroupLayout.FIXED);
         }
     }
 
