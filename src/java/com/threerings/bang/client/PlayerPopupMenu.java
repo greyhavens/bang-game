@@ -337,7 +337,7 @@ public class PlayerPopupMenu extends BPopupMenu
         // disable the submit button until a reason is entered
 
         new EnablingValidator(reason, submit);
-        _ctx.getBangClient().displayPopup(cdiag, true, 600, true);
+        _ctx.getBangClient().displayPopup(cdiag, true, 650, true);
     }
 
     protected void submitComplaint (String reason)
