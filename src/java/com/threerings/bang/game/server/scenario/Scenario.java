@@ -367,7 +367,9 @@ public abstract class Scenario
         for (int ii = ranks.length-1; ii >= 0; ii--) {
             // stop when we get to our record
             if (team && bangobj.teams[ranks[ii].pidx] == bangobj.teams[pidx]) {
-                defeated++;
+                if (defeated - aisDefeated >= 2) {
+                    defeated++;
+                }
                 break;
             } else if (!team && ranks[ii].pidx == pidx) {
                 break;
