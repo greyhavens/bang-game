@@ -127,7 +127,8 @@ public class BankView extends ShopView
     public void actionPerformed (ActionEvent event)
     {
         if ("get_pass".equals(event.getAction())) {
-            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getBillingURL(_ctx), _browlist);
+            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getBillingPassURL(
+                        _ctx, _ctx.getUserObject().townId), _browlist);
         } else if ("exchange".equals(event.getAction())) {
             if (_ctx.getUserObject().canExchange()) {
                 showExchangeView();

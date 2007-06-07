@@ -116,6 +116,14 @@ public class DeploymentConfig
         return getCredentialedURL(ctx, "billing_url");
     }
 
+    /**
+     * Returns the URL for the gold pass billing page.
+     */
+    public static URL getBillingPassURL (BangContext ctx, String pass)
+    {
+        return getCredentialedURL(ctx, "pass_url", pass);
+    }
+
     /** Helper function for getting URL properties. */
     protected static URL getURL (String key, String args)
     {
@@ -134,9 +142,14 @@ public class DeploymentConfig
 
     protected static URL getCredentialedURL (BangContext ctx, String key)
     {
+        return getCredentialedURL(ctx, key, "");
+    }
+
+    protected static URL getCredentialedURL (BangContext ctx, String key, String postfix)
+    {
         BangCredentials creds = (BangCredentials)
             ctx.getClient().getCredentials();
-        String url = config.getValue(key, "not_specified");
+        String url = config.getValue(key, "not_specified") + postfix;
         url = url.replace("USERNAME", creds.getUsername().toString());
         url = url.replace("PASSWORD", creds.getPassword().toString());
         try {

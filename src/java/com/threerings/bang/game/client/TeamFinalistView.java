@@ -112,7 +112,7 @@ public class TeamFinalistView extends BContainer
                     BangConfig config = (BangConfig)ctrl.getPlaceConfig();
                     if (config.ais[ii] == null) {
                         add(new FriendlyFolkButton(bctx, bangobj, idx),
-                                new Point(FF_OFFSET[_winner ? 0 : 1][idx] + _offx, 18));
+                                new Point(FF_OFFSET[_winner ? 0 : 1][idx] + _offx, 22));
                     }
                 }
             }
@@ -200,6 +200,6 @@ public class TeamFinalistView extends BContainer
     protected static final int[][] NAME_OFFSET = { { 14, 256 }, { 7, 155 } };
     protected static final Rectangle[] NAME_RECTS = {
         new Rectangle(0, 13, 236, 25), new Rectangle(0, 8, 136, 17) };
-    protected static final int[][] FF_OFFSET = { { 220, 472}, { 112, 260 } };
+    protected static final int[][] FF_OFFSET = { { 215, 468}, { 112, 260 } };
     protected static final int[][] RIBBON_OFFSET = { { 11, 256 }, { 0, 148 } };
 }
