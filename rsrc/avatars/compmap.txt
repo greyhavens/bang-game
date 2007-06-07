@@ -1,4 +1,4 @@
-679
+688
 buckle/background := bullzeye := 539
 buckle/background := checker := 540
 buckle/background := clockwork := 571
@@ -68,6 +68,8 @@ buckle/icon := feather_up_right_sm := 630
 buckle/icon := flower_sm := 631
 buckle/icon := flower_tiny := 632
 buckle/icon := gear_fat := 551
+buckle/icon := gear_fat_sm := 680
+buckle/icon := gear_tiny := 681
 buckle/icon := gun_crossed_02_left := 575
 buckle/icon := gun_crossed_02_right := 576
 buckle/icon := gun_crossed_left := 577
@@ -82,6 +84,7 @@ buckle/icon := headdress_right := 637
 buckle/icon := headdress_right_sm := 638
 buckle/icon := hole_bullet := 552
 buckle/icon := hole_key := 553
+buckle/icon := hole_key_sm := 682
 buckle/icon := horse_rearing_left := 655
 buckle/icon := horse_rearing_left_sm := 656
 buckle/icon := horse_rearing_right := 657
@@ -112,19 +115,25 @@ buckle/icon := scorpy_small_right_a := 587
 buckle/icon := scorpy_small_right_b := 588
 buckle/icon := screw_double := 554
 buckle/icon := screw_single := 555
+buckle/icon := screw_single_sm := 683
 buckle/icon := snake := 569
 buckle/icon := star_nubs := 556
 buckle/icon := star_nubs_sm := 675
+buckle/icon := star_nubs_tiny := 684
 buckle/icon := star_small := 531
 buckle/icon := star_tiny := 646
 buckle/icon := suit_club := 557
 buckle/icon := suit_club_sm := 676
+buckle/icon := suit_club_tiny := 685
 buckle/icon := suit_diamond := 558
 buckle/icon := suit_diamond_sm := 677
+buckle/icon := suit_diamond_tiny := 686
 buckle/icon := suit_heart := 559
 buckle/icon := suit_heart_sm := 678
+buckle/icon := suit_heart_tiny := 687
 buckle/icon := suit_spade := 560
 buckle/icon := suit_spade_sm := 679
+buckle/icon := suit_spade_tiny := 688
 buckle/icon := thunderbird_front := 647
 buckle/icon := thunderbird_head_left := 648
 buckle/icon := thunderbird_head_right := 649
