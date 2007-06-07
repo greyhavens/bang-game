@@ -90,6 +90,15 @@
     <part name="totem_orca" coins="5" aces="400"/>
     <part name="star_small" coins="2" aces="100"/>
     <part name="star_tiny" coins="1" aces="75"/>
+    <part name="gear_fat_small" coins="3" aces="250"/>
+    <part name="hole_key_small" coins="2" aces="300"/>
+    <part name="screw_single_sm" coins="1" aces="20"/>
+    <part name="star_nubs_tiny" coins="1" aces="75"/>
+    <part name="suit_club_tiny" coins="1" aces="75"/>
+    <part name="suit_diamond_tiny" coins="1" aces="75"/>
+    <part name="suit_heart_tiny" coins="1" aces="75"/>
+    <part name="suit_spade_tiny" coins="1" aces="75"/>
+    <part name="gear_tiny" coins="1" aces="100"/>
     <part name="warrior_shield" coins="8" aces="700"/>
     <part name="chamber" coins="6" aces="550"/>
     <part name="counter" coins="5" aces="450"/>
