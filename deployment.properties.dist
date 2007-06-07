@@ -39,7 +39,7 @@ new_account_url = http://www.banghowdy.com/register/register.wm
 server_status_url = http://www.banghowdy.com/status.html
 terms_of_service_url = http://www.banghowdy.com/support/tos.html
 billing_url = https://billing.banghowdy.com/billing/checkpw.wm?susername=USERNAME&spassword=PASSWORD&from=select_type.wm
-billing_url = https://billing.banghowdy.com/billing/checkpw.wm?susername=USERNAME&spassword=PASSWORD&from=select_pass.wm?pass=
+pass_url = https://billing.banghowdy.com/billing/checkpw.wm?susername=USERNAME&spassword=PASSWORD&from=select_pass.wm?pass=
 
 #
 # Specifies the locale for this deployment. This is used to ensure that the
