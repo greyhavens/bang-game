@@ -103,6 +103,22 @@
     <part name="suit_heart" coins="4" aces="400"/>
     <part name="suit_spade" coins="4" aces="400"/>
     <part name="suit_diamond" coins="4" aces="400"/>
+    <part name="star_nubs_sm" coins="2" aces="150"/>
+    <part name="suit_club_sm" coins="2" aces="200"/>
+    <part name="suit_heart_sm" coins="2" aces="200"/>
+    <part name="suit_spade_sm" coins="2" aces="200"/>
+    <part name="suit_diamond_sm" coins="2" aces="200"/>
+    <part name="bear" coins="6" aces="650"/>
+    <part name="bear_right_sm" coins="4" aces="450"/>
+    <part name="bear_left_sm" coins="4" aces="450"/>
+    <part name="bear_claw_left" coins="5" aces="550"/>
+    <part name="bear_claw_right" coins="5" aces="550"/>
+    <part name="bear_claw_right_sm" coins="3" aces="350"/>
+    <part name="bear_claw_left_sm" coins="3" aces="350"/>
+    <part name="dear_left" coins="5" aces="550"/>
+    <part name="dear_right" coins="5" aces="550"/>
+    <part name="dear_right_sm" coins="3" aces="350"/>
+    <part name="dear_left_sm" coins="3" aces="350"/>
     <part name="washer" coins="1" aces="50"/>
     <part name="banner" coins="1" aces="100"/>
     <part name="boot" coins="2" aces="300"/>
