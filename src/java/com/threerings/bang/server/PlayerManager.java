@@ -693,18 +693,26 @@ public class PlayerManager
         BangServer.invoker.postUnit(new PersistingUnit("updatePosterInfo", cl) {
             public void invokePersistent() throws PersistenceException {
                 _postrepo.storePoster(poster);
-                _posterCache.remove(user.handle);
             }
             public void handleSuccess() {
                 cl.requestProcessed();
-                if (BangServer.peermgr != null) {
-                    BangServer.peermgr.broadcastStaleCacheData(POSTER_CACHE, user.handle);
-                }
+                clearPosterInfoCache(user.handle);
             }
             public String getFailureMessage() {
                 return "Failed to store wanted poster record [poster = " + poster + "]";
             }
         });
+    }
+
+    /**
+     * Clears the player's poster info from the cache.
+     */
+    public void clearPosterInfoCache (Handle handle)
+    {
+        _posterCache.remove(handle);
+        if (BangServer.peermgr != null) {
+            BangServer.peermgr.broadcastStaleCacheData(POSTER_CACHE, handle);
+        }
     }
 
     // from interface PlayerProvider

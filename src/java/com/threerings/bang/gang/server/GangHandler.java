@@ -1064,6 +1064,7 @@ public class GangHandler
                 buf.append(" g:").append(_gangobj.gangId).append(" s:").append(_scripCost);
                 buf.append(" c:").append(_coinCost);
                 BangServer.itemLog(buf.toString());
+                BangServer.playmgr.clearPosterInfoCache(entry.handle);
             }
             protected void actionFailed (String cause) {
                 _deleting = false;
@@ -1127,6 +1128,7 @@ public class GangHandler
                 member.commandOrder = commandOrder;
                 _gangobj.updateMembers(member);
                 listener.requestProcessed();
+                BangServer.playmgr.clearPosterInfoCache(entry.handle);
             }
         });
     }
