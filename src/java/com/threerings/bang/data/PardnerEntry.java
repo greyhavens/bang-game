@@ -102,7 +102,7 @@ public class PardnerEntry
      */
     public boolean isAvailable ()
     {
-        return status == ONLINE || status == IN_SALOON;
+        return (status % 10 == ONLINE) || status == IN_SALOON;
     }
 
     /**
