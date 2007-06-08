@@ -232,6 +232,14 @@ public class BangManager extends GameManager
     }
 
     /**
+     * Returns the team size (including bigshot) for the current round.
+     */
+    public int getWholeTeamSize (int pidx)
+    {
+        return getTeamSize(pidx) + (_bconfig.plist.get(pidx).bigShot == null ? 0 : 1);
+    }
+
+    /**
      * Returns the player record at the specified index.
      */
     public PlayerRecord getPlayerRecord (int pidx)

@@ -80,7 +80,7 @@ public class WendigoDelegate extends CounterDelegate
         }
         int idx = length / 2 - 1;
         _wendigo = new ArrayList<Wendigo>(3);
-        
+
         boolean side = RandomUtil.getInt(2) == 0;
         int size = Math.min(length / 4, 3);
         _wendigo.add(createWendigo(bangobj, idx + off, horiz, side,
@@ -88,7 +88,7 @@ public class WendigoDelegate extends CounterDelegate
         if (size > 0) {
             _wendigo.add(createWendigo(bangobj,idx + off - size, horiz, side,
                                        playarea, true, tick));
-            _wendigo.add(createWendigo(bangobj, idx + off + size, 
+            _wendigo.add(createWendigo(bangobj, idx + off + size,
                         horiz, side, playarea, true, tick));
         }
     }
@@ -234,8 +234,6 @@ public class WendigoDelegate extends CounterDelegate
     {
         int[] survivals = new int[bangobj.players.length];
         int[] talsurvivals = new int[bangobj.players.length];
-        boolean[] teamSurvival = new boolean[bangobj.players.length];
-        Arrays.fill(teamSurvival, true);
 
         Piece[] pieces = bangobj.getPieceArray();
         for (Piece p : pieces) {
@@ -247,8 +245,6 @@ public class WendigoDelegate extends CounterDelegate
                             ((Unit)p).holding)) {
                         talsurvivals[p.owner]++;
                     }
-                } else {
-                    teamSurvival[p.owner] = false;
                 }
             }
         }
@@ -258,18 +254,14 @@ public class WendigoDelegate extends CounterDelegate
             for (int idx = 0; idx < survivals.length; idx++) {
                 if (survivals[idx] > 0) {
                     int talpts = talsurvivals[idx] * TALISMAN_SAFE;
-                    bangobj.grantPoints(
-                        idx, survivals[idx] * pointsPerCounter() + talpts);
-                    bangobj.stats[idx].incrementStat(
-                        StatType.WENDIGO_SURVIVALS, survivals[idx]);
-                    bangobj.stats[idx].incrementStat(
-                        StatType.TALISMAN_POINTS, talpts);
+                    bangobj.grantPoints(idx, survivals[idx] * pointsPerCounter() + talpts);
+                    bangobj.stats[idx].incrementStat(StatType.WENDIGO_SURVIVALS, survivals[idx]);
+                    bangobj.stats[idx].incrementStat(StatType.TALISMAN_POINTS, talpts);
                     bangobj.stats[idx].incrementStat(
                         StatType.TALISMAN_SPOT_SURVIVALS, talsurvivals[idx]);
-                }
-                if (teamSurvival[idx]) {
-                    bangobj.stats[idx].incrementStat(
-                        StatType.WHOLE_TEAM_SURVIVALS, 1);
+                    if (survivals[idx] == _bangmgr.getWholeTeamSize(idx) ) {
+                        bangobj.stats[idx].incrementStat(StatType.WHOLE_TEAM_SURVIVALS, 1);
+                    }
                 }
             }
         } finally {
