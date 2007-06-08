@@ -769,6 +769,7 @@ public class PlayerManager
         // populate the event with what we can
         final EventRecord event = new EventRecord();
         event.source = user.username.toString();
+        event.sourceHandle = user.handle.toString();
         event.status = Event.OPEN;
         event.subject = reason;
 
@@ -785,6 +786,7 @@ public class PlayerManager
 
         // if the target is online, get their username from their player object
         PlayerObject tuser = BangServer.lookupPlayer(target);
+        event.targetHandle = target.toString();
         if (tuser != null) {
             event.target = tuser.username.toString();
         }
