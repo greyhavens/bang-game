@@ -152,7 +152,7 @@ public class ShotEffect extends Effect
             deflectorIds = append(deflectorIds, (short)targetId);
         }
         targetId = target.pieceId;
-        baseDamage = damage;
+        baseDamage = Math.max(damage, 0);
         this.attackIcons = attackIcons;
         this.defendIcons = defendIcons;
         newDamage = Math.min(100, target.damage + damage);
