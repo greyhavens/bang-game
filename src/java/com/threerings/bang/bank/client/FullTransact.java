@@ -68,7 +68,7 @@ public class FullTransact extends BContainer
         }
         _offers[0].setNoOffers();
         offers.setStyleClass("offer_cont");
-        add(offers, new Rectangle(12, 215, 310, 75));
+        add(offers, new Rectangle(6, 206, 315, 86));
 
         add(new BLabel(_msgs.get(msg + "_post_offer"), "bank_post_title"),
             new Point(0, 159));
@@ -94,7 +94,7 @@ public class FullTransact extends BContainer
         _myoffers = new BContainer(new TableLayout(5, 3, 8));
         BScrollPane offerpane = new BScrollPane(_myoffers);
         offerpane.setStyleClass("offer_cont");
-        add(offerpane, new Rectangle(12, 0, 310, 82));
+        add(offerpane, new Rectangle(6, 0, 315, 82));
     }
 
     public void init (BankObject bankobj)
