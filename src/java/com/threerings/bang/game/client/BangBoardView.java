@@ -1019,11 +1019,13 @@ public class BangBoardView extends BoardView
             bview.setBuckle(_bangobj.playerInfo[pidx].buckle);
             marquee.add(bview);
         }
-        String style = (color > 4 && mult ? "gang_team_label" : "gang_marquee_label") + color;
-        BLabel gangLabel = new BLabel(_bangobj.playerInfo[pidx].gang.toString(), style);
-        gangLabel.setFit(BLabel.Fit.SCALE);
-        gangLabel.setPreferredSize(145, 19);
-        marquee.add(gangLabel);
+        if (_bangobj.playerInfo[pidx].gang != null) {
+            String style = (color > 4 && mult ? "gang_team_label" : "gang_marquee_label") + color;
+            BLabel gangLabel = new BLabel(_bangobj.playerInfo[pidx].gang.toString(), style);
+            gangLabel.setFit(BLabel.Fit.SCALE);
+            gangLabel.setPreferredSize(145, 19);
+            marquee.add(gangLabel);
+        }
         return marquee;
     }
 
