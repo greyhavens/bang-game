@@ -216,7 +216,7 @@ public class ParlorMatchView extends BContainer
                 _joins[ii].setVisible(visible && _parobj.playerOids[ii] == 0);
             }
         }
-        if (visible && !_joinBtn.isAdded()) {
+        if (visible && _joinBtn != null && !_joinBtn.isAdded()) {
             _buttons.removeAll();
             _buttons.add(_joinBtn);
         } else if (!visible && !_action.isAdded()) {
