@@ -563,7 +563,7 @@ public class GangHandler
         }
     }
 
-    // documentation inherited from interface ObjectDeathListener
+    // documentation inherited from interface SpeakerValidator
     public boolean isValidSpeaker (DObject speakobj, ClientObject speaker, byte mode)
     {
         return _gangobj.members.containsKey(((PlayerObject)speaker).handle);

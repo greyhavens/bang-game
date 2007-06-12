@@ -539,8 +539,9 @@ public class BangView extends BWindow
             // compute the gap once we've laid out our first status window
             int wwidth = _pswins[ii].getWidth();
             if (gap == 0) {
-                gap = ((width - 10) - (wcount * wwidth) - tgap * (wcount - tcount)) /
-                    (tcount - 1);
+                if (tcount > 1) {
+                    gap = ((width - 10) - (wcount * wwidth) - tgap*(wcount - tcount)) / (tcount-1);
+                }
                 offset = 5;
             } else if (_bangobj.teams[lastpidx] != _bangobj.teams[psv.getPidx()]) {
                 offset += gap;

@@ -167,6 +167,9 @@ public class BangConfig extends GameConfig
         /** A serialized board to use for this round or null. */
         public byte[] bdata;
 
+        /** Additional scenario specific configuration information (used in bouty games). */
+        public String sdata;
+
         /** Helper for {@link #toString}. */
         public String bdataToString ()
         {
@@ -178,6 +181,7 @@ public class BangConfig extends GameConfig
             OutputCapsule out = ex.getCapsule(this);
             out.write(scenario, "scenario", null);
             out.write(board, "board", null);
+            out.write(sdata, "sdata", null);
             // bdata is not serialized
         }
 
@@ -186,6 +190,7 @@ public class BangConfig extends GameConfig
             InputCapsule in = im.getCapsule(this);
             scenario = in.readString("scenario", null);
             board = in.readString("board", null);
+            sdata = in.readString("sdata", null);
             // bdata is not serialized
         }
 
@@ -199,7 +204,8 @@ public class BangConfig extends GameConfig
         {
             Round oround = (Round)other;
             return ObjectUtil.equals(scenario, oround.scenario) &&
-                ObjectUtil.equals(board, oround.board) && Arrays.equals(bdata, oround.bdata);
+                ObjectUtil.equals(sdata, oround.sdata) && ObjectUtil.equals(board, oround.board) &&
+                Arrays.equals(bdata, oround.bdata);
         }
     }
 
@@ -285,8 +291,17 @@ public class BangConfig extends GameConfig
      */
     public void addRound (String scenario, String board, byte[] bdata)
     {
+        addRound(scenario, board, bdata, null);
+    }
+
+    /**
+     * Adds a round to this game config.
+     */
+    public void addRound (String scenario, String board, byte[] bdata, String sdata)
+    {
         Round round = new Round();
         round.scenario = scenario;
+        round.sdata = sdata;
         round.board = board;
         round.bdata = bdata;
         rounds.add(round);
@@ -298,6 +313,14 @@ public class BangConfig extends GameConfig
     public String getScenario (int ridx)
     {
         return rounds.get(ridx).scenario;
+    }
+
+    /**
+     * Returns the scenario data to be used for the specified round.
+     */
+    public String getScenarioData (int ridx)
+    {
+        return rounds.get(ridx).sdata;
     }
 
     /**

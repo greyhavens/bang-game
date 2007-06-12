@@ -112,6 +112,18 @@ public class ForestGuardians extends Scenario
         _difficulty = (int)Math.max(0,
             Math.round(rratio * MAX_INITIAL_DIFFICULTY));
 
+        String sdata = _bangmgr.getBangConfig().getScenarioData(bangobj.roundId - 1);
+        if (!StringUtil.isBlank(sdata)) {
+            try {
+                int diff = Integer.parseInt(sdata);
+                if (diff >= 0 && diff < MAX_DIFFICULTY) {
+                    _difficulty = diff;
+                }
+            } catch (Exception e) {
+                // nothing doing
+            }
+        }
+
         // add a random subset of the tree beds
         _treedel.resetTrees(bangobj, _difficulty);
 

@@ -17,6 +17,7 @@ import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.event.ActionEvent;
@@ -79,6 +80,9 @@ public class BountyGameEditor extends BDecoratedWindow
         addRow(cpanel, "m.speed").add(_speed = new BComboBox());
         cpanel.add(new Spacer(10, 10));
         addRow(cpanel, "m.respawn").add(_respawn = new BCheckBox(""));
+
+        addRow(cpanel, "m.other").add(_sdata = new BTextField());
+        _sdata.setPreferredSize(80, -1);
         add(cpanel);
 
         BContainer bpanel = new BContainer(new TableLayout(5, 5, 5));
@@ -162,7 +166,7 @@ public class BountyGameEditor extends BDecoratedWindow
         // configure our various drop downs
         _ctype.selectItem(0);
         new StateSaver("bounty.crit_type", _ctype);
-        _opponents.selectItem(0);
+        _opponents.selectItem(1);
         new StateSaver("bounty.opponents", _opponents);
 
         String townId = _ctx.getUserObject().townId;
@@ -272,7 +276,7 @@ public class BountyGameEditor extends BDecoratedWindow
         if (oppcount == null || scenario == null) {
             return;
         }
-        int players = oppcount + 1;
+        int players = Math.max(oppcount + 1, 2);
 
         // if we had a board selected, try to preserve it
         BoardInfo oinfo = (BoardInfo)_board.getSelectedItem();
@@ -340,7 +344,7 @@ public class BountyGameEditor extends BDecoratedWindow
         config.duration = (BangConfig.Duration)_duration.getSelectedValue();
         config.speed = (BangConfig.Speed)_speed.getSelectedValue();
         config.addRound((String)_scenario.getSelectedValue(),
-                        ((BoardInfo)_board.getSelectedItem()).name, null);
+                        ((BoardInfo)_board.getSelectedItem()).name, null, _sdata.getText());
         config.respawnUnits = _respawn.isSelected();
         config.minWeight = (Integer)_minweight.getSelectedItem();
 
@@ -370,6 +374,7 @@ public class BountyGameEditor extends BDecoratedWindow
         _speed.selectValue(config.speed);
         _respawn.setSelected(config.respawnUnits);
         _minweight.selectItem(Integer.valueOf(config.minWeight));
+        _sdata.setText(config.rounds.get(0).sdata);
 
         // configure our card selections
         if (config.plist.size() > 0 && config.plist.get(0).cards != null) {
@@ -468,8 +473,9 @@ public class BountyGameEditor extends BDecoratedWindow
     protected BComboBox _duration, _speed, _minweight;
     protected BComboBox[] _cardsel = new BComboBox[GameCodes.MAX_CARDS];
     protected BCheckBox _respawn;
+    protected BTextField _sdata;
 
-    protected BangConfig.Player[] _players = new BangConfig.Player[1+OPPONENTS.length];
+    protected BangConfig.Player[] _players = new BangConfig.Player[OPPONENTS.length];
     protected BContainer _ppanel;
     protected BLabel[] _starts = new BLabel[_players.length];
     protected BLabel[] _teams = new BLabel[_players.length];
@@ -482,7 +488,7 @@ public class BountyGameEditor extends BDecoratedWindow
 
     protected ArrayList<BComboBox.Item> _cards = new ArrayList<BComboBox.Item>();
 
-    protected static final Integer[] OPPONENTS = new Integer[] { 1, 2, 3 };
+    protected static final Integer[] OPPONENTS = new Integer[] { 0, 1, 2, 3 };
 
     protected static final Integer[] CUTOFFS = new Integer[] {
         0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };

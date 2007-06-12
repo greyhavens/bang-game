@@ -270,6 +270,14 @@ public class BangManager extends GameManager
     }
 
     /**
+     * Returns the BangConfig object in use.
+     */
+    public BangConfig getBangConfig ()
+    {
+        return _bconfig;
+    }
+
+    /**
      * Returns a string describing the current board. Used for debug logging.
      */
     public String getBoardInfo ()
@@ -278,7 +286,7 @@ public class BangManager extends GameManager
             _bangobj == null || _bangobj.players == null) {
             return "unknown";
         }
-        return _rounds[_activeRoundId].board.name + ":" + _bangobj.players.length;
+        return _rounds[_activeRoundId].board.name + ":" + Math.max(_bangobj.players.length, 2);
     }
 
     // documentation inherited from interface BangProvider
@@ -872,7 +880,7 @@ public class BangManager extends GameManager
             }
         }
         BoardRecord[] boards = BangServer.boardmgr.selectBoards(
-            _bconfig.players.length, _bconfig.rounds, prevIds);
+            Math.max(_bconfig.players.length, 2), _bconfig.rounds, prevIds);
 
         // set up our round records
         _rounds = new RoundRecord[_bconfig.getRounds()];

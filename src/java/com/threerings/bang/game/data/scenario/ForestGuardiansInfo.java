@@ -20,7 +20,7 @@ public class ForestGuardiansInfo extends ScenarioInfo
 {
     /** The string identifier for this scenario. */
     public static final String IDENT = "fg";
-    
+
     /** Points earned at each tick for contributing to trees' growth. */
     public static final int POINTS_PER_TREE_GROWTH = 1;
 
@@ -46,7 +46,11 @@ public class ForestGuardiansInfo extends ScenarioInfo
     @Override // from ScenarioInfo
     public int getTeamSize (BangConfig config, int pidx)
     {
-        return Math.min(super.getTeamSize(config, pidx), 2);
+        int size = super.getTeamSize(config, pidx);
+        if (config.type != BangConfig.Type.BOUNTY) {
+            size = Math.min(size, 2);
+        }
+        return size;
     }
 
     @Override // from ScenarioInfo
@@ -99,7 +103,7 @@ public class ForestGuardiansInfo extends ScenarioInfo
     {
         return Teams.COOP;
     }
-    
+
     @Override // from ScenarioInfo
     public StatsView getStatsView (BasicContext ctx)
     {

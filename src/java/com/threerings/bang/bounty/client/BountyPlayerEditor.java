@@ -50,22 +50,19 @@ public class BountyPlayerEditor extends BDecoratedWindow
         String townId = ctx.getUserObject().townId;
         ArrayList<BComboBox.Item> bsunits = new ArrayList<BComboBox.Item>();
         ArrayList<BComboBox.Item> runits = new ArrayList<BComboBox.Item>();
-        for (int tt = 0, ll = BangUtil.getTownIndex(townId); tt <= ll; tt++) {
-            String tid = BangCodes.TOWN_IDS[tt];
-            bsunits.add(new BComboBox.Item(null, _msgs.get("m.none")));
-            for (UnitConfig uconf : UnitConfig.getTownUnits(tid, UnitConfig.Rank.BIGSHOT)) {
-                bsunits.add(new BComboBox.Item(uconf.type, _msgs.xlate(uconf.getName())));
-            }
-            runits.add(new BComboBox.Item(null, _msgs.get("m.none")));
-            for (UnitConfig uconf : UnitConfig.getTownUnits(tid, UnitConfig.Rank.NORMAL)) {
-                runits.add(new BComboBox.Item(uconf.type, _msgs.xlate(uconf.getName())));
-            }
+        bsunits.add(new BComboBox.Item(null, _msgs.get("m.none")));
+        for (UnitConfig uconf : UnitConfig.getTownUnits(townId, UnitConfig.Rank.BIGSHOT)) {
+            bsunits.add(new BComboBox.Item(uconf.type, _msgs.xlate(uconf.getName())));
+        }
+        runits.add(new BComboBox.Item(null, _msgs.get("m.none")));
+        for (UnitConfig uconf : UnitConfig.getTownUnits(townId, UnitConfig.Rank.NORMAL)) {
+            runits.add(new BComboBox.Item(uconf.type, _msgs.xlate(uconf.getName())));
         }
 
         // create our configuration interface
         BContainer cpanel = new BContainer(new TableLayout(2, 5, 5));
 
-        addRow(cpanel, "m.bplayer_start_spot").add(_start = new BComboBox(START_SPOTS[oppcount-1]));
+        addRow(cpanel, "m.bplayer_start_spot").add(_start = new BComboBox(START_SPOTS[oppcount]));
         _start.selectItem(Integer.valueOf(player.startSpot));
 
         _teams.add(new BComboBox.Item(-1, _msgs.xlate("m.no_teams")));
@@ -151,6 +148,7 @@ public class BountyPlayerEditor extends BDecoratedWindow
     protected BComboBox[] _units;
 
     protected static final Integer[][] START_SPOTS = {
+        new Integer[] { -1, 0, 1 },
         new Integer[] { -1, 0, 1 },
         new Integer[] { -1, 0, 1, 2 },
         new Integer[] { -1, 0, 1, 2, 3 },
