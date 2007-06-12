@@ -287,6 +287,10 @@ public class ParlorGameConfigView extends BContainer
 
     protected void modeUpdated ()
     {
+        // make sure we're not in the middle of updating ourselves
+        if (_updatingDisplay) {
+            return;
+        }
         _updatingDisplay = true;
         switch((ParlorGameConfig.Mode)_mode.getSelectedValue()) {
         case NORMAL:

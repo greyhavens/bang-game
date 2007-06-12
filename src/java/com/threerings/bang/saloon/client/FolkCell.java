@@ -59,9 +59,6 @@ public class FolkCell extends BContainer
         _isFriend = isFriend;
         _isSelf = _ctx.getUserObject().handle.equals(handle);
 
-        BLabel folkLabel = new BLabel(_handle.toString(), "folk_label");
-        folkLabel.setFit(BLabel.Fit.SCALE);
-        add(folkLabel);
         if (_isPardner) {
             BLabel pardIcon = new BLabel("", "folk_pardner");
             pardIcon.setIcon(new ImageIcon(_ctx.loadImage("ui/saloon/pardners_only.png")));
@@ -71,6 +68,9 @@ public class FolkCell extends BContainer
             add(new BLabel(new ImageIcon(_ctx.loadImage("ui/saloon/recruiting.png"))),
                     GroupLayout.FIXED);
         }
+        BLabel folkLabel = new BLabel(_handle.toString(), "folk_label");
+        folkLabel.setFit(BLabel.Fit.SCALE);
+        add(folkLabel);
     }
 
     /**
