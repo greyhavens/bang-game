@@ -111,7 +111,7 @@ public class TeamFinalistView extends BContainer
                 if (myidx != -1 && myidx != ii) {
                     BangConfig config = (BangConfig)ctrl.getPlaceConfig();
                     if (config.ais[ii] == null) {
-                        add(new FriendlyFolkButton(bctx, bangobj, idx),
+                        add(new FriendlyFolkButton(bctx, bangobj, ii),
                                 new Point(FF_OFFSET[_winner ? 0 : 1][idx] + _offx, 22));
                     }
                 }
