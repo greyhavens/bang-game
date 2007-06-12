@@ -26,9 +26,9 @@ public class FoolsGold extends AddPieceCard
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (ScenarioInfo scenario)
+    public boolean isPlayable (ScenarioInfo scenario, String townId)
     {
-        return super.isPlayable(scenario) && (scenario instanceof NuggetScenarioInfo);
+        return super.isPlayable(scenario, townId) && (scenario instanceof NuggetScenarioInfo);
     }
 
     @Override // documentation inherited
@@ -36,7 +36,7 @@ public class FoolsGold extends AddPieceCard
     {
         return pidx == owner;
     }
-    
+
     @Override // documentation inherited
     public String getTownId ()
     {

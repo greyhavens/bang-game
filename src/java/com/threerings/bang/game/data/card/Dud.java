@@ -11,7 +11,6 @@ import com.threerings.bang.game.data.effect.Effect;
 
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
@@ -37,7 +36,7 @@ public class Dud extends Card
     {
         return pidx == owner;
     }
-    
+
     @Override // documentation inherited
     public String getTownId ()
     {
@@ -65,8 +64,8 @@ public class Dud extends Card
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (ScenarioInfo scenario)
+    public boolean isPlayable (ScenarioInfo scenario, String townId)
     {
-        return super.isPlayable(scenario) && scenario.getIdent() != ForestGuardiansInfo.IDENT;
+        return super.isPlayable(scenario, townId) && scenario.getTeams() != ScenarioInfo.Teams.COOP;
     }
 }

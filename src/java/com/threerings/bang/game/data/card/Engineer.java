@@ -23,9 +23,9 @@ public class Engineer extends AreaCard
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (BangObject bangobj)
+    public boolean isPlayable (BangObject bangobj, String townId)
     {
-        if (!super.isPlayable(bangobj)) {
+        if (!super.isPlayable(bangobj, townId)) {
             return false;
         }
 
@@ -69,7 +69,7 @@ public class Engineer extends AreaCard
     {
         return pidx == owner;
     }
-    
+
     @Override // documentation inherited
     public String getTownId ()
     {

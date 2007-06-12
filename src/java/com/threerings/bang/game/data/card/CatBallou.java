@@ -47,11 +47,11 @@ public class CatBallou extends Card
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (ScenarioInfo scenario)
+    public boolean isPlayable (ScenarioInfo scenario, String townId)
     {
-        return super.isPlayable(scenario) && scenario.getTeams() != ScenarioInfo.Teams.COOP;
+        return super.isPlayable(scenario, townId) && scenario.getTeams() != ScenarioInfo.Teams.COOP;
     }
-    
+
     @Override // documentation inherited
     public boolean isValidPlayer (BangObject bangobj, int pidx)
     {

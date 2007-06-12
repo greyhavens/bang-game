@@ -94,7 +94,7 @@ public abstract class Card extends SimpleStreamableObject
             // falls below the cutoff frequency in use for this game)
             if (bangobj != null) {
                 for (int ii = 0; ii < wcards.length; ii++) {
-                    if (weights[ii] > 0 && (!wcards[ii].isPlayable(bangobj) ||
+                    if (weights[ii] > 0 && (!wcards[ii].isPlayable(bangobj, townId) ||
                                             weights[ii] < bangobj.minCardBonusWeight)) {
                         weights[ii] = 0;
                     }
@@ -171,17 +171,17 @@ public abstract class Card extends SimpleStreamableObject
      * inspect the configuration of the game, it can override this method. If it only cares about
      * the scenario type, it should override {@link #isPlayable(String,ScenarioInfo)}.
      */
-    public boolean isPlayable (BangObject bangobj)
+    public boolean isPlayable (BangObject bangobj, String townId)
     {
-        return isPlayable(bangobj.scenario);
+        return isPlayable(bangobj.scenario, townId);
     }
 
     /**
      * Determines whether this card can be played in the specified scenario.
      */
-    public boolean isPlayable (ScenarioInfo scenario)
+    public boolean isPlayable (ScenarioInfo scenario, String townId)
     {
-        return BangUtil.getTownIndex(scenario.getTownId()) >= BangUtil.getTownIndex(getTownId());
+        return BangUtil.getTownIndex(townId) >= BangUtil.getTownIndex(getTownId());
     }
 
     /**

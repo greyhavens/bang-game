@@ -26,7 +26,7 @@ public class Misfire extends Card
     @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
-        return (target instanceof Unit && target.isAlive() && 
+        return (target instanceof Unit && target.isAlive() &&
                 ((Unit)target).getConfig().gunUser);
     }
 
@@ -35,7 +35,7 @@ public class Misfire extends Card
     {
         return pidx == owner;
     }
-    
+
     @Override // documentation inherited
     public String getTownId ()
     {
@@ -63,8 +63,9 @@ public class Misfire extends Card
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (ScenarioInfo scenario)
+    public boolean isPlayable (ScenarioInfo scenario, String townId)
     {
-        return super.isPlayable(scenario) && scenario.getIdent() != ForestGuardiansInfo.IDENT;
+        return super.isPlayable(scenario, townId) &&
+            scenario.getIdent() != ForestGuardiansInfo.IDENT;
     }
 }

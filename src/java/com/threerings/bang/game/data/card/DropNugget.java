@@ -27,12 +27,12 @@ public class DropNugget extends Card
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (ScenarioInfo scenario)
+    public boolean isPlayable (ScenarioInfo scenario, String townId)
     {
-        return super.isPlayable(scenario) && scenario.hasHoldableBonuses() &&
+        return super.isPlayable(scenario, townId) && scenario.hasHoldableBonuses() &&
             scenario.getTeams() != ScenarioInfo.Teams.COOP;
     }
-    
+
     @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {

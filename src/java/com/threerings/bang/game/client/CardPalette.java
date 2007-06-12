@@ -53,7 +53,7 @@ public class CardPalette extends IconPalette
         if (_cardBG == null) {
             _cardBG = new ImageIcon(_ctx.loadImage("ui/pregame/card_bg.png"));
             _foundBG = new ImageBackground(
-                ImageBackground.CENTER_XY, 
+                ImageBackground.CENTER_XY,
                 _ctx.loadImage("ui/pstatus/card_found_up.png"));
         }
 
@@ -132,7 +132,7 @@ public class CardPalette extends IconPalette
                         citem.playCard();
                     }
                 }
-                if (card.isPlayable(_bangobj) && citem.getQuantity() > 0) {
+                if (card.isPlayable(_bangobj, user.townId) && citem.getQuantity() > 0) {
                     carditems.add(citem);
                 }
             }
@@ -148,7 +148,7 @@ public class CardPalette extends IconPalette
             ItemIcon iicon = new ItemIcon(_ctx, citem, _small);
             if (_small) {
                 iicon.setStyleClass("card_palette_icon");
-            } else { 
+            } else {
                 iicon.setFitted(true);
             }
             addIcon(iicon);

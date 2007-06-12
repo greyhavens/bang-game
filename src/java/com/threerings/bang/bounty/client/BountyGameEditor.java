@@ -299,7 +299,7 @@ public class BountyGameEditor extends BDecoratedWindow
         _cards.add(new BComboBox.Item(null, _msgs.get("m.none")));
         ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenario);
         for (Card card : Card.getCards()) {
-            if (card.isPlayable(info)) {
+            if (card.isPlayable(info, _ctx.getUserObject().townId)) {
                 _cards.add(new BComboBox.Item(card.getType(), _msgs.xlate(card.getName())));
             }
         }

@@ -25,9 +25,9 @@ public class SnakeBite extends Card
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (ScenarioInfo scenario)
+    public boolean isPlayable (ScenarioInfo scenario, String townId)
     {
-        return super.isPlayable(scenario) && scenario.hasEnemies(UnitConfig.Make.HUMAN);
+        return super.isPlayable(scenario, townId) && scenario.hasEnemies(UnitConfig.Make.HUMAN);
     }
 
     @Override // documentation inherited

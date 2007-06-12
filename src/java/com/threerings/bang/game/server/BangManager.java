@@ -349,7 +349,7 @@ public class BangManager extends GameManager
                 }
                 // TODO: get pissy if they try to use the same card twice
                 Card card = item.getCard();
-                if (!card.isPlayable(_bangobj)) {
+                if (!card.isPlayable(_bangobj, ServerConfig.townId)) {
                     log.warning("Rejecting request to use nonplayable card [who=" + user.who() +
                                 ", card=" + card + "].");
                     continue;
