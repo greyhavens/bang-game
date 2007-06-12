@@ -2108,7 +2108,8 @@ public class BangManager extends GameManager
     protected boolean shouldEndGame ()
     {
         return _bangobj.isInPlay() &&
-            (getActiveHumanCount() == 0 || _gameobj.getActivePlayerCount() == 1);
+            (getActiveHumanCount() == 0 || _gameobj.getActivePlayerCount() == 1 ||
+             (_bangobj.isTeamGame() && _bangobj.getActiveTeamCount() == 1));
     }
 
     /**

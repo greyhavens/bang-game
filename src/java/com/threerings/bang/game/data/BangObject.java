@@ -631,6 +631,24 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Returns the number of active teams.
+     */
+    public int getActiveTeamCount ()
+    {
+        boolean[] activeTeam = new boolean[players.length];
+        int count = 0;
+        for (int ii = 0; ii < players.length; ii++) {
+            if (isActivePlayer(ii)) {
+                if (!activeTeam[teams[ii]]) {
+                    activeTeam[teams[ii]] = true;
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
      * Returns an array with points calculated by teams.
      */
     public int[] getTeamPoints (int[] points)
