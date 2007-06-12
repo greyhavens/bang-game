@@ -20,6 +20,7 @@ import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.RandomLogic;
 import com.threerings.bang.game.server.ai.WendigoLogic;
 
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.data.effect.TalismanEffect;
@@ -120,7 +121,8 @@ public class WendigoAttack extends Scenario
                 } else {
                     _nextWendigo = (short)(bangobj.duration - WENDIGO_WAIT - 1);
                 }
-                _resdel.setRespawn(true);
+                // allow the game config to override respawning
+                _resdel.setRespawn(((BangConfig)_bangmgr.getConfig()).respawnUnits);
                 validate = true;
 
             } else {
