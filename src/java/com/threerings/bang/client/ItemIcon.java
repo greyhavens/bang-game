@@ -84,8 +84,14 @@ public class ItemIcon extends PaletteIcon
      */
     public boolean isMenuEnabled ()
     {
-        // TEMP: for now menus are only enabled on songs
-        return _menuEnabled && (_item instanceof Song);
+        if (!_menuEnabled) {
+            return false;
+        }
+        if (!(_ctx instanceof BangContext)) {
+            return (_item instanceof Song);
+        }
+        BangContext ctx = (BangContext)_ctx;
+        return ctx.getUserObject().tokens.isAdmin() || (_item instanceof Song);
     }
 
     // from interface ActionListener
