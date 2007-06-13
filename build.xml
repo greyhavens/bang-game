@@ -1,5 +1,5 @@
 <!-- build configuration -->
-<project name="bang" default="compile" basedir=".">
+<project name="bang" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
 
   <!-- define various build properties -->
   <property name="src.dir"        value="src/java"/>
@@ -65,14 +65,12 @@
     <file name="${extlibs.dir}/s3lib.jar"/>
     <file name="${extlibs.dir}/s3upload.jar"/>
     <file name="${extlibs.dir}/servlet-2.3.jar"/>
-    <file name="${extlibs.dir}/underwire.jar"/>
     <file name="${extlibs.dir}/velocity-1.5-dev.jar"/>
     <file name="lib/lwjgl.jar"/>
     <file name="lib/lwjgl_util.jar"/>
     <file name="lib/jorbis-0.0.12.jar"/>
     <file name="lib/jogg-0.0.5.jar"/>
     <file name="lib/jl1.0.jar"/>
-    <file name="lib/hemiptera.jar"/>
   </filelist>
 
   <!-- declare the libraries in dist.libs needed only at build time and are not to be packaged. -->
@@ -100,6 +98,19 @@
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/rsrc"/>
+
+    <!-- Fetch dependencies -->
+    <artifact:dependencies filesetId="dependency.fileset">
+      <remoteRepository refid="maven.depends.repo"/>
+      <dependency groupId="com.threerings.underwire" artifactId="underwire"
+                  version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.hemiptera" artifactId="hemiptera"
+                  version="0.0-SNAPSHOT"/>
+    </artifact:dependencies>
+    <copy todir="${deploy.dir}/lib">
+      <fileset refid="dependency.fileset"/>
+      <mapper type="flatten"/>
+    </copy>
 
     <!-- copy global static resources -->
     <copy todir="${deploy.dir}/rsrc">
