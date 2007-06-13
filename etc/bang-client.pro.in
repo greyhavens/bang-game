@@ -31,7 +31,7 @@
 -injars ../dist/lib/jme-bui.jar(!META-INF/*,!**/tests/**)
 -injars ../dist/lib/threerings.jar(
   **/coin/data/**,**/IdentUtil*.class,**/TrackingUtil.class,**/Log.class)
--injars ../dist/lib/hemiptera.jar(!**/web/**,!**/persist/**,!install.properties)
+-injars ../dist/lib/hemiptera-0.0-SNAPSHOT.jar(!**/web/**,!**/persist/**,!install.properties)
 -injars ../dist/lib/jorbis-0.0.12.jar(!META-INF/*)
 -injars ../dist/lib/jogg-0.0.5.jar(!META-INF/*)
 -injars ../dist/lib/jl1.0.jar(!META-INF/*)
