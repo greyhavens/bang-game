@@ -94,7 +94,7 @@ public class ToggleSwitchEffect extends Effect
             ts.lastActed = tick;
         }
         ts.activator = activator;
-        if (tick != -1) {
+        if (tick == 0) {
             ts.occupier = occupier;
         } else {
             ts.occupier = -1;
