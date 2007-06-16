@@ -5,7 +5,6 @@ package com.threerings.bang.saloon.server;
 
 import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.Criterion;
-import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -30,35 +29,9 @@ public interface ParlorProvider extends InvocationProvider
         throws InvocationException;
 
     /**
-     * Handles a {@link ParlorService#joinMatch} request.
-     */
-    public void joinMatch (ClientObject caller);
-
-    /**
-     * Handles a {@link ParlorService#joinMatchSlot} request.
-     */
-    public void joinMatchSlot (ClientObject caller, int arg1);
-
-    /**
-     * Handles a {@link ParlorService#leaveMatch} request.
-     */
-    public void leaveMatch (ClientObject caller);
-
-    /**
      * Handles a {@link ParlorService#leaveSaloonMatch} request.
      */
     public void leaveSaloonMatch (ClientObject caller, int arg1);
-
-    /**
-     * Handles a {@link ParlorService#startMatchMaking} request.
-     */
-    public void startMatchMaking (ClientObject caller, ParlorGameConfig arg1, byte[] arg2, InvocationService.InvocationListener arg3)
-        throws InvocationException;
-
-    /**
-     * Handles a {@link ParlorService#updateGameConfig} request.
-     */
-    public void updateGameConfig (ClientObject caller, ParlorGameConfig arg1);
 
     /**
      * Handles a {@link ParlorService#updateParlorConfig} request.

@@ -27,8 +27,8 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.ParlorGameConfig;
-import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
+import com.threerings.bang.saloon.data.TableGameObject;
 
 /**
  * Displays a pending match in a Back Parlor.
@@ -36,13 +36,13 @@ import com.threerings.bang.saloon.data.SaloonCodes;
 public class ParlorMatchView extends BContainer
     implements ActionListener
 {
-    public ParlorMatchView (BangContext ctx, ParlorObject parobj)
+    public ParlorMatchView (BangContext ctx, TableGameObject tobj)
     {
         super(new BorderLayout(0, 10));
 
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
-        _parobj = parobj;
+        _tobj = tobj;
 
         // this will contain the players and game info
         BContainer main = new BContainer(GroupLayout.makeHStretch());
@@ -56,13 +56,13 @@ public class ParlorMatchView extends BContainer
         add(main, BorderLayout.CENTER);
 
         // create our player slots
-        _slots = new PlayerSlot[_parobj.playerOids.length];
-        boolean team = _parobj.game.mode == ParlorGameConfig.Mode.TEAM_2V2;
+        _slots = new PlayerSlot[_tobj.playerOids.length];
+        boolean team = _tobj.game.mode == ParlorGameConfig.Mode.TEAM_2V2;
         if (team) {
-            _joins = new BButton[_parobj.playerOids.length];
+            _joins = new BButton[_tobj.playerOids.length];
         }
         int idx = 0, pidx = 0;
-        for (ParlorGameConfig.Slot slot : _parobj.game.slots) {
+        for (ParlorGameConfig.Slot slot : _tobj.game.slots) {
             int color = team ? TEAM_COLORS[idx] : idx + 1;
             BComponent comp = null;
             switch (slot) {
@@ -115,13 +115,13 @@ public class ParlorMatchView extends BContainer
         _action.setStyleClass("big_button");
         if (team) {
             if (isJoined()) {
-                for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+                for (int ii = 0; ii < _tobj.playerOids.length; ii++) {
                     _joins[ii].setVisible(false);
                 }
                 _buttons.add(_action);
             } else {
-                for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-                    if (_parobj.playerOids[ii] != 0) {
+                for (int ii = 0; ii < _tobj.playerOids.length; ii++) {
+                    if (_tobj.playerOids[ii] != 0) {
                         _joins[ii].setVisible(false);
                     }
                 }
@@ -139,18 +139,18 @@ public class ParlorMatchView extends BContainer
     {
         String action = event.getAction();
         if ("join".equals(action)) {
-            _parobj.service.joinMatch(_ctx.getClient());
+            _tobj.service.joinMatch(_ctx.getClient());
 
         } else if (action.startsWith("join_")) {
             try {
                 int slot = Integer.parseInt(action.substring(5));
-                _parobj.service.joinMatchSlot(_ctx.getClient(), slot);
+                _tobj.service.joinMatchSlot(_ctx.getClient(), slot);
             } catch (NumberFormatException nfe) {
-                _parobj.service.joinMatch(_ctx.getClient());
+                _tobj.service.joinMatch(_ctx.getClient());
             }
 
         } else if ("leave".equals(action)) {
-            _parobj.service.leaveMatch(_ctx.getClient());
+            _tobj.service.leaveMatch(_ctx.getClient());
         }
     }
 
@@ -160,8 +160,8 @@ public class ParlorMatchView extends BContainer
         super.wasAdded();
 
         // add our listeners
-        _parobj.addListener(_elup);
-        _parobj.addListener(_atch);
+        _tobj.addListener(_elup);
+        _tobj.addListener(_atch);
 
         // update our displays
         updateDisplay();
@@ -174,15 +174,15 @@ public class ParlorMatchView extends BContainer
         super.wasRemoved();
 
         // clear out our listeners
-        _parobj.removeListener(_elup);
-        _parobj.removeListener(_atch);
+        _tobj.removeListener(_elup);
+        _tobj.removeListener(_atch);
     }
 
     protected boolean isJoined ()
     {
         int oid = _ctx.getUserObject().getOid();
-        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            if (_parobj.playerOids[ii] == oid) {
+        for (int ii = 0; ii < _tobj.playerOids.length; ii++) {
+            if (_tobj.playerOids[ii] == oid) {
                 return true;
             }
         }
@@ -191,29 +191,29 @@ public class ParlorMatchView extends BContainer
 
     protected void updateCriterion ()
     {
-        _rounds.setText(_msgs.get("m.cr_rounds", "" + _parobj.game.rounds));
-        _teams.setText(_msgs.get("m.cr_teamsize", "" + _parobj.game.teamSize));
+        _rounds.setText(_msgs.get("m.cr_rounds", "" + _tobj.game.rounds));
+        _teams.setText(_msgs.get("m.cr_teamsize", "" + _tobj.game.teamSize));
         _mode.setText(_msgs.xlate(_msgs.compose(
-                        "m.cr_mode", MODES[_parobj.game.mode.ordinal()])));
+                        "m.cr_mode", MODES[_tobj.game.mode.ordinal()])));
         _duration.setText(_msgs.xlate(_msgs.compose(
-                        "m.cr_duration", _parobj.game.duration.key())));
-        _speed.setText(_msgs.xlate(_msgs.compose("m.cr_speed", _parobj.game.speed.key())));
+                        "m.cr_duration", _tobj.game.duration.key())));
+        _speed.setText(_msgs.xlate(_msgs.compose("m.cr_speed", _tobj.game.speed.key())));
 // TODO
 //         _scenarios.setText(_msgs.get("m.cr_scenarios", "" + TODO));
     }
 
     protected void updateStarting ()
     {
-        _starting.setText(_parobj.starting ? _msgs.get("m.starting") : "");
+        _starting.setText(_tobj.starting ? _msgs.get("m.starting") : "");
     }
 
     protected void updateDisplay ()
     {
         boolean visible = !isJoined();
-        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            _slots[ii].setPlayerOid(_parobj.playerOids[ii]);
+        for (int ii = 0; ii < _tobj.playerOids.length; ii++) {
+            _slots[ii].setPlayerOid(_tobj.playerOids[ii]);
             if (_joins != null) {
-                _joins[ii].setVisible(visible && _parobj.playerOids[ii] == 0);
+                _joins[ii].setVisible(visible && _tobj.playerOids[ii] == 0);
             }
         }
         if (visible && _joinBtn != null && !_joinBtn.isAdded()) {
@@ -227,7 +227,7 @@ public class ParlorMatchView extends BContainer
 
     protected AttributeChangeListener _atch = new AttributeChangeListener() {
         public void attributeChanged (AttributeChangedEvent event) {
-            if (event.getName().equals(ParlorObject.STARTING)) {
+            if (event.getName().equals(TableGameObject.STARTING)) {
                 updateStarting();
             }
         }
@@ -241,7 +241,7 @@ public class ParlorMatchView extends BContainer
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
-    protected ParlorObject _parobj;
+    protected TableGameObject _tobj;
     protected BButton _action;
     protected BContainer _buttons;
 

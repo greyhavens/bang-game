@@ -25,14 +25,8 @@ public class ParlorObject extends PlaceObject
     /** The field name of the <code>onlyCreatorStart</code> field. */
     public static final String ONLY_CREATOR_START = "onlyCreatorStart";
 
-    /** The field name of the <code>game</code> field. */
-    public static final String GAME = "game";
-
-    /** The field name of the <code>playerOids</code> field. */
-    public static final String PLAYER_OIDS = "playerOids";
-
-    /** The field name of the <code>starting</code> field. */
-    public static final String STARTING = "starting";
+    /** The field name of the <code>tableOid</code> field. */
+    public static final String TABLE_OID = "tableOid";
     // AUTO-GENERATED: FIELDS END
 
     /** Provides access to parlor services. */
@@ -44,14 +38,8 @@ public class ParlorObject extends PlaceObject
     /** Whether only the parlor creator can start games. */
     public boolean onlyCreatorStart;
 
-    /** Information on a game being configured. */
-    public ParlorGameConfig game;
-
-    /** Used when match-making a game. */
-    public int[] playerOids;
-
-    /** Indicates that the game is about to start. */
-    public boolean starting;
+    /** The oid for the TableGameObject if we have table games. */
+    public int tableOid;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -103,68 +91,19 @@ public class ParlorObject extends PlaceObject
     }
 
     /**
-     * Requests that the <code>game</code> field be set to the
+     * Requests that the <code>tableOid</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setGame (ParlorGameConfig value)
+    public void setTableOid (int value)
     {
-        ParlorGameConfig ovalue = this.game;
+        int ovalue = this.tableOid;
         requestAttributeChange(
-            GAME, value, ovalue);
-        this.game = value;
-    }
-
-    /**
-     * Requests that the <code>playerOids</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setPlayerOids (int[] value)
-    {
-        int[] ovalue = this.playerOids;
-        requestAttributeChange(
-            PLAYER_OIDS, value, ovalue);
-        this.playerOids = (value == null) ? null : (int[])value.clone();
-    }
-
-    /**
-     * Requests that the <code>index</code>th element of
-     * <code>playerOids</code> field be set to the specified value.
-     * The local value will be updated immediately and an event will be
-     * propagated through the system to notify all listeners that the
-     * attribute did change. Proxied copies of this object (on clients)
-     * will apply the value change when they received the attribute
-     * changed notification.
-     */
-    public void setPlayerOidsAt (int value, int index)
-    {
-        int ovalue = this.playerOids[index];
-        requestElementUpdate(
-            PLAYER_OIDS, index, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.playerOids[index] = value;
-    }
-
-    /**
-     * Requests that the <code>starting</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setStarting (boolean value)
-    {
-        boolean ovalue = this.starting;
-        requestAttributeChange(
-            STARTING, Boolean.valueOf(value), Boolean.valueOf(ovalue));
-        this.starting = value;
+            TABLE_OID, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.tableOid = value;
     }
     // AUTO-GENERATED: METHODS END
 }

@@ -3,7 +3,6 @@
 
 package com.threerings.bang.saloon.client;
 
-import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.crowd.client.PlaceController;
@@ -23,7 +22,7 @@ import com.threerings.bang.saloon.data.ParlorObject;
  * Handles the client side of a Back Parlor.
  */
 public class ParlorController extends PlaceController
-    implements AttributeChangeListener, GameReadyObserver
+    implements GameReadyObserver
 {
     @Override // documentation inherited
     public void init (CrowdContext ctx, PlaceConfig config)
@@ -38,17 +37,12 @@ public class ParlorController extends PlaceController
     {
         super.willEnterPlace(plobj);
         _parobj = (ParlorObject)plobj;
-        _parobj.addListener(this);
     }
 
     @Override // documentation inherited
     public void didLeavePlace (PlaceObject plobj)
     {
         super.didLeavePlace(plobj);
-        if (_parobj != null) {
-            _parobj.removeListener(this);
-            _parobj = null;
-        }
         _ctx.getParlorDirector().removeGameReadyObserver(this);
     }
 
@@ -80,21 +74,6 @@ public class ParlorController extends PlaceController
             _parobj.service.leaveSaloonMatch(_ctx.getClient(), matchOid);
         }
         _view.clearSaloonMatchView(null);
-    }
-
-    // documentation inherited from interface AttributeChangeListener
-    public void attributeChanged (AttributeChangedEvent event)
-    {
-        if (_parobj.info.matched) {
-            return;
-        }
-        if (event.getName().equals(ParlorObject.PLAYER_OIDS)) {
-            if (_parobj.playerOids == null) {
-                _view.clearMatchView();
-            } else {
-                _view.displayMatchView();
-            }
-        }
     }
 
     // documentation inherited from interface GameReadyObserver

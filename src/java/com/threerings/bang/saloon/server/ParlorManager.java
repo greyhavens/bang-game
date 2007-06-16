@@ -15,6 +15,7 @@ import com.samskivert.util.Throttle;
 
 import com.threerings.media.util.MathUtil;
 
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.dobj.ObjectDeathListener;
@@ -69,6 +70,34 @@ public class ParlorManager extends PlaceManager
         if (info.server) {
             cancelShutdowner();
         }
+
+        // create a table manager if we're not matched
+        if (!info.matched) {
+            _tmgr = new TableGameManager() {
+                public void updateGameConfig (ClientObject caller, ParlorGameConfig game)
+                {
+                    if (_parobj.onlyCreatorStart &&
+                            !((PlayerObject)caller).handle.equals(_parobj.info.creator)) {
+                        return;
+                    }
+                    super.updateGameConfig(caller, game);
+                }
+                public void startMatchMaking (ClientObject caller, ParlorGameConfig game,
+                        byte[] bdata, InvocationService.ConfirmListener listener)
+                    throws InvocationException
+                {
+                    if (_parobj.onlyCreatorStart &&
+                            !((PlayerObject)caller).handle.equals(_parobj.info.creator)) {
+                        return;
+                    }
+                    super.startMatchMaking(caller, game, bdata, listener);
+                }
+                public void startingGame (PlaceObject gameobj) {
+                    ParlorManager.this.startingGame(gameobj);
+                }
+            };
+            _parobj.setTableOid(_tmgr.getTableGameObject().getOid());
+        }
     }
 
     /**
@@ -122,6 +151,7 @@ public class ParlorManager extends PlaceManager
             try {
                 info.creator = _parobj.info.creator;
                 info.occupants = _parobj.occupantInfo.size();
+                info.matched = _parobj.info.matched;
                 if (!_parobj.info.equals(info)) {
                     _parobj.setInfo(info);
                     _salmgr.parlorUpdated(info);
@@ -140,137 +170,6 @@ public class ParlorManager extends PlaceManager
         if (user.handle.equals(_parobj.info.creator)) {
             _password = password;
         }
-    }
-
-    // documentation inherited from interface ParlorProvider
-    public void updateGameConfig (ClientObject caller, ParlorGameConfig game)
-    {
-        // if we're already matchmaking, reject any config updates
-        if (_parobj.playerOids != null) {
-            return;
-        }
-
-        // otherwise just make sure they have the necessary privileges
-        PlayerObject user = (PlayerObject)caller;
-        if (user.handle.equals(_parobj.info.creator) || !_parobj.onlyCreatorStart) {
-            _parobj.setGame(game);
-        }
-    }
-
-    // documentation inherited from interface ParlorProvider
-    public void startMatchMaking (ClientObject caller, ParlorGameConfig game, byte[] bdata,
-                                  ParlorService.InvocationListener listener)
-        throws InvocationException
-    {
-        // if we're not allowing new games, fail immediately
-        if (!RuntimeConfig.server.allowNewGames) {
-            throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
-        }
-        PlayerObject user = (PlayerObject)caller;
-
-        // if we've already started, then just turn this into a join
-        if (_parobj.playerOids != null) {
-            joinMatch(caller);
-
-        } else {
-            // sanity check the configuration
-            game.slots[0] = Slot.HUMAN;
-            if (game.getCount(Slot.TINCAN) == 0 && game.getCount(Slot.HUMAN) < 2) {
-                game.slots[1] = Slot.HUMAN;
-            }
-            if (game.mode == ParlorGameConfig.Mode.TEAM_2V2) {
-                for (int ii = 0; ii < game.slots.length; ii++) {
-                    if (game.slots[ii] == Slot.NONE) {
-                        game.slots[ii] = Slot.TINCAN;
-                    }
-                }
-
-            }
-            game.rounds = MathUtil.bound(1, game.rounds, GameCodes.MAX_ROUNDS);
-            game.teamSize = MathUtil.bound(1, game.teamSize, GameCodes.MAX_TEAM_SIZE);
-            if (game.scenarios == null || game.scenarios.length == 0) {
-                game.scenarios = ScenarioInfo.getScenarioIds(ServerConfig.townId, false);
-            }
-
-            // update the game config with the desired config
-            _parobj.setGame(game);
-
-            // if this player is an admin, allow the board data
-            if (user.tokens.isAdmin()) {
-                _bdata = bdata;
-            }
-
-            // create a playerOids array and stick the starter in slot zero
-            int[] playerOids = new int[game.getCount(Slot.HUMAN)];
-            playerOids[0] = caller.getOid();
-            _parobj.setPlayerOids(playerOids);
-
-            // start a "start the game" timer if we're ready to go
-            checkStart();
-        }
-    }
-
-    // documentation inherited from interface ParlorProvider
-    public void joinMatch (ClientObject caller)
-    {
-        // make sure the match wasn't cancelled
-        if (_parobj.playerOids == null) {
-            return;
-        }
-
-        // look for a spot, and make sure they're not already joined
-        PlayerObject user = (PlayerObject)caller;
-        int idx = -1;
-        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            if (idx == -1 && _parobj.playerOids[ii] == 0) {
-                idx = ii;
-            }
-            if (_parobj.playerOids[ii] == user.getOid()) {
-                // abort!
-                return;
-            }
-        }
-
-        if (idx != -1) {
-            _parobj.playerOids[idx] = user.getOid();
-            _parobj.setPlayerOids(_parobj.playerOids);
-        }
-
-        // start a "start the game" timer if we're ready to go
-        checkStart();
-    }
-
-    // documentation inherited from interface ParlorProvider
-    public void joinMatchSlot (ClientObject caller, int slot)
-    {
-        // make sure the match wasn't cancelled
-        if (_parobj.playerOids == null) {
-            return;
-        }
-
-        // make sure the spot they're trying to take is still available
-        if (slot < 0 || slot >= _parobj.playerOids.length || _parobj.playerOids[slot] != 0) {
-            return;
-        }
-        PlayerObject user = (PlayerObject)caller;
-        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            if (_parobj.playerOids[ii] == user.getOid()) {
-                // abort!
-                return;
-            }
-        }
-
-        _parobj.playerOids[slot] = user.getOid();
-        _parobj.setPlayerOids(_parobj.playerOids);
-
-        // start a "start the game" timer if we're ready to go
-        checkStart();
-    }
-
-    // documentation inherited from interface ParlorProvider
-    public void leaveMatch (ClientObject caller)
-    {
-        clearPlayer(caller.getOid());
     }
 
     // documentation inherited from interface ParlorProvider
@@ -314,10 +213,10 @@ public class ParlorManager extends PlaceManager
     }
 
     /**
-     * Called when a game is started for an occupant of this parlor.
+     * Called when a game is started from the parlor, so the parlor can keep itself alive
+     * until the game finishes.
      */
-    public void startingGame (PlaceObject gameobj)
-    {
+    public void startingGame (PlaceObject gameobj) {
         if (_activeGames.add(gameobj.getOid())) {
             gameobj.addListener(_gameOverListener);
         }
@@ -378,7 +277,9 @@ public class ParlorManager extends PlaceManager
         super.bodyLeft(bodyOid);
 
         // clear this player out of the game in case they were in it
-        clearPlayer(bodyOid);
+        if (_tmgr != null) {
+            _tmgr.clearPlayer(bodyOid);
+        }
 
         _salmgr.clearPlayer(bodyOid);
 
@@ -394,7 +295,9 @@ public class ParlorManager extends PlaceManager
         // if a player disconnects during the matchmaking phase, remove them
         // from their pending match
         if (info.status == OccupantInfo.DISCONNECTED) {
-            clearPlayer(info.bodyOid);
+            if (_tmgr != null) {
+                _tmgr.clearPlayer(info.bodyOid);
+            }
 
             _salmgr.clearPlayer(info.bodyOid);
         }
@@ -406,142 +309,6 @@ public class ParlorManager extends PlaceManager
             _parobj.info.occupants = _parobj.occupantInfo.size();
             _salmgr.parlorUpdated(_parobj.info);
         }
-    }
-
-    protected void clearPlayer (int playerOid)
-    {
-        // make sure the match wasn't already cancelled
-        if (_parobj.playerOids == null) {
-            return;
-        }
-
-        // clear this player out of the list
-        boolean cleared = false;
-        int remain = 0;
-        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            if (_parobj.playerOids[ii] == playerOid) {
-                _parobj.playerOids[ii] = 0;
-                cleared = true;
-            } else if (_parobj.playerOids[ii] > 0) {
-                remain++;
-            }
-        }
-
-        // if we didn't find this player in the list, stop here
-        if (!cleared) {
-            return;
-        }
-
-        // either remove this player or cancel the match, depending
-        if (remain == 0) {
-            _parobj.setPlayerOids(null);
-        } else {
-            _parobj.setPlayerOids(_parobj.playerOids);
-        }
-
-        // cancel our game start timer
-        if (_starter != null) {
-            _parobj.setStarting(false);
-            _starter.cancel();
-            _starter = null;
-        }
-    }
-
-    protected void checkStart ()
-    {
-        if (readyToStart() && _starter == null) {
-            _parobj.setStarting(true);
-            _starter = new Interval(BangServer.omgr) {
-                public void expired () {
-                    if (_starter != this) {
-                        return;
-                    }
-                    _starter = null;
-                    if (readyToStart()) {
-                        log.info("Starting " + _parobj.game + ".");
-                        startMatch();
-                    }
-                }
-            };
-            _starter.schedule(SaloonManager.START_DELAY);
-        }
-    }
-
-    protected boolean readyToStart ()
-    {
-        return (IntListUtil.indexOf(_parobj.playerOids, 0) == -1);
-    }
-
-    protected void startMatch ()
-    {
-        BangConfig config = new BangConfig();
-
-        // we can use these values directly as we sanity checked them earlier
-        int players = _parobj.game.getCount(Slot.HUMAN);
-        int tinCans = _parobj.game.getCount(Slot.TINCAN);
-        config.init(players + tinCans, _parobj.game.teamSize);
-        config.players = new Handle[config.plist.size()];
-        config.duration = _parobj.game.duration;
-        config.speed = _parobj.game.speed;
-        config.rated = false; // back parlor games are never rated
-
-        // configure our rounds
-        for (int ii = 0; ii < _parobj.game.rounds; ii++) {
-            config.addRound(RandomUtil.pickRandom(_parobj.game.scenarios), null, _bdata);
-        }
-
-        // fill in the human and ai players
-        config.ais = new BangAI[config.players.length];
-        HashSet<String> names = new HashSet<String>();
-        int pidx = 0, idx = 0;
-        for (Slot slot : _parobj.game.slots) {
-            switch (slot) {
-            case HUMAN:
-                PlayerObject user = (PlayerObject)BangServer.omgr.getObject(_parobj.playerOids[pidx]);
-                if (user == null) {
-                    log.warning("Zoiks! Missing player for parlor match [game=" + _parobj.game +
-                                ", oid=" + _parobj.playerOids[pidx] + "].");
-                    // clear our now non-existant player from the match
-                    clearPlayer(_parobj.playerOids[pidx]);
-                    return; // abandon ship
-                }
-                config.players[idx] = user.handle;
-                pidx++;
-                idx++;
-                break;
-            case TINCAN:
-                // TODO: sort out personality and skill
-                BangAI ai = BangAI.createAI(1, 50, names);
-                config.ais[idx] = ai;
-                config.players[idx] = ai.handle;
-                idx++;
-                break;
-            default:
-                // nothing doing
-            }
-        }
-
-        // configure teams if necessary
-        if (_parobj.game.mode == ParlorGameConfig.Mode.TEAM_2V2) {
-            idx = 0;
-            for (BangConfig.Player player : config.plist) {
-                player.teamIdx = (idx < 2 ? 0 : 1);
-                idx++;
-            }
-        }
-
-        try {
-            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
-            startingGame(mgr.getPlaceObject());
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Choked creating game " + config + ".", e);
-        }
-
-        // and clear out our parlor bits
-        _parobj.setStarting(false);
-        _parobj.setPlayerOids(null);
-        _parobj.setGame(null);
-        _bdata = null;
     }
 
     /**
@@ -568,11 +335,10 @@ public class ParlorManager extends PlaceManager
         }
     };
 
+    protected TableGameManager _tmgr;
     protected ParlorObject _parobj;
     protected SaloonManager _salmgr;
-    protected byte[] _bdata;
     protected String _password;
-    protected Interval _starter;
     protected Throttle _throttle = new Throttle(1, 10);
     protected ArrayIntSet _activeGames = new ArrayIntSet();
     protected ArrayIntSet _bootSet = new ArrayIntSet();

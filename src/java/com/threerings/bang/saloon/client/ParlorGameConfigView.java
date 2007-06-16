@@ -50,8 +50,8 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorGameConfig.Slot;
-import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
+import com.threerings.bang.saloon.data.TableGameObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -61,12 +61,13 @@ import static com.threerings.bang.Log.log;
 public class ParlorGameConfigView extends BContainer
     implements AttributeChangeListener, ActionListener
 {
-    public ParlorGameConfigView (BangContext ctx, StatusLabel status)
+    public ParlorGameConfigView (BangContext ctx, StatusLabel status, TableGameView tview)
     {
         super(new BorderLayout(0, 10));
 
         _ctx = ctx;
         _status = status;
+        _tview = tview;
         _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
         BContainer main = new BContainer(
@@ -206,28 +207,26 @@ public class ParlorGameConfigView extends BContainer
         add(_buttons, BorderLayout.SOUTH);
     }
 
-    public void willEnterPlace (ParlorObject parobj)
+    public void willEnterPlace (TableGameObject tobj)
     {
-        _parobj = parobj;
-        _parobj.addListener(this);
-        updateDisplay();
+        _tobj = tobj;
+        _tobj.addListener(this);
     }
 
     public void didLeavePlace ()
     {
-        if (_parobj != null) {
-            _parobj.removeListener(this);
-            _parobj = null;
-            // no trying to create matches on our way out
-            _create.setEnabled(false);
+        // no trying to create matches on our way out
+        _create.setEnabled(false);
+        if (_tobj != null) {
+            _tobj.removeListener(this);
+            _tobj = null;
         }
     }
 
     // documentation inherited from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent event)
     {
-        if (ParlorObject.GAME.equals(event.getName()) ||
-            ParlorObject.ONLY_CREATOR_START.equals(event.getName())) {
+        if (TableGameObject.GAME.equals(event.getName())) {
             updateDisplay();
         }
     }
@@ -237,7 +236,7 @@ public class ParlorGameConfigView extends BContainer
     {
         if (event.getSource() == _create) {
             // make sure we're still in the parlor
-            if (_parobj != null) {
+            if (_tobj != null) {
                 startMatchMaking();
             }
         } else {
@@ -245,8 +244,7 @@ public class ParlorGameConfigView extends BContainer
                 modeUpdated();
             }
             if (shouldSyncGameConfig()) {
-                _parobj.service.updateGameConfig(
-                    _ctx.getClient(), makeConfig());
+                _tobj.service.updateGameConfig(_ctx.getClient(), makeConfig());
             }
         }
     }
@@ -263,20 +261,20 @@ public class ParlorGameConfigView extends BContainer
         if (_updatingDisplay) {
             return false;
         }
-        if (_parobj.game == null) {
+        if (_tobj.game == null) {
             return true;
         }
-        if ((Integer)_rounds.getSelectedItem() != _parobj.game.rounds ||
-            (Integer)_units.getSelectedItem() != _parobj.game.teamSize ||
-            (ParlorGameConfig.Mode)_mode.getSelectedValue() != _parobj.game.mode ||
-            (BangConfig.Duration)_duration.getSelectedValue() != _parobj.game.duration ||
-            (BangConfig.Speed)_speed.getSelectedValue() != _parobj.game.speed ||
-            slotsChanged(_parobj.game.slots)) {
+        if ((Integer)_rounds.getSelectedItem() != _tobj.game.rounds ||
+            (Integer)_units.getSelectedItem() != _tobj.game.teamSize ||
+            (ParlorGameConfig.Mode)_mode.getSelectedValue() != _tobj.game.mode ||
+            (BangConfig.Duration)_duration.getSelectedValue() != _tobj.game.duration ||
+            (BangConfig.Speed)_speed.getSelectedValue() != _tobj.game.speed ||
+            slotsChanged(_tobj.game.slots)) {
             return true;
         }
 
         HashSet<String> set = new HashSet<String>();
-        CollectionUtil.addAll(set, _parobj.game.scenarios);
+        CollectionUtil.addAll(set, _tobj.game.scenarios);
         for (int ii = 0; ii < _scenIds.length; ii++) {
             if (_scens[ii].isSelected() != set.contains(_scenIds[ii])) {
                 return true;
@@ -334,23 +332,21 @@ public class ParlorGameConfigView extends BContainer
     protected void updateDisplay ()
     {
         _updatingDisplay = true;
-        if (_parobj.game != null) {
-            _rounds.selectItem(Integer.valueOf(_parobj.game.rounds));
-            _units.selectItem(Integer.valueOf(_parobj.game.teamSize));
-            _duration.selectValue(_parobj.game.duration);
-            _speed.selectValue(_parobj.game.speed);
-            _mode.selectValue(_parobj.game.mode);
-            setSlotTypes(_parobj.game.slots);
+        if (_tobj.game != null) {
+            _rounds.selectItem(Integer.valueOf(_tobj.game.rounds));
+            _units.selectItem(Integer.valueOf(_tobj.game.teamSize));
+            _duration.selectValue(_tobj.game.duration);
+            _speed.selectValue(_tobj.game.speed);
+            _mode.selectValue(_tobj.game.mode);
+            setSlotTypes(_tobj.game.slots);
             HashSet<String> set = new HashSet<String>();
-            CollectionUtil.addAll(set, _parobj.game.scenarios);
+            CollectionUtil.addAll(set, _tobj.game.scenarios);
             for (int ii = 0; ii < _scenIds.length; ii++) {
                 _scens[ii].setSelected(set.contains(_scenIds[ii]));
             }
         }
 
-        boolean canCreate =
-            _ctx.getUserObject().handle.equals(_parobj.info.creator) ||
-            !_parobj.onlyCreatorStart;
+        boolean canCreate = _tview.canCreate();
         _rounds.setEnabled(canCreate);
         _units.setEnabled(canCreate);
         _duration.setEnabled(canCreate);
@@ -434,7 +430,7 @@ public class ParlorGameConfigView extends BContainer
         // finally start things up
         ReportingListener rl = new ReportingListener(
             _ctx, SaloonCodes.SALOON_MSGS, "m.create_game_failed");
-        _parobj.service.startMatchMaking(
+        _tobj.service.startMatchMaking(
             _ctx.getClient(), config, bdata, rl);
     }
 
@@ -536,8 +532,9 @@ public class ParlorGameConfigView extends BContainer
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
-    protected ParlorObject _parobj;
+    protected TableGameObject _tobj;
     protected StatusLabel _status;
+    protected TableGameView _tview;
 
     protected BComboBox _rounds, _units, _duration, _speed, _mode;
 

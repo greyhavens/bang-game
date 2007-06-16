@@ -3,10 +3,9 @@
 
 package com.threerings.bang.saloon.server;
 
-import com.threerings.bang.saloon.client.ParlorService;
-import com.threerings.bang.saloon.data.Criterion;
-import com.threerings.bang.saloon.data.ParlorInfo;
-import com.threerings.bang.saloon.data.ParlorMarshaller;
+import com.threerings.bang.saloon.client.TableGameService;
+import com.threerings.bang.saloon.data.ParlorGameConfig;
+import com.threerings.bang.saloon.data.TableGameMarshaller;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -15,15 +14,15 @@ import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
 
 /**
- * Dispatches requests to the {@link ParlorProvider}.
+ * Dispatches requests to the {@link TableGameProvider}.
  */
-public class ParlorDispatcher extends InvocationDispatcher
+public class TableGameDispatcher extends InvocationDispatcher
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
      * service requests for the specified provider.
      */
-    public ParlorDispatcher (ParlorProvider provider)
+    public TableGameDispatcher (TableGameProvider provider)
     {
         this.provider = provider;
     }
@@ -31,7 +30,7 @@ public class ParlorDispatcher extends InvocationDispatcher
     // from InvocationDispatcher
     public InvocationMarshaller createMarshaller ()
     {
-        return new ParlorMarshaller();
+        return new TableGameMarshaller();
     }
 
     @SuppressWarnings("unchecked") // from InvocationDispatcher
@@ -40,38 +39,36 @@ public class ParlorDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
-        case ParlorMarshaller.BOOT_PLAYER:
-            ((ParlorProvider)provider).bootPlayer(
+        case TableGameMarshaller.JOIN_MATCH:
+            ((TableGameProvider)provider).joinMatch(
+                source                
+            );
+            return;
+
+        case TableGameMarshaller.JOIN_MATCH_SLOT:
+            ((TableGameProvider)provider).joinMatchSlot(
                 source,
                 ((Integer)args[0]).intValue()
             );
             return;
 
-        case ParlorMarshaller.FIND_SALOON_MATCH:
-            ((ParlorProvider)provider).findSaloonMatch(
-                source,
-                (Criterion)args[0], (InvocationService.ResultListener)args[1]
+        case TableGameMarshaller.LEAVE_MATCH:
+            ((TableGameProvider)provider).leaveMatch(
+                source                
             );
             return;
 
-        case ParlorMarshaller.LEAVE_SALOON_MATCH:
-            ((ParlorProvider)provider).leaveSaloonMatch(
+        case TableGameMarshaller.START_MATCH_MAKING:
+            ((TableGameProvider)provider).startMatchMaking(
                 source,
-                ((Integer)args[0]).intValue()
+                (ParlorGameConfig)args[0], (byte[])args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 
-        case ParlorMarshaller.UPDATE_PARLOR_CONFIG:
-            ((ParlorProvider)provider).updateParlorConfig(
+        case TableGameMarshaller.UPDATE_GAME_CONFIG:
+            ((TableGameProvider)provider).updateGameConfig(
                 source,
-                (ParlorInfo)args[0], ((Boolean)args[1]).booleanValue()
-            );
-            return;
-
-        case ParlorMarshaller.UPDATE_PARLOR_PASSWORD:
-            ((ParlorProvider)provider).updateParlorPassword(
-                source,
-                (String)args[0]
+                (ParlorGameConfig)args[0]
             );
             return;
 
