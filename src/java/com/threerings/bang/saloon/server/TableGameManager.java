@@ -197,8 +197,13 @@ public class TableGameManager implements TableGameProvider
         checkStart();
     }
 
+    /**
+     * This will be override to allow subclasses to before some operations when the game is
+     * about to start.
+     */
     public void startingGame (PlaceObject gameobj)
     {
+        // nothing doing
     }
 
     // documentation inherited from interface TableGameProvider
@@ -207,6 +212,9 @@ public class TableGameManager implements TableGameProvider
         clearPlayer(caller.getOid());
     }
 
+    /**
+     * Removes a player from any pending matches.
+     */
     public void clearPlayer (int playerOid)
     {
         // make sure the match wasn't already cancelled
@@ -246,6 +254,9 @@ public class TableGameManager implements TableGameProvider
         }
     }
 
+    /**
+     * Check if a pending match has satisfied its starting requirements.
+     */
     protected void checkStart ()
     {
         if (readyToStart() && _starter == null) {

@@ -86,6 +86,9 @@ public class TableGameView extends BContainer
         }
     }
 
+    /**
+     * Called to subscribe to the TableGameObject.
+     */
     public void willEnterPlace (int tableOid)
     {
         (_tablesub = new SafeSubscriber<TableGameObject>(
@@ -110,6 +113,9 @@ public class TableGameView extends BContainer
 
     }
 
+    /**
+     * Called before removing the view to unsubscribe from the TableGameObject.
+     */
     public void didLeavePlace ()
     {
         _gconfig.didLeavePlace();
@@ -124,11 +130,17 @@ public class TableGameView extends BContainer
         }
     }
 
+    /**
+     * This will be overriden to allow control over who can configure/create table games.
+     */
     public boolean canCreate ()
     {
         return true;
     }
 
+    /**
+     * Called to force an visual update of the table game configuration.
+     */
     public void updateDisplay ()
     {
         if (_gconfig.isAdded()) {
