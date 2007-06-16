@@ -159,6 +159,7 @@ public class GangInfoDialog extends BWindow
             BContainer ucont = GroupLayout.makeHBox(GroupLayout.CENTER);
             ucont.setPreferredSize(new Dimension(166, -1));
             BButton page = new BButton(hmsgs.get("m.home_page"), this, "home_page");
+            page.setTooltipText(info.url);
             page.setStyleClass("alt_button");
             ucont.add(page);
             scont.add(ucont);

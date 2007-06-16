@@ -110,6 +110,7 @@ public class GangInfoView extends BContainer
         _statement.setTooltipText(GangUtil.quoteStatement(_ctx, _gangobj.statement, false));
         BContainer pcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         pcont.add(_page = new BButton(_msgs.get("m.home_page"), this, "page"));
+        _page.setTooltipText(gangobj.url);
         _page.setStyleClass("alt_button");
         _page.setVisible(gangobj.getURL() != null);
         if (_ctx.getUserObject().gangRank == GangCodes.LEADER_RANK) {
@@ -194,6 +195,7 @@ public class GangInfoView extends BContainer
                 _statement.setTooltipText(GangUtil.quoteStatement(_ctx, _gangobj.statement, false));
             } else if (name.equals(GangObject.URL)) {
                 _page.setVisible(_gangobj.getURL() != null);
+                _page.setTooltipText(_gangobj.url);
             } else if (name.equals(GangObject.BUCKLE)) {
                 _buckle.setBuckle(_gangobj.getBuckleInfo());
             }
