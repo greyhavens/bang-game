@@ -2268,6 +2268,11 @@ play_view {
   padding: 0 5 3 0;
 }
 
+table_view {
+  parent: "play_view";
+  padding: 0 5 3 24;
+}
+
 play_tip {
   font: "Helvetica" plain 12;
   color: #4C2602;
@@ -2321,24 +2326,45 @@ coffer_label {
 }
 
 menu_play {
+  parent: "def_button";
   background: image "ui/hideout/menu_play.png" centerxy;
 }
 menu_play:selected {
+  parent: "def_button";
   background: image "ui/hideout/menu_play_selected.png" centerxy;
+}
+menu_play:disabled {
+  background: image "ui/hideout/menu_play.png" centerxy;
 }
 
 menu_roster {
+  parent: "def_button";
   background: image "ui/hideout/menu_roster.png" centerxy;
 }
 menu_roster:selected {
+  parent: "def_button";
   background: image "ui/hideout/menu_roster_selected.png" centerxy;
 }
 
 menu_directory {
+  parent: "def_button";
   background: image "ui/hideout/menu_directory.png" centerxy;
 }
 menu_directory:selected {
+  parent: "def_button";
   background: image "ui/hideout/menu_directory_selected.png" centerxy;
+}
+
+menu_table {
+  parent: "def_button";
+  background: image "ui/hideout/menu_table.png" centerxy;
+}
+menu_table:selected {
+  parent: "def_button";
+  background: image "ui/hideout/menu_table_selected.png" centerxy;
+}
+menu_table:disabled {
+  background: image "ui/hideout/menu_table.png" centerxy;
 }
 
 hideout_members {
