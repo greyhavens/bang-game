@@ -17,6 +17,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
@@ -454,7 +455,7 @@ public class HideoutManager extends MatchHostManager
         try {
             BangOccupantInfo boi = (BangOccupantInfo)getOccupantInfo(bodyOid);
             BangServer.gangmgr.requireGangPeerProvider(user.gangId).memberEnteredHideout(
-                null, user.handle, boi.avatar);
+                    null, user.handle, boi.avatar);
         } catch (InvocationException e) {
             // an exception will have been logged already
         }
@@ -469,10 +470,32 @@ public class HideoutManager extends MatchHostManager
             return;
         }
         try {
-            BangServer.gangmgr.requireGangPeerProvider(user.gangId).memberLeftHideout(
-                null, user.handle);
+            GangHandler handler = BangServer.gangmgr.requireGang(user.gangId);
+            handler.bodyLeft(bodyOid);
+            handler.getPeerProvider().memberLeftHideout(null, user.handle);
         } catch (InvocationException e) {
             // an exception will have been logged already
+        }
+    }
+
+    @Override // documentation inherited
+    protected void bodyUpdated (OccupantInfo info)
+    {
+        super.bodyUpdated(info);
+
+        // if a player disconnects during the matchmaking phase, remove them
+        // from their pending match
+        if (info.status == OccupantInfo.DISCONNECTED) {
+            PlayerObject user = (PlayerObject)BangServer.omgr.getObject(info.bodyOid);
+            if (user.gangId <= 0) {
+                return;
+            }
+            try {
+                GangHandler handler = BangServer.gangmgr.requireGang(user.gangId);
+                handler.bodyLeft(info.bodyOid);
+            } catch (InvocationException e) {
+                // an exception will have been logged already
+            }
         }
     }
 

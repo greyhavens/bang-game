@@ -6,6 +6,7 @@ package com.threerings.bang.gang.client;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BToggleButton;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
@@ -32,14 +33,15 @@ import com.threerings.bang.gang.data.HideoutObject;
 public class PlayView extends BContainer
     implements HideoutCodes, GameReadyObserver
 {
-    public PlayView (
-        BangContext ctx, HideoutObject hideoutobj, BContainer bcont, StatusLabel status)
+    public PlayView (BangContext ctx, HideoutObject hideoutobj, BContainer bcont,
+            BToggleButton button, StatusLabel status)
     {
         super(GroupLayout.makeVStretch());
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(HIDEOUT_MSGS);
         _hideoutobj = hideoutobj;
         _bcont = bcont;
+        _button = button;
         _status = status;
 
         setStyleClass("play_view");
@@ -122,6 +124,7 @@ public class PlayView extends BContainer
 
         // disable the gang buttons while matchmaking
         _bcont.setEnabled(false);
+        _button.setEnabled(false);
 
         // display a match view for this pending match
         add(_mview = new MatchView(_ctx, matchOid, false) { {
@@ -156,12 +159,14 @@ public class PlayView extends BContainer
 
         // reenable the gang buttons
         _bcont.setEnabled(true);
+        _button.setEnabled(true);
     }
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected HideoutObject _hideoutobj;
     protected BContainer _bcont;
+    protected BToggleButton _button;
     protected StatusLabel _status;
 
     protected CriterionView _crview;

@@ -31,7 +31,6 @@ import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
-import com.threerings.bang.server.ServerConfig;
 
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
@@ -254,6 +253,12 @@ public class ParlorManager extends PlaceManager
         _salmgr.parlorDidShutdown(this);
 
         log.info("Parlor shutdown " + _parobj.info + ".");
+
+        // shutdown out table manager if we have one
+        if (_tmgr != null) {
+            _tmgr.shutdown();
+            _tmgr = null;
+        }
 
         // clear out our invocation service
         if (_parobj != null) {

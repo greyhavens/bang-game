@@ -99,6 +99,7 @@ import com.threerings.bang.gang.server.persist.GangRecord;
 import com.threerings.bang.gang.util.GangUtil;
 
 import static com.threerings.bang.Log.*;
+import com.threerings.bang.saloon.server.TableGameManager;
 
 /**
  * Manages a single gang from resolution to destruction.
@@ -516,6 +517,11 @@ public class GangHandler
             user.commitTransaction();
         }
 
+        // remove them from any pending table games
+        if (_tmgr != null) {
+            _tmgr.clearPlayer(user.getOid());
+        }
+
         // if they're in a place, update their occupant info
         PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.location);
         if (plmgr != null) {
@@ -646,6 +652,13 @@ public class GangHandler
         }
         member.avatar = info;
         _gangobj.updateMembers(member);
+    }
+
+    public void bodyLeft (int bodyOid)
+    {
+        if (_tmgr != null) {
+            _tmgr.clearPlayer(bodyOid);
+        }
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1564,6 +1577,10 @@ public class GangHandler
         _gangobj.speakService = (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
             new SpeakDispatcher(new SpeakProvider(_gangobj, this)));
 
+        // create our table game manager for this town
+        _tmgr = new TableGameManager();
+        _gangobj.tableOid = _tmgr.getTableGameObject().getOid();
+
         // register and announce
         BangServer.omgr.registerObject(_gangobj);
         log.info("Initialized gang object " + this + ".");
@@ -1802,6 +1819,10 @@ public class GangHandler
                     }
                 }));
 
+        // create our local TableGameManager
+        _tmgr = new TableGameManager();
+        _gangobj.tableOid = _tmgr.getTableGameObject().getOid();
+
         _proxy = PeerUtil.createProviderProxy(
             GangPeerProvider.class, _gangobj.gangPeerService, _client);
 
@@ -1885,6 +1906,11 @@ public class GangHandler
         if (BangServer.peermgr != null) {
             BangServer.peermgr.removePlayerObserver(this);
             BangServer.peermgr.removeDroppedLockObserver(this);
+        }
+
+        if (_tmgr != null) {
+            _tmgr.shutdown();
+            _tmgr = null;
         }
 
         BangServer.invmgr.clearDispatcher(_gangobj.gangPeerService);
@@ -2051,6 +2077,9 @@ public class GangHandler
 
     /** The gang object, when resolved. */
     protected GangObject _gangobj;
+
+    /** The table game manager for this gang/town. */
+    protected TableGameManager _tmgr;
 
     /** The gang's raw notoriety. */
     protected int _notoriety;

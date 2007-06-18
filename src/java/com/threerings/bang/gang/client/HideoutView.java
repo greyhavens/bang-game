@@ -42,6 +42,7 @@ import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.saloon.client.TableGameView;
 import com.threerings.bang.saloon.client.TopScoreView;
 
 import com.threerings.bang.gang.data.GangCodes;
@@ -355,7 +356,8 @@ public class HideoutView extends ShopView
     {
         public GangMenu ()
         {
-            super(GroupLayout.makeVert(GroupLayout.CENTER));
+            super(GroupLayout.makeVert(GroupLayout.CENTER).setOffAxisJustification(
+                        GroupLayout.CENTER));
             setPreferredSize(new Dimension(494, -1));
 
             BContainer bcont = new BContainer(GroupLayout.makeHoriz(
@@ -363,11 +365,12 @@ public class HideoutView extends ShopView
             _buttons = new BToggleButton[] {
                 addButton(bcont, "play"),
                 addButton(bcont, "roster"),
-                addButton(bcont, "directory") };
+                addButton(bcont, "directory"),
+                addButton(bcont, "table") };
             add(bcont);
 
             _buttons[0].setSelected(true);
-            add(_play = new PlayView(_ctx, _hideoutobj, _bcont, _status));
+            add(_play = new PlayView(_ctx, _hideoutobj, _bcont, _buttons[3], _status));
         }
 
         // documentation inherited from interface ActionListener
@@ -391,6 +394,13 @@ public class HideoutView extends ShopView
                     _roster = new RosterView(_ctx, _hideoutobj, _gangobj, _status);
                 }
                 add(_roster);
+
+            } else if (action.equals("table")) {
+                if (_table == null) {
+                    _table = new TableView(_ctx, _status, _bcont, _buttons[0]);
+                    _table.willEnterPlace(_gangobj.tableOid);
+                }
+                add(_table);
 
             } else { // action.equals("directory")
                 if (_directory == null) {
@@ -420,12 +430,14 @@ public class HideoutView extends ShopView
         {
             super.wasRemoved();
             _play.shutdown();
+            _table.didLeavePlace();
         }
 
         protected BToggleButton[] _buttons;
         protected PlayView _play;
         protected RosterView _roster;
         protected DirectoryView _directory;
+        protected TableGameView _table;
     }
 
     protected HideoutObject _hideoutobj;
