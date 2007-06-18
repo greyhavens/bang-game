@@ -1568,5 +1568,5 @@ public class PlayerManager
     protected static final int ANONYMOUS_EXPIRE_DAYS = 30;
 
     /** The number of days after which to expire regular players. */
-    protected static final int USER_EXPIRE_DAYS = 120;
+    protected static final int USER_EXPIRE_DAYS = 180;
 }
