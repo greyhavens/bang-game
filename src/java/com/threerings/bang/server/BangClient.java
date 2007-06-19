@@ -108,7 +108,7 @@ public class BangClient extends CrowdClient
         _startPoses = (String[])user.poses.clone();
 
         // check to see if this player has any rewards and redeem them if so
-        BangServer.author.getInvoker().postUnit(new Invoker.Unit() {
+        BangServer.author.getInvoker().postUnit(new Invoker.Unit("redeemRewards:" + _username) {
             public boolean invoke () {
                 _rewards = BangServer.author.redeemRewards(_username.toString(), creds.ident);
                 return (_rewards.size() > 0);
