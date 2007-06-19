@@ -165,6 +165,8 @@ public class PlayerManager
                 public void remotePlayerLoggedOn (int townIndex, BangClientInfo info) {
                     PresentsClient pclient = BangServer.clmgr.getClient(info.username);
                     if (pclient != null) {
+                        log.info("Booting user who logged onto remote server [username=" +
+                            info.username + ", townIndex=" + townIndex + "].");
                         pclient.endSession();
                     }
                 }
