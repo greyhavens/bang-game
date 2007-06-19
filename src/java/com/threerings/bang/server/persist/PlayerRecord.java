@@ -4,8 +4,6 @@
 package com.threerings.bang.server.persist;
 
 import java.sql.Timestamp;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 
 import com.samskivert.util.StringUtil;
 
@@ -84,9 +82,6 @@ public class PlayerRecord
 
     /** Contains age information during the authentication process. */
     public transient boolean isOver13;
-
-    /** Contains any rewards redeemed during the authentication process. */
-    public transient ArrayList<String> rewards;
 
     /** A blank constructor used when loading records from the database. */
     public PlayerRecord ()

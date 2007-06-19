@@ -136,6 +136,28 @@ public class OOOAuthenticator extends BangAuthenticator
         }
     }
 
+    // from abstract BangAuthenticator
+    public ArrayList<String> redeemRewards (String username, String ident)
+    {
+        // redeem any rewards for which they have become eligible
+        ArrayList<String> rdata = new ArrayList<String>();
+        try {
+            ArrayList<RewardRecord> rewards = _rewardrep.loadActivatedRewards(username, ident);
+            for (RewardRecord record : rewards) {
+                if (record.account.equals(username) &&
+                    StringUtil.isBlank(record.redeemerIdent)) {
+                    String info = maybeRedeemReward(username, ident, record, rewards);
+                    if (info != null) {
+                        rdata.add(info);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to redeem rewards [who=" + username + "].", e);
+        }
+        return rdata;
+    }
+
     @Override // from Authenticator
     protected AuthResponseData createResponseData ()
     {
@@ -391,36 +413,17 @@ public class OOOAuthenticator extends BangAuthenticator
 
 
         if (prec != null) {
-            if (!anonymous) {
-                // redeem any rewards for which they have become eligible, but don't let this stick
-                // a fork in the logon process
-                prec.rewards = new ArrayList<String>();
-                try {
-                    ArrayList<RewardRecord> rewards =
-                        _rewardrep.loadActivatedRewards(prec.accountName, creds.ident);
-                    for (RewardRecord record : rewards) {
-                        if (record.account.equals(user.username) &&
-                            StringUtil.isBlank(record.redeemerIdent)) {
-                            maybeRedeemReward(prec, creds.ident, record, rewards);
-                        }
-                    }
-                } catch (Exception e) {
-                    log.log(Level.WARNING, "Failed to redeem rewards for account " +
-                            "[who=" + prec.accountName + "].", e);
-                }
-            }
-
             // pass their player record to the client resolver for use later
             BangClientResolver.stashPlayer(prec);
         }
     }
 
     /**
-     * Ensures that this account is eligible for the reward in question and tacks it onto their
-     * rewards list if so.
+     * Ensures that this account is eligible for the reward in question and returns the reward info
+     * string if so, null otherwise.
      */
-    protected void maybeRedeemReward (
-        PlayerRecord prec, String machIdent, RewardRecord record, ArrayList<RewardRecord> records)
+    protected String maybeRedeemReward (String username, String machIdent, RewardRecord record,
+                                        ArrayList<RewardRecord> records)
         throws PersistenceException
     {
         // otherwise load up the reward info
@@ -433,27 +436,26 @@ public class OOOAuthenticator extends BangAuthenticator
             info = _rewards.get(record.rewardId);
         }
         if (info == null || info.data == null || !info.data.toLowerCase().startsWith("bang:")) {
-            return; // reward is expired (and purged) or not bang related
+            return null; // reward is expired (and purged) or not bang related
         }
 
         // if this is not a billing reward, then we limit it to 2 redeemers on related accounts
         if (!info.data.toLowerCase().startsWith("bang:billing:")) {
             int otherRedeemers = 0;
             for (RewardRecord rrec : records) {
-                if (rrec.rewardId == record.rewardId && !rrec.account.equals(prec.accountName)) {
+                if (rrec.rewardId == record.rewardId && !rrec.account.equals(username)) {
                     otherRedeemers++;
                 }
             }
             if (otherRedeemers > MAX_RELATED_REDEEMERS) {
-                return;
+                return null;
             }
         }
 
         // note this reward as redeemed
         _rewardrep.redeemReward(record, machIdent);
 
-        // finally tack it's game data onto their list
-        prec.rewards.add(info.data);
+        return info.data;
     }
 
     /**

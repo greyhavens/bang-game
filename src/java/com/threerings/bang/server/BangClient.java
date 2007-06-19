@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -73,7 +74,7 @@ public class BangClient extends CrowdClient
         PlayerObject user = (PlayerObject)_clobj;
 
         // generate an audit log entry
-        BangCredentials creds = (BangCredentials)getCredentials();
+        final BangCredentials creds = (BangCredentials)getCredentials();
         BangServer.generalLog("session_start " + user.playerId + " ip:" + getInetAddress() +
                 " id:" + creds.ident + " node:" + ServerConfig.nodename +
                 " sid:" + creds.affiliate);
@@ -105,6 +106,18 @@ public class BangClient extends CrowdClient
 
         // make a note of their current avatar poses for later comparison and potential updating
         _startPoses = (String[])user.poses.clone();
+
+        // check to see if this player has any rewards and redeem them if so
+        BangServer.author.getInvoker().postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                _rewards = BangServer.author.redeemRewards(_username.toString(), creds.ident);
+                return (_rewards.size() > 0);
+            }
+            public void handleResult () {
+                BangServer.playmgr.redeemRewards((PlayerObject)_clobj, _rewards);
+            }
+            protected ArrayList<String> _rewards;
+        });
     }
 
     @Override // documentation inherited

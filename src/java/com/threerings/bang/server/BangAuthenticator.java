@@ -4,6 +4,7 @@
 package com.threerings.bang.server;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;
@@ -23,11 +24,16 @@ public abstract class BangAuthenticator extends Authenticator
         throws PersistenceException;
 
     /**
-     * Called to create an account.
+     * Creates an account in this authenticator's user database.
      */
     public abstract String createAccount (String username, String password, String email,
-            String affiliate, String machIdent, Date birthdate)
+                                          String affiliate, String machIdent, Date birthdate)
         throws PersistenceException;
+
+    /**
+     * Checks whether the specified player has any pending rewards, redeeming them in the process.
+     */
+    public abstract ArrayList<String> redeemRewards (String username, String ident);
 
     @Override // from Authenticator
     protected Invoker getInvoker ()

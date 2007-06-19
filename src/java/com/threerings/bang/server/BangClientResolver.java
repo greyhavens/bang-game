@@ -94,6 +94,8 @@ public class BangClientResolver extends CrowdClientResolver
         String username = buser.username.toString();
         PlayerRecord player;
 
+        log.info("Resolving " + username + "...");
+
         // check for a stashed player record
         synchronized (_pstash) {
             player = _pstash.remove(username.toLowerCase());
@@ -260,9 +262,6 @@ public class BangClientResolver extends CrowdClientResolver
         // toIntArray() returns a sorted array
         buser.friends = friends.toIntArray();
         buser.foes = foes.toIntArray();
-
-        // make a note of this player's redeemable rewards
-        _rewards = player.rewards;
     }
 
     @Override // documentation inherited
@@ -299,11 +298,6 @@ public class BangClientResolver extends CrowdClientResolver
 
         // initialize our gang information
         BangServer.gangmgr.initPlayer(buser, _grecord, _ginvites);
-
-        // redeem any rewards for which this player is eligible
-        if (_rewards != null && _rewards.size() > 0) {
-            BangServer.playmgr.redeemRewards(buser, _rewards);
-        }
     }
 
     /** A temporary handle on this player's pardner records. */
