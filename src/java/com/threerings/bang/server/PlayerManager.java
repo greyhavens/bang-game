@@ -160,6 +160,18 @@ public class PlayerManager
                         _posterCache.remove((Handle)data);
                     }
                 });
+            // make sure we boot a local client if they login to a remote server
+            BangServer.peermgr.addPlayerObserver(new BangPeerManager.RemotePlayerObserver() {
+                public void remotePlayerLoggedOn (int townIndex, BangClientInfo info) {
+                    PresentsClient pclient = BangServer.clmgr.getClient(info.username);
+                    if (pclient != null) {
+                        pclient.endSession();
+                    }
+                }
+                public void remotePlayerLoggedOff (int townIndex, BangClientInfo info) { }
+                public void remotePlayerChangedHandle (
+                    int townIndex, Handle oldHandle, Handle newHandle) { }
+            });
         }
 
         // register our download symlink cleaning interval; note that because this simply posts an
