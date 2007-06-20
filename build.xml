@@ -102,7 +102,7 @@
 
     <!-- Fetch dependencies -->
     <artifact:dependencies filesetId="dependency.fileset">
-      <remoteRepository refid="${maven.depends.repo}"/>
+      <remoteRepository refid="maven.depends.repo"/>
       <dependency groupId="com.threerings.underwire.${maven.dist}" artifactId="underwire"
                   version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.hemiptera.${maven.dist}" artifactId="hemiptera"
