@@ -18,6 +18,7 @@ import com.samskivert.util.Tuple;
 
 import com.threerings.parlor.rating.util.Percentiler;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.server.persist.RatingRepository.RankLevels;
 import com.threerings.bang.server.persist.RatingRepository.TrackerKey;
@@ -46,6 +47,9 @@ public class RatingManager
         if (ServerConfig.isTownServer) {
             createRankRecalculateInterval();
             createTrackerSyncInterval();
+            if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
+                createRatingsPurgeInterval();
+            }
         }
 
         // create the interval to reload the ranks for all rating types
@@ -136,6 +140,32 @@ public class RatingManager
     }
 
     /**
+     * Creates the interval that purges old weekly ratings and rank information.
+     */
+    protected void createRatingsPurgeInterval ()
+    {
+        final Invoker.Unit purger = new Invoker.Unit("ratingPurger") {
+            public boolean invoke () {
+                Date week = getPurgeWeek();
+                try {
+                    _ratingrepo.deleteRatings(week);
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failed to purge weekly ratings [week=" +
+                            week + "].", pe);
+                }
+                return false;
+            }
+        };
+
+        // purge 20 minutes after reboot then once a week
+        new Interval(BangServer.omgr) {
+            public void expired () {
+                BangServer.invoker.postUnit(purger);
+            }
+        }.schedule(20 * 60 * 1000L, 7 * 24 * 60 * 60 * 1000L);
+    }
+
+    /**
      * Returns the date used when grinding a weeks rankings.
      */
     protected Date getGrindWeek ()
@@ -145,6 +175,19 @@ public class RatingManager
         week.setFirstDayOfWeek(Calendar.SUNDAY);
         week.add(Calendar.DAY_OF_WEEK, -1);
         week.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        return new Date(week.getTimeInMillis());
+    }
+
+    /**
+     * Returns the date used when purging a weeks rankings.
+     */
+    protected Date getPurgeWeek ()
+    {
+        // find the first Sunday before today
+        Calendar week = Calendar.getInstance();
+        week.setFirstDayOfWeek(Calendar.SUNDAY);
+        week.add(Calendar.MONTH, -1);
+        week.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         return new Date(week.getTimeInMillis());
     }
 

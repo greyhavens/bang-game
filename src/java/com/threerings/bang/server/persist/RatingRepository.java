@@ -154,6 +154,16 @@ public class RatingRepository extends SimpleRepository
     }
 
     /**
+     * Deletes the ratings for weeks before the specified date.
+     */
+    public void deleteRatings (Date week)
+        throws PersistenceException
+    {
+        update("delete from RATINGS where WEEK < '" + week + "'");
+        update("delete from RANKS where WEEK < '" + week + "'");
+    }
+
+    /**
      * Updates the supplied ratings for the specified player.
      */
     public void updateRatings (final int playerId, final ArrayList<Rating> rats)
