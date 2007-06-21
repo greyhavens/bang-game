@@ -36,4 +36,8 @@ public interface SaloonCodes extends InvocationCodes
     /** An error code reported when new games are not allowed. */
     public static final String NEW_GAMES_DISABLED =
         MessageBundle.qualify(SALOON_MSGS, "m.new_games_disabled");
+
+    /** An error code reported when trying to start a new game when not the creator. */
+    public static final String CREATOR_ONLY =
+        MessageBundle.qualify(SALOON_MSGS, "m.creator_only");
 }

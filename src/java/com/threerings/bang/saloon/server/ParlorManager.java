@@ -87,7 +87,7 @@ public class ParlorManager extends PlaceManager
                 {
                     if (_parobj.onlyCreatorStart &&
                             !((PlayerObject)caller).handle.equals(_parobj.info.creator)) {
-                        return;
+                        throw new InvocationException(SaloonCodes.CREATOR_ONLY);
                     }
                     super.startMatchMaking(caller, game, bdata, listener);
                 }
