@@ -3,6 +3,9 @@
 
 package com.threerings.bang.server;
 
+import java.sql.Date;
+
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -33,22 +36,22 @@ public class RatingManager
         throws PersistenceException
     {
         _ratingrepo = new RatingRepository(conprov);
-        
+
         // load up our scoring percentile trackers
         _trackers = new HashMap<TrackerKey, Percentiler>();
         _ratingrepo.loadScoreTrackers(_trackers);
-        
+
         // if we're a town server, queue up an interval to periodically grind
         // our ratings tables and one to sync our score trackers
         if (ServerConfig.isTownServer) {
             createRankRecalculateInterval();
             createTrackerSyncInterval();
         }
-        
+
         // create the interval to reload the ranks for all rating types
         createRankReloadInterval();
     }
-    
+
     /**
      * Allows the rating manager to save its state to the database.
      */
@@ -57,7 +60,7 @@ public class RatingManager
         log.info("Rating manager shutting down.");
         syncTrackers();
     }
-    
+
     /**
      * Given a numeric rating, returns its rank level.  This method must be thread-safe, as it is
      * called from both the dobj and the invoker thread.
@@ -67,7 +70,7 @@ public class RatingManager
         RankLevels levels = _rankLevels.get(type);
         return (levels == null) ? 0 : levels.getRank(rating);
     }
-    
+
     /**
      * Returns the percentile occupied by the specified score value in the
      * specified scenario with the given number of players.
@@ -91,7 +94,7 @@ public class RatingManager
         }
         return pct;
     }
-    
+
     /**
      * Creates the interval that regrinds our ratings table and produces the
      * rank distributions every six hours.
@@ -102,9 +105,23 @@ public class RatingManager
             public boolean invoke () {
                 try {
                     log.info("Recalculating rankings...");
-                    _ratingrepo.calculateRanks();
+                    _ratingrepo.calculateRanks(null);
                 } catch (PersistenceException pe) {
                     log.log(Level.WARNING, "Failed to recalculate ranks.", pe);
+                }
+                return false;
+            }
+        };
+
+        final Invoker.Unit weekGrinder = new Invoker.Unit("rankGrinder") {
+            public boolean invoke () {
+                Date week = getGrindWeek();
+                try {
+                    log.info("Recalculating weekly rankings...");
+                    _ratingrepo.calculateRanks(week);
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failed to recalculate weekly ranks[week=" +
+                            week + "].", pe);
                 }
                 return false;
             }
@@ -117,7 +134,20 @@ public class RatingManager
             }
         }.schedule(5 * 60 * 1000L, 6 * 60 * 60 * 1000L);
     }
-    
+
+    /**
+     * Returns the date used when grinding a weeks rankings.
+     */
+    protected Date getGrindWeek ()
+    {
+        // find the first Sunday before today
+        Calendar week = Calendar.getInstance();
+        week.setFirstDayOfWeek(Calendar.SUNDAY);
+        week.add(Calendar.DAY_OF_WEEK, -1);
+        week.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        return new Date(week.getTimeInMillis());
+    }
+
     /**
      * Creates the interval that reloads the rank levels for all rating types every hour.
      */
@@ -130,7 +160,7 @@ public class RatingManager
             }
         }.schedule(1000L, 60 * 60 * 1000L);
     }
-    
+
     /**
      * (Re)loads the rank data for all rating types.
      */
@@ -140,7 +170,7 @@ public class RatingManager
             public boolean invoke()  {
                 HashMap<String, RankLevels> newMap = new HashMap<String, RankLevels>();
                 try {
-                    for (RankLevels levels : _ratingrepo.loadRanks()) {
+                    for (RankLevels levels : _ratingrepo.loadRanks(null)) {
                         newMap.put(levels.type, levels);
                     }
                     _rankLevels = newMap;
@@ -151,7 +181,7 @@ public class RatingManager
             }
         });
     }
-    
+
     /**
      * Creates the interval that synchronizes our score trackers with the
      * database every hour.
@@ -165,7 +195,7 @@ public class RatingManager
             }
         }.schedule(60 * 60 * 1000L);
     }
-    
+
     /**
      * Stores the trackers in the database.
      */
@@ -179,7 +209,7 @@ public class RatingManager
             keys[ii] = entry.getKey();
             tilers[ii++] = entry.getValue();
         }
-        
+
         // write out the performance distributions
         BangServer.invoker.postUnit(new Invoker.Unit("storeScoreTrackers") {
             public boolean invoke () {
@@ -196,13 +226,13 @@ public class RatingManager
             }
         });
     }
-    
+
     /** Provides access to the rating database. */
     protected RatingRepository _ratingrepo;
-    
+
     /** Score percentile trackers. */
     protected HashMap<TrackerKey, Percentiler> _trackers;
-    
+
     /** A map of rating types to rank levels, reloaded every so often */
     protected volatile HashMap<String, RankLevels> _rankLevels = new HashMap<String, RankLevels>();
 

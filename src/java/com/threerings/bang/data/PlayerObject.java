@@ -3,6 +3,8 @@
 
 package com.threerings.bang.data;
 
+import java.sql.Date;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -168,15 +170,20 @@ public class PlayerObject extends BodyObject
     public int quitter;
 
     /** Contains all ratings earned by this player. */
-    public transient HashMap<String, Rating> ratings;
+    public transient HashMap<Date, HashMap<String, Rating>> ratings;
 
     /**
      * Returns the player's rating for the specified scenario. Do NOT call this on the client.
      * This method will never return null.
      */
-    public Rating getRating (String scenario)
+    public Rating getRating (String scenario, Date week)
     {
-        Rating rating = ratings.get(scenario);
+        HashMap<String, Rating> weekRatings = ratings.get(week);
+        if (weekRatings == null) {
+            weekRatings = new HashMap<String, Rating>();
+            ratings.put(week, weekRatings);
+        }
+        Rating rating = weekRatings.get(scenario);
         if (rating == null) {
             rating = new Rating();
             rating.scenario = scenario;

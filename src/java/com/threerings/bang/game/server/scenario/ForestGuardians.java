@@ -105,7 +105,7 @@ public class ForestGuardians extends Scenario
         int nplayers = _bangmgr.getPlayerSlots(), trating = 0;
         for (int ii = 0; ii < nplayers; ii++) {
             trating += _bangmgr.getPlayerRecord(ii).getRating(
-                ForestGuardiansInfo.IDENT).rating;
+                ForestGuardiansInfo.IDENT, null).rating;
         }
         float rratio = ((float)(trating / nplayers) - Rating.DEFAULT_RATING) /
             (Rating.MAXIMUM_RATING - Rating.DEFAULT_RATING);

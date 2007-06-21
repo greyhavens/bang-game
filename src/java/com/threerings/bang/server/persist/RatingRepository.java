@@ -5,6 +5,7 @@ package com.threerings.bang.server.persist;
 
 import java.io.PrintStream;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -86,6 +87,11 @@ public class RatingRepository extends SimpleRepository
         }
     }
 
+    public static String whereWeek (Date week)
+    {
+        return "WEEK " + (week == null ? "IS NULL" : " ='" + week + "'");
+    }
+
     /**
      * The database identifier used when establishing a database
      * connection. This value being <code>ratingdb</code>.
@@ -108,12 +114,12 @@ public class RatingRepository extends SimpleRepository
     /**
      * Loads the ratings for the specified player.
      */
-    public HashMap<String, Rating> loadRatings (final int playerId)
+    public HashMap<String, Rating> loadRatings (final int playerId, final Date week)
         throws PersistenceException
     {
         final HashMap<String, Rating> rats = new HashMap<String, Rating>();
         final String query = "select SCENARIO, RATING, EXPERIENCE " +
-            "from RATINGS where PLAYER_ID = " + playerId;
+            "from RATINGS where PLAYER_ID = " + playerId + " and " + whereWeek(week);
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -125,6 +131,7 @@ public class RatingRepository extends SimpleRepository
                         Rating rat = new Rating();
                         rat.scenario = rs.getString(1);
                         rat.rating = rs.getInt(2);
+                        rat.week = week;
                         rat.experience = rs.getInt(3);
                         rats.put(rat.scenario, rat);
                     }
@@ -157,10 +164,10 @@ public class RatingRepository extends SimpleRepository
                 throws SQLException, PersistenceException
             {
                 String uquery = "update RATINGS set RATING=?, EXPERIENCE=? " +
-                    "where PLAYER_ID=? and SCENARIO=?";
+                    "where PLAYER_ID=? and SCENARIO=? and WEEK=?";
                 PreparedStatement ustmt = conn.prepareStatement(uquery);
-                String iquery = "insert into RATINGS (PLAYER_ID, SCENARIO, " +
-                    "RATING, EXPERIENCE) values (?, ?, ?, ?)";
+                String iquery = "insert into RATINGS (PLAYER_ID, SCENARIO, WEEK, " +
+                    "RATING, EXPERIENCE) values (?, ?, ?, ?, ?)";
                 PreparedStatement istmt = null;
                 try {
                     for (Rating rating : rats) {
@@ -169,6 +176,7 @@ public class RatingRepository extends SimpleRepository
                         ustmt.setInt(2, rating.experience);
                         ustmt.setInt(3, playerId);
                         ustmt.setString(4, rating.scenario);
+                        ustmt.setDate(5, rating.week);
                         if (ustmt.executeUpdate() > 0) {
                             continue;
                         }
@@ -179,8 +187,9 @@ public class RatingRepository extends SimpleRepository
                         }
                         istmt.setInt(1, playerId);
                         istmt.setString(2, rating.scenario);
-                        istmt.setInt(3, rating.rating);
-                        istmt.setInt(4, rating.experience);
+                        istmt.setDate(3, rating.week);
+                        istmt.setInt(4, rating.rating);
+                        istmt.setInt(5, rating.experience);
                         JDBCUtil.warnedUpdate(istmt, 1);
                     }
 
@@ -255,7 +264,7 @@ public class RatingRepository extends SimpleRepository
     /**
      * Loads and returns rank levels for each rating type.
      */
-    public List<RankLevels> loadRanks ()
+    public List<RankLevels> loadRanks (final Date week)
         throws PersistenceException
     {
         final List<RankLevels> levelList = new ArrayList<RankLevels>();
@@ -265,7 +274,7 @@ public class RatingRepository extends SimpleRepository
             {
                 ResultSet rs = conn.prepareStatement(
                     "   select RATING_TYPE, RANK, LEVEL " +
-                    "     from RANKS " +
+                    "     from RANKS where " + whereWeek(week) +
                     " order by RATING_TYPE, RANK ").executeQuery();
                 RankLevels currentLevels = null;
                 while (rs.next()) {
@@ -289,15 +298,15 @@ public class RatingRepository extends SimpleRepository
      * Calculate the ranks for each scenario handled by this server;
      * let the Frontier Town server handle the Overall pseudoscenario.
      */
-    public void calculateRanks ()
+    public void calculateRanks (Date week)
         throws PersistenceException
     {
         for (ScenarioInfo info :
                 ScenarioInfo.getScenarios(ServerConfig.townId, false)) {
-            calculateRanks(info.getIdent());
+            calculateRanks(info.getIdent(), week);
         }
         if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
-            calculateRanks(ScenarioInfo.OVERALL_IDENT);
+            calculateRanks(ScenarioInfo.OVERALL_IDENT, week);
         }
     }
 
@@ -314,10 +323,11 @@ public class RatingRepository extends SimpleRepository
      * This class was originally derived from Yohoho's GenerateStandings and
      * some core logic from there still remains.
      */
-    public Metrics calculateRanks (final String type)
+    public Metrics calculateRanks (final String type, final Date week)
         throws PersistenceException
     {
         final String what = "RATING from RATINGS where SCENARIO = " + JDBCUtil.escape(type) +
+                            " and " + whereWeek(week) +
                             " and LAST_PLAYED > " + STALE_DATE;
 
         // sort each row for this type into a histogram
@@ -379,7 +389,7 @@ public class RatingRepository extends SimpleRepository
                     // clear the table
                     clear = conn.prepareStatement(
                             "delete from RANKS" +
-                            "      where RATING_TYPE = ? ");
+                            "      where RATING_TYPE = ? and " + whereWeek(week));
                     clear.setString(1, type);
                     clear.execute();
                     JDBCUtil.close(clear);
@@ -389,12 +399,14 @@ public class RatingRepository extends SimpleRepository
                         "insert into RANKS " +
                         "        set RATING_TYPE = ?, " +
                         "            RANK = ?, " +
+                        "            WEEK = ?, " +
                         "            LEVEL = ? ");
                     int[] levels = met.levels;
                     for (int rank = 0; rank < levels.length; rank ++) {
                         insert.setString(1, type);
                         insert.setInt(2, rank);
-                        insert.setInt(3, levels[rank]);
+                        insert.setDate(3, week);
+                        insert.setInt(4, levels[rank]);
                         insert.execute();
                     }
                     return null;
@@ -514,16 +526,18 @@ public class RatingRepository extends SimpleRepository
         JDBCUtil.createTableIfMissing(conn, "RATINGS", new String[] {
             "PLAYER_ID INTEGER NOT NULL",
             "SCENARIO VARCHAR(2) NOT NULL",
+            "WEEK DATE NULL DEFAULT NULL",
             "RATING SMALLINT NOT NULL",
             "EXPERIENCE INTEGER NOT NULL",
             "LAST_PLAYED TIMESTAMP NOT NULL",
-            "PRIMARY KEY (PLAYER_ID, SCENARIO)",
+            "INDEX UNIQUE (PLAYER_ID, SCENARIO, WEEK)",
         }, "");
         JDBCUtil.createTableIfMissing(conn, "RANKS", new String[] {
             "RATING_TYPE VARCHAR(2) NOT NULL",
             "RANK SMALLINT NOT NULL",
+            "WEEK DATE NULL DEFAULT NULL",
             "LEVEL INTEGER NOT NULL",
-            "PRIMARY KEY (RATING_TYPE, RANK)",
+            "INDEX UNIQUE (RATING_TYPE, RANK, WEEK)",
         }, "");
         JDBCUtil.createTableIfMissing(conn, "SCORE_TRACKERS", new String[] {
             "SCENARIO VARCHAR(2) NOT NULL",
@@ -545,6 +559,20 @@ public class RatingRepository extends SimpleRepository
         if (!JDBCUtil.tableContainsColumn(conn, "RANKS", "RATING_TYPE")) {
             JDBCUtil.changeColumn(conn, "RANKS", "SCENARIO", "RATING_TYPE VARCHAR(2) NOT NULL");
             JDBCUtil.changeColumn(conn, "RANKS", "LEVEL", "LEVEL INTEGER NOT NULL");
+        }
+        if (!JDBCUtil.tableContainsColumn(conn, "RATINGS", "WEEK")) {
+            JDBCUtil.addColumn(conn, "RATINGS", "WEEK", "DATE NULL DEFAULT NULL", "SCENARIO");
+            JDBCUtil.dropPrimaryKey(conn, "RATINGS");
+            Statement stmt = conn.createStatement();
+            stmt.execute("alter table RATINGS add UNIQUE INDEX (PLAYER_ID, SCENARIO, WEEK)");
+            stmt.close();
+        }
+        if (!JDBCUtil.tableContainsColumn(conn, "RANKS", "WEEK")) {
+            JDBCUtil.addColumn(conn, "RANKS", "WEEK", "DATE NULL DEFAULT NULL", "RANK");
+            JDBCUtil.dropPrimaryKey(conn, "RANKS");
+            Statement stmt = conn.createStatement();
+            stmt.execute("alter table RANKS add UNIQUE INDEX (RATING_TYPE, RANK, WEEK)");
+            stmt.close();
         }
         // END TEMP
     }

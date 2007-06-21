@@ -3,6 +3,9 @@
 
 package com.threerings.bang.data;
 
+import java.sql.Date;
+import java.util.Calendar;
+
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.MathUtil;
 import com.threerings.presents.dobj.DSet;
@@ -34,6 +37,24 @@ public class Rating extends SimpleStreamableObject
     /** The number of rounds of the scenario, (or games in total for the
      * overall rating) the player has played. */
     public int experience;
+
+    /** The start day for a 7 day rated period, (or null for lifetime). */
+    public Date week;
+
+    /**
+     * Returns the date representing the current week for use in Rating.
+     */
+    public static Date thisWeek ()
+    {
+        Calendar week = Calendar.getInstance();
+        week.setFirstDayOfWeek(Calendar.SUNDAY);
+        week.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        week.set(Calendar.HOUR_OF_DAY, 0);
+        week.set(Calendar.MINUTE, 0);
+        week.set(Calendar.SECOND, 0);
+        week.set(Calendar.MILLISECOND, 0);
+        return new Date(week.getTimeInMillis());
+    }
 
     /**
      * Computes a player's updated rating using a modified version of the

@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import java.awt.Point;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -137,20 +138,29 @@ public class BangManager extends GameManager
         public Purse purse;
         public int[] finishedTick;
 
-        public HashMap<String,Rating> ratings;
-        public HashMap<String,Rating> nratings = new HashMap<String,Rating>();
+        public HashMap<Date, HashMap<String,Rating>> ratings;
+        public HashMap<Date, HashMap<String,Rating>> nratings =
+            new HashMap<Date, HashMap<String,Rating>>();
 
         public PlayerObject user;
 
-        public Rating getRating (String scenario) {
-            Rating rating = nratings.get(scenario);
+        public Rating getRating (String scenario, Date week) {
+            HashMap<String, Rating> weekRatings = nratings.get(week);
+            Rating rating = null;
+            if (weekRatings != null) {
+                rating = weekRatings.get(scenario);
+            }
             if (rating == null) {
                 if (ratings != null) {
-                    rating = ratings.get(scenario);
+                    weekRatings = ratings.get(week);
+                    if (weekRatings != null) {
+                        rating = weekRatings.get(scenario);
+                    }
                 }
                 if (rating == null) {
                     rating = new Rating();
                     rating.scenario = scenario;
+                    rating.week = week;
                 } else if (rating.experience > 0) {
                     rating = (Rating)rating.clone();
                 }
@@ -937,7 +947,7 @@ public class BangManager extends GameManager
 
             if (isAI(ii)) {
                 prec.playerId = -1;
-                prec.ratings = new HashMap<String, Rating>();
+                prec.ratings = new HashMap<Date, HashMap<String, Rating>>();
                 BangAI ai = (BangAI)_AIs[ii];
                 pinfo[ii].avatar = ai.avatar;
                 pinfo[ii].gang = ai.gang;
@@ -1948,7 +1958,8 @@ public class BangManager extends GameManager
                     int[] rpoints = _bangobj.getFilteredRoundPoints(ii);
                     computePenalizedRatings(_bconfig.getScenario(ii), rpoints);
                 }
-                computePenalizedRatings(ScenarioInfo.OVERALL_IDENT, _bangobj.getFilteredPoints());
+                computePenalizedRatings(
+                        ScenarioInfo.OVERALL_IDENT, _bangobj.getFilteredPoints());
             }
         }
 
@@ -2526,6 +2537,16 @@ public class BangManager extends GameManager
      */
     protected void computeRatings (String scenario, int[] scores)
     {
+        computeRatings(scenario, scores, null);
+        computeRatings(scenario, scores, Rating.thisWeek());
+    }
+
+    /**
+     * Computes updated ratings for the specified scenario, using the supplied scores and stores
+     * them in the appropriate {@link PlayerRecord}.
+     */
+    protected void computeRatings (String scenario, int[] scores, Date week)
+    {
         // compute the average score for coop scenarios
         boolean coop = (!scenario.equals(ScenarioInfo.OVERALL_IDENT) &&
                         ScenarioInfo.getScenarioInfo(scenario).getTeams() ==
@@ -2535,7 +2556,7 @@ public class BangManager extends GameManager
         // collect each player's rating for this scenario
         Rating[] ratings = new Rating[getPlayerSlots()];
         for (int pidx = 0; pidx < ratings.length; pidx++) {
-            ratings[pidx] = _precords[pidx].getRating(scenario);
+            ratings[pidx] = _precords[pidx].getRating(scenario, week);
         }
 
         scores = removeAIScores(scores);
@@ -2549,7 +2570,7 @@ public class BangManager extends GameManager
                 Rating.computeRating(scores, ratings, pidx);
         }
 
-        storeRatings(ratings, nratings);
+        storeRatings(ratings, nratings, week);
     }
 
     /**
@@ -2558,10 +2579,20 @@ public class BangManager extends GameManager
      */
     protected void computePenalizedRatings (String scenario, int[] scores)
     {
+        computePenalizedRatings(scenario, scores, null);
+        computePenalizedRatings(scenario, scores, Rating.thisWeek());
+    }
+
+    /**
+     * Computes updated ratings for the specified scneario for players that left the game early and
+     * stores them in the appropriate {@link PlayerRecord}.
+     */
+    protected void computePenalizedRatings (String scenario, int[] scores, Date week)
+    {
         // collect each player's rating for this scenario
         Rating[] ratings = new Rating[getPlayerSlots()];
         for (int pidx = 0; pidx < ratings.length; pidx++) {
-            ratings[pidx] = _precords[pidx].getRating(scenario);
+            ratings[pidx] = _precords[pidx].getRating(scenario, week);
         }
 
         scores = removeAIScores(scores);
@@ -2572,13 +2603,13 @@ public class BangManager extends GameManager
                 Rating.computeRating(scores, ratings, pidx);
         }
 
-        storeRatings(ratings, nratings);
+        storeRatings(ratings, nratings, week);
     }
 
     /**
      * Helper function that updates player ratings.
      */
-    protected void storeRatings (Rating[] ratings, int[] nratings)
+    protected void storeRatings (Rating[] ratings, int[] nratings, Date week)
     {
         // finally store the adjusted ratings back in the ratings objects and record the increased
         // experience
@@ -2589,7 +2620,12 @@ public class BangManager extends GameManager
             }
             ratings[pidx].rating = nratings[pidx];
             ratings[pidx].experience++;
-            _precords[pidx].nratings.put(ratings[pidx].scenario, ratings[pidx]);
+            HashMap<String, Rating> weekRatings = _precords[pidx].nratings.get(week);
+            if (weekRatings == null) {
+                weekRatings = new HashMap<String, Rating>();
+                _precords[pidx].nratings.put(week, weekRatings);
+            }
+            weekRatings.put(ratings[pidx].scenario, ratings[pidx]);
         }
     }
 
@@ -2882,8 +2918,11 @@ public class BangManager extends GameManager
                     }
 
                     // update their ratings
-                    if (prec.nratings.size() > 0) {
-                        ArrayList<Rating> ratings = new ArrayList<Rating>(prec.nratings.values());
+                    for (HashMap<String, Rating> weekRatings : prec.nratings.values()) {
+                        if (weekRatings.isEmpty()) {
+                            continue;
+                        }
+                        ArrayList<Rating> ratings = new ArrayList<Rating>(weekRatings.values());
                         try {
                             BangServer.ratingrepo.updateRatings(prec.playerId, ratings);
                         } catch (PersistenceException pe) {
@@ -2917,8 +2956,15 @@ public class BangManager extends GameManager
                     if (_tickets[pidx] != null) {
                         player.addToInventory(_tickets[pidx]);
                     }
-                    for (Rating rating : _precords[pidx].nratings.values()) {
-                        player.ratings.put(rating.scenario, rating);
+                    for (HashMap<String, Rating> weekRatings : _precords[pidx].nratings.values()) {
+                        for (Rating rating : weekRatings.values()) {
+                            HashMap<String, Rating> pRatings = player.ratings.get(rating.week);
+                            if (pRatings == null) {
+                                pRatings = new HashMap<String, Rating>();
+                                player.ratings.put(rating.week, pRatings);
+                            }
+                            pRatings.put(rating.scenario, rating);
+                        }
                     }
                 }
                 _bangobj.setAwards(awards);
@@ -3401,7 +3447,8 @@ public class BangManager extends GameManager
     protected ArrayList<AdvanceOrder> _orders = new ArrayList<AdvanceOrder>();
 
     /** If a game is shorter than this (in seconds) we won't rate it. */
-    protected static final int MIN_RATED_DURATION = 180;
+    protected static final int MIN_RATED_DURATION = 10;
+    //protected static final int MIN_RATED_DURATION = 180;
 
     /** If a game is shorter than this (in minutes) some stats don't count. */
     protected static final int MIN_STATS_DURATION = 2;

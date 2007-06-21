@@ -78,7 +78,7 @@ public abstract class ScenarioInfo
     {
         for (ScenarioInfo info : _scenarios.values()) {
             if (info.getTownId().equals(user.townId) &&
-                user.getRating(info.getIdent()).experience == 0) {
+                user.getRating(info.getIdent(), null).experience == 0) {
                 return false;
             }
         }

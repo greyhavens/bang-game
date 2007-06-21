@@ -56,7 +56,7 @@ public class Match
         players = new PlayerObject[GameCodes.MAX_PLAYERS];
         _playerCriterions = new Criterion[GameCodes.MAX_PLAYERS];
         players[0] = player;
-        Rating rating = player.getRating(ScenarioInfo.OVERALL_IDENT);
+        Rating rating = player.getRating(ScenarioInfo.OVERALL_IDENT, null);
         _minRating = _avgRating = _maxRating = rating.rating;
         _playerCriterions[0] = criterion;
         rebuildCriterion();
@@ -166,7 +166,7 @@ public class Match
         // now make sure the joining player satisfies our rating range requirements: the joiner
         // must fall within our desired range of the average rating and the min and max rating must
         // fall within the joiner's criterion-specified range
-        Rating prating = player.getRating(ident);
+        Rating prating = player.getRating(ident, null);
         if (criterion.range < Criterion.OPEN) {
             int range = (criterion.range == Criterion.TIGHT ?
                     RuntimeConfig.server.nearRankRange : RuntimeConfig.server.looseRankRange);
@@ -174,7 +174,7 @@ public class Match
                 if (players[ii] == null) {
                     continue;
                 }
-                Rating rating = players[ii].getRating(ident);
+                Rating rating = players[ii].getRating(ident, null);
                 if (Math.abs(rating.rating - prating.rating) > range) {
                     return false;
                 }
@@ -453,7 +453,7 @@ public class Match
             if (players[ii] == null) {
                 continue;
             }
-            Rating rating = players[ii].getRating(ScenarioInfo.OVERALL_IDENT);
+            Rating rating = players[ii].getRating(ScenarioInfo.OVERALL_IDENT, null);
             _minRating = Math.min(_minRating, rating.rating);
             _maxRating = Math.max(_maxRating, rating.rating);
             _avgRating += rating.rating;

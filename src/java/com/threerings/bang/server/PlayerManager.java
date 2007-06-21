@@ -630,7 +630,7 @@ public class PlayerManager
                 info.avatar = look.getAvatar(posterPlayer);
             }
             BangServer.gangmgr.populatePosterInfo(info, posterPlayer);
-            info.rankings = buildRankings(posterPlayer.ratings);
+            info.rankings = buildRankings(posterPlayer.ratings.get(null));
         }
 
         // if the poster came from the cache, we're already done
@@ -664,7 +664,7 @@ public class PlayerManager
                 // for offline players, get look snapshot from repository
                 if (posterPlayer == null) {
                     info.avatar = _lookrepo.loadSnapshot(_player.playerId);
-                    info.rankings = buildRankings(_raterepo.loadRatings(_player.playerId));
+                    info.rankings = buildRankings(_raterepo.loadRatings(_player.playerId, null));
                     BangServer.gangmgr.populatePosterInfo(info, _player);
                 }
             }
