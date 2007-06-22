@@ -243,6 +243,34 @@ back_button:down {
   background: image "ui/buttons/back_down.png" centerxy;
 }
 
+arrow_fwd_button {
+  background: image "ui/buttons/arrow_forward_normal.png" centerxy;
+  cursor: "hand";
+}
+arrow_fwd_button:disabled {
+  background: image "ui/buttons/arrow_forward_disabled.png" centerxy;
+}
+arrow_fwd_button:hover {
+  background: image "ui/buttons/arrow_forward_hover.png" centerxy;
+}
+arrow_fwd_button:down {
+  background: image "ui/buttons/arrow_forward_down.png" centerxy;
+}
+
+arrow_back_button {
+  background: image "ui/buttons/arrow_back_normal.png" centerxy;
+  cursor: "hand";
+}
+arrow_back_button:disabled {
+  background: image "ui/buttons/arrow_back_disabled.png" centerxy;
+}
+arrow_back_button:hover {
+  background: image "ui/buttons/arrow_back_hover.png" centerxy;
+}
+arrow_back_button:down {
+  background: image "ui/buttons/arrow_back_down.png" centerxy;
+}
+
 arrow_button {
   parent: alt_button;
   padding: 4 1;
@@ -1899,6 +1927,41 @@ news_scroll {
 
 news_buttons {
   padding: 0 35 5 0;
+}
+
+top10_this_week {
+  parent: def_button;
+  background: image "ui/saloon/this_week_normal.png";
+}
+
+top10_this_week:selected {
+  background: image "ui/saloon/this_week_selected.png";
+}
+
+top10_last_week {
+  parent: def_button;
+  background: image "ui/saloon/last_week_normal.png";
+}
+
+top10_last_week:selected {
+  background: image "ui/saloon/last_week_selected.png";
+}
+
+top10_lifetime {
+  parent: def_button;
+  background: image "ui/saloon/lifetime_normal.png";
+}
+
+top10_lifetime:selected {
+  background: image "ui/saloon/lifetime_selected.png";
+}
+
+top10_title {
+  font: "Old Town Wide" plain 24;
+  text-align: center;
+  text-effect: shadow;
+  color: #4C2602;
+  effect-color: #D1C581;
 }
 
 top_score_view {
