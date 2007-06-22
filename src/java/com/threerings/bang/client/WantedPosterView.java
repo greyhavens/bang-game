@@ -4,6 +4,8 @@
 package com.threerings.bang.client;
 
 import java.util.Map;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import com.jme.renderer.Renderer;
 
@@ -16,6 +18,7 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.TableLayout;
@@ -35,6 +38,7 @@ import com.threerings.bang.avatar.client.BuckleView;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.gang.data.GangCodes;
+import com.threerings.bang.saloon.data.SaloonCodes;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.IconPalette;
@@ -244,35 +248,64 @@ public class WantedPosterView extends BContainer
         BContainer cont = GroupLayout.makeVBox(GroupLayout.TOP);
         cont.add(new Spacer(1, 5));
         cont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/wanted/notorious_deeds.png"))));
+        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)buttons.getLayoutManager()).setGap(10);
+        buttons.add(_left = new BButton(new BlankIcon(37,25), _navigator, "left"));
+        _left.setStyleClass("arrow_back_button");
+        _left.setEnabled(false);
+        buttons.add(_title = new BLabel(""));
+        _title.setPreferredSize(150, -1);
+        _title.setStyleClass("top10_title");
+        buttons.add(_right = new BButton(new BlankIcon(37,25), _navigator, "right"));
+        _right.setStyleClass("arrow_fwd_button");
+        cont.add(buttons);
 
-        BContainer box = new BContainer(new TableLayout(2, 2, 10));
-        box.setStyleClass("poster_rankings_box");
-        cont.add(box);
+        _rankBox = new BContainer(new TableLayout(2, 2, 10));
+        _rankBox.setStyleClass("poster_rankings_box");
+        cont.add(_rankBox);
 
-        Integer oaRank = _poster.rankings.get(ScenarioInfo.OVERALL_IDENT);
+        showRanks(0);
+        return cont;
+    }
+
+    protected void showRanks (int page)
+    {
+        if (_page == page || page < 0 || page >= _poster.rankGroups.size()) {
+            return;
+        }
+        _page = page;
+        _left.setEnabled(_page != 0);
+        _right.setEnabled(_page != _poster.rankGroups.size() - 1);
+        _rankBox.removeAll();
+
+        PosterInfo.RankGroup ranks = _poster.rankGroups.get(page);
+        if (ranks.week == 0) {
+            _title.setText(_ctx.xlate(SaloonCodes.SALOON_MSGS, "m.top10_title_0"));
+        } else {
+            Date week = new Date(ranks.week);
+            _title.setText(_ctx.xlate(BangCodes.BANG_MSGS, MessageBundle.tcompose(
+                            "m.poster_rank_week", RANK_FORMAT.format(week))));
+        }
+
+        Integer oaRank = ranks.rankings.get(ScenarioInfo.OVERALL_IDENT);
         if (oaRank != null) {
             String scenario = "m.scenario_" + ScenarioInfo.OVERALL_IDENT;
             scenario = _ctx.xlate(GameCodes.GAME_MSGS, scenario);
-            addRankRow(box, scenario, oaRank.intValue());
+            addRankRow(_rankBox, scenario, oaRank.intValue());
             // add a spacer row
-            box.add(new Spacer(1, 12));
-            box.add(new Spacer(1, 12));
+            _rankBox.add(new Spacer(1, 12));
+            _rankBox.add(new Spacer(1, 12));
         }
 
-        for (Map.Entry<String, Integer> row : _poster.rankings.entrySet()) {
-            String scenarioId = row.getKey();
-            if (ScenarioInfo.OVERALL_IDENT.equals(scenarioId)) {
+        // let's have the scenarios show up in a consistent order
+        for (String scenarioId : ScenarioInfo.getScenarioIds()) {
+            Integer rank = ranks.rankings.get(scenarioId);
+            if (rank == null) {
                 continue;
             }
             ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenarioId);
-            if (info == null) {
-                log.warning("Unknown scenario id [id=" + scenarioId + "]");
-                continue;
-            }
-            addRankRow(box, _ctx.xlate(GameCodes.GAME_MSGS, info.getName()),
-                       row.getValue().intValue());
+            addRankRow(_rankBox, _ctx.xlate(GameCodes.GAME_MSGS, info.getName()), rank.intValue());
         }
-        return cont;
     }
 
     protected void addRankRow (BContainer box, String name, int rank)
@@ -373,6 +406,18 @@ public class WantedPosterView extends BContainer
         return box;
     }
 
+    /** Listens for navigation button presses. */
+    protected ActionListener _navigator = new ActionListener() {
+        public void actionPerformed (ActionEvent event) {
+            String action = event.getAction();
+            if (action.equals("right")) {
+                showRanks(_page + 1);
+            } else if (action.equals("left")) {
+                showRanks(_page - 1);
+            }
+        }
+    };
+
     protected BangContext _ctx;
 
     /** The handle of the poster being either displayed or requested */
@@ -386,4 +431,11 @@ public class WantedPosterView extends BContainer
 
     /** A pointer to the sepia overlay for the badge view */
     protected BImage _badgeSepia;
+
+    protected BContainer _rankBox;
+    protected BLabel _title;
+    protected BButton _left, _right;
+    protected int _page = -1;
+
+    protected static final SimpleDateFormat RANK_FORMAT = new SimpleDateFormat("MMM d");
 }

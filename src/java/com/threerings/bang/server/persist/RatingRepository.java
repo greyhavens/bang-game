@@ -174,20 +174,24 @@ public class RatingRepository extends SimpleRepository
                 throws SQLException, PersistenceException
             {
                 String uquery = "update RATINGS set RATING=?, EXPERIENCE=? " +
-                    "where PLAYER_ID=? and SCENARIO=? and WEEK=?";
-                PreparedStatement ustmt = conn.prepareStatement(uquery);
+                    "where PLAYER_ID=? and SCENARIO=? and WEEK";
+                PreparedStatement ustmt = conn.prepareStatement(uquery + "=?");
+                PreparedStatement nstmt = conn.prepareStatement(uquery + " IS NULL");
                 String iquery = "insert into RATINGS (PLAYER_ID, SCENARIO, WEEK, " +
                     "RATING, EXPERIENCE) values (?, ?, ?, ?, ?)";
                 PreparedStatement istmt = null;
                 try {
                     for (Rating rating : rats) {
                         // first try updating
-                        ustmt.setInt(1, rating.rating);
-                        ustmt.setInt(2, rating.experience);
-                        ustmt.setInt(3, playerId);
-                        ustmt.setString(4, rating.scenario);
-                        ustmt.setDate(5, rating.week);
-                        if (ustmt.executeUpdate() > 0) {
+                        PreparedStatement stmt = (rating.week == null ? nstmt : ustmt);
+                        stmt.setInt(1, rating.rating);
+                        stmt.setInt(2, rating.experience);
+                        stmt.setInt(3, playerId);
+                        stmt.setString(4, rating.scenario);
+                        if (rating.week != null) {
+                            stmt.setDate(5, rating.week);
+                        }
+                        if (stmt.executeUpdate() > 0) {
                             continue;
                         }
 
@@ -219,8 +223,8 @@ public class RatingRepository extends SimpleRepository
      * @param where additions to the where clause (e.g., "RATINGS.PLAYER_ID =
      * GANG_MEMBERS.PLAYER_ID and GANG_ID = 32"), or <code>null</code> for none
      */
-    public ArrayList<TopRankedList> loadTopRanked (
-        final String[] scenarios, final String join, final String where, final int count)
+    public ArrayList<TopRankedList> loadTopRanked (final String[] scenarios, final String join,
+            final String where, final int count, final Date week)
         throws PersistenceException
     {
         final ArrayList<TopRankedList> lists = new ArrayList<TopRankedList>();
@@ -231,7 +235,7 @@ public class RatingRepository extends SimpleRepository
                 String query = "select RATINGS.PLAYER_ID, HANDLE " +
                     "from RATINGS, PLAYERS" +
                     (join == null ? "" : (", " + join)) +
-                    " where RATINGS.SCENARIO = ? " +
+                    " where RATINGS.SCENARIO = ? and " + whereWeek(week) + " " +
                     (where == null ? "" : ("and " + where + " ")) +
                     "and LAST_PLAYED > " + STALE_DATE + " " +
                     "and RATINGS.PLAYER_ID = PLAYERS.PLAYER_ID " +
@@ -249,9 +253,13 @@ public class RatingRepository extends SimpleRepository
                             ids.add(rs.getInt(1));
                             handles.add(new Handle(rs.getString(2)));
                         }
+                        if (ids.isEmpty()) {
+                            continue;
+                        }
 
                         // convert it into a TopRankedList object
                         TopRankedList list = new TopRankedList();
+                        list.week = week;
                         list.criterion = scenario;
                         list.playerIds = new int[ids.size()];
                         list.players = new Handle[handles.size()];

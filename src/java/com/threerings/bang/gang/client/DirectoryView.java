@@ -37,6 +37,17 @@ import com.threerings.bang.gang.data.HideoutObject;
 public class DirectoryView extends BContainer
     implements ActionListener
 {
+    public static BButton createArrowButton (
+            BangContext ctx, ActionListener listener, String action)
+    {
+        String pref = "ui/icons/small_" + action + "_arrow";
+        MultiIconButton button = new MultiIconButton(
+            new ImageIcon(ctx.loadImage(pref + ".png")), listener, action);
+        button.setIcon(new ImageIcon(ctx.loadImage(pref + "_disable.png")), BButton.DISABLED);
+        button.setStyleClass("small_arrow_button");
+        return button;
+    }
+
     public DirectoryView (BangContext ctx, HideoutObject hideoutobj)
     {
         super(GroupLayout.makeVStretch());
@@ -49,7 +60,7 @@ public class DirectoryView extends BContainer
         GroupLayout glay = GroupLayout.makeHoriz(GroupLayout.CENTER);
         glay.setGap(0);
         BContainer bcont = new BContainer(glay);
-        bcont.add(_left = createArrowButton("left"));
+        bcont.add(_left = createArrowButton(_ctx, this, "left"));
         bcont.add(new Spacer(6, 1));
         char[] letters = NameFactory.getValidator().getValidLetters();
         _lbuttons = new BToggleButton[letters.length];
@@ -68,7 +79,7 @@ public class DirectoryView extends BContainer
             bcont.add(_lbuttons[ii]);
         }
         bcont.add(new Spacer(6, 1));
-        bcont.add(_right = createArrowButton("right"));
+        bcont.add(_right = createArrowButton(_ctx, this, "right"));
         add(bcont, GroupLayout.FIXED);
 
         // add the group entry container
@@ -105,16 +116,6 @@ public class DirectoryView extends BContainer
     {
         super.wasRemoved();
         _hideoutobj.removeListener(_dirlist);
-    }
-
-    protected BButton createArrowButton (String action)
-    {
-        String pref = "ui/icons/small_" + action + "_arrow";
-        MultiIconButton button = new MultiIconButton(
-            new ImageIcon(_ctx.loadImage(pref + ".png")), this, action);
-        button.setIcon(new ImageIcon(_ctx.loadImage(pref + "_disable.png")), BButton.DISABLED);
-        button.setStyleClass("small_arrow_button");
-        return button;
     }
 
     protected void showPage (int pidx)

@@ -18,6 +18,7 @@ import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -45,7 +46,7 @@ public class PaperView extends BContainer
     public PaperView (BangContext ctx)
     {
         super(GroupLayout.makeVStretch());
-        ((GroupLayout)getLayoutManager()).setGap(12);
+        ((GroupLayout)getLayoutManager()).setGap(8);
         setStyleClass("news_view");
 
         _ctx = ctx;

@@ -216,8 +216,10 @@ public class BangClientResolver extends CrowdClientResolver
         // load up this player's ratings
         buser.ratings = new HashMap<Date, HashMap<String, Rating>>();
         buser.ratings.put(null, BangServer.ratingrepo.loadRatings(buser.playerId, null));
-        Date week = Rating.thisWeek();
-        buser.ratings.put(week, BangServer.ratingrepo.loadRatings(buser.playerId, week));
+        for (int ii = 0; ii < PlayerManager.SHOW_WEEKS; ii++) {
+            Date week = Rating.getWeek(ii);
+            buser.ratings.put(week, BangServer.ratingrepo.loadRatings(buser.playerId, week));
+        }
 
         // load up this player's avatar looks and modify any looks that have now expired articles
         ArrayList<Look> looks = BangServer.lookrepo.loadLooks(player.playerId);

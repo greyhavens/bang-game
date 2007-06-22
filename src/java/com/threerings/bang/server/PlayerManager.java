@@ -630,7 +630,18 @@ public class PlayerManager
                 info.avatar = look.getAvatar(posterPlayer);
             }
             BangServer.gangmgr.populatePosterInfo(info, posterPlayer);
-            info.rankings = buildRankings(posterPlayer.ratings.get(null));
+
+            info.rankGroups.clear();
+            info.rankGroups.add(new PosterInfo.RankGroup(
+                        0, buildRankings(posterPlayer.ratings.get(null))));
+            for (int ii = 0; ii < SHOW_WEEKS; ii++) {
+                java.sql.Date week = Rating.getWeek(ii);
+                HashMap<String, Rating> map = posterPlayer.ratings.get(week);
+                if (map != null && !map.isEmpty()) {
+                    info.rankGroups.add(new PosterInfo.RankGroup(
+                                week.getTime(), buildRankings(map)));
+                }
+            }
         }
 
         // if the poster came from the cache, we're already done
@@ -664,7 +675,16 @@ public class PlayerManager
                 // for offline players, get look snapshot from repository
                 if (posterPlayer == null) {
                     info.avatar = _lookrepo.loadSnapshot(_player.playerId);
-                    info.rankings = buildRankings(_raterepo.loadRatings(_player.playerId, null));
+                    info.rankGroups.add(new PosterInfo.RankGroup(
+                                0, buildRankings(_raterepo.loadRatings(_player.playerId, null))));
+                    for (int ii = 0; ii < SHOW_WEEKS; ii++) {
+                        java.sql.Date week = Rating.getWeek(ii);
+                        HashMap<String, Rating> map = _raterepo.loadRatings(_player.playerId, week);
+                        if (map != null && !map.isEmpty()) {
+                            info.rankGroups.add(new PosterInfo.RankGroup(
+                                        week.getTime(), buildRankings(map)));
+                        }
+                    }
                     BangServer.gangmgr.populatePosterInfo(info, _player);
                 }
             }
@@ -1583,4 +1603,7 @@ public class PlayerManager
 
     /** The number of days after which to expire regular players. */
     protected static final int USER_EXPIRE_DAYS = 180;
+
+    /** The number of back weeks to show on the wanted poster. */
+    protected static final int SHOW_WEEKS = 4;
 }

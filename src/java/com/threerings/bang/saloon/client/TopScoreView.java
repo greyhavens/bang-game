@@ -3,18 +3,26 @@
 
 package com.threerings.bang.saloon.client;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.Spacer;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.BEvent;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
+
+import com.threerings.bang.gang.client.DirectoryView;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.TopRankObject;
@@ -30,23 +38,85 @@ public class TopScoreView extends BContainer
         super(new BorderLayout());
         setStyleClass("top_score_view");
         _ctx = ctx;
+        _rankobj = rankobj;
+        _msgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
-        add(new BLabel(getHeaderText(), "top_score_header"), BorderLayout.NORTH);
+        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)buttons.getLayoutManager()).setGap(10);
+        buttons.add(_left = new BButton(new BlankIcon(37,25), _navigator, "left"));
+        _left.setStyleClass("arrow_back_button");
+        _left.setEnabled(false);
+        buttons.add(_title = new BLabel(""));
+        _title.setPreferredSize(150, -1);
+        _title.setStyleClass("top10_title");
+        buttons.add(_right = new BButton(new BlankIcon(37,25), _navigator, "right"));
+        _right.setStyleClass("arrow_fwd_button");
+        add(buttons, BorderLayout.NORTH);
 
-        BContainer cont = new BContainer(
+        _listCont = new BContainer(
             GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
                                  GroupLayout.STRETCH));
-        add(new BScrollPane(cont), BorderLayout.CENTER);
+        add(new BScrollPane(_listCont), BorderLayout.CENTER);
 
+        boolean thisWeek = false, lastWeek = false;
+        int pages = 1;
         for (TopRankedList list : rankobj.getTopRanked()) {
-            if (list.criterion.indexOf("m.scenario_oa") > -1 && list.players.length > 0) {
-                addScenario(cont, list);
+            if (list.period == TopRankedList.THIS_WEEK) {
+                if (!thisWeek) {
+                    pages++;
+                }
+                thisWeek = true;
+            } else if (list.period == TopRankedList.LAST_WEEK) {
+                if (!lastWeek) {
+                    pages++;
+                }
+                lastWeek = true;
+            }
+        }
+
+        _pages = new int[pages];
+        int idx = 0;
+        if (thisWeek) {
+            _pages[idx++] = TopRankedList.THIS_WEEK;
+        } else if (lastWeek) {
+            _pages[idx++] = TopRankedList.LAST_WEEK;
+        }
+        _pages[idx] = TopRankedList.LIFETIME;
+        showList(_pages[_page]);
+        if (_pages.length == 1) {
+            _right.setEnabled(false);
+        }
+    }
+
+    protected void displayPage (int page)
+    {
+        if (_page == page || page < 0 || page >= _pages.length) {
+            return;
+        }
+
+        _page = page;
+        _left.setEnabled(_page != 0);
+        _right.setEnabled(_page != _pages.length - 1);
+        showList(_pages[_page]);
+    }
+
+    protected void showList (int period)
+    {
+        _listCont.removeAll();
+
+        _title.setText(_msgs.get("m.top10_title_" + period));
+
+        for (TopRankedList list : _rankobj.getTopRanked()) {
+            if (list.criterion.indexOf("m.scenario_oa") > -1 && list.players.length > 0 &&
+                    list.period == period) {
+                addScenario(_listCont, list);
                 break;
             }
         }
-        for (TopRankedList list : rankobj.getTopRanked()) {
-            if (list.criterion.indexOf("m.scenario_oa") == -1 && list.players.length > 0) {
-                addScenario(cont, list);
+        for (TopRankedList list : _rankobj.getTopRanked()) {
+            if (list.criterion.indexOf("m.scenario_oa") == -1 && list.players.length > 0 &&
+                    list.period == period) {
+                addScenario(_listCont, list);
             }
         }
     }
@@ -111,5 +181,24 @@ public class TopScoreView extends BContainer
         protected Handle _handle;
     }
 
+    /** Listens for navigation button presses. */
+    protected ActionListener _navigator = new ActionListener() {
+        public void actionPerformed (ActionEvent event) {
+            String action = event.getAction();
+            if (action.equals("right")) {
+                displayPage(_page + 1);
+            } else if (action.equals("left")) {
+                displayPage(_page - 1);
+            }
+        }
+    };
+
     protected BangContext _ctx;
+    protected MessageBundle _msgs;
+    protected int _page;
+    protected int[] _pages;
+    protected TopRankObject _rankobj;
+    protected BButton _left, _right;
+    protected BLabel _title;
+    protected BContainer _listCont;
 }

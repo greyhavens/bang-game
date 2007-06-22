@@ -4,6 +4,7 @@
 package com.threerings.bang.data;
 
 import com.threerings.io.SimpleStreamableObject;
+import com.threerings.util.StreamableArrayList;
 import com.threerings.util.StreamableHashMap;
 import com.threerings.presents.dobj.DSet;
 
@@ -14,6 +15,20 @@ public class PosterInfo extends SimpleStreamableObject
     implements DSet.Entry, Cloneable
 {
     public static final int BADGES = 4;
+
+    public static class RankGroup extends SimpleStreamableObject
+    {
+        public long week;
+        public StreamableHashMap<String,Integer> rankings;
+
+        public RankGroup () { }
+
+        public RankGroup (long week, StreamableHashMap<String, Integer> rankings)
+        {
+            this.week = week;
+            this.rankings = rankings;
+        }
+    }
 
     /** The handle of this poster's player */
     public Handle handle;
@@ -37,7 +52,7 @@ public class PosterInfo extends SimpleStreamableObject
     public int[] badgeIds;
 
     /** The player's ranking in each scenario */
-    public StreamableHashMap<String,Integer> rankings;
+    public StreamableArrayList<RankGroup> rankGroups = new StreamableArrayList<RankGroup>();
 
     @Override // documentation inherited
     public Object clone ()

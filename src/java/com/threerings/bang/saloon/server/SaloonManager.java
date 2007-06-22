@@ -3,6 +3,8 @@
 
 package com.threerings.bang.saloon.server;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -28,6 +30,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Rating;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 
@@ -73,7 +76,19 @@ public class SaloonManager extends MatchHostManager
             public boolean invoke () {
                 String[] scens = ArrayUtil.append(scenarios, ScenarioInfo.OVERALL_IDENT);
                 try {
-                    _lists = BangServer.ratingrepo.loadTopRanked(scens, join, where, count);
+                    _lists = BangServer.ratingrepo.loadTopRanked(scens, join, where, count, null);
+
+                    // we don't start showing this week's top ranked until a couple days
+                    // have passed
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.DAY_OF_YEAR, -2);
+                    Date thisWeek = Rating.thisWeek();
+                    if (thisWeek.before(cal.getTime())) {
+                        _lists.addAll(BangServer.ratingrepo.loadTopRanked(
+                                scens, join, where, count, thisWeek));
+                    }
+                    _lists.addAll(BangServer.ratingrepo.loadTopRanked(
+                            scens, join, where, count, Rating.getWeek(-1)));
                     return true;
 
                 } catch (PersistenceException pe) {
@@ -247,6 +262,10 @@ public class SaloonManager extends MatchHostManager
         list.criterion = MessageBundle.qualify(GameCodes.GAME_MSGS, "m.scenario_" + list.criterion);
         int topRankId = (list.playerIds == null || list.playerIds.length == 0) ?
             0 : list.playerIds[0];
+        if (list.week != null) {
+            list.period = list.week.equals(Rating.thisWeek()) ?
+                TopRankedList.THIS_WEEK : TopRankedList.LAST_WEEK;
+        }
         BangServer.barbermgr.getSnapshot(topRankId, new ResultListener<AvatarInfo>() {
             public void requestCompleted (AvatarInfo snapshot) {
                 list.topDogSnapshot = snapshot;
@@ -259,7 +278,7 @@ public class SaloonManager extends MatchHostManager
                 commitList();
             }
             protected void commitList () {
-                if (rankobj.getTopRanked().containsKey(list.criterion)) {
+                if (rankobj.getTopRanked().containsKey(list.getKey())) {
                     rankobj.updateTopRanked(list);
                 } else {
                     rankobj.addToTopRanked(list);

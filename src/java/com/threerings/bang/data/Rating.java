@@ -46,14 +46,33 @@ public class Rating extends SimpleStreamableObject
      */
     public static Date thisWeek ()
     {
-        Calendar week = Calendar.getInstance();
-        week.setFirstDayOfWeek(Calendar.SUNDAY);
+        Calendar week = formatForWeek(Calendar.getInstance());
         week.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        week.set(Calendar.HOUR_OF_DAY, 0);
-        week.set(Calendar.MINUTE, 0);
-        week.set(Calendar.SECOND, 0);
-        week.set(Calendar.MILLISECOND, 0);
         return new Date(week.getTimeInMillis());
+    }
+
+    /**
+     * Returns the date representing the previous week for use in Rating.
+     */
+    public static Date getWeek (int delta)
+    {
+        Calendar week = formatForWeek(Calendar.getInstance());
+        week.add(Calendar.WEEK_OF_YEAR, -delta);
+        week.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        return new Date(week.getTimeInMillis());
+    }
+
+    /**
+     * Formats a calendar to sunday at midnight.
+     */
+    public static Calendar formatForWeek (Calendar cal)
+    {
+        cal.setFirstDayOfWeek(Calendar.SUNDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal;
     }
 
     /**
