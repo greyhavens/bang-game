@@ -271,10 +271,22 @@ public class ForestGuardians extends Scenario
     }
 
     @Override // documentation inherited
-    protected long getBaseTickTime ()
+    protected int getAverageUnitCount (BangObject bangobj)
     {
-        // we have fewer units, but we don't want crazy speed
-        return BASE_TICK_TIME + 1000L;
+        // we want to include the computer controlled units in this calculation
+        int units = 0, players = 0;
+        boolean[] liveUnits = new boolean[bangobj.players.length + 1];
+        for (Piece p : bangobj.pieces) {
+            if (p instanceof Unit && p.isAlive()) {
+                units++;
+                if (!liveUnits[p.owner + 1]) {
+                    players++;
+                    liveUnits[p.owner + 1] = true;
+                }
+            }
+        }
+        players = Math.max(1, players);
+        return (int)Math.round(units / players);
     }
 
     /**

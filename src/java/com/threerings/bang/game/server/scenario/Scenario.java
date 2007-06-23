@@ -134,10 +134,10 @@ public abstract class Scenario
 
         // scale from 1/1 to 2/3 over the course of ten minutes
         float factor = 1f + 0.5f * delta / TIME_SCALE_CAP;
-        long baseTime = Math.round(getBaseTickTime() / factor);
+        long baseTime = Math.round(BASE_TICK_TIME / factor);
 
         // scale this base time by the average number of units in play
-        long tickTime = baseTime * bangobj.getAverageUnitCount();
+        long tickTime = baseTime * getAverageUnitCount(bangobj);
 
         // make sure the tick is at least one second long
         return Math.max(tickTime, 1000L);
@@ -573,13 +573,11 @@ public abstract class Scenario
     }
 
     /**
-     * Returns the base tick time, which by default is scaled from 1 to 2/3
-     * over the course of ten minutes of play, as well as multiplied by the
-     * average number of units per player, to get the final tick time.
+     * Returns the average number of live units per player.
      */
-    protected long getBaseTickTime ()
+    protected int getAverageUnitCount (BangObject bangobj)
     {
-        return BASE_TICK_TIME;
+        return bangobj.getAverageUnitCount();
     }
 
     /**
