@@ -22,6 +22,9 @@ import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+
 import com.threerings.bang.gang.client.DirectoryView;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
@@ -107,15 +110,15 @@ public class TopScoreView extends BContainer
         _title.setText(_msgs.get("m.top10_title_" + period));
 
         for (TopRankedList list : _rankobj.getTopRanked()) {
-            if (list.criterion.indexOf("m.scenario_oa") > -1 && list.players.length > 0 &&
-                    list.period == period) {
+            if (list.criterion.indexOf(ScenarioInfo.OVERALL_IDENT) > -1 &&
+                    list.players.length > 0 && list.period == period) {
                 addScenario(_listCont, list);
                 break;
             }
         }
         for (TopRankedList list : _rankobj.getTopRanked()) {
-            if (list.criterion.indexOf("m.scenario_oa") == -1 && list.players.length > 0 &&
-                    list.period == period) {
+            if (list.criterion.indexOf(ScenarioInfo.OVERALL_IDENT) == -1 &&
+                    list.players.length > 0 && list.period == period) {
                 addScenario(_listCont, list);
             }
         }
@@ -142,7 +145,8 @@ public class TopScoreView extends BContainer
         ((GroupLayout)col.getLayoutManager()).setGap(0);
         row.add(col);
 
-        String cat = _ctx.xlate(SaloonCodes.SALOON_MSGS, list.criterion);
+        String cat = _ctx.xlate(SaloonCodes.SALOON_MSGS,
+                MessageBundle.qualify(GameCodes.GAME_MSGS, "m.scenario_" + list.criterion));
         col.add(new BLabel(cat, "top_score_category"));
 
         AvatarView aview = new AvatarView(_ctx, 4, false, true);

@@ -104,6 +104,10 @@ public enum StatType implements Stat.Type
     FREE_TICKETS(new ShortStringSetStat(), false, false),
     ACTIVATED_TICKETS(new ShortStringSetStat(), false, false),
 
+    // weekly top ranked stats
+    WEEKLY_TOP10(new ShortStringSetStat(), false, false),
+    WEEKLY_WINNER(new ShortStringSetStat(), false, false),
+
     // stats that are meant to by mysterious
     MYSTERY_ONE(new IntStat(), false, false, false, true), // high noon logon
     MYSTERY_TWO(new IntStat(), false, false, false, true), // christmas morning game

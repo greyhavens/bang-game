@@ -30,6 +30,8 @@ import com.threerings.bang.gang.server.persist.GangMemberRecord;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.saloon.data.TopRankedList;
+import com.threerings.bang.saloon.data.TopRankObject;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
@@ -268,6 +270,23 @@ public class BangClientResolver extends CrowdClientResolver
         // toIntArray() returns a sorted array
         buser.friends = friends.toIntArray();
         buser.foes = foes.toIntArray();
+
+        // see if they were in the top 10 last week
+        TopRankObject rankobj = (TopRankObject)BangServer.saloonmgr.getPlaceObject();
+        for (TopRankedList trl : rankobj.getTopRanked()) {
+            if (trl.period != TopRankedList.LAST_WEEK) {
+                continue;
+            }
+            for (int ii = 0; ii < trl.playerIds.length; ii++) {
+                if (buser.playerId == trl.playerIds[ii]) {
+                    buser.stats.addToSetStat(StatType.WEEKLY_TOP10, trl.criterion);
+                    if (ii == 0) {
+                        buser.stats.addToSetStat(StatType.WEEKLY_WINNER, trl.criterion);
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     @Override // documentation inherited

@@ -3447,8 +3447,7 @@ public class BangManager extends GameManager
     protected ArrayList<AdvanceOrder> _orders = new ArrayList<AdvanceOrder>();
 
     /** If a game is shorter than this (in seconds) we won't rate it. */
-    protected static final int MIN_RATED_DURATION = 10;
-    //protected static final int MIN_RATED_DURATION = 180;
+    protected static final int MIN_RATED_DURATION = 180;
 
     /** If a game is shorter than this (in minutes) some stats don't count. */
     protected static final int MIN_STATS_DURATION = 2;

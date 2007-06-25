@@ -22,6 +22,14 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.TutorialCodes;
+import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
+import com.threerings.bang.game.data.scenario.ClaimJumpingInfo;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
+import com.threerings.bang.game.data.scenario.GoldRushInfo;
+import com.threerings.bang.game.data.scenario.LandGrabInfo;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
+import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
 
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
@@ -632,6 +640,89 @@ public class Badge extends Item
             }
         },
 
+        // top ranked badges
+        WEEKLY_TOP10_OA {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, ScenarioInfo.OVERALL_IDENT);
+            }
+        },
+        WEEKLY_TOP10_GR {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, GoldRushInfo.IDENT);
+            }
+        },
+        WEEKLY_TOP10_LG {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, LandGrabInfo.IDENT);
+            }
+        },
+        WEEKLY_TOP10_CR {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, CattleRustlingInfo.IDENT);
+            }
+        },
+        WEEKLY_TOP10_CJ {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, ClaimJumpingInfo.IDENT);
+            }
+        },
+        WEEKLY_TOP10_WA {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, WendigoAttackInfo.IDENT);
+            }
+        },
+        WEEKLY_TOP10_TB {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, TotemBuildingInfo.IDENT);
+            }
+        },
+        WEEKLY_TOP10_FG {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, ForestGuardiansInfo.IDENT);
+            }
+        },
+
+        WEEKLY_WINNER_OA {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, ScenarioInfo.OVERALL_IDENT);
+            }
+        },
+        WEEKLY_WINNER_GR {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, GoldRushInfo.IDENT);
+            }
+        },
+        WEEKLY_WINNER_LG {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, LandGrabInfo.IDENT);
+            }
+        },
+        WEEKLY_WINNER_CR {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, CattleRustlingInfo.IDENT);
+            }
+        },
+        WEEKLY_WINNER_CJ {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, ClaimJumpingInfo.IDENT);
+            }
+        },
+        WEEKLY_WINNER_WA {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, WendigoAttackInfo.IDENT);
+            }
+        },
+        WEEKLY_WINNER_TB {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, TotemBuildingInfo.IDENT);
+            }
+        },
+        WEEKLY_WINNER_FG {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, ForestGuardiansInfo.IDENT);
+            }
+        },
+
         UNUSED;
 
         /** Returns a new blank stat instance of the specified type. */
@@ -725,6 +816,12 @@ public class Badge extends Item
         Type.CAVALRY_USER, Type.TACTICIAN_USER, Type.CODGER_USER,
         Type.FT_BIGSHOT_USER, Type.FT_ALLUNIT_USER,
 
+        Type.WEEKLY_TOP10_GR, Type.WEEKLY_TOP10_CR, Type.WEEKLY_TOP10_CJ,
+        Type.WEEKLY_TOP10_LG, Type.WEEKLY_TOP10_OA,
+
+        Type.WEEKLY_WINNER_GR, Type.WEEKLY_WINNER_CR, Type.WEEKLY_WINNER_CJ,
+        Type.WEEKLY_WINNER_LG, Type.WEEKLY_WINNER_OA,
+
         // indian trading post badges
         Type.TOTEMS_STACKED_1, Type.TOTEMS_STACKED_2, Type.TOTEMS_STACKED_3,
         Type.TOTEMS_STACKED_4, Type.TOTEMS_STACKED_5,
@@ -737,6 +834,10 @@ public class Badge extends Item
 
         Type.STORM_CALLER_USER, Type.TRICKSTER_RAVEN_USER,
         Type.REVOLUTIONARY_USER, Type.ITP_BIGSHOT_USER, Type.ITP_ALLUNIT_USER,
+
+        Type.WEEKLY_TOP10_TB, Type.WEEKLY_TOP10_WA, Type.WEEKLY_TOP10_FG, null, null,
+
+        Type.WEEKLY_WINNER_TB, Type.WEEKLY_WINNER_WA, Type.WEEKLY_WINNER_FG, null, null,
 
         // you suck badges
         Type.UNITS_LOST_1, Type.UNITS_LOST_2, null, Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,

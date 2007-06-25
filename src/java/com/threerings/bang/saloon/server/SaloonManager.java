@@ -88,7 +88,7 @@ public class SaloonManager extends MatchHostManager
                                 scens, join, where, count, thisWeek));
                     }
                     _lists.addAll(BangServer.ratingrepo.loadTopRanked(
-                            scens, join, where, count, Rating.getWeek(-1)));
+                            scens, join, where, count, Rating.getWeek(1)));
                     return true;
 
                 } catch (PersistenceException pe) {
@@ -259,7 +259,6 @@ public class SaloonManager extends MatchHostManager
 
     protected static void commitTopRanked (final TopRankObject rankobj, final TopRankedList list)
     {
-        list.criterion = MessageBundle.qualify(GameCodes.GAME_MSGS, "m.scenario_" + list.criterion);
         int topRankId = (list.playerIds == null || list.playerIds.length == 0) ?
             0 : list.playerIds[0];
         if (list.week != null) {
