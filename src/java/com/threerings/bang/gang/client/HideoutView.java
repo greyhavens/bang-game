@@ -430,7 +430,9 @@ public class HideoutView extends ShopView
         {
             super.wasRemoved();
             _play.shutdown();
-            _table.didLeavePlace();
+            if (_table != null) {
+                _table.didLeavePlace();
+            }
         }
 
         protected BToggleButton[] _buttons;
