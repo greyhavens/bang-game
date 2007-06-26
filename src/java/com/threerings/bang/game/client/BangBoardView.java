@@ -209,7 +209,10 @@ public class BangBoardView extends BoardView
     {
         Piece piece = _bangobj.pieces.get(targetId);
         if (piece != null) {
-            getTargetableSprite(piece).setPendingShot(false);
+            Targetable t = getTargetableSprite(piece);
+            if (t != null) {
+                t.setPendingShot(false);
+            }
         }
     }
 
@@ -593,7 +596,9 @@ public class BangBoardView extends BoardView
         }
 
         // give some auditory feedback
-        _sounds.getSound(ORDER_INVALIDATED).play(true);
+        if (_sounds != null) {
+            _sounds.getSound(ORDER_INVALIDATED).play(true);
+        }
 
         // show a question mark over the unit
         Unit unit = (Unit)_bangobj.pieces.get(unitId);

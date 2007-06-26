@@ -550,7 +550,15 @@ public class TownView extends BWindow
             // otherwise things are jerky as it tries to load up the UI while we're moving
             _ctx.getCameraHandler().addCameraObserver(new CameraPath.Observer() {
                 public boolean pathCompleted (CameraPath path) {
-                    BangUI.playShopEntry(_bctx.getUserObject().townId, cmd);
+                    // TEMP: replace these sounds until we get new ones for these buildings
+                    String sound = cmd;
+                    if ("hideout".equals(sound)) {
+                        sound = "saloon";
+                    } else if ("office".equals(sound)) {
+                        sound = "ranch";
+                    }
+                    // END TEMP
+                    BangUI.playShopEntry(_bctx.getUserObject().townId, sound);
                     fireCommand(cmd);
                     return false; // removes our observer
                 }

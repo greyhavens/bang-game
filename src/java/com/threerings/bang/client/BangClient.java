@@ -651,7 +651,9 @@ public class BangClient extends BasicClient
                 new WindowSlider(popup, WindowSlider.TO_RIGHT, 0.25f, 0, dy) {
                 protected void slideComplete () {
                     super.slideComplete();
-                    _ctx.getRootNode().removeWindow(popup);
+                    if (popup.isAdded()) {
+                        _ctx.getRootNode().removeWindow(popup);
+                    }
                 }
             });
         } else {
