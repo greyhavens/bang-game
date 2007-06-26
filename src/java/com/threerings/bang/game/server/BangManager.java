@@ -955,6 +955,12 @@ public class BangManager extends GameManager
 
             } else if (isActivePlayer(ii)) {
                 prec.user = (PlayerObject)getPlayer(ii);
+                // It's possible for someone to log off after saying they are ready but before
+                // reach loading their record.  In that case we'll just treat them as gone.
+                if (prec.user == null) {
+                    _playerOid[ii] = -1;
+                    continue;
+                }
                 prec.playerId = prec.user.playerId;
                 prec.gangId = prec.user.gangId;
                 prec.purse = prec.user.getPurse();
