@@ -657,7 +657,9 @@ public class BangClient extends BasicClient
                 }
             });
         } else {
-            _ctx.getRootNode().removeWindow(popup);
+            if (popup.isAdded()) {
+                _ctx.getRootNode().removeWindow(popup);
+            }
         }
     }
 
