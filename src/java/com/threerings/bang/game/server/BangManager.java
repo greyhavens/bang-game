@@ -1163,6 +1163,9 @@ public class BangManager extends GameManager
             }
         }
 
+        // setup of other piece logic
+        _pLogics = new HashIntMap<PieceLogic>();
+
         // set up the board and pieces and select a board tour marquee
         _bangobj.board = (BangBoard)round.bdata.board.clone();
         String marquee = (_bounty == null) ? round.board.name :
@@ -3447,7 +3450,7 @@ public class BangManager extends GameManager
     protected ArrayIntSet _shooters = new ArrayIntSet();
 
     /** A mapping of pieceIds to specilized logic handlers. */
-    protected HashIntMap<PieceLogic> _pLogics = new HashIntMap<PieceLogic>();
+    protected HashIntMap<PieceLogic> _pLogics;
 
     /** Tracks advance orders. */
     protected ArrayList<AdvanceOrder> _orders = new ArrayList<AdvanceOrder>();

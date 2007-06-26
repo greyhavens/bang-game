@@ -46,7 +46,7 @@ public abstract class PieceLogic
     public void tick (Piece[] pieces, short tick)
     {
         for (Piece p : pieces) {
-            if (p.pieceId == pieceId && p.isAlive() &&
+            if (p instanceof Unit && p.pieceId == pieceId && p.isAlive() &&
                     p.ticksUntilMovable(tick) == 0) {
                 Unit unit = (Unit)p;
                 _moves.clear();
@@ -126,13 +126,13 @@ public abstract class PieceLogic
     {
         int mindist = (tdist < 0) ? unit.getMinFireDistance() : 0,
             maxdist = (tdist < 0) ? unit.getMaxFireDistance() : tdist;
-        
+
         // find out if we're already there
         int dist = Piece.getDistance(unit.x, unit.y, dx, dy);
         if (!mustMove && dist >= mindist && dist <= maxdist) {
             return new Point(unit.x, unit.y);
         }
-        
+
         // next, look for points within the current move set that
         // satisfy the distance requirement
         ArrayList<Point> pts = new ArrayList<Point>();
@@ -155,7 +155,7 @@ public abstract class PieceLogic
             // us any good
             return null;
         }
-        
+
         // then do a search to find further points
         List<Point> path = AStarPathUtil.getPath(
                 _bangobj.board, getStepper(), unit,
@@ -184,7 +184,7 @@ public abstract class PieceLogic
     {
         return _bangobj.board.getWidth() / 2;
     }
-    
+
     protected AStarPathUtil.Stepper getStepper ()
     {
         return new AStarPathUtil.Stepper() {
