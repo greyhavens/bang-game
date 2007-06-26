@@ -203,6 +203,9 @@ public abstract class ComicChatView
         if (builder == null || !builder.getSpeaker().equals(speaker)) {
             builder = new ChatEntryBuilder(speaker, message, true);
             addValue(builder, true);
+            if (_values.size() > MAX_VALUES) {
+                removeValuesFromTop(REMOVE_SIZE);
+            }
         } else {
             builder.setSecondMessage(message);
             // clear out the cached height for our builder or the scrolling list won't properly
@@ -454,4 +457,9 @@ public abstract class ComicChatView
      * of bubbles in sequence. */
     protected ImageBackground _sfbg, _srbg, _rfbg, _rrbg;
 
+    /** The max number of chat entries to allow. */
+    protected static final int MAX_VALUES = 250;
+
+    /** The number of chat entries we remove when we've gone over the max. */
+    protected static final int REMOVE_SIZE = 5;
 }
