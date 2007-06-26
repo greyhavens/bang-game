@@ -399,7 +399,7 @@ public class BangManager extends GameManager
         throws InvocationException
     {
         if (_bangobj.state != BangObject.IN_PLAY) {
-            throw new InvocationException(INTERNAL_ERROR);
+            throw new InvocationException(GameCodes.GAME_ENDED);
         }
 
         PlayerObject user = (PlayerObject)caller;

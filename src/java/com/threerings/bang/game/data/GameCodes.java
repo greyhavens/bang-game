@@ -40,6 +40,9 @@ public interface GameCodes extends InvocationCodes
     /** An error response code for {@link BangService#move}. */
     public static final String TARGET_UNREACHABLE = "m.target_unreachable";
 
+    /** An error response code for {@link BangServer#move}. */
+    public static final String GAME_ENDED = "m.game_ended";
+
     /** An error response code for {@link BangService#playCard}. */
     public static final String CARD_UNPLAYABLE = "m.card_unplayable";
 
