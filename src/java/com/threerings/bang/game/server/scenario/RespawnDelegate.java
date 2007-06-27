@@ -85,9 +85,6 @@ public class RespawnDelegate extends ScenarioDelegate
             Unit unit = _respawns.poll();
             log.fine("Respawning " + unit + ".");
 
-            // reassign the unit to its original owner
-            unit.setOwner(bangobj, unit.originalOwner);
-
             // figure out where to put this guy
             Point spot = _parent.getStartSpot(unit.owner);
             Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
@@ -100,6 +97,9 @@ public class RespawnDelegate extends ScenarioDelegate
                 continue;
             }
 
+            // reassign the unit to its original owner
+            unit.setOwner(bangobj, unit.originalOwner);
+
             // reset the units vital statistics
             unit.respawnInit(bangobj);
 
@@ -107,6 +107,11 @@ public class RespawnDelegate extends ScenarioDelegate
             if (bangobj.pieces.containsKey(unit.getKey())) {
                 bangobj.board.clearShadow(unit);
                 bangobj.removeFromPieces(unit.getKey());
+            }
+
+            // don't respawn units for players that are no longer active
+            if (!_bangmgr.isActivePlayer(unit.owner)) {
+                continue;
             }
 
             boolean freeIronPlate = _freeIronPlate && !bangobj.hasLiveUnits(unit.owner);
