@@ -263,6 +263,17 @@ public class OverlayChatView extends BWindow
         }
 
         @Override // documentation inherited
+        public void setText(String text) {
+            // filter out escape @s
+            String sanitized = text;
+            if (text.length() > 4) {
+                sanitized = text.substring(0, text.length() - 4).replaceAll("@", "@@") +
+                    text.substring(text.length() - 4);
+            }
+            super.setText(sanitized);
+        }
+
+        @Override // documentation inherited
         public ColorRGBA getColor () {
             return _color;
         }

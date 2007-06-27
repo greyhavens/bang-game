@@ -245,18 +245,6 @@ public class BangChatDirector extends ChatDirector
         return null;
     }
 
-    @Override // documentation inherited
-    protected String mogrifyChat (String text, boolean transformsAllowed, boolean capFirst)
-    {
-        // filter out escape @s
-        String sanitized = text;
-        if (text.length() > 4) {
-            sanitized = text.substring(0, text.length() - 4).replaceAll("@", "@@") +
-                text.substring(text.length() - 4);
-        }
-        return super.mogrifyChat(sanitized, transformsAllowed, capFirst);
-    }
-
     /** Provides acces to client services. */
     protected BangContext _ctx;
 

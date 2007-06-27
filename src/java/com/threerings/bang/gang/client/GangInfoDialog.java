@@ -160,7 +160,7 @@ public class GangInfoDialog extends BWindow
             ucont.setPreferredSize(new Dimension(166, -1));
             BButton page = new BButton(hmsgs.get("m.home_page"), this, "home_page");
             page.setTooltipText(info.url);
-            page.setStyleClass("alt_button");
+            page.setStyleClass("gang_page_button");
             ucont.add(page);
             scont.add(ucont);
             scont.add(new Spacer(1, 7));

@@ -111,7 +111,7 @@ public class GangInfoView extends BContainer
         BContainer pcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         pcont.add(_page = new BButton(_msgs.get("m.home_page"), this, "page"));
         _page.setTooltipText(gangobj.url);
-        _page.setStyleClass("alt_button");
+        _page.setStyleClass("gang_page_button");
         _page.setVisible(gangobj.getURL() != null);
         if (_ctx.getUserObject().gangRank == GangCodes.LEADER_RANK) {
             BButton edit = new BButton(_msgs.get("m.edit"), this, "edit_statement");
