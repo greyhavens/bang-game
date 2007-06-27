@@ -10,6 +10,7 @@ root {
   color: #FFFFFF;
   font: "Dialog" plain 16;
   cursor: "default";
+  tooltip: "tooltip_label";
 }
 
 root:disabled {
@@ -73,6 +74,11 @@ tooltip_window {
 
 tooltip_label {
   color: #000000;
+}
+
+plain_tooltip_label {
+  parent: "tooltip_label";
+  text-effect: plain;
 }
 
 component {
@@ -702,6 +708,7 @@ chat_history_log {
   color: #524129;
   background: image "ui/textfield.png" framexy;
   padding: 5;
+  text-effect: plain;
 }
 
 
@@ -1019,6 +1026,7 @@ poster_avatar {
 poster_statement_box {
   color: #4a2805;
   text-align: center;
+  text-effect: plain;
 }
 
 poster_statement {
@@ -1153,6 +1161,7 @@ sent_chat_bubble {
   text-align: center;
   vertical-align: center;
   padding: 10 10 10 18;
+  text-effect: plain;
 }
 
 received_chat_bubble {
@@ -1161,16 +1170,19 @@ received_chat_bubble {
   text-align: center;
   vertical-align: center;
   padding: 10 18 10 10;
+  text-effect: plain;
 }
 
 sent_chat {
   font: "Dom Casual" plain 16;
   color: #222222;
+  text-effect: plain;
 }
 
 received_chat {
   parent: "sent_chat";
   color: #000000;
+  text-effect: plain;
 }
 
 send_button {
@@ -1192,6 +1204,7 @@ system_chat_view {
 system_chat_label {
   font: "Dom Casual" plain 16;
   color: #000000;
+  text-effect: plain;
   text-align: center;
   vertical-align: center;
   border: 1 solid #000000;
@@ -2373,8 +2386,15 @@ gang_notoriety {
 
 gang_statement {
   parent: "hideout_text";
+  text-effect: plain;
   text-align: center;
   vertical-align: center;
+  tooltip: "plain_tooltip_label";
+}
+
+gang_page_button {
+  parent: "alt_button";
+  tooltip: "plain_tooltip_label";
 }
 
 gang_coffers {
@@ -2675,6 +2695,7 @@ gang_info_statement {
   font: "Helvetica" plain 12;
   color: #4C2602;
   size: 270 -1;
+  text-effect: plain;
 }
 
 gang_info_leader_view {
