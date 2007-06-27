@@ -81,7 +81,8 @@ public class TopScoreView extends BContainer
         int idx = 0;
         if (thisWeek) {
             _pages[idx++] = TopRankedList.THIS_WEEK;
-        } else if (lastWeek) {
+        }
+        if (lastWeek) {
             _pages[idx++] = TopRankedList.LAST_WEEK;
         }
         _pages[idx] = TopRankedList.LIFETIME;
