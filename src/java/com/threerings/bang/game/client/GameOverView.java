@@ -103,7 +103,8 @@ public class GameOverView extends SteelWindow
             for (int ii = 0; ii < bangobj.awards.length; ii++) {
                 if (pidx == bangobj.awards[ii].pidx) {
                     award = bangobj.awards[ii];
-                    _cueidx = award.rank;
+                    // let's cue the music based on the team performance
+                    _cueidx = 3 - (bangobj.perRoundRanks[0][0] - BangObject.COOP_RANK - 1)/25;
                 }
             }
 
