@@ -22,20 +22,22 @@ public class WindowFader extends Controller
         float duration)
     {
         if (duration <= 0f) {
-            ctx.getRootNode().removeWindow(window);
+            if (window.isAdded()) {
+                ctx.getRootNode().removeWindow(window);
+            }
             return;
         }
         ctx.getRootNode().addController(new WindowFader(ctx, window,
             duration));
     }
-    
+
     protected WindowFader (BasicContext ctx, BWindow window, float duration)
     {
         _ctx = ctx;
         _window = window;
         _duration = duration;
     }
-    
+
     // documentation inherited
     public void update (float time)
     {
@@ -46,7 +48,7 @@ public class WindowFader extends Controller
         }
         _window.setAlpha(1f - _elapsed / _duration);
     }
-    
+
     protected BasicContext _ctx;
     protected BWindow _window;
     protected float _elapsed, _duration;
