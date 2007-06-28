@@ -81,7 +81,8 @@ public class LoggingRobot extends Unit
     {
         // locust robots can attack trees directly
         if (isAlive() && isLocust() && target instanceof TreeBed && target.isAlive() &&
-            ((TreeBed)target).growth > 0) {
+            ((TreeBed)target).growth > 0 &&
+            (getHindrance() == null || getHindrance().validTarget(this, target, allowSelf))) {
             return true;
         }
         // logging robots can't see units holding the fox fetish
