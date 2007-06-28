@@ -793,6 +793,12 @@ public class BangBoard extends SimpleStreamableObject
         if (piece instanceof Bonus && _tstate[pos] >= 0) {
             // we may clear a bonus after a piece has moved into place to pick it up, in which case
             // we want to do nothing
+        } else if (_tstate[pos] == O_OCC_AND_AIR) {
+            if (piece instanceof Train) {
+                _tstate[pos] = O_AIRBORNE;
+            } else {
+                _tstate[pos] = O_OCCUPIED;
+            }
         } else {
             _tstate[pos] = _btstate[pos];
         }
@@ -891,7 +897,11 @@ public class BangBoard extends SimpleStreamableObject
         } else if (piece instanceof Bonus) {
             _tstate[_width*piece.y+piece.x] = O_BONUS;
 
-        } else if (piece instanceof Cow || piece instanceof Train || piece.owner < 0) {
+        } else if (piece instanceof Train) {
+            int idx = _width * piece.y + piece.x;
+            _tstate[idx] = (_tstate[idx] == O_AIRBORNE ? O_OCC_AND_AIR : O_OCCUPIED);
+
+        } else if (piece instanceof Cow || piece.owner < 0) {
             _tstate[_width*piece.y+piece.x] = O_OCCUPIED;
 
         } else {
@@ -1825,6 +1835,9 @@ public class BangBoard extends SimpleStreamableObject
 
     /** If the heightfield has changed since generating max heights. */
     protected transient boolean _heightfieldChanged = true;
+
+    /** Indicates that this tile is occupied by an airborne and mobile non-unit. */
+    protected static final byte O_OCC_AND_AIR = 12;
 
     /** Indicates that this tile is occupied by an airborne unit. */
     protected static final byte O_AIRBORNE = 11;
