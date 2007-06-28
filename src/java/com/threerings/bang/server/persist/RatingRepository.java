@@ -237,7 +237,7 @@ public class RatingRepository extends SimpleRepository
                     (join == null ? "" : (", " + join)) +
                     " where RATINGS.SCENARIO = ? and " + whereWeek(week) + " " +
                     (where == null ? "" : ("and " + where + " ")) +
-                    "and LAST_PLAYED > " + STALE_DATE + " " +
+                    (week == null ? ("and LAST_PLAYED > " + STALE_DATE + " ") : "") +
                     "and RATINGS.PLAYER_ID = PLAYERS.PLAYER_ID " +
                     "order by RATING desc limit " + count;
                 PreparedStatement stmt = conn.prepareStatement(query);
