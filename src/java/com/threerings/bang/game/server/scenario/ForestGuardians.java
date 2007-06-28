@@ -328,6 +328,7 @@ public class ForestGuardians extends Scenario
 
         // if there isn't time to start another wave, end the game
         if (bangobj.lastTick - tick < MIN_WAVE_TICKS) {
+            _treedel.clearTrees();
             bangobj.setLastTick(tick);
             return;
         }

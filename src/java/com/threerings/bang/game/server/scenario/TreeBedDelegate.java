@@ -55,13 +55,21 @@ public class TreeBedDelegate extends ScenarioDelegate
             tree.assignPieceId(bangobj);
         }
     }
-    
+
     /**
      * Returns the set of trees in use for this wave.
      */
     public ArrayList<TreeBed> getWaveTrees ()
     {
         return _ctrees;
+    }
+
+    /**
+     * Clears all the trees so they are not counted twice at the end of the game.
+     */
+    public void clearTrees ()
+    {
+        _ctrees.clear();
     }
 
     /**
