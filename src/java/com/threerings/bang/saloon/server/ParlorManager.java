@@ -123,7 +123,7 @@ public class ParlorManager extends PlaceManager
         switch (_parobj.info.type) {
         case PASSWORD:
             // make sure the password matches if we have a password
-            if (!password.equalsIgnoreCase(_password)) {
+            if (password == null || !password.equalsIgnoreCase(_password)) {
                 throw new InvocationException(INCORRECT_PASSWORD);
             }
             break;

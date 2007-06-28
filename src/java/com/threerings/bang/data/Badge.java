@@ -631,7 +631,6 @@ public class Badge extends Item
         // indian post bounty badges
         BOUNTY_ZERO3,
         BOUNTY_LETRAPPE,
-        BOUNTY_CLOUD,
         BOUNTY_ALL_ITP_TOWN {
             public boolean qualifies (PlayerObject user) {
                 return hasCompletedBounties(
@@ -867,8 +866,8 @@ public class Badge extends Item
         Type.BOUNTY_ALL_FT,
 
         // indian post bounty badges
-        Type.BOUNTY_LETRAPPE, Type.BOUNTY_CLOUD, null, null, Type.BOUNTY_ALL_ITP_TOWN,
-        Type.BOUNTY_ZERO3, null, null, null, null,
+        Type.BOUNTY_LETRAPPE, null, null, null, Type.BOUNTY_ALL_ITP_TOWN,
+        Type.BOUNTY_ZERO3, null, null, null, Type.BOUNTY_ALL_ITP,
 
         // tutorial badges
         Type.TUTORIAL_ALL_FT, Type.TUTORIAL_ALL_ITP, null, null, null,
