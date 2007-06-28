@@ -80,7 +80,7 @@ public class LoggingRobot extends Unit
         BangObject bangobj, Piece target, boolean allowSelf)
     {
         // locust robots can attack trees directly
-        if (isLocust() && target instanceof TreeBed && target.isAlive() &&
+        if (isAlive() && isLocust() && target instanceof TreeBed && target.isAlive() &&
             ((TreeBed)target).growth > 0) {
             return true;
         }
