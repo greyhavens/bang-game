@@ -34,25 +34,25 @@ public class Prop extends BigPiece
 {
     /** The fine x offset of this piece. */
     public byte fx;
-    
+
     /** The fine y offset of this piece. */
     public byte fy;
-    
+
     /** The fine orientation offset of this piece. */
     public byte forient;
-    
+
     /** The fine elevation offset of this piece. */
     public byte felev;
-    
+
     /** The pitch of the piece. */
     public byte pitch;
-    
+
     /** The roll of the piece. */
     public byte roll;
 
     /** The scale factors of the piece. */
     public short scalex, scaley, scalez;
-    
+
     /**
      * Instantiates a prop of the specified type.
      */
@@ -131,7 +131,7 @@ public class Prop extends BigPiece
         scalez = capsule.readShort("scalez", (short)0);
         init(PropConfig.getConfig(capsule.readString("type", null)));
     }
-    
+
     @Override // documentation inherited
     public void write (JMEExporter ex)
         throws IOException
@@ -152,7 +152,7 @@ public class Prop extends BigPiece
         capsule.write(scalez, "scalez", (short)0);
         capsule.write(_type, "type", null);
     }
-    
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
@@ -162,7 +162,7 @@ public class Prop extends BigPiece
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
-        return !isPassable() && !lapper.isAirborne();
+        return isTall() || (!isPassable() && !lapper.isAirborne());
     }
 
     @Override // documentation inherited
@@ -170,7 +170,7 @@ public class Prop extends BigPiece
     {
         return super.computeElevation(board, tx, ty) + felev;
     }
-    
+
     @Override // documentation inherited
     public float getHeight ()
     {
@@ -184,19 +184,19 @@ public class Prop extends BigPiece
     {
         return _config.passElev;
     }
-    
+
     @Override // documentation inherited
     public boolean isTall ()
     {
         return _config.tall;
     }
-    
+
     @Override // documentation inherited
     public boolean isPenetrable ()
     {
         return _config.penetrable;
     }
-    
+
     /**
      * Determines whether this prop can be omitted from the board view in low
      * detail modes (i.e., it has no effect on gameplay).
@@ -204,10 +204,10 @@ public class Prop extends BigPiece
     public boolean isOmissible (BangBoard board)
     {
         return !intersects(board.getPlayableArea()) ||
-            (isPassable() && _config.passElev == 0f && 
+            (isPassable() && _config.passElev == 0f &&
                 StringUtil.isBlank(_config.blockDir));
     }
-    
+
     /**
      * Determines whether this prop performs a function in the game beyond
      * simply contributing to the board's passability and height maps.
@@ -218,7 +218,7 @@ public class Prop extends BigPiece
         // derived classes are assumed to be interactive
         return getClass() != Prop.class;
     }
-    
+
     /**
      * Determines whether this prop is passable: that is, whether units can
      * occupy its location.
@@ -274,16 +274,16 @@ public class Prop extends BigPiece
     {
         return false;
     }
-    
+
     @Override // documentation inherited
     public boolean isValidScenario (String scenarioId)
     {
         return super.isValidScenario(scenarioId) &&
-            (scenarioId == null || _config.scenario == null || 
+            (scenarioId == null || _config.scenario == null ||
              TutorialInfo.IDENT.equals(scenarioId) ||
              _config.scenario.equals(scenarioId));
     }
-    
+
     /**
      * Rotates this piece in fine units, which divide the 90 degree rotations
      * up by 256.
@@ -295,7 +295,7 @@ public class Prop extends BigPiece
     {
         forient = PieceUtil.rotateFine(this, forient, amount);
     }
-    
+
     @Override // documentation inherited
     public boolean rotate (int direction)
     {
@@ -303,7 +303,7 @@ public class Prop extends BigPiece
         forient = pitch = roll = 0;
         return true;
     }
-    
+
     /**
      * Positions this piece in fine coordinates, which divide the tile
      * coordinates up by 256.
@@ -382,7 +382,7 @@ public class Prop extends BigPiece
         super.updatePosition(nx, ny);
         fx = fy = felev = 0;
     }
-    
+
     /**
      * Provides the prop with its configuration.
      */
