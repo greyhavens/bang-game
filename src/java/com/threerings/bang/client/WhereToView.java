@@ -99,13 +99,6 @@ public class WhereToView extends SteelWindow
             BButton go = new BButton(_msgs.get("m.bldg_go_" + ident), this, "to_" + ident);
             go.setStyleClass("big_button");
             go.setPreferredSize(new Dimension(140, -1));
-            // TEMP: disable sheriff's office in ITP
-            if (BangCodes.INDIAN_POST.equals(self.townId) && ident.equals("office")) {
-                go.setText(_msgs.get("m.bldg_soon"));
-                go.setEnabled(false);
-                go.setStyleClass("alt_button");
-            }
-            // END TEMP
             BContainer butrow = GroupLayout.makeHBox(GroupLayout.RIGHT);
             butrow.add(go);
             bldgs.add(butrow, GroupLayout.FIXED);
