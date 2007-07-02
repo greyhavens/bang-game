@@ -115,12 +115,15 @@ public class GoodsCatalog
             }
         }
 
-// TODO: when we have stars in ITP, revert to the full monty
-//        for (int townIdx = 0; townIdx < BangCodes.TOWN_IDS.length; townIdx++) {
         // register our deputy sheriff's stars
-        for (int townIdx = 0; townIdx < 1; townIdx++) {
+        for (int townIdx = 0; townIdx < BangCodes.TOWN_IDS.length; townIdx++) {
             for (Star.Difficulty diff : Star.Difficulty.values()) {
                 if (diff == Star.Difficulty.EASY) { // no easy star
+                    continue;
+                }
+                // currently only the medium bounties are available in ITP
+                if (diff != Star.Difficulty.MEDIUM &&
+                        BangCodes.TOWN_IDS[townIdx].equals(BangCodes.INDIAN_POST)) {
                     continue;
                 }
                 registerGood(new StarGood(townIdx, diff), pf);

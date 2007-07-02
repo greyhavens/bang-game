@@ -18,6 +18,7 @@ import com.threerings.stats.data.StringSetStat;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Badge;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
@@ -230,6 +231,11 @@ public class BountyConfig extends SimpleStreamableObject
             if (!user.holdsStar(BangUtil.getTownIndex(townId), difficulty)) {
                 return false;
             }
+            // TEMP: disable MW past medium in ITP
+            if (BangCodes.INDIAN_POST.equals(townId) && difficulty != Star.Difficulty.MEDIUM) {
+                return false;
+            }
+            // END TEMP
             // fall through to last bounty check
 
         } else if (difficulty == Star.Difficulty.EASY) {

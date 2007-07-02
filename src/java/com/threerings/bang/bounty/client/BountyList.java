@@ -14,6 +14,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.util.MessageBundle;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Star;
 import com.threerings.bang.data.StatType;
@@ -60,6 +61,14 @@ public class BountyList extends BContainer
             } else if (firstUnavail != null && config.difficulty != firstUnavail) {
                 // only show one difficulty level beyond what's unlocked for most wanted bounties
                 continue;
+
+            // TEMP: Disable most wanted > medium in ITP
+            } else if (type == BountyConfig.Type.MOST_WANTED &&
+                    config.difficulty != Star.Difficulty.MEDIUM &&
+                    user.townId.equals(BangCodes.INDIAN_POST)) {
+                continue;
+            // END TEMP
+
             } else if (firstUnavail == null && config.difficulty != highestAvail) {
                 firstUnavail = config.difficulty;
             }
@@ -80,6 +89,8 @@ public class BountyList extends BContainer
             tip = "all_unlocked";
         } else if (firstUnavail != null) {
             tip = StringUtil.toUSLowerCase(firstUnavail.toString());
+        } else if (type == BountyConfig.Type.TOWN && user.townId.equals(BangCodes.INDIAN_POST)) {
+            tip = "town_itp";
         } else {
             tip = StringUtil.toUSLowerCase(type.toString());
         }
