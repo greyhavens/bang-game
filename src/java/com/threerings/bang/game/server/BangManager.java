@@ -2740,13 +2740,14 @@ public class BangManager extends GameManager
                     int v = _rounds[rr].stats[pidx].getIntStat(type);
                     user.stats.maxStat(MAX_STATS[ss], v);
                 }
+
+                // allow the scenario to record statistics as well
+                _rounds[rr].scenario.recordStats(_bangobj, gameMins, pidx, user);
+
             }
 
             // note their cash earned
             user.stats.incrementStat(StatType.CASH_EARNED, award.cashEarned);
-
-            // allow the scenario to record statistics as well
-            _scenario.recordStats(_bangobj, gameMins, pidx, user);
 
             // determine whether this player qualifies for a new badge
             award.item = Badge.checkQualifies(user);
