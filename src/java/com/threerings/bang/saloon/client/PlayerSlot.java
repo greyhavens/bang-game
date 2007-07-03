@@ -40,6 +40,7 @@ public class PlayerSlot extends AvatarView
 
         // load up some images
         _silhouette = ctx.loadImage("ui/saloon/silhouette.png");
+        _player = ctx.loadImage("ui/saloon/player.png");
         _emptyScroll = ctx.loadImage("ui/frames/tall_tiny_scroll0.png");
 
         // AvatarView sets a preferred size, but we want to override that
@@ -89,9 +90,27 @@ public class PlayerSlot extends AvatarView
         setAvatar(pinfo.avatar);
     }
 
+    /**
+     * Sets the slot to an anonymous player.
+     */
+    public void setPlayerAnonymous (boolean anonymous)
+    {
+        if (_anonymous == anonymous) {
+            return;
+        }
+        _anonymous = anonymous;
+
+        if (!_anonymous) {
+            setText(_ctx.xlate(SaloonCodes.SALOON_MSGS, "m.waiting_for_player"));
+            return;
+        }
+
+        setText(_ctx.xlate(SaloonCodes.SALOON_MSGS, "m.player_here"));
+    }
+
     public ColorRGBA getColor ()
     {
-        return _pinfo != null ? super.getColor() : GREY_ALPHA;
+        return (_pinfo != null || _anonymous) ? super.getColor() : GREY_ALPHA;
     }
 
     @Override // from BComponent
@@ -110,6 +129,7 @@ public class PlayerSlot extends AvatarView
 
         // reference our images
         _silhouette.reference();
+        _player.reference();
         _emptyScroll.reference();
     }
 
@@ -120,6 +140,7 @@ public class PlayerSlot extends AvatarView
 
         // release our images
         _silhouette.release();
+        _player.release();
         _emptyScroll.release();
     }
 
@@ -134,6 +155,9 @@ public class PlayerSlot extends AvatarView
     {
         if (_pinfo != null) {
             super.renderImage(renderer);
+        } else if (_anonymous) {
+            int ix = (getWidth() - _player.getWidth())/2;
+            _player.render(renderer, ix, _scroll.getHeight()-4, 1f);
         } else {
             int ix = (getWidth() - _silhouette.getWidth())/2;
             _silhouette.render(renderer, ix, _emptyScroll.getHeight()-1, 1f);
@@ -143,7 +167,7 @@ public class PlayerSlot extends AvatarView
     @Override // documentation inherited
     protected void renderScroll (Renderer renderer)
     {
-        if (_pinfo != null) {
+        if (_pinfo != null || _anonymous) {
             super.renderScroll(renderer);
         } else {
             int ix = (getWidth() - _emptyScroll.getWidth())/2;
@@ -154,7 +178,8 @@ public class PlayerSlot extends AvatarView
     protected BangContext _ctx;
     protected MatchObject.PlayerInfo _pinfo;
     protected int _playerOid;
-    protected BImage _silhouette, _emptyScroll;
+    protected BImage _silhouette, _emptyScroll, _player;
+    protected boolean _anonymous;
 
     protected static final ColorRGBA GREY_ALPHA = new ColorRGBA(0f, 0f, 0f, 0.25f);
 }

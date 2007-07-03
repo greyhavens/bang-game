@@ -114,7 +114,7 @@ public class ParlorView extends ShopView
         }
 
         // display a match view for this pending match
-        add(_smview = new MatchView(_ctx, matchOid, false) {
+        add(_smview = new MatchView(_ctx, matchOid) {
             protected void leaveMatch (int matchOid) {
                 _ctrl.leaveSaloonMatch(matchOid);
             }

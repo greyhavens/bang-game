@@ -127,7 +127,7 @@ public class PlayView extends BContainer
         _button.setEnabled(false);
 
         // display a match view for this pending match
-        add(_mview = new MatchView(_ctx, matchOid, false) { {
+        add(_mview = new MatchView(_ctx, matchOid) { {
                 ((GroupLayout)getLayoutManager()).setGap(10);
                 setStyleClass("hideout_match_view");
             }

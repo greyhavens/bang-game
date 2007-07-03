@@ -43,7 +43,7 @@ import static com.threerings.bang.Log.log;
 public abstract class MatchView extends BContainer
     implements Subscriber<MatchObject>
 {
-    public MatchView (BangContext ctx, int matchOid, boolean showChat)
+    public MatchView (BangContext ctx, int matchOid)
     {
         super(GroupLayout.makeVStretch());
         setStyleClass("match_view");
@@ -85,42 +85,6 @@ public abstract class MatchView extends BContainer
             }
         }, "leave"));
         add(row, GroupLayout.FIXED);
-
-        // cut it short if we're not showing the chat display
-        if (!showChat) {
-            return;
-        }
-
-        // add a label that will overlay the "Back Parlors" text (it also has
-        // custom spacing that positions everything properly)
-        ImageIcon icon = new ImageIcon(
-            _ctx.loadImage("ui/saloon/matched_game_chat.png"));
-        add(new BLabel(icon, "match_chat_header"), GroupLayout.FIXED);
-
-        // this will eventually be the chat view
-        _chat = new ChatView(_ctx, _ctx.getChatDirector()) {
-            /* ChatView() */ {
-                _text.setStyleClass("match_chat_text");
-                _input.setStyleClass("match_chat_input");
-            }
-            protected boolean handlesType (String localType) {
-                return "match_chat".equals(localType);
-            }
-            protected void wasRemoved () {
-                super.wasRemoved();
-                // save halted message for the game
-                ((BangChatDirector)_ctx.getChatDirector()).setHaltedMessage(
-                    _input.getText());
-            }
-        };
-        ((BorderLayout)_chat.getLayoutManager()).setGaps(2, 0);
-        _chat.setEnabled(false);
-        icon = new ImageIcon(_ctx.loadImage("ui/chat/bubble_icon.png"));
-        BButton chat = new BButton(icon, "");
-        chat.setStyleClass("arrow_button");
-        _chat.setChatButton(chat);
-        _chat.setStyleClass("match_chat");
-        add(_chat);
     }
 
     // documentation inherited from interface Subscriber
@@ -131,7 +95,7 @@ public abstract class MatchView extends BContainer
         _mobj.addListener(_atch);
 
         // create our player slots
-        _slots = new PlayerSlot[_mobj.playerInfo.length];
+        _slots = new PlayerSlot[_mobj.playerOids.length];
         for (int ii = 0; ii < _slots.length; ii++) {
             if (ii % 2 == 0) {
                 _left.add(_slots[ii] = new PlayerSlot(_ctx, 0));
@@ -143,16 +107,6 @@ public abstract class MatchView extends BContainer
         updateDisplay();
         updateCriterion();
         updateStarting();
-
-        if (_chat == null) {
-            return;
-        }
-        _ctx.getChatDirector().addAuxiliarySource(_mobj, "match_chat");
-        _chat.setSpeakService(_mobj.speakService, "match_chat");
-        _chat.setEnabled(true);
-        _chat.requestFocus();
-        _ctx.getChatDirector().displayInfo(
-            SaloonCodes.SALOON_MSGS, "m.chat_here", "match_chat");
     }
 
     // documentation inherited from interface Subscriber
@@ -173,16 +127,16 @@ public abstract class MatchView extends BContainer
     {
         super.wasRemoved();
         _msub.unsubscribe(_ctx.getDObjectManager());
-        if (_chat != null && _mobj != null) {
-            _ctx.getChatDirector().removeAuxiliarySource(_mobj);
-            _chat.clearSpeakService();
-        }
     }
 
     protected void updateDisplay ()
     {
-        for (int ii = 0; ii < _mobj.playerInfo.length; ii++) {
-            _slots[ii].setPlayerInfo(_mobj.playerInfo[ii]);
+        for (int ii = 0; ii < _mobj.playerOids.length; ii++) {
+            if (_mobj.playerOids[ii] == _ctx.getUserObject().getOid()) {
+                _slots[ii].setPlayerOid(_mobj.playerOids[ii]);
+            } else {
+                _slots[ii].setPlayerAnonymous(_mobj.playerOids[ii] > 0);
+            }
         }
     }
 
@@ -198,6 +152,9 @@ public abstract class MatchView extends BContainer
         _range.setText(_msgs.get(value));
         _prevscen.setText(_mobj.criterion.allowPreviousTowns ?
                           _msgs.get("m.cr_allscens") : "");
+        for (int ii = 0; ii < _mobj.playerOids.length; ii++) {
+            _slots[ii].setVisible(ii < _mobj.criterion.getDesiredPlayers());
+        }
     }
 
     protected void updateStarting ()
@@ -231,6 +188,4 @@ public abstract class MatchView extends BContainer
 
     protected BContainer _left, _right, _info;
     protected PlayerSlot[] _slots;
-
-    protected ChatView _chat;
 }

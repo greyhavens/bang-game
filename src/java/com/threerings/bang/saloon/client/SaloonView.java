@@ -65,7 +65,6 @@ public class SaloonView extends ShopView
         // remove our criterion view
         if (_crview.isAdded()) {
             remove(_crview);
-            remove(_parlist);
         }
 
         // this should never happen, but just to be ultra-robust
@@ -75,7 +74,7 @@ public class SaloonView extends ShopView
         }
 
         // display a match view for this pending match
-        add(_mview = new MatchView(_ctx, matchOid, true) {
+        add(_mview = new MatchView(_ctx, matchOid) {
             protected void leaveMatch (int matchOid) {
                 _ctrl.leaveMatch(matchOid);
             }
@@ -97,7 +96,6 @@ public class SaloonView extends ShopView
         // redisplay the criterion view
         if (!_crview.isAdded()) {
             add(_crview, CRIT_RECT);
-            add(_parlist, PARLIST_RECT);
         }
 
         setStatus(status);
@@ -152,7 +150,7 @@ public class SaloonView extends ShopView
     protected static final Rectangle CRIT_RECT =
         new Rectangle(77, 305, 440, 255);
     protected static final Rectangle MATCH_RECT =
-        new Rectangle(77, 114, 440, 456);
+        new Rectangle(77, 312, 440, 255);
     protected static final Rectangle PARLIST_RECT =
         new Rectangle(95, 81, 407, 168);
 }

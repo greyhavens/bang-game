@@ -69,19 +69,12 @@ public class Match
     public void setObject (MatchObject matchobj)
     {
         this.matchobj = matchobj;
-        MatchObject.PlayerInfo[] pinfo = new MatchObject.PlayerInfo[players.length];
-        for (int ii = 0; ii < pinfo.length; ii++) {
-            if (players[ii] != null) {
-                pinfo[ii] = new MatchObject.PlayerInfo(players[ii]);
-            }
-        }
         int[] oids = new int[players.length];
         for (int ii = 0; ii < oids.length; ii++) {
             oids[ii] = (players[ii] == null) ? 0 : players[ii].getOid();
         }
         matchobj.setCriterion(_criterion);
         matchobj.setPlayerOids(oids);
-        matchobj.setPlayerInfo(pinfo);
     }
 
     /**
@@ -200,7 +193,6 @@ public class Match
                     players[ii] = player;
                     _playerCriterions[ii] = criterion;
                     matchobj.setPlayerOidsAt(player.getOid(), ii);
-                    matchobj.setPlayerInfoAt(new MatchObject.PlayerInfo(player), ii);
                     added = ii;
                     break;
                 }
@@ -242,7 +234,6 @@ public class Match
                 try {
                     matchobj.startTransaction();
                     matchobj.setPlayerOidsAt(0, ii);
-                    matchobj.setPlayerInfoAt(null, ii);
                     rebuildCriterion(); // recreate the criterion now that this player is gone
                     matchobj.setCriterion(_criterion);
                 } finally {

@@ -86,9 +86,6 @@ public abstract class MatchHostManager extends ShopManager
         // otherwise we need to create a new match
         Match match = createMatch(user, criterion);
         match.setObject(BangServer.omgr.registerObject(new MatchObject()));
-        match.matchobj.setSpeakService(
-            (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
-                new SpeakDispatcher(new SpeakProvider(match.matchobj, null))));
         _matches.put(match.matchobj.getOid(), match);
         BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
         listener.requestProcessed(match.matchobj.getOid());
@@ -277,9 +274,6 @@ public abstract class MatchHostManager extends ShopManager
 
     protected void clearMatchServices (Match match)
     {
-        if (match.matchobj.speakService != null) {
-            BangServer.invmgr.clearDispatcher(match.matchobj.speakService);
-        }
         BangServer.omgr.destroyObject(match.matchobj.getOid());
         BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
     }
