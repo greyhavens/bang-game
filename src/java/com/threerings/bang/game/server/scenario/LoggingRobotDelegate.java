@@ -44,8 +44,8 @@ public class LoggingRobotDelegate extends ScenarioDelegate
                              ArrayList<TreeBed> trees, int treesGrown)
     {
         // compute our robot unit targets
-        float ratio = BASE_ROBOT_RATIO + ROBOT_RATIO_INCREMENT * _difficulty;
-        float sratio = BASE_SUPER_RATIO + SUPER_RATIO_INCREMENT * _difficulty;
+        float ratio = BASE_ROBOT_RATIO + ROBOT_RATIO_INCREMENT * difficulty;
+        float sratio = BASE_SUPER_RATIO + SUPER_RATIO_INCREMENT * difficulty;
 
         int units = (_bangmgr.getTeamSize() + 1) * _bangmgr.getPlayerCount();
         int rcount = Math.min(MAX_ROBOTS, (int)Math.round(units * ratio)); // total bots
@@ -58,7 +58,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         _target[LoggingRobot.SUPER] = scount - _target[LoggingRobot.SUPER_LOCUST];
 
         // determine the rate at which robots respawn
-        _rate = Math.min(BASE_RESPAWN_RATE + RESPAWN_RATE_INCREMENT * _difficulty, 1f);
+        _rate = Math.min(BASE_RESPAWN_RATE + RESPAWN_RATE_INCREMENT * difficulty, 1f);
 
         // keep these around for later
         _wave = wave;
