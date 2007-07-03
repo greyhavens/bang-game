@@ -90,8 +90,7 @@ public abstract class ScenarioInfo
      */
     public static String[] getScenarioIds ()
     {
-        Set<String> keys = _scenarios.keySet();
-        return keys.toArray(new String[keys.size()]);
+        return _scenIds.toArray(new String[_scenIds.size()]);
     }
 
     /**
@@ -433,6 +432,7 @@ public abstract class ScenarioInfo
     protected static void register (ScenarioInfo info)
     {
         _scenarios.put(info.getIdent(), info);
+        _scenIds.add(info.getIdent());
     }
 
     /** Used to cache our town index so we don't have to look it up all the damned time. Yay for
@@ -441,6 +441,9 @@ public abstract class ScenarioInfo
 
     /** Maps scenario ids to scenario info instances. */
     protected static HashMap<String,ScenarioInfo> _scenarios = new HashMap<String,ScenarioInfo>();
+
+    /** An ordered list of scneario ids. */
+    protected static ArrayList<String> _scenIds = new ArrayList<String>();
 
     /** The default set of clips to preload: none. */
     protected static final String[] PRELOAD_CLIPS = {};
