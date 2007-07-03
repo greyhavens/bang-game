@@ -111,6 +111,7 @@ public class WantedPosterView extends BContainer
         buttonBox.add(backButton);
         popup.add(buttonBox, GroupLayout.FIXED);
         popup.setModal(true);
+        popup.setLayer(2);
 
         ctx.getBangClient().displayPopup(popup, true);
     }

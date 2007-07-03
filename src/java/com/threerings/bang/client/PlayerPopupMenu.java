@@ -211,9 +211,7 @@ public class PlayerPopupMenu extends BPopupMenu
         boolean isGame = (pobj instanceof BangObject);
 
         // add an item for viewing their wanted poster
-        if (!isGame) {
-            addMenuItem(new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
-        }
+        addMenuItem(new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
 
         // if we're an admin/support, add a link to their admin account page
         if (self.tokens.isSupport()) {

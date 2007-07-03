@@ -564,7 +564,7 @@ public class BangClient extends BasicClient
         if (_mview instanceof MainView) {
             return ((MainView)_mview).allowsPopup(type);
         } else {
-            return false;
+            return type == MainView.Type.POSTER_DISPLAY;
         }
     }
 
