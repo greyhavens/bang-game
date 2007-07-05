@@ -326,6 +326,11 @@ public class ForestGuardians extends Scenario
             bangobj.grantPoints(ii, points);
         }
 
+        // give out a wave bonus for successful completion of a wave
+        if (grown >= _treedel.getWaveTrees().size() / 2) {
+            _waveBonus += _difficulty + 1;
+        }
+
         // if there isn't time to start another wave, end the game
         if (bangobj.lastTick - tick < MIN_WAVE_TICKS) {
             _treedel.clearTrees();
@@ -333,10 +338,8 @@ public class ForestGuardians extends Scenario
             return;
         }
 
-        // if at least half the trees were saved, increase the difficulty level, give a wave
-        // bonus
+        // if at least half the trees were saved, increase the difficulty level
         if (grown >= _treedel.getWaveTrees().size() / 2) {
-            _waveBonus += _difficulty + 1;
             _difficulty = Math.min(_difficulty + 1, MAX_DIFFICULTY);
         }
 
