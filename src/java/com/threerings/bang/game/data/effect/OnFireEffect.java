@@ -16,9 +16,13 @@ import com.threerings.bang.game.data.piece.Unit;
  */
 public class OnFireEffect extends SetHindranceEffect
 {
-    public OnFireEffect (Piece piece)
+    // the player index for the unit which caused the fire
+    public int pidx;
+
+    public OnFireEffect (Piece piece, int pidx)
     {
         init(piece);
+        this.pidx = pidx;
     }
 
     /**
@@ -36,12 +40,12 @@ public class OnFireEffect extends SetHindranceEffect
                 return "on_fire";
             }
             public InfluenceViz createViz (boolean high) {
-                return (high ? 
+                return (high ?
                         new ParticleInfluenceViz("frontier_town/fire") :
                         new IconInfluenceViz("on_fire"));
             }
             public Effect tick () {
-                return new DamageEffect(target, DAMAGE_PER_TICK);
+                return new DamageEffect(target, DAMAGE_PER_TICK, pidx);
             }
             public boolean isVisible () {
                 return true;
@@ -52,7 +56,7 @@ public class OnFireEffect extends SetHindranceEffect
         };
     }
 
-    @Override // documentation inherited 
+    @Override // documentation inherited
     protected String getEffectName ()
     {
         return "indian_post/on_fire";

@@ -23,8 +23,9 @@ public class FirestarterEffect extends SetInfluenceEffect
             public Effect[] willShoot (
                     BangObject bangobj, final Piece target, ShotEffect shot)
             {
-                return (target instanceof Unit) ? 
-                    new Effect[] { new OnFireEffect(target) } :
+                Piece shooter = bangobj.pieces.get(shot.shooterId);
+                return (target instanceof Unit) ?
+                    new Effect[] { new OnFireEffect(target, shooter.owner) } :
                     Piece.NO_EFFECTS;
             }
         };

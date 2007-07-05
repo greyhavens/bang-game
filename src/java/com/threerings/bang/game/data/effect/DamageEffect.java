@@ -41,6 +41,12 @@ public class DamageEffect extends Effect
         baseDamage = damage;
     }
 
+    public DamageEffect (Piece piece, int damage, int pidx)
+    {
+        this(piece, damage);
+        this.pidx = pidx;
+    }
+
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
