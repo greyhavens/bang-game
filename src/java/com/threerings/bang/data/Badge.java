@@ -266,12 +266,12 @@ public class Badge extends Item
         },
         BONUSES_COLLECTED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(StatType.MOST_BONUSES) >= 6;
+                return user.stats.getMaxIntStat(StatType.BONUSES_COLLECTED) >= 6;
             }
         },
         BONUSES_COLLECTED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(StatType.MOST_BONUSES) >= 10;
+                return user.stats.getMaxIntStat(StatType.BONUSES_COLLECTED) >= 10;
             }
         },
 
