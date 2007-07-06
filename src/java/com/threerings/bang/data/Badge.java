@@ -540,12 +540,12 @@ public class Badge extends Item
         },
         CHAT_RECEIVED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(StatType.CHAT_RECEIVED) >= 1000;
+                return user.stats.getIntStat(StatType.CHAT_RECEIVED) >= 5000;
             }
         },
         CHAT_RECEIVED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(StatType.CHAT_RECEIVED) >= 5000;
+                return user.stats.getIntStat(StatType.CHAT_RECEIVED) >= 50000;
             }
         },
 

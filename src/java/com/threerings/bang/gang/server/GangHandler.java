@@ -1852,6 +1852,7 @@ public class GangHandler
             }
         }
         _gangobj.addListener(this);
+        _gangobj.addListener(BangServer.playmgr.receivedChatListener);
         BangServer.gangmgr.mapGang(_gangobj.name, this);
         _listeners.requestCompleted(_gangobj);
         _listeners = null;
@@ -1875,6 +1876,7 @@ public class GangHandler
     {
         _client.removeClientObserver(_unsubber);
         _gangobj.removeListener(this);
+        _gangobj.removeListener(BangServer.playmgr.receivedChatListener);
         BangServer.invmgr.clearDispatcher(_gangobj.speakService);
         BangServer.peermgr.unproxyRemoteObject(_nodeName, _gangobj.remoteOid);
 

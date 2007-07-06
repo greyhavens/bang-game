@@ -249,6 +249,7 @@ public class ParlorManager extends PlaceManager
         _parobj = (ParlorObject)_plobj;
         _parobj.setService((ParlorMarshaller)
                            BangServer.invmgr.registerDispatcher(new ParlorDispatcher(this)));
+        _parobj.addListener(BangServer.playmgr.receivedChatListener);
     }
 
     @Override // documentation inherited
@@ -270,6 +271,7 @@ public class ParlorManager extends PlaceManager
         // clear out our invocation service
         if (_parobj != null) {
             BangServer.invmgr.clearDispatcher(_parobj.service);
+            _parobj.removeListener(BangServer.playmgr.receivedChatListener);
             _parobj = null;
         }
     }

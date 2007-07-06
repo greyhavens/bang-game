@@ -861,6 +861,7 @@ public class BangManager extends GameManager
         _bangobj.setService((BangMarshaller)
                             PresentsServer.invmgr.registerDispatcher(new BangDispatcher(this)));
         _bangobj.addListener(_ticklst);
+        _bangobj.addListener(BangServer.playmgr.receivedChatListener);
         _bconfig = (BangConfig)_gameconfig;
 
         // note this game in the status object
@@ -923,6 +924,7 @@ public class BangManager extends GameManager
         super.didShutdown();
         PresentsServer.invmgr.clearDispatcher(_bangobj.service);
         BangServer.adminmgr.statobj.removeFromGames(_bangobj.getOid());
+        _bangobj.removeListener(BangServer.playmgr.receivedChatListener);
         log.info("Manager shutdown [where=" + where() + "].");
     }
 

@@ -35,6 +35,8 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.dobj.MessageEvent;
+import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
@@ -44,6 +46,7 @@ import com.threerings.presents.util.PersistingUnit;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.UserMessage;
+import com.threerings.crowd.chat.data.SpeakObject;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.parlor.server.ParlorSender;
 
@@ -95,6 +98,7 @@ import com.threerings.bang.data.PardnerInvite;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.data.Rating;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.data.Warning;
 
@@ -119,6 +123,32 @@ import static com.threerings.bang.Log.log;
 public class PlayerManager
     implements PlayerProvider, BangCodes
 {
+    /** Add the receivedChatListener to any SpeakObjects where you want to record messages
+     * sent and received in the players stats. */
+    public static MessageListener receivedChatListener = new MessageListener() {
+        public void messageReceived (MessageEvent event)
+        {
+            if (!event.getName().equals(ChatCodes.CHAT_NOTIFICATION)) {
+                return;
+            }
+            ChatMessage msg = (ChatMessage)event.getArgs()[0];
+            if (!(msg instanceof UserMessage)) {
+                return;
+            }
+            Name speaker = ((UserMessage)msg).speaker;
+            if (speaker != null) {
+                PlayerObject user = (PlayerObject)BangServer.lookupBody(speaker);
+                if (user != null) {
+                    user.stats.incrementStat(StatType.CHAT_SENT, 1);
+                }
+            }
+            DObject speakObj = BangServer.omgr.getObject(event.getTargetOid());
+            if (speakObj != null && speakObj instanceof SpeakObject) {
+                ((SpeakObject)speakObj).applyToListeners(_messageCounter);
+            }
+        }
+    };
+
     /**
      * Initializes the player manager, and registers its invocation service.
      */
@@ -1552,6 +1582,23 @@ public class PlayerManager
             }
         });
     }
+
+    public static SpeakObject.ListenerOp _messageCounter = new SpeakObject.ListenerOp() {
+        public void apply (int bodyOid) {
+            DObject dobj = BangServer.omgr.getObject(bodyOid);
+            if (dobj != null && dobj instanceof PlayerObject) {
+                ((PlayerObject)dobj).stats.incrementStat(StatType.CHAT_RECEIVED, 1);
+            }
+        }
+
+        public void apply (Name username) {
+            PlayerObject user = (PlayerObject)BangServer.lookupBody(username);
+            if (user != null) {
+                user.stats.incrementStat(StatType.CHAT_RECEIVED, 1);
+            }
+        }
+    };
+
 
     /** Provides access to the pardner database. */
     protected PardnerRepository _pardrepo;
