@@ -22,6 +22,7 @@ import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
@@ -227,6 +228,13 @@ public class PlayerManager
                 }
             }.schedule(PLAYER_PURGE_INTERVAL, true);
         }
+
+        // register our late night purging interval
+        new Interval() {
+            public void expired () {
+                clearLateNighters();
+            }
+        }.schedule(LATE_NIGHT_INTERVAL, true);
     }
 
     /**
@@ -1203,6 +1211,35 @@ public class PlayerManager
     }
 
     /**
+     * Checks if a player has not already registered a late night game, and if not, increments
+     * their stat.
+     */
+    public void setLateNight (PlayerObject user)
+    {
+        if (_lateNighters.contains(user.playerId)) {
+            return;
+        }
+        user.stats.incrementStat(StatType.LATE_NIGHTS, 1);
+
+        Calendar cal = Calendar.getInstance();
+        _lateNighters.put(user.playerId, cal.get(Calendar.HOUR_OF_DAY));
+    }
+
+    /**
+     * Clears our player Ids for late night games that occured 20 hours ago.
+     */
+    public void clearLateNighters ()
+    {
+        Calendar cal = Calendar.getInstance();
+        int hour = (cal.get(Calendar.HOUR_OF_DAY) + 20) % 24;
+        for (IntIntMap.IntIntEntry entry : _lateNighters.entrySet()) {
+            if (entry.getIntValue() == hour) {
+                _lateNighters.remove(entry.getIntKey());
+            }
+        }
+    }
+
+    /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
     protected void playComputer (
@@ -1630,6 +1667,9 @@ public class PlayerManager
     protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
         new HashMap<Handle, SoftReference<PosterInfo>>();
 
+    /** Keeps a record when players have played late night games. */
+    protected IntIntMap _lateNighters = new IntIntMap();
+
     /** Keeps track of pending create account requests. */
     protected ArrayIntSet _creatingAccounts = new ArrayIntSet();
 
@@ -1642,8 +1682,11 @@ public class PlayerManager
     /** The frequency with which download symlinks are purged. */
     protected static final long DOWNLOAD_PURGE_INTERVAL = 60 * 1000L;
 
-    /** The frequencey with which we search for players to purge. */
+    /** The frequency with which we search for players to purge. */
     protected static final long PLAYER_PURGE_INTERVAL = 60 * 1000L;
+
+    /** The freqeuncy with which we clear late night players. */
+    protected static final long LATE_NIGHT_INTERVAL = 60 * 1000L;
 
     /** The number of days after which to expire anonymous players. */
     protected static final int ANONYMOUS_EXPIRE_DAYS = 30;

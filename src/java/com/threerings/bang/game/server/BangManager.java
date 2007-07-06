@@ -1596,6 +1596,11 @@ public class BangManager extends GameManager
             user.stats.incrementStat(StatType.MYSTERY_TWO, 1);
         }
 
+        // check for night owl
+        if (cal.get(Calendar.HOUR_OF_DAY) >= 4 && cal.get(Calendar.HOUR_OF_DAY) < 6) {
+            BangServer.playmgr.setLateNight(user);
+        }
+
         // TODO: night owl
     }
 

@@ -594,7 +594,7 @@ public class Badge extends Item
         },
         NIGHT_OWL {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(StatType.LATE_NIGHTS) >= 5000;
+                return user.stats.getIntStat(StatType.LATE_NIGHTS) >= 5;
             }
         },
         HIGH_NOON {
@@ -628,6 +628,7 @@ public class Badge extends Item
         // indian post bounty badges
         BOUNTY_ZERO3,
         BOUNTY_LETRAPPE,
+        BOUNTY_CLOUD,
         BOUNTY_ALL_ITP_TOWN {
             public boolean qualifies (PlayerObject user) {
                 return hasCompletedBounties(
