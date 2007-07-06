@@ -266,14 +266,12 @@ public class Badge extends Item
         },
         BONUSES_COLLECTED_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: uncomment when we see how MOST_BONUSES shapes up
-                // return user.stats.getIntStat(StatType.MOST_BONUSES) >= 6;
+                return user.stats.getIntStat(StatType.MOST_BONUSES) >= 6;
             }
         },
         BONUSES_COLLECTED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: uncomment when we see how MOST_BONUSES shapes up
-                // return user.stats.getIntStat(StatType.MOST_BONUSES) >= 10;
+                return user.stats.getIntStat(StatType.MOST_BONUSES) >= 10;
             }
         },
 
@@ -904,6 +902,11 @@ public class Badge extends Item
         } else if (args.length > 0 && "xlate".indexOf(args[0]) != -1) {
             for (Type type : Type.values()) {
                 System.err.println(type.key() + " = " + type);
+            }
+
+        } else if (args.length > 0 && "stat".indexOf(args[0]) != -1) {
+            for (StatType type : StatType.values()) {
+                System.err.println(type + " = " + type.code());
             }
 
         } else {
