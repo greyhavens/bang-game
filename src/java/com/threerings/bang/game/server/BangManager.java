@@ -1351,6 +1351,10 @@ public class BangManager extends GameManager
                         _cardSet.add(cards[ii]);
                     }
                 }
+                if (_broughtCards == null) {
+                    _broughtCards = new int[getPlayerCount()];
+                }
+                _broughtCards[pidx] = cards.length;
             }
 
             // configure their big shot selection
@@ -1832,6 +1836,10 @@ public class BangManager extends GameManager
             } else {
                 updates.add(scard);
             }
+            if (_usedBroughtCards == null) {
+                _usedBroughtCards = new boolean[getPlayerCount()];
+            }
+            _usedBroughtCards[scard.pidx] = true;
             iter.remove();
         }
         if (updates.size() > 0 || removals.size() > 0) {
@@ -2695,13 +2703,19 @@ public class BangManager extends GameManager
                         user.stats.incrementStat(StatType.CONSEC_WINS, 1);
                         // note this win for all the big shots they used
                         noteUnitsUsed(_bigshots, StatType.BIGSHOT_WINS, pidx);
+                        if (_usedBroughtCards != null && _usedBroughtCards[pidx]) {
+                            user.stats.incrementStat(StatType.PACK_CARD_WINS, 1);
+                        } else if (_broughtCards != null && _broughtCards[pidx] == 3) {
+                            user.stats.incrementStat(StatType.BLUFF_CARD_WINS, 1);
+                        }
                     } else {
                         user.stats.setStat(StatType.CONSEC_WINS, 0);
                     }
                     // increment consecutive losses for 4th place only
                     if (award.rank == 3) {
                         user.stats.incrementStat(StatType.CONSEC_LOSSES, 1);
-                    } else {
+                    // but only a win will reset it
+                    } else if (award.rank == 0) {
                         user.stats.setStat(StatType.CONSEC_LOSSES, 0);
                     }
                 }
@@ -3425,6 +3439,12 @@ public class BangManager extends GameManager
 
     /** Stores cards to be added to the BangObject. */
     protected HashSet<Card> _cardSet = new HashSet<Card>();
+
+    /** The number of cards a player brings. */
+    protected int[] _broughtCards;
+
+    /** If a player used brought in cards during the game. */
+    protected boolean[] _usedBroughtCards;
 
     /** The time for which the next tick is scheduled. */
     protected long _nextTickTime;
