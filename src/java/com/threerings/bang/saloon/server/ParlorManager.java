@@ -30,6 +30,7 @@ import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.game.data.BangAI;
@@ -218,6 +219,12 @@ public class ParlorManager extends PlaceManager
     public void startingGame (PlaceObject gameobj) {
         if (_activeGames.add(gameobj.getOid())) {
             gameobj.addListener(_gameOverListener);
+
+            // if the creator is still around, mark them as having hosted a game
+            PlayerObject creator = BangServer.lookupPlayer(_parobj.info.creator);
+            if (creator != null) {
+                creator.stats.incrementStat(StatType.GAMES_HOSTED, 1);
+            }
         }
     }
 
