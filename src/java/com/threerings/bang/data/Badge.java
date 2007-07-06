@@ -413,13 +413,12 @@ public class Badge extends Item
         },
         TREES_SAVED_3 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 20+ trees saved in one game
+                return user.stats.getMaxIntStat(StatType.TREES_ELDER) >= 20;
             }
         },
         TREES_SAVED_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: uncomment when we see how MOST_HARD_ROBOT_KILLS shapes up
-                // return user.stats.getMaxIntStat(StatType.HARD_ROBOT_KILLS) >= N;
+                return user.stats.getMaxIntStat(StatType.HARD_ROBOT_KILLS) >= 8;
             }
         },
         TREES_SAVED_5 {
