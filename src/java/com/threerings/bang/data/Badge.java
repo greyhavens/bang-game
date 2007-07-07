@@ -602,7 +602,11 @@ public class Badge extends Item
                 return user.stats.getIntStat(StatType.MYSTERY_ONE) >= 1;
             }
         },
-        NEW_SHERRIF_IN_TOWN,
+        NEW_SHERRIF_IN_TOWN {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(StatType.MYSTERY_THREE) >= 1;
+            }
+        },
 
         // frontier town bounty badges
         BOUNTY_DYNAMITE,

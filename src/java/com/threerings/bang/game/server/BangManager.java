@@ -942,6 +942,7 @@ public class BangManager extends GameManager
         // create our player records now that we know everyone's in the room and ready to go
         _precords = new PlayerRecord[getPlayerSlots()];
         BangObject.PlayerInfo[] pinfo = new BangObject.PlayerInfo[getPlayerSlots()];
+        _hotStreak = new boolean[getPlayerSlots()];
         for (int ii = 0; ii < _precords.length; ii++) {
             PlayerRecord prec = (_precords[ii] = new PlayerRecord());
             prec.finishedTick = new int[_bconfig.getRounds()];
@@ -968,6 +969,7 @@ public class BangManager extends GameManager
                 prec.purse = prec.user.getPurse();
                 prec.ratings = prec.user.ratings;
                 pinfo[ii].playerId = prec.user.playerId;
+                _hotStreak[ii] = prec.user.stats.getIntStat(StatType.CONSEC_WINS) >= 15;
 
                 Look look = prec.user.getLook(Look.Pose.DEFAULT);
                 if (look != null) {
@@ -2715,6 +2717,11 @@ public class BangManager extends GameManager
                         } else if (_broughtCards != null && _broughtCards[pidx] == 3) {
                             user.stats.incrementStat(StatType.BLUFF_CARD_WINS, 1);
                         }
+                        for (int ii = 0; ii < _hotStreak.length; ii++) {
+                            if (ii != pidx && _hotStreak[ii]) {
+                                user.stats.incrementStat(StatType.MYSTERY_THREE, 1);
+                            }
+                        }
                     } else {
                         user.stats.setStat(StatType.CONSEC_WINS, 0);
                     }
@@ -3452,6 +3459,9 @@ public class BangManager extends GameManager
 
     /** If a player used brought in cards during the game. */
     protected boolean[] _usedBroughtCards;
+
+    /** Set to true if the player has a 15 game win streak. */
+    protected boolean[] _hotStreak;
 
     /** The time for which the next tick is scheduled. */
     protected long _nextTickTime;

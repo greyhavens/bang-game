@@ -111,6 +111,7 @@ public enum StatType implements Stat.Type
     // stats that are meant to by mysterious
     MYSTERY_ONE(new IntStat(), false, false, false, true), // high noon logon
     MYSTERY_TWO(new IntStat(), false, false, false, true), // christmas morning game
+    MYSTERY_THREE(new IntStat(), false, false, true, true), // new sheriff in town
 
     UNUSED(new IntStat(), false, false);
 
