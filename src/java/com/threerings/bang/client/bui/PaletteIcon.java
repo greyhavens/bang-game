@@ -64,8 +64,11 @@ public class PaletteIcon extends SelectableIcon
     {
         super.layout();
 
-        // we need to do some jiggery pokery to force the label in a bit from the edges
-        _text.layout(getTextInsets(), getWidth(), getHeight());
+        Insets insets = getTextInsets();
+        // if the text doesn't wrap then give it some top margin
+        int yoff = (!_small && _text.computePreferredSize(
+                    getWidth() - insets.getHorizontal(), -1).height < 25) ? 5 : 0;
+        _text.layout(getTextInsets(), getWidth(), getHeight() - yoff);
     }
 
     @Override // documentation inherited
@@ -80,7 +83,7 @@ public class PaletteIcon extends SelectableIcon
      */
     protected Insets getTextInsets ()
     {
-        return (_small ? new Insets(2, 0, 2, 0) : new Insets(5, 5, 5, 0));
+        return (_small ? new Insets(2, 0, 2, 0) : new Insets(5, 0, 5, 0));
     }
 
     protected Label _text;
