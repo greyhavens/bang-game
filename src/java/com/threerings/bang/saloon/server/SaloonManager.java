@@ -86,6 +86,8 @@ public class SaloonManager extends MatchHostManager
                     if (thisWeek.before(cal.getTime())) {
                         _lists.addAll(BangServer.ratingrepo.loadTopRanked(
                                 scens, join, where, count, thisWeek));
+                    } else {
+                        _clearThisWeek = true;
                     }
                     _lists.addAll(BangServer.ratingrepo.loadTopRanked(
                             scens, join, where, count, Rating.getWeek(1)));
@@ -102,12 +104,21 @@ public class SaloonManager extends MatchHostManager
                 if (!((DObject)rankobj).isActive()) {
                     return;
                 }
+                if (_clearThisWeek) {
+                    TopRankedList[] lists = rankobj.getTopRanked().toArray(null);
+                    for (int ii = 0; ii < lists.length; ii++) {
+                        if (lists[ii].period != TopRankedList.LIFETIME) {
+                            rankobj.removeFromTopRanked(lists[ii].getKey());
+                        }
+                    }
+                }
                 for (TopRankedList list : _lists) {
                     commitTopRanked(rankobj, list);
                 }
             }
 
             protected ArrayList<TopRankedList> _lists;
+            protected boolean _clearThisWeek;
         });
     }
 
