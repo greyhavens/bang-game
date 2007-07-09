@@ -769,6 +769,7 @@ palette_icon {
   vertical-align: top;
   padding: 24 4 4 4;
   cursor: "hand";
+  line-spacing: -4;
 }
 
 palette_icon:selected {
