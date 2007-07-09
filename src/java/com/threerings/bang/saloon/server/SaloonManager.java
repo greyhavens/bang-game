@@ -105,7 +105,8 @@ public class SaloonManager extends MatchHostManager
                     return;
                 }
                 if (_clearThisWeek) {
-                    TopRankedList[] lists = rankobj.getTopRanked().toArray(null);
+                    TopRankedList[] lists = rankobj.getTopRanked().toArray(
+                            new TopRankedList[rankobj.getTopRanked().size()]);
                     for (int ii = 0; ii < lists.length; ii++) {
                         if (lists[ii].period != TopRankedList.LIFETIME) {
                             rankobj.removeFromTopRanked(lists[ii].getKey());
