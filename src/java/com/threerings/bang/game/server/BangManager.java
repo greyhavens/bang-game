@@ -56,6 +56,7 @@ import com.threerings.crowd.server.PlaceManager;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.admin.data.StatusObject;
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.bounty.data.BountyConfig;
 
@@ -1317,8 +1318,8 @@ public class BangManager extends GameManager
     {
         _bangobj.setState(BangObject.SELECT_PHASE);
 //        log.info("Starting select phase timer.");
-//        _preGameTimer.state = BangObject.SELECT_PHASE;
-//        _preGameTimer.schedule(15000L);
+        _preGameTimer.state = BangObject.SELECT_PHASE;
+        _preGameTimer.schedule(RuntimeConfig.server.selectPhaseTimeout * 1000L);
     }
 
     /**

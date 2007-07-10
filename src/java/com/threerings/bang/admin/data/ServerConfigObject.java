@@ -53,6 +53,9 @@ public class ServerConfigObject extends ConfigObject
 
     /** The field name of the <code>anonymousAccessEnabled</code> field. */
     public static final String ANONYMOUS_ACCESS_ENABLED = "anonymousAccessEnabled";
+
+    /** The field name of the <code>selectPhaseTimeout</code> field. */
+    public static final String SELECT_PHASE_TIMEOUT = "selectPhaseTimeout";
     // AUTO-GENERATED: FIELDS END
 
     /** Whether or not to require insiders or testers. */
@@ -99,6 +102,9 @@ public class ServerConfigObject extends ConfigObject
 
     /** Controls access of anonymous accounts. */
     public boolean anonymousAccessEnabled = false;
+
+    /** The select phase timeout in seconds. */
+    public int selectPhaseTimeout = 180;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -339,6 +345,22 @@ public class ServerConfigObject extends ConfigObject
         requestAttributeChange(
             ANONYMOUS_ACCESS_ENABLED, Boolean.valueOf(value), Boolean.valueOf(ovalue));
         this.anonymousAccessEnabled = value;
+    }
+
+    /**
+     * Requests that the <code>selectPhaseTimeout</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setSelectPhaseTimeout (int value)
+    {
+        int ovalue = this.selectPhaseTimeout;
+        requestAttributeChange(
+            SELECT_PHASE_TIMEOUT, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.selectPhaseTimeout = value;
     }
     // AUTO-GENERATED: METHODS END
 }

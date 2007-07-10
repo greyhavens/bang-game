@@ -183,7 +183,7 @@ public class BangController extends GameController
         mapCommand(KeyInput.KEY_C, "AdjustZoom");
         mapCommand(KeyInput.KEY_Q, "SwingCameraLeft");
         mapCommand(KeyInput.KEY_E, "SwingCameraRight");
-        mapCommand(KeyInput.KEY_G, "ToggleGrid");
+        //mapCommand(KeyInput.KEY_G, "ToggleGrid");
         mapCommand(KeyInput.KEY_1, PLACE_CARD, new Integer(0));
         mapCommand(KeyInput.KEY_2, PLACE_CARD, new Integer(1));
         mapCommand(KeyInput.KEY_3, PLACE_CARD, new Integer(2));
