@@ -6,15 +6,19 @@ package com.threerings.bang.gang.server;
 import java.lang.ref.SoftReference;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryListenerUnit;
+import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.jdbc.TransitionRepository;
 
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.Interval;
+import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.SoftCache;
 
@@ -33,6 +37,7 @@ import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
@@ -40,6 +45,7 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.FinancialAction;
 import com.threerings.bang.server.persist.PlayerRecord;
 
@@ -89,6 +95,16 @@ public class GangManager
                 });
         }
 
+        // listen for gang notoriety updates
+        if (BangServer.peermgr != null) {
+            BangServer.peermgr.addStaleCacheObserver(GANG_NOTORIETY_CACHE,
+                new PeerManager.StaleCacheObserver() {
+                    public void changedCacheData (Streamable data) {
+                        syncNotoriety();
+                    }
+                });
+        }
+
         // TEMP: init command orders based on join dates
         BangServer.transitrepo.transition(GangRepository.class, "init_command_orders",
             new TransitionRepository.Transition() {
@@ -97,6 +113,24 @@ public class GangManager
                 }
             });
         // END TEMP
+
+        // if we're in Frontier Town, start our errosion interval to run at 2am every day
+        if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, 2);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            long delay = cal.getTimeInMillis() - System.currentTimeMillis();
+            if (delay < 0) {
+                delay += ERODE_NOTORIETY_INTERVAL;
+            }
+            new Interval () {
+                public void expired () {
+                    erodeNotoriety();
+                }
+            }.schedule(delay, ERODE_NOTORIETY_INTERVAL);
+        }
+
     }
 
     /**
@@ -464,6 +498,55 @@ public class GangManager
     }
 
     /**
+     * Erodes the notoriety of all gangs, then syncronizes the notoriety levels.
+     */
+    public void erodeNotoriety ()
+    {
+        BangServer.invoker.postUnit(new RepositoryUnit() {
+            public void invokePersist ()
+                throws PersistenceException {
+                BangServer.gangrepo.erodeNotoriety();
+            }
+            public void handleSuccess () {
+                syncNotoriety();
+                if (BangServer.peermgr != null) {
+                    BangServer.peermgr.broadcastStaleCacheData(GANG_NOTORIETY_CACHE, null);
+                }
+            }
+            public void handleFailure (Exception cause) {
+                log.warning("Failed to erode gang notorieties [error=" + cause + "].");
+            }
+        });
+    }
+
+    /**
+     * Syncronize the in memory notoriety with the persisted value.
+     */
+    public void syncNotoriety ()
+    {
+        BangServer.invoker.postUnit(new RepositoryUnit() {
+            public void invokePersist ()
+                throws PersistenceException {
+                _notMap = BangServer.gangrepo.loadGangsNotoriety(_gangs.keys());
+            }
+            public void handleSuccess () {
+                for (IntIntMap.IntIntEntry entry : _notMap.entrySet()) {
+                    GangHandler handler = _gangs.get(entry.getIntKey());
+                    // make sure this is a local handler
+                    if (handler != null && handler == handler.getPeerProvider()) {
+                        handler.setNotoriety(entry.getIntValue());
+                    }
+                }
+            }
+            public void handleFailure (Exception cause) {
+                log.warning("Failed to sync gang notorieties [error=" + cause + "].");
+            }
+
+            protected IntIntMap _notMap;
+        });
+    }
+
+    /**
      * Processes the response to a gang invitation.
      */
     protected void handleInviteResponse (
@@ -544,4 +627,10 @@ public class GangManager
 
     /** The name of our gang info cache. */
     protected static final String GANG_INFO_CACHE = "gangInfoCache";
+
+    /** The name of our gang notoriety cache. */
+    protected static final String GANG_NOTORIETY_CACHE = "gangNotorietyCache";
+
+    /** The interval with which we erode gang notoriety levels. */
+    protected static final long ERODE_NOTORIETY_INTERVAL = 24 * 60 * 60 * 1000L;
 }

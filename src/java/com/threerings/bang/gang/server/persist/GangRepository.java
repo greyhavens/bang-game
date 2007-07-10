@@ -24,6 +24,8 @@ import com.samskivert.jdbc.jora.Table;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.Interator;
+import com.samskivert.util.IntIntMap;
 
 import com.threerings.util.MessageBundle;
 
@@ -357,6 +359,47 @@ public class GangRepository extends JORARepository
                       ", LAST_PLAYED = NOW() where GANG_ID = " + gangId, 1);
         checkedUpdate("update GANG_MEMBERS set NOTORIETY = NOTORIETY + " + points +
                       " where PLAYER_ID = " + playerId, 1);
+    }
+
+    /**
+     * Removes 1% of noteriety from all gangs.
+     */
+    public void erodeNotoriety ()
+        throws PersistenceException
+    {
+        update("update GANGS set NOTORIETY = NOTORIETY - ceil(NOTORIETY * 0.01)");
+    }
+
+    /**
+     * Loads directory entries for all active gangs.
+     */
+    public IntIntMap loadGangsNotoriety (final Interator gangIds)
+        throws PersistenceException
+    {
+        final IntIntMap notMap = new IntIntMap();
+        final String query = "select NOTORIETY from GANGS where GANG_ID = ?";
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                try {
+                    while (gangIds.hasNext()) {
+                        int gangId = gangIds.nextInt();
+                        stmt.setInt(1, gangId);
+                        ResultSet rs = stmt.executeQuery(query);
+                        if (rs.next()) {
+                            notMap.put(gangId, rs.getInt(1));
+                        }
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+        return notMap;
     }
 
     /**

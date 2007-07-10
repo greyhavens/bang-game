@@ -621,6 +621,15 @@ public class GangHandler
         });
     }
 
+    /**
+     * Sets the gang notoriety, should only be called by {@link Gang Manager}.
+     */
+    public void setNotoriety (int notoriety)
+    {
+        _notoriety = notoriety;
+        _gangobj.setNotoriety(GangUtil.getNotorietyLevel(_gangobj.getWeightClass(), _notoriety));
+    }
+
     // documentation inherited from interface GangPeerProvider
     public void setAvatar (ClientObject caller, int playerId, AvatarInfo info)
     {
