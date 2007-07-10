@@ -121,8 +121,8 @@ public class GoodsCatalog
                 if (diff == Star.Difficulty.EASY) { // no easy star
                     continue;
                 }
-                // currently only the medium bounties are available in ITP
-                if (diff != Star.Difficulty.MEDIUM &&
+                // currently the extreme ITP bounties and unavailable
+                if (diff == Star.Difficulty.EXTREME &&
                         BangCodes.TOWN_IDS[townIdx].equals(BangCodes.INDIAN_POST)) {
                     continue;
                 }

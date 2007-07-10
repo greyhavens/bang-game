@@ -231,8 +231,8 @@ public class BountyConfig extends SimpleStreamableObject
             if (!user.holdsStar(BangUtil.getTownIndex(townId), difficulty)) {
                 return false;
             }
-            // TEMP: disable MW past medium in ITP
-            if (BangCodes.INDIAN_POST.equals(townId) && difficulty != Star.Difficulty.MEDIUM) {
+            // TEMP: disable Extreme ITP bounties
+            if (BangCodes.INDIAN_POST.equals(townId) && difficulty == Star.Difficulty.EXTREME) {
                 return false;
             }
             // END TEMP

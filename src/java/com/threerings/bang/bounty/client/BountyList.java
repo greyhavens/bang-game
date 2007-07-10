@@ -62,9 +62,9 @@ public class BountyList extends BContainer
                 // only show one difficulty level beyond what's unlocked for most wanted bounties
                 continue;
 
-            // TEMP: Disable most wanted > medium in ITP
+            // TEMP: Disable extreme most wanted in ITP
             } else if (type == BountyConfig.Type.MOST_WANTED &&
-                    config.difficulty != Star.Difficulty.MEDIUM &&
+                    config.difficulty == Star.Difficulty.EXTREME &&
                     user.townId.equals(BangCodes.INDIAN_POST)) {
                 continue;
             // END TEMP
