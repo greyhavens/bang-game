@@ -207,9 +207,9 @@ public class BangChatDirector extends ChatDirector
     }
 
     @Override // documentation inherited
-    public void dispatchMessage (ChatMessage message)
+    protected void dispatchPreparedMessage (ChatMessage message)
     {
-        super.dispatchMessage(message);
+        super.dispatchPreparedMessage(message);
 
         // store the message in our history
         _messageHistory.add(message);
