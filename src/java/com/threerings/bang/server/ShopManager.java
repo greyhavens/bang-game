@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.BodyObject;
@@ -43,6 +44,15 @@ public abstract class ShopManager extends PlaceManager
             msg = BangCodes.UNDER_13;
         }
         return msg;
+    }
+
+    @Override // from PlaceManager
+    public boolean isValidSpeaker (DObject speakObj, ClientObject speaker, byte mode)
+    {
+        if (hasChat()) {
+            return super.isValidSpeaker(speakObj, speaker, mode);
+        }
+        return false;
     }
 
     @Override // from PlaceManager
@@ -139,6 +149,14 @@ public abstract class ShopManager extends PlaceManager
     protected boolean allowUnder13 ()
     {
         return true;
+    }
+
+    /**
+     * Returns true if the shop has a public chat channel.
+     */
+    protected boolean hasChat ()
+    {
+        return false;
     }
 
     /**

@@ -29,6 +29,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.gang.data.HideoutObject;
 import java.util.HashMap;
 
 /**
@@ -138,6 +139,16 @@ public class BangChatDirector extends ChatDirector
     }
 
     @Override // documentation inherited
+    public void registerCommandHandler (MessageBundle msg, String command, CommandHandler handler)
+    {
+        // we never want to use the default channel
+        if (handler instanceof SpeakHandler) {
+            return;
+        }
+        super.registerCommandHandler(msg, command, handler);
+    }
+
+    @Override // documentation inherited
     public String requestChat (
         SpeakService speakSvc, String text, boolean record)
     {
@@ -241,6 +252,8 @@ public class BangChatDirector extends ChatDirector
                     bangobj.getPlayerIndex(_ctx.getUserObject().handle) == -1) {
                 return "e.not_player";
             }
+        } else if (plobj instanceof HideoutObject) {
+            return "m.internal_error";
         }
         return null;
     }
