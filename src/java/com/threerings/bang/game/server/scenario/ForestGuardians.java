@@ -380,6 +380,12 @@ public class ForestGuardians extends Scenario
         return count;
     }
 
+    @Override // documentation inherited
+    public float getScaleFactor ()
+    {
+        return 0f;
+    }
+
     /** The delegate responsible for respawning player units. */
     protected RespawnDelegate _respdel;
 

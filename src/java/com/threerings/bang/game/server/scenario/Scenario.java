@@ -133,7 +133,7 @@ public abstract class Scenario
         delta = Math.min(delta, TIME_SCALE_CAP);
 
         // scale from 1/1 to 2/3 over the course of ten minutes
-        float factor = 1f + 0.5f * delta / TIME_SCALE_CAP;
+        float factor = 1f + getScaleFactor() * delta / TIME_SCALE_CAP;
         long baseTime = Math.round(BASE_TICK_TIME / factor);
 
         // scale this base time by the average number of units in play
@@ -588,6 +588,14 @@ public abstract class Scenario
     protected short getBaseDuration ()
     {
         return BASE_SCENARIO_TICKS;
+    }
+
+    /**
+     * Returns the scale factor for ticks as the game progresses.
+     */
+    protected float getScaleFactor ()
+    {
+        return 0.5f;
     }
 
     /**
