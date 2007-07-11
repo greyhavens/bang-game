@@ -42,7 +42,7 @@ public class Warning extends Notification
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
-        return message;
+        return "WARNING" + message;
     }
 
     @Override // documentation inherited

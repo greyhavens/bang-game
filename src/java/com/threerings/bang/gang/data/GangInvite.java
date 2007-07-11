@@ -44,7 +44,7 @@ public class GangInvite extends Notification
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
-        return gang;
+        return "GANG" + gang.toString();
     }
 
     @Override // documentation inherited
