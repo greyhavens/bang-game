@@ -22,6 +22,7 @@ import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.Interator;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
@@ -1232,9 +1233,9 @@ public class PlayerManager
     {
         Calendar cal = Calendar.getInstance();
         int hour = (cal.get(Calendar.HOUR_OF_DAY) + 20) % 24;
-        for (IntIntMap.IntIntEntry entry : _lateNighters.entrySet()) {
-            if (entry.getIntValue() == hour) {
-                _lateNighters.remove(entry.getIntKey());
+        for (Interator inter = _lateNighters.values(); inter.hasNext(); ) {
+            if (inter.nextInt() == hour) {
+                inter.remove();
             }
         }
     }
