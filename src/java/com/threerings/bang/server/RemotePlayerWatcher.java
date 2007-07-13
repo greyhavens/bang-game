@@ -152,7 +152,12 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
             if (event.getName().equals(getSetName()) &&
                     !(event instanceof EntryReplacedEvent)) {
                 @SuppressWarnings("unchecked") T entry = (T)event.getOldEntry();
-                clearPlayer(entry);
+                if (entry == null) { // sanity check
+                    log.warning("Missing old entry [event=" + event +
+                            ", container=" + _container + "].");
+                } else {
+                    clearPlayer(entry);
+                }
             }
         }
 
