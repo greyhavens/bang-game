@@ -16,7 +16,6 @@ if (!open($LOG, ">$root/log/respawn-$node.log")) {
 
 my $pidfile = shift;
 my $server_pidfile = shift;
-
 if (defined $pidfile) {
     if (open(OUT, ">$pidfile")) {
         print OUT "$$\n";
@@ -43,11 +42,9 @@ while (1) {
 
     # report and deal with the server's exit code
     if ($rcode != 0) {
-        print $LOG "$fnow Bang server failed (return code: $rcode) " .
-            "after $duration seconds.\n";
+        print $LOG "$fnow Bang server failed (return code: $rcode) after $duration seconds.\n";
     } else {
-	print $LOG "$fnow Bang server exited healthily " .
-            "after $duration seconds.\n";
+	print $LOG "$fnow Bang server exited healthily after $duration seconds.\n";
     }
 
     # don't spiral out of control; only restart once per minute

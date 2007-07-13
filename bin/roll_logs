@@ -46,4 +46,4 @@ for BANGLOG in $BANG_HOME/log/stdout-*.log ; do
 done
 
 # prune old logs
-find $BANG_HOME/log -name 'stdout.log*' -a -mtime +7 | xargs rm -f
+find $BANG_HOME/log -name 'stdout-*.log*' -a -mtime +7 | xargs rm -f
