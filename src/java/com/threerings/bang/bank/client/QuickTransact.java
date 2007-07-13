@@ -25,6 +25,7 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankObject;
+import com.threerings.bang.bank.data.BestOffer;
 
 /**
  * Displays an interface for making a quick transaction: an immediately
@@ -55,10 +56,10 @@ public class QuickTransact extends BContainer
         _trade.setEnabled(false);
     }
 
-    public void init (BankObject bankobj)
+    public void init (BestOffer boffer)
     {
-        _bankobj = bankobj;
-        _bankobj.addListener(_updater);
+        _boffer = boffer;
+        _boffer.addListener(_updater);
     }
 
     // documentation inherited from interface ActionListener
@@ -71,7 +72,7 @@ public class QuickTransact extends BContainer
 
         // determine the best offer price
         ConsolidatedOffer best = _buying ?
-            _bankobj.getBestSell() : _bankobj.getBestBuy();
+            _boffer.getBestSell() : _boffer.getBestBuy();
         if (best == null) {
             return;
         }
@@ -85,8 +86,8 @@ public class QuickTransact extends BContainer
                 _status.setStatus(_msgs.xlate(reason), true);
             }
         };
-        _bankobj.service.postOffer(
-            _ctx.getClient(), _ccount, best.price, _buying, true, rl);
+        _boffer.postImmediateOffer(
+            _ctx.getClient(), _ccount, best.price, _buying, rl);
     }
 
     protected void coinsUpdated ()
@@ -107,7 +108,7 @@ public class QuickTransact extends BContainer
 
             // make sure we have a best offer
             ConsolidatedOffer best = _buying ?
-                _bankobj.getBestSell() : _bankobj.getBestBuy();
+                _boffer.getBestSell() : _boffer.getBestBuy();
             if (best == null) {
                 _status.setStatus(_msgs.get("m.no_offers"), false);
                 return;
@@ -159,7 +160,7 @@ public class QuickTransact extends BContainer
                  !_buying && name.equals(BankObject.BUY_OFFERS)) &&
                 _ccount > 0) {
                 ConsolidatedOffer best = _buying ?
-                    _bankobj.getBestSell() : _bankobj.getBestBuy();
+                    _boffer.getBestSell() : _boffer.getBestBuy();
                 if (best == null || best.volume < _ccount ||
                     best.price * _ccount != _value) {
                     _coins.setText("");
@@ -176,7 +177,7 @@ public class QuickTransact extends BContainer
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
-    protected BankObject _bankobj;
+    protected BestOffer _boffer;
     protected boolean _buying;
     protected int _ccount, _value;
 

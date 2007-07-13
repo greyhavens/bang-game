@@ -5,18 +5,21 @@ package com.threerings.bang.gang.data;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.GoodsObject;
+import com.threerings.bang.bank.data.BestOffer;
 
 /**
  * Contains distributed data for the Hideout.
  */
 public class HideoutObject extends PlaceObject
-    implements GoodsObject
+    implements GoodsObject, BestOffer
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
@@ -30,6 +33,9 @@ public class HideoutObject extends PlaceObject
 
     /** The field name of the <code>goods</code> field. */
     public static final String GOODS = "goods";
+
+    /** The field name of the <code>sellOffers</code> field. */
+    public static final String SELL_OFFERS = "sellOffers";
     // AUTO-GENERATED: FIELDS END
 
     /** The means by which the client makes requests to the server. */
@@ -43,6 +49,34 @@ public class HideoutObject extends PlaceObject
 
     /** Gang goods available for sale. */
     public DSet<Good> goods;
+
+    /** The top N offers to sell coins for scrip. */
+    public ConsolidatedOffer[] sellOffers;
+
+    // documentation inherited from BestOffer
+    public ConsolidatedOffer getBestBuy ()
+    {
+        return null;
+    }
+
+    // documentation inherited from BestOffer
+    public ConsolidatedOffer getBestSell ()
+    {
+        ConsolidatedOffer best = null;
+        for (int ii = 0; ii < sellOffers.length; ii++) {
+            if (best == null || sellOffers[ii].price < best.price) {
+                best = sellOffers[ii];
+            }
+        }
+        return best;
+    }
+
+    // documentation inherited from BestOffer
+    public void postImmediateOffer (Client client, int coins, int pricePerCoin, boolean buying,
+                                    InvocationService.ResultListener rl)
+    {
+        service.postOffer(client, coins, pricePerCoin, rl);
+    }
 
     // documentation inherited from interface GoodsObject
     public DSet<Good> getGoods ()
@@ -216,6 +250,39 @@ public class HideoutObject extends PlaceObject
         @SuppressWarnings("unchecked") DSet<com.threerings.bang.store.data.Good> clone =
             (value == null) ? null : value.typedClone();
         this.goods = clone;
+    }
+
+    /**
+     * Requests that the <code>sellOffers</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setSellOffers (ConsolidatedOffer[] value)
+    {
+        ConsolidatedOffer[] ovalue = this.sellOffers;
+        requestAttributeChange(
+            SELL_OFFERS, value, ovalue);
+        this.sellOffers = (value == null) ? null : (ConsolidatedOffer[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>sellOffers</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setSellOffersAt (ConsolidatedOffer value, int index)
+    {
+        ConsolidatedOffer ovalue = this.sellOffers[index];
+        requestElementUpdate(
+            SELL_OFFERS, index, value, ovalue);
+        this.sellOffers[index] = value;
     }
     // AUTO-GENERATED: METHODS END
 }

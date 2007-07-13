@@ -110,4 +110,13 @@ public interface HideoutService extends InvocationService
      * Broadcast a message to all online members of the player's gang.
      */
     public void broadcastToMembers (Client client, String message, ConfirmListener listener);
+
+    /**
+     * Requests that the specified offer be posted to the market.
+     *
+     * @param rl a result listener that will be notified with a {@link
+     * CoinExOfferInfo} for a posted offer or null for an immediately executed
+     * transaction.
+     */
+    public void postOffer (Client client, int coins, int pricePerCoin, ResultListener rl);
 }

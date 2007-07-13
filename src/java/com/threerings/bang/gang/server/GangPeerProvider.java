@@ -49,6 +49,11 @@ public interface GangPeerProvider extends InvocationProvider
     public void grantAces (ClientObject caller, Handle arg1, int arg2);
 
     /**
+     * Handles a {@link GangPeerService#grantScrip} request.
+     */
+    public void grantScrip (ClientObject caller, int arg1);
+
+    /**
      * Handles a {@link GangPeerService#handleInviteResponse} request.
      */
     public void handleInviteResponse (ClientObject caller, Handle arg1, int arg2, Handle arg3, boolean arg4, InvocationService.ConfirmListener arg5)
@@ -83,6 +88,12 @@ public interface GangPeerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link GangPeerService#reserveScrip} request.
+     */
+    public void reserveScrip (ClientObject caller, int arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link GangPeerService#sendSpeak} request.
      */
     public void sendSpeak (ClientObject caller, Handle arg1, String arg2, byte arg3);
@@ -103,4 +114,14 @@ public interface GangPeerProvider extends InvocationProvider
      */
     public void setStatement (ClientObject caller, Handle arg1, String arg2, String arg3, InvocationService.ConfirmListener arg4)
         throws InvocationException;
+
+    /**
+     * Handles a {@link GangPeerService#tradeCompleted} request.
+     */
+    public void tradeCompleted (ClientObject caller, int arg1, int arg2, String arg3);
+
+    /**
+     * Handles a {@link GangPeerService#updateCoins} request.
+     */
+    public void updateCoins (ClientObject caller);
 }

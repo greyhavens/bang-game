@@ -344,6 +344,22 @@ public class GangManager
     }
 
     /**
+     * Returns the {@link GangPeerProvider} interface for the specified gang (which either resolves
+     * to a local handler or a proxy to a handler on a peer node).
+     */
+    public GangPeerProvider requireGangPeerProvider (Handle name)
+        throws InvocationException
+    {
+        GangHandler handler = _names.get(name);
+        if (handler == null || handler.getGangObject() == null) {
+            log.warning("Gang not loaded or initialized [name=" + name + ", handler=" +
+                handler + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        return handler.getPeerProvider();
+    }
+
+    /**
      * Retrieves the initialized gang handler for the supplied gang id, throwing an exception and
      * logging a warning if unavailable.
      */

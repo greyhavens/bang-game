@@ -126,6 +126,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             );
             return;
 
+        case HideoutMarshaller.POST_OFFER:
+            ((HideoutProvider)provider).postOffer(
+                source,
+                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), (InvocationService.ResultListener)args[2]
+            );
+            return;
+
         case HideoutMarshaller.SET_BUCKLE:
             ((HideoutProvider)provider).setBuckle(
                 source,

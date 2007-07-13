@@ -5,12 +5,16 @@ package com.threerings.bang.bank.data;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService.ResultListener;
+
 import com.threerings.bang.data.ConsolidatedOffer;
 
 /**
  * Contains published information for the Bank.
  */
 public class BankObject extends PlaceObject
+    implements BestOffer
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
@@ -38,11 +42,7 @@ public class BankObject extends PlaceObject
     /** The top N offers to sell coins for scrip. */
     public ConsolidatedOffer[] sellOffers;
 
-    /**
-     * Returns a consolidation of the best published buy offers (the price will
-     * be the best buy price and the volume will be the total volume of all
-     * offers at that price) or null if there are no published buy offers.
-     */
+    // documentation inherited from BestOffer
     public ConsolidatedOffer getBestBuy ()
     {
         ConsolidatedOffer best = null;
@@ -54,11 +54,7 @@ public class BankObject extends PlaceObject
         return best;
     }
 
-    /**
-     * Returns a consolidation of the best published sell offers (the price
-     * will be the best sell price and the volume will be the total volume of
-     * all offers at that price) or null if there are no published sell offers.
-     */
+    // documentation inherited from BestOffer
     public ConsolidatedOffer getBestSell ()
     {
         ConsolidatedOffer best = null;
@@ -68,6 +64,13 @@ public class BankObject extends PlaceObject
             }
         }
         return best;
+    }
+
+    // documentation inherited from BestOffer
+    public void postImmediateOffer (
+        Client client, int coins, int pricePerCoin, boolean buying, ResultListener rl)
+    {
+        service.postOffer(client, coins, pricePerCoin, buying, true, rl);
     }
 
     // AUTO-GENERATED: METHODS START

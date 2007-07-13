@@ -77,6 +77,13 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case GangPeerMarshaller.GRANT_SCRIP:
+            ((GangPeerProvider)provider).grantScrip(
+                source,
+                ((Integer)args[0]).intValue()
+            );
+            return;
+
         case GangPeerMarshaller.HANDLE_INVITE_RESPONSE:
             ((GangPeerProvider)provider).handleInviteResponse(
                 source,
@@ -119,6 +126,13 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case GangPeerMarshaller.RESERVE_SCRIP:
+            ((GangPeerProvider)provider).reserveScrip(
+                source,
+                ((Integer)args[0]).intValue(), (InvocationService.ResultListener)args[1]
+            );
+            return;
+
         case GangPeerMarshaller.SEND_SPEAK:
             ((GangPeerProvider)provider).sendSpeak(
                 source,
@@ -144,6 +158,19 @@ public class GangPeerDispatcher extends InvocationDispatcher
             ((GangPeerProvider)provider).setStatement(
                 source,
                 (Handle)args[0], (String)args[1], (String)args[2], (InvocationService.ConfirmListener)args[3]
+            );
+            return;
+
+        case GangPeerMarshaller.TRADE_COMPLETED:
+            ((GangPeerProvider)provider).tradeCompleted(
+                source,
+                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), (String)args[2]
+            );
+            return;
+
+        case GangPeerMarshaller.UPDATE_COINS:
+            ((GangPeerProvider)provider).updateCoins(
+                source                
             );
             return;
 

@@ -177,8 +177,21 @@ public class HideoutMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #postOffer} requests. */
+    public static final int POST_OFFER = 13;
+
+    // from interface HideoutService
+    public void postOffer (Client arg1, int arg2, int arg3, InvocationService.ResultListener arg4)
+    {
+        InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, POST_OFFER, new Object[] {
+            Integer.valueOf(arg2), Integer.valueOf(arg3), listener4
+        });
+    }
+
     /** The method id used to dispatch {@link #setBuckle} requests. */
-    public static final int SET_BUCKLE = 13;
+    public static final int SET_BUCKLE = 14;
 
     // from interface HideoutService
     public void setBuckle (Client arg1, BucklePart[] arg2, InvocationService.ConfirmListener arg3)
@@ -191,7 +204,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setStatement} requests. */
-    public static final int SET_STATEMENT = 14;
+    public static final int SET_STATEMENT = 15;
 
     // from interface HideoutService
     public void setStatement (Client arg1, String arg2, String arg3, InvocationService.ConfirmListener arg4)

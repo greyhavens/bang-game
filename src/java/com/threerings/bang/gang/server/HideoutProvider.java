@@ -91,6 +91,12 @@ public interface HideoutProvider extends InvocationProvider
     public void leaveMatch (ClientObject caller, int arg1);
 
     /**
+     * Handles a {@link HideoutService#postOffer} request.
+     */
+    public void postOffer (ClientObject caller, int arg1, int arg2, InvocationService.ResultListener arg3)
+        throws InvocationException;
+
+    /**
      * Handles a {@link HideoutService#setBuckle} request.
      */
     public void setBuckle (ClientObject caller, BucklePart[] arg1, InvocationService.ConfirmListener arg2)

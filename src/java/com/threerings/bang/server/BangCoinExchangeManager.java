@@ -18,6 +18,7 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.Name;
 
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.util.InvocationAdapter;
 
 import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.coin.server.CoinExOffer;
@@ -25,8 +26,11 @@ import com.threerings.coin.server.CoinExchangeManager;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.ConsolidatedOffer;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.gang.data.GangObject;
+import com.threerings.bang.gang.server.GangPeerProvider;
 
 import static com.threerings.bang.Log.log;
 
@@ -171,6 +175,14 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     @Override // documentation inherited
     protected void updateUserCoins (String gameName, String accountName)
     {
+        if (accountName.startsWith("{")) {
+            try {
+                getGangPeerProvider(accountName).updateCoins(null);
+            } catch (InvocationException ie) {
+                log.warning("Failed to load gang to update coins. [ie=" + ie + "].");
+            }
+            return;
+        }
         PlayerObject player = BangServer.lookupByAccountName(new Name(accountName));
         if (player != null) {
             BangServer.coinmgr.updateCoinCount(player);
@@ -180,6 +192,15 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     @Override // documentation inherited
     protected void distributeCurrency (final CoinExOffer info, final int currency, final String msg)
     {
+        // see if we're dealing with a gang
+        if (info.accountName.indexOf("{") > -1) {
+            try {
+                getGangPeerProvider(info.accountName).grantScrip(null, currency);
+            } catch (InvocationException ie) {
+                log.warning("Failed to load gang for distributeCurrency. [ie=" + ie + "].");
+            }
+            return;
+        }
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
@@ -205,6 +226,11 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     protected void reserveCurrency (
         Object user, final int cost, final ResultListener<Object> listener)
     {
+        if (user instanceof GangObject) {
+            reserveGangCurrency((GangObject)user, cost, listener);
+            return;
+        }
+
         // make sure they have the necessary currency to begin with
         final PlayerObject player = (PlayerObject)user;
         if (player.scrip < cost) {
@@ -240,13 +266,42 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         });
     }
 
-    @Override // documentation inherited
-    protected void tradeCompleted (int price, int vol, String seller, final String buyer)
+    /**
+     * Special handling for gang exchange offers.
+     */
+    protected void reserveGangCurrency (
+            GangObject gang, final int cost, final ResultListener<Object> listener)
     {
-        super.tradeCompleted(price, vol, seller, buyer);
+        if (gang.scrip < cost) {
+            listener.requestFailed(new InvocationException(BangCodes.E_INSUFFICIENT_FUNDS));
+            return;
+        }
+        try {
+            BangServer.gangmgr.requireGangPeerProvider(gang.gangId).reserveScrip(
+                    null, cost, new InvocationAdapter(listener));
+        } catch (InvocationException ie) {
+            log.warning("Unable to reserve gang currency! [ie=" + ie + "].");
+            listener.requestFailed(ie);
+        }
+    }
+
+    @Override // documentation inherited
+    protected void tradeCompleted (
+            int price, int vol, String seller, final String buyer, String buyerGame)
+    {
+        super.tradeCompleted(price, vol, seller, buyer, buyerGame);
+        if (buyer.indexOf("{") > -1) {
+            try {
+                getGangPeerProvider(buyer).tradeCompleted(null, price, vol, buyerGame);
+            } catch (InvocationException ie) {
+                log.warning("Failed to load gang! [cause=" + ie + "].");
+            }
+            return;
+        }
         PlayerObject player = BangServer.lookupByAccountName(new Name(buyer));
         if (player != null) {
             _audit.log("bought_excoins " + player.playerId);
+            return;
         }
 
         // if they're not online, we'll need to load them from the database
@@ -267,6 +322,16 @@ public class BangCoinExchangeManager extends CoinExchangeManager
 
             protected PlayerRecord _user;
         });
+    }
+
+    /**
+     * Helper function for getting a GangHandler from it's account name.
+     */
+    protected GangPeerProvider getGangPeerProvider (String accountName)
+        throws InvocationException
+    {
+        Handle gangName = new Handle(accountName.substring(1, accountName.length() - 1));
+        return BangServer.gangmgr.requireGangPeerProvider(gangName);
     }
 
     /**

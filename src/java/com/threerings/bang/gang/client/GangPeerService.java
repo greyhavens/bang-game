@@ -76,6 +76,26 @@ public interface GangPeerService extends InvocationService
         ConfirmListener listener);
 
     /**
+     * Reserves scrip to be used in an exchange offer.
+     */
+    public void reserveScrip (Client client, int scrip, ResultListener listener);
+
+    /**
+     * Grants scrip from a failed exchange offer.
+     */
+    public void grantScrip (Client client, int scrip);
+
+    /**
+     * Tells a gang to update it's coin count.
+     */
+    public void updateCoins (Client client);
+
+    /**
+     * Logs a completed exchange transaction in the gang history.
+     */
+    public void tradeCompleted (Client client, int price, int vol, String member);
+
+    /**
      * Removes a player from the gang.
      */
     public void removeFromGang (

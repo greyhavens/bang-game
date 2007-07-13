@@ -5,6 +5,7 @@ package com.threerings.bang.gang.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 
@@ -13,6 +14,7 @@ import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
@@ -46,6 +48,7 @@ import com.threerings.presents.peer.util.PeerUtil;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.util.PersistingUnit;
+import com.threerings.presents.util.ResultAdapter;
 
 import com.threerings.crowd.server.PlaceManager;
 
@@ -57,6 +60,7 @@ import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.chat.server.SpeakProvider.SpeakerValidator;
 
+import com.threerings.coin.server.CoinExOffer;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.Article;
@@ -85,6 +89,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.saloon.server.SaloonManager;
+import com.threerings.bang.saloon.server.TableGameManager;
 
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangInvite;
@@ -99,7 +104,6 @@ import com.threerings.bang.gang.server.persist.GangRecord;
 import com.threerings.bang.gang.util.GangUtil;
 
 import static com.threerings.bang.Log.*;
-import com.threerings.bang.saloon.server.TableGameManager;
 
 /**
  * Manages a single gang from resolution to destruction.
@@ -262,6 +266,26 @@ public class GangHandler
                 listener.requestFailed(cause);
             }
         }.start();
+    }
+
+    /**
+     * Posts an immediate buy offer on the gold exchange for the town the user is situated in.
+     * This must be coordinated between the peer on which the used is logged in and the
+     * controlling peer.
+     */
+    public void postOffer (PlayerObject user, int coins, int pricePerCoin,
+            InvocationService.ResultListener listener)
+        throws InvocationException
+    {
+        verifyIsLeader(user.handle);
+
+        CoinExOffer offer = new CoinExOffer();
+        offer.accountName = _gangobj.getCoinAccount();
+        offer.gameName = user.handle.toString();
+        offer.buy = true;
+        offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
+        offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
+        BangServer.coinexmgr.postOffer(_gangobj, offer, true, new ResultAdapter<Object>(listener));
     }
 
     /**
@@ -992,6 +1016,99 @@ public class GangHandler
     }
 
     // documentation inherited from interface GangPeerProvider
+    public void reserveScrip (
+            ClientObject caller, final int scrip, final InvocationService.ResultListener listener)
+        throws InvocationException
+    {
+        // make sure is comes from this server or a peer
+        verifyLocalOrPeer(caller);
+
+        // update the object to say the scrip is spent
+        _gangobj.setScrip(_gangobj.scrip - scrip);
+
+        // persist this expenditure to the database
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                try {
+                    BangServer.gangrepo.spendScrip(_gangId, scrip);
+                } catch (PersistenceException pe) {
+                    _error = pe;
+                }
+                return true;
+            }
+
+            public void handleResult () {
+                if (_error == null) {
+                    listener.requestProcessed(null);
+                } else {
+                    // return the scrip to the player object before failing
+                    _gangobj.setScrip(_gangobj.scrip + scrip);
+                    listener.requestFailed(_error.getMessage());
+                }
+            }
+
+            protected PersistenceException _error;
+        });
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void grantScrip (ClientObject caller, final int scrip)
+    {
+        try {
+            // make sure is comes from this server or a peer
+            verifyLocalOrPeer(caller);
+        } catch (InvocationException ie) {
+            log.warning("Grant scrip request received from illegal caller. " +
+                    "[caller=" + caller + ", ie=" + ie + "].");
+        }
+
+        // persist this expenditure to the database
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                try {
+                    BangServer.gangrepo.grantScrip(_gangId, scrip);
+                    return true;
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failed to grant scrip to gang " + "[id=" + _gangId +
+                            ", amount=" + scrip + "].", pe);
+                    return false;
+                }
+            }
+
+            public void handleResult () {
+                _gangobj.setScrip(_gangobj.scrip + scrip);
+            }
+        });
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void updateCoins (ClientObject caller)
+    {
+        try {
+            // make sure is comes from this server or a peer
+            verifyLocalOrPeer(caller);
+        } catch (InvocationException ie) {
+            log.warning("Update Coins request received from illegal caller. " +
+                    "[caller=" + caller + ", ie=" + ie + "].");
+        }
+
+        BangServer.invoker.postUnit(new RepositoryUnit() {
+            public void invokePersist () throws Exception {
+                _coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
+                    _gangobj.getCoinAccount());
+            }
+            public void handleSuccess () {
+                _gangobj.setCoins(_coins);
+            }
+            public void handleFailure (Exception err) {
+                log.log(Level.WARNING, "Error updating gang coin count. [id=" +
+                    _gangId + "].", err);
+            }
+            protected int _coins;
+        });
+    }
+
+    // documentation inherited from interface GangPeerProvider
     public void removeFromGang (
         ClientObject caller, final Handle handle, final Handle target,
         final InvocationService.ConfirmListener listener)
@@ -1272,6 +1389,41 @@ public class GangHandler
         // transmit on the gang object and report success
         SpeakProvider.sendSpeak(_gangobj, handle, null, message, ChatCodes.BROADCAST_MODE);
         listener.requestProcessed();
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void tradeCompleted (
+            ClientObject caller, final int price, final int vol, final String member)
+    {
+        try {
+            // make sure it comes from this server or a peer
+            verifyLocalOrPeer(caller);
+        } catch (InvocationException ie) {
+            log.warning("Failed to log completed trade. [ie=" + ie + "].");
+            return;
+        }
+
+        // log the completed trade in the gang history
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                try {
+                    BangServer.gangrepo.insertHistoryEntry(_gangId,
+                        MessageBundle.tcompose(
+                            "m.exchange_purchase", member, "" + vol, "" + price*vol));
+                } catch (PersistenceException pe) {
+                    _error = pe;
+                }
+                return true;
+            }
+
+            public void handleResult () {
+                if (_error != null) {
+                    log.warning("Failed to log completed trade. [error=" + _error + "].");
+                }
+            }
+
+            protected PersistenceException _error;
+        });
     }
 
     /**
