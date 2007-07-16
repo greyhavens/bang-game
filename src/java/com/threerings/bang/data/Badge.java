@@ -868,7 +868,7 @@ public class Badge extends Item
         Type.BOUNTY_ALL_FT,
 
         // indian post bounty badges
-        Type.BOUNTY_LETRAPPE, null, null, null, Type.BOUNTY_ALL_ITP_TOWN,
+        Type.BOUNTY_LETRAPPE, Type.BOUNTY_CLOUD, null, null, Type.BOUNTY_ALL_ITP_TOWN,
         Type.BOUNTY_ZERO3, null, null, null, Type.BOUNTY_ALL_ITP,
 
         // tutorial badges
