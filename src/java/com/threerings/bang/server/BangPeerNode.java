@@ -26,12 +26,13 @@ import com.threerings.bang.util.BangUtil;
 import static com.threerings.bang.Log.log;
 
 /**
- * Does something extraordinary.
+ * Handles Bang-specific peer bits.
  */
-class BangPeerNode extends PeerNode
+public class BangPeerNode extends PeerNode
     implements SetListener
 {
-    public BangPeerNode (BangPeerManager peermgr, NodeRecord record) {
+    public BangPeerNode (BangPeerManager peermgr, NodeRecord record)
+    {
         super(peermgr, record);
         _bpmgr = peermgr;
     }
@@ -70,7 +71,9 @@ class BangPeerNode extends PeerNode
         }
     }
 
-    public void entryAdded (EntryAddedEvent event) {
+    // from interface SetListener
+    public void entryAdded (EntryAddedEvent event)
+    {
         // log.info("Remote entry added " + event);
         if (event.getName().equals(NodeObject.CLIENTS)) {
             BangClientInfo info = (BangClientInfo)event.getEntry();
@@ -79,10 +82,15 @@ class BangPeerNode extends PeerNode
         }
     }
 
-    public void entryUpdated (EntryUpdatedEvent event) {
+    // from interface SetListener
+    public void entryUpdated (EntryUpdatedEvent event)
+    {
+        // nada
     }
 
-    public void entryRemoved (EntryRemovedEvent event) {
+    // from interface SetListener
+    public void entryRemoved (EntryRemovedEvent event)
+    {
         // log.info("Remote entry removed " + event);
         if (event.getName().equals(NodeObject.CLIENTS)) {
             BangClientInfo info = (BangClientInfo)event.getOldEntry();
@@ -91,8 +99,7 @@ class BangPeerNode extends PeerNode
         }
     }
 
+    protected BangPeerManager _bpmgr;
     protected int townIndex;
     protected HashIntMap<BangClientInfo> players = new HashIntMap<BangClientInfo>();
-
-    protected BangPeerManager _bpmgr;
 }
