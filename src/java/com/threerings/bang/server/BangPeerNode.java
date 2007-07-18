@@ -31,6 +31,12 @@ import static com.threerings.bang.Log.log;
 public class BangPeerNode extends PeerNode
     implements SetListener
 {
+    /** The index of the town managed by this peer. */
+    public int townIndex;
+
+    /** A mapping from playerId to client info record for all players online on this peer. */
+    public HashIntMap<BangClientInfo> players = new HashIntMap<BangClientInfo>();
+
     public BangPeerNode (BangPeerManager peermgr, NodeRecord record)
     {
         super(peermgr, record);
@@ -101,6 +107,4 @@ public class BangPeerNode extends PeerNode
     }
 
     protected BangPeerManager _bpmgr;
-    protected int townIndex;
-    protected HashIntMap<BangClientInfo> players = new HashIntMap<BangClientInfo>();
 }
