@@ -361,6 +361,10 @@ public abstract class BaseAvatarView extends BLabel
             _rcache.remove(_avatar);
         }
 
+        public long getLongThreshold () {
+            return 10000L; // this could take a while...
+        }
+
         protected BasicContext _ctx;
         protected BaseAvatarInfo _avatar;
         protected CharacterDescriptor _cdesc;
