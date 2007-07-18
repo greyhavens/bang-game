@@ -38,7 +38,8 @@ public class BangPeerNode extends PeerNode
     }
 
     @Override // from PeerNode
-    public void objectAvailable (NodeObject object) {
+    public void objectAvailable (NodeObject object)
+    {
         super.objectAvailable(object);
 
         // look up this node's town index once and store it
