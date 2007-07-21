@@ -477,7 +477,7 @@ public class GangHandler
         }
 
         // if they're in a place, update their occupant info
-        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.location);
+        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.getPlaceOid());
         if (plmgr != null) {
             BangOccupantInfo boi = (BangOccupantInfo)plmgr.getOccupantInfo(user.getOid());
             boi.gangId = _gangId;
@@ -547,7 +547,7 @@ public class GangHandler
         }
 
         // if they're in a place, update their occupant info
-        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.location);
+        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.getPlaceOid());
         if (plmgr != null) {
             BangOccupantInfo boi = (BangOccupantInfo)plmgr.getOccupantInfo(user.getOid());
             boi.gangId = 0;

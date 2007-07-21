@@ -103,7 +103,7 @@ public class Match
     {
         for (int ii = 0; ii < players.length; ii++) {
             if (players[ii] != null) {
-                PlaceManager pmgr = BangServer.plreg.getPlaceManager(players[ii].location);
+                PlaceManager pmgr = BangServer.plreg.getPlaceManager(players[ii].getPlaceOid());
                 if (pmgr instanceof ParlorManager) {
                     ((ParlorManager)pmgr).startingGame(gameobj);
                 }
