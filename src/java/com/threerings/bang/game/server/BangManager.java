@@ -1877,7 +1877,12 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void gameDidEnd ()
     {
+        // backup the player oids since we want them around after the game is ended
+        int[] playerOids = _playerOids.clone();
+
         super.gameDidEnd();
+
+        _playerOids = playerOids;
 
         // do the normal round ending stuff as well
         roundDidEnd(false);
