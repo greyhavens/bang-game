@@ -183,6 +183,22 @@
     <copy file="build/etc/ehcache.xml" todir="${deploy.dir}/classes"/>
   </target>
 
+  <!-- generates fields for persistent record classes -->
+  <target name="genrecord" depends="prepare">
+    <taskdef name="grecord" classname="com.samskivert.jdbc.depot.tools.GenRecordTask"
+             classpathref="classpath"/>
+    <!-- make sure the record class files are all compiled -->
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
+           debug="on" optimize="${build.optimize}" deprecation="on">
+      <classpath refid="classpath"/>
+      <include name="**/*Record.java"/>
+    </javac>
+    <!-- now update the source files -->
+    <grecord classpathref="classpath">
+      <fileset dir="${src.dir}" includes="**/*Record.java"/>
+    </grecord>
+  </target>
+
   <!-- generates additional methods for distributed object classes -->
   <target name="gendobj" depends="prepare">
     <taskdef name="dobj" classpathref="tool.classpath"
