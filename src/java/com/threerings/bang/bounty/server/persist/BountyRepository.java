@@ -4,9 +4,11 @@
 package com.threerings.bang.bounty.server.persist;
 
 import java.util.Collection;
+import java.util.Set;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.jdbc.depot.PersistentRecord;
 import com.samskivert.jdbc.depot.DepotRepository;
 import com.samskivert.jdbc.depot.clause.Where;
 
@@ -38,5 +40,11 @@ public class BountyRepository extends DepotRepository
         throws PersistenceException
     {
         store(record);
+    }
+
+    @Override // from DepotRepository
+    protected void getManagedRecords (Set<Class<? extends PersistentRecord>> classes)
+    {
+        classes.add(RecentCompletersRecord.class);
     }
 }
