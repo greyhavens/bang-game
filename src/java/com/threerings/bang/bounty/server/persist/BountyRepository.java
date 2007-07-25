@@ -27,7 +27,7 @@ public class BountyRepository extends DepotRepository
         throws PersistenceException
     {
         return findAll(RecentCompletersRecord.class,
-                       new Where(RecentCompletersRecord.TOWN_ID, townId));
+                       new Where(RecentCompletersRecord.TOWN_ID_C, townId));
     }
 
     /**
