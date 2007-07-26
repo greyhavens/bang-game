@@ -12,6 +12,8 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.jdbc.TransitionRepository;
+import com.samskivert.jdbc.depot.PersistenceContext;
+
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
@@ -20,8 +22,6 @@ import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.Tuple;
-
-import net.sf.ehcache.CacheManager;
 
 import com.threerings.admin.server.AdminProvider;
 import com.threerings.admin.server.ConfigRegistry;
@@ -115,9 +115,11 @@ public class BangServer extends CrowdServer
         public void playerChangedHandle (PlayerObject user, Handle oldHandle);
     }
 
-    /** The connection provider used to obtain access to our JDBC
-     * databases. */
+    /** The connection provider used to obtain access to our JDBC databases. */
     public static ConnectionProvider conprov;
+
+    /** Used to provide database access to our Depot repositories. */
+    public static PersistenceContext perCtx;
 
     /** Used to coordinate transitions to persistent data. */
     public static TransitionRepository transitrepo;
@@ -258,6 +260,7 @@ public class BangServer extends CrowdServer
     {
         // create out database connection provider this must be done before calling super.init()
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+        perCtx = new PersistenceContext("bangdb", conprov);
 
         // create our transition manager prior to doing anything else
         transitrepo = new TransitionRepository(conprov);
@@ -295,7 +298,7 @@ public class BangServer extends CrowdServer
         // create our repositories
         itemrepo = new ItemRepository(conprov);
         gangrepo = new GangRepository(conprov);
-        statrepo = new BangStatRepository(conprov);
+        statrepo = new BangStatRepository(perCtx);
         ratingrepo = new RatingRepository(conprov);
         lookrepo = new LookRepository(conprov);
         bountyrepo = new BountyRepository(conprov);
@@ -315,11 +318,11 @@ public class BangServer extends CrowdServer
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
             log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
-            peermgr = new BangPeerManager(conprov, invoker);
+            peermgr = new BangPeerManager(perCtx, invoker);
         }
 
         // create and set up our configuration registry and admin service
-        confreg = new DatabaseConfigRegistry(conprov, invoker, ServerConfig.nodename);
+        confreg = new DatabaseConfigRegistry(perCtx, invoker, ServerConfig.nodename);
         AdminProvider.init(invmgr, confreg);
 
         // now initialize our runtime configuration, postponing the remaining server initialization
@@ -361,8 +364,8 @@ public class BangServer extends CrowdServer
         // shut down the rating manager
         ratingmgr.shutdown();
 
-        // shutdown the ehcache manager
-        CacheManager.getInstance().shutdown();
+        // shutdown our persistence context
+        perCtx.shutdown();
 
         // close our audit logs
         _glog.close();

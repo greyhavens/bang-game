@@ -54,7 +54,6 @@
     <file name="${extlibs.dir}/commons-io.jar"/>
     <file name="${extlibs.dir}/commons-lang.jar"/>
     <file name="${extlibs.dir}/commons-logging.jar"/>
-    <file name="${extlibs.dir}/ehcache-1.2.jar"/>
     <file name="${extlibs.dir}/getdown.jar"/>
     <file name="${extlibs.dir}/gwt-user.jar"/>
     <file name="${extlibs.dir}/jarbundler-1.2.jar"/>
@@ -179,8 +178,6 @@
 
     <copy file="rsrc/config/resource/manager.properties"
           tofile="${deploy.dir}/rsrc/config/resource/manager.properties"/>
-    <!-- use the default ehcache config for now -->
-    <copy file="build/etc/ehcache.xml" todir="${deploy.dir}/classes"/>
   </target>
 
   <!-- generates fields for persistent record classes -->
@@ -890,9 +887,6 @@
         <include name="rsrc/bounties/**"/>
         <include name="rsrc/extras/**"/>
         <exclude name="**/*.jar"/>
-      </fileset>
-      <fileset dir="${deploy.dir}/classes">
-        <include name="ehcache.xml"/>
       </fileset>
     </jar>
   </target>

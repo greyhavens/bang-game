@@ -4,6 +4,7 @@
 package com.threerings.bang.tests.server;
 
 import com.samskivert.jdbc.StaticConnectionProvider;
+import com.samskivert.jdbc.depot.PersistenceContext;
 import com.samskivert.util.Log;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
@@ -25,9 +26,9 @@ public class StringCodeTest
         OneLineLogFormatter.configureDefaultHandler(false);
 
         try {
-            StaticConnectionProvider conprov =
-                new StaticConnectionProvider(ServerConfig.getJDBCConfig());
-            BangStatRepository statrepo = new BangStatRepository(conprov);
+            BangStatRepository statrepo = new BangStatRepository(
+                new PersistenceContext(
+                    "bangdb", new StaticConnectionProvider(ServerConfig.getJDBCConfig())));
 
             // this should generate a warning
             System.out.println("Looking for missing code: " +

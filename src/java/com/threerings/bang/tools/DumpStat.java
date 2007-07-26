@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import com.samskivert.jdbc.StaticConnectionProvider;
+import com.samskivert.jdbc.depot.PersistenceContext;
 import com.samskivert.util.CountHashMap;
 import com.samskivert.util.StringUtil;
 
@@ -57,9 +58,9 @@ public class DumpStat
             return; // help the compiler be smart
         }
 
-        StaticConnectionProvider conprov =
-            new StaticConnectionProvider(ServerConfig.getJDBCConfig());
-        BangStatRepository statrepo = new BangStatRepository(conprov);
+        BangStatRepository statrepo = new BangStatRepository(
+            new PersistenceContext(
+                "bangdb", new StaticConnectionProvider(ServerConfig.getJDBCConfig())));
 
         Grinder grinder = null;
         switch (action) {

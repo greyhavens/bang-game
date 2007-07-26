@@ -6,7 +6,7 @@ package com.threerings.bang.server;
 import java.util.Date;
 
 import com.samskivert.io.PersistenceException;
-import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.jdbc.depot.PersistenceContext;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObserverList;
@@ -79,10 +79,10 @@ public class BangPeerManager extends CrowdPeerManager
         public void remotePlayerChangedHandle (int townIndex, Handle oldHandle, Handle newHandle);
     }
 
-    public BangPeerManager (ConnectionProvider conprov, Invoker invoker)
+    public BangPeerManager (PersistenceContext ctx, Invoker invoker)
         throws PersistenceException
     {
-        super(conprov, invoker);
+        super(ctx, invoker);
     }
 
     /**
