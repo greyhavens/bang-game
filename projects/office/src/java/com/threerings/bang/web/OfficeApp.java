@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
+import com.samskivert.jdbc.depot.PersistenceContext;
 import com.samskivert.servlet.JDBCTableSiteIdentifier;
 import com.samskivert.servlet.SiteIdentifier;
 import com.samskivert.servlet.util.RequestUtils;
@@ -60,6 +61,13 @@ public class OfficeApp extends Application
         return _statrepo;
     }
 
+    @Override // from Application
+    public void shutdown ()
+    {
+        super.shutdown();
+        _perCtx.shutdown();
+    }
+
     @Override // documentation inherited
     protected void willInit (ServletConfig config)
     {
@@ -67,8 +75,8 @@ public class OfficeApp extends Application
 
 	try {
             // create a static connection provider
-            _conprov = new StaticConnectionProvider(
-                ServerConfig.getJDBCConfig());
+            _conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+            _perCtx = new PersistenceContext("bangdb", _conprov);
 
             // create our user manager
             _usermgr = new OOOUserManager(
@@ -76,7 +84,7 @@ public class OfficeApp extends Application
 
             // create our repositories
             _playrepo = new PlayerStatRepository(_conprov);
-            _statrepo = new BangStatRepository(_conprov);
+            _statrepo = new BangStatRepository(_perCtx);
 
 	    log.info("Sheriff's Office initialized.");
 
@@ -126,6 +134,7 @@ public class OfficeApp extends Application
     }
 
     protected ConnectionProvider _conprov;
+    protected PersistenceContext _perCtx;
     protected OOOUserManager _usermgr;
 
     protected PlayerStatRepository _playrepo;
