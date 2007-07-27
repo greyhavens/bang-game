@@ -18,6 +18,8 @@ import com.samskivert.jdbc.depot.Query.TrivialQuery;
 import com.threerings.stats.data.Stat;
 import com.threerings.stats.server.persist.StatRepository;
 
+import com.threerings.bang.data.StatType;
+
 /**
  * Extends the standard StatRepository with some Bang-specific bits.
  */
@@ -78,5 +80,16 @@ public class BangStatRepository extends StatRepository
                 return null;
             }
         });
+    }
+
+    @Override // documentation inherited
+    protected void loadStringCodes (Stat.Type type)
+        throws PersistenceException
+    {
+        // we need to make sure StatType has been initialized
+        StatType stattype = StatType.UNUSED;
+
+        // now back to our regular scheduled programming
+        super.loadStringCodes(type);
     }
 }
