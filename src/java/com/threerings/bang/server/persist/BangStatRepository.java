@@ -13,6 +13,7 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.depot.PersistenceContext;
+import com.samskivert.jdbc.depot.Query.TrivialQuery;
 
 import com.threerings.stats.data.Stat;
 import com.threerings.stats.server.persist.StatRepository;
@@ -54,29 +55,28 @@ public class BangStatRepository extends StatRepository
     public void processStats (final Processor processor, Stat.Type type)
         throws PersistenceException
     {
-// TODO
-//         final Stat stat = type.newStat();
-//         final String query = "select STATS.PLAYER_ID, ACCOUNT_NAME, HANDLE, CREATED, " +
-//             "SESSION_MINUTES, STAT_DATA from STATS, PLAYERS " +
-//             "where PLAYERS.PLAYER_ID = STATS.PLAYER_ID and STAT_CODE = " + type.code();
-//         execute(new Operation<Object>() {
-//             public Object invoke (Connection conn, DatabaseLiaison liaison)
-//                 throws SQLException, PersistenceException
-//             {
-//                 Statement stmt = conn.createStatement();
-//                 try {
-//                     ResultSet rs = stmt.executeQuery(query);
-//                     while (rs.next()) {
-//                         if (decodeStat(stat, (byte[])rs.getObject(6)) != null) {
-//                             processor.process(rs.getInt(1), rs.getString(2), rs.getString(3),
-//                                               rs.getDate(4), rs.getInt(5), stat);
-//                         }
-//                     }
-//                 } finally {
-//                     JDBCUtil.close(stmt);
-//                 }
-//                 return null;
-//             }
-//         });
+        final Stat stat = type.newStat();
+        final String query = "select STATS.PLAYER_ID, ACCOUNT_NAME, HANDLE, CREATED, " +
+            "SESSION_MINUTES, STAT_DATA from STATS, PLAYERS " +
+            "where PLAYERS.PLAYER_ID = STATS.PLAYER_ID and STAT_CODE = " + type.code();
+        _ctx.invoke(new TrivialQuery<Void>() {
+            public Void invoke (Connection conn, DatabaseLiaison liaison)
+            throws SQLException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        if (decodeStat(stat, (byte[])rs.getObject(6)) != null) {
+                            processor.process(rs.getInt(1), rs.getString(2), rs.getString(3),
+                                              rs.getDate(4), rs.getInt(5), stat);
+                        }
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
     }
 }
