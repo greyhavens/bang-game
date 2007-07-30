@@ -82,6 +82,7 @@
   <!-- creates the disk image -->
   <target name="image">
     <exec executable="mkisofs" failonerror="true">
+      <arg line="-quiet"/>
       <arg line="-hide-rr-moved"/>
       <arg line="-hide-joliet"/>
       <arg line=".rr_moved"/>
