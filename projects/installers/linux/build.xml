@@ -41,13 +41,14 @@
       <arg line="${temp.dir}/bangeditor"/>
     </exec>
 
-    <exec executable="makeself" failonerror="true">
+    <exec executable="makeself" failonerror="true" outputproperty="make.output">
       <arg line="${temp.dir}"/>
       <arg line="../${deploy.dir}/bang-install.bin"/>
       <arg line="${client_ident}"/>
       <arg line="./finish_install.sh"/>
       <arg line="$0"/>
     </exec>
+    <echo level="info">${make.output}</echo>
 
     <delete dir="${temp.dir}"/>
   </target>
