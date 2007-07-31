@@ -29,6 +29,7 @@ import static com.threerings.bang.Log.*;
  * Manages rating bits.
  */
 public class RatingManager
+    implements BangServer.Shutdowner
 {
     /**
      * Prepares the rating manager for operation.
@@ -42,8 +43,11 @@ public class RatingManager
         _trackers = new HashMap<TrackerKey, Percentiler>();
         _ratingrepo.loadScoreTrackers(_trackers);
 
-        // if we're a town server, queue up an interval to periodically grind
-        // our ratings tables and one to sync our score trackers
+        // register to be shutdown when the server shuts down
+        BangServer.registerShutdowner(this);
+
+        // if we're a town server, queue up an interval to periodically grind our ratings tables
+        // and one to sync our score trackers
         if (ServerConfig.isTownServer) {
             createRankRecalculateInterval();
             createTrackerSyncInterval();
@@ -57,15 +61,6 @@ public class RatingManager
     }
 
     /**
-     * Allows the rating manager to save its state to the database.
-     */
-    public void shutdown ()
-    {
-        log.info("Rating manager shutting down.");
-        syncTrackers();
-    }
-
-    /**
      * Given a numeric rating, returns its rank level.  This method must be thread-safe, as it is
      * called from both the dobj and the invoker thread.
      */
@@ -76,8 +71,8 @@ public class RatingManager
     }
 
     /**
-     * Returns the percentile occupied by the specified score value in the
-     * specified scenario with the given number of players.
+     * Returns the percentile occupied by the specified score value in the specified scenario with
+     * the given number of players.
      *
      * @param record if true, the score will be recorded to the percentiler as
      * a data point.
@@ -97,6 +92,13 @@ public class RatingManager
             tracker.recordValue(score);
         }
         return pct;
+    }
+
+    // from BangServer.Shutdowner
+    public void shutdown ()
+    {
+        log.info("Rating manager shutting down.");
+        syncTrackers();
     }
 
     /**

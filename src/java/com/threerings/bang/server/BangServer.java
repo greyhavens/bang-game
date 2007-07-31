@@ -352,30 +352,6 @@ public class BangServer extends CrowdServer
     }
 
     @Override // documentation inherited
-    public void shutdown ()
-    {
-        super.shutdown();
-
-        // logoff of our peer nodes
-        if (peermgr != null) {
-            peermgr.shutdown();
-        }
-
-        // shut down the rating manager
-        ratingmgr.shutdown();
-
-        // shutdown our persistence context
-        perCtx.shutdown();
-
-        // close our audit logs
-        _glog.close();
-        _ilog.close();
-        _stlog.close();
-        _plog.close();
-        BangCoinManager.coinlog.close();
-    }
-
-    @Override // documentation inherited
     protected BodyLocator createBodyLocator ()
     {
         return new BodyLocator() {
@@ -601,6 +577,22 @@ public class BangServer extends CrowdServer
     protected void logReport (String report)
     {
         _stlog.log(report);
+    }
+
+    @Override // from PresentsServer
+    protected void invokerDidShutdown ()
+    {
+        super.invokerDidShutdown();
+
+        // shutdown our persistence context
+        perCtx.shutdown();
+
+        // close our audit logs
+        _glog.close();
+        _ilog.close();
+        _stlog.close();
+        _plog.close();
+        BangCoinManager.coinlog.close();
     }
 
     protected void checkAutoRestart ()
