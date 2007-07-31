@@ -13,7 +13,6 @@ import com.samskivert.util.RandomUtil;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.parlor.game.data.GameAI;
 import com.threerings.presents.server.InvocationException;
 

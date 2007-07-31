@@ -48,7 +48,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.server.PresentsServer;
 
-import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
@@ -1533,7 +1533,7 @@ public class BangManager extends GameManager
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
                             ", scen=" + _scenario + ", error=" + ie.getMessage() + "].");
-                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, ie.getMessage());
+                SpeakUtil.sendAttention(_bangobj, GAME_MSGS, ie.getMessage());
                 // TODO: cancel the round (or let the scenario cancel it on the first tick?)
             }
 
@@ -2236,7 +2236,7 @@ public class BangManager extends GameManager
                 // per round points which is used for various stat calculations later on).
                 if (!active[ii]) {
                     _bangobj.setPointsAt(0, ii);
-                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
+                    SpeakUtil.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
                                 "m.resign_points", _bangobj.players[ii].toString()));
                 }
                 _ranks[ii] = new RankRecord(ii, points[ii], kills, (active[ii] ? 1 : 0));
@@ -2254,7 +2254,7 @@ public class BangManager extends GameManager
                     // we won't break adjust points for resigned players
                     if (_bangobj.points[highidx] <= _bangobj.points[lowidx] && active[highidx]) {
                         _bangobj.setPointsAt(_bangobj.points[lowidx]+1, highidx);
-                        SpeakProvider.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
+                        SpeakUtil.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
                                     "m.tiebreaker_points", _bangobj.players[highidx].toString()));
                     }
                 }

@@ -49,7 +49,7 @@ import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.data.SpeakObject;
-import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.parlor.server.ParlorSender;
 
 import com.threerings.underwire.server.persist.EventRecord;
@@ -857,7 +857,7 @@ public class PlayerManager
         // format and provide the complainer's chat history
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss:SSS");
         StringBuilder chatHistory = new StringBuilder();
-        for (ChatMessage msg : SpeakProvider.getChatHistory(user.handle)) {
+        for (ChatMessage msg : SpeakUtil.getChatHistory(user.handle)) {
             UserMessage umsg = (UserMessage)msg;
             chatHistory.append(df.format(new Date(umsg.timestamp))).append(' ');
             chatHistory.append(StringUtil.pad(ChatCodes.XLATE_MODES[umsg.mode], 10)).append(' ');
@@ -1082,7 +1082,7 @@ public class PlayerManager
     public void deliverItemLocal (PlayerObject user, Item item, String source)
     {
         user.addToInventory(item);
-        SpeakProvider.sendInfo(user, BangCodes.BANG_MSGS,
+        SpeakUtil.sendInfo(user, BangCodes.BANG_MSGS,
             MessageBundle.compose("m.received_item", item.getName(), source));
     }
 
@@ -1141,7 +1141,7 @@ public class PlayerManager
             }
         }
         String msg = accept ? "m.pardner_accepted" : "m.pardner_rejected";
-        SpeakProvider.sendInfo(inviter, BANG_MSGS, MessageBundle.tcompose(msg, invitee));
+        SpeakUtil.sendInfo(inviter, BANG_MSGS, MessageBundle.tcompose(msg, invitee));
     }
 
     /**
@@ -1164,7 +1164,7 @@ public class PlayerManager
     {
         removee.removeFromPardners(remover);
         String msg = MessageBundle.tcompose("m.pardner_ended", remover);
-        SpeakProvider.sendInfo(removee, BANG_MSGS, msg);
+        SpeakUtil.sendInfo(removee, BANG_MSGS, msg);
     }
 
     /**

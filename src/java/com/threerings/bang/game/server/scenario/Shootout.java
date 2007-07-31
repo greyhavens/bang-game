@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 
-import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.util.MessageBundle;
 
@@ -57,7 +57,7 @@ public class Shootout extends Scenario
                 bangobj.grantPoints(ii, SCORE_POINTS * score);
                 String msg = MessageBundle.tcompose(
                     "m.knocked_out", bangobj.players[ii]);
-                SpeakProvider.sendInfo(bangobj, GameCodes.GAME_MSGS, msg);
+                SpeakUtil.sendInfo(bangobj, GameCodes.GAME_MSGS, msg);
             }
         }
 

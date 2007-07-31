@@ -24,7 +24,7 @@ import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
-import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.crowd.chat.server.SpeakUtil;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.BangOccupantInfo;
@@ -207,7 +207,7 @@ public class ParlorManager extends PlaceManager
             return;
         }
 
-        SpeakProvider.sendAttention(other, SALOON_MSGS, "m.booted");
+        SpeakUtil.sendAttention(other, SALOON_MSGS, "m.booted");
         BangServer.plreg.locprov.moveBody(other, _salmgr.getLocation());
         _bootSet.add(boi.playerId);
     }

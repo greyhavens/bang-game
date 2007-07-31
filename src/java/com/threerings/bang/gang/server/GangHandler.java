@@ -57,8 +57,9 @@ import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.server.SpeakDispatcher;
+import com.threerings.crowd.chat.server.SpeakHandler;
 import com.threerings.crowd.chat.server.SpeakProvider;
-import com.threerings.crowd.chat.server.SpeakProvider.SpeakerValidator;
+import com.threerings.crowd.chat.server.SpeakUtil;
 
 import com.threerings.coin.server.CoinExOffer;
 import com.threerings.coin.server.persist.CoinTransaction;
@@ -110,7 +111,7 @@ import static com.threerings.bang.Log.*;
  */
 public class GangHandler
     implements DroppedLockObserver, PlayerObserver, RemotePlayerObserver, MessageListener,
-        AttributeChangeListener, SetListener, ObjectDeathListener, SpeakerValidator,
+        AttributeChangeListener, SetListener, ObjectDeathListener, SpeakHandler.SpeakerValidator,
         GangPeerProvider, GangCodes
 {
     /**
@@ -593,7 +594,7 @@ public class GangHandler
         }
     }
 
-    // documentation inherited from interface SpeakerValidator
+    // from interface SpeakHandler.SpeakerValidator
     public boolean isValidSpeaker (DObject speakobj, ClientObject speaker, byte mode)
     {
         return _gangobj.members.containsKey(((PlayerObject)speaker).handle);
@@ -810,7 +811,7 @@ public class GangHandler
         }
 
         // speak!
-        SpeakProvider.sendSpeak(_gangobj, handle, null, message, mode);
+        SpeakUtil.sendSpeak(_gangobj, handle, null, message, mode);
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1387,7 +1388,7 @@ public class GangHandler
         verifyIsLeader(handle);
 
         // transmit on the gang object and report success
-        SpeakProvider.sendSpeak(_gangobj, handle, null, message, ChatCodes.BROADCAST_MODE);
+        SpeakUtil.sendSpeak(_gangobj, handle, null, message, ChatCodes.BROADCAST_MODE);
         listener.requestProcessed();
     }
 
@@ -1736,7 +1737,7 @@ public class GangHandler
 
         // register the speak service for local users
         _gangobj.speakService = (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
-            new SpeakDispatcher(new SpeakProvider(_gangobj, this)));
+            new SpeakDispatcher(new SpeakHandler(_gangobj, this)));
 
         // create our table game manager for this town
         _tmgr = new TableGameManager();
@@ -1973,7 +1974,7 @@ public class GangHandler
         // the controlling node
         _gangobj.speakService =
             (SpeakMarshaller)BangServer.invmgr.registerDispatcher(new SpeakDispatcher(
-                new SpeakProvider(_gangobj, this) {
+                new SpeakProvider() {
                     public void speak (ClientObject caller, String message, byte mode) {
                         _gangobj.gangPeerService.sendSpeak(
                             _client, ((PlayerObject)caller).handle, message, mode);
@@ -2151,7 +2152,7 @@ public class GangHandler
         // TODO: notify the inviter if he's on another server
         PlayerObject invobj = BangServer.lookupPlayer(inviter);
         if (invobj != null) {
-            SpeakProvider.sendInfo(invobj, GANG_MSGS,
+            SpeakUtil.sendInfo(invobj, GANG_MSGS,
                 MessageBundle.tcompose(
                     (mrec == null) ? "m.member_rejected" : "m.member_accepted",
                     handle, _gangobj.name));
