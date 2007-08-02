@@ -126,6 +126,20 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case GangPeerMarshaller.RENEW_GANG_ITEM:
+            ((GangPeerProvider)provider).renewGangItem(
+                source,
+                (Handle)args[0], ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
+        case GangPeerMarshaller.RENT_GANG_GOOD:
+            ((GangPeerProvider)provider).rentGangGood(
+                source,
+                (Handle)args[0], (String)args[1], (Object[])args[2], ((Boolean)args[3]).booleanValue(), (InvocationService.ConfirmListener)args[4]
+            );
+            return;
+
         case GangPeerMarshaller.RESERVE_SCRIP:
             ((GangPeerProvider)provider).reserveScrip(
                 source,

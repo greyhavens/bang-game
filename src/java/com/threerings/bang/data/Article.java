@@ -37,9 +37,6 @@ import static com.threerings.bang.Log.log;
  */
 public class Article extends Item
 {
-    /** Date formating when showing temporary articles. */
-    public static final SimpleDateFormat EXPIRE_FORMAT = new SimpleDateFormat("MMM d, yyyy");
-
     /**
      * Creates a comparator to sort articles.
      */
@@ -131,7 +128,7 @@ public class Article extends Item
      * Returns the id of the gang with which this article is associated, or 0 for none.
      * Gang articles can only be worn by members of the gang.
      */
-    public int getGangId ()
+    public int getArticleGangId ()
     {
         return _gangId;
     }
@@ -139,7 +136,7 @@ public class Article extends Item
     /**
      * Sets the gang id.
      */
-    public void setGangId (int gangId)
+    public void setArticleGangId (int gangId)
     {
         _gangId = gangId;
     }
@@ -190,42 +187,13 @@ public class Article extends Item
     @Override // documentation inherited
     public String getTooltip (PlayerObject user)
     {
-        String msg = "m.article_tip";
-        if (_expires != 0) {
-            msg = MessageBundle.tcompose(
-                    msg + "_expires", EXPIRE_FORMAT.format(new Date(_expires)));
-        } else if (_gangId != 0) {
-            msg += (isWearable(user) ? "_uniform" : "_unwearable");
-        }
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.article_tip");
     }
 
     @Override // documentation inherited
     public String getIconPath ()
     {
         return getIconPath(_name);
-    }
-
-    @Override // documentation inherited
-    public ImageIcon createIcon (BasicContext ctx, String iconPath)
-    {
-        AvatarLogic al = ctx.getAvatarLogic();
-        ArticleCatalog.Article aca = al.getArticleCatalog().getArticle(_name);
-        if (aca == null) {
-            log.warning("Article no longer exists? " + this);
-            return customizeIcon(ctx, super.createIcon(ctx, iconPath));
-        }
-
-        Colorization[] zations = al.decodeColorizations(
-            getComponents()[0], al.getColorizationClasses(aca));
-        if (zations == null) {
-            return customizeIcon(ctx, super.createIcon(ctx, iconPath));
-        }
-
-        BImage image = new BImage(
-            ImageUtil.recolorImage(
-                ctx.getImageCache().getBufferedImage(iconPath), zations));
-        return customizeIcon(ctx, new ImageIcon(image));
     }
 
     @Override // documentation inherited
@@ -250,36 +218,10 @@ public class Article extends Item
         return true;
     }
 
-    /**
-     * If the article is unwearable, returns an icon with a lock on it.
-     */
-    protected ImageIcon customizeIcon (BasicContext ctx, final ImageIcon base)
+    @Override // documentation inherited
+    public boolean canBeOwned (PlayerObject user)
     {
-        if (!(ctx instanceof BangContext) || _gangId == 0) {
-            return base;
-        }
-        boolean wearable = isWearable(((BangContext)ctx).getUserObject());
-        return new ImageIcon(ctx.loadImage(wearable ?
-            "ui/icons/gang_item.png" : "ui/ranch/unit_locked.png")) {
-            public int getHeight () {
-                return base.getHeight();
-            }
-            public int getWidth () {
-                return base.getWidth();
-            }
-            public void wasAdded () {
-                super.wasAdded();
-                base.wasAdded();
-            }
-            public void wasRemoved () {
-                super.wasRemoved();
-                base.wasRemoved();
-            }
-            public void render (Renderer r, int x, int y, float alpha) {
-                base.render(r, x, y, alpha);
-                super.render(r, x, y, alpha);
-            }
-        };
+        return user.isMale == (getArticleName().indexOf("female") == -1);
     }
 
     @Override // documentation inherited
@@ -296,6 +238,28 @@ public class Article extends Item
         if (_expires != 0) {
             buf.append(", expires=").append(_expires);
         }
+    }
+
+    @Override // documentation inherited
+    protected ImageIcon buildIcon (BasicContext ctx, String iconPath)
+    {
+        AvatarLogic al = ctx.getAvatarLogic();
+        ArticleCatalog.Article aca = al.getArticleCatalog().getArticle(_name);
+        if (aca == null) {
+            log.warning("Article no longer exists? " + this);
+            return super.buildIcon(ctx, iconPath);
+        }
+
+        Colorization[] zations = al.decodeColorizations(
+            getComponents()[0], al.getColorizationClasses(aca));
+        if (zations == null) {
+            return super.buildIcon(ctx, iconPath);
+        }
+
+        BImage image = new BImage(
+            ImageUtil.recolorImage(
+                ctx.getImageCache().getBufferedImage(iconPath), zations));
+        return new ImageIcon(image);
     }
 
     protected String _slot, _name;

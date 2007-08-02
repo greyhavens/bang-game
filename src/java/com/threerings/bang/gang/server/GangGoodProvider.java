@@ -62,7 +62,7 @@ public abstract class GangGoodProvider extends GangFinancialAction
         // insert a history entry
         _entryId = BangServer.gangrepo.insertHistoryEntry(_gang.gangId,
             MessageBundle.compose(
-                "m.purchase_entry",
+                getHistoryLogKey(),
                 MessageBundle.taint(_handle),
                 _good.getName(),
                 GangUtil.getMoneyDesc(_scripCost, _coinCost, _aceCost)));
@@ -89,6 +89,11 @@ public abstract class GangGoodProvider extends GangFinancialAction
     protected void actionFailed (String cause)
     {
         _listener.requestFailed(cause);
+    }
+
+    protected String getHistoryLogKey ()
+    {
+        return "m.purchase_entry";
     }
 
     protected String getGoodType ()

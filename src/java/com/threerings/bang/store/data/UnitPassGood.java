@@ -78,5 +78,14 @@ public class UnitPassGood extends Good
         return new UnitPass(playerId, getUnitType());
     }
 
+    @Override // documentation inherited
+    public boolean wouldCreateItem (Item item)
+    {
+        if (!(item instanceof UnitPass)) {
+            return false;
+        }
+        return ((UnitPass)item).getUnitType().equals(getUnitType());
+    }
+
     protected static final int UNIT_PASS_PRIORITY = 10;
 }

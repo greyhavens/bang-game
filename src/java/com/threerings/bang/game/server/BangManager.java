@@ -1811,13 +1811,17 @@ public class BangManager extends GameManager
                 _bangobj.perRoundRanks[_activeRoundId][ranks[ii].pidx] = rank;
             }
 
-            // record for all players still in the game that they "used" their units in this round
-            noteUnitsUsed(_purchases, StatType.UNITS_USED, -1);
+            // don't count unit usage for bounty games
+            if (_bconfig.type != BangConfig.Type.BOUNTY) {
+                // record for all players still in the game that they "used" their units in this
+                // round
+                noteUnitsUsed(_purchases, StatType.UNITS_USED, -1);
 
-            // also keep track of all big shot units used during the game
-            for (Unit unit : _bangobj.bigShots) {
-                if (unit != null) {
-                    _bigshots.add(unit);
+                // also keep track of all big shot units used during the game
+                for (Unit unit : _bangobj.bigShots) {
+                    if (unit != null) {
+                        _bigshots.add(unit);
+                    }
                 }
             }
         }
@@ -3503,7 +3507,8 @@ public class BangManager extends GameManager
     protected static final int MIN_RATED_DURATION = 180;
 
     /** If a game is shorter than this (in minutes) some stats don't count. */
-    protected static final int MIN_STATS_DURATION = 2;
+    protected static final int MIN_STATS_DURATION = 0;
+    //protected static final int MIN_STATS_DURATION = 2;
 
     /** Stats that we accumulate at the end of the game into the player's persistent stats. */
     protected static final StatType[] ACCUM_STATS = {

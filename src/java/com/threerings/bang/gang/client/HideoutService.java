@@ -107,6 +107,16 @@ public interface HideoutService extends InvocationService
     public void buyGangGood (Client client, String type, Object[] args, ConfirmListener listener);
 
     /**
+     * Rents a good for all gang members with the specified arguments.
+     */
+    public void rentGangGood (Client client, String type, Object[] args, ConfirmListener listener);
+
+    /**
+     * Renews a gang rented item.
+     */
+    public void renewGangItem (Client client, int itemId, ConfirmListener listener);
+
+    /**
      * Broadcast a message to all online members of the player's gang.
      */
     public void broadcastToMembers (Client client, String message, ConfirmListener listener);

@@ -75,6 +75,12 @@ public class WeightClassUpgrade extends Item
             ((WeightClassUpgrade)other)._weightClass == _weightClass;
     }
 
+    @Override // documentation inherited
+    public boolean canBeOwned (PlayerObject user)
+    {
+        return false;
+    }
+
     @Override // from Item
     protected void toString (StringBuilder buf)
     {

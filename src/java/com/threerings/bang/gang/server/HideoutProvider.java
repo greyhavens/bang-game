@@ -97,6 +97,18 @@ public interface HideoutProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link HideoutService#renewGangItem} request.
+     */
+    public void renewGangItem (ClientObject caller, int arg1, InvocationService.ConfirmListener arg2)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link HideoutService#rentGangGood} request.
+     */
+    public void rentGangGood (ClientObject caller, String arg1, Object[] arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
+
+    /**
      * Handles a {@link HideoutService#setBuckle} request.
      */
     public void setBuckle (ClientObject caller, BucklePart[] arg1, InvocationService.ConfirmListener arg2)

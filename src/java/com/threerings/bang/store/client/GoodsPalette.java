@@ -111,10 +111,15 @@ public class GoodsPalette extends IconPalette
             // if we're trying to reselect our previous good but couldn't find it, don't select
             // anything and leave the old good shown in the inspector
 
-        } else {
+        } else if (autoSelectFirstItem()) {
             // select the first thing on the current page
             _icons.get(_page * _rows * _cols).setSelected(true);
         }
+    }
+
+    public boolean autoSelectFirstItem ()
+    {
+        return true;
     }
 
     /**

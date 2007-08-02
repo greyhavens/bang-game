@@ -88,6 +88,18 @@ public interface GangPeerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link GangPeerService#renewGangItem} request.
+     */
+    public void renewGangItem (ClientObject caller, Handle arg1, int arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link GangPeerService#rentGangGood} request.
+     */
+    public void rentGangGood (ClientObject caller, Handle arg1, String arg2, Object[] arg3, boolean arg4, InvocationService.ConfirmListener arg5)
+        throws InvocationException;
+
+    /**
      * Handles a {@link GangPeerService#reserveScrip} request.
      */
     public void reserveScrip (ClientObject caller, int arg1, InvocationService.ResultListener arg2)

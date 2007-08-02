@@ -27,6 +27,7 @@ import com.threerings.bang.data.BangNodeObject;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangServer;
@@ -53,6 +54,7 @@ import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutMarshaller;
 import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.OutfitArticle;
+import com.threerings.bang.gang.data.RentalGood;
 import com.threerings.bang.gang.data.TopRankedGangList;
 
 import static com.threerings.bang.Log.log;
@@ -143,6 +145,48 @@ public class HideoutManager extends MatchHostManager
             throw new InvocationException(INTERNAL_ERROR);
         }
         return provider;
+    }
+
+    /**
+     * Attempts to create a {@link GangGoodProvider} to rent a good for the specified
+     * gang.
+     */
+    public GangGoodProvider getRentalGoodProvider (
+        GangHandler gang, Handle handle, boolean admin, String type, Object[] args)
+        throws InvocationException
+    {
+        // make sure we sell the good in question
+        RentalGood good = (RentalGood)_hobj.rentalGoods.get(type);
+        if (good == null) {
+            log.warning("Requested to rent unknown good [gang=" + gang +
+                        ", handle=" + handle + ", type=" + type + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // validate that the client can rent this good
+        if (!good.isAvailable(gang.getGangObject())) {
+            log.warning("Requested to rent unavailable good [gang=" + gang +
+                        ", handle=" + handle + ", good=" + good + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // create the appropriate provider and return it
+        GangGoodProvider provider = _rentalGoods.getProvider(
+            gang.getGangObject(), handle, admin, good, args);
+        if (provider == null) {
+            log.warning("Unable to find provider for good [gang=" + gang +
+                        ", handle=" + handle + ", good=" + good + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        return provider;
+    }
+
+    /**
+     * Returns a rental good that would create the provided item.
+     */
+    public RentalGood getRentalGood (Item item)
+    {
+        return _hobj.getRentalGood(item);
     }
 
     // documentation inherited from interface HideoutProvider
@@ -351,6 +395,32 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
+    public void rentGangGood (ClientObject caller, String type, Object[] args,
+                             HideoutService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).rentGangGood(
+            null, user.handle, type, args, user.tokens.isAdmin(), listener);
+    }
+
+    // documentation inherited from interface HideoutProvider
+    public void renewGangItem (
+            ClientObject caller, int itemId, HideoutService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).renewGangItem(
+                null, user.handle, itemId, listener);
+    }
+
+    // documentation inherited from interface HideoutProvider
     public void broadcastToMembers (ClientObject caller, String message,
                                     HideoutService.ConfirmListener listener)
         throws InvocationException
@@ -428,6 +498,7 @@ public class HideoutManager extends MatchHostManager
 
         // create our goods catalog
         _goods = new GangGoodsCatalog(BangServer.alogic);
+        _rentalGoods = new RentalGoodsCatalog(BangServer.alogic);
     }
 
     @Override // from PlaceManager
@@ -440,6 +511,7 @@ public class HideoutManager extends MatchHostManager
         _hobj.setService((HideoutMarshaller)
                          BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this)));
         _hobj.setGoods(new DSet<Good>(_goods.getGoods()));
+        _hobj.setRentalGoods(new DSet<Good>(_rentalGoods.getGoods()));
 
         // register with the coin exchange manager
         BangServer.coinexmgr.registerPublisher(this);
@@ -601,6 +673,7 @@ public class HideoutManager extends MatchHostManager
     }
 
     protected GangGoodsCatalog _goods;
+    protected RentalGoodsCatalog _rentalGoods;
     protected HideoutObject _hobj;
     protected Interval _rankval;
 

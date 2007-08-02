@@ -25,6 +25,10 @@ import com.samskivert.util.QuickSort;
 
 import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.util.MessageBundle;
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.MoneyLabel;
@@ -35,6 +39,7 @@ import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
@@ -43,16 +48,28 @@ import com.threerings.bang.avatar.client.ColorSelector;
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.avatar.util.ArticleCatalog;
 
+import com.threerings.bang.store.client.GoodsInspector;
+import com.threerings.bang.store.client.GoodsPalette;
+import com.threerings.bang.store.data.ArticleGood;
+import com.threerings.bang.store.data.Good;
+import com.threerings.bang.store.data.GoodsObject;
+
 import com.threerings.bang.gang.data.GangObject;
+import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.OutfitArticle;
+import com.threerings.bang.gang.data.RentalGood;
+import com.threerings.bang.gang.data.GangGood;
+import com.threerings.bang.gang.util.GangUtil;
+import com.threerings.bang.store.client.GoodsIcon;
+import com.threerings.media.image.Colorization;
 
 /**
  * Allows gang leaders to select and purchase outfits for their gangs.
  */
 public class OutfitDialog extends BDecoratedWindow
-    implements ActionListener, IconPalette.Inspector, HideoutCodes
+    implements ActionListener, IconPalette.Inspector, HideoutCodes, GangCodes
 {
     public OutfitDialog (BangContext ctx, HideoutObject hideoutobj, GangObject gangobj)
     {
@@ -68,10 +85,6 @@ public class OutfitDialog extends BDecoratedWindow
 
         // remember the current gang outfit by article type
         ArticleCatalog acat = _ctx.getAvatarLogic().getArticleCatalog();
-        for (OutfitArticle oart : _gangobj.outfit) {
-            ArticleCatalog.Article catart = acat.getArticle(oart.article);
-            _oarts.put(new OutfitKey(catart), oart);
-        }
 
         BContainer pcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         pcont.setStyleClass("outfit_articles");
@@ -97,7 +110,7 @@ public class OutfitDialog extends BDecoratedWindow
         ltcont.add(acont);
 
         ltcont.add(_ltabs =
-            new HackyTabs(ctx, true, "ui/hideout/outfit_tab_left_", TABS, 85, 10) {
+            new HackyTabs(ctx, true, "ui/hideout/outfit_tab_left_", TABS, 68, 10) {
                 protected void tabSelected (int index) {
                     OutfitDialog.this.tabSelected(index, false);
                 }
@@ -105,7 +118,27 @@ public class OutfitDialog extends BDecoratedWindow
         _ltabs.setStyleClass("outfit_tabs_left");
         _ltabs.setDefaultTab(-1);
 
-        pcont.add(_palette = new IconPalette(this, 5, 3, ItemIcon.ICON_SIZE, Integer.MAX_VALUE));
+        pcont.add(_palette = new GoodsPalette(_ctx, 5, 3) {
+            public boolean autoSelectFirstItem () {
+                return false;
+            }
+            protected boolean isAvailable (Good good) {
+                return ((GangGood)good).isAvailable(_gangobj);
+            }
+            protected DObject getColorEntity () {
+                return _gangobj;
+            }
+        });
+        _goodsobj = new GoodsObject() {
+            public DSet<Good> getGoods() {
+                return _hideoutobj.rentalGoods;
+            }
+            public void buyGood (
+                Client client, String type, Object[] args, InvocationService.ConfirmListener cl) {
+                _hideoutobj.service.rentGangGood(client, type, args, cl);
+            }
+        };
+        _palette.init(_goodsobj);
         _palette.setPaintBackground(true);
         _palette.setShowNavigation(false);
 
@@ -126,7 +159,7 @@ public class OutfitDialog extends BDecoratedWindow
         rtcont.add(acont);
 
         rtcont.add(_rtabs =
-            new HackyTabs(ctx, true, "ui/hideout/outfit_tab_right_", TABS, 85, 10) {
+            new HackyTabs(ctx, true, "ui/hideout/outfit_tab_right_", TABS, 68, 10) {
                 protected void tabSelected (int index) {
                     OutfitDialog.this.tabSelected(index, true);
                 }
@@ -147,16 +180,14 @@ public class OutfitDialog extends BDecoratedWindow
 
         ccont.add(_icont = GroupLayout.makeHBox(GroupLayout.LEFT));
         ((GroupLayout)_icont.getLayoutManager()).setGap(10);
+        _palette.setInspector(this);
 
         BContainer bcont = GroupLayout.makeVBox(GroupLayout.CENTER);
         bcont.setStyleClass("outfit_controls");
         ((GroupLayout)bcont.getLayoutManager()).setPolicy(GroupLayout.STRETCH);
         bcont.add(new BLabel(_msgs.get("m.total_price"), "outfit_total_price"), GroupLayout.FIXED);
-        bcont.add(_qcont = GroupLayout.makeVBox(GroupLayout.CENTER));
-        _qcont.add(_quote = new BButton(_msgs.get("m.get_quote"), this, "get_quote"));
-        _quote.setStyleClass("alt_button");
-        _qlabel = new MoneyLabel(ctx);
-        bcont.add(_buy = new BButton(_msgs.get("m.buy_outfits"), this, "buy_outfits"),
+        bcont.add(_qlabel = new MoneyLabel(ctx));
+        bcont.add(_buy = new BButton(_msgs.get("m.rent_item"), this, "rent_item"),
             GroupLayout.FIXED);
         ccont.add(bcont, GroupLayout.FIXED);
 
@@ -170,9 +201,7 @@ public class OutfitDialog extends BDecoratedWindow
         dcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"), GroupLayout.FIXED);
         ccont.add(dcont, GroupLayout.FIXED);
 
-        boolean enable = !_oarts.isEmpty();
-        _quote.setEnabled(enable);
-        _buy.setEnabled(enable);
+        _buy.setEnabled(false);
 
         add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
         _status.setStatus(" ", false); // make sure it takes up space
@@ -188,59 +217,21 @@ public class OutfitDialog extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         String action = event.getAction();
-        if (action.equals("selectionChanged")) {
-            int zations = 0;
-            for (ColorSelector sel : _isels) {
-                zations |= AvatarLogic.composeZation(sel.getColorClass(), sel.getSelectedColor());
+        if (action.equals("rent_item")) {
+            if (_good == null) {
+                return;
             }
-            String name = ((Article)_iicon.getItem()).getArticleName();
-            AvatarLogic alogic = _ctx.getAvatarLogic();
-            Article article = alogic.createArticle(
-                -1, alogic.getArticleCatalog().getArticle(name), zations);
-            _iicon.setItem(article);
-            _ilabel.setIcon(_iicon.getIcon());
-            OutfitKey key = new OutfitKey(article);
-            _oarts.put(key, new OutfitArticle(name, zations));
-            updateAvatar(key.male);
-
-        } else if (action.equals("get_quote")) {
-            OutfitArticle[] oarts = _oarts.values().toArray(new OutfitArticle[0]);
-            _quote.setEnabled(false);
-            _hideoutobj.service.getOutfitQuote(_ctx.getClient(), oarts,
-                new HideoutService.ResultListener() {
-                    public void requestProcessed (Object result) {
-                        int[] cost = (int[])result;
-                        _qcont.remove(_quote);
-                        _qcont.add(_qlabel);
-                        _qlabel.setMoney(cost[0], cost[1], true);
-                    }
-                    public void requestFailed (String cause) {
-                        _status.setStatus(_msgs.xlate(cause), true);
-                        _quote.setEnabled(true);
-                    }
-                });
-        } else if (action.equals("buy_outfits")) {
-            OutfitArticle[] oarts = _oarts.values().toArray(new OutfitArticle[0]);
             _buy.setEnabled(false);
-            _hideoutobj.service.buyOutfits(_ctx.getClient(), oarts,
-                new HideoutService.ResultListener() {
-                    public void requestProcessed (Object result) {
-                        int[] counts = (int[])result;
-                        if (counts[0] == 0 && counts[1] == 0) {
-                            _status.setStatus(_msgs.get("m.nothing_bought"), false);
-                        } else {
-                            String msg = MessageBundle.compose("m.outfits_bought",
-                                MessageBundle.tcompose("m.member_count", counts[0]),
-                                MessageBundle.tcompose("m.articles", counts[1]));
-                            _status.setStatus(_msgs.xlate(msg), false);
-                        }
-                        _buy.setEnabled(true);
-                    }
-                    public void requestFailed (String cause) {
-                        _status.setStatus(_msgs.xlate(cause), true);
-                        _buy.setEnabled(true);
-                    }
-                });
+            HideoutService.ConfirmListener cl = new HideoutService.ConfirmListener() {
+                public void requestProcessed () {
+                }
+                public void requestFailed (String cause) {
+                    _buy.setEnabled(true);
+                    _status.setStatus(_msgs.xlate(cause), true);
+                }
+            };
+            _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
+
         } else if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
         }
@@ -249,37 +240,17 @@ public class OutfitDialog extends BDecoratedWindow
     // documentation inherited from interface IconPalette.Inspector
     public void iconUpdated (SelectableIcon icon, boolean selected)
     {
-        Article article = (Article)((ItemIcon)icon).getItem();
-        OutfitKey key = new OutfitKey(article);
-        if (selected) {
-            ItemIcon oicon = _oicons.get(key);
-            if (oicon != null) {
-                _preventArticleUpdates = true;
-                oicon.setSelected(false);
-                _preventArticleUpdates = false;
-            }
-            _oicons.put(key, (ItemIcon)icon);
-            _oarts.put(key, new OutfitArticle(
-                article.getArticleName(), article.getComponents()[0] & 0xFFFF0000));
-        } else {
-            _oicons.remove(key);
-            _oarts.remove(key);
-        }
-        if (!_preventArticleUpdates) {
-            updateAvatar(key.male);
-            if (selected) {
-                populateInspector((ItemIcon)icon);
-            } else if (icon == _iicon) {
+        if (!selected) {
+            if (icon == _gicon && _key != null) {
+                _oarts.remove(_key);
+                updateAvatar(_key.male);
+                _key = null;
                 populateInspector(null);
             }
+        } else {
+            populateInspector((GoodsIcon)icon);
         }
-        if (_qlabel.getParent() == _qcont) {
-            _qcont.remove(_qlabel);
-            _qcont.add(_quote);
-        }
-        boolean enable = !_oarts.isEmpty();
-        _quote.setEnabled(enable);
-        _buy.setEnabled(enable);
+        _buy.setEnabled(selected);
     }
 
     @Override // documentation inherited
@@ -298,78 +269,8 @@ public class OutfitDialog extends BDecoratedWindow
             (male ? _ltabs : _rtabs).selectTab(-1, false);
             _selmale = male;
             _selidx = index;
-            populatePalette();
-        }
-    }
-
-    /**
-     * Populates the article palette with the articles in the currently selected gender/slot
-     * combination.
-     */
-    protected void populatePalette ()
-    {
-        _palette.clear();
-        _oicons.clear();
-        populateInspector(null);
-
-        // sort the articles in the catalog first by slot, then by town, then by name
-        AvatarLogic alogic = _ctx.getAvatarLogic();
-        ArticleCatalog.Article[] catarts = alogic.getArticleCatalog().getArticles().toArray(
-            new ArticleCatalog.Article[0]);
-        QuickSort.sort(catarts, new Comparator<ArticleCatalog.Article>() {
-            public int compare (ArticleCatalog.Article a1, ArticleCatalog.Article a2) {
-                int diff = AvatarLogic.getSlotIndex(a1.slot) - AvatarLogic.getSlotIndex(a2.slot);
-                if (diff != 0) {
-                    return diff;
-                }
-                diff = BangUtil.getTownIndex(a1.townId) - BangUtil.getTownIndex(a2.townId);
-                return (diff == 0) ? a1.name.compareTo(a2.name) : diff;
-            }
-        });
-
-        boolean support = _ctx.getUserObject().tokens.isSupport();
-        for (ArticleCatalog.Article catart : catarts) {
-            if (catart.qualifier != null || catart.start != null || catart.stop != null) {
-                continue;
-            }
-            if (!(catart.townId.equals(BangCodes.FRONTIER_TOWN) || support ||
-                _ctx.getUserObject().holdsTicket(catart.townId))) {
-                // TODO: filter the articles according to the gang state, perhaps by
-                // making town articles accessible for gang outfits when the gangs
-                // achieve a certain amount of experience in the town's scenarios
-                continue;
-            }
-            if (!matchesSelection(catart)) {
-                continue;
-            }
-            int zations = 0;
-            boolean select = false;
-            OutfitKey key = new OutfitKey(catart);
-            OutfitArticle oart = _oarts.get(key);
-            if (oart != null && oart.article.endsWith(catart.name)) {
-                // use the colors configured for the current outfit
-                zations = oart.zations;
-                select = true;
-            } else {
-                // choose random colors
-                for (ColorRecord crec : alogic.pickRandomColors(catart, _gangobj)) {
-                    if (crec == null || AvatarLogic.SKIN.equals(crec.cclass.name)) {
-                        continue;
-                    }
-                    zations |= AvatarLogic.composeZation(crec.cclass.name, crec.colorId);
-                }
-            }
-            ItemIcon icon = new ItemIcon(_ctx, alogic.createArticle(-1, catart, zations));
-            icon.setTooltipText(null);
-            _palette.addIcon(icon);
-            if (select) {
-                _preventArticleUpdates = true;
-                icon.setSelected(true);
-                _preventArticleUpdates = false;
-                if (_iicon == null) { // inspect the first selected article
-                    populateInspector(icon);
-                }
-            }
+            _palette.setFilter(_filters[(male ? 0 : 1)][index]);
+            populateInspector(null);
         }
     }
 
@@ -377,11 +278,11 @@ public class OutfitDialog extends BDecoratedWindow
      * Configures the item inspector to manipulate the specified icon (or <code>null</code>
      * to clear it out).
      */
-    protected void populateInspector (ItemIcon icon)
+    protected void populateInspector (GoodsIcon icon)
     {
         // add the item icon label
         _icont.removeAll();
-        if ((_iicon = icon) == null) {
+        if ((_gicon = icon) == null) {
             // insert the tip text
             BContainer tcont = GroupLayout.makeVBox(GroupLayout.TOP);
             ((GroupLayout)tcont.getLayoutManager()).setOffAxisJustification(GroupLayout.LEFT);
@@ -395,46 +296,57 @@ public class OutfitDialog extends BDecoratedWindow
             }
             tcont.add(scont);
             _icont.add(tcont);
+            _qlabel.setMoney(0, 0, false);
             return;
         }
         _icont.add(_ilabel = new BLabel(icon.getIcon(), "outfit_item"));
-
-        // add the color selectors with the article's current colors
-        BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
-        Article article = (Article)icon.getItem();
-        AvatarLogic alogic = _ctx.getAvatarLogic();
-        ArticleCatalog.Article catart =
-            alogic.getArticleCatalog().getArticle(article.getArticleName());
-        String[] cclasses = alogic.getColorizationClasses(catart);
-        int comp = article.getComponents()[0];
-        int[] colors = new int[] {
-            AvatarLogic.decodePrimary(comp),
-            AvatarLogic.decodeSecondary(comp),
-            AvatarLogic.decodeTertiary(comp) };
+        _good = (RentalGood)_gicon.getGood();
+        String[] cclasses = _good.getColorizationClasses(_ctx);
         _isels.clear();
-        for (String cclass : cclasses) {
-            if (cclass.equals(AvatarLogic.SKIN)) {
-                continue; // specified by global colorizations
+        if (cclasses != null && cclasses.length > 0) {
+            _args[0] = _args[1] = _args[2] = Integer.valueOf(0);
+
+            // add the color selectors with the article's current colors
+            BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
+            int[] colorIds = _gicon.colorIds;
+            _zations = new Colorization[3];
+            for (int ii = 0; ii < cclasses.length; ii++) {
+                String cclass = cclasses[ii];
+                if (cclass.equals(AvatarLogic.SKIN) ||
+                    cclass.equals(AvatarLogic.HAIR)) {
+                    continue;
+                }
+
+                // primary, secondary and tertiary colors have to go into the appropriate index
+                int index = AvatarLogic.getColorIndex(cclass);
+                ColorSelector colorsel = new ColorSelector(_ctx, cclass, _gangobj, _colorpal);
+                colorsel.setSelectedColorId(colorIds[index]);
+                colorsel.setProperty("index", Integer.valueOf(index));
+                scont.add(colorsel);
+                _isels.add(colorsel);
+                _args[index] = Integer.valueOf(colorsel.getSelectedColor());
+                _zations[index] = colorsel.getSelectedColorization();
             }
-            ColorSelector sel = new ColorSelector(_ctx, cclass, _gangobj, this);
-            sel.setSelectedColorId(colors[AvatarLogic.getColorIndex(cclass)]);
-            scont.add(sel);
-            _isels.add(sel);
+            _icont.add(scont);
+            _icont.add(new Spacer(10, 1));
+        } else {
+            _zations = null;
         }
-        _icont.add(scont);
-        _icont.add(new Spacer(10, 1));
+        updateAvatar();
 
         // add the description and price labels
         BContainer dcont = new BContainer(GroupLayout.makeVStretch());
         dcont.setPreferredSize(-1, 135);
-        dcont.add(new BLabel(_msgs.xlate(article.getName()), "medium_title"), GroupLayout.FIXED);
+        dcont.add(new BLabel(_msgs.xlate(_good.getName()), "medium_title"), GroupLayout.FIXED);
         BLabel tlabel = new BLabel(_msgs.get("m.article_tip"), "goods_descrip");
         tlabel.setPreferredSize(250, -1);
         dcont.add(tlabel);
         BContainer pcont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        pcont.add(new BLabel(_msgs.get("m.unit_price"), "table_data"));
+        pcont.add(new BLabel(_msgs.get("m.item_price"), "table_data"));
         MoneyLabel plabel = new MoneyLabel(_ctx);
-        plabel.setMoney(catart.scrip, catart.coins, false);
+        plabel.setMoney(_good.getScripCost(), _good.getCoinCost(), false);
+        _qlabel.setMoney(
+                _good.getRentalScripCost(_gangobj), _good.getRentalCoinCost(_gangobj), false);
         pcont.add(plabel);
         dcont.add(pcont, GroupLayout.FIXED);
         _icont.add(dcont);
@@ -449,13 +361,33 @@ public class OutfitDialog extends BDecoratedWindow
             return false;
         }
         switch (_selidx) {
-            case 0:
-                return catart.slot.equals("hat");
             case 1:
+                return catart.slot.equals("hat");
+            case 2:
                 return catart.slot.equals("clothing");
-            default:
+            case 3:
                 return !(catart.slot.equals("hat") || catart.slot.equals("clothing"));
+            default:
+                return false;
         }
+    }
+
+    protected void updateAvatar ()
+    {
+        if (!(_good.getGood() instanceof ArticleGood)) {
+            return;
+        }
+        int zations = 0;
+        for (ColorSelector sel : _isels) {
+            zations |= AvatarLogic.composeZation(sel.getColorClass(), sel.getSelectedColor());
+        }
+        String name = _good.getType();
+        AvatarLogic alogic = _ctx.getAvatarLogic();
+        Article article = alogic.createArticle(
+            -1, alogic.getArticleCatalog().getArticle(name), zations);
+        _key = new OutfitKey(article);
+        _oarts.put(_key, new OutfitArticle(name, zations));
+        updateAvatar(_key.male);
     }
 
     /**
@@ -520,6 +452,19 @@ public class OutfitDialog extends BDecoratedWindow
         }
     }
 
+    protected ActionListener _colorpal = new ActionListener() {
+        public void actionPerformed (ActionEvent event) {
+            ColorSelector sel = (ColorSelector)event.getSource();
+            int index = (Integer)sel.getProperty("index");
+            _zations[index] = sel.getSelectedColorization();
+            _gicon.colorIds[index] = sel.getSelectedColor();
+            _args[index] = Integer.valueOf(sel.getSelectedColor());
+            _ilabel.setIcon(_good.createIcon(_ctx, _zations));
+            _gicon.setIcon(_ilabel.getIcon());
+            updateAvatar();
+        }
+    };
+
     protected BangContext _ctx;
     protected HideoutObject _hideoutobj;
     protected GangObject _gangobj;
@@ -542,16 +487,20 @@ public class OutfitDialog extends BDecoratedWindow
     protected int _selidx;
 
     /** Displays the articles in the current tab. */
-    protected IconPalette _palette;
+    protected GoodsPalette _palette;
 
     /** Article inspector controls. */
     protected BContainer _icont;
-    protected ItemIcon _iicon;
+    protected GoodsIcon _gicon;
     protected BLabel _ilabel;
     protected ArrayList<ColorSelector> _isels = new ArrayList<ColorSelector>();
+    protected RentalGood _good;
+    protected Colorization[] _zations;
+    protected OutfitKey _key;
+    protected GoodsObject _goodsobj;
+    protected Object[] _args = new Object[3];
 
     /** Price quote/buy controls. */
-    protected BContainer _qcont;
     protected BButton _quote, _buy;
     protected MoneyLabel _qlabel;
 
@@ -560,5 +509,77 @@ public class OutfitDialog extends BDecoratedWindow
 
     protected StatusLabel _status;
 
-    protected static final String[] TABS = { "hats", "clothes", "gear" };
+    protected abstract class RentalFilter
+        implements GoodsPalette.Filter
+    {
+        public boolean isValid (Good good) {
+            return isValid((RentalGood)good);
+        }
+
+        public abstract boolean isValid (RentalGood good);
+    }
+
+    protected abstract class ArticleGoodFilter extends RentalFilter
+    {
+        public boolean isValid (RentalGood good) {
+            if (good.getGood() instanceof ArticleGood) {
+                ArticleCatalog.Article article =
+                    _ctx.getAvatarLogic().getArticleCatalog().getArticle(
+                        good.getType());
+                return (article != null) && isValid(article);
+            }
+            return false;
+        }
+        public abstract boolean isValid (ArticleCatalog.Article article);
+    }
+
+    protected RentalFilter[][] _filters = new RentalFilter[][] {
+        {
+            new RentalFilter() { // items
+                public boolean isValid (RentalGood good) {
+                    return (!(good.getGood() instanceof ArticleGood));
+                }
+            },
+            new ArticleGoodFilter() { // hats
+                public boolean isValid (ArticleCatalog.Article article) {
+                    return article.slot.equals("hat") && isMaleArticle(article.name);
+                }
+            },
+            new ArticleGoodFilter() { // clothing
+                public boolean isValid (ArticleCatalog.Article article) {
+                    return article.slot.equals("clothing") && isMaleArticle(article.name);
+                }
+            },
+            new ArticleGoodFilter() { // gear
+                public boolean isValid (ArticleCatalog.Article article) {
+                    return !article.slot.equals("hat") &&
+                        !article.slot.equals("clothing") && isMaleArticle(article.name);
+                }
+            },
+        }, {
+            new RentalFilter() { // items
+                public boolean isValid (RentalGood good) {
+                    return (!(good.getGood() instanceof ArticleGood));
+                }
+            },
+            new ArticleGoodFilter() { // hats
+                public boolean isValid (ArticleCatalog.Article article) {
+                    return article.slot.equals("hat") && !isMaleArticle(article.name);
+                }
+            },
+            new ArticleGoodFilter() { // clothing
+                public boolean isValid (ArticleCatalog.Article article) {
+                    return article.slot.equals("clothing") && !isMaleArticle(article.name);
+                }
+            },
+            new ArticleGoodFilter() { // gear
+                public boolean isValid (ArticleCatalog.Article article) {
+                    return !article.slot.equals("hat") &&
+                        !article.slot.equals("clothing") && !isMaleArticle(article.name);
+                }
+            },
+        }
+    };
+
+    protected static final String[] TABS = { "items", "hats", "clothes", "gear" };
 }

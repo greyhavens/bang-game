@@ -133,6 +133,20 @@ public class HideoutDispatcher extends InvocationDispatcher
             );
             return;
 
+        case HideoutMarshaller.RENEW_GANG_ITEM:
+            ((HideoutProvider)provider).renewGangItem(
+                source,
+                ((Integer)args[0]).intValue(), (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
+        case HideoutMarshaller.RENT_GANG_GOOD:
+            ((HideoutProvider)provider).rentGangGood(
+                source,
+                (String)args[0], (Object[])args[1], (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
         case HideoutMarshaller.SET_BUCKLE:
             ((HideoutProvider)provider).setBuckle(
                 source,

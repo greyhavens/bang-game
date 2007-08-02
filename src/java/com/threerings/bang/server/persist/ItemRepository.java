@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -75,7 +76,7 @@ public class ItemRepository extends SimpleRepository
         throws PersistenceException
     {
         final ArrayList<Item> items = new ArrayList<Item>();
-        final String query = "select ITEM_ID, ITEM_TYPE, ITEM_DATA " +
+        final String query = "select ITEM_ID, ITEM_TYPE, ITEM_DATA, GANG_ID, EXPIRES " +
             "from ITEMS where GANG_OWNED = " + gangOwned + " and OWNER_ID = " + ownerId;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
@@ -85,9 +86,8 @@ public class ItemRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        items.add(decodeItem(
-                                      rs.getInt(1), rs.getInt(2),
-                                      gangOwned, ownerId, (byte[])rs.getObject(3)));
+                        items.add(decodeItem(rs.getInt(1), rs.getInt(2), gangOwned, ownerId,
+                                (byte[])rs.getObject(3), rs.getInt(4), rs.getDate(5)));
                     }
                 } finally {
                     JDBCUtil.close(stmt);
@@ -102,8 +102,8 @@ public class ItemRepository extends SimpleRepository
      * Instantiates the appropriate item class and decodes the item from
      * the data.
      */
-    protected Item decodeItem (
-        int itemId, int itemType, boolean gangOwned, int ownerId, byte[] data)
+    protected Item decodeItem (int itemId, int itemType, boolean gangOwned, int ownerId,
+            byte[] data, int gangId, Date expires)
         throws PersistenceException, SQLException
     {
         String errmsg = null;
@@ -123,6 +123,8 @@ public class ItemRepository extends SimpleRepository
             item.setItemId(itemId);
             item.setGangOwned(gangOwned);
             item.setOwnerId(ownerId);
+            item.setGangId(gangId);
+            item.setExpires(expires);
 
             // decode its contents from the serialized data
             ByteArrayInputStream bin = new ByteArrayInputStream(data);
@@ -174,7 +176,8 @@ public class ItemRepository extends SimpleRepository
                 String query = "select count(*) from ITEMS where GANG_OWNED = ? " +
                     "and OWNER_ID = ? and ITEM_TYPE = ? and ITEM_DATA = ?";
                 String insert = "insert into ITEMS " +
-                    "(GANG_OWNED, OWNER_ID, ITEM_TYPE, ITEM_DATA) values (?, ?, ?, ?)";
+                    "(GANG_OWNED, OWNER_ID, ITEM_TYPE, ITEM_DATA, GANG_ID, EXPIRES) " +
+                    "values (?, ?, ?, ?, ?, ?)";
                 try {
                     if (!item.allowsDuplicates()) {
                         stmt = conn.prepareStatement(query);
@@ -192,6 +195,8 @@ public class ItemRepository extends SimpleRepository
                     stmt.setInt(2, item.getOwnerId());
                     stmt.setInt(3, itemType);
                     stmt.setBytes(4, itemData);
+                    stmt.setInt(5, item.getGangId());
+                    stmt.setDate(6, item.getExpiryDate());
 
                     // do the insertion
                     JDBCUtil.checkedUpdate(stmt, 1);
@@ -224,6 +229,8 @@ public class ItemRepository extends SimpleRepository
         // determine the prototype's assigned item type and serialize it
         final int itemType = getItemType(prototype);
         final byte[] itemData = persistItem(prototype).toByteArray();
+        final int gangId = prototype.getGangId();
+        final Date expires = prototype.getExpiryDate();
 
         // now insert the flattened data into the database
         executeUpdate(new Operation<Object>() {
@@ -232,11 +239,14 @@ public class ItemRepository extends SimpleRepository
             {
                 PreparedStatement stmt = null;
                 String query = "insert into ITEMS " +
-                    "(GANG_OWNED, OWNER_ID, ITEM_TYPE, ITEM_DATA) values (FALSE, ?, ?, ?)";
+                    "(GANG_OWNED, OWNER_ID, ITEM_TYPE, ITEM_DATA, GANG_ID, EXPIRES) " +
+                    "values (FALSE, ?, ?, ?, ?, ?)";
                 try {
                     stmt = conn.prepareStatement(query);
                     stmt.setInt(2, itemType);
                     stmt.setBytes(3, itemData);
+                    stmt.setInt(4, gangId);
+                    stmt.setDate(5, expires);
 
                     // do the insertions
                     for (Interator it = userIds.interator(); it.hasNext(); ) {
@@ -298,10 +308,11 @@ public class ItemRepository extends SimpleRepository
                 throws SQLException, PersistenceException
             {
                 PreparedStatement stmt = conn.prepareStatement(
-                    "update ITEMS set ITEM_DATA = ? where ITEM_ID = ?");
+                    "update ITEMS set ITEM_DATA = ?, EXPIRES = ? where ITEM_ID = ?");
                 try {
                     stmt.setBinaryStream(1, out.getInputStream(), out.size());
-                    stmt.setInt(2, item.getItemId());
+                    stmt.setDate(2, item.getExpiryDate());
+                    stmt.setInt(3, item.getItemId());
                     JDBCUtil.checkedUpdate(stmt, 1);
                     return null;
 
@@ -506,6 +517,8 @@ public class ItemRepository extends SimpleRepository
             "ITEM_ID INTEGER NOT NULL AUTO_INCREMENT",
             "GANG_OWNED BOOLEAN NOT NULL",
             "OWNER_ID INTEGER NOT NULL",
+            "EXPIRES DATE DEFAULT NULL",
+            "GANG_ID INTEGER NOT NULL",
             "ITEM_TYPE INTEGER NOT NULL",
             "ITEM_DATA BLOB NOT NULL",
             "PRIMARY KEY (ITEM_ID)",
@@ -514,6 +527,11 @@ public class ItemRepository extends SimpleRepository
 
         // TEMP: add the gang-owned column
         JDBCUtil.addColumn(conn, "ITEMS", "GANG_OWNED", "BOOLEAN NOT NULL", "ITEM_ID");
+        // END TEMP
+
+        // TEMP: add expiry and gang id columns
+        JDBCUtil.addColumn(conn, "ITEMS", "EXPIRES", "DATE", "OWNER_ID");
+        JDBCUtil.addColumn(conn, "ITEMS", "GANG_ID", "INTEGER NOT NULL", "EXPIRES");
         // END TEMP
     }
 }

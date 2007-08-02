@@ -48,7 +48,7 @@ public class ItemIcon extends PaletteIcon
         if (!(ctx instanceof BangContext)) {
             return;
         }
-        String tt = _item.getTooltip(((BangContext)ctx).getUserObject());
+        String tt = _item.getTooltipText(((BangContext)ctx).getUserObject());
         if (tt != null) {
             setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, tt));
         }

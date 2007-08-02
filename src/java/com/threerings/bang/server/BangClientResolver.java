@@ -9,10 +9,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Level;
 
+import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.CollectionUtil;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
@@ -140,6 +143,13 @@ public class BangClientResolver extends CrowdClientResolver
         buser.scrip = player.scrip;
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(player.accountName);
 
+        // load up this player's gang information
+        _grecord = BangServer.gangrepo.loadMember(player.playerId);
+        if (_grecord == null) {
+            _ginvites = BangServer.gangrepo.getInviteRecords(player.playerId);
+        }
+        int gangId = (_grecord == null ? 0 : _grecord.gangId);
+
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
         long now = System.currentTimeMillis();
@@ -147,7 +157,12 @@ public class BangClientResolver extends CrowdClientResolver
         ArrayIntSet removals = new ArrayIntSet();
         for (Iterator<Item> iter = items.iterator(); iter.hasNext(); ) {
             Item item = iter.next();
-            if (item instanceof Article && ((Article)item).isExpired(now)) {
+            if (!(item instanceof Article)) {
+                continue;
+            }
+            Article article = (Article)item;
+            int agid = article.getArticleGangId();
+            if (article.isExpired(now) || (agid != 0 && agid != gangId)) {
                 removals.add(item.getItemId());
                 iter.remove();
                 BangServer.itemrepo.deleteItem(item, "Article expired");
@@ -255,12 +270,6 @@ public class BangClientResolver extends CrowdClientResolver
         // load up this player's pardners
         _precords = BangServer.playmgr.getPardnerRepository().getPardnerRecords(player.playerId);
 
-        // load up this player's gang information
-        _grecord = BangServer.gangrepo.loadMember(player.playerId);
-        if (_grecord == null) {
-            _ginvites = BangServer.gangrepo.getInviteRecords(player.playerId);
-        }
-
         // load this player's friends and foes
         ArrayList<FolkRecord> folks = BangServer.playrepo.loadOpinions(buser.playerId);
         ArrayIntSet friends = new ArrayIntSet(), foes = new ArrayIntSet();
@@ -302,7 +311,7 @@ public class BangClientResolver extends CrowdClientResolver
         BangServer.gangmgr.resolveGang(_grecord.gangId,
             new ResultListener<GangObject>() {
                 public void requestCompleted (GangObject result) {
-                    BangClientResolver.super.handleResult();
+                    updateRentedItems((PlayerObject)_clobj, result);
                 }
                 public void requestFailed (Exception cause) {
                     // let them log in as if they didn't belong to a gang
@@ -310,6 +319,88 @@ public class BangClientResolver extends CrowdClientResolver
                     BangClientResolver.super.handleResult();
                 }
             });
+    }
+
+    /**
+     * Checks for expired rented items.
+     */
+    public void updateRentedItems (final PlayerObject buser, GangObject gangobj)
+    {
+        final ArrayIntSet removed = new ArrayIntSet();
+        final ArrayList<Item> updated = new ArrayList<Item>();
+        final ArrayList<Item> added = new ArrayList<Item>();
+        Item[] items = buser.inventory.toArray(new Item[buser.inventory.size()]);
+        for (Item item : items) {
+            if (!item.isGangOwned()) {
+                continue;
+            }
+            if (item.getGangId() != gangobj.gangId) {
+                removed.add(item.getItemId());
+                buser.removeFromInventory(item.getKey());
+                continue;
+            }
+            Item gitem = gangobj.inventory.get(item.getKey());
+            if (gitem == null || gitem.isExpired(System.currentTimeMillis())) {
+                removed.add(item.getItemId());
+                buser.removeFromInventory(item.getKey());
+                continue;
+            }
+            if (item.getExpires() != gitem.getExpires()) {
+                item.setExpires(gitem.getExpires());
+                updated.add(item);
+            }
+        }
+        items = gangobj.inventory.toArray(new Item[gangobj.inventory.size()]);
+        for (Item item : items) {
+            if (item.canBeOwned(buser) && !buser.holdsEquivalentItem(item)) {
+                Item citem = (Item)item.clone();
+                citem.setGangId(citem.getOwnerId());
+                citem.setOwnerId(buser.playerId);
+                citem.setGangOwned(false);
+                citem.setItemId(0);
+                added.add(citem);
+            }
+        }
+
+        final ArrayList<Look> modified =
+            AvatarLogic.stripLooks(removed, buser.inventory, buser.looks);
+        for (Look look : modified) {
+            buser.updateLooks(look);
+        }
+        if (!removed.isEmpty() || !updated.isEmpty() || !added.isEmpty()) {
+            BangServer.invoker.postUnit(new Invoker.Unit("updateRentedItems") {
+                public boolean invoke () {
+                    try {
+                        if (!removed.isEmpty()) {
+                            BangServer.itemrepo.deleteItems(removed, "Gang items expired");
+                        }
+                        for (Item item : updated) {
+                            BangServer.itemrepo.updateItem(item);
+                        }
+                        for (Look look : modified) {
+                            BangServer.lookrepo.updateLook(buser.playerId, look);
+                        }
+                        for (Item item : added) {
+                            BangServer.itemrepo.insertItem(item);
+                        }
+                    } catch (PersistenceException pe) {
+                        log.log(Level.WARNING, "Failed to update player gang items. [user=" +
+                            buser.who() + "].", pe);
+                    }
+                    return true;
+                }
+                public void handleResult() {
+                    for (Item item : added) {
+                        if (item.getItemId() > 0) {
+                            buser.addToInventory(item);
+                        }
+                    }
+                    BangClientResolver.super.handleResult();
+                }
+            });
+        } else {
+            super.handleResult();
+        }
     }
 
     @Override // documentation inherited

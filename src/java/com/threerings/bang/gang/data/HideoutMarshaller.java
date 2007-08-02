@@ -190,8 +190,34 @@ public class HideoutMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #renewGangItem} requests. */
+    public static final int RENEW_GANG_ITEM = 14;
+
+    // from interface HideoutService
+    public void renewGangItem (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, RENEW_GANG_ITEM, new Object[] {
+            Integer.valueOf(arg2), listener3
+        });
+    }
+
+    /** The method id used to dispatch {@link #rentGangGood} requests. */
+    public static final int RENT_GANG_GOOD = 15;
+
+    // from interface HideoutService
+    public void rentGangGood (Client arg1, String arg2, Object[] arg3, InvocationService.ConfirmListener arg4)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, RENT_GANG_GOOD, new Object[] {
+            arg2, arg3, listener4
+        });
+    }
+
     /** The method id used to dispatch {@link #setBuckle} requests. */
-    public static final int SET_BUCKLE = 14;
+    public static final int SET_BUCKLE = 16;
 
     // from interface HideoutService
     public void setBuckle (Client arg1, BucklePart[] arg2, InvocationService.ConfirmListener arg3)
@@ -204,7 +230,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setStatement} requests. */
-    public static final int SET_STATEMENT = 15;
+    public static final int SET_STATEMENT = 17;
 
     // from interface HideoutService
     public void setStatement (Client arg1, String arg2, String arg3, InvocationService.ConfirmListener arg4)

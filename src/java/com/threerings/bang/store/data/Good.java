@@ -127,6 +127,15 @@ public abstract class Good extends SimpleStreamableObject
      * Returns the cost of this good in coins. This is in addition to the scrip cost ({@link
      * #getScripCost}).
      */
+    public int getCoinCost ()
+    {
+        return _coinCost;
+    }
+
+    /**
+     * Returns the cost of this good in coins. This is in addition to the scrip cost ({@link
+     * #getScripCost}).
+     */
     public int getCoinCost (PlayerObject user)
     {
         return (isGoldPassFree() && user.holdsGoldPass(_townId)) ? 0 :  _coinCost;
@@ -177,6 +186,14 @@ public abstract class Good extends SimpleStreamableObject
         throw new RuntimeException("createItem() not supported by this Good");
     }
 
+    /**
+     * Returns true if this good would create the supplied item.
+     */
+    public boolean wouldCreateItem (Item item)
+    {
+        return false;
+    }
+
     // from interface DSet.Entry
     public Comparable getKey ()
     {
@@ -187,7 +204,15 @@ public abstract class Good extends SimpleStreamableObject
     public int compareTo (Good other)
     {
         int diff = other._priority - _priority;
-        return diff == 0 ? _type.compareTo(other._type) : diff;
+        return diff == 0 ? getType().compareTo(other.getType()) : diff;
+    }
+
+    /**
+     * Returns a string qualifier to get the good.
+     */
+    public String getQualifier ()
+    {
+        return null;
     }
 
     @Override // documentation inherited

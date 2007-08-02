@@ -22,6 +22,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.GuestHandle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
 
@@ -128,13 +129,28 @@ public class ArticleGood extends Good
         }
         return MessageBundle.qualify(BangCodes.GOODS_MSGS,
                 (_dstop == null ? "m.article_tip" : MessageBundle.tcompose(
-                        "m.article_tip_expires", Article.EXPIRE_FORMAT.format(_dstop))));
+                        "m.article_tip_expires", Item.EXPIRE_FORMAT.format(_dstop))));
     }
 
     @Override // from Good
     public int getCoinType ()
     {
         return CoinTransaction.DUDS_PURCHASE;
+    }
+
+    @Override // from Good
+    public String getQualifier ()
+    {
+        return _qualifier;
+    }
+
+    @Override // from Good
+    public boolean wouldCreateItem (Item item)
+    {
+        if (!(item instanceof Article)) {
+            return false;
+        }
+        return ((Article)item).getArticleName().equals(_type);
     }
 
     protected String _qualifier;

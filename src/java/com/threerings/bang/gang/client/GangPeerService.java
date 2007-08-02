@@ -9,6 +9,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 
 import com.threerings.bang.gang.data.OutfitArticle;
 
@@ -120,6 +121,19 @@ public interface GangPeerService extends InvocationService
     public void buyGangGood (
         Client client, Handle handle, String type, Object[] args, boolean admin,
         ConfirmListener listener);
+
+    /**
+     * Purchases a good for the gang.
+     */
+    public void rentGangGood (
+        Client client, Handle handle, String type, Object[] args, boolean admin,
+        ConfirmListener listener);
+
+    /**
+     * Renews a ranted gang item.
+     */
+    public void renewGangItem (
+        Client client, Handle handle, int itemId, ConfirmListener listener);
 
     /**
      * Broadcasts a message to all online members.

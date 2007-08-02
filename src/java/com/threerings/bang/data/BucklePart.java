@@ -113,12 +113,6 @@ public class BucklePart extends Item
     }
 
     @Override // documentation inherited
-    public ImageIcon createIcon (BasicContext ctx, String iconPath)
-    {
-        return new ImageIcon(new BImage(BuckleView.getPartIcon(ctx, this)));
-    }
-
-    @Override // documentation inherited
     public boolean isEquivalent (Item other)
     {
         BucklePart opart;
@@ -135,6 +129,12 @@ public class BucklePart extends Item
     }
 
     @Override // documentation inherited
+    public boolean canBeOwned (PlayerObject user)
+    {
+        return false;
+    }
+
+    @Override // documentation inherited
     protected void toString (StringBuilder buf)
     {
         super.toString(buf);
@@ -144,6 +144,12 @@ public class BucklePart extends Item
         StringUtil.toString(buf, _components);
         buf.append(", x=").append(_x);
         buf.append(", y=").append(_y);
+    }
+
+    @Override // documentation inherited
+    protected ImageIcon buildIcon (BasicContext ctx, String iconPath)
+    {
+        return new ImageIcon(new BImage(BuckleView.getPartIcon(ctx, this)));
     }
 
     protected String _class, _name;

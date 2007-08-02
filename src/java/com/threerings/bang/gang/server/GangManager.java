@@ -8,6 +8,7 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 
@@ -555,7 +556,7 @@ public class GangManager
                 }
             }
             public void handleFailure (Exception cause) {
-                log.warning("Failed to sync gang notorieties [error=" + cause + "].");
+                log.log(Level.WARNING, "Failed to sync gang notorieties.", cause);
             }
 
             protected IntIntMap _notMap;

@@ -70,6 +70,7 @@ import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
+import com.threerings.bang.data.BuckleUpgrade;
 import com.threerings.bang.data.EntryReplacedEvent;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
@@ -99,6 +100,7 @@ import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.GangPeerMarshaller;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
+import com.threerings.bang.gang.data.RentalGood;
 import com.threerings.bang.gang.server.persist.GangFinancialAction;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
 import com.threerings.bang.gang.server.persist.GangRecord;
@@ -411,13 +413,19 @@ public class GangHandler
     public void entryAdded (EntryAddedEvent event)
     {
         String name = event.getName();
-        if (name.equals(GangObject.INVENTORY) &&
-            event.getEntry() instanceof WeightClassUpgrade && _client == null) {
-            // update weight class and notoriety on purchase of upgrade
-            _gangobj.setNotoriety(GangUtil.getNotorietyLevel(
-                _gangobj.getWeightClass(), _notoriety));
-            gangInfoChanged();
-            return;
+        if (name.equals(GangObject.INVENTORY)) {
+            Item item = (Item)event.getEntry();
+            if (item instanceof WeightClassUpgrade && _client == null) {
+                // update weight class and notoriety on purchase of upgrade
+                _gangobj.setNotoriety(GangUtil.getNotorietyLevel(
+                    _gangobj.getWeightClass(), _notoriety));
+                gangInfoChanged();
+                return;
+            } else if (!(item instanceof WeightClassUpgrade) && !(item instanceof BuckleUpgrade) &&
+                    !(item instanceof BucklePart)) {
+                distributeRental(item);
+                return;
+            }
 
         } else if (!name.equals(GangObject.MEMBERS)) {
             return;
@@ -1357,6 +1365,58 @@ public class GangHandler
     }
 
     // documentation inherited from interface GangPeerProvider
+    public void rentGangGood (
+        ClientObject caller, Handle handle, String type, Object[] args,
+        boolean admin, InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure it comes from this server or a peer
+        verifyLocalOrPeer(caller);
+
+        // make sure it comes from a leader
+        verifyIsLeader(handle);
+
+        // create and start up the provider
+        GangGoodProvider provider = BangServer.hideoutmgr.getRentalGoodProvider(
+            this, handle, admin, type, args);
+        provider.setListener(listener);
+        provider.start();
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void renewGangItem (
+        ClientObject caller, Handle handle, int itemId, InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure is comes from this server or a peer
+        verifyLocalOrPeer(caller);
+
+        // make sure it comes from a leader
+        verifyIsLeader(handle);
+
+        Item item = null;
+        for (Item i : _gangobj.inventory) {
+            if (i.getItemId() == itemId) {
+                item = i;
+                break;
+            }
+        }
+
+        if (item == null) {
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        RentalGood good = BangServer.hideoutmgr.getRentalGood(item);
+        if (good == null) {
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        ItemRenewal renewal = new ItemRenewal(_gangobj, handle, item, good);
+        renewal.setListener(listener);
+        renewal.start();
+    }
+
+    // documentation inherited from interface GangPeerProvider
     public void buyGangGood (
         ClientObject caller, Handle handle, String type, Object[] args,
         boolean admin, InvocationService.ConfirmListener listener)
@@ -1425,6 +1485,42 @@ public class GangHandler
 
             protected PersistenceException _error;
         });
+    }
+
+    /**
+     * Distributes rented items to online members.
+     */
+    protected void distributeRental (final Item item)
+    {
+        final ArrayIntSet userIds = new ArrayIntSet();
+        boolean maleItem = true;
+        for (GangMemberEntry member : _gangobj.members) {
+            PlayerObject user = BangServer.lookupPlayer(member.playerId);
+            if (user != null && item.canBeOwned(user) && !user.holdsEquivalentItem(item)) {
+                userIds.add(user.playerId);
+            }
+        }
+        if (userIds.isEmpty()) {
+            return;
+        }
+        item.setGangId(_gangobj.gangId);
+        BangServer.invoker.postUnit(
+            new RepositoryUnit("distributeRental") {
+                public void invokePersist () throws PersistenceException {
+                    BangServer.itemrepo.insertItems(item, userIds, _items);
+                }
+                public void handleSuccess () {
+                    for (Item item : _items) {
+                        PlayerObject user = BangServer.lookupPlayer(item.getOwnerId());
+                        if (user != null) {
+                            user.addToInventory(item);
+                        }
+                    }
+                }
+                public void handleFailure (Exception cause) {
+                }
+                protected ArrayList<Item> _items = new ArrayList<Item>();
+            });
     }
 
     /**
@@ -1710,8 +1806,9 @@ public class GangHandler
         _gangobj.aces = record.aces;
         _gangobj.buckle = record.getBuckle();
         _gangobj.outfit = record.outfit;
-        _gangobj.inventory = new DSet<Item>(record.inventory);
         _gangobj.members = new DSet<GangMemberEntry>(record.members.iterator());
+
+        _gangobj.inventory = new DSet<Item>(record.inventory);
 
         _notoriety = record.notoriety;
         _gangobj.notoriety = GangUtil.getNotorietyLevel(_gangobj.getWeightClass(), _notoriety);
