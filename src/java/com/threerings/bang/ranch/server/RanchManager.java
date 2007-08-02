@@ -147,7 +147,7 @@ public class RanchManager extends ShopManager
             return "ranch";
         }
         protected String getGoodType () {
-            return "Ticket";
+            return "BigShot";
         }
 
         protected BigShotItem _unit;
