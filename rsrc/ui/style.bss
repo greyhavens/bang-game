@@ -2619,6 +2619,12 @@ outfit_total_price {
   effect-color: #6C5237;
 }
 
+// Gang inventory dialog styles
+
+gang_inventory_tabs {
+  background: image "ui/hideout/inventory_tabs.png" centerxy;
+}
+
 // Gang store dialog styles
 
 gang_store_dialog {
