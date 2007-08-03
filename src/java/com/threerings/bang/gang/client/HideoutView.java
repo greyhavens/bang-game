@@ -113,6 +113,8 @@ public class HideoutView extends ShopView
         String action = event.getAction();
         if (action.equals("options")) {
             displayOptionsMenu();
+        } else if (action.equals("userOptions")) {
+            displayUserOptionsMenu();
         } else if (action.equals("edit_buckle")) {
             _ctx.getBangClient().displayPopup(
                 new BuckleDialog(_ctx, _hideoutobj, _gangobj), true, 500);
@@ -240,6 +242,8 @@ public class HideoutView extends ShopView
         // add the buttons
         if (_ctx.getUserObject().gangRank == LEADER_RANK) {
             _bcont.add(_options = createButton("options"));
+        } else {
+            _bcont.add(_options = createButton("userOptions"));
         }
         _bcont.add(createButton("history"));
         _bcont.add(createButton("leave"));
@@ -320,6 +324,19 @@ public class HideoutView extends ShopView
         menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_items"), "purchase_items"));
         menu.addMenuItem(new BMenuItem(_msgs.get("m.member_broadcast"), "member_broadcast"));
         menu.addMenuItem(new BMenuItem(_msgs.get("m.exchange_scrip"), "exchange_scrip"));
+        menu.addListener(this);
+
+        menu.popup(_options.getAbsoluteX(), _options.getAbsoluteY() + _options.getHeight(), true);
+    }
+
+    /**
+     * Pops up the user options menu.
+     */
+    protected void displayUserOptionsMenu ()
+    {
+        BPopupMenu menu = new BPopupMenu(getWindow(), false);
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.show_buckle"), "edit_buckle"));
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.inventory"), "inventory"));
         menu.addListener(this);
 
         menu.popup(_options.getAbsoluteX(), _options.getAbsoluteY() + _options.getHeight(), true);

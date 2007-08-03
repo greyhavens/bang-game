@@ -10,6 +10,7 @@ import java.util.HashMap;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.data.InvocationCodes;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.UnitConfig;
@@ -72,7 +73,7 @@ public class RentalGoodsCatalog
         pf = new ItemProviderFactory();
 
         // register our unit passes
-        UnitConfig[] units = UnitConfig.getTownUnits(ServerConfig.townId);
+        UnitConfig[] units = UnitConfig.getTownUnits(BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length - 1]);
         for (int ii = 0; ii < units.length; ii++) {
             UnitConfig uc = units[ii];
             if (uc.badgeCode != 0 && uc.scripCost > 0) {
@@ -81,8 +82,6 @@ public class RentalGoodsCatalog
                 registerGood(good, pf);
             }
         }
-
-
     }
 
     /**

@@ -58,6 +58,7 @@ import com.threerings.bang.avatar.client.BuckleView;
 import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
@@ -69,7 +70,7 @@ import static com.threerings.bang.Log.*;
  * Allows gang leaders to configure their belt buckles.
  */
 public class BuckleDialog extends BDecoratedWindow
-    implements ActionListener, IconPalette.Inspector, HideoutCodes
+    implements ActionListener, IconPalette.Inspector, HideoutCodes, GangCodes
 {
     public BuckleDialog (BangContext ctx, HideoutObject hideoutobj, GangObject gangobj)
     {
@@ -124,20 +125,22 @@ public class BuckleDialog extends BDecoratedWindow
         _icontrols.add(new BLabel(_msgs.get("m.icon_tip"), "buckle_tip"));
         _icontrols.setEnabled(false);
 
-        ccont.add(new RequestButton(ctx, HIDEOUT_MSGS, "m.commit", _status) {
-            public void fireRequest () {
-                BucklePart[] parts = new BucklePart[_buckle.length];
-                for (int ii = 0; ii < parts.length; ii++) {
-                    parts[ii] = _parts.get(_buckle[ii]);
+        if (_ctx.getUserObject().gangRank == LEADER_RANK) {
+            ccont.add(new RequestButton(ctx, HIDEOUT_MSGS, "m.commit", _status) {
+                public void fireRequest () {
+                    BucklePart[] parts = new BucklePart[_buckle.length];
+                    for (int ii = 0; ii < parts.length; ii++) {
+                        parts[ii] = _parts.get(_buckle[ii]);
+                    }
+                    _hideoutobj.service.setBuckle(_ctx.getClient(), parts, this);
                 }
-                _hideoutobj.service.setBuckle(_ctx.getClient(), parts, this);
-            }
-            public void requestProcessed () {
-                super.requestProcessed();
-                _ctx.getBangClient().clearPopup(BuckleDialog.this, true);
-            }
-        }, GroupLayout.FIXED);
-        ccont.add(new Spacer(1, 5), GroupLayout.FIXED);
+                public void requestProcessed () {
+                    super.requestProcessed();
+                    _ctx.getBangClient().clearPopup(BuckleDialog.this, true);
+                }
+            }, GroupLayout.FIXED);
+            ccont.add(new Spacer(1, 5), GroupLayout.FIXED);
+        }
         ccont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"), GroupLayout.FIXED);
 
         if (ctx.getUserObject().tokens.isSupport()) {

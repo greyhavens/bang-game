@@ -125,14 +125,18 @@ public class GangInventory extends BDecoratedWindow
         ((GroupLayout)_icont.getLayoutManager()).setGap(10);
         _palette.setInspector(this);
 
-        BContainer bcont = GroupLayout.makeVBox(GroupLayout.CENTER);
-        bcont.setStyleClass("outfit_controls");
-        ((GroupLayout)bcont.getLayoutManager()).setPolicy(GroupLayout.STRETCH);
-        bcont.add(new BLabel(_msgs.get("m.renew_until"), "outfit_total_price"), GroupLayout.FIXED);
-        bcont.add(_dlabel = new BLabel("", "goods_descrip"));
-        bcont.add(_renew = new BButton(_msgs.get("m.renew_item"), this, "renew_item"),
-            GroupLayout.FIXED);
-        ccont.add(bcont, GroupLayout.FIXED);
+        if (_ctx.getUserObject().gangRank == LEADER_RANK) {
+            BContainer bcont = GroupLayout.makeVBox(GroupLayout.CENTER);
+            bcont.setStyleClass("outfit_controls");
+            ((GroupLayout)bcont.getLayoutManager()).setPolicy(GroupLayout.STRETCH);
+            bcont.add(new BLabel(_msgs.get("m.renew_until"), "outfit_total_price"),
+                    GroupLayout.FIXED);
+            bcont.add(_dlabel = new BLabel("", "goods_descrip"));
+            bcont.add(_renew = new BButton(_msgs.get("m.renew_item"), this, "renew_item"),
+                GroupLayout.FIXED);
+            _renew.setEnabled(false);
+            ccont.add(bcont, GroupLayout.FIXED);
+        }
 
         BContainer dcont = GroupLayout.makeVBox(GroupLayout.CENTER);
         dcont.setStyleClass("outfit_controls");
@@ -144,7 +148,6 @@ public class GangInventory extends BDecoratedWindow
         dcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"), GroupLayout.FIXED);
         ccont.add(dcont, GroupLayout.FIXED);
 
-        _renew.setEnabled(false);
 
         add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
         _status.setStatus(" ", false); // make sure it takes up space
@@ -155,7 +158,7 @@ public class GangInventory extends BDecoratedWindow
     {
         String action = event.getAction();
         if (action.equals("renew_item")) {
-            if (_item == null) {
+            if (_item == null || _renew == null) {
                 return;
             }
             _renew.setEnabled(false);
@@ -177,7 +180,9 @@ public class GangInventory extends BDecoratedWindow
     // documentation inherited from interface IconPalette.Inspector
     public void iconUpdated (SelectableIcon icon, boolean selected)
     {
-        _renew.setEnabled(selected);
+        if (_renew != null) {
+            _renew.setEnabled(selected);
+        }
         _icont.removeAll();
         if (!selected) {
             _item = null;
@@ -194,10 +199,12 @@ public class GangInventory extends BDecoratedWindow
         if (_item.getExpires() != 0) {
             msg = MessageBundle.compose("m.renew_tip",
                     MessageBundle.taint(Item.EXPIRE_FORMAT.format(new Date(_item.getExpires()))));
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(_item.getExpires());
-            cal.add(Calendar.DAY_OF_YEAR, 30);
-            _dlabel.setText("@=b(" + Item.EXPIRE_FORMAT.format(cal.getTime()) + ")");
+            if (_dlabel != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(_item.getExpires());
+                cal.add(Calendar.DAY_OF_YEAR, 30);
+                _dlabel.setText("@=b(" + Item.EXPIRE_FORMAT.format(cal.getTime()) + ")");
+            }
         } else {
             msg = "m.item_tip";
         }
