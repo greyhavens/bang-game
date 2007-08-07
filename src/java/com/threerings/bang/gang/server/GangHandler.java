@@ -532,7 +532,8 @@ public class GangHandler
         if (leaving) {
             refund[0] = refund[1] = 0;
         }
-        ArrayList<Look> modified = stripLooks(user.inventory, user.looks);
+        ArrayIntSet removals = new ArrayIntSet();
+        ArrayList<Look> modified = stripLooks(user.inventory, user.looks, removals);
         user.startTransaction();
         try {
             user.setGangId(0);
@@ -545,6 +546,12 @@ public class GangHandler
             }
             for (Look look : modified) {
                 user.updateLooks(look);
+            }
+            Item[] items = user.inventory.toArray(new Item[user.inventory.size()]);
+            for (Item item : user.inventory) {
+                if (removals.contains(item.getItemId())) {
+                    user.removeFromInventory(item.getKey());
+                }
             }
         } finally {
             user.commitTransaction();
@@ -582,16 +589,19 @@ public class GangHandler
         // update the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
         PlayerObject user = BangServer.lookupPlayer(entry.playerId);
-        if (user == null || user.gangRank == entry.rank) {
+        if (user == null) {
             return;
         }
-        user.startTransaction();
-        try {
-            user.setGangRank(entry.rank);
-            user.setGangCommandOrder(entry.commandOrder);
-        } finally {
-            user.commitTransaction();
+        if (user.gangRank != entry.rank) {
+            user.startTransaction();
+            try {
+                user.setGangRank(entry.rank);
+                user.setGangCommandOrder(entry.commandOrder);
+            } finally {
+                user.commitTransaction();
+            }
         }
+        deliverGangItems(user);
     }
 
     // documentation inherited from interface ObjectDeathListener
@@ -693,7 +703,30 @@ public class GangHandler
             return;
         }
         member.avatar = info;
-        _gangobj.updateMembers(member);
+        _gangobj.startTransaction();
+        try {
+            _gangobj.updateMembers(member);
+
+            // removed any expired items from the inventory
+            ArrayList<Comparable> removals = null;
+            long now = System.currentTimeMillis();
+            for (Item item : _gangobj.inventory) {
+                if (item.isExpired(now)) {
+                    if (removals == null) {
+                        removals = new ArrayList<Comparable>();
+                    }
+                    removals.add(item.getKey());
+                }
+            }
+            if (removals != null) {
+                for (Comparable key : removals) {
+                    _gangobj.removeFromInventory(key);
+                }
+            }
+        } finally {
+            _gangobj.commitTransaction();
+        }
+
     }
 
     public void bodyLeft (int bodyOid)
@@ -1524,6 +1557,52 @@ public class GangHandler
     }
 
     /**
+     * Gives a new gang member the gang rented items.
+     */
+    protected void deliverGangItems (final PlayerObject user)
+    {
+        final ArrayList<Item> added = new ArrayList<Item>();
+        long now = System.currentTimeMillis();
+        for (Item item : _gangobj.inventory) {
+            if (item.canBeOwned(user) && !user.holdsEquivalentItem(item) && !item.isExpired(now)) {
+                Item citem = (Item)item.clone();
+                citem.setGangId(citem.getOwnerId());
+                citem.setOwnerId(user.playerId);
+                citem.setGangOwned(false);
+                citem.setItemId(0);
+                added.add(citem);
+            }
+        }
+
+        if (added.isEmpty()) {
+            return;
+        }
+
+        BangServer.invoker.postUnit(new RepositoryUnit("deliverGangItems") {
+            public void invokePersist ()
+                throws PersistenceException {
+                for (Item item : added) {
+                    BangServer.itemrepo.insertItem(item);
+                }
+            }
+            public void handleSuccess () {
+                user.startTransaction();
+                try {
+                    for (Item item : added) {
+                        user.addToInventory(item);
+                    }
+                } finally {
+                    user.commitTransaction();
+                }
+            }
+            public void handleFailure (Exception cause) {
+                log.warning("Failed to deliver gang items to new member [gang=" + GangHandler.this +
+                    ", user=" + user.who() + ", error=" + cause + "].");
+            }
+        });
+    }
+
+    /**
      * Having determined which gang members need parts of the outfit and computed the cost,
      * uses fund from the gang's coffers to buy the outfits.
      */
@@ -1681,6 +1760,20 @@ public class GangHandler
                     if (_grec != null) {
                         validateBuckle(_grec);
                         validateWeightClass(_grec);
+                    }
+
+                    // check for expired items
+                    long now = System.currentTimeMillis();
+                    Item[] items = _grec.inventory.toArray(new Item[_grec.inventory.size()]);
+                    ArrayIntSet removals = new ArrayIntSet();
+                    for (Item item : items) {
+                        if (item.isExpired(now)) {
+                            removals.add(item.getItemId());
+                            _grec.inventory.remove(item);
+                        }
+                    }
+                    if (!removals.isEmpty()) {
+                        BangServer.itemrepo.deleteItems(removals, "Gang item surprised");
                     }
                 }
                 public void handleSuccess () {
@@ -2294,22 +2387,24 @@ public class GangHandler
         // delete the member record itself
         BangServer.gangrepo.deleteMember(playerId);
 
-        ArrayList<Look> modified = stripLooks(
-                BangServer.itemrepo.loadItems(playerId), BangServer.lookrepo.loadLooks(playerId));
+        ArrayIntSet removals = new ArrayIntSet();
+        ArrayList<Look> modified = stripLooks(BangServer.itemrepo.loadItems(playerId),
+                BangServer.lookrepo.loadLooks(playerId), removals);
 
         for (Look look : modified) {
             BangServer.lookrepo.updateLook(playerId, look);
         }
+        BangServer.itemrepo.deleteItems(removals, "Booted from gang");
     }
 
     /**
      * Returns a list of modified looks with all gang owned articles removed.
      */
-    protected ArrayList<Look> stripLooks (Iterable<Item> items, Iterable<Look> looks)
+    protected ArrayList<Look> stripLooks (
+            Iterable<Item> items, Iterable<Look> looks, ArrayIntSet removals)
     {
-        ArrayIntSet removals = new ArrayIntSet();
         for (Item item : items) {
-            if (item instanceof Article && ((Article)item).getGangId() == _gangId) {
+            if (item.getGangId() == _gangId) {
                 removals.add(item.getItemId());
             }
         }

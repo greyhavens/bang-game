@@ -259,6 +259,16 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns true if this player has access to this town.
+     */
+    public boolean hasAccess (String townId)
+    {
+        if (BangCodes.FRONTIER_TOWN.equals(townId)) {
+            return true;
+        }
+        return holdsTicket(townId);
+    }
+    /**
      * Returns true if the player holds a ticket to the specified town.
      */
     public boolean holdsTicket (String townId)

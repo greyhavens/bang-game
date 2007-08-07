@@ -157,15 +157,11 @@ public class BangClientResolver extends CrowdClientResolver
         ArrayIntSet removals = new ArrayIntSet();
         for (Iterator<Item> iter = items.iterator(); iter.hasNext(); ) {
             Item item = iter.next();
-            if (!(item instanceof Article)) {
-                continue;
-            }
-            Article article = (Article)item;
-            int agid = article.getArticleGangId();
-            if (article.isExpired(now) || (agid != 0 && agid != gangId)) {
+            int gid = item.getGangId();
+            if (item.isExpired(now) || (gid != 0 && gid != gangId)) {
                 removals.add(item.getItemId());
                 iter.remove();
-                BangServer.itemrepo.deleteItem(item, "Article expired");
+                BangServer.itemrepo.deleteItem(item, "Item expired");
             }
         }
         buser.inventory = new DSet<Item>(items.iterator());
@@ -331,7 +327,7 @@ public class BangClientResolver extends CrowdClientResolver
         final ArrayList<Item> added = new ArrayList<Item>();
         Item[] items = buser.inventory.toArray(new Item[buser.inventory.size()]);
         for (Item item : items) {
-            if (!item.isGangOwned()) {
+            if (item.getGangId() == 0) {
                 continue;
             }
             if (item.getGangId() != gangobj.gangId) {
@@ -339,7 +335,13 @@ public class BangClientResolver extends CrowdClientResolver
                 buser.removeFromInventory(item.getKey());
                 continue;
             }
-            Item gitem = gangobj.inventory.get(item.getKey());
+            Item gitem = null;
+            for (Item gi : gangobj.inventory) {
+                if (gi.isEquivalent(item)) {
+                    gitem = gi;
+                    break;
+                }
+            }
             if (gitem == null || gitem.isExpired(System.currentTimeMillis())) {
                 removed.add(item.getItemId());
                 buser.removeFromInventory(item.getKey());

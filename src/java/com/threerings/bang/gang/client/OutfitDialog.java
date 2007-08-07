@@ -513,7 +513,7 @@ public class OutfitDialog extends BDecoratedWindow
         implements GoodsPalette.Filter
     {
         public boolean isValid (Good good) {
-            return isValid((RentalGood)good);
+            return _ctx.getUserObject().hasAccess(good.getTownId()) && isValid((RentalGood)good);
         }
 
         public abstract boolean isValid (RentalGood good);
