@@ -172,7 +172,7 @@ public class Article extends Item
     public boolean isExpired (long timestamp)
     {
         if (_expires == 0) {
-            return false;
+            return super.isExpired(timestamp);
         }
         Date expire = new Date(_expires);
         return expire.before(new Date(timestamp));

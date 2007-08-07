@@ -15,13 +15,16 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.RentalGood;
+import com.threerings.bang.gang.data.TicketGood;
 
+import com.threerings.bang.station.data.StationCodes;
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.UnitPassGood;
 import com.threerings.bang.store.data.Good;
@@ -73,7 +76,8 @@ public class RentalGoodsCatalog
         pf = new ItemProviderFactory();
 
         // register our unit passes
-        UnitConfig[] units = UnitConfig.getTownUnits(BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length - 1]);
+        UnitConfig[] units =
+            UnitConfig.getTownUnits(BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length - 1]);
         for (int ii = 0; ii < units.length; ii++) {
             UnitConfig uc = units[ii];
             if (uc.badgeCode != 0 && uc.scripCost > 0) {
@@ -82,6 +86,12 @@ public class RentalGoodsCatalog
                 registerGood(good, pf);
             }
         }
+
+        // free tickets!!
+        int townIdx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
+        TicketGood good = new TicketGood(BangCodes.INDIAN_POST, StationCodes.TICKET_SCRIP[townIdx],
+                StationCodes.TICKET_COINS[townIdx]);
+        registerGood(good, pf);
     }
 
     /**

@@ -1523,24 +1523,26 @@ public class GangHandler
     /**
      * Distributes rented items to online members.
      */
-    protected void distributeRental (final Item item)
+    protected void distributeRental (Item item)
     {
         final ArrayIntSet userIds = new ArrayIntSet();
         boolean maleItem = true;
+        final Item citem = (Item)item.clone();
         for (GangMemberEntry member : _gangobj.members) {
             PlayerObject user = BangServer.lookupPlayer(member.playerId);
-            if (user != null && item.canBeOwned(user) && !user.holdsEquivalentItem(item)) {
+            if (user != null && item.canBeOwned(user) && !user.holdsEquivalentItem(citem)) {
                 userIds.add(user.playerId);
             }
         }
         if (userIds.isEmpty()) {
             return;
         }
-        item.setGangId(_gangobj.gangId);
+        citem.setGangId(_gangobj.gangId);
+        citem.setGangOwned(false);
         BangServer.invoker.postUnit(
             new RepositoryUnit("distributeRental") {
                 public void invokePersist () throws PersistenceException {
-                    BangServer.itemrepo.insertItems(item, userIds, _items);
+                    BangServer.itemrepo.insertItems(citem, userIds, _items);
                 }
                 public void handleSuccess () {
                     for (Item item : _items) {
