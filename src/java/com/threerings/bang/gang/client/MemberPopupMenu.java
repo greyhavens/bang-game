@@ -3,13 +3,17 @@
 
 package com.threerings.bang.gang.client;
 
+import com.jmex.bui.BButton;
+import com.jmex.bui.BComboBox;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BMenuItem;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -97,6 +101,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
                 MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[ii]));
             addMenuItem(new BMenuItem(_ctx.xlate(HIDEOUT_MSGS, msg), "rank_" + ii));
         }
+        addMenuItem(new BMenuItem(_ctx.xlate(HIDEOUT_MSGS, "m.change_title"), "change_title"));
         addMenuItem(new BMenuItem(_ctx.xlate(HIDEOUT_MSGS, "m.expel"), "expel"));
     }
 
@@ -109,6 +114,8 @@ public class MemberPopupMenu extends PlayerPopupMenu
             changeMemberRank(Byte.parseByte(action.substring(5)));
         } else if (action.equals("expel")) {
             expelMember();
+        } else if (action.equals("change_title")) {
+            changeMemberTitle();
         }
     }
 
@@ -163,6 +170,64 @@ public class MemberPopupMenu extends PlayerPopupMenu
                     _hideoutobj.service.expelMember(_ctx.getClient(), _member.handle, this);
                 }
             }, true, 400);
+    }
+
+    protected void changeMemberTitle ()
+    {
+        String title = MessageBundle.tcompose("t.change_title", _member.handle);
+        _ctx.getBangClient().displayPopup(
+                new TitleWindow(title, _member.title), true, 600);
+    }
+
+    protected class TitleWindow extends BDecoratedWindow
+        implements ActionListener, HideoutService.ConfirmListener
+    {
+        public TitleWindow (String title, int tidx)
+        {
+            super(_ctx.getStyleSheet(), _ctx.xlate(HIDEOUT_MSGS, title));
+            setModal(true);
+
+            BContainer tcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
+            tcont.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, "m.new_title")));
+            _titles = new BComboBox();
+            for (int ii = 0; ii <= GangCodes.TITLES_COUNT; ii++) {
+                _titles.addItem(_ctx.xlate(GangCodes.GANG_MSGS, "m.title." + ii));
+            }
+            _titles.selectItem(tidx);
+            tcont.add(_titles);
+            add(tcont);
+
+            BContainer bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
+            bcont.add(new BButton(_ctx.xlate(HIDEOUT_MSGS, "m.update"), this, "update"));
+            bcont.add(new BButton(_ctx.xlate(HIDEOUT_MSGS, "m.cancel"), this, "cancel"));
+            add(bcont, GroupLayout.FIXED);
+        }
+
+        // documentation inherited from interface ActionListener
+        public void actionPerformed (ActionEvent event)
+        {
+            _ctx.getBangClient().clearPopup(this, true);
+            if (event.getAction().equals("update")) {
+                _hideoutobj.service.changeMemberTitle(
+                        _ctx.getClient(), _member.handle, _titles.getSelectedIndex(), this);
+            }
+        }
+
+        // documentation inherited from interface InvocationService.ConfirmListener
+        public void requestProcessed ()
+        {
+            _status.setStatus(HIDEOUT_MSGS, MessageBundle.tcompose(
+                        "m.title_change_success", _member.handle.toString(),
+                        (String)_titles.getSelectedItem()), false);
+        }
+
+        // documentation inherited from interface InvocationService.ConfirmListener
+        public void requestFailed (String cause)
+        {
+            _status.setStatus(HIDEOUT_MSGS, cause, true);
+        }
+
+        protected BComboBox _titles;
     }
 
     protected GangMemberEntry _member;

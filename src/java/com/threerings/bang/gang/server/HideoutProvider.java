@@ -50,6 +50,12 @@ public interface HideoutProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link HideoutService#changeMemberTitle} request.
+     */
+    public void changeMemberTitle (ClientObject caller, Handle arg1, int arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
+
+    /**
      * Handles a {@link HideoutService#expelMember} request.
      */
     public void expelMember (ClientObject caller, Handle arg1, InvocationService.ConfirmListener arg2)

@@ -70,6 +70,13 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case GangPeerMarshaller.CHANGE_MEMBER_TITLE:
+            ((GangPeerProvider)provider).changeMemberTitle(
+                source,
+                (Handle)args[0], (Handle)args[1], ((Integer)args[2]).intValue(), (InvocationService.ConfirmListener)args[3]
+            );
+            return;
+
         case GangPeerMarshaller.GRANT_ACES:
             ((GangPeerProvider)provider).grantAces(
                 source,

@@ -335,6 +335,26 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
+    public void changeMemberTitle (ClientObject caller, Handle handle, int title,
+                                  HideoutService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // make sure it's a valid rank
+        if (title < 0 || title >= TITLES_COUNT) {
+            log.warning("Tried to change member to invalid title [who=" + user.who() +
+                ", target=" + handle + ", title=" + title + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).changeMemberTitle(
+            null, user.handle, handle, title, listener);
+    }
+
+    // documentation inherited from interface HideoutProvider
     public void getHistoryEntries (ClientObject caller, int offset,
                                    HideoutService.ResultListener listener)
         throws InvocationException

@@ -232,12 +232,15 @@ public class WantedPosterView extends BContainer
         BuckleView bview = new BuckleView(_ctx, 3);
         bview.setBuckle(_poster.buckle);
         cont.add(bview);
+        String title = GangCodes.XLATE_RANKS[_poster.rank];
+        if (_poster.rank != GangCodes.LEADER_RANK && _poster.title != 0) {
+            title = "m.title." + _poster.title;
+        }
 
         String gang = _ctx.xlate(BangCodes.BANG_MSGS,
             MessageBundle.compose(
                 "m.poster_gang",
-                MessageBundle.qualify(
-                    GangCodes.GANG_MSGS, GangCodes.XLATE_RANKS[_poster.rank]),
+                MessageBundle.qualify(GangCodes.GANG_MSGS, title),
                 MessageBundle.taint(_poster.gang)));
         cont.add(BangUI.createGangLabel(_poster.gang, gang, "poster_gang"));
 

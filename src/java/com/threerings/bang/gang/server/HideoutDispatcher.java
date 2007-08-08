@@ -77,6 +77,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             );
             return;
 
+        case HideoutMarshaller.CHANGE_MEMBER_TITLE:
+            ((HideoutProvider)provider).changeMemberTitle(
+                source,
+                (Handle)args[0], ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
         case HideoutMarshaller.EXPEL_MEMBER:
             ((HideoutProvider)provider).expelMember(
                 source,

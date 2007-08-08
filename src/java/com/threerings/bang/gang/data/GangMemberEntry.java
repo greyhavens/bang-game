@@ -45,6 +45,9 @@ public class GangMemberEntry extends SimpleStreamableObject
     /** The number of coins donated by the member. */
     public int coinsDonated;
 
+    /** The title index of the member. */
+    public int title;
+
     /** The index of the town that the member is logged into, or -1 if the member is offline. */
     public byte townIdx = -1;
 
@@ -62,7 +65,7 @@ public class GangMemberEntry extends SimpleStreamableObject
      */
     public GangMemberEntry (
         Handle handle, int playerId, byte rank, int commandOrder, Date joined, int notoriety,
-        int scripDonated, int coinsDonated, Date lastSession)
+        int scripDonated, int coinsDonated, int title, Date lastSession)
     {
         this.handle = handle;
         this.playerId = playerId;
@@ -72,6 +75,7 @@ public class GangMemberEntry extends SimpleStreamableObject
         this.notoriety = notoriety;
         this.scripDonated = scripDonated;
         this.coinsDonated = coinsDonated;
+        this.title = title;
         this.lastSession = lastSession.getTime();
         updateWasActive();
     }

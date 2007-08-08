@@ -212,7 +212,8 @@ public class GangManager
         try {
             GangObject gangobj = requireGang(player.gangId).getGangObject();
             info.gang = gangobj.name;
-            info.rank = getPosterRank(player.gangRank);
+            info.rank = player.gangRank;
+            info.title = player.gangTitle;
             info.buckle = gangobj.getBuckleInfo();
         } catch (InvocationException e) {
             log.warning("Gang not loaded to populate poster [gangId=" + player.gangId +
@@ -234,7 +235,8 @@ public class GangManager
             GangRecord grec = _gangrepo.loadGang(mrec.gangId, false);
             if (grec != null) {
                 info.gang = grec.getName();
-                info.rank = getPosterRank(mrec.rank);
+                info.rank = mrec.rank;
+                info.title = mrec.title;
                 info.buckle = new BuckleInfo(grec.getBucklePrint());
             }
         }
@@ -429,7 +431,7 @@ public class GangManager
                 _gangrepo.insertHistoryEntry(
                     _grec.gangId, MessageBundle.tcompose("m.founded_entry", user.handle));
                 _grec.members.add(new GangMemberEntry(
-                    user.handle, user.playerId, LEADER_RANK, 0, _mrec.joined, 0, 0, 0,
+                    user.handle, user.playerId, LEADER_RANK, 0, _mrec.joined, 0, 0, 0, 0,
                     _mrec.joined));
                 _grec.avatar = avatar;
 

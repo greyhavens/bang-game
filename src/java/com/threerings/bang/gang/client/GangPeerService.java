@@ -109,6 +109,12 @@ public interface GangPeerService extends InvocationService
         Client client, Handle handle, Handle target, byte rank, ConfirmListener listener);
 
     /**
+     * Changes a member's title.
+     */
+    public void changeMemberTitle (
+        Client client, Handle handle, Handle target, int title, ConfirmListener listener);
+
+    /**
      * Gets a quote for or buys the specified gang articles.
      */
     public void processOutfits (

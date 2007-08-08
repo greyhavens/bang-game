@@ -44,6 +44,12 @@ public interface GangPeerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link GangPeerService#changeMemberTitle} request.
+     */
+    public void changeMemberTitle (ClientObject caller, Handle arg1, Handle arg2, int arg3, InvocationService.ConfirmListener arg4)
+        throws InvocationException;
+
+    /**
      * Handles a {@link GangPeerService#grantAces} request.
      */
     public void grantAces (ClientObject caller, Handle arg1, int arg2);

@@ -39,6 +39,9 @@ public class PosterInfo extends SimpleStreamableObject
     /** The player's rank in the gang. */
     public byte rank;
 
+    /** The player's title in the gang. */
+    public int title;
+
     /** The player's gang buckle. */
     public BuckleInfo buckle;
 

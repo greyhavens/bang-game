@@ -478,6 +478,7 @@ public class GangHandler
             }
             user.setGangId(_gangId);
             user.setGangRank(entry.rank);
+            user.setGangTitle(entry.title);
             user.setGangCommandOrder(entry.commandOrder);
             user.setJoinedGang(entry.joined);
             user.setGangOid(_gangobj.getOid());
@@ -592,11 +593,12 @@ public class GangHandler
         if (user == null) {
             return;
         }
-        if (user.gangRank != entry.rank) {
+        if (user.gangRank != entry.rank || user.gangTitle != entry.title) {
             user.startTransaction();
             try {
                 user.setGangRank(entry.rank);
                 user.setGangCommandOrder(entry.commandOrder);
+                user.setGangTitle(entry.title);
             } finally {
                 user.commitTransaction();
             }
@@ -1224,7 +1226,7 @@ public class GangHandler
                 } else {
                     BangServer.gangrepo.insertMember(new GangMemberRecord(
                         entry.playerId, _gangId, entry.rank, entry.commandOrder, entry.joined,
-                        entry.notoriety, entry.scripDonated, entry.coinsDonated));
+                        entry.notoriety, entry.scripDonated, entry.coinsDonated, entry.title));
                 }
                 if (_entryId > 0) {
                     BangServer.gangrepo.deleteHistoryEntry(_entryId);
@@ -1307,6 +1309,45 @@ public class GangHandler
                 GangMemberEntry member = _gangobj.members.get(target);
                 member.rank = rank;
                 member.commandOrder = commandOrder;
+                _gangobj.updateMembers(member);
+                listener.requestProcessed();
+                BangServer.playmgr.clearPosterInfoCache(entry.handle);
+            }
+        });
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void changeMemberTitle (
+        ClientObject caller, final Handle handle, final Handle target, final int title,
+        final InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure it comes from this server or a peer
+        verifyLocalOrPeer(caller);
+
+        // make sure they can change it
+        final GangMemberEntry entry = verifyCanChange(handle, target);
+
+        // make sure it's not the same rank
+        if (title == entry.title) {
+            listener.requestProcessed();
+            return;
+        }
+
+        // post to the database
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                BangServer.gangrepo.updateTitle(entry.playerId, title);
+                BangServer.gangrepo.insertHistoryEntry(_gangId,
+                    MessageBundle.compose("m.title_entry",
+                        MessageBundle.taint(handle),
+                        MessageBundle.taint(target),
+                        MessageBundle.qualify(GANG_MSGS, "m.title." + title)));
+            }
+            public void handleSuccess () {
+                GangMemberEntry member = _gangobj.members.get(target);
+                member.title = title;
                 _gangobj.updateMembers(member);
                 listener.requestProcessed();
                 BangServer.playmgr.clearPosterInfoCache(entry.handle);
@@ -2351,7 +2392,7 @@ public class GangHandler
         }
         if (mrec != null) {
             GangMemberEntry entry = new GangMemberEntry(
-                handle, playerId, MEMBER_RANK, 0, mrec.joined, 0, 0, 0, mrec.joined);
+                handle, playerId, MEMBER_RANK, 0, mrec.joined, 0, 0, 0, 0, mrec.joined);
             initTownIndex(entry);
             _gangobj.addToMembers(entry);
             if (entry.townIdx == -1) {

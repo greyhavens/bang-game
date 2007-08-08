@@ -54,6 +54,9 @@ public interface GangCodes extends InvocationCodes
     /** The number of gang ranks. */
     public static final byte RANK_COUNT = 3;
 
+    /** The number of gang member titles. */
+    public static final int TITLES_COUNT = 25;
+
     /** Gang rank string translations. */
     public static final String[] XLATE_RANKS = {
         "m.member", "m.recruiter", "m.leader" };

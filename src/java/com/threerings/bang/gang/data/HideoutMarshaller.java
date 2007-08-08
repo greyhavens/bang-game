@@ -88,8 +88,21 @@ public class HideoutMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #changeMemberTitle} requests. */
+    public static final int CHANGE_MEMBER_TITLE = 6;
+
+    // from interface HideoutService
+    public void changeMemberTitle (Client arg1, Handle arg2, int arg3, InvocationService.ConfirmListener arg4)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, CHANGE_MEMBER_TITLE, new Object[] {
+            arg2, Integer.valueOf(arg3), listener4
+        });
+    }
+
     /** The method id used to dispatch {@link #expelMember} requests. */
-    public static final int EXPEL_MEMBER = 6;
+    public static final int EXPEL_MEMBER = 7;
 
     // from interface HideoutService
     public void expelMember (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
@@ -102,7 +115,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #findMatch} requests. */
-    public static final int FIND_MATCH = 7;
+    public static final int FIND_MATCH = 8;
 
     // from interface HideoutService
     public void findMatch (Client arg1, Criterion arg2, InvocationService.ResultListener arg3)
@@ -115,7 +128,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #formGang} requests. */
-    public static final int FORM_GANG = 8;
+    public static final int FORM_GANG = 9;
 
     // from interface HideoutService
     public void formGang (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
@@ -128,7 +141,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #getHistoryEntries} requests. */
-    public static final int GET_HISTORY_ENTRIES = 9;
+    public static final int GET_HISTORY_ENTRIES = 10;
 
     // from interface HideoutService
     public void getHistoryEntries (Client arg1, int arg2, InvocationService.ResultListener arg3)
@@ -141,7 +154,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #getOutfitQuote} requests. */
-    public static final int GET_OUTFIT_QUOTE = 10;
+    public static final int GET_OUTFIT_QUOTE = 11;
 
     // from interface HideoutService
     public void getOutfitQuote (Client arg1, OutfitArticle[] arg2, InvocationService.ResultListener arg3)
@@ -154,7 +167,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #leaveGang} requests. */
-    public static final int LEAVE_GANG = 11;
+    public static final int LEAVE_GANG = 12;
 
     // from interface HideoutService
     public void leaveGang (Client arg1, InvocationService.ConfirmListener arg2)
@@ -167,7 +180,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #leaveMatch} requests. */
-    public static final int LEAVE_MATCH = 12;
+    public static final int LEAVE_MATCH = 13;
 
     // from interface HideoutService
     public void leaveMatch (Client arg1, int arg2)
@@ -178,7 +191,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #postOffer} requests. */
-    public static final int POST_OFFER = 13;
+    public static final int POST_OFFER = 14;
 
     // from interface HideoutService
     public void postOffer (Client arg1, int arg2, int arg3, InvocationService.ResultListener arg4)
@@ -191,7 +204,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #renewGangItem} requests. */
-    public static final int RENEW_GANG_ITEM = 14;
+    public static final int RENEW_GANG_ITEM = 15;
 
     // from interface HideoutService
     public void renewGangItem (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
@@ -204,7 +217,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #rentGangGood} requests. */
-    public static final int RENT_GANG_GOOD = 15;
+    public static final int RENT_GANG_GOOD = 16;
 
     // from interface HideoutService
     public void rentGangGood (Client arg1, String arg2, Object[] arg3, InvocationService.ConfirmListener arg4)
@@ -217,7 +230,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setBuckle} requests. */
-    public static final int SET_BUCKLE = 16;
+    public static final int SET_BUCKLE = 17;
 
     // from interface HideoutService
     public void setBuckle (Client arg1, BucklePart[] arg2, InvocationService.ConfirmListener arg3)
@@ -230,7 +243,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setStatement} requests. */
-    public static final int SET_STATEMENT = 17;
+    public static final int SET_STATEMENT = 18;
 
     // from interface HideoutService
     public void setStatement (Client arg1, String arg2, String arg3, InvocationService.ConfirmListener arg4)

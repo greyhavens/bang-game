@@ -35,6 +35,9 @@ public class GangMemberRecord
     /** The number of coins donated by this member. */
     public int coinsDonated;
 
+    /** The member title index. */
+    public int title;
+
     /** Used when adding new members. */
     public GangMemberRecord (int playerId, int gangId, byte rank)
     {
@@ -46,7 +49,7 @@ public class GangMemberRecord
     /** Used when rolling back deletions. */
     public GangMemberRecord (
         int playerId, int gangId, byte rank, int commandOrder, long joined, int notoriety,
-        int scripDonated, int coinsDonated)
+        int scripDonated, int coinsDonated, int title)
     {
         this.playerId = playerId;
         this.gangId = gangId;
@@ -56,6 +59,7 @@ public class GangMemberRecord
         this.notoriety = notoriety;
         this.scripDonated = scripDonated;
         this.coinsDonated = coinsDonated;
+        this.title = title;
     }
 
     /** Used when forming queries. */

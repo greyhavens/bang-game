@@ -502,6 +502,16 @@ public class GangRepository extends JORARepository
     }
 
     /**
+     * Changes the specified user's title.
+     */
+    public void updateTitle (int playerId, int title)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANG_MEMBERS set TITLE = " + title +
+                " where PLAYER_ID = " + playerId, 1);
+    }
+
+    /**
      * Get a list of {@link GangInviteRecord}s representing all invitations stored for the
      * specified player.
      */
@@ -741,8 +751,9 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         final ArrayList<GangMemberEntry> list = new ArrayList<GangMemberEntry>();
-        final String query = "select HANDLE, GANG_MEMBERS.PLAYER_ID, RANK, COMMAND_ORDER, " +
-            "JOINED, NOTORIETY, SCRIP_DONATED, COINS_DONATED, LAST_SESSION from GANG_MEMBERS, " +
+        final String query =
+            "select HANDLE, GANG_MEMBERS.PLAYER_ID, RANK, COMMAND_ORDER, JOINED, " +
+            "NOTORIETY, SCRIP_DONATED, COINS_DONATED, TITLE, LAST_SESSION from GANG_MEMBERS, " +
             "PLAYERS where GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
@@ -755,7 +766,7 @@ public class GangRepository extends JORARepository
                         list.add(new GangMemberEntry(
                             new Handle(rs.getString(1)), rs.getInt(2), rs.getByte(3), rs.getInt(4),
                             rs.getTimestamp(5), rs.getInt(6), rs.getInt(7), rs.getInt(8),
-                            rs.getTimestamp(9)));
+                            rs.getInt(9), rs.getTimestamp(10)));
                     }
                     return null;
 
@@ -797,6 +808,7 @@ public class GangRepository extends JORARepository
             "NOTORIETY INTEGER NOT NULL",
             "SCRIP_DONATED INTEGER NOT NULL",
             "COINS_DONATED INTEGER NOT NULL",
+            "TITLE INTEGER NOT NULL",
             "PRIMARY KEY (PLAYER_ID)",
             "INDEX (GANG_ID)",
         }, "");
@@ -806,6 +818,10 @@ public class GangRepository extends JORARepository
         JDBCUtil.addColumn(conn, "GANG_MEMBERS", "SCRIP_DONATED", "INTEGER NOT NULL", "NOTORIETY");
         JDBCUtil.addColumn(conn, "GANG_MEMBERS", "COINS_DONATED", "INTEGER NOT NULL",
             "SCRIP_DONATED");
+        // END TEMP
+
+        // TEMP: add title
+        JDBCUtil.addColumn(conn, "GANG_MEMBERS", "TITLE", "INTEGER NOT NULL", "COINS_DONATED");
         // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_INVITES", new String[] {

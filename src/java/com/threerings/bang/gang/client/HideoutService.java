@@ -70,6 +70,12 @@ public interface HideoutService extends InvocationService
         Client client, Handle handle, byte rank, ConfirmListener listener);
 
     /**
+     * Requests to change the title of a gang member.
+     */
+    public void changeMemberTitle (
+        Client client, Handle handle, int title, ConfirmListener listener);
+
+    /**
      * Downloads part of the gang's history.
      *
      * @param offset the offset at which to start
