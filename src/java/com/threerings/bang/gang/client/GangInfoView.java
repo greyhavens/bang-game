@@ -124,11 +124,9 @@ public class GangInfoView extends BContainer
         BContainer ccont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ccont.add(new BLabel(_msgs.get("m.coffers"), "coffer_label"));
         ccont.add(_coffers = new CofferLabel(ctx, gangobj));
-        if (_ctx.getUserObject().canDonate()) {
-            BButton donate = new BButton(_msgs.get("m.donate"), this, "donate");
-            donate.setStyleClass("alt_button");
-            ccont.add(donate);
-        }
+        BButton donate = new BButton(_msgs.get("m.donate"), this, "donate");
+        donate.setStyleClass("alt_button");
+        ccont.add(donate);
         rcont.add(ccont, GroupLayout.FIXED);
 
         add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/design_bottom.png")),

@@ -57,9 +57,6 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>gangCommandOrder</code> field. */
     public static final String GANG_COMMAND_ORDER = "gangCommandOrder";
 
-    /** The field name of the <code>joinedGang</code> field. */
-    public static final String JOINED_GANG = "joinedGang";
-
     /** The field name of the <code>inventory</code> field. */
     public static final String INVENTORY = "inventory";
 
@@ -129,9 +126,6 @@ public class PlayerObject extends BodyObject
 
     /** The user's command order in the gang. */
     public int gangCommandOrder;
-
-    /** The date upon which the user joined the gang. */
-    public long joinedGang;
 
     /** Contains all items held by this user. */
     public DSet<Item> inventory;
@@ -372,15 +366,6 @@ public class PlayerObject extends BodyObject
         return gangId > 0 && gangRank >= GangCodes.RECRUITER_RANK;
     }
 
-    /**
-     * Returns true if the player can donate to his gang's coffers.
-     */
-    public boolean canDonate ()
-    {
-        return gangRank >= GangCodes.LEADER_RANK ||
-            (System.currentTimeMillis() - joinedGang) >= GangCodes.DONATION_DELAY;
-    }
-
     @Override // documentation inherited
     public BangTokenRing getTokens ()
     {
@@ -588,22 +573,6 @@ public class PlayerObject extends BodyObject
         requestAttributeChange(
             GANG_COMMAND_ORDER, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.gangCommandOrder = value;
-    }
-
-    /**
-     * Requests that the <code>joinedGang</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setJoinedGang (long value)
-    {
-        long ovalue = this.joinedGang;
-        requestAttributeChange(
-            JOINED_GANG, Long.valueOf(value), Long.valueOf(ovalue));
-        this.joinedGang = value;
     }
 
     /**

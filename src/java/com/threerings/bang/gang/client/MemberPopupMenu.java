@@ -158,7 +158,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
         String warning = (refund[0] == 0 && refund[1] == 0) ?
             MessageBundle.taint("") :
             MessageBundle.compose("m.expel_reimburse",
-                MessageBundle.taint(DONATION_REIMBURSEMENT_PCT),
+                MessageBundle.taint(_member.getDonationReimbursementPct()),
                 GangUtil.getMoneyDesc(refund[0], refund[1], 0));
 
         String confirm = MessageBundle.compose("m.confirm_expel",

@@ -153,11 +153,21 @@ public class GangMemberEntry extends SimpleStreamableObject
      * Returns an array containing the amount of scrip and number of coins that must be reimbursed
      * to this member if he is expelled.
      */
+    public int getDonationReimbursementPct ()
+    {
+        return (System.currentTimeMillis() - joined >= GangCodes.DONATION_DELAY ?
+                GangCodes.DONATION_REIMBURSEMENT_PCT : GangCodes.EARLY_REIMBURSEMENT_PCT);
+    }
+    /**
+     * Returns an array containing the amount of scrip and number of coins that must be reimbursed
+     * to this member if he is expelled.
+     */
     public int[] getDonationReimbursement ()
     {
+        int reimbursement = getDonationReimbursementPct();
         return new int[] {
-            (scripDonated * GangCodes.DONATION_REIMBURSEMENT_PCT) / 100,
-            (coinsDonated * GangCodes.DONATION_REIMBURSEMENT_PCT) / 100
+            (scripDonated * reimbursement) / 100,
+            (coinsDonated * reimbursement) / 100
         };
     }
 

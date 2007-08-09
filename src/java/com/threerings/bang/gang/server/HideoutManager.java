@@ -283,12 +283,6 @@ public class HideoutManager extends MatchHostManager
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
 
-        // make sure they can donate; we return a user-friendly message if not, even though they
-        // shouldn't see the option, because their clock may not match up with ours
-        if (!user.canDonate()) {
-            throw new InvocationException("e.too_soon");
-        }
-
         // make sure the amounts are positive and that at least one is nonzero
         if (scrip < 0 || coins < 0 || scrip + coins == 0) {
             log.warning("Player tried to donate invalid amounts [who=" +

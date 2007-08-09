@@ -511,7 +511,6 @@ public class GangHandler
             user.setGangRank(entry.rank);
             user.setGangTitle(entry.title);
             user.setGangCommandOrder(entry.commandOrder);
-            user.setJoinedGang(entry.joined);
             user.setGangOid(_gangobj.getOid());
         } finally {
             user.commitTransaction();

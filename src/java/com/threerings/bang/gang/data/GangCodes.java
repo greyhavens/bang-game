@@ -74,6 +74,10 @@ public interface GangCodes extends InvocationCodes
      * out of the gang. */
     public static final int DONATION_REIMBURSEMENT_PCT = 50;
 
+    /** The percentage of the member's total donations that must be reimbursed if they are kicked
+     * out of the gang in the initial time period. */
+    public static final int EARLY_REIMBURSEMENT_PCT = 100;
+
     /** The amount of time that may elapse before gang members are considered to be inactive. */
     public static final long ACTIVITY_DELAY = 14L * 24 * 60 * 60 * 1000;
 
