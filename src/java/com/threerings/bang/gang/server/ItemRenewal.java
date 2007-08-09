@@ -71,6 +71,7 @@ public class ItemRenewal extends GangFinancialAction
         _entryId = BangServer.gangrepo.insertHistoryEntry(_gang.gangId,
                 MessageBundle.compose("m.renewal_entry", MessageBundle.taint(_handle),
                     _good.getName(), GangUtil.getMoneyDesc(_scripCost, _coinCost, _aceCost)));
+        GangHandler.incLeaderLevel(_gang, _handle);
         return null;
     }
 
@@ -90,6 +91,7 @@ public class ItemRenewal extends GangFinancialAction
     @Override // documentation inherited
     protected void actionCompleted ()
     {
+        _gang.updateMembers(_gang.members.get(_handle));
         _gang.updateInventory(_item);
         _listener.requestProcessed();
         super.actionCompleted();

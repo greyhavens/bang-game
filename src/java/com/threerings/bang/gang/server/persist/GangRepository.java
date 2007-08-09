@@ -475,6 +475,9 @@ public class GangRepository extends JORARepository
         if (member.joined == null) {
             member.joined = new Timestamp(System.currentTimeMillis());
         }
+        if (member.lastLeaderCommand == null) {
+            member.lastLeaderCommand = new Timestamp(System.currentTimeMillis());
+        }
 
         // make sure there are no any pending invitations
         deletePendingInvites(member.playerId);
@@ -498,7 +501,8 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         checkedUpdate("update GANG_MEMBERS set RANK = " + rank + ", COMMAND_ORDER = " +
-                      commandOrder + " where PLAYER_ID = " + playerId, 1);
+                      commandOrder + ", LEADER_LEVEL = 0, LAST_LEADER_COMMAND = NOW() " +
+                      "where PLAYER_ID = " + playerId, 1);
     }
 
     /**
@@ -509,6 +513,16 @@ public class GangRepository extends JORARepository
     {
         checkedUpdate("update GANG_MEMBERS set TITLE = " + title +
                 " where PLAYER_ID = " + playerId, 1);
+    }
+
+    /**
+     * Updates the leader level and last leader command timstamp for a leader.
+     */
+    public void updateLeaderLevel (int playerId, int leaderLevel)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANG_MEMBERS set LEADER_LEVEL = " + leaderLevel +
+                ", LAST_LEADER_COMMAND = NOW() where PLAYER_ID = " + playerId, 1);
     }
 
     /**
@@ -752,9 +766,10 @@ public class GangRepository extends JORARepository
     {
         final ArrayList<GangMemberEntry> list = new ArrayList<GangMemberEntry>();
         final String query =
-            "select HANDLE, GANG_MEMBERS.PLAYER_ID, RANK, COMMAND_ORDER, JOINED, " +
-            "NOTORIETY, SCRIP_DONATED, COINS_DONATED, TITLE, LAST_SESSION from GANG_MEMBERS, " +
-            "PLAYERS where GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
+            "select HANDLE, GANG_MEMBERS.PLAYER_ID, RANK, COMMAND_ORDER, LEADER_LEVEL, " +
+            "LAST_LEADER_COMMAND, JOINED, NOTORIETY, SCRIP_DONATED, COINS_DONATED, TITLE, " +
+            "LAST_SESSION from GANG_MEMBERS, PLAYERS " +
+            "where GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -765,8 +780,8 @@ public class GangRepository extends JORARepository
                     while (rs.next()) {
                         list.add(new GangMemberEntry(
                             new Handle(rs.getString(1)), rs.getInt(2), rs.getByte(3), rs.getInt(4),
-                            rs.getTimestamp(5), rs.getInt(6), rs.getInt(7), rs.getInt(8),
-                            rs.getInt(9), rs.getTimestamp(10)));
+                            rs.getInt(5), rs.getTimestamp(6), rs.getTimestamp(7), rs.getInt(8),
+                            rs.getInt(9), rs.getInt(10), rs.getInt(11), rs.getTimestamp(12)));
                     }
                     return null;
 
@@ -804,6 +819,8 @@ public class GangRepository extends JORARepository
             "GANG_ID INTEGER NOT NULL",
             "RANK TINYINT NOT NULL",
             "COMMAND_ORDER INTEGER NOT NULL",
+            "LEADER_LEVEL INTEGER NOT NULL",
+            "LAST_LEADER_COMMAND DATETIME NOT NULL DEFAULT \"2005-01-01\"",
             "JOINED DATETIME NOT NULL",
             "NOTORIETY INTEGER NOT NULL",
             "SCRIP_DONATED INTEGER NOT NULL",
@@ -822,6 +839,17 @@ public class GangRepository extends JORARepository
 
         // TEMP: add title
         JDBCUtil.addColumn(conn, "GANG_MEMBERS", "TITLE", "INTEGER NOT NULL", "COINS_DONATED");
+        // END TEMP
+
+        // TEMP: add leader tracking
+        if (!JDBCUtil.tableContainsColumn(conn, "GANG_MEMBERS", "LEADER_LEVEL")) {
+            JDBCUtil.addColumn(
+                    conn, "GANG_MEMBERS", "LEADER_LEVEL", "INTEGER NOT NULL", "COMMAND_ORDER");
+            JDBCUtil.addColumn(conn, "GANG_MEMBERS", "LAST_LEADER_COMMAND",
+                    "DATETIME NOT NULL DEFAULT \"2005-01-01\"", "LEADER_LEVEL");
+            update("update GANG_MEMBERS set LEADER_LEVEL = 10 where RANK = " +
+                    GangCodes.LEADER_RANK);
+        }
         // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_INVITES", new String[] {

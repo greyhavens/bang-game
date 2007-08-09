@@ -33,6 +33,12 @@ public class GangMemberEntry extends SimpleStreamableObject
      * leader, etc.) */
     public int commandOrder;
 
+    /** The level this leader is at (determines how quickly they can perform leader commands). */
+    public int leaderLevel;
+
+    /** The last leader command this member performed. */
+    public long lastLeaderCommand;
+
     /** The time at which the member joined the gang. */
     public long joined;
 
@@ -64,13 +70,16 @@ public class GangMemberEntry extends SimpleStreamableObject
      * Constructor for entries loaded from the database.
      */
     public GangMemberEntry (
-        Handle handle, int playerId, byte rank, int commandOrder, Date joined, int notoriety,
-        int scripDonated, int coinsDonated, int title, Date lastSession)
+        Handle handle, int playerId, byte rank, int commandOrder, int leaderLevel,
+        Date lastLeaderCommand, Date joined, int notoriety, int scripDonated, int coinsDonated,
+        int title, Date lastSession)
     {
         this.handle = handle;
         this.playerId = playerId;
         this.rank = rank;
         this.commandOrder = commandOrder;
+        this.leaderLevel = leaderLevel;
+        this.lastLeaderCommand = lastLeaderCommand.getTime();
         this.joined = joined.getTime();
         this.notoriety = notoriety;
         this.scripDonated = scripDonated;

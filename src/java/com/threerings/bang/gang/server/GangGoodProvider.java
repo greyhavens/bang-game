@@ -66,6 +66,7 @@ public abstract class GangGoodProvider extends GangFinancialAction
                 MessageBundle.taint(_handle),
                 _good.getName(),
                 GangUtil.getMoneyDesc(_scripCost, _coinCost, _aceCost)));
+        GangHandler.incLeaderLevel(_gang, _handle);
         return null;
     }
 
@@ -81,6 +82,7 @@ public abstract class GangGoodProvider extends GangFinancialAction
     @Override // documentation inherited
     protected void actionCompleted ()
     {
+        _gang.updateMembers(_gang.members.get(_handle));
         _listener.requestProcessed();
         super.actionCompleted();
     }

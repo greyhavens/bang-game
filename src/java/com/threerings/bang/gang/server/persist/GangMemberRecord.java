@@ -23,6 +23,13 @@ public class GangMemberRecord
      * leader, etc.) */
     public int commandOrder;
 
+    /** The command level a leader has, which is used to restrict how soon they can perform
+     * leader activites. */
+    public int leaderLevel;
+
+    /** The last time they performed a leader command. */
+    public Timestamp lastLeaderCommand;
+
     /** The time at which the player joined the gang. */
     public Timestamp joined;
 
@@ -48,13 +55,16 @@ public class GangMemberRecord
 
     /** Used when rolling back deletions. */
     public GangMemberRecord (
-        int playerId, int gangId, byte rank, int commandOrder, long joined, int notoriety,
+        int playerId, int gangId, byte rank, int commandOrder, int leaderLevel,
+        long lastLeaderCommand, long joined, int notoriety,
         int scripDonated, int coinsDonated, int title)
     {
         this.playerId = playerId;
         this.gangId = gangId;
         this.rank = rank;
         this.commandOrder = commandOrder;
+        this.leaderLevel = leaderLevel;
+        this.lastLeaderCommand = new Timestamp(lastLeaderCommand);
         this.joined = new Timestamp(joined);
         this.notoriety = notoriety;
         this.scripDonated = scripDonated;

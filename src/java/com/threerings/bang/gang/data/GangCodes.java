@@ -42,6 +42,9 @@ public interface GangCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String GANG_MSGS = "gang";
 
+    /** Error message when a new leader cannot perform a command. */
+    public static final String NEW_LEADER_WAIT = "e.new_leader_wait";
+
     /** Gang rank constant. */
     public static final byte MEMBER_RANK = 0;
 
@@ -55,7 +58,7 @@ public interface GangCodes extends InvocationCodes
     public static final byte RANK_COUNT = 3;
 
     /** The number of gang member titles. */
-    public static final int TITLES_COUNT = 25;
+    public static final int TITLES_COUNT = 53;
 
     /** Gang rank string translations. */
     public static final String[] XLATE_RANKS = {

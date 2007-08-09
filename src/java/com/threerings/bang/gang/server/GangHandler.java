@@ -5,6 +5,7 @@ package com.threerings.bang.gang.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
@@ -116,6 +117,36 @@ public class GangHandler
         AttributeChangeListener, SetListener, ObjectDeathListener, SpeakHandler.SpeakerValidator,
         GangPeerProvider, GangCodes
 {
+    /** The amount of time in hours required between leader commands for each leader level. */
+    public static final int[] LEADER_LEVEL_WAITS = {
+        0, 24, 24, 12, 12, 6, 6, 3, 3, 1, 0
+    };
+
+    /**
+     * Convenience function for persisting an increment of a gang member's leader level.  Must be
+     * called on the invoker thread.
+     */
+    public static void incLeaderLevel (GangObject gangobj, Handle handle)
+        throws PersistenceException
+    {
+        if (handle != null) {
+            GangMemberEntry leader = gangobj.members.get(handle);
+            if (leader != null && leader.leaderLevel < LEADER_LEVEL_WAITS.length - 1) {
+                // if they've waited twice as long as necessary, they get a double bump in level
+                long doubleTime = leader.lastLeaderCommand +
+                    2 * LEADER_LEVEL_WAITS[leader.leaderLevel] * ONE_HOUR;
+                if (leader.leaderLevel > 0 && doubleTime < System.currentTimeMillis()) {
+                    leader.leaderLevel =
+                        Math.min(LEADER_LEVEL_WAITS.length-1, leader.leaderLevel+2);
+                } else {
+                    leader.leaderLevel++;
+                }
+                leader.lastLeaderCommand = System.currentTimeMillis();
+                BangServer.gangrepo.updateLeaderLevel(leader.playerId, leader.leaderLevel);
+            }
+        }
+    }
+
     /**
      * Creates the handler and starts the process of resolving the specified gang.
      */
@@ -859,7 +890,7 @@ public class GangHandler
 
     // documentation inherited from interface GangPeerProvider
     public void setStatement (
-        ClientObject caller, Handle handle, final String statement,
+        ClientObject caller, final Handle handle, final String statement,
         final String url, final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
@@ -874,12 +905,15 @@ public class GangHandler
             public void invokePersistent ()
                 throws PersistenceException {
                 BangServer.gangrepo.updateStatement(_gangId, statement, url);
+                incLeaderLevel(_gangobj, handle);
             }
             public void handleSuccess () {
+                GangMemberEntry leader = _gangobj.members.get(handle);
                 _gangobj.startTransaction();
                 try {
                     _gangobj.setStatement(statement);
                     _gangobj.setUrl(url);
+                    _gangobj.updateMembers(leader);
                 } finally {
                     _gangobj.commitTransaction();
                 }
@@ -890,7 +924,7 @@ public class GangHandler
 
     // documentation inherited from interface GangPeerProvider
     public void setBuckle (
-        ClientObject caller, Handle handle, final BucklePart[] parts,
+        ClientObject caller, final Handle handle, final BucklePart[] parts,
         final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
@@ -967,8 +1001,10 @@ public class GangHandler
                     }
                 }
                 BangServer.gangrepo.updateBuckle(_gangId, partIds, buckle.print);
+                incLeaderLevel(_gangobj, handle);
             }
             public void handleSuccess () {
+                GangMemberEntry leader = _gangobj.members.get(handle);
                 _gangobj.startTransaction();
                 try {
                     for (BucklePart part : parts) {
@@ -977,6 +1013,7 @@ public class GangHandler
                         }
                     }
                     _gangobj.setBuckle(partIds);
+                    _gangobj.updateMembers(leader);
                 } finally {
                     _gangobj.commitTransaction();
                 }
@@ -1192,6 +1229,7 @@ public class GangHandler
                     _entryId = BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
                         MessageBundle.tcompose("m.left_entry", entry.handle) :
                         MessageBundle.tcompose("m.expelled_entry", handle, entry.handle));
+                    incLeaderLevel(_gangobj, handle);
                 }
                 return null;
             }
@@ -1225,8 +1263,9 @@ public class GangHandler
                         GangHandler.this + ", leaver=" + target + "].");
                 } else {
                     BangServer.gangrepo.insertMember(new GangMemberRecord(
-                        entry.playerId, _gangId, entry.rank, entry.commandOrder, entry.joined,
-                        entry.notoriety, entry.scripDonated, entry.coinsDonated, entry.title));
+                        entry.playerId, _gangId, entry.rank, entry.commandOrder, entry.leaderLevel,
+                        entry.lastLeaderCommand, entry.joined, entry.notoriety, entry.scripDonated,
+                        entry.coinsDonated, entry.title));
                 }
                 if (_entryId > 0) {
                     BangServer.gangrepo.deleteHistoryEntry(_entryId);
@@ -1241,6 +1280,10 @@ public class GangHandler
                     shutdown();
                 } else {
                     maybeScheduleUnload();
+                }
+                if (handle != null) {
+                    GangMemberEntry leader = _gangobj.members.get(handle);
+                    _gangobj.updateMembers(leader);
                 }
                 listener.requestProcessed();
                 StringBuffer buf = (new StringBuffer("gang_refund ")).append(entry.playerId);
@@ -1304,12 +1347,19 @@ public class GangHandler
                         MessageBundle.taint(handle),
                         MessageBundle.taint(target),
                         MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[rank])));
+                incLeaderLevel(_gangobj, handle);
             }
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(target);
                 member.rank = rank;
                 member.commandOrder = commandOrder;
+                member.leaderLevel = 0;
+                member.lastLeaderCommand = System.currentTimeMillis();
                 _gangobj.updateMembers(member);
+                if (handle != null) {
+                    GangMemberEntry leader = _gangobj.members.get(handle);
+                    _gangobj.updateMembers(leader);
+                }
                 listener.requestProcessed();
                 BangServer.playmgr.clearPosterInfoCache(entry.handle);
             }
@@ -1344,11 +1394,14 @@ public class GangHandler
                         MessageBundle.taint(handle),
                         MessageBundle.taint(target),
                         MessageBundle.qualify(GANG_MSGS, "m.title." + title)));
+                incLeaderLevel(_gangobj, handle);
             }
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(target);
                 member.title = title;
                 _gangobj.updateMembers(member);
+                GangMemberEntry leader = _gangobj.members.get(handle);
+                _gangobj.updateMembers(leader);
                 listener.requestProcessed();
                 BangServer.playmgr.clearPosterInfoCache(entry.handle);
             }
@@ -1545,6 +1598,7 @@ public class GangHandler
                     BangServer.gangrepo.insertHistoryEntry(_gangId,
                         MessageBundle.tcompose(
                             "m.exchange_purchase", member, "" + vol, "" + price*vol));
+                    incLeaderLevel(_gangobj, new Handle(member));
                 } catch (PersistenceException pe) {
                     _error = pe;
                 }
@@ -1554,6 +1608,9 @@ public class GangHandler
             public void handleResult () {
                 if (_error != null) {
                     log.warning("Failed to log completed trade. [error=" + _error + "].");
+                } else {
+                    GangMemberEntry leader = _gangobj.members.get(new Handle(member));
+                    _gangobj.updateMembers(leader);
                 }
             }
 
@@ -1768,6 +1825,16 @@ public class GangHandler
         if (entry.rank != LEADER_RANK) {
             log.warning("User not leader [entry=" + entry + ", gang=" + this + "].");
             throw new InvocationException(INTERNAL_ERROR);
+        }
+        if (LEADER_LEVEL_WAITS[entry.leaderLevel] > 0 &&
+                !_gangobj.getSeniorLeader().handle.equals(entry.handle)) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.HOUR, -LEADER_LEVEL_WAITS[entry.leaderLevel]);
+            int remain = (int)Math.ceil(
+                    (entry.lastLeaderCommand - cal.getTimeInMillis())/(double)ONE_HOUR);
+            if (remain > 0) {
+                throw new InvocationException(MessageBundle.tcompose(NEW_LEADER_WAIT, remain));
+            }
         }
         return entry;
     }
@@ -2391,8 +2458,8 @@ public class GangHandler
                     handle, _gangobj.name));
         }
         if (mrec != null) {
-            GangMemberEntry entry = new GangMemberEntry(
-                handle, playerId, MEMBER_RANK, 0, mrec.joined, 0, 0, 0, 0, mrec.joined);
+            GangMemberEntry entry = new GangMemberEntry(handle, playerId, MEMBER_RANK, 0, 0,
+                    mrec.lastLeaderCommand, mrec.joined, 0, 0, 0, 0, mrec.joined);
             initTownIndex(entry);
             _gangobj.addToMembers(entry);
             if (entry.townIdx == -1) {
@@ -2522,4 +2589,8 @@ public class GangHandler
     /** In order to prevent rapid loading and unloading, we wait this long after the last gang
      * member has logged off of the cluster to unload the gang. */
     protected static final long UNLOAD_INTERVAL = 60 * 60 * 1000L;
+
+    /** One hour in milliseconds. */
+    protected static final long ONE_HOUR = 60 * 60 * 1000L;
+
 }
