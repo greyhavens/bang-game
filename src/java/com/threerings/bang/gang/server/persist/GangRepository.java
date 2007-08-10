@@ -683,9 +683,25 @@ public class GangRepository extends JORARepository
     public ArrayList<HistoryEntry> loadHistoryEntries (int gangId, int offset, int count)
         throws PersistenceException
     {
+        return loadHistoryEntries(gangId, offset, count, null);
+    }
+
+    /**
+     * Loads a batch of historical entries from the database.
+     *
+     * @param offset the offset from the end (e.g., 0 to retrieve the last <code>count</code>
+     * entries, <code>count</code> to retrieve the next-to-last <code>count</code>)
+     * @param filter a string to filter the descriptions on
+     */
+    public ArrayList<HistoryEntry> loadHistoryEntries (
+            int gangId, int offset, int count, String filter)
+        throws PersistenceException
+    {
         final ArrayList<HistoryEntry> list = new ArrayList<HistoryEntry>();
         final String query = "select RECORDED, DESCRIPTION from GANG_HISTORY " +
-            "where GANG_ID = " + gangId + " order by ENTRY_ID desc limit " + offset + ", " + count;
+            "where GANG_ID = " + gangId +
+            (filter == null ? "" : " and DESCRIPTION like \"" + filter + "%\"") +
+            " order by ENTRY_ID desc limit " + offset + ", " + count;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException

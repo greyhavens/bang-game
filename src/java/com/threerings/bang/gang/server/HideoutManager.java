@@ -349,7 +349,7 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void getHistoryEntries (ClientObject caller, int offset,
+    public void getHistoryEntries (ClientObject caller, int offset, String filter,
                                    HideoutService.ResultListener listener)
         throws InvocationException
     {
@@ -366,7 +366,7 @@ public class HideoutManager extends MatchHostManager
         // pass it off to the gang handler.  we ask for one more than we display on a page in
         // order to find out if there are any on the previous page
         BangServer.gangmgr.requireGang(user.gangId).getHistoryEntries(
-            offset, HISTORY_PAGE_ENTRIES + 1, listener);
+            offset, HISTORY_PAGE_ENTRIES + 1, filter, listener);
     }
 
     // documentation inherited from interface HideoutProvider

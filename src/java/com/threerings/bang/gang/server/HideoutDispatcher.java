@@ -108,7 +108,7 @@ public class HideoutDispatcher extends InvocationDispatcher
         case HideoutMarshaller.GET_HISTORY_ENTRIES:
             ((HideoutProvider)provider).getHistoryEntries(
                 source,
-                ((Integer)args[0]).intValue(), (InvocationService.ResultListener)args[1]
+                ((Integer)args[0]).intValue(), (String)args[1], (InvocationService.ResultListener)args[2]
             );
             return;
 

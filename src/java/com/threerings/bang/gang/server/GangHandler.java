@@ -260,12 +260,12 @@ public class GangHandler
      * Fetches a batch of history entries.  This need not be forwarded to the controlling peer
      * because it simply reads the entries from the database.
      */
-    public void getHistoryEntries (
-        final int offset, final int count, final InvocationService.ResultListener listener)
+    public void getHistoryEntries (final int offset, final int count, final String filter,
+            final InvocationService.ResultListener listener)
     {
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                _entries = BangServer.gangrepo.loadHistoryEntries(_gangId, offset, count);
+                _entries = BangServer.gangrepo.loadHistoryEntries(_gangId, offset, count, filter);
             }
             public void handleSuccess () {
                 listener.requestProcessed(_entries.toArray(new HistoryEntry[_entries.size()]));
@@ -1596,7 +1596,7 @@ public class GangHandler
                 try {
                     BangServer.gangrepo.insertHistoryEntry(_gangId,
                         MessageBundle.tcompose(
-                            "m.exchange_purchase", member, "" + vol, "" + price*vol));
+                            "m.exchange_purchase_entry", member, "" + vol, "" + price*vol));
                     incLeaderLevel(_gangobj, new Handle(member));
                 } catch (PersistenceException pe) {
                     _error = pe;

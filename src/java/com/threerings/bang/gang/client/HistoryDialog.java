@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
@@ -51,6 +52,18 @@ public class HistoryDialog extends BDecoratedWindow
         _econt.add(new Spacer(1, 1));
 
         BContainer acont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
+        BContainer fcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
+        fcont.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, "m.history_filter")));
+        _filter = new BComboBox();
+        _filter.addItem(new BComboBox.Item(null, _ctx.xlate(HIDEOUT_MSGS, "m.filter_none")));
+        for (String fstr : HideoutCodes.HISTORY_TYPES) {
+            _filter.addItem(new BComboBox.Item(
+                        fstr + "entry", _ctx.xlate(HIDEOUT_MSGS, fstr + "filter")));
+        }
+        _filter.selectItem(0);
+        _filter.addListener(this);
+        fcont.add(_filter);
+        acont.add(fcont);
         ((GroupLayout)acont.getLayoutManager()).setGap(40);
         acont.add(_back = new BButton("", this, "back"));
         _back.setStyleClass("back_button");
@@ -73,9 +86,12 @@ public class HistoryDialog extends BDecoratedWindow
     {
         String action = event.getAction();
         if (action.equals("back")) {
-            fetchEntries(_offset + HISTORY_PAGE_ENTRIES);
+            fetchEntries(_offset + HISTORY_PAGE_ENTRIES, (String)_filter.getSelectedValue());
         } else if (action.equals("forward")) {
-            fetchEntries(Math.max(0, _offset - HISTORY_PAGE_ENTRIES));
+            fetchEntries(Math.max(0, _offset - HISTORY_PAGE_ENTRIES),
+                    (String)_filter.getSelectedValue());
+        } else if (action.equals("selectionChanged")) {
+            fetchEntries(0, (String)_filter.getSelectedValue());
         } else if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
         }
@@ -89,18 +105,18 @@ public class HistoryDialog extends BDecoratedWindow
         center();
 
         // fetch the first batch of entries
-        fetchEntries(0);
+        fetchEntries(0, (String)_filter.getSelectedValue());
     }
 
     /**
      * Fetches the entries starting at the specified offset.
      */
-    protected void fetchEntries (final int offset)
+    protected void fetchEntries (final int offset, final String filter)
     {
         final boolean fenable = _forward.isEnabled(), benable = _back.isEnabled();
         _forward.setEnabled(false);
         _back.setEnabled(false);
-        _hideoutobj.service.getHistoryEntries(_ctx.getClient(), offset,
+        _hideoutobj.service.getHistoryEntries(_ctx.getClient(), offset, filter,
             new HideoutService.ResultListener() {
             public void requestProcessed (Object result) {
                 HistoryEntry[] entries = (HistoryEntry[])result;
@@ -184,6 +200,7 @@ public class HistoryDialog extends BDecoratedWindow
     protected BContainer _econt;
     protected BButton _back, _forward;
     protected StatusLabel _status;
+    protected BComboBox _filter;
 
     /** The date format to use for history entries. */
     protected static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("M/d/yy h:mm a");

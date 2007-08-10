@@ -76,7 +76,7 @@ public interface HideoutProvider extends InvocationProvider
     /**
      * Handles a {@link HideoutService#getHistoryEntries} request.
      */
-    public void getHistoryEntries (ClientObject caller, int arg1, InvocationService.ResultListener arg2)
+    public void getHistoryEntries (ClientObject caller, int arg1, String arg2, InvocationService.ResultListener arg3)
         throws InvocationException;
 
     /**

@@ -81,7 +81,8 @@ public interface HideoutService extends InvocationService
      * @param offset the offset at which to start
      * @param listener a listener to notify with the array of {@link HistoryEntry}s
      */
-    public void getHistoryEntries (Client client, int offset, ResultListener listener);
+    public void getHistoryEntries (
+            Client client, int offset, String filter, ResultListener listener);
 
     /**
      * Requests that a game be located meeting the specified criterion.

@@ -24,4 +24,11 @@ public interface HideoutCodes extends InvocationCodes
 
     /** The (maximum) number of history entries displayed on a single page. */
     public static final int HISTORY_PAGE_ENTRIES = 10;
+
+    /** The different history entry types. */
+    public static final String[] HISTORY_TYPES = {
+        "m.founded_", "m.donation_", "m.exchange_purchase_", "m.outfit_", "m.purchase_",
+        "m.rental_", "m.renewal_", "m.invited_", "m.joined_", "m.left_", "m.expelled_",
+        "m.auto_promotion_", "m.promotion_", "m.demotion_", "m.title_",
+    };
 }

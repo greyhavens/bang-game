@@ -144,12 +144,12 @@ public class HideoutMarshaller extends InvocationMarshaller
     public static final int GET_HISTORY_ENTRIES = 10;
 
     // from interface HideoutService
-    public void getHistoryEntries (Client arg1, int arg2, InvocationService.ResultListener arg3)
+    public void getHistoryEntries (Client arg1, int arg2, String arg3, InvocationService.ResultListener arg4)
     {
-        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
-        listener3.listener = arg3;
+        InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
+        listener4.listener = arg4;
         sendRequest(arg1, GET_HISTORY_ENTRIES, new Object[] {
-            Integer.valueOf(arg2), listener3
+            Integer.valueOf(arg2), arg3, listener4
         });
     }
 
