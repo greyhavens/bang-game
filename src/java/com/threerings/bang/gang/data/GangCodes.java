@@ -25,16 +25,11 @@ public interface GangCodes extends InvocationCodes
         /** The notoriety level cutoffs. */
         public int[] notorietyLevels;
 
-        /** The multiplier that determines an items 30 day rental cost. */
-        public float rentMultiplier;
-
-        public WeightClass (int aces, int coins, int maxMembers, float rentMultiplier,
-                int[] notorietyLevels)
+        public WeightClass (int aces, int coins, int maxMembers, int[] notorietyLevels)
         {
             this.aces = aces;
             this.coins = coins;
             this.maxMembers = maxMembers;
-            this.rentMultiplier = rentMultiplier;
             this.notorietyLevels = notorietyLevels;
         }
     }
@@ -89,10 +84,10 @@ public interface GangCodes extends InvocationCodes
 
     /** The gang weight classes. */
     public static final WeightClass[] WEIGHT_CLASSES = {
-        new WeightClass(0, 0, 20, 6f, new int[] { 130, 520, 1560, 3640, 6240, 9360 }),
-        new WeightClass(200, 5, 50, 15f, new int[] { 325, 1300, 3900, 9100, 15600, 23400 }),
-        new WeightClass(400, 10, 100, 28f, new int[] { 650, 2600, 7800, 18200, 31200, 46800 }),
-        new WeightClass(700, 20, 200, 56f, new int[] { 1300, 5200, 15600, 36400, 62400, 93600 }),
-        new WeightClass(1000, 40, 500, 134f, new int[] { 2600, 10400, 31200, 72800, 124800, 187200 }),
+        new WeightClass(0, 0, 20, new int[] { 130, 520, 1560, 3640, 6240, 9360 }),
+        new WeightClass(200, 5, 50, new int[] { 325, 1300, 3900, 9100, 15600, 23400 }),
+        new WeightClass(400, 10, 100, new int[] { 650, 2600, 7800, 18200, 31200, 46800 }),
+        new WeightClass(700, 20, 200, new int[] { 1300, 5200, 15600, 36400, 62400, 93600 }),
+        new WeightClass(1000, 40, 500, new int[] { 2600, 10400, 31200, 72800, 124800, 187200 }),
     };
 }
