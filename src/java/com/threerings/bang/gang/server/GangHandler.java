@@ -85,6 +85,9 @@ import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.PeerFinancialAction;
 import com.threerings.bang.server.persist.ProxyFinancialAction;
 
+import com.threerings.bang.admin.data.ServerConfigObject;
+import com.threerings.bang.admin.server.RuntimeConfig;
+
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -450,6 +453,10 @@ public class GangHandler
                 // update weight class and notoriety on purchase of upgrade
                 _gangobj.setNotoriety(GangUtil.getNotorietyLevel(
                     _gangobj.getWeightClass(), _notoriety));
+                _gangobj.setRentMultiplier(RuntimeConfig.server.rentMultiplier[
+                        _gangobj.getWeightClass()]);
+                _gangobj.setArticleRentMultiplier(RuntimeConfig.server.articleRentMultiplier[
+                        _gangobj.getWeightClass()]);
                 gangInfoChanged();
                 return;
             } else if (!(item instanceof WeightClassUpgrade) && !(item instanceof BuckleUpgrade) &&
@@ -2014,6 +2021,23 @@ public class GangHandler
 
         _notoriety = record.notoriety;
         _gangobj.notoriety = GangUtil.getNotorietyLevel(_gangobj.getWeightClass(), _notoriety);
+
+        _gangobj.rentMultiplier = RuntimeConfig.server.rentMultiplier[_gangobj.getWeightClass()];
+        _gangobj.articleRentMultiplier = RuntimeConfig.server.articleRentMultiplier[
+            _gangobj.getWeightClass()];
+        RuntimeConfig.server.addListener(new AttributeChangeListener() {
+            public void attributeChanged (AttributeChangedEvent event)
+            {
+                String name = event.getName();
+                if (name.equals(ServerConfigObject.RENT_MULTIPLIER)) {
+                    _gangobj.setRentMultiplier(
+                        RuntimeConfig.server.rentMultiplier[_gangobj.getWeightClass()]);
+                } else if (name.equals(ServerConfigObject.ARTICLE_RENT_MULTIPLIER)) {
+                    _gangobj.setArticleRentMultiplier(
+                        RuntimeConfig.server.articleRentMultiplier[_gangobj.getWeightClass()]);
+                }
+            }
+        });
 
         // the avatar id is that of the senior leader
         GangMemberEntry leader = _gangobj.getSeniorLeader();

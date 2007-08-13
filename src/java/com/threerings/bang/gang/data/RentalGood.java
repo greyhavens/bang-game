@@ -14,6 +14,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.gang.util.GangUtil;
 
@@ -114,8 +115,8 @@ public class RentalGood extends GangGood
      */
     public int getRentalScripCost (GangObject gangobj)
     {
-        int weightClass = GangUtil.getWeightClass(gangobj.inventory);
-        return Math.round(getScripCost()  * GangCodes.WEIGHT_CLASSES[weightClass].rentMultiplier);
+        return Math.round(getScripCost()  * (_good instanceof ArticleGood ?
+                        gangobj.articleRentMultiplier : gangobj.rentMultiplier));
     }
 
     /**
@@ -123,8 +124,8 @@ public class RentalGood extends GangGood
      */
     public int getRentalCoinCost (GangObject gangobj)
     {
-        int weightClass = GangUtil.getWeightClass(gangobj.inventory);
-        return Math.round(getCoinCost()  * GangCodes.WEIGHT_CLASSES[weightClass].rentMultiplier);
+        return Math.round(getCoinCost()  * (_good instanceof ArticleGood ?
+                        gangobj.articleRentMultiplier : gangobj.rentMultiplier));
     }
 
     @Override // documentation inherited

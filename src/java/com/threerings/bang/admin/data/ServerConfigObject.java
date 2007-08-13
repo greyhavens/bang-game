@@ -56,6 +56,12 @@ public class ServerConfigObject extends ConfigObject
 
     /** The field name of the <code>selectPhaseTimeout</code> field. */
     public static final String SELECT_PHASE_TIMEOUT = "selectPhaseTimeout";
+
+    /** The field name of the <code>rentMultiplier</code> field. */
+    public static final String RENT_MULTIPLIER = "rentMultiplier";
+
+    /** The field name of the <code>articleRentMultiplier</code> field. */
+    public static final String ARTICLE_RENT_MULTIPLIER = "articleRentMultiplier";
     // AUTO-GENERATED: FIELDS END
 
     /** Whether or not to require insiders or testers. */
@@ -105,6 +111,12 @@ public class ServerConfigObject extends ConfigObject
 
     /** The select phase timeout in seconds. */
     public int selectPhaseTimeout = 180;
+
+    /** The rent multipliers by gang weight class. */
+    public float[] rentMultiplier = { 5f, 12f, 23f, 45f, 110f };
+
+    /** The article rent multipliers by gang weight class. */
+    public float[] articleRentMultiplier = { 2.5f, 6f, 11.5f, 22.5f, 55f };
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -361,6 +373,72 @@ public class ServerConfigObject extends ConfigObject
         requestAttributeChange(
             SELECT_PHASE_TIMEOUT, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.selectPhaseTimeout = value;
+    }
+
+    /**
+     * Requests that the <code>rentMultiplier</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setRentMultiplier (float[] value)
+    {
+        float[] ovalue = this.rentMultiplier;
+        requestAttributeChange(
+            RENT_MULTIPLIER, value, ovalue);
+        this.rentMultiplier = (value == null) ? null : (float[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>rentMultiplier</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setRentMultiplierAt (float value, int index)
+    {
+        float ovalue = this.rentMultiplier[index];
+        requestElementUpdate(
+            RENT_MULTIPLIER, index, Float.valueOf(value), Float.valueOf(ovalue));
+        this.rentMultiplier[index] = value;
+    }
+
+    /**
+     * Requests that the <code>articleRentMultiplier</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setArticleRentMultiplier (float[] value)
+    {
+        float[] ovalue = this.articleRentMultiplier;
+        requestAttributeChange(
+            ARTICLE_RENT_MULTIPLIER, value, ovalue);
+        this.articleRentMultiplier = (value == null) ? null : (float[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>articleRentMultiplier</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setArticleRentMultiplierAt (float value, int index)
+    {
+        float ovalue = this.articleRentMultiplier[index];
+        requestElementUpdate(
+            ARTICLE_RENT_MULTIPLIER, index, Float.valueOf(value), Float.valueOf(ovalue));
+        this.articleRentMultiplier[index] = value;
     }
     // AUTO-GENERATED: METHODS END
 }

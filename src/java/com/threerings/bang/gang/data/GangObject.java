@@ -81,6 +81,12 @@ public class GangObject extends DObject
 
     /** The field name of the <code>tableOid</code> field. */
     public static final String TABLE_OID = "tableOid";
+
+    /** The field name of the <code>rentMultiplier</code> field. */
+    public static final String RENT_MULTIPLIER = "rentMultiplier";
+
+    /** The field name of the <code>articleRentMultiplier</code> field. */
+    public static final String ARTICLE_RENT_MULTIPLIER = "articleRentMultiplier";
     // AUTO-GENERATED: FIELDS END
 
     /** Used by peers to make requests on the behalf of their users. */
@@ -136,6 +142,12 @@ public class GangObject extends DObject
 
     /** The oid for the table game object.  This is rewritten for peer nodes. */
     public int tableOid;
+
+    /** The rent multiplier for this gang. */
+    public float rentMultiplier;
+
+    /** The article rent multiplier for this gang. */
+    public float articleRentMultiplier;
 
     /** On servers using this object as a proxy, the oid on the peer server. */
     public transient int remoteOid;
@@ -650,6 +662,38 @@ public class GangObject extends DObject
         requestAttributeChange(
             TABLE_OID, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.tableOid = value;
+    }
+
+    /**
+     * Requests that the <code>rentMultiplier</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setRentMultiplier (float value)
+    {
+        float ovalue = this.rentMultiplier;
+        requestAttributeChange(
+            RENT_MULTIPLIER, Float.valueOf(value), Float.valueOf(ovalue));
+        this.rentMultiplier = value;
+    }
+
+    /**
+     * Requests that the <code>articleRentMultiplier</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setArticleRentMultiplier (float value)
+    {
+        float ovalue = this.articleRentMultiplier;
+        requestAttributeChange(
+            ARTICLE_RENT_MULTIPLIER, Float.valueOf(value), Float.valueOf(ovalue));
+        this.articleRentMultiplier = value;
     }
     // AUTO-GENERATED: METHODS END
 }
