@@ -6,6 +6,7 @@ package com.threerings.bang.gang.server;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.presents.client.Client;
@@ -83,6 +84,12 @@ public interface HideoutProvider extends InvocationProvider
      * Handles a {@link HideoutService#getOutfitQuote} request.
      */
     public void getOutfitQuote (ClientObject caller, OutfitArticle[] arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link HideoutService#getUpgradeQuote} request.
+     */
+    public void getUpgradeQuote (ClientObject caller, GangGood arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
 
     /**

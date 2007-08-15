@@ -7,6 +7,7 @@ import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.GangPeerService;
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -88,8 +89,21 @@ public class GangPeerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #getUpgradeQuote} requests. */
+    public static final int GET_UPGRADE_QUOTE = 6;
+
+    // from interface GangPeerService
+    public void getUpgradeQuote (Client arg1, Handle arg2, GangGood arg3, InvocationService.ResultListener arg4)
+    {
+        InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, GET_UPGRADE_QUOTE, new Object[] {
+            arg2, arg3, listener4
+        });
+    }
+
     /** The method id used to dispatch {@link #grantAces} requests. */
-    public static final int GRANT_ACES = 6;
+    public static final int GRANT_ACES = 7;
 
     // from interface GangPeerService
     public void grantAces (Client arg1, Handle arg2, int arg3)
@@ -100,7 +114,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #grantScrip} requests. */
-    public static final int GRANT_SCRIP = 7;
+    public static final int GRANT_SCRIP = 8;
 
     // from interface GangPeerService
     public void grantScrip (Client arg1, int arg2)
@@ -111,7 +125,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #handleInviteResponse} requests. */
-    public static final int HANDLE_INVITE_RESPONSE = 8;
+    public static final int HANDLE_INVITE_RESPONSE = 9;
 
     // from interface GangPeerService
     public void handleInviteResponse (Client arg1, Handle arg2, int arg3, Handle arg4, boolean arg5, InvocationService.ConfirmListener arg6)
@@ -124,7 +138,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #inviteMember} requests. */
-    public static final int INVITE_MEMBER = 9;
+    public static final int INVITE_MEMBER = 10;
 
     // from interface GangPeerService
     public void inviteMember (Client arg1, Handle arg2, Handle arg3, String arg4, InvocationService.ConfirmListener arg5)
@@ -137,7 +151,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #memberEnteredHideout} requests. */
-    public static final int MEMBER_ENTERED_HIDEOUT = 10;
+    public static final int MEMBER_ENTERED_HIDEOUT = 11;
 
     // from interface GangPeerService
     public void memberEnteredHideout (Client arg1, Handle arg2, AvatarInfo arg3)
@@ -148,7 +162,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #memberLeftHideout} requests. */
-    public static final int MEMBER_LEFT_HIDEOUT = 11;
+    public static final int MEMBER_LEFT_HIDEOUT = 12;
 
     // from interface GangPeerService
     public void memberLeftHideout (Client arg1, Handle arg2)
@@ -159,7 +173,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #processOutfits} requests. */
-    public static final int PROCESS_OUTFITS = 12;
+    public static final int PROCESS_OUTFITS = 13;
 
     // from interface GangPeerService
     public void processOutfits (Client arg1, Handle arg2, OutfitArticle[] arg3, boolean arg4, boolean arg5, InvocationService.ResultListener arg6)
@@ -172,7 +186,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #removeFromGang} requests. */
-    public static final int REMOVE_FROM_GANG = 13;
+    public static final int REMOVE_FROM_GANG = 14;
 
     // from interface GangPeerService
     public void removeFromGang (Client arg1, Handle arg2, Handle arg3, InvocationService.ConfirmListener arg4)
@@ -185,7 +199,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #renewGangItem} requests. */
-    public static final int RENEW_GANG_ITEM = 14;
+    public static final int RENEW_GANG_ITEM = 15;
 
     // from interface GangPeerService
     public void renewGangItem (Client arg1, Handle arg2, int arg3, InvocationService.ConfirmListener arg4)
@@ -198,7 +212,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #rentGangGood} requests. */
-    public static final int RENT_GANG_GOOD = 15;
+    public static final int RENT_GANG_GOOD = 16;
 
     // from interface GangPeerService
     public void rentGangGood (Client arg1, Handle arg2, String arg3, Object[] arg4, boolean arg5, InvocationService.ConfirmListener arg6)
@@ -211,7 +225,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #reserveScrip} requests. */
-    public static final int RESERVE_SCRIP = 16;
+    public static final int RESERVE_SCRIP = 17;
 
     // from interface GangPeerService
     public void reserveScrip (Client arg1, int arg2, InvocationService.ResultListener arg3)
@@ -224,7 +238,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #sendSpeak} requests. */
-    public static final int SEND_SPEAK = 17;
+    public static final int SEND_SPEAK = 18;
 
     // from interface GangPeerService
     public void sendSpeak (Client arg1, Handle arg2, String arg3, byte arg4)
@@ -235,7 +249,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setAvatar} requests. */
-    public static final int SET_AVATAR = 18;
+    public static final int SET_AVATAR = 19;
 
     // from interface GangPeerService
     public void setAvatar (Client arg1, int arg2, AvatarInfo arg3)
@@ -246,7 +260,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setBuckle} requests. */
-    public static final int SET_BUCKLE = 19;
+    public static final int SET_BUCKLE = 20;
 
     // from interface GangPeerService
     public void setBuckle (Client arg1, Handle arg2, BucklePart[] arg3, InvocationService.ConfirmListener arg4)
@@ -259,7 +273,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setStatement} requests. */
-    public static final int SET_STATEMENT = 20;
+    public static final int SET_STATEMENT = 21;
 
     // from interface GangPeerService
     public void setStatement (Client arg1, Handle arg2, String arg3, String arg4, InvocationService.ConfirmListener arg5)
@@ -272,7 +286,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #tradeCompleted} requests. */
-    public static final int TRADE_COMPLETED = 21;
+    public static final int TRADE_COMPLETED = 22;
 
     // from interface GangPeerService
     public void tradeCompleted (Client arg1, int arg2, int arg3, String arg4)
@@ -283,7 +297,7 @@ public class GangPeerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #updateCoins} requests. */
-    public static final int UPDATE_COINS = 22;
+    public static final int UPDATE_COINS = 23;
 
     // from interface GangPeerService
     public void updateCoins (Client arg1)

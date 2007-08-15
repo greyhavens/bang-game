@@ -28,10 +28,39 @@ public class WeightClassUpgradeGood extends GangGood
     {
     }
 
+    @Override // from GangGood
+    public int getCoinCost (GangObject gang)
+    {
+        byte weightClass = gang.getWeightClass();
+        if (weightClass >= _weightClass) {
+            return 0;
+        }
+        return _coinCost - GangCodes.WEIGHT_CLASSES[weightClass].coins;
+    }
+
+    @Override // from GangGood
+    public int getAceCost (GangObject gang)
+    {
+        byte weightClass = gang.getWeightClass();
+        if (weightClass >= _weightClass) {
+            return 0;
+        }
+        return _aceCost - GangCodes.WEIGHT_CLASSES[weightClass].aces;
+    }
+
+    /**
+     * Returns the new weight class.
+     */
+    public byte getWeightClass ()
+    {
+        return _weightClass;
+    }
+
     // documentation inherited
     public boolean isAvailable (GangObject gang)
     {
-        return (gang.getWeightClass() < _weightClass);
+        return (gang.getWeightClass() != _weightClass &&
+                gang.members.size() <= GangCodes.WEIGHT_CLASSES[_weightClass].maxMembers);
     }
 
     @Override // from Good
@@ -49,7 +78,9 @@ public class WeightClassUpgradeGood extends GangGood
     @Override // from Good
     public String getTip ()
     {
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.weight_class_upgrade_tip");
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, MessageBundle.tcompose(
+                    "m.weight_class_upgrade_tip",
+                    GangCodes.WEIGHT_CLASSES[_weightClass].maxMembers));
     }
 
     protected byte _weightClass;

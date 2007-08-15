@@ -98,6 +98,7 @@ import com.threerings.bang.saloon.server.SaloonManager;
 import com.threerings.bang.saloon.server.TableGameManager;
 
 import com.threerings.bang.gang.data.GangCodes;
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
@@ -105,6 +106,7 @@ import com.threerings.bang.gang.data.GangPeerMarshaller;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.RentalGood;
+import com.threerings.bang.gang.data.WeightClassUpgradeGood;
 import com.threerings.bang.gang.server.persist.GangFinancialAction;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
 import com.threerings.bang.gang.server.persist.GangRecord;
@@ -1415,6 +1417,25 @@ public class GangHandler
     }
 
     // documentation inherited from interface GangPeerProvider
+    public void getUpgradeQuote (ClientObject caller, Handle handle, GangGood good,
+            InvocationService.ResultListener listener)
+        throws InvocationException
+    {
+        // make sure it comes from this server or a peer
+        verifyLocalOrPeer(caller);
+
+        // make sure it comes from a leader
+        verifyIsLeader(handle);
+
+        if (!(good instanceof WeightClassUpgradeGood)) {
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        listener.requestProcessed(BangServer.hideoutmgr.upgradeCost(
+                _gangobj, ((WeightClassUpgradeGood)good).getWeightClass()));
+    }
+
+    // documentation inherited from interface GangPeerProvider
     public void processOutfits (
         ClientObject caller, final Handle handle, final OutfitArticle[] outfit, final boolean buy,
         final boolean admin, final InvocationService.ResultListener listener)
@@ -1872,24 +1893,27 @@ public class GangHandler
                 public void invokePersist () throws PersistenceException {
                     _grec = BangServer.gangrepo.loadGang(_gangId, true);
 
-                    // TEMP: validate the buckle and weight class, fixing as necessary
-                    if (_grec != null) {
-                        validateBuckle(_grec);
-                        validateWeightClass(_grec);
+                    if (_grec == null) {
+                        return;
                     }
+
+                    // TEMP: validate the buckle and weight class, fixing as necessary
+                    validateBuckle(_grec);
+                    validateWeightClass(_grec);
 
                     // check for expired items
                     long now = System.currentTimeMillis();
                     Item[] items = _grec.inventory.toArray(new Item[_grec.inventory.size()]);
                     ArrayIntSet removals = new ArrayIntSet();
                     for (Item item : items) {
-                        if (item.isExpired(now)) {
+                        if (item.isExpired(now) || ((item instanceof WeightClassUpgrade) &&
+                                ((WeightClassUpgrade)item).getWeightClass() != _grec.weightClass)) {
                             removals.add(item.getItemId());
                             _grec.inventory.remove(item);
                         }
                     }
                     if (!removals.isEmpty()) {
-                        BangServer.itemrepo.deleteItems(removals, "Gang item surprised");
+                        BangServer.itemrepo.deleteItems(removals, "Gang item expired");
                     }
                 }
                 public void handleSuccess () {

@@ -115,7 +115,7 @@ public class RentalGood extends GangGood
      */
     public int getRentalScripCost (GangObject gangobj)
     {
-        return Math.round(getScripCost()  * (_good instanceof ArticleGood ?
+        return Math.round(getScripCost() * (_good instanceof ArticleGood ?
                         gangobj.articleRentMultiplier : gangobj.rentMultiplier));
     }
 
@@ -124,7 +124,7 @@ public class RentalGood extends GangGood
      */
     public int getRentalCoinCost (GangObject gangobj)
     {
-        return Math.round(getCoinCost()  * (_good instanceof ArticleGood ?
+        return Math.round(getCoinCost() * (_good instanceof ArticleGood ?
                         gangobj.articleRentMultiplier : gangobj.rentMultiplier));
     }
 

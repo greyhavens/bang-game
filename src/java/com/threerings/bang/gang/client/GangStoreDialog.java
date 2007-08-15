@@ -14,6 +14,7 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.threerings.presents.dobj.DObject;
@@ -22,6 +23,9 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.HackyTabs;
+import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.BuckleView;
@@ -34,6 +38,7 @@ import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
+import com.threerings.bang.gang.data.WeightClassUpgradeGood;
 
 /**
  * Allows gang leaders to purchase buckle parts and upgrades for their gangs.
@@ -138,21 +143,7 @@ public class GangStoreDialog extends BDecoratedWindow
         add(ccont, GroupLayout.FIXED);
 
         ccont.add(new Spacer(30, 1), GroupLayout.FIXED);
-        ccont.add(_inspector = new GoodsInspector(ctx, _palette) { {
-                _icon.setStyleClass("gang_store_good");
-            }
-            protected int getControlGapOffset () {
-                return 10;
-            }
-            protected MoneyLabel createCostLabel () {
-                return new GangMoneyLabel(_ctx, true);
-            }
-            protected void updateCostLabel () {
-                GangGood good = (GangGood)_good;
-                ((GangMoneyLabel)_cost).setMoney(
-                    good.getScripCost(), good.getCoinCost(), good.getAceCost(), false);
-            }
-        });
+        ccont.add(_inspector = new GangGoodsInspector(_ctx, _palette));
         _inspector.init(hideoutobj);
         _palette.setInspector(_inspector);
 
@@ -165,6 +156,9 @@ public class GangStoreDialog extends BDecoratedWindow
         dcont.add(cofcont);
         dcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"), GroupLayout.FIXED);
         ccont.add(dcont, GroupLayout.FIXED);
+
+        add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
+        _status.setStatus(" ", false); // make sure it takes up space
     }
 
     // documentation inherited from interface ActionListener
@@ -195,6 +189,97 @@ public class GangStoreDialog extends BDecoratedWindow
         }
     }
 
+    /**
+     * Shows a warning about the perils of downgrading
+     */
+    protected void showDowngradeWarning ()
+    {
+        OptionDialog.showConfirmDialog(
+                _ctx, HIDEOUT_MSGS, "m.downgrade_warning", new String[] { "m.ok" }, null);
+    }
+
+    protected class GangGoodsInspector extends GoodsInspector
+    {
+        public GangGoodsInspector (BangContext ctx, GoodsPalette palette)
+        {
+            super(ctx, palette);
+            _icon.setStyleClass("gang_store_good");
+            _quote = new BButton(_msgs.get("m.quote"), this, "quote");
+            _quote.setStyleClass("big_button");
+        }
+
+        public void iconUpdated (SelectableIcon icon, boolean selected)
+        {
+            super.iconUpdated(icon, selected);
+
+            if (_good instanceof WeightClassUpgradeGood) {
+                remove(_buy);
+                if (!_quote.isAdded()) {
+                    add(_quote, new Point(500 + getControlGapOffset(), 10));
+                }
+                _mode = Mode.NEW;
+            } else if (_quote.isAdded()) {
+                remove(_quote);
+            }
+        }
+
+        public void actionPerformed (ActionEvent event)
+        {
+            super.actionPerformed(event);
+
+            if (_good == null) {
+                return;
+            }
+            final GangGood fgood = (GangGood)_good;
+
+            if ("quote".equals(event.getAction())) {
+                HideoutService.ResultListener rl = new HideoutService.ResultListener() {
+                    public void requestProcessed (Object result) {
+                        if (_good != fgood) {
+                            return;
+                        }
+                        int[] costs = (int[])result;
+                        ((GangMoneyLabel)_cost).setMoney(
+                            fgood.getScripCost(_gangobj) + costs[1],
+                            fgood.getCoinCost(_gangobj) + costs[0],
+                            fgood.getAceCost(_gangobj), false);
+                        remove(_quote);
+                        add(_buy, new Point(500 + getControlGapOffset(), 10));
+                        if (fgood instanceof WeightClassUpgradeGood &&
+                                ((WeightClassUpgradeGood)fgood).getWeightClass() <
+                                _gangobj.getWeightClass()) {
+                            showDowngradeWarning();
+                        }
+                    }
+                    public void requestFailed (String cause) {
+                        _quote.setEnabled(true);
+                        _status.setStatus(_msgs.xlate(cause), true);
+                    }
+                };
+                _hideoutobj.service.getUpgradeQuote(_ctx.getClient(), fgood, rl);
+            }
+        }
+
+        protected int getControlGapOffset ()
+        {
+            return 10;
+        }
+
+        protected MoneyLabel createCostLabel ()
+        {
+            return new GangMoneyLabel(_ctx, false);
+        }
+
+        protected void updateCostLabel ()
+        {
+            GangGood good = (GangGood)_good;
+            ((GangMoneyLabel)_cost).setMoney(good.getScripCost(_gangobj),
+                good.getCoinCost(_gangobj), good.getAceCost(_gangobj), false);
+        }
+
+        protected BButton _quote;
+    }
+
     protected BangContext _ctx;
     protected HideoutObject _hideoutobj;
     protected GangObject _gangobj;
@@ -203,6 +288,7 @@ public class GangStoreDialog extends BDecoratedWindow
     protected HackyTabs _ltabs, _rtabs;
     protected GoodsPalette _palette;
     protected GoodsInspector _inspector;
+    protected StatusLabel _status;
 
     protected static final String[] LEFT_TABS = { "upgrade", "unlock" };
     protected static final String[] RIGHT_TABS = { "icon", "border", "background" };

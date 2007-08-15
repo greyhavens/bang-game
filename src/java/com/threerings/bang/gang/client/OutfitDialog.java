@@ -240,6 +240,7 @@ public class OutfitDialog extends BDecoratedWindow
     // documentation inherited from interface IconPalette.Inspector
     public void iconUpdated (SelectableIcon icon, boolean selected)
     {
+        _status.setStatus("", false);
         if (!selected) {
             if (icon == _gicon && _key != null) {
                 _oarts.remove(_key);

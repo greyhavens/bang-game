@@ -11,6 +11,7 @@ import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.OutfitArticle;
 
 /**
@@ -146,4 +147,10 @@ public interface GangPeerService extends InvocationService
      */
     public void broadcastToMembers (
         Client client, Handle handle, String message, ConfirmListener listener);
+
+    /**
+     * Gets a quote for a gang upgrade.
+     */
+    public void getUpgradeQuote (
+            Client client, Handle handle, GangGood good, ResultListener listener);
 }

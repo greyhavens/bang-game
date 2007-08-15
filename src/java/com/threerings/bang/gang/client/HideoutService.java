@@ -12,6 +12,7 @@ import com.threerings.bang.util.NameCreator;
 
 import com.threerings.bang.saloon.data.Criterion;
 
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
 
@@ -136,4 +137,10 @@ public interface HideoutService extends InvocationService
      * transaction.
      */
     public void postOffer (Client client, int coins, int pricePerCoin, ResultListener rl);
+
+    /**
+     * Requests a price quote for the specified gang upgrade.  The listener will receive an integer
+     * array containing the scip and coin cost to buy the gang upgrade.
+     */
+    public void getUpgradeQuote (Client client, GangGood good, ResultListener listener);
 }

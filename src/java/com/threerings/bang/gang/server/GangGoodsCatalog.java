@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.samskivert.io.PersistenceException;
+import com.samskivert.util.ArrayIntSet;
 
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
@@ -55,7 +56,7 @@ public class GangGoodsCatalog
 
         // add the weight class upgrades
         pf = new WeightClassUpgradeProviderFactory();
-        for (byte ii = 1; ii < WEIGHT_CLASSES.length; ii++) {
+        for (byte ii = 0; ii < WEIGHT_CLASSES.length; ii++) {
             WeightClass wclass = WEIGHT_CLASSES[ii];
             registerGood(new WeightClassUpgradeGood(ii, 0, wclass.coins, wclass.aces), pf);
         }
@@ -124,21 +125,9 @@ public class GangGoodsCatalog
             GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
             throws InvocationException
         {
-            final byte oldWeightClass = gang.getWeightClass();
-            return new GangItemProvider(gang, handle, admin, good, args) {
-                protected String persistentAction () throws PersistenceException {
-                    String result = super.persistentAction();
-                    if (result == null) {
-                        BangServer.gangrepo.updateWeightClass(_gang.gangId,
-                            ((WeightClassUpgrade)_item).getWeightClass());
-                    }
-                    return null;
-                }
-                protected void rollbackPersistentAction () throws PersistenceException {
-                    super.rollbackPersistentAction();
-                    BangServer.gangrepo.updateWeightClass(_gang.gangId, oldWeightClass);
-                }
-            };
+            WeightClassUpgradeGood wgood = (WeightClassUpgradeGood)good;
+            return new WeightClassUpgradeProvider(gang, handle, admin, wgood,
+                    BangServer.hideoutmgr.upgradeCost(gang, wgood.getWeightClass()));
         }
     }
 
@@ -169,6 +158,67 @@ public class GangGoodsCatalog
                 }
             };
         }
+    }
+
+    protected class WeightClassUpgradeProvider extends GangItemProvider
+    {
+        public WeightClassUpgradeProvider (GangObject gang, Handle handle, boolean admin,
+                WeightClassUpgradeGood good, int[] cost)
+            throws InvocationException
+        {
+            super(gang, handle, admin, good, null);
+            _coinCost += cost[0];
+            _scripCost += cost[1];
+            _oldWeightClass = gang.getWeightClass();
+            _oldWeightUpgrades = new ArrayIntSet();
+            byte weightClass = good.getWeightClass();
+            if (weightClass < _oldWeightClass) {
+                _pct = (float)GangCodes.WEIGHT_CLASSES[weightClass].maxMembers /
+                    GangCodes.WEIGHT_CLASSES[_oldWeightClass].maxMembers;
+            }
+            for (Item item : gang.inventory) {
+                if (item instanceof WeightClassUpgrade) {
+                    _oldWeightUpgrades.add(item.getItemId());
+                }
+            }
+        }
+        protected String persistentAction () throws PersistenceException {
+            String result = super.persistentAction();
+            if (result == null) {
+                if (!_oldWeightUpgrades.isEmpty()) {
+                    BangServer.itemrepo.deleteItems(_oldWeightUpgrades, "replaced upgrade");
+                }
+                if (_pct > 0 && _pct < 1) {
+                    BangServer.gangrepo.reduceNotoriety(_gang.gangId, _pct);
+                }
+                BangServer.gangrepo.updateWeightClass(_gang.gangId,
+                        ((WeightClassUpgrade)_item).getWeightClass());
+            }
+            return result;
+        }
+        protected void rollbackPersistentAction () throws PersistenceException {
+            super.rollbackPersistentAction();
+            BangServer.gangrepo.updateWeightClass(_gang.gangId, _oldWeightClass);
+        }
+        protected void actionCompleted ()
+        {
+            for (int itemId : _oldWeightUpgrades) {
+                _gang.removeFromInventory(itemId);
+            }
+            if (_pct > 0 && _pct < 1) {
+                try {
+                    GangHandler handler = BangServer.gangmgr.requireGang(_gang.gangId);
+                    handler.setNotoriety((int)(_gang.notoriety * _pct));
+                } catch (InvocationException ie) {
+                    // should never happen
+                }
+            }
+            super.actionCompleted();
+        }
+
+        protected byte _oldWeightClass;
+        protected ArrayIntSet _oldWeightUpgrades;
+        protected float _pct;
     }
 
     protected AvatarLogic _alogic;

@@ -29,7 +29,7 @@ public abstract class GangGoodProvider extends GangFinancialAction
     protected GangGoodProvider (
         GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
     {
-        super(gang, admin, good.getScripCost(), good.getCoinCost(), good.getAceCost());
+        super(gang, admin, good.getScripCost(gang), good.getCoinCost(gang), good.getAceCost(gang));
         _handle = handle;
         _good = good;
         _args = args;

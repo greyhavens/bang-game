@@ -149,7 +149,9 @@ public class OptionDialog extends BDecoratedWindow
         } else {
             button = ListUtil.indexOf(_buttons, event.getSource());
         }
-        _receiver.resultPosted(button, value);
+        if (_receiver != null) {
+            _receiver.resultPosted(button, value);
+        }
     }
 
     protected OptionDialog (BangContext ctx, String bundle, String text,

@@ -6,6 +6,7 @@ package com.threerings.bang.gang.server;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.HideoutMarshaller;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.saloon.data.Criterion;
@@ -116,6 +117,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             ((HideoutProvider)provider).getOutfitQuote(
                 source,
                 (OutfitArticle[])args[0], (InvocationService.ResultListener)args[1]
+            );
+            return;
+
+        case HideoutMarshaller.GET_UPGRADE_QUOTE:
+            ((HideoutProvider)provider).getUpgradeQuote(
+                source,
+                (GangGood)args[0], (InvocationService.ResultListener)args[1]
             );
             return;
 

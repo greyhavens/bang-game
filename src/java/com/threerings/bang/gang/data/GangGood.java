@@ -18,6 +18,22 @@ public abstract class GangGood extends Good
     }
 
     /**
+     * The coin cost for this gang to purchase this good.
+     */
+    public int getCoinCost (GangObject gang)
+    {
+        return getCoinCost();
+    }
+
+    /**
+     * The scrip cost for this gang to purchase this good.
+     */
+    public int getScripCost (GangObject gang)
+    {
+        return getScripCost();
+    }
+
+    /**
      * The coin cost for this good.
      */
     public int getCoinCost ()
@@ -34,7 +50,7 @@ public abstract class GangGood extends Good
     /**
      * Returns the cost of this good in aces. This is in addition to the scrip and coin costs.
      */
-    public int getAceCost ()
+    public int getAceCost (GangObject gang)
     {
         return _aceCost;
     }

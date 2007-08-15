@@ -7,6 +7,7 @@ import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.GangPeerService;
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -47,6 +48,12 @@ public interface GangPeerProvider extends InvocationProvider
      * Handles a {@link GangPeerService#changeMemberTitle} request.
      */
     public void changeMemberTitle (ClientObject caller, Handle arg1, Handle arg2, int arg3, InvocationService.ConfirmListener arg4)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link GangPeerService#getUpgradeQuote} request.
+     */
+    public void getUpgradeQuote (ClientObject caller, Handle arg1, GangGood arg2, InvocationService.ResultListener arg3)
         throws InvocationException;
 
     /**

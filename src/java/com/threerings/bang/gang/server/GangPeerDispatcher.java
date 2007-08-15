@@ -7,6 +7,7 @@ import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.GangPeerService;
+import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangPeerMarshaller;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.presents.client.Client;
@@ -74,6 +75,13 @@ public class GangPeerDispatcher extends InvocationDispatcher
             ((GangPeerProvider)provider).changeMemberTitle(
                 source,
                 (Handle)args[0], (Handle)args[1], ((Integer)args[2]).intValue(), (InvocationService.ConfirmListener)args[3]
+            );
+            return;
+
+        case GangPeerMarshaller.GET_UPGRADE_QUOTE:
+            ((GangPeerProvider)provider).getUpgradeQuote(
+                source,
+                (Handle)args[0], (GangGood)args[1], (InvocationService.ResultListener)args[2]
             );
             return;
 

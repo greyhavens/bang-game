@@ -362,6 +362,16 @@ public class GangRepository extends JORARepository
     }
 
     /**
+     * Reduces a gang's notoriety by some percentage.
+     */
+    public void reduceNotoriety (int gangId, float pct)
+        throws PersistenceException
+    {
+        checkedUpdate("updage GANGS et NOTORIETY = NOTORIETY * " + pct +
+                " where GANG_ID = " + gangId, 1);
+    }
+
+    /**
      * Removes 1% of noteriety from all gangs.
      */
     public void erodeNotoriety ()

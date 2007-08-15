@@ -34,6 +34,7 @@ import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.util.NameFactory;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.server.BarberManager;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -42,6 +43,7 @@ import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.server.Match;
 import com.threerings.bang.saloon.server.MatchHostManager;
 
+import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
 
 import com.threerings.bang.gang.client.HideoutService;
@@ -370,6 +372,19 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
+    public void getUpgradeQuote (
+            ClientObject caller, GangGood good, HideoutService.ResultListener listener)
+        throws InvocationException
+    {
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).getUpgradeQuote(
+                null, user.handle, good, listener);
+    }
+
+    // documentation inherited from interface HideoutProvider
     public void getOutfitQuote (ClientObject caller, OutfitArticle[] outfit,
                                 HideoutService.ResultListener listener)
         throws InvocationException
@@ -491,6 +506,42 @@ public class HideoutManager extends MatchHostManager
     public void offersDestroyed (int[] ooferIds)
     {
         // nothing doing
+    }
+
+    /**
+     * Calculates the cost to upgrade rented gang items to a new weight class.
+     */
+    public int[] upgradeCost(GangObject gangobj, byte weightClass)
+    {
+        int[] cost = new int[2];
+        int oldWeightClass = gangobj.getWeightClass();
+        if (weightClass <= oldWeightClass) {
+            return cost;
+        }
+        float rentDiff = RuntimeConfig.server.rentMultiplier[weightClass] -
+            RuntimeConfig.server.rentMultiplier[oldWeightClass];
+        float articleRentDiff = RuntimeConfig.server.articleRentMultiplier[weightClass] -
+            RuntimeConfig.server.articleRentMultiplier[oldWeightClass];
+        long now = System.currentTimeMillis();
+        for (Item item : gangobj.inventory) {
+            if (item.getExpires() != 0 && !item.isExpired(now)) {
+                RentalGood rgood = _hobj.getRentalGood(item);
+                if (rgood == null) {
+                    continue;
+                }
+                Good good = rgood.getGood();
+                float remaining = (float)(item.getExpires() - now) / RENTAL_PERIOD;
+                if (good instanceof ArticleGood) {
+                    cost[0] += Math.round(good.getCoinCost() * articleRentDiff * remaining);
+                    cost[1] += Math.round(good.getScripCost() * articleRentDiff * remaining);
+                } else {
+                    cost[0] += Math.round(good.getCoinCost() * rentDiff * remaining);
+                    cost[1] += Math.round(good.getScripCost() * rentDiff * remaining);
+                }
+
+            }
+        }
+        return cost;
     }
 
     @Override // from ShopManager
@@ -696,4 +747,7 @@ public class HideoutManager extends MatchHostManager
 
     /** The size of the top-ranked gang lists. */
     protected static final int TOP_RANKED_LIST_SIZE = 10;
+
+    /** A day in milliseconds. */
+    protected static final long RENTAL_PERIOD = 30 * 24 * 60 * 60 * 1000L;
 }
