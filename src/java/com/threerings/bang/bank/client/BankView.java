@@ -198,9 +198,9 @@ public class BankView extends ShopView
         _contents.add(new BLabel(new ImageIcon(_ctx.loadImage(
                             "ui/bank/heading_immediate_trades.png"))), new Point(60, 445));
 
-        _contents.add(_qsell = new QuickTransact(_ctx, _status, false),
+        _contents.add(_qsell = new QuickTransact(_ctx, _status, false, _ctx.getUserObject()),
             new Rectangle(65, 403, 320, 30));
-        _contents.add(_qbuy = new QuickTransact(_ctx, _status, true),
+        _contents.add(_qbuy = new QuickTransact(_ctx, _status, true, _ctx.getUserObject()),
             new Rectangle(470, 403, 320, 30));
 
         _contents.add(new BLabel(new BlankIcon(800, 24), "bank_divider"), new Point(30, 345));

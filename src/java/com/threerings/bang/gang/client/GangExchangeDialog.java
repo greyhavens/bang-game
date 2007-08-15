@@ -61,7 +61,7 @@ public class GangExchangeDialog extends BDecoratedWindow
                 pack();
             }
         };
-        tradecont.add(_buyer = new QuickTransact(_ctx, _status, true),
+        tradecont.add(_buyer = new QuickTransact(_ctx, _status, true, gobj),
                 new Rectangle(50, 50, 320, 35));
         BContainer currentPrice = new BContainer(
                 GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(5));

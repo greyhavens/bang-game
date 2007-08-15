@@ -16,6 +16,7 @@ import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BuckleUpgrade;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.Wallet;
 import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;
 
@@ -25,7 +26,7 @@ import com.threerings.bang.gang.util.GangUtil;
  * Contains data concerning a single gang.
  */
 public class GangObject extends DObject
-    implements SpeakObject, TopRankObject
+    implements SpeakObject, TopRankObject, Wallet
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>gangPeerService</code> field. */
@@ -151,6 +152,18 @@ public class GangObject extends DObject
 
     /** On servers using this object as a proxy, the oid on the peer server. */
     public transient int remoteOid;
+
+    // documentation inherited from interface Wallet
+    public int getScrip ()
+    {
+        return scrip;
+    }
+
+    // documentation inherited from interface Wallet
+    public int getCoins ()
+    {
+        return coins;
+    }
 
     /**
      * Returns the name used to identity the gang's entry in the coin database.

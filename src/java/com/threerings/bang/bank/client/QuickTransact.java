@@ -21,6 +21,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.ConsolidatedOffer;
+import com.threerings.bang.data.Wallet;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bank.data.BankCodes;
@@ -34,12 +35,13 @@ import com.threerings.bang.bank.data.BestOffer;
 public class QuickTransact extends BContainer
     implements ActionListener, BankCodes
 {
-    public QuickTransact (BangContext ctx, StatusLabel status, boolean buying)
+    public QuickTransact (BangContext ctx, StatusLabel status, boolean buying, Wallet wallet)
     {
         super(GroupLayout.makeHStretch());
         _ctx = ctx;
         _status = status;
         _buying = buying;
+        _wallet = wallet;
         _msgs = ctx.getMessageManager().getBundle(BANK_MSGS);
 
         String msg = buying ? "m.buy" : "m.sell";
@@ -126,10 +128,10 @@ public class QuickTransact extends BContainer
             _scrip.setText(String.valueOf(_value));
 
             // make sure they have sufficient funds
-            if (_buying && _ccount * best.price > _ctx.getUserObject().scrip) {
+            if (_buying && _ccount * best.price > _wallet.getScrip()) {
                 _status.setStatus(_msgs.get("m.insufficient_scrip"), false);
                 return;
-            } else if (!_buying && _ccount > _ctx.getUserObject().coins) {
+            } else if (!_buying && _ccount > _wallet.getCoins()) {
                 _status.setStatus(_msgs.get("m.insufficient_coins"), false);
                 return;
             }
@@ -180,6 +182,7 @@ public class QuickTransact extends BContainer
     protected BestOffer _boffer;
     protected boolean _buying;
     protected int _ccount, _value;
+    protected Wallet _wallet;
 
     protected StatusLabel _status;
     protected BTextField _coins;

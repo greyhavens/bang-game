@@ -27,7 +27,7 @@ import com.threerings.bang.util.BangUtil;
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
  */
 public class PlayerObject extends BodyObject
-    implements StatSet.Container
+    implements StatSet.Container, Wallet
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerId</code> field. */
@@ -171,6 +171,18 @@ public class PlayerObject extends BodyObject
 
     /** Contains all ratings earned by this player. */
     public transient HashMap<Date, HashMap<String, Rating>> ratings;
+
+    // documentation inherited from interface Wallet
+    public int getScrip ()
+    {
+        return scrip;
+    }
+
+    // documentation inherited from interface Wallet
+    public int getCoins ()
+    {
+        return coins;
+    }
 
     /**
      * Returns the player's rating for the specified scenario. Do NOT call this on the client.
