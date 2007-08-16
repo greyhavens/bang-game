@@ -460,12 +460,11 @@ public class GangHandler
                 _gangobj.setArticleRentMultiplier(RuntimeConfig.server.articleRentMultiplier[
                         _gangobj.getWeightClass()]);
                 gangInfoChanged();
-                return;
             } else if (!(item instanceof WeightClassUpgrade) && !(item instanceof BuckleUpgrade) &&
                     !(item instanceof BucklePart)) {
                 distributeRental(item);
-                return;
             }
+            return;
 
         } else if (!name.equals(GangObject.MEMBERS)) {
             return;
@@ -2551,7 +2550,9 @@ public class GangHandler
         for (Look look : modified) {
             BangServer.lookrepo.updateLook(playerId, look);
         }
-        BangServer.itemrepo.deleteItems(removals, "Booted from gang");
+        if (!removals.isEmpty()) {
+            BangServer.itemrepo.deleteItems(removals, "Booted from gang");
+        }
     }
 
     /**
