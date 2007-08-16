@@ -7,7 +7,8 @@
 -injars ../dist/lib/commons-collections.jar(!META-INF/*)
 -injars ../dist/lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/narya-base.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/narya-distrib.jar(!META-INF/*,!**/tools/**,!**/persist/**,!**/peer/server/**)
+-injars ../dist/lib/narya-distrib.jar(
+  !META-INF/*,!**/tools/**,!**/persist/**,!**/peer/server/**,!**/admin/server/**)
 -injars ../dist/lib/nenya-rsrc.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-media.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-cast.jar(!META-INF/*,!**/tools/**)
