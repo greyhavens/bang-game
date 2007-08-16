@@ -92,8 +92,7 @@ public class BangAdminManager
         }
 
         protected void broadcast (String message) {
-            BangServer.chatprov.broadcast(
-                null, BangCodes.BANG_MSGS, message, true);
+            BangServer.chatprov.broadcast(null, BangCodes.BANG_MSGS, message, true, false);
         }
 
         protected int getDayFrequency () {
