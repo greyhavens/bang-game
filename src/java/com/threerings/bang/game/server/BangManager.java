@@ -2285,7 +2285,7 @@ public class BangManager extends GameManager
 
         // resign anyone that has not selected a team
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (!isAI(ii) && _bangobj.playerInfo[ii].readyState == BangObject.SELECT_PHASE) {
+            if (!isAI(ii) && _bangobj.playerInfo[ii].readyState != targetState) {
                 log.info("Player failed to make a selection in time [game=" + where() +
                          ", state=" + targetState + ", who=" + _bangobj.players[ii] + "].");
                 endPlayerGame(ii);
