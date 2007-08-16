@@ -103,6 +103,7 @@ import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.GangPeerMarshaller;
+import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.RentalGood;
@@ -1859,7 +1860,8 @@ public class GangHandler
             int remain = (int)Math.ceil(
                     (entry.lastLeaderCommand - cal.getTimeInMillis())/(double)ONE_HOUR);
             if (remain > 0) {
-                throw new InvocationException(MessageBundle.tcompose(NEW_LEADER_WAIT, remain));
+                throw new InvocationException(MessageBundle.qualify(
+                    HideoutCodes.HIDEOUT_MSGS, MessageBundle.tcompose(NEW_LEADER_WAIT, remain)));
             }
         }
         return entry;
