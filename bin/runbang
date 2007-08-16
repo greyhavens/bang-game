@@ -135,6 +135,6 @@ NOW=`date "+%F-%H:%M"`
 mv $LOGFILE $LOGFILE.$NOW
 
 # Prune old logs
-find $BANG_HOME/log -name 'stdout-$NODE.log*' -a -mtime +7 | xargs rm -f
+find $BANG_HOME/log -name 'stdout-$NODE.log*' -a -mtime +60 | xargs rm -f
 
 exit $EXIT_CODE
