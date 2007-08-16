@@ -318,7 +318,7 @@ public class BangServer extends CrowdServer
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
             log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
-            peermgr = new BangPeerManager(perCtx, invoker);
+            peermgr = new BangPeerManager();
         }
 
         // create and set up our configuration registry and admin service
@@ -383,7 +383,7 @@ public class BangServer extends CrowdServer
         coinexmgr.init();
         adminmgr.init(this);
         if (peermgr != null) {
-            peermgr.init(ServerConfig.nodename, ServerConfig.sharedSecret,
+            peermgr.init(perCtx, invoker, ServerConfig.nodename, ServerConfig.sharedSecret,
                          ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
         }
 

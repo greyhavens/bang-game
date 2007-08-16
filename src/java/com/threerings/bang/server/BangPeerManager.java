@@ -6,9 +6,7 @@ package com.threerings.bang.server;
 import java.util.Date;
 
 import com.samskivert.io.PersistenceException;
-import com.samskivert.jdbc.depot.PersistenceContext;
 import com.samskivert.util.HashIntMap;
-import com.samskivert.util.Invoker;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.Tuple;
@@ -77,12 +75,6 @@ public class BangPeerManager extends CrowdPeerManager
          * Called when a remote player changes his handle.
          */
         public void remotePlayerChangedHandle (int townIndex, Handle oldHandle, Handle newHandle);
-    }
-
-    public BangPeerManager (PersistenceContext ctx, Invoker invoker)
-        throws PersistenceException
-    {
-        super(ctx, invoker);
     }
 
     /**
