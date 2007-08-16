@@ -367,7 +367,7 @@ public class GangRepository extends JORARepository
     public void reduceNotoriety (int gangId, float pct)
         throws PersistenceException
     {
-        checkedUpdate("updage GANGS et NOTORIETY = NOTORIETY * " + pct +
+        checkedUpdate("update GANGS set NOTORIETY = NOTORIETY * " + pct +
                 " where GANG_ID = " + gangId, 1);
     }
 
