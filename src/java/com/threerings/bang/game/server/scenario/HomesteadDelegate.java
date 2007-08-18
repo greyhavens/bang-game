@@ -171,9 +171,9 @@ public class HomesteadDelegate extends ScenarioDelegate
     }
 
     @Override // from Scenario
-    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter, int sidx)
     {
-        super.pieceWasKilled(bangobj, piece, shooter);
+        super.pieceWasKilled(bangobj, piece, shooter, sidx);
 
         // if this was a homestead, deduct points from the previous owner and
         // update the destroy count of the shooting player (if any)

@@ -54,14 +54,14 @@ public class WendigoAttack extends Scenario
         int rticks = RespawnDelegate.RESPAWN_TICKS/2;
         registerDelegate(_resdel = new RespawnDelegate(rticks, false) {
             public void pieceWasKilled (
-                BangObject bangobj, Piece piece, int shooter) {
+                BangObject bangobj, Piece piece, int shooter, int sidx) {
                 int oldRT = _respawnTicks;
                 // if units were killed by a wendigo they respawn quicker
                 if (_wendel._wendigoRespawnTicks != null && piece.owner != -1) {
                     int pticks = _wendel._wendigoRespawnTicks[piece.owner]++;
                     _respawnTicks = Math.min(pticks, _respawnTicks);
                 }
-                super.pieceWasKilled(bangobj, piece, shooter);
+                super.pieceWasKilled(bangobj, piece, shooter, sidx);
                 _respawnTicks = oldRT;
             }
         });
@@ -111,7 +111,7 @@ public class WendigoAttack extends Scenario
         boolean validate = false;
         // if the wendigo are ready, we deploy 'em, otherwise we create them
         // which fades the board to let the players know they're coming
-        if (tick>= _nextWendigo) {
+        if (tick >= _nextWendigo) {
             if (_wendel.wendigoReady()) {
                 _wendel.deployWendigo(bangobj, tick);
                 if (_nextWendigo + MAX_WENDIGO_TICKS + MIN_WENDIGO_TICKS +

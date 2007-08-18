@@ -739,6 +739,33 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
+     * Returns a set of coordinates for locations surrounding specified coordinates into which a
+     * piece can be spawned.
+     */
+    public ArrayList<Point> getRandomOccupiableSpots (
+        int count, int cx, int cy, int mindist, int maxdist)
+    {
+        ArrayList<Point> ospots = new ArrayList<Point>();
+        PointSet spots = new PointSet();
+        for (int dist = mindist; dist <= maxdist; dist++) {
+            spots.addFrame(cx, cy, dist, _playarea);
+        }
+        int[] coords = spots.toIntArray();
+        ArrayUtil.shuffle(coords);
+      SEARCH:
+        for (int ii = 0; ii < coords.length; ii++) {
+            int hx = PointSet.decodeX(coords[ii]), hy = PointSet.decodeY(coords[ii]);
+            if (isOccupiable(hx, hy)) {
+                ospots.add(new Point(hx, hy));
+                if (ospots.size() == count) {
+                    break SEARCH;
+                }
+            }
+        }
+        return ospots;
+    }
+
+    /**
      * Adds the supplied set of pieces to our board "shadow" data. This is done at the start of the
      * game; all subsequent changes are incremental.
      */

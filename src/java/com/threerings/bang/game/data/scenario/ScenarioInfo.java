@@ -459,6 +459,7 @@ public abstract class ScenarioInfo
         register(new WendigoAttackInfo());
         register(new TotemBuildingInfo());
         register(new ForestGuardiansInfo());
+        register(new HeroBuildingInfo());
 
         // boom town scenarios
         // TBD

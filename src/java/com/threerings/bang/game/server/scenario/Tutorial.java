@@ -70,9 +70,9 @@ public class Tutorial extends Scenario
         if (_config.respawn) {
             registerDelegate(new RespawnDelegate(2, false) {
                 public void pieceWasKilled (
-                    BangObject bangobj, Piece piece, int shooter) {
+                    BangObject bangobj, Piece piece, int shooter, int sidx) {
                     if (piece.owner == 0) {
-                        super.pieceWasKilled(bangobj, piece, shooter);
+                        super.pieceWasKilled(bangobj, piece, shooter, sidx);
                     }
                 }
             });

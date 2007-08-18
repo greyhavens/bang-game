@@ -159,7 +159,7 @@ public class WendigoDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
-    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter, int sidx)
     {
         // a dirigible may activate a toggle on dying
         checkTSActivation(piece, bangobj.tick);

@@ -167,7 +167,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     }
 
     @Override // documentation inherited
-    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter, int sidx)
     {
         // update type counts and record super robot kills
         if (piece instanceof LoggingRobot) {

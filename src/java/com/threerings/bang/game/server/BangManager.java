@@ -3355,7 +3355,7 @@ public class BangManager extends GameManager
             });
         }
 
-        public void pieceKilled (Piece piece, int shooter) {
+        public void pieceKilled (Piece piece, int shooter, int sidx) {
             // queue a post death effect
             Effect effect = piece.didDie(_bangobj);
             if (effect != null) {
@@ -3363,7 +3363,7 @@ public class BangManager extends GameManager
             }
 
             // let the scenario know that the piece was killed
-            _scenario.pieceWasKilled(_bangobj, piece, shooter);
+            _scenario.pieceWasKilled(_bangobj, piece, shooter, sidx);
         }
 
         public void pieceRemoved (Piece piece) {

@@ -91,6 +91,8 @@ public enum StatType implements Stat.Type
     PERFECT_WAVES(new IntStat(), true, false),
     HIGHEST_SAWS(new IntStat(), false, false),
 
+    HERO_LEVEL(new MaxIntStat(), true, false),
+
     // stats accumulated outside a game
     CHAT_SENT(new IntStat(), false, false),
     CHAT_RECEIVED(new IntStat(), false, false),

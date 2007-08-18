@@ -70,8 +70,10 @@ public abstract class Effect extends SimpleStreamableObject
          *
          * @param shooter the index of the player that shot the piece, or -1
          * if a player was not responsible
+         * @param sidx the index of the piece that was responsible, or -1 if
+         * there was no piece responsible
          */
-        public void pieceKilled (Piece piece, int shooter);
+        public void pieceKilled (Piece piece, int shooter, int sidx);
 
         /**
          * Indicates that the specified piece was removed from the board.
@@ -203,18 +205,20 @@ public abstract class Effect extends SimpleStreamableObject
         // report that the target was affected
         reportEffect(obs, target, effect);
 
+        int sidx = (shooter == null ? -1 : shooter.pieceId);
+
         // if the target is not dead, we can stop here
         if (target.isAlive()) {
             // if the piece was killed but remained alive for some reason
             // still report the kill
             if (!alive) {
-                reportKill(obs, target, shooterIdx);
+                reportKill(obs, target, shooterIdx, sidx);
             }
             return true;
         }
 
         // report that the target was killed
-        reportKill(obs, target, shooterIdx);
+        reportKill(obs, target, shooterIdx, sidx);
 
         // if we're on the server, record the kill
         if (bangobj.getManager().isManager(bangobj) && target instanceof Unit) {
@@ -463,10 +467,10 @@ public abstract class Effect extends SimpleStreamableObject
     }
 
     /** A helper function for reporting piece death. */
-    protected static void reportKill (Observer obs, Piece piece, int shooter)
+    protected static void reportKill (Observer obs, Piece piece, int shooter, int sidx)
     {
         if (obs != null) {
-            obs.pieceKilled(piece, shooter);
+            obs.pieceKilled(piece, shooter, sidx);
         }
     }
 

@@ -69,7 +69,7 @@ public class ScenarioDelegate
     /**
      * Called when a piece was killed. See {@link Scenario#pieceWasKilled}.
      */
-    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter, int sidx)
     {
     }
 
