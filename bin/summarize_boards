@@ -7,11 +7,11 @@
 # % ./bin/summarize_boards rsrc/boards/*/?/*.board > pages/boards.html
 
 scens = [ "cj", "cr", "gr", "lg", # frontier town
-          "tb", "wa", "fg", # indian trading post
+          "tb", "wa", "fg", "hb", # indian trading post
         ]
 colors = {
   "cj" => "#FFCC66", "cr" => "#FFCC66", "gr" => "#FFCC66", "lg" => "#FFCC66",
-  "tb" => "#99CC66", "wa" => "#99CC66", "fg" => "#99CC66",
+  "tb" => "#99CC66", "wa" => "#99CC66", "fg" => "#99CC66", "hb" => "#99CC66",
 }
 
 boards = {}
