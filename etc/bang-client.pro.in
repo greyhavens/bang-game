@@ -15,7 +15,8 @@
 -injars ../dist/lib/nenya-jme.jar(
   !META-INF/*,!**/jme/tools/*Task.class,**/jme/tools/**,!**/tools/**)
 -injars ../dist/lib/nenya-openal.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/vilya-parlor.jar(!META-INF/*,!**/tools/**,!**/persist/**,!**/ezgame/**)
+-injars ../dist/lib/vilya-parlor.jar(
+  !META-INF/*,!**/tools/**,!**/persist/**,!**/ezgame/**,!**/rating/server**)
 -injars ../dist/lib/vilya-stats.jar(!META-INF/*,!**/tools/**,!**/persist/**)
 -injars ../dist/lib/samskivert.jar(
   com/samskivert/Log.class,**/io/**,**/net/**,**/swing/**,**/text/**,**/util/**,**/xml/**,
