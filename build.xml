@@ -573,7 +573,7 @@
     </copy>
 
     <!-- copy the getdown.txt file into the right place -->
-    <property name="client.base" value="${deploy.dir}/client/pages/client"/>
+    <property name="client.base" value="${deploy.dir}/client/pages/bang/client"/>
     <mkdir dir="${client.base}"/>
     <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt"
           overwrite="true" encoding="UTF-8">
@@ -659,7 +659,7 @@
     </copy>
 
     <!-- copy the getdown.txt file into the right place -->
-    <property name="client.base" value="${deploy.dir}/client/pages/client/${version}"/>
+    <property name="client.base" value="${deploy.dir}/client/pages/bang/client/${version}"/>
     <mkdir dir="${client.base}"/>
     <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt.tmp"
           overwrite="true" encoding="UTF-8">
@@ -685,7 +685,7 @@
     <!-- copy the just built client into var/ where it can be used for future diffing -->
     <mkdir dir="${var.dir}"/>
     <copy todir="${var.dir}">
-      <fileset dir="${deploy.dir}/client/pages/client" includes="${version}/**"/>
+      <fileset dir="${deploy.dir}/client/pages/bang/client" includes="${version}/**"/>
     </copy>
 
     <!-- create the getdown diff files -->
@@ -734,8 +734,8 @@
     <if><istrue value="${client_s3enable}"/><then>
         <property name="s3upload" value="${deploy.dir}/tmp/s3upload"/>
         <delete dir="${s3upload}"/>
-        <copy todir="${s3upload}/bang">
-          <fileset dir="${deploy.dir}/client/pages" includes="client/${version}/**"/>
+        <copy todir="${s3upload}">
+          <fileset dir="${deploy.dir}/client/pages" includes="bang/client/${version}/**"/>
         </copy>
         <echo>Uploading the client to S3</echo>
         <taskdef name="s3upload" classname="com.threerings.ant.S3Upload"
@@ -1015,6 +1015,7 @@
     <antcall target="prepare-extra">
       <param name="extra.type" value="client"/>
       <param name="pkg.name" value="bang-client-${version}"/>
+      <param name="pkg.prefix" value="${prefix}/download"/>
     </antcall>
     <antcall target="prepare-extra">
       <param name="extra.type" value="applet"/>
@@ -1022,10 +1023,10 @@
     <!-- the production client package needs to update the client/getdown.txt symlink -->
     <antcall target="maintainer-scripts">
       <param name="install.type" value="client"/>
-      <param name="client.version" value="${version}"/>
-      <param name="client.ident" value="client"/>
-      <param name="client.path" value=""/>
+      <param name="client.base" value="bang/client/"/>
+      <param name="client.path" value="bang/client/${version}"/>
       <param name="pkg.name" value="bang-client"/>
+      <param name="script.prefix" value="${prefix}/download"/>
     </antcall>
     <!-- append the version number to the package name. for dev this will always be 0 -->
     <!-- also setup the bang-client-current dwb file -->
