@@ -594,7 +594,7 @@
     <move file="etc/proguard/${version}.map" todir="${deploy.dir}/hemiptera-map"/>
 
     <!-- generate some game metadata summary pages -->
-    <property name="pages.out" value="${basedir}/${deploy.dir}/client/pages/bang/client"/>
+    <property name="pages.out" value="${basedir}/${deploy.dir}/client-extra/pages"/>
     <java classpathref="tool.classpath" failonerror="true" output="${pages.out}/units.html"
           fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
       <arg value="boom_town"/>
@@ -1056,6 +1056,13 @@
 
   <!-- install project specific server code into ${pkg.base} -->
   <target name="prepare-server-extra">
+    <if><available file="${deploy.dir}/client-extra"/>
+      <then>
+        <copy todir="${pkg.base}">
+          <fileset dir="${deploy.dir}/client-extra"/>
+        </copy>
+      </then>
+    </if>
     <copy todir="${pkg.base}/${deploy.dir}/rsrc">
       <fileset dir="${deploy.dir}/rsrc" includes="avatars/**/*.jar"/>
     </copy>
