@@ -742,7 +742,7 @@
         <taskdef name="s3upload" classname="com.threerings.ant.S3Upload"
                  classpathref="tool.classpath"/>
         <s3upload awsAuthId="${client_s3id}" awsAuthKey="${client_s3key}"
-                  awsBucket="${client_s3bucket}">
+                  awsBucket="${client_s3bucket}" accessPolicy="public_read">
             <fileset dir="${s3upload}" includes="bang/**"/>
         </s3upload>
     </then></if>
