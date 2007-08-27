@@ -594,7 +594,7 @@
     <move file="etc/proguard/${version}.map" todir="${deploy.dir}/hemiptera-map"/>
 
     <!-- generate some game metadata summary pages -->
-    <property name="pages.out" value="${basedir}/${deploy.dir}/client/pages"/>
+    <property name="pages.out" value="${basedir}/${deploy.dir}/client/pages/bang/client"/>
     <java classpathref="tool.classpath" failonerror="true" output="${pages.out}/units.html"
           fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
       <arg value="boom_town"/>
