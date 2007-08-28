@@ -8,7 +8,7 @@
     <file name="narya-distrib.jar"/>
     <file name="nenya-cast.jar"/>
     <file name="samskivert.jar"/>
-    <file name="servlet-2.3.jar"/>
+    <file name="servlet-api.jar"/>
     <file name="threerings.jar"/>
     <file name="velocity-1.5-dev.jar"/>
     <file name="vilya-parlor.jar"/>
