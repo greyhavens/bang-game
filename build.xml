@@ -58,13 +58,13 @@
     <file name="${extlibs.dir}/gwt-user.jar"/>
     <file name="${extlibs.dir}/jarbundler-1.2.jar"/>
     <file name="${extlibs.dir}/javassist.jar"/>
-    <file name="${extlibs.dir}/junit-3.7.jar"/>
+    <file name="${extlibs.dir}/junit4.jar"/>
     <file name="${extlibs.dir}/mail.jar"/>
     <file name="${extlibs.dir}/mysql-connector-java.jar"/>
     <file name="${extlibs.dir}/proguard.jar"/>
     <file name="${extlibs.dir}/s3lib.jar"/>
     <file name="${extlibs.dir}/s3upload.jar"/>
-    <file name="${extlibs.dir}/servlet-2.3.jar"/>
+    <file name="${extlibs.dir}/servlet-api.jar"/>
     <file name="${extlibs.dir}/velocity-1.5-dev.jar"/>
     <file name="lib/lwjgl.jar"/>
     <file name="lib/lwjgl_util.jar"/>
