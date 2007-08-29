@@ -397,7 +397,7 @@ public class GangRepository extends JORARepository
                     while (gangIds.hasNext()) {
                         int gangId = gangIds.nextInt();
                         stmt.setInt(1, gangId);
-                        ResultSet rs = stmt.executeQuery(query);
+                        ResultSet rs = stmt.executeQuery();
                         if (rs.next()) {
                             notMap.put(gangId, rs.getInt(1));
                         }
