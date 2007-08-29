@@ -90,6 +90,14 @@ public class Unit extends Piece
     }
 
     /**
+     * Gets an influence by type.
+     */
+    public Influence getInfluence (InfluenceType type)
+    {
+        return _influences[type.ordinal()];
+    }
+
+    /**
      * Gets the main influence.
      */
     public Influence getMainInfluence ()

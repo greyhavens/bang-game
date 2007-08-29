@@ -3,20 +3,21 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.util.ArrayList;
-
 import java.awt.Point;
+
+import java.util.ArrayList;
 
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
+import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.HealHeroEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
-
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceSet;
 
 /**
@@ -65,6 +66,22 @@ public class HeroBuilding extends Scenario
         int level = bangobj.stats[pidx].getIntStat(StatType.HERO_LEVEL);
         if (level > 0) {
             user.stats.incrementStat(StatType.HERO_LEVEL, level);
+        }
+    }
+
+    @Override // documentation inherited
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter, int sidx)
+    {
+        super.pieceWasKilled(bangobj, piece, shooter, sidx);
+
+        if (!(piece instanceof Unit) || ((Unit)piece).originalOwner == -1) {
+            return;
+        }
+
+        Unit unit = (Unit)piece;
+
+        // heroes respawn immediately
+        if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
         }
     }
 }

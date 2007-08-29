@@ -549,14 +549,14 @@ public class RatingRepository extends SimpleRepository
             "RATING SMALLINT NOT NULL",
             "EXPERIENCE INTEGER NOT NULL",
             "LAST_PLAYED TIMESTAMP NOT NULL",
-            "INDEX UNIQUE (PLAYER_ID, SCENARIO, WEEK)",
+            "UNIQUE INDEX (PLAYER_ID, SCENARIO, WEEK)",
         }, "");
         JDBCUtil.createTableIfMissing(conn, "RANKS", new String[] {
             "RATING_TYPE VARCHAR(2) NOT NULL",
             "RANK SMALLINT NOT NULL",
             "WEEK DATE NULL DEFAULT NULL",
             "LEVEL INTEGER NOT NULL",
-            "INDEX UNIQUE (RATING_TYPE, RANK, WEEK)",
+            "UNIQUE INDEX (RATING_TYPE, RANK, WEEK)",
         }, "");
         JDBCUtil.createTableIfMissing(conn, "SCORE_TRACKERS", new String[] {
             "SCENARIO VARCHAR(2) NOT NULL",

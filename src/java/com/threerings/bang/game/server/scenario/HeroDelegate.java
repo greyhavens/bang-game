@@ -3,16 +3,16 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import com.threerings.presents.server.InvocationException;
-
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
-
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.CountEffect;
+import com.threerings.bang.game.data.effect.LevelEffect;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.HeroBuildingInfo;
+import com.threerings.presents.server.InvocationException;
 
 /**
  * Handles managing of hero levels, influences and respawn.
@@ -24,7 +24,7 @@ public class HeroDelegate extends CounterDelegate
         throws InvocationException
     {
         super.roundWillStart(bangobj);
-        _levels = new int[_bangmgr.getPlayerCount()];
+        _levels = new byte[_bangmgr.getPlayerCount()];
         _xp = new int[_bangmgr.getPlayerCount()];
     }
 
@@ -52,22 +52,25 @@ public class HeroDelegate extends CounterDelegate
             }
         }
 
-        updateLevels(piece.pieceId);
+        updateLevels(bangobj, piece.pieceId);
     }
 
     /**
      * Updates the levels for each player based on their xp.
      */
-    protected void updateLevels (int queuePiece)
+    protected void updateLevels (BangObject bangobj, int queuePiece)
     {
         for (Counter counter : _counters) {
             for (int ii = LEVEL_XP.length - 1; ii > 0; ii--) {
                 if (_xp[counter.owner] >= LEVEL_XP[ii]) {
-                    _levels[counter.owner] = ii;
+                    _levels[counter.owner] = (byte)ii;
+                    bangobj.stats[counter.owner].setStat(StatType.HERO_LEVEL, ii);
                     break;
                 }
             }
             if (_levels[counter.owner] != counter.count) {
+                _bangmgr.deployEffect(-1, LevelEffect.changeLevel(
+                           bangobj, counter.owner, _levels[counter.owner]));
                 _bangmgr.deployEffect(-1, CountEffect.changeCount(
                             counter.pieceId, _levels[counter.owner], queuePiece));
             }
@@ -87,7 +90,7 @@ public class HeroDelegate extends CounterDelegate
         // nothing doing
     }
 
-    protected int[] _levels;
+    protected byte[] _levels;
     protected int[] _xp;
 
     protected static final int[] LEVEL_XP = {0, 5, 12, 20, 30, 42, 56, 72, 90, 110};
