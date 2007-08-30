@@ -17,6 +17,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
@@ -247,21 +248,6 @@ public class Match
     }
 
     /**
-     * Verifies that all match players are still present, returns true if all players present.
-     */
-    public boolean verifyOccupants (IntSet validOids)
-    {
-        boolean present = true;
-        for (int poid : matchobj.playerOids) {
-            if (poid > 0 && !validOids.contains(poid)) {
-                remove(poid);
-                present = false;
-            }
-        }
-        return present;
-    }
-
-    /**
      * Returns the count of human players involved in this match.
      */
     public int getPlayerCount ()
@@ -280,6 +266,7 @@ public class Match
      */
     public Readiness checkReady ()
     {
+        verifyPlayers();
         int count = getPlayerCount();
         if (matchobj == null || !matchobj.isActive()) {
             // if our match object has gone away; we will never again be ready
@@ -455,6 +442,23 @@ public class Match
         }
     }
 
+    /**
+     * Verifies that all match players are still present, removes those that aren't.
+     */
+    public void verifyPlayers ()
+    {
+        for (int poid : matchobj.playerOids) {
+            if (poid <= 0) {
+                continue;
+            }
+            PlayerObject user = (PlayerObject)BangServer.omgr.getObject(poid);
+            // make sure the player is still online and not in a game
+            if (user == null ||
+                    (BangServer.omgr.getObject(user.getPlaceOid()) instanceof BangObject)) {
+                remove(poid);
+            }
+        }
+    }
 
     protected Criterion _criterion;
     protected Criterion[] _playerCriterions;
