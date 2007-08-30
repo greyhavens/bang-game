@@ -111,6 +111,10 @@ public abstract class PrototypeCache<S, T>
                     handler.requestFailed(_cause);
                 }
             }
+            public long getLongThreshold () {
+                return 3000L;  // this could take a while...
+            }
+
             protected T _prototype;
             protected Exception _cause;
         });
