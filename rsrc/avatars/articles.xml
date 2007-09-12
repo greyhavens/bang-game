@@ -308,6 +308,11 @@
   </article>
 
   <!-- male hats: indian trading post -->
+  <article name="male_bukwas" townId="indian_post" slot="hat" scrip="5000" coins="4" colors="" qualifier="bounty:extreme/gaunt_bukwas">
+    <component cclass="male/hat" name="bukwas"/>
+    <component cclass="male/hat_back" name="bukwas"/>
+  </article>
+
   <article name="male_feather_one" townId="indian_post" slot="hat" scrip="2000" coins="0" colors="clothes_p">
     <component cclass="male/hat_back" name="feather_one"/>
   </article>
@@ -760,6 +765,11 @@
   </article>
 
   <!-- female hats: indian trading post -->
+  <article name="female_bukwas" townId="indian_post" slot="hat" scrip="5000" coins="4" colors="" qualifier="bounty:extreme/gaunt_bukwas">
+    <component cclass="female/hat" name="bukwas"/>
+    <component cclass="female/hat_back" name="bukwas"/>
+  </article>
+
   <article name="female_feather_one" townId="indian_post" slot="hat" scrip="2000" coins="0" colors="clothes_p">
     <component cclass="female/hat_back" name="feather_one"/>
   </article>
