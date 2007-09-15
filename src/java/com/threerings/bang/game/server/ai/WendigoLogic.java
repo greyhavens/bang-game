@@ -73,13 +73,13 @@ public class WendigoLogic extends AILogic
                     talisman = p;
                 }
 
-            } else if (p instanceof ToggleSwitch && 
+            } else if (p instanceof ToggleSwitch &&
                     ((ToggleSwitch)p).isActive(_bangobj.tick)) {
-                if (tswitch == null || 
+                if (tswitch == null ||
                         unit.getDistance(p) < unit.getDistance(tswitch)) {
                     tswitch = (ToggleSwitch)p;
                 }
-                
+
             } else if (p instanceof Unit && p.owner != _pidx) {
                 Unit target = (Unit)p;
                 if (TalismanEffect.TALISMAN_BONUS.equals(target.holding) &&
@@ -121,7 +121,7 @@ public class WendigoLogic extends AILogic
             return;
 
         // if there's a talisman within reach, grab it
-        } else if (!holdingTalisman && talisman != null && 
+        } else if (!holdingTalisman && talisman != null &&
                     moves.contains(talisman.x, talisman.y)) {
             executeOrder(unit, talisman.x, talisman.y, getBestTarget(
                 pieces, unit, talisman.x, talisman.y, TARGET_EVALUATOR));
@@ -138,7 +138,7 @@ public class WendigoLogic extends AILogic
             }
             return;
 
-        } else if (tswitch != null && safeties == 0 && 
+        } else if (tswitch != null && safeties == 0 &&
                 moves.contains(tswitch.x, tswitch.y)) {
             executeOrder(unit, tswitch.x, tswitch.y, getBestTarget(
                 pieces, unit, tswitch.x, tswitch.y, TARGET_EVALUATOR));
@@ -158,13 +158,11 @@ public class WendigoLogic extends AILogic
         // if we're closer to a safe zone, move there
         if ((talisman == null || dist < unit.getDistance(talisman)) &&
                 (ctarget == null || dist < unit.getDistance(ctarget)) &&
-                 moveUnit(pieces, unit, moves, safe.x, safe.y, 0,
-                     TARGET_EVALUATOR)) {
+                 moveUnit(pieces, unit, moves, safe.x, safe.y, 0, TARGET_EVALUATOR)) {
             return;
 
         // otherwise, move towards nearest free talisman
-        } else if (!holdingTalisman && 
-                moveUnit(pieces, unit, moves, talisman, 0)) {
+        } else if (!holdingTalisman && moveUnit(pieces, unit, moves, talisman, 0)) {
             return;
 
         // or nearest talisman holding target
@@ -181,8 +179,7 @@ public class WendigoLogic extends AILogic
 
         } else {
             // shoot anyone we can find
-            Piece target = getBestTarget(pieces, unit, attacks,
-                preferredMoves, TARGET_EVALUATOR);
+            Piece target = getBestTarget(pieces, unit, attacks, preferredMoves, TARGET_EVALUATOR);
             if (target != null) {
                 executeOrder(unit, Short.MAX_VALUE, 0, target);
             }
@@ -220,7 +217,7 @@ public class WendigoLogic extends AILogic
 
         public int getWeight (BangObject bangobj, Unit unit, Piece target,
                 int dist, PointSet preferredMoves) {
-            int preferredBonus = (!preferredMoves.isEmpty() &&
+            int preferredBonus = (preferredMoves.isEmpty() ||
                     unit.computeShotLocation(bangobj.board, target,
                         preferredMoves, true) == null) ? 0 : 5000;
             return ((target instanceof Unit) &&

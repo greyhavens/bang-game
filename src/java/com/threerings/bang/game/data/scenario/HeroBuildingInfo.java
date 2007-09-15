@@ -30,6 +30,12 @@ public class HeroBuildingInfo extends ScenarioInfo
     }
 
     @Override // documentation inherited
+    public String getMusic ()
+    {
+        return getTownId() + "/scenario_" + TotemBuildingInfo.IDENT;
+    }
+
+    @Override // documentation inherited
     public StatType[] getObjectives ()
     {
         return new StatType[] { StatType.HERO_LEVEL };

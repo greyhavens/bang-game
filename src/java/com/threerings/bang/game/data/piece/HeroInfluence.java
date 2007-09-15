@@ -20,7 +20,7 @@ public class HeroInfluence extends Influence
     // documentation inherited
     public String getName ()
     {
-        return null;
+        return "hero";
     }
 
     /**
@@ -89,6 +89,18 @@ public class HeroInfluence extends Influence
     public boolean didAdjustDefend ()
     {
         return _level > 0;
+    }
+
+    @Override // documentation inherited
+    public boolean removeWhenDead (boolean remove)
+    {
+        return false;
+    }
+
+    @Override // documentation inherited
+    public boolean removeOnKill ()
+    {
+        return false;
     }
 
     protected byte _level;

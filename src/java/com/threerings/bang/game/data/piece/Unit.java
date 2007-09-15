@@ -537,7 +537,9 @@ public class Unit extends Piece
         super.wasKilled(tick);
         // influences and hindrances do not survive through death
         for (InfluenceType type : InfluenceType.values()) {
-            _influences[type.ordinal()] = null;
+            if (_influences[type.ordinal()] != null && _influences[type.ordinal()].removeOnKill()) {
+                _influences[type.ordinal()] = null;
+            }
         }
     }
 
@@ -553,7 +555,14 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
-        return _config.make == UnitConfig.Make.HUMAN || _config.make == UnitConfig.Make.SPIRIT;
+        boolean remove = _config.make == UnitConfig.Make.HUMAN ||
+            _config.make == UnitConfig.Make.SPIRIT;
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                remove = influence.removeWhenDead(remove);
+            }
+        }
+        return remove;
     }
 
     @Override // documentation inherited

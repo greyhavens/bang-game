@@ -74,6 +74,13 @@ public class ScenarioDelegate
     }
 
     /**
+     * Called when a piece was killed. See {@link Scenario#pieceWasRemoved}.
+     */
+    public void pieceWasRemoved (BangObject bangobj, Piece piece)
+    {
+    }
+
+    /**
      * Called when a piece is affected.
      */
     public void pieceAffected (Piece piece, String effect)

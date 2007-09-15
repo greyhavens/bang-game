@@ -312,6 +312,17 @@ public abstract class Scenario
     }
 
     /**
+     * Called when a piece was removed.
+     */
+    public void pieceWasRemoved (BangObject bangobj, Piece piece)
+    {
+        // allow our delegates to participate
+        for (ScenarioDelegate delegate : _delegates) {
+            delegate.pieceWasRemoved(bangobj, piece);
+        }
+    }
+
+    /**
      * Called when a piece is affected.
      */
     public void pieceAffected (Piece piece, String effect)

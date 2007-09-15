@@ -3368,6 +3368,9 @@ public class BangManager extends GameManager
 
         public void pieceRemoved (Piece piece) {
             _pLogics.remove(piece.pieceId);
+
+            // let the scenario know that the piece was removed
+            _scenario.pieceWasRemoved(_bangobj, piece);
         }
 
         public void cardAdded (Card card) {

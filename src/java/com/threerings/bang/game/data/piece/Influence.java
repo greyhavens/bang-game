@@ -23,7 +23,7 @@ import com.threerings.io.SimpleStreamableObject;
 public abstract class Influence extends SimpleStreamableObject
 {
     public boolean holding = false;
-    
+
     /** Returns the name of this influence, used for icons and
      * messages (can be <code>null</code> for none). */
     public abstract String getName ();
@@ -34,9 +34,9 @@ public abstract class Influence extends SimpleStreamableObject
         _startTick = tick;
     }
 
-    /** 
+    /**
      * Creates a visualization for the influence, or returns <code>null</code>
-     * for none. 
+     * for none.
      *
      * @param high set to true for a high detail visualization, false for a low
      * detail visualization
@@ -45,7 +45,7 @@ public abstract class Influence extends SimpleStreamableObject
     {
         return null;
     }
-    
+
     /** Returns true if this influence has expired. */
     public boolean isExpired (short tick)
     {
@@ -59,7 +59,7 @@ public abstract class Influence extends SimpleStreamableObject
     {
         return new ExpireInfluenceEffect();
     }
-    
+
     /**
      * Adjusts a piece's ticks per move. The default is no adjustment.
      */
@@ -152,6 +152,14 @@ public abstract class Influence extends SimpleStreamableObject
     }
 
     /**
+     * Adjusts the pieces ability to stay around when dead.
+     */
+    public boolean removeWhenDead (boolean remove)
+    {
+        return remove;
+    }
+
+    /**
      * Returns true if this influence is hidden from opponents.
      */
     public boolean hidden ()
@@ -190,6 +198,14 @@ public abstract class Influence extends SimpleStreamableObject
     public String toString ()
     {
         return getName();
+    }
+
+    /**
+     * Returns true if this influence should be removed when the unit is killed.
+     */
+    public boolean removeOnKill ()
+    {
+        return true;
     }
 
     /** Returns the duration of this influence in ticks. The default is

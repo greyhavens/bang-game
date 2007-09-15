@@ -29,6 +29,17 @@ public class HeroDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
+    public boolean tick (BangObject bangobj, short tick)
+    {
+        if (tick == 0) {
+            for (int ii = 0; ii < bangobj.getPlayerCount(); ii++) {
+                _bangmgr.deployEffect(-1, LevelEffect.changeLevel(bangobj, ii, (byte)0));
+            }
+        }
+        return false;
+    }
+
+    @Override // documentation inherited
     public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter, int sidx)
     {
         super.pieceWasKilled(bangobj, piece, shooter, sidx);
@@ -38,9 +49,14 @@ public class HeroDelegate extends CounterDelegate
             _xp[shooter] += 1;
         }
 
+        /*
         // losing their hero will automatically drop them down one level
         if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
             _xp[piece.owner] = LEVEL_XP[Math.max(0, _levels[piece.owner] - 1)];
+        }
+        */
+        if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            _xp[piece.owner] = Math.max(0, _xp[piece.owner] - _levels[piece.owner]);
         }
 
         if (sidx != -1) {
@@ -56,15 +72,39 @@ public class HeroDelegate extends CounterDelegate
     }
 
     /**
+     * Returns the hero level for the player.
+     */
+    public byte getLevel (int pidx)
+    {
+        return _levels[pidx];
+    }
+
+    /**
+     * Returns the hero for the player.
+     */
+    public Unit getHero (BangObject bangobj, int pidx)
+    {
+        for (Piece piece : bangobj.pieces) {
+            if (piece instanceof Unit && piece.owner == pidx &&
+                    ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+                return (Unit)piece;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Updates the levels for each player based on their xp.
      */
     protected void updateLevels (BangObject bangobj, int queuePiece)
     {
         for (Counter counter : _counters) {
-            for (int ii = LEVEL_XP.length - 1; ii > 0; ii--) {
+            for (int ii = LEVEL_XP.length - 1; ii >= 0; ii--) {
                 if (_xp[counter.owner] >= LEVEL_XP[ii]) {
+                    int diff = ii - _levels[counter.owner];
                     _levels[counter.owner] = (byte)ii;
                     bangobj.stats[counter.owner].setStat(StatType.HERO_LEVEL, ii);
+                    bangobj.grantPoints(counter.owner, diff * pointsPerCounter());
                     break;
                 }
             }
@@ -75,7 +115,6 @@ public class HeroDelegate extends CounterDelegate
                             counter.pieceId, _levels[counter.owner], queuePiece));
             }
         }
-
     }
 
     @Override // documentation inherited from CounterDelegate

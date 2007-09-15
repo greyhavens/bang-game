@@ -26,7 +26,7 @@ public class HealHeroEffect extends BonusEffect
     public static final String HEAL_HERO = "indian_post/heal_hero";
 
     /** The base amount by which to heal the hero. */
-    public int baseHeal = 10;
+    public int baseHeal = 20;
 
     /** The updated damage for the affected piece. */
     public int newDamage;
