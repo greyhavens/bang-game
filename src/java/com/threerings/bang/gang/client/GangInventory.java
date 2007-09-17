@@ -320,7 +320,7 @@ public class GangInventory extends BDecoratedWindow
         public void setPredicate (Predicate<Item> itemp)
         {
             clear();
-            Item[] items = _gangobj.inventory.toArray(new Item[_gangobj.inventory.size()]);
+            Item[] items = _gangobj.inventorySnapshot();
             Arrays.sort(items, _itemComparator);
             _itemp = itemp;
             for (Item item : items) {

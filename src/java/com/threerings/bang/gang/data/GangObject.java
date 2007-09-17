@@ -241,6 +241,15 @@ public class GangObject extends DObject
         return false;
     }
 
+    /**
+     * Returns a snapshot of this gang's inventory, useful for iterating over if you plan to remove
+     * items from their inventory.
+     */
+    public Item[] inventorySnapshot ()
+    {
+        return inventory.toArray(new Item[inventory.size()]);
+    }
+
     // documentation inherited from interface SpeakObject
     public void applyToListeners (SpeakObject.ListenerOp op)
     {

@@ -325,8 +325,7 @@ public class BangClientResolver extends CrowdClientResolver
         final ArrayIntSet removed = new ArrayIntSet();
         final ArrayList<Item> updated = new ArrayList<Item>();
         final ArrayList<Item> added = new ArrayList<Item>();
-        Item[] items = buser.inventory.toArray(new Item[buser.inventory.size()]);
-        for (Item item : items) {
+        for (Item item : buser.inventorySnapshot()) {
             if (item.getGangId() == 0) {
                 continue;
             }
@@ -352,8 +351,7 @@ public class BangClientResolver extends CrowdClientResolver
                 updated.add(item);
             }
         }
-        items = gangobj.inventory.toArray(new Item[gangobj.inventory.size()]);
-        for (Item item : items) {
+        for (Item item : gangobj.inventorySnapshot()) {
             if (item.canBeOwned(buser) && !buser.holdsEquivalentItem(item)) {
                 Item citem = (Item)item.clone();
                 citem.setGangId(citem.getOwnerId());

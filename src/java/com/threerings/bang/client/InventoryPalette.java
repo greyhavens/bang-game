@@ -149,7 +149,7 @@ public class InventoryPalette extends IconPalette
     protected void populate ()
     {
         PlayerObject user = _ctx.getUserObject();
-        Item[] items = user.inventory.toArray(new Item[user.inventory.size()]);
+        Item[] items = user.inventorySnapshot();
         Arrays.sort(items, _itemComparator);
         // sort the items in some vaguely sensible order
         for (Item item : items) {

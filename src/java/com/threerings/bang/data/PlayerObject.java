@@ -342,6 +342,15 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns a snapshot of this user's inventory, useful for iterating over if you plan to remove
+     * items from their inventory.
+     */
+    public Item[] inventorySnapshot ()
+    {
+        return inventory.toArray(new Item[inventory.size()]);
+    }
+
+    /**
      * Returns the first instance of an item that is equivalent in content to the one specified.
      */
     public Item getEquivalentItem (Item item)

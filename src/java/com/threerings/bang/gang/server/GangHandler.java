@@ -587,7 +587,7 @@ public class GangHandler
             for (Look look : modified) {
                 user.updateLooks(look);
             }
-            for (Item item : user.inventory.toArray(new Item[user.inventory.size()])) {
+            for (Item item : user.inventorySnapshot()) {
                 if (removals.contains(item.getItemId())) {
                     user.removeFromInventory(item.getKey());
                 }
