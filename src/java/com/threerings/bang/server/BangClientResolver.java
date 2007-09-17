@@ -236,12 +236,9 @@ public class BangClientResolver extends CrowdClientResolver
 
         // load up this player's avatar looks and modify any looks that have now expired articles
         ArrayList<Look> looks = BangServer.lookrepo.loadLooks(player.playerId);
-        if (!removals.isEmpty()) {
-            ArrayList<Look> modified = AvatarLogic.stripLooks(
-                    removals, buser.inventory, looks);
-            for (Look look : modified) {
-                BangServer.lookrepo.updateLook(buser.playerId, look);
-            }
+        ArrayList<Look> modified = AvatarLogic.stripLooks(removals, buser.inventory, looks);
+        for (Look look : modified) {
+            BangServer.lookrepo.updateLook(buser.playerId, look);
         }
         buser.looks = new DSet<Look>(looks);
 

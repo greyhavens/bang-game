@@ -276,8 +276,9 @@ public class AvatarLogic
     }
 
     /**
-     * Strips the supplied list of articles from the supplied looks returning a list of looks
-     * that were modified during the process.
+     * Strips the supplied list of articles from the supplied looks as well as verifying that
+     * all the looks have valid articles, returning a list of looks that were modified during
+     * the process.
      */
     public static ArrayList<Look> stripLooks (
             ArrayIntSet removals, Iterable<Item> items, Iterable<Look> looks)
@@ -285,12 +286,14 @@ public class AvatarLogic
         // find the item ids of all gang articles as well as suitable replacements for
         // each slot
         int[] replacements = new int[AvatarLogic.SLOTS.length];
+        ArrayIntSet validArts = new ArrayIntSet();
         for (Item item : items) {
             if (!(item instanceof Article)) {
                 continue;
             }
             Article article = (Article)item;
             int itemId = article.getItemId();
+            validArts.add(itemId);
             if (article.getGangId() > 0 || removals.contains(itemId)) {
                 continue;
             }
@@ -310,7 +313,7 @@ public class AvatarLogic
             int[] articles = look.articles;
             boolean replaced = false;
             for (int ii = 0; ii < articles.length; ii++) {
-                if (removals.contains(articles[ii])) {
+                if (removals.contains(articles[ii]) || !validArts.contains(articles[ii])) {
                     articles[ii] = replacements[ii];
                     replaced = true;
                 }
