@@ -26,13 +26,13 @@ public class HeroBuildingInfo extends ScenarioInfo
     @Override // documentation inherited
     public String getTownId ()
     {
-        return BangCodes.INDIAN_POST;
+        return BangCodes.BOOM_TOWN;
     }
 
     @Override // documentation inherited
     public String getMusic ()
     {
-        return getTownId() + "/scenario_" + TotemBuildingInfo.IDENT;
+        return BangCodes.INDIAN_POST + "/scenario_" + TotemBuildingInfo.IDENT;
     }
 
     @Override // documentation inherited
