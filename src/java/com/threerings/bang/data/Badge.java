@@ -633,6 +633,9 @@ public class Badge extends Item
         BOUNTY_ZERO3,
         BOUNTY_LETRAPPE,
         BOUNTY_CLOUD,
+        BOUNTY_BAXTER,
+        BOUNTY_JEDIDIAH,
+        BOUNTY_MCGRAW,
         BOUNTY_ALL_ITP_TOWN {
             public boolean qualifies (PlayerObject user) {
                 return hasCompletedBounties(
@@ -641,10 +644,9 @@ public class Badge extends Item
         },
         BOUNTY_ALL_ITP {
             public boolean qualifies (PlayerObject user) {
-                return false; // don't enable until all most wanted bounties are released
-                //return user.holdsBadge(BOUNTY_ALL_ITP_TOWN) &&
-                //    hasCompletedBounties(
-                //            user.stats, BandCodes.INDIAN_POST, BountyConfig.Type.MOST_WANTED);
+                return user.holdsBadge(BOUNTY_ALL_ITP_TOWN) &&
+                    hasCompletedBounties(
+                            user.stats, BangCodes.INDIAN_POST, BountyConfig.Type.MOST_WANTED);
             }
         },
 
@@ -869,7 +871,8 @@ public class Badge extends Item
 
         // indian post bounty badges
         Type.BOUNTY_LETRAPPE, Type.BOUNTY_CLOUD, null, null, Type.BOUNTY_ALL_ITP_TOWN,
-        Type.BOUNTY_ZERO3, null, null, null, Type.BOUNTY_ALL_ITP,
+        Type.BOUNTY_BAXTER, Type.BOUNTY_ZERO3, Type.BOUNTY_MCGRAW, Type.BOUNTY_JEDIDIAH,
+        Type.BOUNTY_ALL_ITP,
 
         // tutorial badges
         Type.TUTORIAL_ALL_FT, Type.TUTORIAL_ALL_ITP, null, null, null,

@@ -50,24 +50,20 @@ public class BountyList extends BContainer
             BountyConfig config = bounties.get(ii);
             if (user.stats.containsValue(StatType.BOUNTIES_COMPLETED, config.ident)) {
                 completed++;
+
             } else if (config.isAvailable(user)) {
                 unlocked++;
                 // select the first playable bounty
                 _selidx = Math.min(_selidx, ii);
                 // note the highest available difficulty
                 highestAvail = config.difficulty;
+
             } else if (type == BountyConfig.Type.TOWN && config.difficulty != highestAvail) {
                 continue; // don't show town bounties that are not yet unlocked
+
             } else if (firstUnavail != null && config.difficulty != firstUnavail) {
                 // only show one difficulty level beyond what's unlocked for most wanted bounties
                 continue;
-
-            // TEMP: Disable extreme most wanted in ITP
-            } else if (type == BountyConfig.Type.MOST_WANTED &&
-                    config.difficulty == Star.Difficulty.EXTREME &&
-                    user.townId.equals(BangCodes.INDIAN_POST)) {
-                continue;
-            // END TEMP
 
             } else if (firstUnavail == null && config.difficulty != highestAvail) {
                 firstUnavail = config.difficulty;
