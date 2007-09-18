@@ -174,7 +174,7 @@ public class GangGoodsCatalog
             byte weightClass = good.getWeightClass();
             if (weightClass < _oldWeightClass) {
                 _pct = (float)GangCodes.WEIGHT_CLASSES[weightClass].maxMembers /
-                    GangCodes.WEIGHT_CLASSES[_oldWeightClass].maxMembers;
+                    (float)GangCodes.WEIGHT_CLASSES[_oldWeightClass].maxMembers;
             }
             for (Item item : gang.inventory) {
                 if (item instanceof WeightClassUpgrade) {
