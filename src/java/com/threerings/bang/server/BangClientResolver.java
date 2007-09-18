@@ -190,6 +190,16 @@ public class BangClientResolver extends CrowdClientResolver
         } else if (holdsITPTicket &&
                 ((player.townId == null) || player.townId.equals(BangCodes.FRONTIER_TOWN))) {
             BangServer.playrepo.grantTownAccess(buser.playerId, BangCodes.INDIAN_POST);
+
+        // clear a players granted access when tickets expire
+        } else if (!buser.holdsTicket(player.townId)) {
+            String townAccess = BangCodes.FRONTIER_TOWN;
+            for (int ii = 1; ii < BangCodes.TOWN_IDS.length; ii++) {
+                if (buser.holdsTicket(BangCodes.TOWN_IDS[ii])) {
+                    townAccess = BangCodes.TOWN_IDS[ii];
+                }
+            }
+            BangServer.playrepo.grantTownAccess(buser.playerId, townAccess);
         }
 
         // if they have an expired free ticket, remove it

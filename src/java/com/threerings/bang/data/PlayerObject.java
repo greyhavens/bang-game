@@ -310,6 +310,19 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns a free ticket generated for a free town day if the player has it.
+     */
+    public TrainTicket getFreeTownTicket ()
+    {
+        for (Item item : inventory) {
+            if (item instanceof TrainTicket && item.getItemId() == 0) {
+                return (TrainTicket)item;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns true if the player owns the specified Deputy Sheriff's Star.
      */
     public boolean holdsStar (int townIdx, Star.Difficulty difficulty)

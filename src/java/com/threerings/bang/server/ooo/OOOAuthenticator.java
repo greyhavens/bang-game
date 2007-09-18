@@ -300,6 +300,7 @@ public class OOOAuthenticator extends BangAuthenticator
             serverTownIdx == BangUtil.getTownIndex(BangCodes.INDIAN_POST)) {
             // free access
             serverTownIdx = -1;
+            log.info("Free server access granted");
         }
         if (serverTownIdx > 0) {
             String townId = BangCodes.FRONTIER_TOWN;
@@ -313,6 +314,7 @@ public class OOOAuthenticator extends BangAuthenticator
                     townidx++;
                 }
             }
+            log.info("townidx=" + townidx + ", townId=" + townId + ", serverTownIdx=" + serverTownIdx);
 
             if (townidx < serverTownIdx && !user.isAdmin()) {
                 log.warning("Rejecting access to town server by non-ticket-holder " +

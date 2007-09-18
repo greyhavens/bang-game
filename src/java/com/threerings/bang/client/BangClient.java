@@ -69,6 +69,7 @@ import com.threerings.admin.data.AdminCodes;
 import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.ranch.client.FirstBigShotView;
 import com.threerings.bang.ranch.data.RanchObject;
+import com.threerings.bang.station.client.FreePassView;
 import com.threerings.bang.station.client.PassDetailsView;
 
 import com.threerings.bang.chat.client.BangChatDirector;
@@ -101,6 +102,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
+import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -486,6 +488,11 @@ public class BangClient extends BasicClient
             return true;
         }
 
+        // if there's a free town open, potentially show it
+        if (maybeShowFreeTownDetails()) {
+            return true;
+        }
+
         if (!skipWhereTo && BangPrefs.shouldShowTutIntro(user)) {
             displayPopup(new TutorialView(_ctx), true, TutorialView.WIDTH_HINT);
             return true;
@@ -681,6 +688,21 @@ public class BangClient extends BasicClient
         if (!PassDetailsView.wasShown() && (ticket = user.getFreeTicket()) != null &&
                 !ticket.isActivated() && BangPrefs.shouldShowPassDetail(user, ticket.getTownId())) {
             displayPopup(new PassDetailsView(_ctx, ticket, false), true);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * See if we should display the Free Town window.
+     */
+    public boolean maybeShowFreeTownDetails ()
+    {
+        TrainTicket ticket = null;
+        PlayerObject user = _ctx.getUserObject();
+        if (!FreePassView.wasShown() && (ticket = user.getFreeTownTicket()) != null &&
+                !user.townId.equals(ticket.getTownId())) {
+            displayPopup(new FreePassView(_ctx, ticket), true);
             return true;
         }
         return false;
