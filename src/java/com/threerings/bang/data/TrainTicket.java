@@ -74,14 +74,15 @@ public class TrainTicket extends Item
     {
         String msg = MessageBundle.qualify(
             BangCodes.BANG_MSGS, "m." + getTownId());
-        msg = MessageBundle.compose("m.train_ticket_tip", msg);
+        msg = MessageBundle.compose(
+                (getItemId() == 0 ? "m.temporary_" : "m.") + "train_ticket_tip", msg);
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "goods/tickets/" + getTownId() + ".png";
+        return "goods/tickets/" + (getItemId() == 0 ? "pass_" : "" ) + getTownId() + ".png";
     }
 
     @Override // documentation inherited
