@@ -260,6 +260,11 @@ public class GangStoreDialog extends BDecoratedWindow
             }
         }
 
+        protected String purchasedKey ()
+        {
+            return "m.gang_purchased";
+        }
+
         protected int getControlGapOffset ()
         {
             return 10;

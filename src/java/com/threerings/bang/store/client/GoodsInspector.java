@@ -206,7 +206,7 @@ public class GoodsInspector extends BContainer
         _palette.reinitGoods(true);
 
         // if they bought an article, give them a quick button to go try it on
-        String msg = "m.purchased";
+        String msg = purchasedKey();
         if (_good instanceof ArticleGood) {
             showMode(Mode.TRY);
             msg += "_article";
@@ -217,6 +217,11 @@ public class GoodsInspector extends BContainer
 
         _descrip.setText(_msgs.get(msg));
         BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
+    }
+
+    protected String purchasedKey ()
+    {
+        return "m.purchased";
     }
 
     protected void showMode (Mode mode)
