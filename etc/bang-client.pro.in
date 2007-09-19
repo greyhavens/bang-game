@@ -53,7 +53,7 @@
 -dontskipnonpubliclibraryclasses
 -outjars ../dist/bang-pcode.jar
 -printseeds ../dist/proguard.seeds
-# @apply_mapping@ @apply_file@
+@apply_mapping@ @apply_file@
 -printmapping proguard/@version@.map
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
