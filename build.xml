@@ -1024,8 +1024,8 @@
     <!-- the production client package needs to update the client/getdown.txt symlink -->
     <antcall target="maintainer-scripts">
       <param name="install.type" value="client"/>
-      <param name="client.base" value="bang/client/"/>
-      <param name="client.path" value="bang/client/${version}"/>
+      <param name="client.base" value="bang/client"/>
+      <param name="client.current" value="${version}"/>
       <param name="pkg.name" value="bang-client"/>
       <param name="script.prefix" value="${prefix}/download"/>
     </antcall>
