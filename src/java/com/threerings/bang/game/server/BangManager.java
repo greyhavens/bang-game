@@ -1811,8 +1811,8 @@ public class BangManager extends GameManager
                 _bangobj.perRoundRanks[_activeRoundId][ranks[ii].pidx] = rank;
             }
 
-            // don't count unit usage for bounty games
-            if (_bconfig.type != BangConfig.Type.BOUNTY) {
+            // only count unit usage for rated games
+            if (_bconfig.rated) {
                 // record for all players still in the game that they "used" their units in this
                 // round
                 noteUnitsUsed(_purchases, StatType.UNITS_USED, -1);
