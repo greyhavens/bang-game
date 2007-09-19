@@ -81,6 +81,7 @@ public class TutorialCodes
     public static final String[] TUTORIAL_UNIT = {
         "units/frontier_town/codger/portrait.png",
         "units/indian_post/tricksterraven/portrait.png",
+        "units/indian_post/tricksterraven/portrait.png",
     };
 
     /** Our practice game configurations. */
