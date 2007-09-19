@@ -1044,6 +1044,12 @@
     <antcall target="prepare-meta">
       <param name="pkg.names" value="bang-client-current,bang-game-server,bang-web-server"/>
     </antcall>
+    <!-- copy the current getdown.txt into the webroot inside the bang-client-current package
+         to support legacy installers still pointing at www.banghowdy.com -->
+    <if><equals arg1="${props.dist}" arg2="production"/><then>
+      <copy file="${deploy.dir}/client/pages/bang/client/${version}/getdown.txt"
+            todir="${destroot}/bang-client-current/${prefix.app}/pages/client"/>
+    </then></if>
 
     <antcall target="prepare-extra">
       <param name="extra.type" value="hemiptera-map"/>
