@@ -185,12 +185,8 @@ public class HeroBuilding extends Scenario
         unit.setOwner(bangobj, unit.originalOwner);
 
         // reset the units vital statistics but don't have bigshots reset their active tick
-        short oldLastActed = unit.lastActed;
+        short oldLastActed = (short)(unit.lastActed + 1);
         unit.respawnInit(bangobj);
-        if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-            unit.lastActed = oldLastActed;
-        }
-
         // if the unit is still in play for some reason, remove it first
         if (bangobj.pieces.containsKey(unit.getKey())) {
             _bangmgr.deployEffect(-1, new RemovePieceEffect(unit));
@@ -199,6 +195,10 @@ public class HeroBuilding extends Scenario
         // don't respawn units for players that are no longer active
         if (!_bangmgr.isActivePlayer(unit.owner)) {
             return;
+        }
+
+        if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            unit.lastActed = oldLastActed;
         }
 
         // then position it and add it back at its new location

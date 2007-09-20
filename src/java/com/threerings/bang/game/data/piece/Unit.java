@@ -534,12 +534,19 @@ public class Unit extends Piece
     @Override // documentation inherited
     public void wasKilled (short tick)
     {
-        super.wasKilled(tick);
+        boolean resetTicks = true;
         // influences and hindrances do not survive through death
         for (InfluenceType type : InfluenceType.values()) {
-            if (_influences[type.ordinal()] != null && _influences[type.ordinal()].removeOnKill()) {
-                _influences[type.ordinal()] = null;
+            if (_influences[type.ordinal()] != null) {
+                if (_influences[type.ordinal()].removeOnKill()) {
+                    _influences[type.ordinal()] = null;
+                } else {
+                    resetTicks = false;
+                }
             }
+        }
+        if (resetTicks) {
+            super.wasKilled(tick);
         }
     }
 
