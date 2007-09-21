@@ -3,6 +3,9 @@
 
 package com.threerings.bang.game.data.piece;
 
+import com.threerings.bang.game.client.effect.HeroInfluenceViz;
+import com.threerings.bang.game.client.effect.InfluenceViz;
+
 /**
  * Provides bonuses to a hero based on its level.
  */
@@ -23,12 +26,23 @@ public class HeroInfluence extends Influence
         return "hero";
     }
 
+    @Override // documentation inherited
+    public InfluenceViz createViz (boolean high) {
+        if (_viz == null) {
+            _viz = new HeroInfluenceViz(_level);
+        }
+        return _viz;
+    }
+
     /**
      * Sets the hero level for the influence.
      */
     public void setLevel (byte level)
     {
         _level = level;
+        if (_viz != null) {
+            _viz.setLevel(_level);
+        }
     }
 
     @Override // documentation inherited
@@ -104,4 +118,5 @@ public class HeroInfluence extends Influence
     }
 
     protected byte _level;
+    protected HeroInfluenceViz _viz;
 }

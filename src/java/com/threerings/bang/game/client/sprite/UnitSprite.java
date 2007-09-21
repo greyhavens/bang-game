@@ -284,27 +284,19 @@ public class UnitSprite extends MobileSprite
         }
 
         // display visualizations for influences and hindrances
-        if (!ObjectUtil.equals(unit.getMainInfluence(), _influence)) {
-            if (_influenceViz != null) {
-                _influenceViz.destroy();
-            }
-            _influence = unit.getMainInfluence();
-            if (_influence != null) {
-                _influenceViz = _influence.createViz(BangPrefs.isHighDetail());
-                if (_influenceViz != null) {
-                    _influenceViz.init(_ctx, this);
+        for (Unit.InfluenceType type : Unit.InfluenceType.values()) {
+            if (!ObjectUtil.equals(unit.getInfluence(type), _influences.get(type))) {
+                if (_influenceVizs.get(type) != null) {
+                    _influenceVizs.remove(type).destroy();
                 }
-            }
-        }
-        if (!ObjectUtil.equals(unit.getHindrance(), _hindrance)) {
-            if (_hindranceViz != null) {
-                _hindranceViz.destroy();
-            }
-            _hindrance = unit.getHindrance();
-            if (_hindrance != null) {
-                _hindranceViz = _hindrance.createViz(BangPrefs.isHighDetail());
-                if (_hindranceViz != null) {
-                    _hindranceViz.init(_ctx, this);
+                Influence influence = unit.getInfluence(type);
+                _influences.put(type, influence);
+                if (influence != null) {
+                    InfluenceViz viz = influence.createViz(BangPrefs.isHighDetail());
+                    if (viz != null) {
+                        _influenceVizs.put(type, viz);
+                        viz.init(_ctx, this);
+                    }
                 }
             }
         }
@@ -617,8 +609,10 @@ public class UnitSprite extends MobileSprite
     protected Node _holding;
     protected String _holdingType;
 
-    protected InfluenceViz _influenceViz, _hindranceViz;
-    protected Influence _influence, _hindrance;
+    protected HashMap<Unit.InfluenceType, InfluenceViz> _influenceVizs =
+        new HashMap<Unit.InfluenceType, InfluenceViz>();
+    protected HashMap<Unit.InfluenceType, Influence> _influences =
+        new HashMap<Unit.InfluenceType, Influence>();
 
     protected Spatial _fire;
 

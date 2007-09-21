@@ -152,7 +152,9 @@ public class HeroLogic extends AILogic
                         ((Unit)target).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
                     weight += 5000;
                 }
-                weight += _herodel.getLevel(target.owner) * 500;
+                if (target.owner >= 0) {
+                    weight += _herodel.getLevel(target.owner) * 500;
+                }
                 return weight;
             }
         };
