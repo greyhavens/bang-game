@@ -1,4 +1,4 @@
-692
+709
 buckle/background := bullzeye := 539
 buckle/background := checker := 540
 buckle/background := clockwork := 571
@@ -151,6 +151,7 @@ buckle/icon := wrench_left := 593
 buckle/icon := wrench_right := 594
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
+female/clothing_back := cavalry := 702
 female/clothing_back := dogsoldier := 503
 female/clothing_back := duster := 325
 female/clothing_back := duster_smoking := 326
@@ -166,6 +167,7 @@ female/clothing_back := kneel := 334
 female/clothing_back := kneel_rifle := 327
 female/clothing_back := madam_cash := 316
 female/clothing_back := madam_hips := 317
+female/clothing_back := old_codger := 703
 female/clothing_back := pancho := 177
 female/clothing_back := pancho_closed := 178
 female/clothing_back := peasant_dress := 179
@@ -179,11 +181,13 @@ female/clothing_back := shoulder_wrap := 395
 female/clothing_back := squaw := 81
 female/clothing_back := storm_caller := 387
 female/clothing_back := striped_vest := 180
+female/clothing_back := tactician := 704
 female/clothing_back := tin_can_pete := 510
 female/clothing_back := trickster_raven := 378
 female/clothing_back := wolf_handler := 379
 female/clothing_back := wrap := 380
 female/clothing_back := youth_dress := 381
+female/clothing_front := arms_codger := 705
 female/clothing_front := arms_down_bodice := 181
 female/clothing_front := basket_gatherer := 396
 female/clothing_front := book_frontier_dress := 182
@@ -201,6 +205,7 @@ female/clothing_front := pistol_peasant_dress := 185
 female/clothing_front := rifle_kneel := 331
 female/clothing_front := rifle_shirt := 494
 female/clothing_front := robe := 497
+female/clothing_front := salute_cavalry := 706
 female/clothing_front := smoking_duster := 332
 female/clothing_front := storm_caller := 388
 female/clothing_front := tin_can_clementine := 513
@@ -246,6 +251,7 @@ female/familiar := mini_blimp := 386
 female/familiar := raccoon := 617
 female/glasses := clown_nose := 602
 female/glasses := mask := 498
+female/glasses := monacle := 707
 female/glasses := round := 94
 female/glasses := steamgoggles := 336
 female/glasses := von_helmet_goggles := 527
@@ -286,10 +292,12 @@ female/hair_middle := wings := 348
 female/hat := bonnet := 197
 female/hat := bowler := 150
 female/hat := bukwas := 691
+female/hat := cavalry := 708
 female/hat := eagle_mask := 349
 female/hat := lioness := 384
 female/hat := longbrim := 130
 female/hat := moohorns := 525
+female/hat := old_codger := 709
 female/hat := railbrim := 143
 female/hat := revolutionary := 403
 female/hat := saloon_feather := 398
@@ -431,12 +439,14 @@ male/clothing_back := a_skinny_prospector := 361
 male/clothing_back := a_suit := 255
 male/clothing_back := a_tlingit := 390
 male/clothing_back := a_warrior := 370
+male/clothing_back := cavalry := 693
 male/clothing_back := duster := 214
 male/clothing_back := fat_suspenders := 320
 male/clothing_back := fringe := 215
 male/clothing_back := ironplate_poncho := 256
 male/clothing_back := medallion_hunter := 514
 male/clothing_back := mink_shirt := 495
+male/clothing_back := old_codger := 694
 male/clothing_back := overalls := 435
 male/clothing_back := overalls_wheat := 443
 male/clothing_back := plate_poncho := 216
@@ -447,6 +457,7 @@ male/clothing_back := shotgun_fringe := 219
 male/clothing_back := storm_caller := 407
 male/clothing_back := suit := 220
 male/clothing_back := suit_bow := 5
+male/clothing_back := tactician := 695
 male/clothing_back := tin_can_willy := 508
 male/clothing_back := tlingit_chillkat_blanket := 444
 male/clothing_back := trickster_raven := 408
@@ -518,6 +529,7 @@ male/familiar := raccoon := 614
 male/glasses := clown_nose := 601
 male/glasses := goggles := 438
 male/glasses := mask := 502
+male/glasses := monacle := 696
 male/glasses := round := 8
 male/glasses := steamgoggles := 34
 male/glasses := von_helmet_goggles := 526
@@ -550,15 +562,18 @@ male/hat := battered := 517
 male/hat := battered_fox_skull := 518
 male/hat := buffalo := 356
 male/hat := bukwas := 689
+male/hat := cavalry := 697
 male/hat := coonskin := 322
 male/hat := cowboy := 11
 male/hat := fur := 521
 male/hat := head_wrap := 515
 male/hat := moohorns := 523
 male/hat := native_topper := 442
+male/hat := old_codger := 698
 male/hat := revolutionary := 411
 male/hat := sombrero := 258
 male/hat := stetson := 232
+male/hat := tactician := 699
 male/hat := ten_gallon := 259
 male/hat := tlingit_headress := 461
 male/hat := tlingit_wooden := 462
@@ -571,6 +586,7 @@ male/hat_back := battered := 519
 male/hat_back := battered_fox_skull := 520
 male/hat_back := buffalo := 357
 male/hat_back := bukwas := 690
+male/hat_back := cavalry := 700
 male/hat_back := coonskin := 323
 male/hat_back := cowboy := 12
 male/hat_back := feather_double := 45
@@ -584,6 +600,7 @@ male/hat_back := native_topper := 440
 male/hat_back := revolutionary := 413
 male/hat_back := sombrero := 260
 male/hat_back := stetson := 233
+male/hat_back := tactician := 701
 male/hat_back := ten_gallon := 261
 male/hat_back := tlingit_headress := 463
 male/hat_back := tlingit_wooden := 464
