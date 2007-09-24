@@ -90,16 +90,16 @@
     <component cclass="male/clothing_front" name="tin_can_pete"/>
   </article>
 
-  <article name="male_codger" townId="frontier_town" slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
+  <article name="male_codger" townId="frontier_town" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="male/clothing_back" name="old_codger"/>
     <component cclass="male/clothing_front" name="arms_codger"/>
   </article>
 
-  <article name="male_cavalry" townId="frontier_town" slot="clothing" scrip="3500" coins="3" qualifier="bigshot" colors="clothes_p,clothes_t">
+  <article name="male_cavalry" townId="frontier_town" slot="clothing" scrip="4500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_t">
     <component cclass="male/clothing_back" name="cavalry"/>
   </article>
 
-  <article name="male_tactician" townId="frontier_town" slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
+  <article name="male_tactician" townId="frontier_town" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="male/clothing_back" name="tactician"/>
   </article>
 
@@ -153,22 +153,22 @@
     <component cclass="male/clothing_front" name="tlingit_dagger"/>
   </article>
 
-  <article name="male_revolutionary" townId="indian_post" slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
+  <article name="male_medallion_hunter" townId="indian_post" slot="clothing" scrip="1500" coins="1" qualifier="bigshot">
+    <component cclass="male/clothing_back" name="medallion_hunter"/>
+  </article>
+
+  <article name="male_revolutionary" townId="indian_post" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="male/clothing_back" name="revolutionary"/>
   </article>
 
-  <article name="male_trickster_raven" townId="indian_post" slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
+  <article name="male_trickster_raven" townId="indian_post" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="male/clothing_back" name="trickster_raven"/>
     <component cclass="male/clothing_front" name="trickster_raven"/>
   </article>
 
-  <article name="male_storm_caller" townId="indian_post" slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
+  <article name="male_storm_caller" townId="indian_post" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="male/clothing_back" name="storm_caller"/>
     <component cclass="male/clothing_front" name="storm_caller"/>
-  </article>
-
-  <article name="male_medallion_hunter" townId="indian_post" slot="clothing" scrip="1500" coins="1" qualifier="bigshot">
-    <component cclass="male/clothing_back" name="medallion_hunter"/>
   </article>
 
 
@@ -218,7 +218,7 @@
     <component cclass="male/glasses" name="clown_nose"/>
   </article>
 
-  <article name="male_monacle" townId="frontier_town" slot="glasses" scrip="3000" coins="2" qualifier="bigshot" colors="">
+  <article name="male_monacle" townId="frontier_town" slot="glasses" scrip="4500" coins="5" qualifier="bigshot" colors="">
     <component cclass="male/glasses" name="monacle"/>
   </article>
 
@@ -327,16 +327,16 @@
     <component cclass="male/hat_back" name="moohorns"/>
   </article>
 
-  <article name="male_cavalry_hat" townId="frontier_town" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p">
+  <article name="male_cavalry_hat" townId="frontier_town" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p">
     <component cclass="male/hat" name="cavalry"/>
     <component cclass="male/hat_back" name="cavalry"/>
   </article>
 
-  <article name="male_codger_hat" townId="frontier_town" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p, clothes_s">
+  <article name="male_codger_hat" townId="frontier_town" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p, clothes_s">
     <component cclass="male/hat" name="old_codger"/>
   </article>
 
-  <article name="male_tactician_hat" townId="frontier_town" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p, clothes_s">
+  <article name="male_tactician_hat" townId="frontier_town" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p, clothes_s">
     <component cclass="male/hat" name="tactician"/>
     <component cclass="male/hat_back" name="tactician"/>
   </article>
@@ -388,12 +388,12 @@
     <component cclass="male/hat_band" name="medallion_buffalo"/>
   </article>
 
-  <article name="male_revolutionary_hat" townId="indian_post" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p,clothes_s,clothes_t">
+  <article name="male_revolutionary_hat" townId="indian_post" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="revolutionary"/>
     <component cclass="male/hat_back" name="revolutionary"/>
   </article>
 
-  <article name="male_trickster_raven_hat" townId="indian_post" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p,clothes_s,clothes_t">
+  <article name="male_trickster_raven_hat" townId="indian_post" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="trickster_raven"/>
   </article>
 
@@ -583,17 +583,17 @@
     <component cclass="female/clothing_front" name="tin_can_clementine"/>
   </article>
 
-  <article name="female_codger" townId="frontier_town" slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
+  <article name="female_codger" townId="frontier_town" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="female/clothing_back" name="old_codger"/>
     <component cclass="female/clothing_front" name="arms_codger"/>
   </article>
 
-  <article name="female_cavalry" townId="frontier_town" slot="clothing" scrip="3500" coins="3" qualifier="bigshot" colors="clothes_p,clothes_t">
+  <article name="female_cavalry" townId="frontier_town" slot="clothing" scrip="4500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_t">
     <component cclass="female/clothing_back" name="cavalry"/>
     <component cclass="female/clothing_front" name="salute_cavalry"/>
   </article>
 
-  <article name="female_tactician" townId="frontier_town" slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
+  <article name="female_tactician" townId="frontier_town" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="female/clothing_back" name="tactician"/>
   </article>
 
@@ -657,16 +657,16 @@
     <component cclass="female/clothing_back" name="jacket_collar"/>
   </article>
 
-  <article name="female_revolutionary" townId="indian_post" slot="clothing" scrip="3750" coins="4" qualifier="bigshot" colors="clothes_p,clothes_s">
+  <article name="female_revolutionary" townId="indian_post" slot="clothing" scrip="4500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_s">
     <component cclass="female/clothing_back" name="revolutionary"/>
   </article>
 
-  <article name="female_storm_caller" townId="indian_post" slot="clothing" scrip="3750" coins="4" qualifier="bigshot">
+  <article name="female_storm_caller" townId="indian_post" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="female/clothing_back" name="storm_caller"/>
     <component cclass="female/clothing_front" name="storm_caller"/>
   </article>
 
-  <article name="female_trickster_raven" townId="indian_post" slot="clothing" scrip="3750" coins="4" qualifier="bigshot">
+  <article name="female_trickster_raven" townId="indian_post" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="female/clothing_back" name="trickster_raven"/>
     <component cclass="female/clothing_front" name="trickster_raven"/>
   </article>
@@ -714,7 +714,7 @@
     <component cclass="female/glasses" name="clown_nose"/>
   </article>
 
-  <article name="female_monacle" townId="frontier_town" slot="glasses" scrip="3000" coins="2" qualifier="bigshot" colors="">
+  <article name="female_monacle" townId="frontier_town" slot="glasses" scrip="4500" coins="5" qualifier="bigshot" colors="">
     <component cclass="female/glasses" name="monacle"/>
   </article>
 
@@ -818,11 +818,11 @@
     <component cclass="female/hat" name="moohorns"/>
   </article>
 
-  <article name="female_cavalry_hat" townId="frontier_town" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p">
+  <article name="female_cavalry_hat" townId="frontier_town" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p">
     <component cclass="female/hat" name="cavalry"/>
   </article>
 
-  <article name="female_codger_hat" townId="frontier_town" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p, clothes_s">
+  <article name="female_codger_hat" townId="frontier_town" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p, clothes_s">
     <component cclass="female/hat" name="old_codger"/>
   </article>
 
@@ -865,12 +865,12 @@
     <component cclass="female/hat_band" name="cougar_mask"/>
   </article>
 
-  <article name="female_revolutionary_hat" townId="indian_post" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p,clothes_s">
+  <article name="female_revolutionary_hat" townId="indian_post" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="revolutionary"/>
     <component cclass="female/hat_back" name="revolutionary"/>
   </article>
 
-  <article name="female_trickster_raven_hat" townId="indian_post" slot="hat" scrip="2500" coins="3" qualifier="bigshot" colors="clothes_p,clothes_s,clothes_t">
+  <article name="female_trickster_raven_hat" townId="indian_post" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="trickster_raven"/>
   </article>
 
