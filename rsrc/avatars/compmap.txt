@@ -1,4 +1,4 @@
-709
+710
 buckle/background := bullzeye := 539
 buckle/background := checker := 540
 buckle/background := clockwork := 571
@@ -463,6 +463,7 @@ male/clothing_back := tlingit_chillkat_blanket := 444
 male/clothing_back := trickster_raven := 408
 male/clothing_back := western_jacket := 22
 male/clothing_back := wolf_spear := 354
+male/clothing_front := arms_codger := 710
 male/clothing_front := cards_suit := 250
 male/clothing_front := cautious_longjohns := 221
 male/clothing_front := chubby_geronimo_rifle := 371
