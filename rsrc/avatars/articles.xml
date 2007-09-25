@@ -846,7 +846,8 @@
     <component cclass="female/hat" name="old_codger"/>
   </article>
 
-  <article name="female_tactician_hat" townId="frontier_town" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p, clothes_s">
+  <article name="female_tactician_hat" townId="frontier_town" slot="hat" scrip="3500" coins="5"
+     qualifier="bigshot:frontier_town/tactician:badge:44d0dd8d:badge:8e5089bf" colors="clothes_p, clothes_s">
     <component cclass="female/hat" name="tactician"/>
     <component cclass="female/hat_back" name="tactician"/>
   </article>
