@@ -232,20 +232,21 @@ public class ForestGuardians extends Scenario
 
     @Override // documentation inherited
     public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+        StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
-        super.recordStats(bangobj, gameTime, pidx, user);
+        super.recordStats(stats, gameTime, pidx, user);
+
 
         // record the number of trees they grew
         for (int ii = 0; ii < ForestGuardiansInfo.GROWTH_STATS.length; ii++) {
             StatType stat = ForestGuardiansInfo.GROWTH_STATS[ii];
-            user.stats.incrementStat(stat, bangobj.stats[pidx].getIntStat(stat));
+            user.stats.incrementStat(stat, stats[pidx].getIntStat(stat));
         }
 
         // record other accumulating stats
         for (int ii = 0; ii < ACCUM_STATS.length; ii++) {
             user.stats.incrementStat(
-                ACCUM_STATS[ii], bangobj.stats[pidx].getIntStat(ACCUM_STATS[ii]));
+                ACCUM_STATS[ii], stats[pidx].getIntStat(ACCUM_STATS[ii]));
         }
 
         // and the highest difficulty level reached

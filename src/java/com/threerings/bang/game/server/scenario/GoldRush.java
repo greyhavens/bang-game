@@ -10,6 +10,8 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
@@ -92,7 +94,7 @@ public class GoldRush extends Scenario
         int nuggets = 0;
         for (int ii = 0; ii < pieces.length; ii++) {
             if (Bonus.isBonus(pieces[ii], NuggetEffect.NUGGET_BONUS) ||
-                (pieces[ii] instanceof Unit && 
+                (pieces[ii] instanceof Unit &&
                  NuggetEffect.NUGGET_BONUS.equals(((Unit)pieces[ii]).holding))) {
                 nuggets++;
             }
@@ -109,12 +111,12 @@ public class GoldRush extends Scenario
     }
 
     @Override // documentation inherited
-    public void recordStats (BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+    public void recordStats (StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
-        super.recordStats(bangobj, gameTime, pidx, user);
+        super.recordStats(stats, gameTime, pidx, user);
 
         // record the number of nuggets they claimed
-        int nuggets = bangobj.stats[pidx].getIntStat(StatType.NUGGETS_CLAIMED);
+        int nuggets = stats[pidx].getIntStat(StatType.NUGGETS_CLAIMED);
         if (nuggets > 0) {
             user.stats.incrementStat(StatType.NUGGETS_CLAIMED, nuggets);
         }

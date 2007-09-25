@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 
@@ -74,13 +76,13 @@ public class LandGrab extends Scenario
 
     @Override // from Scenario
     public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+        StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
-        super.recordStats(bangobj, gameTime, pidx, user);
+        super.recordStats(stats, gameTime, pidx, user);
 
         // persist their various homestead related stats
         for (StatType stat : ACCUM_STATS) {
-            user.stats.incrementStat(stat, bangobj.stats[pidx].getIntStat(stat));
+            user.stats.incrementStat(stat, stats[pidx].getIntStat(stat));
         }
     }
 

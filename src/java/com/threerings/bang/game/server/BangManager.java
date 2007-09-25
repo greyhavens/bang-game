@@ -2780,7 +2780,7 @@ public class BangManager extends GameManager
                 }
 
                 // allow the scenario to record statistics as well
-                _rounds[rr].scenario.recordStats(_bangobj, gameMins, pidx, user);
+                _rounds[rr].scenario.recordStats(_rounds[rr].stats, gameMins, pidx, user);
 
             }
 

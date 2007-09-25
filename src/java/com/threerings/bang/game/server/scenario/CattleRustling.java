@@ -15,6 +15,8 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 
@@ -138,15 +140,15 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public void recordStats (BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+    public void recordStats (StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
-        super.recordStats(bangobj, gameTime, pidx, user);
+        super.recordStats(stats, gameTime, pidx, user);
 
         // propagate this player's cattle related stats into their permanent stat set
         user.stats.incrementStat(
-            StatType.CATTLE_RUSTLED, bangobj.stats[pidx].getIntStat(StatType.CATTLE_RUSTLED));
+            StatType.CATTLE_RUSTLED, stats[pidx].getIntStat(StatType.CATTLE_RUSTLED));
         user.stats.maxStat(
-            StatType.MOST_CATTLE, bangobj.stats[pidx].getIntStat(StatType.MOST_CATTLE));
+            StatType.MOST_CATTLE, stats[pidx].getIntStat(StatType.MOST_CATTLE));
     }
 
     @Override // documentation inherited

@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.parlor.game.data.GameAI;
+import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
@@ -80,12 +81,12 @@ public class HeroBuilding extends Scenario
     }
 
     @Override // documentation inherited
-    public void recordStats (BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+    public void recordStats (StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
-        super.recordStats(bangobj, gameTime, pidx, user);
+        super.recordStats(stats, gameTime, pidx, user);
 
         // record the hero level
-        int level = bangobj.stats[pidx].getIntStat(StatType.HERO_LEVEL);
+        int level = stats[pidx].getIntStat(StatType.HERO_LEVEL);
         if (level > 0) {
             user.stats.incrementStat(StatType.HERO_LEVEL, level);
         }

@@ -9,6 +9,8 @@ import java.util.Iterator;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.RandomUtil;
 
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
@@ -136,13 +138,13 @@ public class TotemBuilding extends Scenario
     }
 
     @Override // documentation inherited
-    public void recordStats (BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+    public void recordStats (StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
-        super.recordStats(bangobj, gameTime, pidx, user);
+        super.recordStats(stats, gameTime, pidx, user);
 
         // record the number of totem pieces stacked
         for (TotemBonus.Type type : TotemBonus.Type.values()) {
-            int totems = bangobj.stats[pidx].getIntStat(type.stat());
+            int totems = stats[pidx].getIntStat(type.stat());
             if (totems > 0) {
                 user.stats.incrementStat(type.stat(), totems);
             }

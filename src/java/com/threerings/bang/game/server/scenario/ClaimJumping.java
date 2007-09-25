@@ -15,6 +15,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.parlor.game.data.GameAI;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BonusConfig;
@@ -110,13 +111,13 @@ public class ClaimJumping extends Scenario
 
     @Override // documentation inherited
     public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+        StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
-        super.recordStats(bangobj, gameTime, pidx, user);
+        super.recordStats(stats, gameTime, pidx, user);
 
         // record the number of nuggets they claimed and update their max claimed
         user.stats.incrementStat(
-            StatType.NUGGETS_CLAIMED, bangobj.stats[pidx].getIntStat(StatType.NUGGETS_CLAIMED));
+            StatType.NUGGETS_CLAIMED, stats[pidx].getIntStat(StatType.NUGGETS_CLAIMED));
     }
 
     /** Indicates the tick on which we will end the game. */

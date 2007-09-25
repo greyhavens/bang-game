@@ -13,6 +13,8 @@ import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.stats.data.StatSet;
+
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 
@@ -136,31 +138,26 @@ public class WendigoAttack extends Scenario
 
     @Override // documentation inherited
     public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+        StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
-        super.recordStats(bangobj, gameTime, pidx, user);
+        super.recordStats(stats, gameTime, pidx, user);
 
         // record the number of wendigo survivals
-        int survivals = bangobj.stats[pidx].getIntStat(
-                StatType.WENDIGO_SURVIVALS);
+        int survivals = stats[pidx].getIntStat(StatType.WENDIGO_SURVIVALS);
         if (survivals > 0) {
             user.stats.incrementStat(StatType.WENDIGO_SURVIVALS, survivals);
         }
 
         // record the talisman on safe spot survivals
-        survivals = bangobj.stats[pidx].getIntStat(
-                StatType.TALISMAN_SPOT_SURVIVALS);
+        survivals = stats[pidx].getIntStat(StatType.TALISMAN_SPOT_SURVIVALS);
         if (survivals > 0) {
-            user.stats.incrementStat(
-                    StatType.TALISMAN_SPOT_SURVIVALS, survivals);
+            user.stats.incrementStat(StatType.TALISMAN_SPOT_SURVIVALS, survivals);
         }
 
         // record the whole team survivals
-        survivals = bangobj.stats[pidx].getIntStat(
-                StatType.WHOLE_TEAM_SURVIVALS);
+        survivals = stats[pidx].getIntStat(StatType.WHOLE_TEAM_SURVIVALS);
         if (survivals > 0) {
-            user.stats.incrementStat(
-                    StatType.WHOLE_TEAM_SURVIVALS, survivals);
+            user.stats.incrementStat(StatType.WHOLE_TEAM_SURVIVALS, survivals);
         }
     }
 

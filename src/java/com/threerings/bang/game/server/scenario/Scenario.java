@@ -16,6 +16,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
+import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BonusConfig;
@@ -418,7 +419,7 @@ public abstract class Scenario
      * player at the end of the game.
      */
     public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+        StatSet[] stats, int gameTime, int pidx, PlayerObject user)
     {
         // nothing by default
     }
