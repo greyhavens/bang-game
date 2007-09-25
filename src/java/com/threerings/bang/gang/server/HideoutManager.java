@@ -339,7 +339,7 @@ public class HideoutManager extends MatchHostManager
         PlayerObject user = requireShopEnabled(caller);
 
         // make sure it's a valid rank
-        if (title < 0 || title >= TITLES_COUNT) {
+        if (title < 0 || title > TITLES_COUNT) {
             log.warning("Tried to change member to invalid title [who=" + user.who() +
                 ", target=" + handle + ", title=" + title + "].");
             throw new InvocationException(INTERNAL_ERROR);
