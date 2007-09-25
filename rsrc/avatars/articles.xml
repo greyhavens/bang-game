@@ -846,6 +846,11 @@
     <component cclass="female/hat" name="old_codger"/>
   </article>
 
+  <article name="female_tactician_hat" townId="frontier_town" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p, clothes_s">
+    <component cclass="female/hat" name="tactician"/>
+    <component cclass="female/hat_back" name="tactician"/>
+  </article>
+
   <!-- female hats: indian trading post -->
   <article name="female_bukwas" townId="indian_post" slot="hat" scrip="5000" coins="4" colors="" qualifier="bounty:extreme/gaunt_bukwas">
     <component cclass="female/hat" name="bukwas"/>
