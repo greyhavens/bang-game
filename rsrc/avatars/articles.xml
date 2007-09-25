@@ -657,7 +657,7 @@
     <component cclass="female/clothing_back" name="jacket_collar"/>
   </article>
 
-  <article name="female_revolutionary" townId="indian_post" slot="clothing" scrip="4500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_s">
+  <article name="female_revolutionary" townId="indian_post" slot="clothing" scrip="4500" coins="5" qualifier="bigshot">
     <component cclass="female/clothing_back" name="revolutionary"/>
   </article>
 
@@ -865,7 +865,7 @@
     <component cclass="female/hat_band" name="cougar_mask"/>
   </article>
 
-  <article name="female_revolutionary_hat" townId="indian_post" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_s">
+  <article name="female_revolutionary_hat" townId="indian_post" slot="hat" scrip="3500" coins="5" qualifier="bigshot" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="revolutionary"/>
     <component cclass="female/hat_back" name="revolutionary"/>
   </article>
