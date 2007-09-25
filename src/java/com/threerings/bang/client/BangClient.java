@@ -478,8 +478,7 @@ public class BangClient extends BasicClient
         // if there are any pending notifications, show the first one
         for (Notification notification : user.notifications) {
             if (!notification.responded) {
-                displayNotification(notification);
-                return true;
+                return displayNotification(notification);
             }
         }
 
@@ -1167,7 +1166,7 @@ public class BangClient extends BasicClient
         ParticlePool.warmup(_ctx);
     }
 
-    protected void displayNotification (final Notification notification)
+    protected boolean displayNotification (final Notification notification)
     {
         final ReportingListener rl = new ReportingListener(_ctx, BANG_MSGS, "e.response_failed");
 
@@ -1181,8 +1180,7 @@ public class BangClient extends BasicClient
             // flag this notification as answered and loop back to checkShowIntro in case there are
             // more
             notification.responded = true;
-            checkShowIntro(false);
-            return;
+            return checkShowIntro(false);
         }
 
         // append the mute button if it comes from a person
@@ -1207,6 +1205,7 @@ public class BangClient extends BasicClient
                 checkShowIntro(false);
             }
         });
+        return true;
     }
 
     protected boolean displayLowerDetailSuggestion ()
