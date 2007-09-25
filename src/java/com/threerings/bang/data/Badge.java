@@ -1200,6 +1200,30 @@ public class Badge extends Item
             msg = MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + card.getType());
             registerReward(qual, MessageBundle.compose(key, msg));
         }
+
+        key = "m.bigshot_enabled";
+        msg = MessageBundle.compose(key, MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.cavalry"));
+        registerReward(Type.CAVALRY_USER, msg);
+        registerReward(Type.CATTLE_RUSTLED_3, msg);
+        msg = MessageBundle.compose(key,
+                MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.tactician"));
+        registerReward(Type.TACTICIAN_USER, msg);
+        registerReward(Type.NUGGETS_CLAIMED_3, msg);
+        msg = MessageBundle.compose(key, MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.codger"));
+        registerReward(Type.CODGER_USER, msg);
+        registerReward(Type.STEADS_DESTROYED_2, msg);
+        msg = MessageBundle.compose(key,
+                MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.revolutionary"));
+        registerReward(Type.REVOLUTIONARY_USER, msg);
+        registerReward(Type.WENDIGO_SURVIVALS_3, msg);
+        msg = MessageBundle.compose(key,
+                MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.tricksterraven"));
+        registerReward(Type.TRICKSTER_RAVEN_USER, msg);
+        registerReward(Type.TREES_SAVED_4, msg);
+        msg = MessageBundle.compose(key,
+                MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.stormcaller"));
+        registerReward(Type.STORM_CALLER_USER, msg);
+        registerReward(Type.TOTEMS_STACKED_3, msg);
     }
 
     /** The unique code for the type of this badge. */

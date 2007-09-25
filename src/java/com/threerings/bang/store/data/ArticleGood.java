@@ -7,6 +7,8 @@ import java.util.Date;
 
 import com.jmex.bui.icon.ImageIcon;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.Colorization;
 
@@ -21,6 +23,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
@@ -96,11 +99,33 @@ public class ArticleGood extends Good
     @Override // from Good
     public boolean isAvailable (PlayerObject user)
     {
+        if ("ai".equals(_qualifier)) {
+            return false;
+        }
+        if (!StringUtil.isBlank(_qualifier) && !user.tokens.isSupport()) {
+            String[] qualities = _qualifier.toLowerCase().split(":");
+            if (qualities.length % 2 == 1) {
+                return false;
+            }
+            for (int ii = 0; ii < qualities.length; ii += 2) {
+                if ("badge".equals(qualities[ii])) {
+                    if (!user.holdsBadge(Badge.getType((int)Long.parseLong(qualities[ii+1], 16)))) {
+                        return false;
+                    }
+                } else if ("bigshot".equals(qualities[ii])) {
+                    if (!user.holdsBigShot(qualities[ii+1])) {
+                        return false;
+                    }
+
+                // all unknown qualifiers will immediately cause failure
+                } else {
+                    return false;
+                }
+            }
+
+        }
         // make sure the gender matches
-        boolean isMale = (user.handle instanceof GuestHandle ? user.isMale :
-                (_type.indexOf("female") == -1));
-        return user.isMale == isMale &&
-            (_qualifier == null || (user.tokens.isSupport() && !"ai".equals(_qualifier)));
+        return user.handle instanceof GuestHandle || user.isMale == (_type.indexOf("female") == -1);
     }
 
     @Override // from Good

@@ -247,6 +247,20 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns true if this player has at the specified {@link BigShotItem} in
+     * their inventory.
+     */
+    public boolean holdsBigShot (String type)
+    {
+        for (Item item : inventory) {
+            if (item instanceof BigShotItem && ((BigShotItem)item).getType().equals(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns true if this player has earned the specified badge type.
      */
     public boolean holdsBadge (Badge.Type type)
