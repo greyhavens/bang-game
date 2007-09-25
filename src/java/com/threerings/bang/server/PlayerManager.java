@@ -1208,7 +1208,7 @@ public class PlayerManager
                 purgePlayers(_players.iterator());
             }
             public long getLongThreshold () {
-                return 3500L; // this seems to take about ~3000ms every time...
+                return 4000L; // this seems to take about ~3600ms every time...
             }
             protected ArrayList<PlayerRecord> _players;
         });
