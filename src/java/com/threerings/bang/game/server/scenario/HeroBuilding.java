@@ -6,7 +6,10 @@ package com.threerings.bang.game.server.scenario;
 import java.awt.Point;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
+
+import com.samskivert.util.Tuple;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -68,9 +71,12 @@ public class HeroBuilding extends Scenario
 
         for (int ii = 0; ii < _startSpots.length; ii++) {
             ArrayList<Point> heals = bangobj.board.getRandomOccupiableSpots(
-                    _bangmgr.getTeamSize(ii), _startSpots[ii].x, _startSpots[ii].y, 2, 5);
+                    2, _startSpots[ii].x, _startSpots[ii].y, 2, 5);
             for (Point heal : heals) {
-                dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
+                Bonus bonus = dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
+                if (bonus != null) {
+                    _hbonuses.offer(new TimedBonus(bangobj.tick, bonus));
+                }
             }
         }
 
@@ -112,6 +118,24 @@ public class HeroBuilding extends Scenario
     }
 
     @Override // documentation inherited
+    public void pieceWasRemoved (BangObject bangobj, Piece piece)
+    {
+        if (!Bonus.isBonus(piece, HealHeroEffect.HEAL_HERO)) {
+            return;
+        }
+        // if one of our heal bonuses is removed, we no longer need to track it
+        Bonus bonus = (Bonus)piece;
+        for (Iterator<TimedBonus> iter = _hbonuses.iterator(); iter.hasNext(); ) {
+            TimedBonus tb = iter.next();
+            if (tb.right.pieceId == bonus.pieceId) {
+                iter.remove();
+                break;
+            }
+        }
+
+    }
+
+    @Override // documentation inherited
     public boolean tick (BangObject bangobj, short tick)
     {
         super.tick(bangobj, tick);
@@ -142,6 +166,15 @@ public class HeroBuilding extends Scenario
                 validate = true;
             }
         }
+
+        // clear out bonuses that have gone stale
+        while (_hbonuses.size() > 0) {
+            if (_hbonuses.peek().left.intValue() + BONUS_TIMEOUT < bangobj.tick) {
+                _bangmgr.deployEffect(-1, new RemovePieceEffect(_hbonuses.poll().right));
+            } else {
+                break;
+            }
+        }
         return validate;
     }
 
@@ -161,7 +194,10 @@ public class HeroBuilding extends Scenario
             ArrayList<Point> heals = bangobj.board.getRandomOccupiableSpots(
                     1, hero.x, hero.y, 2, 5);
             for (Point heal : heals) {
-                dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
+                Bonus bonus = dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
+                if (bonus != null) {
+                    _hbonuses.offer(new TimedBonus(bangobj.tick, bonus));
+                }
             }
             return true;
         }
@@ -212,8 +248,16 @@ public class HeroBuilding extends Scenario
     }
 
     protected class RespawnList extends LinkedList<Unit> {};
+    protected class TimedBonus extends Tuple<Integer, Bonus> {
+        public TimedBonus (short tick, Bonus bonus) {
+            super(new Integer(tick), bonus);
+        }
+    };
 
     protected RespawnList[] _respawns;
+    protected LinkedList<TimedBonus> _hbonuses = new LinkedList<TimedBonus>();
     protected HeroDelegate _herodel;
     protected int _bonuses;
+
+    protected static final int BONUS_TIMEOUT = 12;
 }
