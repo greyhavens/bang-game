@@ -120,15 +120,17 @@ public class ItemRepository extends SimpleRepository
 
             // create the item
             Item item = (Item)itemClass.newInstance();
+
+            // decode its contents from the serialized data
+            ByteArrayInputStream bin = new ByteArrayInputStream(data);
+            item.unpersistFrom(new ObjectInputStream(bin));
+
+            // then assign the db stored data
             item.setItemId(itemId);
             item.setGangOwned(gangOwned);
             item.setOwnerId(ownerId);
             item.setGangId(gangId);
             item.setExpires(expires);
-
-            // decode its contents from the serialized data
-            ByteArrayInputStream bin = new ByteArrayInputStream(data);
-            item.unpersistFrom(new ObjectInputStream(bin));
             return item;
 
         } catch (IOException ioe) {
