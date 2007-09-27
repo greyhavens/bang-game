@@ -68,9 +68,9 @@ public class HeroLogic extends AILogic
                 }
 
             } else if (pieces[ii] instanceof Bonus && ((Bonus)pieces[ii]).isScenarioBonus()) {
-                bonuses.add(pieces[ii].x, pieces[ii].y);
                 if (moves.contains(pieces[ii].x, pieces[ii].y)) {
-                    if (bonus != null && unit.getDistance(pieces[ii].x, pieces[ii].y) <
+                    bonuses.add(pieces[ii].x, pieces[ii].y);
+                    if (bonus == null || unit.getDistance(pieces[ii].x, pieces[ii].y) <
                             unit.getDistance(bonus.x, bonus.y)) {
                         bonus = pieces[ii];
                     }
