@@ -28,6 +28,7 @@ import com.threerings.bang.game.data.effect.RemovePieceEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Revolutionary;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.server.ai.AILogic;
@@ -54,6 +55,7 @@ public class HeroBuilding extends Scenario
      */
     public HeroBuilding ()
     {
+        registerDelegate(new TrainDelegate());
         registerDelegate(_herodel = new HeroDelegate());
     }
 
@@ -106,6 +108,11 @@ public class HeroBuilding extends Scenario
 
             // heroes respawn immediately
             if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+                if (unit instanceof Revolutionary) {
+                    for (Unit u : _respawns[unit.originalOwner]) {
+                        u.setRespawnTick(Short.MIN_VALUE);
+                    }
+                }
                 unit.setRespawnTick(bangobj.tick);
                 _respawns[unit.originalOwner].addFirst(unit);
             } else {
