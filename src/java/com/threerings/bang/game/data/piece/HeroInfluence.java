@@ -106,12 +106,6 @@ public class HeroInfluence extends Influence
     }
 
     @Override // documentation inherited
-    public boolean removeWhenDead (boolean remove)
-    {
-        return false;
-    }
-
-    @Override // documentation inherited
     public boolean removeOnKill ()
     {
         return false;

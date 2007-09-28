@@ -562,14 +562,7 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
-        boolean remove = _config.make == UnitConfig.Make.HUMAN ||
-            _config.make == UnitConfig.Make.SPIRIT;
-        for (Influence influence : getInfluences()) {
-            if (influence != null) {
-                remove = influence.removeWhenDead(remove);
-            }
-        }
-        return remove;
+        return _config.make == UnitConfig.Make.HUMAN || _config.make == UnitConfig.Make.SPIRIT;
     }
 
     @Override // documentation inherited

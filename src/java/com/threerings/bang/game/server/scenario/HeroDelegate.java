@@ -109,8 +109,11 @@ public class HeroDelegate extends CounterDelegate
                 }
             }
             if (_levels[counter.owner] != counter.count) {
-                _bangmgr.deployEffect(-1, LevelEffect.changeLevel(
-                           bangobj, counter.owner, _levels[counter.owner]));
+                LevelEffect effect = LevelEffect.changeLevel(
+                        bangobj, counter.owner, _levels[counter.owner]);
+                if (effect != null) {
+                    _bangmgr.deployEffect(-1, effect);
+                }
                 _bangmgr.deployEffect(-1, CountEffect.changeCount(
                             counter.pieceId, _levels[counter.owner], queuePiece));
             }

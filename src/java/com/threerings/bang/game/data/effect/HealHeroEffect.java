@@ -71,6 +71,12 @@ public class HealHeroEffect extends BonusEffect
     }
 
     @Override // documentation inherited
+    public boolean isApplicable ()
+    {
+        return heroId != -1;
+    }
+
+    @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);

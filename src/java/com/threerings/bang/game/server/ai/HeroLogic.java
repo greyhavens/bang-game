@@ -83,11 +83,6 @@ public class HeroLogic extends AILogic
 
         }
 
-        if (hero == null) {
-            log.warning("No hero found!!");
-            return;
-        }
-
         // let the hero kill if they can
         if (unit == hero && canKill) {
             Piece target = getBestTarget(pieces, unit, attacks, bonuses, KILL_EVALUATOR);
@@ -97,7 +92,7 @@ public class HeroLogic extends AILogic
             }
         }
         // if the hero's hurt, try to heal them
-        if (hero.damage > 50 && bonus != null &&
+        if (hero != null && hero.damage > 50 && bonus != null &&
                 moveUnit(pieces, unit, moves, bonus.x, bonus.y, 0, TARGET_EVALUATOR)) {
             return;
 
@@ -118,7 +113,7 @@ public class HeroLogic extends AILogic
         }
 
         // or head off to the nearest enemy hero
-        if (moveUnit(pieces, unit, moves, ehero.x, ehero.y,
+        if (ehero != null && moveUnit(pieces, unit, moves, ehero.x, ehero.y,
                     -unit.getConfig().minFireDistance, TARGET_EVALUATOR)) {
             return;
 

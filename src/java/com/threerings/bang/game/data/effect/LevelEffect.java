@@ -39,9 +39,10 @@ public class LevelEffect extends Effect
             if (piece.owner == player && piece instanceof Unit &&
                     ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
                 effect.pieceId = piece.pieceId;
+                return effect;
             }
         }
-        return effect;
+        return null;
     }
 
     @Override // documentation inherited

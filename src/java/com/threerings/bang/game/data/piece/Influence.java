@@ -152,14 +152,6 @@ public abstract class Influence extends SimpleStreamableObject
     }
 
     /**
-     * Adjusts the pieces ability to stay around when dead.
-     */
-    public boolean removeWhenDead (boolean remove)
-    {
-        return remove;
-    }
-
-    /**
      * Returns true if this influence is hidden from opponents.
      */
     public boolean hidden ()

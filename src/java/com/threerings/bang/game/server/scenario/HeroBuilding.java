@@ -159,15 +159,10 @@ public class HeroBuilding extends Scenario
 
                 Unit unit = _respawns[ii].poll();
 
-                Point spot = null;
-                if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-                    spot = getStartSpot(unit.owner);
-                } else {
-                    if (hero == null) {
-                        hero = _herodel.getHero(bangobj, ii);
-                    }
-                    spot = new Point(hero.x, hero.y);
+                if (hero == null) {
+                    hero = _herodel.getHero(bangobj, ii);
                 }
+                Point spot = (hero == null) ? getStartSpot(unit.owner) : new Point(hero.x, hero.y);
 
                 respawnUnit(bangobj, unit, spot);
                 validate = true;
@@ -197,9 +192,11 @@ public class HeroBuilding extends Scenario
         }
 
         if (bonuses < bangobj.getPlayerCount() * _bangmgr.getTeamSize(0)) {
-            Unit hero = _herodel.getHero(bangobj, _bonuses++ % bangobj.getPlayerCount());
+            _bonuses = (_bonuses + 1) % bangobj.getPlayerCount();
+            Unit hero = _herodel.getHero(bangobj, _bonuses);
+            Point spot = (hero == null) ? getStartSpot(_bonuses) : new Point(hero.x, hero.y);
             ArrayList<Point> heals = bangobj.board.getRandomOccupiableSpots(
-                    1, hero.x, hero.y, 2, 5);
+                    1, spot.x, spot.y, 2, 5);
             for (Point heal : heals) {
                 Bonus bonus = dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
                 if (bonus != null) {
