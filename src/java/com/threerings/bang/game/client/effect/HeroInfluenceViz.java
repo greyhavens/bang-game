@@ -50,7 +50,6 @@ public class HeroInfluenceViz extends InfluenceViz
         _count.setLightCombineMode(LightState.OFF);
 
         _owner = target.getPiece().owner;
-        _sprite = target;
         setLevel(_level);
 
         // attach the geometry to the sprite
@@ -59,7 +58,7 @@ public class HeroInfluenceViz extends InfluenceViz
         _billboard.setLocalTranslation(new Vector3f(0, 0, target.getHeight() + 0.5f * TILE_SIZE));
         target.attachChild(_billboard);
         float scale = 1f + _level * 0.05f;
-        _sprite.setLocalScale(new Vector3f(scale, scale, scale));
+        _target.setLocalScale(new Vector3f(scale, scale, scale));
     }
 
     /**
@@ -83,7 +82,7 @@ public class HeroInfluenceViz extends InfluenceViz
         _count.updateRenderState();
         _count.setCullMode(Spatial.CULL_DYNAMIC);
         float scale = 1f + _level * 0.05f;
-        _sprite.setLocalScale(new Vector3f(scale, scale, scale));
+        _target.setLocalScale(new Vector3f(scale, scale, scale));
     }
 
     @Override // documentation inherited
@@ -98,5 +97,4 @@ public class HeroInfluenceViz extends InfluenceViz
     protected BillboardNode _billboard;
     protected Quad _count;
     protected TextureState _tstate;
-    protected PieceSprite _sprite;
 }

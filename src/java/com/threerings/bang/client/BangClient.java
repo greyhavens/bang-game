@@ -1389,6 +1389,10 @@ public class BangClient extends BasicClient
             if (_ctx.getUserObject() != null && _ctx.getUserObject().tokens.isDemo()) {
                 return;
             }
+            // if we're on loopplay don't log them off for being idle
+            if (Boolean.parseBoolean(System.getProperty("loopplay"))) {
+                return;
+            }
             if (idle > LOGOFF_DELAY) {
                 if (_ctx.getClient().isLoggedOn()) {
                     cancel();

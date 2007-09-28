@@ -30,6 +30,10 @@ while [ ! -z "$1" ]; do
             JARGS="$JARGS -Dautoplay=true";
             ;;
 
+        -loopplay)
+            JARGS="$JARGS -Dloopplay=true";
+            ;;
+
         -tutorial)
             JARGS="$JARGS -Dtutorial=test";
             ;;

@@ -168,6 +168,11 @@ public class BangController extends GameController
         // we'll use this one at the end of the game
         _postRoundMultex = new Multex(new Runnable() {
             public void run () {
+                // we may be in auto-looping mode
+                if (Boolean.parseBoolean(System.getProperty("loopplay"))) {
+                    _ctx.getBangClient().startTestGame(false);
+                    return;
+                }
                 // we could be gone by this point
                 if (_bangobj != null) {
                     displayStatsView();
