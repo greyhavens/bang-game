@@ -538,11 +538,10 @@ public class Unit extends Piece
         // influences and hindrances do not survive through death
         for (InfluenceType type : InfluenceType.values()) {
             if (_influences[type.ordinal()] != null) {
-                if (_influences[type.ordinal()].removeOnKill()) {
-                    _influences[type.ordinal()] = null;
-                } else {
+                if (!_influences[type.ordinal()].resetTicksOnKill()) {
                     resetTicks = false;
                 }
+                _influences[type.ordinal()] = null;
             }
         }
         if (resetTicks) {

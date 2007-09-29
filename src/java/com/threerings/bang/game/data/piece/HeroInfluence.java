@@ -106,7 +106,7 @@ public class HeroInfluence extends Influence
     }
 
     @Override // documentation inherited
-    public boolean removeOnKill ()
+    public boolean resetTicksOnKill ()
     {
         return false;
     }

@@ -186,18 +186,18 @@ public abstract class Influence extends SimpleStreamableObject
         return false;
     }
 
+    /**
+     * Returns true if the unit should reset its ticks when killed.  The default is true.
+     */
+    public boolean resetTicksOnKill ()
+    {
+        return true;
+    }
+
     @Override // documentation inherited
     public String toString ()
     {
         return getName();
-    }
-
-    /**
-     * Returns true if this influence should be removed when the unit is killed.
-     */
-    public boolean removeOnKill ()
-    {
-        return true;
     }
 
     /** Returns the duration of this influence in ticks. The default is
