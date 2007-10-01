@@ -169,5 +169,7 @@ public class HeroDelegate extends CounterDelegate
     protected byte[] _levels;
     protected int[] _xp;
 
-    protected static final int[] LEVEL_XP = {0, 5, 12, 20, 30, 42, 56, 72, 90, 110};
+    protected static final int[] LEVEL_XP = {
+        0, 5, 12, 20, 30, 42, 56, 72, 90, 110, 135, 160, 180, 230, 300
+    };
 }
