@@ -3,16 +3,27 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import java.util.ArrayList;
+
+import java.awt.Point;
+
+import com.samskivert.util.ArrayIntSet;
+
+import com.threerings.presents.server.InvocationException;
+
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.effect.LevelEffect;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.HeroBuildingInfo;
-import com.threerings.presents.server.InvocationException;
+
+import com.threerings.bang.game.util.PointSet;
 
 /**
  * Handles managing of hero levels, influences and respawn.
@@ -46,7 +57,7 @@ public class HeroDelegate extends CounterDelegate
 
         // any kills will give the player 1 xp
         if (shooter != -1) {
-            _xp[shooter] += 1;
+            _xp[shooter] += 1 + Math.max(0, 3 - getLevel(shooter) / 4);
         }
 
         /*
@@ -56,6 +67,7 @@ public class HeroDelegate extends CounterDelegate
         }
         */
         if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            spawnBonusesFromHero(bangobj, piece);
             _xp[piece.owner] = Math.max(0, _xp[piece.owner] - _levels[piece.owner]);
         }
 
@@ -64,7 +76,7 @@ public class HeroDelegate extends CounterDelegate
             // if the hero kills another unit then they get 9 additional xp
             if (spiece != null && spiece instanceof Unit &&
                     ((Unit)spiece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-                _xp[spiece.owner] += 9;
+                _xp[spiece.owner] += 7;
             }
         }
 
@@ -117,6 +129,28 @@ public class HeroDelegate extends CounterDelegate
                 _bangmgr.deployEffect(-1, CountEffect.changeCount(
                             counter.pieceId, _levels[counter.owner], queuePiece));
             }
+        }
+    }
+
+    /**
+     * When a hero dies, bonuses fly out from their position, their strength based on the
+     * level of the hero.
+     */
+    protected void spawnBonusesFromHero (BangObject bangobj, Piece piece)
+    {
+        // figure out how many bonuses to spawn based on the hero level
+        int numSpawns = 1 + getLevel(piece.owner) / 3;
+
+        ArrayList<Point> drops = bangobj.board.getRandomOccupiableSpots(
+                numSpawns, piece.x, piece.y, 1, 4);
+        PointSet spots = new PointSet();
+        for (Point p : drops) {
+            spots.add(p.x, p.y);
+        }
+        ArrayIntSet[] reachers = _parent.computeReachers(bangobj, bangobj.getPieceArray(), spots);
+        for (int ii = 0; ii < reachers.length; ii++) {
+            _parent.placeBonus(bangobj, Bonus.selectBonus(bangobj, reachers[ii]),
+                    spots.getX(ii), spots.getY(ii));
         }
     }
 
