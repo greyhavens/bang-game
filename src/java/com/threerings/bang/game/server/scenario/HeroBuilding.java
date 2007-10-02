@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Tuple;
 
 import com.threerings.presents.server.InvocationException;
@@ -31,6 +32,7 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Revolutionary;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceSet;
+import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.HeroLogic;
 
@@ -108,6 +110,7 @@ public class HeroBuilding extends Scenario
 
             // heroes respawn immediately
             if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+                spawnBonusesFromHero(bangobj, piece);
                 if (unit instanceof Revolutionary) {
                     for (Unit u : _respawns[unit.originalOwner]) {
                         u.setRespawnTick(Short.MIN_VALUE);
@@ -127,10 +130,10 @@ public class HeroBuilding extends Scenario
     @Override // documentation inherited
     public void pieceWasRemoved (BangObject bangobj, Piece piece)
     {
-        if (!Bonus.isBonus(piece, HealHeroEffect.HEAL_HERO)) {
+        if (!(piece instanceof Bonus)) {
             return;
         }
-        // if one of our heal bonuses is removed, we no longer need to track it
+        // if one of our tracked bonuses is removed, we no longer need to track it
         Bonus bonus = (Bonus)piece;
         for (Iterator<TimedBonus> iter = _hbonuses.iterator(); iter.hasNext(); ) {
             TimedBonus tb = iter.next();
@@ -257,6 +260,29 @@ public class HeroBuilding extends Scenario
             super(new Integer(tick), bonus);
         }
     };
+
+    /**
+     * When a hero dies, bonuses fly out from their position, their strength based on the
+     * level of the hero.
+     */
+    protected void spawnBonusesFromHero (BangObject bangobj, Piece piece)
+    {
+        // figure out how many bonuses to spawn based on the hero level
+        int numSpawns = 1 + _herodel.getLevel(piece.owner) / 3;
+
+        ArrayList<Point> drops = bangobj.board.getRandomOccupiableSpots(
+                numSpawns, piece.x, piece.y, 1, 4);
+        PointSet spots = new PointSet();
+        for (Point p : drops) {
+            spots.add(p.x, p.y);
+        }
+        ArrayIntSet[] reachers = computeReachers(bangobj, bangobj.getPieceArray(), spots);
+        for (int ii = 0; ii < reachers.length; ii++) {
+            Bonus bonus = Bonus.selectBonus(bangobj, reachers[ii]);
+            placeBonus(bangobj, bonus, spots.getX(ii), spots.getY(ii));
+            _hbonuses.offer(new TimedBonus(bangobj.tick, bonus));
+        }
+    }
 
     protected RespawnList[] _respawns;
     protected LinkedList<TimedBonus> _hbonuses = new LinkedList<TimedBonus>();

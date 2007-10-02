@@ -3,12 +3,6 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.util.ArrayList;
-
-import java.awt.Point;
-
-import com.samskivert.util.ArrayIntSet;
-
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.StatType;
@@ -22,8 +16,6 @@ import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.HeroBuildingInfo;
-
-import com.threerings.bang.game.util.PointSet;
 
 /**
  * Handles managing of hero levels, influences and respawn.
@@ -67,7 +59,6 @@ public class HeroDelegate extends CounterDelegate
         }
         */
         if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-            spawnBonusesFromHero(bangobj, piece);
             _xp[piece.owner] = Math.max(0, _xp[piece.owner] - _levels[piece.owner]);
         }
 
@@ -129,28 +120,6 @@ public class HeroDelegate extends CounterDelegate
                 _bangmgr.deployEffect(-1, CountEffect.changeCount(
                             counter.pieceId, _levels[counter.owner], queuePiece));
             }
-        }
-    }
-
-    /**
-     * When a hero dies, bonuses fly out from their position, their strength based on the
-     * level of the hero.
-     */
-    protected void spawnBonusesFromHero (BangObject bangobj, Piece piece)
-    {
-        // figure out how many bonuses to spawn based on the hero level
-        int numSpawns = 1 + getLevel(piece.owner) / 3;
-
-        ArrayList<Point> drops = bangobj.board.getRandomOccupiableSpots(
-                numSpawns, piece.x, piece.y, 1, 4);
-        PointSet spots = new PointSet();
-        for (Point p : drops) {
-            spots.add(p.x, p.y);
-        }
-        ArrayIntSet[] reachers = _parent.computeReachers(bangobj, bangobj.getPieceArray(), spots);
-        for (int ii = 0; ii < reachers.length; ii++) {
-            _parent.placeBonus(bangobj, Bonus.selectBonus(bangobj, reachers[ii]),
-                    spots.getX(ii), spots.getY(ii));
         }
     }
 
