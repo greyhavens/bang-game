@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.Tuple;
 
 import com.threerings.presents.server.InvocationException;
@@ -17,12 +18,14 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
 import com.threerings.stats.data.StatSet;
 
+import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
+import com.threerings.bang.game.data.effect.AddSpawnedBonusEffect;
 import com.threerings.bang.game.data.effect.HealHeroEffect;
 import com.threerings.bang.game.data.effect.LevelEffect;
 import com.threerings.bang.game.data.effect.RemovePieceEffect;
@@ -271,17 +274,51 @@ public class HeroBuilding extends Scenario
         int numSpawns = 1 + _herodel.getLevel(piece.owner) / 3;
 
         ArrayList<Point> drops = bangobj.board.getRandomOccupiableSpots(
-                numSpawns, piece.x, piece.y, 1, 4);
-        PointSet spots = new PointSet();
-        for (Point p : drops) {
-            spots.add(p.x, p.y);
-        }
-        ArrayIntSet[] reachers = computeReachers(bangobj, bangobj.getPieceArray(), spots);
-        for (int ii = 0; ii < reachers.length; ii++) {
-            Bonus bonus = Bonus.selectBonus(bangobj, reachers[ii]);
-            placeBonus(bangobj, bonus, spots.getX(ii), spots.getY(ii));
+                numSpawns, piece.x, piece.y, 1, 3);
+        Bonus[] bonuses = selectBonuses(bangobj, _herodel.getLevel(piece.owner), numSpawns);
+        for (int ii = 0; ii < bonuses.length; ii++) {
+            Bonus bonus = bonuses[ii];
+            Point drop = drops.get(ii);
+            bonus.assignPieceId(bangobj);
+            bonus.position(drop.x, drop.y);
+            //placeBonus(bangobj, bonus, spots.getX(ii), spots.getY(ii));
+            _bangmgr.deployEffect(-1,
+                    new AddSpawnedBonusEffect(bonus, piece.x, piece.y, piece.pieceId));
             _hbonuses.offer(new TimedBonus(bangobj.tick, bonus));
         }
+    }
+
+    /**
+     * Selects a random bonus to be spawned from a dying hero.
+     */
+    protected Bonus[] selectBonuses (BangObject bangobj, int level, int num)
+    {
+        BonusConfig[] configs = BonusConfig.getTownBonuses(bangobj.townId);
+        int[] weights = new int[configs.length];
+        Bonus[] bonuses = new Bonus[num];
+
+        // Use the base weight of the bonuses, but have cutoffs based on the hero level
+        for (int ii = 0; ii < configs.length; ii++) {
+            BonusConfig config = configs[ii];
+            if (config.baseWeight <= 0 || config.minPointDiff > 0) {
+                continue;
+            }
+            if (config.baseWeight < (8 - level)*10) {
+                continue;
+            }
+            int weight = config.baseWeight;
+            // We like cards in this situation
+            if ("card".equals(config.type)) {
+                weight *= 4;
+            }
+            weights[ii] = weight;
+        }
+        for ( ; num > 0; num--) {
+            int idx = RandomUtil.getWeightedIndex(weights);
+            bonuses[num-1] = Bonus.createBonus(configs[idx]);
+            weights[idx] = 0;
+        }
+        return bonuses;
     }
 
     protected RespawnList[] _respawns;

@@ -51,6 +51,7 @@ import com.threerings.bang.game.client.sprite.TreeBedSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 
 import com.threerings.bang.game.data.effect.AddPieceEffect;
+import com.threerings.bang.game.data.effect.AddSpawnedBonusEffect;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HighNoonEffect;
@@ -254,6 +255,16 @@ public class EffectHandler extends BoardView.BoardAction
         // drop the piece from the sky
         if (effect.equals(AddPieceEffect.DROPPED)) {
             dropPiece(piece);
+        }
+
+        // fly the piece in from some specified location
+        if (effect.equals(AddSpawnedBonusEffect.SPAWNED_BONUS)) {
+            AddSpawnedBonusEffect asbe = (AddSpawnedBonusEffect)_effect;
+            Vector3f trans = new Vector3f(
+                    asbe.x * TILE_SIZE + TILE_SIZE/2, asbe.y * TILE_SIZE + TILE_SIZE/2,
+                    _view.getBoard().getElevation(asbe.x, asbe.y) *
+                    _view.getBoard().getElevationScale(TILE_SIZE));
+            flyDroppedBonus(trans, sprite, true);
         }
 
         // queue the effect up on the piece sprite
