@@ -26,7 +26,7 @@ public class HeroBuildingInfo extends ScenarioInfo
     @Override // documentation inherited
     public String getTownId ()
     {
-        return BangCodes.BOOM_TOWN;
+        return BangCodes.INDIAN_POST;
     }
 
     @Override // documentation inherited
