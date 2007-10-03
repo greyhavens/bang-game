@@ -26,6 +26,7 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AddSpawnedBonusEffect;
+import com.threerings.bang.game.data.effect.AddHeroEffect;
 import com.threerings.bang.game.data.effect.HealHeroEffect;
 import com.threerings.bang.game.data.effect.LevelEffect;
 import com.threerings.bang.game.data.effect.RemovePieceEffect;
@@ -250,10 +251,10 @@ public class HeroBuilding extends Scenario
 
         // then position it and add it back at its new location
         unit.position(bspot.x, bspot.y);
-        _bangmgr.addPiece(unit, AddPieceEffect.RESPAWNED);
         if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-            _bangmgr.deployEffect(-1,
-                    LevelEffect.changeLevel(bangobj, unit.owner, _herodel.getLevel(unit.owner)));
+            _bangmgr.deployEffect(-1, new AddHeroEffect(unit, _herodel.getLevel(unit.owner)));
+        } else {
+            _bangmgr.addPiece(unit, AddPieceEffect.RESPAWNED);
         }
     }
 
