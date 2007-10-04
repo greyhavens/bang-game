@@ -563,6 +563,7 @@ public class UnitStatusView extends BWindow
                         "influences/" + unit.getMainInfluence().getName() + ".png";
                     setInfluence(_ctx.getImageCache().getBImage(path));
                 }
+
                 // tint the unit icon red if it has a visible hindrance
                 /*
                 if (unit.getHindrance() == null || !unit.getHindrance().isVisible()) {

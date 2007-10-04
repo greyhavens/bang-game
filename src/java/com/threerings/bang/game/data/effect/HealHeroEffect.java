@@ -14,6 +14,8 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.HealHeroHandler;
 
 import static com.threerings.bang.Log.log;
 
@@ -106,5 +108,11 @@ public class HealHeroEffect extends BonusEffect
     protected String getActivatedEffect ()
     {
         return null;
+    }
+
+    @Override // documentation inherited
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        return new HealHeroHandler();
     }
 }

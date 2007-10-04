@@ -54,6 +54,7 @@ import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AddSpawnedBonusEffect;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.HealHeroEffect;
 import com.threerings.bang.game.data.effect.HighNoonEffect;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
@@ -202,7 +203,8 @@ public class EffectHandler extends BoardView.BoardAction
             effviz = new ExplosionViz("boom_town/fireworks/fireworks_explosion", false);
         } else if ((_effect instanceof RepairEffect &&
             RepairEffect.isRepairEffect(effect)) ||
-                effect.equals(NuggetEffect.NUGGET_ADDED)) {
+                effect.equals(NuggetEffect.NUGGET_ADDED) ||
+                effect.equals(HealHeroEffect.HEAL_HERO)) {
             effviz = new RepairViz();
         }
 
