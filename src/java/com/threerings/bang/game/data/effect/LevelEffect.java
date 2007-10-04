@@ -71,6 +71,9 @@ public class LevelEffect extends Effect
         } else {
             ((HeroInfluence)influence).setLevel(level);
         }
+        if (level > 0) {
+            reportEffect(obs, hero, LEVEL_CHANGED);
+        }
         return true;
     }
 }

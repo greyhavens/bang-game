@@ -57,6 +57,7 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HealHeroEffect;
 import com.threerings.bang.game.data.effect.HighNoonEffect;
 import com.threerings.bang.game.data.effect.HoldEffect;
+import com.threerings.bang.game.data.effect.LevelEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
@@ -333,9 +334,12 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // perhaps display a generic particle effect
-        if (BangPrefs.isMediumDetail() &&
-            _ctx.getParticleCache().haveParticles(effect)) {
-            sprite.displayParticles(effect, true);
+        if (BangPrefs.isMediumDetail()) {
+            if (_ctx.getParticleCache().haveParticles(effect)) {
+                sprite.displayParticles(effect, true);
+            } else if (LevelEffect.LEVEL_CHANGED.equals(effect)) {
+                sprite.displayParticles("indian_post/teleporter_1/activate", false);
+            }
         }
 
         // perhaps play a sound to go with our visual effect
