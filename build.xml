@@ -1007,6 +1007,7 @@
     <if><equals arg1="${props.dist}" arg2="devel"/><then>
       <antcall target="prepare-extra">
         <param name="extra.type" value="pseditor"/>
+        <param name="pkg.prefix" value="${prefix}/download"/>
       </antcall>
     </then></if>
 
