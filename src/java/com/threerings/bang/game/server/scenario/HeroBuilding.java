@@ -120,7 +120,7 @@ public class HeroBuilding extends Scenario
                         u.setRespawnTick(Short.MIN_VALUE);
                     }
                 }
-                unit.setRespawnTick(bangobj.tick);
+                unit.setRespawnTick((short)(bangobj.tick + 1));
                 _respawns[unit.originalOwner].addFirst(unit);
             } else {
                 unit.setRespawnTick((short)(bangobj.tick + 2));
@@ -297,6 +297,7 @@ public class HeroBuilding extends Scenario
         BonusConfig[] configs = BonusConfig.getTownBonuses(bangobj.townId);
         int[] weights = new int[configs.length];
         Bonus[] bonuses = new Bonus[num];
+        int cardIdx = -1;
 
         // Use the base weight of the bonuses, but have cutoffs based on the hero level
         for (int ii = 0; ii < configs.length; ii++) {
@@ -311,13 +312,16 @@ public class HeroBuilding extends Scenario
             // We like cards in this situation
             if ("card".equals(config.type)) {
                 weight *= 4;
+                cardIdx = ii;
             }
             weights[ii] = weight;
         }
         for ( ; num > 0; num--) {
             int idx = RandomUtil.getWeightedIndex(weights);
             bonuses[num-1] = Bonus.createBonus(configs[idx]);
-            weights[idx] = 0;
+            if (idx != cardIdx) {
+                weights[idx] = 0;
+            }
         }
         return bonuses;
     }

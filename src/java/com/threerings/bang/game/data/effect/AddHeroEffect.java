@@ -27,8 +27,8 @@ public class AddHeroEffect extends AddPieceEffect
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        super.apply(bangobj, obs);
         ((Unit)piece).setInfluence(Unit.InfluenceType.SPECIAL, new HeroInfluence(level));
+        super.apply(bangobj, obs);
         return true;
     }
 }

@@ -3,18 +3,24 @@
 
 package com.threerings.bang.game.client.effect;
 
-import com.jme.util.geom.BufferUtils;
-
 import com.jme.image.Texture;
-
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
+import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.util.geom.BufferUtils;
+
+import com.threerings.jme.util.SpatialVisitor;
+import com.threerings.jme.model.ModelMesh;
 
 import com.threerings.bang.client.BangUI;
 
@@ -39,6 +45,8 @@ public class HeroInfluenceViz extends InfluenceViz
     public void init (BasicContext ctx, PieceSprite target)
     {
         super.init(ctx, target);
+        _owner = target.getPiece().owner;
+
         // create the geometry we'll add the count to
         _count = new Quad("count", 25, 25);
         _tstate = ctx.getRenderer().createTextureState();
@@ -49,7 +57,27 @@ public class HeroInfluenceViz extends InfluenceViz
         _count.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _count.setLightCombineMode(LightState.OFF);
 
-        _owner = target.getPiece().owner;
+        // create an overlay we'll blend in with the hero texture as they level up
+        if (_sphereMap == null) {
+            _sphereMap = RenderUtil.createTextureState(ctx,
+                "textures/environ/spheremap.png");
+            _sphereMap.getTexture().setEnvironmentalMapMode(Texture.EM_SPHERE);
+        }
+        _mstate = ctx.getRenderer().createMaterialState();
+        ColorRGBA color = getJPieceColor(_owner);
+        _mstate.getEmissive().set(color.r, color.g, color.b, 0.6f);
+        _mstate.getDiffuse().set(color.r*.8f, color.g*.8f, color.b*.8f, 0f);
+        _mstate.getSpecular().set(color.r, color.g, color.b, 0.8f);
+        _mstate.setShininess(.5f);
+        _overlay = new RenderState[] { _sphereMap, _mstate,
+            RenderUtil.addAlpha, RenderUtil.overlayZBuf };
+
+        new SpatialVisitor<ModelMesh>(ModelMesh.class) {
+            protected void visit (ModelMesh mesh) {
+                mesh.addOverlay(_overlay);
+            }
+        }.traverse(_target.getModelNode());
+
         setLevel(_level);
 
         // attach the geometry to the sprite
@@ -83,6 +111,9 @@ public class HeroInfluenceViz extends InfluenceViz
         _count.setCullMode(Spatial.CULL_DYNAMIC);
         float scale = 1f + _level * 0.05f;
         _target.setLocalScale(new Vector3f(scale, scale, scale));
+
+        float alpha = getAlpha();
+        _mstate.getDiffuse().a = alpha;
     }
 
     @Override // documentation inherited
@@ -91,10 +122,48 @@ public class HeroInfluenceViz extends InfluenceViz
         if (_target != null) {
             _target.detachChild(_billboard);
         }
+
+        // fade out the color change before removing
+        final float duration = 1f;
+        _target.addController(new Controller() {
+            public void update (float time) {
+                _elapsed = Math.min(_elapsed + time, duration);
+                float alpha = getAlpha() * (duration - _elapsed) / duration;
+                _mstate.getDiffuse().a  = alpha;
+                if (_elapsed >= duration) {
+                    _target.removeController(this);
+                    new SpatialVisitor<ModelMesh>(ModelMesh.class) {
+                        protected void visit (ModelMesh mesh) {
+                            mesh.removeOverlay(_overlay);
+                        }
+                    }.traverse(_target.getModelNode());
+                }
+            }
+            protected float _elapsed;
+        });
+
+    }
+
+    /**
+     * Calculates the alpha value for this hero level.
+     */
+    protected float getAlpha ()
+    {
+        if (_level < 5) {
+            return (float)_level / 5f * .3f;
+        }
+        return .3f + (float)(_level - 5) / 10f;
     }
 
     protected int _level, _owner;
+
+    // our floating level indicator
     protected BillboardNode _billboard;
     protected Quad _count;
     protected TextureState _tstate;
+
+    // our overlay
+    protected MaterialState _mstate;
+    protected RenderState[] _overlay;
+    protected static TextureState _sphereMap;
 }
