@@ -16,6 +16,10 @@ web_dir = pages
 # download_root_url = http://s3download.banghowdy.com/bang
 
 #
+# The base URL for downloading the pseditor. Only used for the development environment.
+# pseditor_root_url = http://localhost
+
+#
 # The standard ports on which the server listens for client connections. These
 # may be overridden on a server by server basis below.
 
