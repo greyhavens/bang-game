@@ -1646,22 +1646,42 @@ unit_status_health0 {
   color: #FFFFFF;
   text-effect: outline;
   effect-size: 4;
-  effect-color: #002033;
+  effect-color: #202020;
 }
 
 unit_status_health1 {
   parent: unit_status_health0;
-  effect-color: #330000;
+  effect-color: #002033;
 }
 
 unit_status_health2 {
   parent: unit_status_health0;
-  effect-color: #003300;
+  effect-color: #330000;
 }
 
 unit_status_health3 {
   parent: unit_status_health0;
+  effect-color: #003300;
+}
+
+unit_status_health4 {
+  parent: unit_status_health0;
   effect-color: #333300;
+}
+
+unit_status_health5 {
+  parent: unit_status_health0;
+  effect-color: #331800;
+}
+
+unit_status_health6 {
+  parent: unit_status_health0;
+  effect-color: #042533;
+}
+
+unit_status_health7 {
+  parent: unit_status_health0;
+  effect-color: #160633;
 }
 
 unit_status_details {
@@ -1691,6 +1711,57 @@ unit_status_influence {
 unit_status_hindrance {
   parent: unit_status_holding;
   color: #6D0C08;
+}
+
+//
+// Hero Building HUD
+
+hero_level_label {
+  parent: "label";
+  font: "Dom Casual" plain 22;
+}
+
+hero_level0 {
+  font: "Old Town" plain 30;
+  color: #FFFFFF;
+  text-effect: outline;
+  effect-size: 4;
+  effect-color: #202020;
+}
+
+hero_level1 {
+  parent: hero_level0;
+  effect-color: #002033;
+}
+
+hero_level2 {
+  parent: hero_level0;
+  effect-color: #330000;
+}
+
+hero_level3 {
+  parent: hero_level0;
+  effect-color: #003300;
+}
+
+hero_level4 {
+  parent: hero_level0;
+  effect-color: #333300;
+}
+
+hero_level5 {
+  parent: hero_level0;
+  effect-color: #331800;
+}
+
+hero_level6 {
+  parent: hero_level0;
+  effect-color: #042533;
+}
+
+hero_level7 {
+  parent: hero_level0;
+  effect-color: #160633;
 }
 
 //
