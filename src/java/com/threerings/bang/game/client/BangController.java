@@ -768,6 +768,8 @@ public class BangController extends GameController
         // if we're in a bounty game, slide the criteria status view down from the top
         if (_config.type == BangConfig.Type.BOUNTY) {
             _view.showBountyCriteria();
+        } else {
+            _view.showScenarioHUD();
         }
 
         // if we're one of the players

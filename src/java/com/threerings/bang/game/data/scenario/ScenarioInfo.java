@@ -20,6 +20,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.game.client.ScenarioHUD;
 import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -28,6 +29,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.saloon.data.Criterion;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 
@@ -391,6 +393,14 @@ public abstract class ScenarioInfo
     public StatsView getStatsView (BasicContext ctx)
     {
         return new StatsView(ctx, false);
+    }
+
+    /**
+     * Returns a HUD element used by the client to display in-game information.
+     */
+    public ScenarioHUD getHUD (BangContext ctx, BangObject bangobj)
+    {
+        return null;
     }
 
     /**

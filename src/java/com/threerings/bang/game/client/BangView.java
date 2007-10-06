@@ -75,6 +75,9 @@ public class BangView extends BWindow
     /** Displays bounty criteria. */
     public InGameBountyView critview;
 
+    /** Our scenario HUD. */
+    public ScenarioHUD scenHUD;
+
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
@@ -305,6 +308,10 @@ public class BangView extends BWindow
             _ctx.getRootNode().removeWindow(critview);
             critview = null;
         }
+        if (scenHUD != null) {
+            _ctx.getRootNode().removeWindow(scenHUD);
+            scenHUD = null;
+        }
     }
 
     @Override // documentation inherited
@@ -349,6 +356,15 @@ public class BangView extends BWindow
         return _timer;
     }
 
+    /**
+     * Called by {@link EffectHandler} to tell us when a piece was affected.
+     */
+    public void pieceWasAffected (Piece piece, String effect)
+    {
+        if (scenHUD != null) {
+            scenHUD.pieceWasAffected(piece, effect);
+        }
+    }
 
     /**
      * Creates the player status views.
@@ -595,6 +611,21 @@ public class BangView extends BWindow
             critview.pack();
             _ctx.getInterface().attachChild(
                 new WindowSlider(critview, WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
+        }
+    }
+
+    protected void showScenarioHUD ()
+    {
+        if (scenHUD != null) {
+            _ctx.getRootNode().removeWindow(scenHUD);
+            scenHUD = null;
+        }
+        scenHUD = _bangobj.scenario.getHUD(_ctx, _bangobj);
+        if (scenHUD != null) {
+            _ctx.getRootNode().addWindow(scenHUD);
+            scenHUD.pack();
+            _ctx.getInterface().attachChild(
+                    new WindowSlider(scenHUD, WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
         }
     }
 

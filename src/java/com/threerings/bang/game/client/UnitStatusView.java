@@ -49,6 +49,7 @@ import com.threerings.bang.ranch.client.UnitBonus;
 import com.threerings.util.MessageBundle;
 
 import static com.threerings.bang.Log.log;
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays the status of the various units in iconic form.
@@ -243,7 +244,7 @@ public class UnitStatusView extends BWindow
             pieceId = _sprite.getPieceId();
             label.setUnitSprite(sprite);
             Unit unit = getUnit();
-            _health = new BLabel("", "unit_status_health" + unit.owner);
+            _health = new BLabel("", "unit_status_health" + colorLookup[unit.owner + 1]);
             BContainer healthcont = new BContainer(GroupLayout.makeHStretch());
             healthcont.add(new Spacer(0, 0));
             healthcont.add(_health, GroupLayout.FIXED);

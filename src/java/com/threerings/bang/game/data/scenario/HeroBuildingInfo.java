@@ -5,6 +5,10 @@ package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.StatType;
+import com.threerings.bang.util.BangContext;
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.client.HeroBuildingView;
+import com.threerings.bang.game.client.ScenarioHUD;
 
 /**
  * Contains metadata on the Hero Building scenario.
@@ -27,6 +31,12 @@ public class HeroBuildingInfo extends ScenarioInfo
     public String getTownId ()
     {
         return BangCodes.INDIAN_POST;
+    }
+
+    @Override // documentation inherited
+    public ScenarioHUD getHUD (BangContext ctx, BangObject bangobj)
+    {
+        return new HeroBuildingView(ctx, bangobj);
     }
 
     @Override // documentation inherited

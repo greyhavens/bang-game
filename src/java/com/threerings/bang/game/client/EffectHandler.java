@@ -351,6 +351,7 @@ public class EffectHandler extends BoardView.BoardAction
         // report the effect to the view who will report it to the tutorial
         // controller if appropriate
         _view.pieceWasAffected(piece, effect);
+        _bview.pieceWasAffected(piece, effect);
     }
 
     // documentation inherited from interface Effect.Observer
