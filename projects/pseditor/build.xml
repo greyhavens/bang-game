@@ -83,7 +83,7 @@
     <copy todir="${install.dir}">
       <fileset dir="etc" includes="pseditor.jnlp"/>
       <filterset>
-        <filter token="application_uri" value="${pseditor_root_url}/pseditor"/>
+        <filter token="application_uri" value="${pseditor_root_url}"/>
       </filterset>
     </copy>
 
