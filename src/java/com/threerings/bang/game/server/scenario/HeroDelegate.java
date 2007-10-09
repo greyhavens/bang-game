@@ -36,7 +36,10 @@ public class HeroDelegate extends CounterDelegate
     {
         if (tick == 0) {
             for (int ii = 0; ii < bangobj.getPlayerCount(); ii++) {
-                _bangmgr.deployEffect(-1, LevelEffect.changeLevel(bangobj, ii, (byte)0));
+                LevelEffect effect = LevelEffect.changeLevel(bangobj, ii, (byte)0);
+                if (effect != null) {
+                    _bangmgr.deployEffect(-1, effect);
+                }
             }
         }
         return false;
@@ -94,6 +97,24 @@ public class HeroDelegate extends CounterDelegate
             }
         }
         return null;
+    }
+
+    /**
+     * Used by the tutorial to apply level effects immediately.
+     */
+    public void applyLevels (BangObject bangobj)
+    {
+        for (Piece piece : bangobj.pieces) {
+            if (piece instanceof Unit &&
+                    ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT &&
+                    ((Unit)piece).getInfluence(Unit.InfluenceType.SPECIAL) == null) {
+                LevelEffect effect = LevelEffect.changeLevel(
+                        bangobj, piece.owner, _levels[piece.owner]);
+                if (effect != null) {
+                    _bangmgr.deployEffect(-1, effect);
+                }
+            }
+        }
     }
 
     /**

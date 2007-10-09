@@ -9,6 +9,7 @@ import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.data.scenario.ClaimJumpingInfo;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 import com.threerings.bang.game.data.scenario.GoldRushInfo;
+import com.threerings.bang.game.data.scenario.HeroBuildingInfo;
 import com.threerings.bang.game.data.scenario.LandGrabInfo;
 import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
 import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
@@ -72,6 +73,8 @@ public class TutorialCodes
             PRACTICE_PREFIX + WendigoAttackInfo.IDENT,
             "new_forest_guardians",
             PRACTICE_PREFIX + ForestGuardiansInfo.IDENT,
+            "hero_building",
+            PRACTICE_PREFIX + HeroBuildingInfo.IDENT,
         }, { // boom town tutorials
             "boom_units",
         }
@@ -120,6 +123,8 @@ public class TutorialCodes
                     "Dead Wind Refuge", "indian_post/stormcaller", null, null));
         PRACTICE_CONFIGS.put(ForestGuardiansInfo.IDENT, new PracticeConfig(
                     "Honeycomb Copse", "indian_post/tricksterraven", null, null));
+        PRACTICE_CONFIGS.put(HeroBuildingInfo.IDENT, new PracticeConfig(
+                    "Foothills", "indian_post/stormcaller", null, null));
     }
 
     /** An event message sent to the server to let the tutorial scenario know

@@ -259,6 +259,8 @@ public class TutorialController
                 _view.showUnitStatus();
             } else if (name.equals("round_timer")) {
                 _view.showRoundTimer();
+            } else if (name.equals("hero_hud")) {
+                _view.showScenarioHUD(new HeroBuildingView(_ctx, _bangobj));
             }
 
         } else if (action instanceof TutorialConfig.ScenarioAction) {

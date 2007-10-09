@@ -176,7 +176,7 @@ public class TutorialView extends SteelWindow
             list.add(play);
             _enabledButtons.add(play);
             currentTut = tid;
-            if (icon != BangUI.completed) {
+            if (icon != BangUI.completed && !self.tokens.isAdmin()) {
                 break;
             } else {
                 currentTut = self.townId;

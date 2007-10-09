@@ -3,6 +3,9 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.util.Observer;
+
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
@@ -16,16 +19,19 @@ public class AddSpawnedBonusEffect extends AddPieceEffect
 
     public int wait;
 
+    public boolean first;
+
     public AddSpawnedBonusEffect ()
     {
     }
 
-    public AddSpawnedBonusEffect (Piece piece, int x, int y, int wait)
+    public AddSpawnedBonusEffect (Piece piece, int x, int y, int wait, boolean first)
     {
         super(piece, SPAWNED_BONUS);
         this.x = x;
         this.y = y;
         this.wait = wait;
+        this.first = first;
     }
 
     @Override // documentation inherited

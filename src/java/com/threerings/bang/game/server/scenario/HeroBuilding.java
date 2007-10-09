@@ -284,7 +284,7 @@ public class HeroBuilding extends Scenario
             bonus.position(drop.x, drop.y);
             //placeBonus(bangobj, bonus, spots.getX(ii), spots.getY(ii));
             _bangmgr.deployEffect(-1,
-                    new AddSpawnedBonusEffect(bonus, piece.x, piece.y, piece.pieceId));
+                    new AddSpawnedBonusEffect(bonus, piece.x, piece.y, piece.pieceId, ii == 0));
             _hbonuses.offer(new TimedBonus(bangobj.tick, bonus));
         }
     }

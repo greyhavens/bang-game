@@ -616,11 +616,16 @@ public class BangView extends BWindow
 
     protected void showScenarioHUD ()
     {
+        showScenarioHUD(_bangobj.scenario.getHUD(_ctx, _bangobj));
+    }
+
+    protected void showScenarioHUD (ScenarioHUD hud)
+    {
         if (scenHUD != null) {
             _ctx.getRootNode().removeWindow(scenHUD);
             scenHUD = null;
         }
-        scenHUD = _bangobj.scenario.getHUD(_ctx, _bangobj);
+        scenHUD = hud;
         if (scenHUD != null) {
             _ctx.getRootNode().addWindow(scenHUD);
             scenHUD.pack();

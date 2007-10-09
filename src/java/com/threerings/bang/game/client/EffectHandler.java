@@ -36,6 +36,7 @@ import com.threerings.bang.util.SoundUtil;
 import com.threerings.bang.game.client.effect.DamageIconViz;
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.client.effect.ExplosionViz;
+import com.threerings.bang.game.client.effect.HealHeroViz;
 import com.threerings.bang.game.client.effect.IconViz;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.client.effect.PlaySoundViz;
@@ -204,9 +205,10 @@ public class EffectHandler extends BoardView.BoardAction
             effviz = new ExplosionViz("boom_town/fireworks/fireworks_explosion", false);
         } else if ((_effect instanceof RepairEffect &&
             RepairEffect.isRepairEffect(effect)) ||
-                effect.equals(NuggetEffect.NUGGET_ADDED) ||
-                effect.equals(HealHeroEffect.HEAL_HERO)) {
+                effect.equals(NuggetEffect.NUGGET_ADDED)) {
             effviz = new RepairViz();
+        } else if (effect.equals(HealHeroEffect.HEAL_HERO)) {
+            effviz = new HealHeroViz();
         }
 
         // if they were damaged, go ahead and clear any pending shot
@@ -268,6 +270,9 @@ public class EffectHandler extends BoardView.BoardAction
                     _view.getBoard().getElevation(asbe.x, asbe.y) *
                     _view.getBoard().getElevationScale(TILE_SIZE));
             flyDroppedBonus(trans, sprite, true);
+            if (asbe.first) {
+                displayParticles("indian_post/hero_death", trans);
+            }
         }
 
         // queue the effect up on the piece sprite
@@ -900,6 +905,17 @@ public class EffectHandler extends BoardView.BoardAction
                          " [penders=" + _penders + "].");
             }
         }
+    }
+
+    protected void displayParticles (String name, final Vector3f pos)
+    {
+        ParticlePool.getParticles(name,
+            new ResultAttacher<Spatial>(_view.getPieceNode()) {
+            public void requestCompleted (Spatial result) {
+                super.requestCompleted(result);
+                result.getLocalTranslation().set(pos);
+            }
+        });
     }
 
     protected BangContext _ctx;

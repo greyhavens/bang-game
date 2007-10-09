@@ -96,6 +96,8 @@ public class Tutorial extends Scenario
         } else if (_config.ident.endsWith("forest_guardians")) {
             registerDelegate(new LoggingRobotDelegate());
             registerDelegate(_treedel = new TreeBedDelegate());
+        } else if (_config.ident.endsWith("hero_building")) {
+            registerDelegate(_herodel = new HeroDelegate());
         }
 
         // now that our delegates are registered we can call super.init
@@ -338,6 +340,9 @@ public class Tutorial extends Scenario
 
             } else if (type.equals("reset_trees")) {
                 _treedel.resetTrees(_bangobj, 0);
+
+            } else if (type.equals("apply_levels")) {
+                _herodel.applyLevels(_bangobj);
             }
 
         } else if (action instanceof TutorialConfig.SetCard) {
@@ -375,4 +380,7 @@ public class Tutorial extends Scenario
 
     // used for the Forest Guardians tutorial
     protected TreeBedDelegate _treedel;
+
+    // used for the Hero Building tutorial
+    protected HeroDelegate _herodel;
 }
