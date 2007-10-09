@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="hero_building" board="Warriors Camp" players="2" card="peace_pipe">
+    <show_view name="player_status"/>
+
+    <!-- say hi -->
+    <text message="welcome" step="1" avatar="units/indian_post/stormcaller/portrait.png"/>
+    <wait event="text_clicked"/>
+
+    <!-- add their bigshot -->
+    <add_piece what="unit" id="1000" type="indian_post/stormcaller" location="22,17" owner="0"/>
+    <scenario_action type="apply_levels"/>
+    <text message="bigshot"/>
+    <wait event="text_clicked"/>
+
+    <!-- add some fodder to kill -->
+    <add_piece what="unit" id="2001" type="indian_post/thunderbird" location="21,19" owner="1"/>
+    <wait event="unit_killed" allowAttack="0"/>
+
+    <text message="level1"/>
+    <show_view name="hero_hud"/>
+    <wait event="text_clicked"/>
+
+</tutorial>
