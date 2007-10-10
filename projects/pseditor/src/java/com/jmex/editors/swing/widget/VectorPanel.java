@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -37,6 +37,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -47,24 +48,27 @@ public class VectorPanel extends JPanel
     implements ChangeListener {
 
     private static final long serialVersionUID = 1L;
-    
+
     private ValuePanel xPanel, yPanel, zPanel;
     private ArrayList<ChangeListener> changeListeners =
         new ArrayList<ChangeListener>();
     private boolean setting;
-    
+
     public VectorPanel(float min, float max, float step) {
-        super(new GridBagLayout());
-        
-        xPanel = new ValuePanel("X: ", "", min, max, step);
+        super();
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        //super(new GridBagLayout());
+
+        add(xPanel = new ValuePanel("X: ", "", min, max, step));
         xPanel.addChangeListener(this);
-        
-        yPanel = new ValuePanel("Y: ", "", min, max, step);
+
+        add(yPanel = new ValuePanel("Y: ", "", min, max, step));
         yPanel.addChangeListener(this);
-        
-        zPanel = new ValuePanel("Z: ", "", min, max, step);
+
+        add(zPanel = new ValuePanel("Z: ", "", min, max, step));
         zPanel.addChangeListener(this);
-        
+
+        /*
         add(xPanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(5, 5, 5, 5), 0, 0));
@@ -74,8 +78,9 @@ public class VectorPanel extends JPanel
         add(zPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(5, 5, 5, 5), 0, 0));
+            */
     }
-    
+
     public void setValue(Vector3f value) {
         setting = true;
         xPanel.setValue(value.x);
@@ -83,16 +88,16 @@ public class VectorPanel extends JPanel
         zPanel.setValue(value.z);
         setting = false;
     }
-    
+
     public Vector3f getValue() {
         return new Vector3f(xPanel.getFloatValue(), yPanel.getFloatValue(),
             zPanel.getFloatValue());
     }
-    
+
     public void addChangeListener(ChangeListener l) {
         changeListeners.add(l);
     }
-    
+
     public void stateChanged(ChangeEvent e) {
         if (!setting) {
             for (ChangeListener l : changeListeners) {
