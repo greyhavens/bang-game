@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.RandomUtil;
 import com.samskivert.util.Tuple;
 
 import com.threerings.presents.server.InvocationException;
@@ -18,14 +17,12 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
 import com.threerings.stats.data.StatSet;
 
-import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
-import com.threerings.bang.game.data.effect.AddSpawnedBonusEffect;
 import com.threerings.bang.game.data.effect.AddHeroEffect;
 import com.threerings.bang.game.data.effect.HealHeroEffect;
 import com.threerings.bang.game.data.effect.LevelEffect;
@@ -114,7 +111,6 @@ public class HeroBuilding extends Scenario
 
             // heroes respawn immediately
             if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-                spawnBonusesFromHero(bangobj, piece);
                 if (unit instanceof Revolutionary) {
                     for (Unit u : _respawns[unit.originalOwner]) {
                         u.setRespawnTick(Short.MIN_VALUE);
@@ -217,6 +213,14 @@ public class HeroBuilding extends Scenario
     }
 
     /**
+     * Called by the delegate when a bonus is added which has a limited lifespan.
+     */
+    public void bonusAdded (short tick, Bonus bonus)
+    {
+        _hbonuses.offer(new TimedBonus(tick, bonus));
+    }
+
+    /**
      * Respawns a unit.
      */
     protected void respawnUnit (BangObject bangobj, Unit unit, Point spot)
@@ -264,67 +268,6 @@ public class HeroBuilding extends Scenario
             super(new Integer(tick), bonus);
         }
     };
-
-    /**
-     * When a hero dies, bonuses fly out from their position, their strength based on the
-     * level of the hero.
-     */
-    protected void spawnBonusesFromHero (BangObject bangobj, Piece piece)
-    {
-        // figure out how many bonuses to spawn based on the hero level
-        int numSpawns = 1 + _herodel.getLevel(piece.owner) / 3;
-
-        ArrayList<Point> drops = bangobj.board.getRandomOccupiableSpots(
-                numSpawns, piece.x, piece.y, 1, 3);
-        Bonus[] bonuses = selectBonuses(bangobj, _herodel.getLevel(piece.owner), numSpawns);
-        for (int ii = 0; ii < bonuses.length; ii++) {
-            Bonus bonus = bonuses[ii];
-            Point drop = drops.get(ii);
-            bonus.assignPieceId(bangobj);
-            bonus.position(drop.x, drop.y);
-            //placeBonus(bangobj, bonus, spots.getX(ii), spots.getY(ii));
-            _bangmgr.deployEffect(-1,
-                    new AddSpawnedBonusEffect(bonus, piece.x, piece.y, piece.pieceId, ii == 0));
-            _hbonuses.offer(new TimedBonus(bangobj.tick, bonus));
-        }
-    }
-
-    /**
-     * Selects a random bonus to be spawned from a dying hero.
-     */
-    protected Bonus[] selectBonuses (BangObject bangobj, int level, int num)
-    {
-        BonusConfig[] configs = BonusConfig.getTownBonuses(bangobj.townId);
-        int[] weights = new int[configs.length];
-        Bonus[] bonuses = new Bonus[num];
-        int cardIdx = -1;
-
-        // Use the base weight of the bonuses, but have cutoffs based on the hero level
-        for (int ii = 0; ii < configs.length; ii++) {
-            BonusConfig config = configs[ii];
-            if (config.baseWeight <= 0 || config.minPointDiff > 0) {
-                continue;
-            }
-            if (config.baseWeight < (8 - level)*10) {
-                continue;
-            }
-            int weight = config.baseWeight;
-            // We like cards in this situation
-            if ("card".equals(config.type)) {
-                weight *= 4;
-                cardIdx = ii;
-            }
-            weights[ii] = weight;
-        }
-        for ( ; num > 0; num--) {
-            int idx = RandomUtil.getWeightedIndex(weights);
-            bonuses[num-1] = Bonus.createBonus(configs[idx]);
-            if (idx != cardIdx) {
-                weights[idx] = 0;
-            }
-        }
-        return bonuses;
-    }
 
     protected RespawnList[] _respawns;
     protected LinkedList<TimedBonus> _hbonuses = new LinkedList<TimedBonus>();

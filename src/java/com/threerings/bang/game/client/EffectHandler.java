@@ -343,7 +343,7 @@ public class EffectHandler extends BoardView.BoardAction
             if (_ctx.getParticleCache().haveParticles(effect)) {
                 sprite.displayParticles(effect, true);
             } else if (LevelEffect.LEVEL_CHANGED.equals(effect)) {
-                sprite.displayParticles("indian_post/teleporter_1/activate", false);
+                sprite.displayParticles("indian_post/level_up", false);
             }
         }
 

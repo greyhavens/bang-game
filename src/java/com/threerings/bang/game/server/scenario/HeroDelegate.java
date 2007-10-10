@@ -3,12 +3,20 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import java.util.ArrayList;
+
+import java.awt.Point;
+
+import com.samskivert.util.RandomUtil;
+
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.AddSpawnedBonusEffect;
 import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.effect.LevelEffect;
 import com.threerings.bang.game.data.piece.Bonus;
@@ -62,6 +70,7 @@ public class HeroDelegate extends CounterDelegate
         }
         */
         if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            spawnBonusesFromHero(bangobj, piece);
             _xp[piece.owner] = Math.max(0, _xp[piece.owner] - _levels[piece.owner]);
         }
 
@@ -155,6 +164,70 @@ public class HeroDelegate extends CounterDelegate
     {
         // nothing doing
     }
+
+    /**
+     * When a hero dies, bonuses fly out from their position, their strength based on the
+     * level of the hero.
+     */
+    protected void spawnBonusesFromHero (BangObject bangobj, Piece piece)
+    {
+        // figure out how many bonuses to spawn based on the hero level
+        int numSpawns = 1 + getLevel(piece.owner) / 3;
+
+        ArrayList<Point> drops = bangobj.board.getRandomOccupiableSpots(
+                numSpawns, piece.x, piece.y, 1, 3);
+        Bonus[] bonuses = selectBonuses(bangobj, getLevel(piece.owner), numSpawns);
+        for (int ii = 0; ii < bonuses.length; ii++) {
+            Bonus bonus = bonuses[ii];
+            Point drop = drops.get(ii);
+            bonus.assignPieceId(bangobj);
+            bonus.position(drop.x, drop.y);
+            //placeBonus(bangobj, bonus, spots.getX(ii), spots.getY(ii));
+            _bangmgr.deployEffect(-1,
+                    new AddSpawnedBonusEffect(bonus, piece.x, piece.y, piece.pieceId, ii == 0));
+            if (_parent instanceof HeroBuilding) {
+                ((HeroBuilding)_parent).bonusAdded(bangobj.tick, bonus);
+            }
+        }
+    }
+
+    /**
+     * Selects a random bonus to be spawned from a dying hero.
+     */
+    protected Bonus[] selectBonuses (BangObject bangobj, int level, int num)
+    {
+        BonusConfig[] configs = BonusConfig.getTownBonuses(bangobj.townId);
+        int[] weights = new int[configs.length];
+        Bonus[] bonuses = new Bonus[num];
+        int cardIdx = -1;
+
+        // Use the base weight of the bonuses, but have cutoffs based on the hero level
+        for (int ii = 0; ii < configs.length; ii++) {
+            BonusConfig config = configs[ii];
+            if (config.baseWeight <= 0 || config.minPointDiff > 0) {
+                continue;
+            }
+            if (config.baseWeight < (8 - level)*10) {
+                continue;
+            }
+            int weight = config.baseWeight;
+            // We like cards in this situation
+            if ("card".equals(config.type)) {
+                weight *= 4;
+                cardIdx = ii;
+            }
+            weights[ii] = weight;
+        }
+        for ( ; num > 0; num--) {
+            int idx = RandomUtil.getWeightedIndex(weights);
+            bonuses[num-1] = Bonus.createBonus(configs[idx]);
+            if (idx != cardIdx) {
+                weights[idx] = 0;
+            }
+        }
+        return bonuses;
+    }
+
 
     protected byte[] _levels;
     protected int[] _xp;
