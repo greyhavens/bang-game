@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="hero_building" board="Warriors Camp" players="2" card="peace_pipe">
+<tutorial ident="hero_building" board="Warriors Camp" players="2" card="peace_pipe" respawn="false">
     <show_view name="player_status"/>
 
     <!-- say hi -->
@@ -15,10 +15,49 @@
 
     <!-- add some fodder to kill -->
     <add_piece what="unit" id="2001" type="indian_post/thunderbird" location="21,19" owner="1"/>
-    <wait event="unit_killed" allowAttack="0"/>
+    <center_on what="piece" id="2001"/>
+    <text message="bigshot2"/>
+    <wait event="unit_killed" allowAttack="21,19"/>
 
-    <text message="level1"/>
+    <text message="level"/>
     <show_view name="hero_hud"/>
     <wait event="text_clicked"/>
+
+    <add_piece what="unit" id="2003" type="indian_post/revolutionary" location="22,20" owner="1"/>
+    <scenario_action type="apply_levels"/>
+    <text message="level1"/>
+    <wait event="text_clicked"/>
+
+    <add_piece what="unit" id="1002" type="indian_post/buffalo_rider" location="21,20" owner="0"/>
+    <move_unit id="2003" location="22,18" target="1000"/>
+    <text message="heal"/>
+    <wait event="text_clicked"/>
+
+    <add_piece what="bonus" id="3004" type="indian_post/heal_hero" location="17, 19" owner="-1"/>
+    <center_on what="piece" id="3004"/>
+    <text message="heal1"/>
+    <wait event="effect:indian_post/heal_hero" allowAttack="17,19"/>
+
+    <text message="heal2"/>
+    <wait event="text_clicked"/>
+
+    <move_unit id="2003" location="21,18" target="1000"/>
+    <text message="dead_hero"/>
+    <wait event="text_clicked"/>
+
+    <move_unit id="2003" location="21,21"/>
+    <add_piece what="unit" id="1005" type="indian_post/stormcaller" location="23,15"/>
+    <center_on what="piece" id="1005"/>
+    <scenario_action type="apply_levels"/>
+    <text message="dead_hero2"/>
+    <wait event="text_clicked"/>
+
+    <text message="unit_kills"/>
+    <center_on what="piece" id="2003"/>
+    <wait event="unit_attacked" allowAttack="21,21"/>
+
+    <text message="unit_kills1"/>
+    <center_on what="piece" id="1005"/>
+    <wait event="unit_killed" allowAttack="23,18"/>
 
 </tutorial>
