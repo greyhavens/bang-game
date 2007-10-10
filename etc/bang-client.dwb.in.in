@@ -7,7 +7,7 @@
     Maintainer  Bang Developers <bang-dev@threerings.net>
     Section     pages
     Architecture    all
-    Description The Bang client, lives inside the web document root.
+    Description The Bang client, lives inside the download document root.
 
     # Maintainer Scripts
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
