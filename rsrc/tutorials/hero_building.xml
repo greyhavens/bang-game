@@ -10,13 +10,17 @@
     <!-- add their bigshot -->
     <add_piece what="unit" id="1000" type="indian_post/stormcaller" location="22,17" owner="0"/>
     <scenario_action type="apply_levels"/>
+    <center_on what="piece" id="1000"/>
     <text message="bigshot"/>
     <wait event="text_clicked"/>
 
     <!-- add some fodder to kill -->
     <add_piece what="unit" id="2001" type="indian_post/thunderbird" location="21,19" owner="1"/>
-    <center_on what="piece" id="2001"/>
     <text message="bigshot2"/>
+    <wait event="text_clicked"/>
+
+    <center_on what="piece" id="2001"/>
+    <text message="bigshot3"/>
     <wait event="unit_killed" allowAttack="21,19"/>
 
     <text message="level"/>
@@ -39,6 +43,7 @@
     <wait event="effect:indian_post/heal_hero" allowAttack="17,19"/>
 
     <text message="heal2"/>
+    <center_on what="piece" id="1000"/>
     <wait event="text_clicked"/>
 
     <move_unit id="2003" location="21,18" target="1000"/>
@@ -54,10 +59,16 @@
 
     <text message="unit_kills"/>
     <center_on what="piece" id="2003"/>
-    <wait event="unit_attacked" allowAttack="21,21"/>
+    <wait event="text_clicked"/>
 
     <text message="unit_kills1"/>
+    <wait event="unit_attacked" allowAttack="21,21"/>
+
+    <text message="unit_kills2"/>
     <center_on what="piece" id="1005"/>
     <wait event="unit_killed" allowAttack="23,18"/>
+
+    <text message="bigshot_death"/>
+    <wait event="text_clicked"/>
 
 </tutorial>
