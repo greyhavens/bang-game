@@ -26,6 +26,7 @@ import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.data.scenario.ClaimJumpingInfo;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 import com.threerings.bang.game.data.scenario.GoldRushInfo;
+import com.threerings.bang.game.data.scenario.HeroBuildingInfo;
 import com.threerings.bang.game.data.scenario.LandGrabInfo;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
@@ -454,6 +455,33 @@ public class Badge extends Item
             }
         },
 
+        // hero building badges
+        HERO_LEVELS_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(StatType.HERO_LEVEL) >= 30;
+            }
+        },
+        HERO_LEVELS_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(StatType.HERO_LEVEL) >= 500;
+            }
+        },
+        HERO_LEVELS_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(StatType.HERO_LEVEL) >= 5000;
+            }
+        },
+        HERO_KILLS {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(StatType.HERO_KILLING) >= 10;
+            }
+        },
+        HERO_LEVELS_4 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(StatType.TOP_LEVEL) >= 10;
+            }
+        },
+
         // frontier town unit usage badges
         CAVALRY_USER {
             public boolean qualifies (PlayerObject user) {
@@ -703,6 +731,11 @@ public class Badge extends Item
                 return user.stats.containsValue(StatType.WEEKLY_TOP10, ForestGuardiansInfo.IDENT);
             }
         },
+        WEEKLY_TOP10_HB {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_TOP10, HeroBuildingInfo.IDENT);
+            }
+        },
 
         WEEKLY_WINNER_OA {
             public boolean qualifies (PlayerObject user) {
@@ -742,6 +775,11 @@ public class Badge extends Item
         WEEKLY_WINNER_FG {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.containsValue(StatType.WEEKLY_WINNER, ForestGuardiansInfo.IDENT);
+            }
+        },
+        WEEKLY_WINNER_HB {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.containsValue(StatType.WEEKLY_WINNER, HeroBuildingInfo.IDENT);
             }
         },
 
@@ -854,12 +892,17 @@ public class Badge extends Item
         Type.WENDIGO_SURVIVALS_1, Type.WENDIGO_SURVIVALS_2, Type.WENDIGO_SURVIVALS_3,
         Type.WENDIGO_SURVIVALS_4, Type.WENDIGO_SURVIVALS_5,
 
+        Type.HERO_LEVELS_1, Type.HERO_LEVELS_2, Type.HERO_LEVELS_3,
+        Type.HERO_KILLS, Type.HERO_LEVELS_4,
+
         Type.STORM_CALLER_USER, Type.TRICKSTER_RAVEN_USER,
         Type.REVOLUTIONARY_USER, Type.ITP_BIGSHOT_USER, Type.ITP_ALLUNIT_USER,
 
-        Type.WEEKLY_TOP10_TB, Type.WEEKLY_TOP10_WA, Type.WEEKLY_TOP10_FG, null, null,
+        Type.WEEKLY_TOP10_TB, Type.WEEKLY_TOP10_WA, Type.WEEKLY_TOP10_FG,
+        Type.WEEKLY_TOP10_HB, null,
 
-        Type.WEEKLY_WINNER_TB, Type.WEEKLY_WINNER_WA, Type.WEEKLY_WINNER_FG, null, null,
+        Type.WEEKLY_WINNER_TB, Type.WEEKLY_WINNER_WA, Type.WEEKLY_WINNER_FG,
+        Type.WEEKLY_WINNER_HB, null,
 
         // you suck badges
         Type.UNITS_LOST_1, Type.UNITS_LOST_2, null, Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,

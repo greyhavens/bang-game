@@ -101,6 +101,12 @@ public class HeroBuilding extends Scenario
         if (level > 0) {
             user.stats.incrementStat(StatType.HERO_LEVEL, level);
         }
+        if (stats[pidx].getIntStat(StatType.TOP_LEVEL) > 0) {
+            user.stats.incrementStat(StatType.TOP_LEVEL, 1);
+        }
+        if (stats[pidx].getIntStat(StatType.HERO_KILLING) > 0) {
+            user.stats.incrementStat(StatType.HERO_KILLING, 1);
+        }
     }
 
     @Override // documentation inherited

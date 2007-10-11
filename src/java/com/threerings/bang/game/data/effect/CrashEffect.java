@@ -24,7 +24,7 @@ public class CrashEffect extends DamageEffect
 
     public CrashEffect (Piece piece, int damage, Piece crasher)
     {
-        super(piece, damage);
+        super(piece, Math.max(0, damage));
         crasherId = crasher.pieceId;
         pidx = crasher.owner;
     }

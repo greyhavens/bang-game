@@ -92,6 +92,8 @@ public enum StatType implements Stat.Type
     HIGHEST_SAWS(new IntStat(), false, false),
 
     HERO_LEVEL(new MaxIntStat(), true, false),
+    TOP_LEVEL(new IntStat(), true, false),
+    HERO_KILLING(new IntStat(), true, false),
 
     // stats accumulated outside a game
     CHAT_SENT(new IntStat(), false, false),

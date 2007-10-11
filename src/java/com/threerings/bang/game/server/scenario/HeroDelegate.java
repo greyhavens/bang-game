@@ -70,6 +70,9 @@ public class HeroDelegate extends CounterDelegate
         }
         */
         if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            if (_levels[piece.owner] > 10) {
+                bangobj.stats[shooter].incrementStat(StatType.HERO_KILLING, 1);
+            }
             spawnBonusesFromHero(bangobj, piece);
             _xp[piece.owner] = Math.max(0, _xp[piece.owner] - _levels[piece.owner]);
         }
@@ -84,6 +87,16 @@ public class HeroDelegate extends CounterDelegate
         }
 
         updateLevels(bangobj, piece.pieceId);
+    }
+
+    @Override // documentation inherited
+    public void roundDidEnd (BangObject bangobj)
+    {
+        for (int ii = 0; ii < _xp.length; ii++) {
+            if (_xp[ii] >= LEVEL_XP[LEVEL_XP.length-1]) {
+                bangobj.stats[ii].setStat(StatType.TOP_LEVEL, 1);
+            }
+        }
     }
 
     /**
