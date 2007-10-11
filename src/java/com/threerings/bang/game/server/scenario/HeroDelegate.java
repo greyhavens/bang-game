@@ -58,17 +58,12 @@ public class HeroDelegate extends CounterDelegate
     {
         super.pieceWasKilled(bangobj, piece, shooter, sidx);
 
-        // any kills will give the player 1 xp
+        // the base experience gained is inversely proportional to the hero level
         if (shooter != -1) {
             _xp[shooter] += 1 + Math.max(0, 3 - getLevel(shooter) / 4);
         }
 
-        /*
-        // losing their hero will automatically drop them down one level
-        if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-            _xp[piece.owner] = LEVEL_XP[Math.max(0, _levels[piece.owner] - 1)];
-        }
-        */
+        // killing a hero will result in bonuses flying out of their ass
         if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
             if (_levels[piece.owner] > 10) {
                 bangobj.stats[shooter].incrementStat(StatType.HERO_KILLING, 1);
@@ -79,7 +74,7 @@ public class HeroDelegate extends CounterDelegate
 
         if (sidx != -1) {
             Piece spiece = bangobj.pieces.get(sidx);
-            // if the hero kills another unit then they get 9 additional xp
+            // if the hero kills another unit then they get 7 additional xp
             if (spiece != null && spiece instanceof Unit &&
                     ((Unit)spiece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
                 _xp[spiece.owner] += 7;
@@ -155,10 +150,12 @@ public class HeroDelegate extends CounterDelegate
                 }
             }
             if (_levels[counter.owner] != counter.count) {
-                LevelEffect effect = LevelEffect.changeLevel(
-                        bangobj, counter.owner, _levels[counter.owner]);
-                if (effect != null) {
-                    _bangmgr.deployEffect(-1, effect);
+                if (_levels[counter.owner] > counter.count) {
+                    LevelEffect effect = LevelEffect.changeLevel(
+                            bangobj, counter.owner, _levels[counter.owner]);
+                    if (effect != null) {
+                        _bangmgr.deployEffect(-1, effect);
+                    }
                 }
                 _bangmgr.deployEffect(-1, CountEffect.changeCount(
                             counter.pieceId, _levels[counter.owner], queuePiece));
