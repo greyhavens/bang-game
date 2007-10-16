@@ -10,16 +10,15 @@
     <!-- add their bigshot -->
     <add_piece what="unit" id="1000" type="indian_post/stormcaller" location="20,17" owner="0"/>
     <scenario_action type="apply_levels"/>
-    <center_on what="piece" id="1000"/>
 
     <!-- add a hustle bonus and have them activate it -->
     <text message="hustle"/>
-    <add_piece what="bonus" id="3330" type="frontier_town/repair"
-             location="22,17"/>
+    <add_piece what="bonus" id="3330" type="frontier_town/hustle" location="22,17"/>
     <center_on what="piece" id="3330"/>
     <wait event="bonus_activated"/>
 
 
+    <center_on what="piece" id="1000"/>
     <text message="bigshot" step="2"/>
     <wait event="text_clicked"/>
 
