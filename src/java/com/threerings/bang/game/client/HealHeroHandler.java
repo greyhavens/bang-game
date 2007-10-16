@@ -53,7 +53,6 @@ public class HealHeroHandler extends EffectHandler
         }
 
         // send the healing goodness to the hero
-        int dx = target.x, dy = target.y, dh = target.computeElevation(_bangobj.board, dx, dy);
         Vector3f start = new Vector3f(ssprite.getWorldTranslation()),
                  end = new Vector3f(tsprite.getWorldTranslation()),
                  startup = ssprite.getWorldRotation().mult(Vector3f.UNIT_Z),
@@ -61,11 +60,11 @@ public class HealHeroHandler extends EffectHandler
         start.scaleAdd(0.25f * TILE_SIZE, startup, start);
         end.scaleAdd(0.25f * TILE_SIZE, endup, end);
         final ShotSprite shot = new ShotSprite(
-                _ctx, "effects/indian_post/teleporter_1/travel", null);
+                _ctx, "effects/indian_post/heal_hero/travel", null);
         _view.addSprite(shot);
         shot.move(new LineSegmentPath(shot, Vector3f.UNIT_Z,
                     Vector3f.UNIT_X, new Vector3f[] { start, start, end, end },
-                    new float[] { 0.25f, 0.75f, 0.25f }) {
+                    new float[] { 0.05f, 0.7f, 0.1f }) {
             public void wasRemoved () {
                 super.wasRemoved();
                 _view.removeSprite(shot);

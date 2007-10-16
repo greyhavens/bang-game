@@ -76,7 +76,7 @@ public class HeroBuilding extends Scenario
 
         for (int ii = 0; ii < _startSpots.length; ii++) {
             ArrayList<Point> heals = bangobj.board.getRandomOccupiableSpots(
-                    2, _startSpots[ii].x, _startSpots[ii].y, 2, 5);
+                    _bangmgr.getTeamSize(ii), _startSpots[ii].x, _startSpots[ii].y, 2, 5);
             for (Point heal : heals) {
                 Bonus bonus = dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
                 if (bonus != null) {
@@ -210,9 +210,9 @@ public class HeroBuilding extends Scenario
                 Bonus bonus = dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
                 if (bonus != null) {
                     _hbonuses.offer(new TimedBonus(bangobj.tick, bonus));
+                    return true;
                 }
             }
-            return true;
         }
 
         return super.addBonus(bangobj, pieces);
