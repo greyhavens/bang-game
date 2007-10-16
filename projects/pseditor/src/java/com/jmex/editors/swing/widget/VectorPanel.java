@@ -32,8 +32,6 @@
 
 package com.jmex.editors.swing.widget;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 
@@ -57,7 +55,6 @@ public class VectorPanel extends JPanel
     public VectorPanel(float min, float max, float step) {
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        //super(new GridBagLayout());
 
         add(xPanel = new ValuePanel("X: ", "", min, max, step));
         xPanel.addChangeListener(this);
@@ -67,18 +64,6 @@ public class VectorPanel extends JPanel
 
         add(zPanel = new ValuePanel("Z: ", "", min, max, step));
         zPanel.addChangeListener(this);
-
-        /*
-        add(xPanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets(5, 5, 5, 5), 0, 0));
-        add(yPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets(5, 5, 5, 5), 0, 0));
-        add(zPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets(5, 5, 5, 5), 0, 0));
-            */
     }
 
     public void setValue(Vector3f value) {

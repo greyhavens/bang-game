@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -57,6 +57,8 @@ public class ParticleFlowPanel extends ParticleEditPanel {
     private ValuePanel rateVarPanel = new ValuePanel("Variance: ", "%", 0f, 1f,
             0.01f);
     private JCheckBox spawnBox;
+    private ValuePanel warmUpPanel = new ValuePanel(
+            "Warm up iterations: ", "", 0, Integer.MAX_VALUE, 1);
 
     public ParticleFlowPanel() {
         setLayout(new GridBagLayout());
@@ -85,6 +87,13 @@ public class ParticleFlowPanel extends ParticleEditPanel {
             public void stateChanged(ChangeEvent e) {
                 getEdittedParticles().setReleaseVariance(
                         rateVarPanel.getFloatValue());
+            }
+        });
+
+        warmUpPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                getEdittedParticles().getParticleController().setIterations(
+                    warmUpPanel.getIntValue());
             }
         });
 
@@ -121,6 +130,8 @@ public class ParticleFlowPanel extends ParticleEditPanel {
 
             public void actionPerformed(ActionEvent e) {
                 getEdittedParticles().forceRespawn();
+                getEdittedParticles().warmUp(
+                    getEdittedParticles().getParticleController().getIterations());
             }
         });
 
@@ -133,12 +144,23 @@ public class ParticleFlowPanel extends ParticleEditPanel {
                 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 new Insets(5, 10, 10, 10), 0, 0));
 
+        JPanel warmPanel = new JPanel(new GridBagLayout());
+        warmPanel.setBorder(createTitledBorder("WARM UP"));
+        warmPanel.add(warmUpPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                    new Insets(10, 10, 10, 10), 0, 0));
+
         add(ratePanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(10, 10, 5, 10), 0, 0));
-        add(spawnPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+        add(spawnPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
                 new Insets(10, 10, 10, 10), 0, 0));
+        add(warmPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0,
+                GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                new Insets(10, 10, 10, 10), 0, 0));
+
+
     }
 
     @Override
@@ -150,6 +172,8 @@ public class ParticleFlowPanel extends ParticleEditPanel {
         updateRateLabels();
         spawnBox.setSelected(getEdittedParticles().getParticleController()
                 .getRepeatType() == Controller.RT_WRAP);
+        warmUpPanel.setValue(getEdittedParticles().getParticleController()
+                .getIterations());
     }
 
     /**
