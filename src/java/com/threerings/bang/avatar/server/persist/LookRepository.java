@@ -114,7 +114,7 @@ public class LookRepository extends SimpleRepository
                 throws SQLException, PersistenceException
             {
                 String ssql = "update LOOKS set ARTICLES = ? " +
-                    "where PLAYER_ID = ? and NAME = ?";
+                    "where PLAYER_ID = ? and convert(NAME using binary) = ?";
                 PreparedStatement stmt = conn.prepareStatement(ssql);
                 try {
                     stmt.setBytes(1, toByteArray(look.articles));
@@ -136,7 +136,7 @@ public class LookRepository extends SimpleRepository
         throws PersistenceException
     {
         int mods = update("delete from LOOKS where PLAYER_ID = " + playerId +
-                          " and LOOK = " + JDBCUtil.escape(name));
+                          " and convert(NAME using binary) = " + JDBCUtil.escape(name));
         if (mods != 1) {
             log.warning("Unable to delete look [pid=" + playerId +
                         ", name=" + name + ", mods=" + mods + "].");
