@@ -46,20 +46,20 @@ import static com.threerings.bang.Log.log;
  * Maintains a cache of particle system effects.
  */
 public class ParticleCache extends PrototypeCache<String, Spatial>
-{    
+{
     /** The rotation from y-up coordinates to z-up coordinates. */
     public static final Quaternion Z_UP_ROTATION = new Quaternion();
     static {
         Z_UP_ROTATION.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
     }
-    
+
     public ParticleCache (BasicContext ctx)
     {
         super(ctx);
         Collections.addAll(_particles, BangUtil.townResourceToStrings(
             "rsrc/effects/TOWN/particles.txt"));
     }
-    
+
     /**
      * Determines whether the named particle effect exists.
      */
@@ -67,7 +67,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
     {
         return _particles.contains(name);
     }
-    
+
     /**
      * Loads an instance of the specified effect.
      *
@@ -77,11 +77,11 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
     {
         getInstance(name, null, rl);
     }
-    
+
     // documentation inherited
     protected Spatial loadPrototype (final String key)
         throws Exception
-    {  
+    {
         final File parent = _ctx.getResourceManager().getResourceFile(
             "effects/" + key);
         TextureKey.setLocationOverride(new TextureKey.LocationOverride() {
@@ -106,7 +106,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
         particles.setLocalScale(Float.parseFloat(
             props.getProperty("scale", "0.025")));
         particles.getLocalRotation().set(Z_UP_ROTATION);
-        
+
         String bounds = props.getProperty("bounds", "box");
         BoundingVolume bproto = null;
         if ("box".equals(bounds)) {
@@ -127,15 +127,15 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
                 }
             }.traverse(particles);
         }
-        
+
         return particles;
     }
-    
+
     // documentation inherited
     protected void initPrototype (Spatial prototype)
     {
     }
-    
+
     // documentation inherited
     protected Spatial createInstance (
         String key, Spatial prototype, Colorization[] zations)
@@ -175,7 +175,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
             instance = ParticleFactory.buildParticles(prototype.getName(),
                 prototype.getNumParticles(), ptype);
         }
-        
+
         // copy appearance parameters
         instance.setVelocityAligned(prototype.isVelocityAligned());
         instance.setStartColor(prototype.getStartColor());
@@ -183,7 +183,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
         instance.setStartSize(prototype.getStartSize());
         instance.setEndSize(prototype.getEndSize());
         instance.setAlphaFalloff(prototype.getAlphaFalloff());
-        
+
         // copy origin parameters
         instance.getLocalTranslation().set(prototype.getLocalTranslation());
         instance.getLocalRotation().set(prototype.getLocalRotation());
@@ -194,7 +194,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
         instance.setGeometry(prototype.getRing());
         instance.setGeometry(prototype.getFrustum());
         instance.setEmitType(prototype.getEmitType());
-        
+
         // copy emission parameters
         instance.setRotateWithScene(true);
         instance.setTransformParticles(prototype.isTransformParticles());
@@ -203,13 +203,13 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
         instance.setMaximumAngle(prototype.getMaximumAngle());
         instance.setInitialVelocity(prototype.getInitialVelocity());
         instance.setParticleSpinSpeed(prototype.getParticleSpinSpeed());
-        
+
         // copy flow parameters
         instance.setControlFlow(prototype.getParticleController().isControlFlow());
         instance.setReleaseRate(prototype.getReleaseRate());
         instance.setReleaseVariance(prototype.getReleaseVariance());
         instance.setRepeatType(prototype.getParticleController().getRepeatType());
-        
+
         // copy world parameters
         instance.setSpeed(prototype.getParticleController().getSpeed());
         instance.getParticleController().setPrecision(
@@ -217,7 +217,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
         instance.setParticleMass(prototype.getParticle(0).getMass());
         instance.setMinimumLifeTime(prototype.getMinimumLifeTime());
         instance.setMaximumLifeTime(prototype.getMaximumLifeTime());
-        
+
         // copy influence parameters
         ArrayList<ParticleInfluence> infs = prototype.getInfluences();
         if (infs != null) {
@@ -225,7 +225,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
                 instance.addInfluence(inf);
             }
         }
-        
+
         // copy render states
         for (int ii = 0; ii < RenderState.RS_MAX_STATE; ii++) {
             RenderState rs = prototype.getRenderState(ii);
@@ -233,7 +233,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
                 instance.setRenderState(rs);
             }
         }
-        
+
         // if the particle system is emissive, disable fog
         AlphaState astate = (AlphaState)prototype.getRenderState(
             RenderState.RS_ALPHA);
@@ -242,21 +242,22 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
             fstate.setEnabled(false);
             instance.setRenderState(fstate);
         }
-        
+
         // recreate the particles with new parameters and do any warmup
         // required
+        instance.updateGeometricState(0f, false);
         instance.forceRespawn();
         instance.warmUp(instance.getParticleController().getIterations());
-        
+
         // clone model bounds, if present
         BoundingVolume bounds = prototype.getBatch(0).getModelBound();
         if (bounds != null) {
             instance.getBatch(0).setModelBound(bounds.clone(null));
         }
-        
+
         return instance;
     }
-    
+
     /** The particle effects available for loading. */
     protected HashSet<String> _particles = new HashSet<String>();
 }
