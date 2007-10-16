@@ -1276,7 +1276,8 @@ public class PlayerManager
             config.players[0] = player.getVisibleName();
         }
         for (int ii = autoplay ? 0 : 1; ii < config.players.length; ii++) {
-            BangAI ai = BangAI.createAI(1, 50, names);
+            int ailevel = (config.duration == BangConfig.Duration.PRACTICE ? 20 : 50);
+            BangAI ai = BangAI.createAI(1, ailevel, names);
             config.players[ii] = ai.handle;
             config.ais[ii] = ai;
         }
