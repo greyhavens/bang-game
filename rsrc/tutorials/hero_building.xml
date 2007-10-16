@@ -8,10 +8,19 @@
     <wait event="text_clicked"/>
 
     <!-- add their bigshot -->
-    <add_piece what="unit" id="1000" type="indian_post/stormcaller" location="22,17" owner="0"/>
+    <add_piece what="unit" id="1000" type="indian_post/stormcaller" location="20,17" owner="0"/>
     <scenario_action type="apply_levels"/>
     <center_on what="piece" id="1000"/>
-    <text message="bigshot"/>
+
+    <!-- add a hustle bonus and have them activate it -->
+    <text message="hustle"/>
+    <add_piece what="bonus" id="3330" type="frontier_town/repair"
+             location="22,17"/>
+    <center_on what="piece" id="3330"/>
+    <wait event="bonus_activated"/>
+
+
+    <text message="bigshot" step="2"/>
     <wait event="text_clicked"/>
 
     <!-- add some fodder to kill -->
@@ -34,7 +43,8 @@
 
     <add_piece what="unit" id="1002" type="indian_post/buffalo_rider" location="21,20" owner="0"/>
     <move_unit id="2003" location="22,18" target="1000"/>
-    <text message="heal"/>
+
+    <text message="heal" step="3"/>
     <wait event="text_clicked"/>
 
     <add_piece what="bonus" id="3004" type="indian_post/heal_hero" location="17, 19" owner="-1"/>
@@ -47,7 +57,8 @@
     <wait event="text_clicked"/>
 
     <move_unit id="2003" location="21,18" target="1000"/>
-    <text message="dead_hero"/>
+
+    <text message="dead_hero" step="4"/>
     <wait event="text_clicked"/>
 
     <move_unit id="2003" location="21,21"/>
@@ -57,7 +68,7 @@
     <text message="dead_hero2"/>
     <wait event="text_clicked"/>
 
-    <text message="unit_kills"/>
+    <text message="unit_kills" step="5"/>
     <center_on what="piece" id="2003"/>
     <wait event="text_clicked"/>
 
@@ -68,7 +79,7 @@
     <center_on what="piece" id="1005"/>
     <wait event="unit_killed" allowAttack="23,18"/>
 
-    <text message="bigshot_death"/>
+    <text message="bigshot_death" step="6"/>
     <wait event="text_clicked"/>
 
 </tutorial>
