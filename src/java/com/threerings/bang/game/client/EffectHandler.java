@@ -272,6 +272,10 @@ public class EffectHandler extends BoardView.BoardAction
             flyDroppedBonus(trans, sprite, true);
             if (asbe.first) {
                 displayParticles("indian_post/hero_death", trans);
+                String soundPath = getSoundPath("indian_post/hero_death");
+                if (soundPath != null) {
+                    _sounds.getSound(soundPath).play(true);
+                }
             }
         }
 
@@ -341,9 +345,8 @@ public class EffectHandler extends BoardView.BoardAction
         // perhaps display a generic particle effect
         if (BangPrefs.isMediumDetail()) {
             if (_ctx.getParticleCache().haveParticles(effect)) {
-                sprite.displayParticles(effect, true);
-            } else if (LevelEffect.LEVEL_CHANGED.equals(effect)) {
-                sprite.displayParticles("indian_post/level_up", false);
+                boolean center = (!LevelEffect.LEVEL_UP.equals(effect));
+                sprite.displayParticles(effect, center);
             }
         }
 

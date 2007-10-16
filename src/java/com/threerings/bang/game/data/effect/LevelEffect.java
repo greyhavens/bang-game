@@ -20,7 +20,7 @@ import static com.threerings.bang.Log.log;
 public class LevelEffect extends Effect
 {
     /** The identifier for the level changing effect. */
-    public static final String LEVEL_CHANGED = "level_changed";
+    public static final String LEVEL_UP = "indian_post/level_up";
 
     /** The id of the hero that's level is changing. */
     public int pieceId = -1;
@@ -72,7 +72,7 @@ public class LevelEffect extends Effect
             ((HeroInfluence)influence).setLevel(level);
         }
         if (level > 0) {
-            reportEffect(obs, hero, LEVEL_CHANGED);
+            reportEffect(obs, hero, LEVEL_UP);
         }
         return true;
     }

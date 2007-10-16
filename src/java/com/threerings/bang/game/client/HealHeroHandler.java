@@ -24,6 +24,12 @@ public class HealHeroHandler extends EffectHandler
     public boolean execute ()
     {
         HealHeroEffect heal = (HealHeroEffect)_effect;
+
+        String soundPath = getSoundPath("frontier_town/half_repair");
+        if (soundPath != null) {
+            _sounds.getSound(soundPath).play(true);
+        }
+
         if (heal.pieceId == heal.heroId) {
             return super.execute();
         }
