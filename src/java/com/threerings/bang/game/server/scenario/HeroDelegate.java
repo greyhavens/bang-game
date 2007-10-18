@@ -87,6 +87,9 @@ public class HeroDelegate extends CounterDelegate
     @Override // documentation inherited
     public void roundDidEnd (BangObject bangobj)
     {
+        if (_xp == null) {
+            return;
+        }
         for (int ii = 0; ii < _xp.length; ii++) {
             if (_xp[ii] >= LEVEL_XP[LEVEL_XP.length-1]) {
                 bangobj.stats[ii].setStat(StatType.TOP_LEVEL, 1);
