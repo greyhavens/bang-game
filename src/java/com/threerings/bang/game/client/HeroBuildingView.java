@@ -109,6 +109,13 @@ public class HeroBuildingView extends ScenarioHUD
         getBackground().render(renderer, 0, 0, _width, _height, 0.5f);
     }
 
+    @Override // from BComponent
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _icons.removeAll();
+    }
+
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected int _pidx, _color;

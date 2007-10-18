@@ -168,7 +168,7 @@ public class PieceStatus extends Node
             getTextureState(_icon[0]).setTexture(_damout.createSimpleClone());
         }
 
-        int dlevel = (int)Math.floor(piece.damage/10f);
+        int dlevel = Math.max(0, (int)Math.floor(piece.damage/10f));
         if (_dlevel != dlevel) {
             _dlevel = dlevel;
             Texture dtex = _damtexs[dlevel];
