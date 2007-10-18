@@ -268,6 +268,12 @@ public class HeroBuilding extends Scenario
         }
     }
 
+    @Override // documentation inherited
+    protected float getScaleFactor ()
+    {
+        return 0f;
+    }
+
     protected class RespawnList extends LinkedList<Unit> {};
     protected class TimedBonus extends Tuple<Integer, Bonus> {
         public TimedBonus (short tick, Bonus bonus) {
