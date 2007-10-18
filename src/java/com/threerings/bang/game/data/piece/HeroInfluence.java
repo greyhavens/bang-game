@@ -72,7 +72,7 @@ public class HeroInfluence extends Influence
     @Override // documentation inherited
     public int adjustDefend (Piece shooter, int damage)
     {
-        return (int)(damage  - 3 * _level);
+        return Math.max(0, (int)(damage  - 3 * _level));
     }
 
     @Override // documentation inherited
