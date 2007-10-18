@@ -876,7 +876,7 @@ public abstract class Piece
 
         // account for any influences on the attacker or defender
         ddamage = adjustAttack(target, ddamage);
-        ddamage = target.adjustDefend(this, ddamage);
+        ddamage = Math.max(0, target.adjustDefend(this, ddamage));
 
         // finally scale the damage by the desired value
         return Math.round(scale * ddamage);
