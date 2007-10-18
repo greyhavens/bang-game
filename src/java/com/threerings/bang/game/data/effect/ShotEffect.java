@@ -155,7 +155,7 @@ public class ShotEffect extends Effect
         baseDamage = Math.max(damage, 0);
         this.attackIcons = attackIcons;
         this.defendIcons = defendIcons;
-        newDamage = Math.min(100, target.damage + damage);
+        newDamage = Math.max(0, Math.min(100, target.damage + damage));
         xcoords = append(xcoords, target.x);
         ycoords = append(ycoords, target.y);
     }
