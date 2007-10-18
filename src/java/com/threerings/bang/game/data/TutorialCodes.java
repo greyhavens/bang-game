@@ -124,7 +124,7 @@ public class TutorialCodes
         PRACTICE_CONFIGS.put(ForestGuardiansInfo.IDENT, new PracticeConfig(
                     "Honeycomb Copse", "indian_post/tricksterraven", null, null));
         PRACTICE_CONFIGS.put(HeroBuildingInfo.IDENT, new PracticeConfig(
-                    "Foothills", "indian_post/stormcaller", null, null));
+                    "Frost Maw", "indian_post/stormcaller", null, null));
     }
 
     /** An event message sent to the server to let the tutorial scenario know
