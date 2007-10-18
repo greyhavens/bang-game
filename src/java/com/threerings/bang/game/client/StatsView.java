@@ -901,5 +901,7 @@ public class StatsView extends SteelWindow
         // Forest Guardians
         StatType.TREES_SAPLING, StatType.TREES_MATURE,
         StatType.TREES_ELDER, StatType.TREE_POINTS,
+        // Warpath
+        StatType.HERO_LEVEL,
     };
 }
