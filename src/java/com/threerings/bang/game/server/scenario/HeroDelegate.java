@@ -65,7 +65,7 @@ public class HeroDelegate extends CounterDelegate
 
         // killing a hero will result in bonuses flying out of their ass
         if (piece instanceof Unit && ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-            if (_levels[piece.owner] > 10) {
+            if (shooter != -1 && _levels[piece.owner] > 10) {
                 bangobj.stats[shooter].incrementStat(StatType.HERO_KILLING, 1);
             }
             spawnBonusesFromHero(bangobj, piece);
