@@ -748,20 +748,31 @@ public class GangHandler
             _gangobj.updateMembers(member);
 
             // removed any expired items from the inventory
-            ArrayList<Comparable> removals = null;
+            ArrayList<Integer> removals = null;
             long now = System.currentTimeMillis();
             for (Item item : _gangobj.inventory) {
                 if (item.isExpired(now)) {
                     if (removals == null) {
-                        removals = new ArrayList<Comparable>();
+                        removals = new ArrayList<Integer>();
                     }
-                    removals.add(item.getKey());
+                    removals.add((Integer)item.getKey());
                 }
             }
             if (removals != null) {
-                for (Comparable key : removals) {
+                final ArrayIntSet itemIds = new ArrayIntSet();
+                for (Integer key : removals) {
                     _gangobj.removeFromInventory(key);
+                    itemIds.add(key.intValue());
                 }
+                BangServer.invoker.postUnit(new RepositoryUnit("expireItems") {
+                    public void invokePersist () throws PersistenceException {
+                        BangServer.itemrepo.deleteItems(itemIds, "Gang item expired");
+                    }
+                    public void handleSuccess () {
+                    }
+                    public void handleFailure (Exception cause) {
+                    }
+                });
             }
         } finally {
             _gangobj.commitTransaction();
