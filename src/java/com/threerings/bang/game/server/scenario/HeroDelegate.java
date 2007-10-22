@@ -189,13 +189,12 @@ public class HeroDelegate extends CounterDelegate
 
         ArrayList<Point> drops = bangobj.board.getRandomOccupiableSpots(
                 numSpawns, piece.x, piece.y, 1, 3);
-        Bonus[] bonuses = selectBonuses(bangobj, getLevel(piece.owner), numSpawns);
+        Bonus[] bonuses = selectBonuses(bangobj, getLevel(piece.owner), drops.size());
         for (int ii = 0; ii < bonuses.length; ii++) {
             Bonus bonus = bonuses[ii];
             Point drop = drops.get(ii);
             bonus.assignPieceId(bangobj);
             bonus.position(drop.x, drop.y);
-            //placeBonus(bangobj, bonus, spots.getX(ii), spots.getY(ii));
             _bangmgr.deployEffect(-1,
                     new AddSpawnedBonusEffect(bonus, piece.x, piece.y, piece.pieceId, ii == 0));
             if (_parent instanceof HeroBuilding) {
