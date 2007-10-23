@@ -3510,8 +3510,7 @@ public class BangManager extends GameManager
     protected static final int MIN_RATED_DURATION = 180;
 
     /** If a game is shorter than this (in minutes) some stats don't count. */
-    protected static final int MIN_STATS_DURATION = 0;
-    //protected static final int MIN_STATS_DURATION = 2;
+    protected static final int MIN_STATS_DURATION = 2;
 
     /** Stats that we accumulate at the end of the game into the player's persistent stats. */
     protected static final StatType[] ACCUM_STATS = {
