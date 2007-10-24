@@ -29,11 +29,12 @@ public class FailedShotEffect extends ShotEffect
     {
     }
 
-    public FailedShotEffect (Piece shooter, Piece target, int damage)
+    public FailedShotEffect (Piece shooter, Piece target, int damage, int type)
     {
         shooterId = shooter.pieceId;
         baseDamage = damage;
         newDamage = Math.min(100, shooter.damage + damage);
+        animType = type;
         setTarget(target, damage, null, null);
     }
 
@@ -41,7 +42,7 @@ public class FailedShotEffect extends ShotEffect
      * Configures this shot effect with a target and damage amount.  The
      * damage value will be applied to the shooter since the shot failed.
      */
-    public void setTarget (Piece target, int damage, 
+    public void setTarget (Piece target, int damage,
                       String[] attackIcons, String[] defendIcons)
     {
         targetId = target.pieceId;
@@ -52,8 +53,9 @@ public class FailedShotEffect extends ShotEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        int t = animType;
         animType = type;
-        type = (short)(baseDamage == 0 ? DUD : MISFIRE);
+        type = (short)t;
         Piece shooter = bangobj.pieces.get(shooterId);
         if (shooter != null) {
             dammap.increment(shooter.owner, newDamage - shooter.damage);
@@ -65,7 +67,7 @@ public class FailedShotEffect extends ShotEffect
             for (Effect effect : preShotEffects) {
                 effect.prepare(bangobj, dammap);
             }
-            
+
         } else {
             log.warning("FailedShot effect missing shooter [id=" +
                     shooterId + "].");
@@ -76,12 +78,12 @@ public class FailedShotEffect extends ShotEffect
     public boolean applyTarget (
             BangObject bangobj, Unit shooter, Observer obs)
     {
-        if (baseDamage > 0) {
+        if (type == MISFIRE) {
             return damage(bangobj, obs, shooter.owner, null, shooter,
                 newDamage, DAMAGED);
         }
         Piece target;
-        if (targetId != -1 && 
+        if (targetId != -1 &&
                 (target = bangobj.pieces.get(targetId)) != null) {
             reportEffect(obs, target, DUDDED);
         }
@@ -91,19 +93,19 @@ public class FailedShotEffect extends ShotEffect
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
-        if (baseDamage == 0) {
+        if (type == DUD) {
             return new DudShotHandler(animType);
         } else {
             return new MisfireHandler(animType);
         }
     }
-    
+
     @Override // documentation inherited
     public int getBaseDamage (Piece piece)
     {
         return (piece.pieceId == shooterId) ? baseDamage : 0;
     }
-    
+
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {

@@ -36,7 +36,7 @@ public class DudEffect extends SetHindranceEffect
                     return null;
                 }
                 _expired = true;
-                return new FailedShotEffect(shooter, target, 0);
+                return new FailedShotEffect(shooter, target, 0, FailedShotEffect.DUD);
             }
 
             public boolean isExpired (short tick)

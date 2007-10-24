@@ -35,7 +35,8 @@ public class MisfireEffect extends SetHindranceEffect
                 }
                 _expired = true;
                 return new FailedShotEffect(shooter, target,
-                        shooter.computeScaledDamage(bangobj, target, scale));
+                        shooter.computeScaledDamage(bangobj, target, scale),
+                        FailedShotEffect.MISFIRE);
             }
 
             public boolean isExpired (short tick)
