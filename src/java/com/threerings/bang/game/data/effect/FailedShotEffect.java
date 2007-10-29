@@ -113,7 +113,7 @@ public class FailedShotEffect extends ShotEffect
         if (piece == null || piece.owner != pidx || pidx == -1) {
             return null;
         }
-        if (baseDamage == 0) {
+        if (type == DUD) {
             return MessageBundle.compose("m.effect_dud", piece.getName());
         } else {
             return MessageBundle.compose("m.effect_misfire", piece.getName(),
