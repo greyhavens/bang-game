@@ -799,12 +799,12 @@
     <!-- build our models and avatars by execing ant separately because it seems to -->
     <!-- otherwise blow its top due to some heap size wackiness -->
     <exec executable="ant" dir="${basedir}" failonerror="true">
-      <env key="ANT_OPTS" value="-mx128M"/>
+      <env key="ANT_OPTS" value="-mx256M"/>
       <arg line="-Dtowns=${towns}"/>
       <arg line="avatars"/>
     </exec>
     <exec executable="ant" dir="${basedir}" failonerror="true">
-      <env key="ANT_OPTS" value="-mx128M"/>
+      <env key="ANT_OPTS" value="-mx256M"/>
       <arg line="-Dtowns=${towns}"/>
       <arg line="models"/>
     </exec>
