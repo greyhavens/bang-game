@@ -20,7 +20,7 @@
   <import file="build/etc/build-support.xml"/>
 
   <!-- override the fileset for the checkclean target to ignore ${var.dir} -->
-  <fileset id="checkclean.fileset" dir="${basedir}">
+  <fileset id="checkclean.fileset" dir="${basedir}" excludes="build-number.txt">
     <exclude name="${var.dir}/**"/>
   </fileset>
 
