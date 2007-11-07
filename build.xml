@@ -943,10 +943,6 @@
       <antcall target="distall"/>
     </else></if>
 
-    <if><istrue value="${build.docs}"/><then>
-      <antcall target="javadoc"/>
-    </then></if>
-
     <!-- only build the pseditor for the devel builds -->
     <if><equals arg1="${props.dist}" arg2="devel"/><then>
       <ant dir="projects/pseditor" target="proguard" inheritAll="false"/>
@@ -1057,10 +1053,6 @@
       <param name="extra.type" value="hemiptera-map"/>
       <param name="pkg.prefix" value="${prefix}/threerings/etc/proguard/${app.name}"/>
     </antcall>
-
-    <if><istrue value="${build.docs}"/><then>
-      <antcall target="prepare-docs"/>
-    </then></if>
   </target>
 
   <!-- install project specific server code into ${pkg.base} -->
