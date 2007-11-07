@@ -733,7 +733,6 @@
     </then></if>
 
     <!-- if enabled, upload the client to S3 -->
-    <!-- XXX TEMP DISABLE FOR FIRST BAMBOO BUILD
     <if><istrue value="${client_s3enable}"/><then>
         <property name="s3upload" value="${deploy.dir}/tmp/s3upload"/>
         <delete dir="${s3upload}"/>
@@ -748,7 +747,6 @@
             <fileset dir="${s3upload}" includes="bang/**"/>
         </s3upload>
     </then></if>
-    -->
   </target>
 
   <!-- signs and install the Getdown applet jar file -->
