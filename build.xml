@@ -691,7 +691,7 @@
     </copy>
 
     <!-- create the getdown diff files -->
-    <copy todir="${deploy.dir}/lib" file="${java.home}/lib/javaws.jar"/>
+    <copy todir="${deploy.dir}/lib" file="lib/javaws.jar"/>
     <for param="dir">
       <path>
         <dirset dir="${var.dir}" includes="*"/>
