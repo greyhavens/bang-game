@@ -716,7 +716,6 @@
       <fileset dir="etc/proguard" includes="??????????.map"/>
     </copy>
     <!-- commit the proguard map file -->
-    <!-- XXX TEMP DISABLE FOR FIRST BAMBOO BUILD
     <if>
       <or><equals arg1="${props.dist}" arg2="production"/>
       <equals arg1="${props.dist}" arg2="test"/></or>
@@ -732,7 +731,6 @@
         <arg value="etc/proguard/${version}.map"/>
       </exec>
     </then></if>
-    -->
 
     <!-- if enabled, upload the client to S3 -->
     <!-- XXX TEMP DISABLE FOR FIRST BAMBOO BUILD
