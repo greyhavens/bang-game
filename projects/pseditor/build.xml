@@ -37,7 +37,6 @@
     <copy todir="${deploy.dir}/classes">
       <fileset dir="rsrc" includes="**/*"/>
     </copy>
-    <mkdir dir="${deploy.dir}/lib"/>
     <copyfilelist dest="${deploy.dir}/lib">
       <filelist refid="${app.name}.libs"/>
     </copyfilelist>
