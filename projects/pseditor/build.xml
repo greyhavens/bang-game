@@ -37,11 +37,10 @@
     <copy todir="${deploy.dir}/classes">
       <fileset dir="rsrc" includes="**/*"/>
     </copy>
-    <antcall target="copyfilelist">
-      <param name="filelist.id" value="${app.name}.libs"/>
-      <param name="dest.dir" value="${deploy.dir}/lib"/>
-      <param name="flatten" value="true"/>
-    </antcall>
+    <mkdir dir="${deploy.dir}/lib"/>
+    <copyfilelist dest="${deploy.dir}/lib">
+      <filelist refid="${app.name}.libs"/>
+    </copyfilelist>
   </target>
 
   <!-- cleans out the installed application -->
