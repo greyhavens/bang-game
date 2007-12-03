@@ -203,7 +203,7 @@ public class ParlorManager extends PlaceManager
 
         PlayerObject other = BangServer.lookupPlayer(boi.playerId);
         // and you can't boot a power user
-        if (_parobj.info.powerUser(other)) {
+        if (other == null || _parobj.info.powerUser(other)) {
             return;
         }
 
