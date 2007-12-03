@@ -56,7 +56,7 @@ public class ParlorInfo extends SimpleStreamableObject
     public boolean powerUser (PlayerObject user)
     {
         // if this player is the creator, or an admin/support, let 'em in regardless
-        return creator.equals(user.handle) || user.tokens.isSupport() ||
+        return user.handle.equals(creator) || user.tokens.isSupport() ||
             (type == Type.RECRUITING && user.gangId == gangId && user.canRecruit());
     }
 }
