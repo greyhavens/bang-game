@@ -244,8 +244,8 @@ public class BangApp extends JmeApp
     protected BRootNode createRootNode ()
     {
         return new PolledRootNode(_timer, _input) {
-            protected void dispatchEvent (BComponent target, BEvent event) {
-                super.dispatchEvent(target, event);
+            protected boolean dispatchEvent (BComponent target, BEvent event) {
+                boolean dispatched = super.dispatchEvent(target, event);
                 if (event instanceof ActionEvent && target instanceof BButton &&
                     !(target instanceof SelectableIcon)) {
                     // allow buttons to have special feedback sounds
@@ -258,6 +258,7 @@ public class BangApp extends JmeApp
                 } else if (event instanceof TextEvent) {
                     BangUI.play(BangUI.FeedbackSound.KEY_TYPED);
                 }
+                return dispatched;
             }
         };
     }
