@@ -2,11 +2,11 @@
 <!-- declares the libraries needed to build the pseditor -->
 <project name="library-dependencies">
   <filelist dir="${libs.dir}" id="pseditor.libs">
-    <file name="jme.jar"/>
-    <file name="jme-awt.jar"/>
-    <file name="jme-effects.jar"/>
-    <file name="jme-gamestates.jar"/>
-    <file name="jme-scene.jar"/>
+    <file name="jme-0.0-SNAPSHOT.jar"/>
+    <file name="jme-awt-0.0-SNAPSHOT.jar"/>
+    <file name="jme-effects-0.0-SNAPSHOT.jar"/>
+    <file name="jme-gamestates-0.0-SNAPSHOT.jar"/>
+    <file name="jme-scene-0.0-SNAPSHOT.jar"/>
     <file name="lwjgl.jar"/>
     <file name="proguard.jar"/>
   </filelist>
