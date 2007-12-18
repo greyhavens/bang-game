@@ -5,14 +5,14 @@
     <file name="commons-collections.jar"/>
     <file name="junit4.jar"/>
     <file name="mysql-connector-java.jar"/>
-    <file name="narya-base.jar"/>
-    <file name="narya-distrib.jar"/>
-    <file name="nenya-cast.jar"/>
-    <file name="samskivert.jar"/>
     <file name="servlet-api.jar"/>
-    <file name="threerings.jar"/>
     <file name="velocity-1.5-dev.jar"/>
-    <file name="vilya-parlor.jar"/>
-    <file name="vilya-stats.jar"/>
+    <file name="narya-base-0.0-SNAPSHOT.jar"/>
+    <file name="narya-distrib-0.0-SNAPSHOT.jar"/>
+    <file name="nenya-cast-0.0-SNAPSHOT.jar"/>
+    <file name="samskivert-0.0-SNAPSHOT.jar"/>
+    <file name="threerings-0.0-SNAPSHOT.jar"/>
+    <file name="vilya-parlor-0.0-SNAPSHOT.jar"/>
+    <file name="vilya-stats-0.0-SNAPSHOT.jar"/>
   </filelist>
 </project>

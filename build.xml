@@ -9,11 +9,9 @@
   <property name="extlibs.dir"    value="extlibs/java"/>
   <property name="javadoc.title"  value="Bang! Howdy API"/>
   <property name="build.optimize" value="on"/>
-  <property name="nartool.path"   value="${basedir}/projects/narya/bin"/>
   <property name="towns"          value="frontier_town,indian_post,boom_town"/>
 
   <!-- define our subprojects and include the standard build system -->
-  <property name="projects" value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
   <property name="webapps" value="office"/>
   <!-- jetty needs to import server.conf, not bang.conf which is the default -->
   <property name="jetty.app.conf" value="server.conf"/>
@@ -67,8 +65,8 @@
     <file name="${extlibs.dir}/s3upload.jar"/>
     <file name="${extlibs.dir}/servlet-api.jar"/>
     <file name="${extlibs.dir}/velocity-1.5-dev.jar"/>
-    <file name="lib/lwjgl.jar"/>
-    <file name="lib/lwjgl_util.jar"/>
+    <file name="${extlibs.dir}/lwjgl/lwjgl.jar"/>
+    <file name="${extlibs.dir}/lwjgl/lwjgl_util.jar"/>
     <file name="lib/jorbis-0.0.12.jar"/>
     <file name="lib/jogg-0.0.5.jar"/>
     <file name="lib/jl1.0.jar"/>
@@ -99,19 +97,6 @@
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/rsrc"/>
-
-    <!-- Fetch dependencies -->
-    <artifact:dependencies filesetId="dependency.fileset">
-      <remoteRepository refid="maven.depends.repo"/>
-      <dependency groupId="com.threerings.underwire.${maven.dist}" artifactId="underwire"
-                  version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.hemiptera.${maven.dist}" artifactId="hemiptera"
-                  version="0.0-SNAPSHOT"/>
-    </artifact:dependencies>
-    <copy todir="${deploy.dir}/lib">
-      <fileset refid="dependency.fileset"/>
-      <mapper type="flatten"/>
-    </copy>
 
     <!-- copy global static resources -->
     <copy todir="${deploy.dir}/rsrc">
@@ -179,6 +164,43 @@
 
     <copy file="rsrc/config/resource/manager.properties"
           tofile="${deploy.dir}/rsrc/config/resource/manager.properties"/>
+  </target>
+
+  <!-- fetches our library dependencies -->
+  <target name="mavendeps" depends="prepare">
+    <artifact:dependencies filesetId="dependency.fileset">
+      <remoteRepository refid="maven.depends.repo"/>
+      <dependency groupId="com.threerings.panopticon.${maven.dist}" artifactId="panopticon-client"
+                  version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme-awt" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme-effects" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme-gamestates" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme-model" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme-scene" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme-sound" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme-terrain" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.samskivert" artifactId="jme-bui" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.samskivert" artifactId="samskivert" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.narya" artifactId="narya-base" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.narya" artifactId="narya-distrib" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.nenya" artifactId="nenya-rsrc" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.nenya" artifactId="nenya-media" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.nenya" artifactId="nenya-jme" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.nenya" artifactId="nenya-openal" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.nenya" artifactId="nenya-cast" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.vilya" artifactId="vilya-parlor" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.vilya" artifactId="vilya-stats" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.underwire.${maven.dist}" artifactId="underwire"
+                  version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.hemiptera.${maven.dist}" artifactId="hemiptera"
+                  version="0.0-SNAPSHOT"/>
+    </artifact:dependencies>
+    <copy todir="${deploy.dir}/lib">
+      <fileset refid="dependency.fileset"/>
+      <mapper type="flatten"/>
+    </copy>
   </target>
 
   <!-- generates fields for persistent record classes -->
@@ -535,9 +557,9 @@
       <fileset dir="rsrc" includes="config/resource/manager.properties"/>
     </copy>
     <copy todir="${client_dir}/native">
-      <fileset dir="lib/i686-Linux" includes="*.so"/>
-      <fileset dir="lib/i686-Windows" includes="*.dll"/>
-      <fileset dir="lib/Universal-MacOS" includes="*"/>
+      <fileset dir="${extlibs.dir}/lwjgl/i686-Linux" includes="*.so"/>
+      <fileset dir="${extlibs.dir}/lwjgl/i686-Windows" includes="*.dll"/>
+      <fileset dir="${extlibs.dir}/lwjgl/Universal-MacOS" includes="*"/>
     </copy>
 
     <!-- generate the getdown digest file -->
@@ -779,11 +801,6 @@
   <!-- rebuild all the niggling bits -->
   <target name="bits" depends="colorpos,tutorials"/>
 
-  <!-- convenience targets that build specific projects and copy the results -->
-  <target name="bui">
-    <antcall target="distprojects"><param name="projects" value="jme-bui"/></antcall>
-  </target>
-
   <!-- builds the distribution jar files -->
   <target name="dist" depends="prepare,compile">
     <!-- create the main jar file with all the code and fiddly bits -->
@@ -893,40 +910,13 @@
     </jar>
   </target>
 
-  <!-- cleans JME which doesn't fit into our standard scheme -->
-  <target name="cleanjme">
-    <echo level="info">Cleaning in jme...</echo>
-    <delete dir="${projects.dir}/jme/build"/>
-    <delete dir="${projects.dir}/jme/data/doc"/>
-    <delete><fileset dir="${projects.dir}/jme/target" includes="jme*.jar"/></delete>
-  </target>
-
-  <!-- rebuilds JME which doesn't fit into our standard scheme -->
-  <target name="distjme">
-    <echo>Building in jme...</echo>
-    <ant dir="${projects.dir}/jme" target="dist-all" inheritAll="false"/>
-    <copy todir="${deploy.dir}/lib">
-      <fileset dir="${projects.dir}/jme/target">
-        <include name="jme.jar"/>
-        <include name="jme-awt.jar"/>
-        <include name="jme-effects.jar"/>
-        <include name="jme-gamestates.jar"/>
-        <include name="jme-model.jar"/>
-        <include name="jme-scene.jar"/>
-        <include name="jme-sound.jar"/>
-        <include name="jme-terrain.jar"/>
-      </fileset>
-    </copy>
-  </target>
-
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="prepare,distjme,distprojects,dist,distwebapps,mdist">
+  <target name="distall" depends="prepare,mavendeps,dist,distwebapps,mdist">
     <!-- copy native narya libraries into ${deploy.dir}/lib -->
     <copy todir="${deploy.dir}/lib">
-      <fileset dir="projects/narya/${deploy.dir}/lib" includes="**/libsignal.so"/>
-      <fileset dir="lib/" includes="**/*.so"/>
-      <fileset dir="lib/" includes="**/*.jnilib"/>
-      <fileset dir="lib/" includes="**/*.dylib"/>
+      <fileset dir="${extlibs.dir}/lwjgl" includes="**/*.so"/>
+      <fileset dir="${extlibs.dir}/lwjgl" includes="**/*.jnilib"/>
+      <fileset dir="${extlibs.dir}/lwjgl" includes="**/*.dylib"/>
     </copy>
   </target>
 
@@ -986,10 +976,10 @@
   </target>
 
   <!-- cleans out the application and all subprojects -->
-  <target name="cleanall" depends="cleanprojects,cleanwebapps,clean"/>
+  <target name="cleanall" depends="cleanwebapps,clean"/>
 
   <!-- fully cleans out the application and all subprojects -->
-  <target name="distcleanall" depends="distcleanprojects,distcleanwebapps,cleanjme,distclean"/>
+  <target name="distcleanall" depends="distcleanwebapps,distclean"/>
 
   <!-- prepare ${destroot} for all the packages being built -->
   <target name="preppkg" depends="copydistprops">
