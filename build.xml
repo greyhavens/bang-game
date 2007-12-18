@@ -39,7 +39,7 @@
   <property name="bin.list"   value="${bin.list1},${bin.list2},${bin.list3}"/>
 
   <!-- declare the files that will be deployed to the maven repository -->
-  <filelist dir="." id="deploy.filelist">
+  <filelist dir="." id="deploy.dist.filelist">
     <file name="${deploy.dir}/bang-support.jar"/>
   </filelist>
 
