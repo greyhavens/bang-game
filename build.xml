@@ -36,11 +36,6 @@
   <property name="bin.list3"  value="grind_bounties,bang,bangrespawn"/>
   <property name="bin.list"   value="${bin.list1},${bin.list2},${bin.list3}"/>
 
-  <!-- declare the files that will be deployed to the maven repository -->
-  <filelist dir="." id="deploy.dist.filelist">
-    <file name="${deploy.dir}/bang-support.jar"/>
-  </filelist>
-
   <!-- declare the libraries needed by the Bang runtime -->
   <filelist dir="." id="dist.libs">
     <file name="${extlibs.dir}/ant.jar"/>
@@ -973,6 +968,15 @@
         </exec>
       </then></if>
     </then></if>
+
+    <!-- deploy the bang-support artifact to the maven repository to a namespace that
+         includes the current "distribution", e.g. "devel" -->
+    <filelist dir="." id="bang.deploy">
+      <file name="${deploy.dir}/bang-support.jar"/>
+    </filelist>
+    <antcall target="maven-deploy-to-dist">
+      <reference refid="bang.deploy" torefid="deploy.dist.filelist"/>
+    </antcall>
   </target>
 
   <!-- cleans out the application and all subprojects -->
