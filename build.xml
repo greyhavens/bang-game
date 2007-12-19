@@ -165,8 +165,6 @@
   <target name="mavendeps" depends="prepare">
     <artifact:dependencies filesetId="dependency.fileset">
       <remoteRepository refid="maven.depends.repo"/>
-      <dependency groupId="com.threerings.panopticon.${maven.dist}" artifactId="panopticon-client"
-                  version="0.0-SNAPSHOT"/>
       <dependency groupId="com.jme" artifactId="jme" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.jme" artifactId="jme-awt" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.jme" artifactId="jme-effects" version="0.0-SNAPSHOT"/>
