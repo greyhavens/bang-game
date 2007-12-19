@@ -185,6 +185,7 @@
       <dependency groupId="com.threerings.vilya" artifactId="vilya-parlor" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.vilya" artifactId="vilya-stats" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings" artifactId="getdown" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.underwire.${maven.dist}" artifactId="underwire"
                   version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.hemiptera.${maven.dist}" artifactId="hemiptera"
@@ -543,7 +544,14 @@
       <fileset dir="${deploy.dir}/lib" includes="commons-digester.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="commons-logging.jar"/>
     </copy>
-    <copy file="${extlibs.dir}/getdown-pro.jar" tofile="${client_dir}/code/getdown-pro-new.jar"/>
+    <artifact:dependencies filesetId="getdown-pro.fileset">
+      <remoteRepository refid="maven.depends.repo"/>
+      <dependency groupId="com.threerings" artifactId="getdown-pro" version="0.0-SNAPSHOT"/>
+    </artifact:dependencies>
+    <copy todir="${client_dir}/code">
+      <fileset refid="getdown-pro.fileset"/>
+      <mergemapper to="getdown-pro-new.jar"/>
+    </copy>
     <delete file="${deploy.dir}/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
       <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
@@ -559,8 +567,8 @@
     <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask">
       <classpath>
         <pathelement path="${deploy.dir}/lib/commons-codec.jar"/>
-        <pathelement path="${deploy.dir}/lib/getdown.jar"/>
-        <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
+        <pathelement path="${deploy.dir}/lib/getdown-0.0-SNAPSHOT.jar"/>
+        <pathelement path="${deploy.dir}/lib/samskivert-0.0-SNAPSHOT.jar"/>
       </classpath>
     </taskdef>
     <property file="${cert_dir}/certificate.properties"/>
