@@ -27,6 +27,11 @@
     <property name="${app.name}-hemiptera-map.apt.dist" value="${production.apt.dist}"/>
   </then></if>
 
+  <!-- declare artifacts to be deployed using maven -->
+  <filelist dir="." id="bang.deploy">
+    <file name="${deploy.dir}/bang-support.jar"/>
+  </filelist>
+
   <!-- declare the properties files. -->
   <property name="props.list" value="server.properties,deployment.properties"/>
 
@@ -195,6 +200,14 @@
       <fileset refid="dependency.fileset"/>
       <mapper type="flatten"/>
     </copy>
+  </target>
+
+  <!-- install maven artifacts int the local ~/.m2 repository. useful for development only. -->
+  <target name="maven-install"
+          description="Installs locally built libraries into your local Maven repository." >
+    <antcall target="maven-install-filelist">
+      <reference refid="bang.deploy" torefid="install.maven.filelist"/>
+    </antcall>
   </target>
 
   <!-- generates fields for persistent record classes -->
@@ -977,9 +990,6 @@
 
     <!-- deploy the bang-support artifact to the maven repository to a namespace that
          includes the current "distribution", e.g. "devel" -->
-    <filelist dir="." id="bang.deploy">
-      <file name="${deploy.dir}/bang-support.jar"/>
-    </filelist>
     <antcall target="maven-deploy-to-dist">
       <reference refid="bang.deploy" torefid="deploy.dist.filelist"/>
     </antcall>
