@@ -1379,20 +1379,25 @@ public class BangManager extends GameManager
             // if this is a human player and we're in a saloon game, make sure they didn't request
             // units to which they don't have access
             if (user != null && _bconfig.type == BangConfig.Type.SALOON) {
+                HashSet<String> selectedUnits = new HashSet<String>();
                 for (int ii = 0; ii < units.length; ii++) {
                     if (units[ii] == null) {
                         continue;
                     }
                     UnitConfig config = units[ii].getConfig();
-                    if (config != null && (config.scripCost < 0 || !config.hasAccess(user))) {
+                    if (config == null || config.scripCost < 0 || !config.hasAccess(user) ||
+                            config.rank != UnitConfig.Rank.NORMAL) {
                         log.warning("Player requested to purchase illegal unit [who=" + user.who() +
                                     ", unit=" + config.type + "].");
                         units[ii] = null;
+                        continue;
+                    }
+
+                    // check if we have duplicates
+                    if (!selectedUnits.add(config.type)) {
+                        units[ii] = null;
                     }
                 }
-
-                // TODO: make sure they didn't request more than their allowed number of each unit
-                // (currently one)
             }
 
             // initialize and prepare the units

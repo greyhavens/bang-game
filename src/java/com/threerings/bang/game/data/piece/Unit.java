@@ -638,7 +638,9 @@ public class Unit extends Piece
     @Override // documentation inherited
     public int traversalCost (TerrainConfig terrain)
     {
-        int cost;
+        // Terrain traversal costs are currently unimplemented
+        int cost = BangBoard.BASE_TRAVERSAL;
+        /*
         // flyers are unaffected by terrain adjustments
         if (isFlyer()) {
             cost = BangBoard.BASE_TRAVERSAL;
@@ -646,6 +648,7 @@ public class Unit extends Piece
             cost = super.traversalCost(terrain) +
                 _config.movementAdjust[terrain.category.ordinal()];
         }
+        */
         for (Influence influence : getInfluences()) {
             if (influence != null) {
                 cost = influence.adjustTraversalCost(terrain, cost);
