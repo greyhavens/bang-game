@@ -4,7 +4,7 @@
   <!-- define various build properties -->
   <property name="src.dir"        value="src/java"/>
   <property name="deploy.dir"     value="dist"/>
-  <property name="var.dir"        value="var"/>
+  <property name="build.data"     value="${ooo.build.data}/bang_client"/>
   <property name="app.name"       value="bang"/>
   <property name="extlibs.dir"    value="extlibs/java"/>
   <property name="javadoc.title"  value="Bang! Howdy API"/>
@@ -16,11 +16,6 @@
   <!-- jetty needs to import server.conf, not bang.conf which is the default -->
   <property name="jetty.app.conf" value="server.conf"/>
   <import file="build/etc/build-support.xml"/>
-
-  <!-- override the fileset for the checkclean target to ignore ${var.dir} -->
-  <fileset id="checkclean.fileset" dir="${basedir}" excludes="build-number.txt">
-    <exclude name="${var.dir}/**"/>
-  </fileset>
 
   <!-- force the hemiptera-map package to install in production even if building testing -->
   <if><equals arg1="${props.dist}" arg2="test"/><then>
@@ -720,9 +715,10 @@
       <param name="client_dir" value="${client.base}"/>
     </antcall>
 
-    <!-- copy the just built client into var/ where it can be used for future diffing -->
-    <mkdir dir="${var.dir}"/>
-    <copy todir="${var.dir}">
+    <!-- copy the just built client into the global build data directory where it can be used
+         for future diffing -->
+    <mkdir dir="${build.data}"/>
+    <copy todir="${build.data}">
       <fileset dir="${deploy.dir}/client/pages/bang/client" includes="${version}/**"/>
     </copy>
 
@@ -730,7 +726,7 @@
     <copy todir="${deploy.dir}/lib" file="${extlibs.dir}/javaws.jar"/>
     <for param="dir">
       <path>
-        <dirset dir="${var.dir}" includes="*"/>
+        <dirset dir="${build.data}" includes="*"/>
       </path>
       <sequential>
         <basename property="patch.version" file="@{dir}"/>
