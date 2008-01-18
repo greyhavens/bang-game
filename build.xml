@@ -4,7 +4,6 @@
   <!-- define various build properties -->
   <property name="src.dir"        value="src/java"/>
   <property name="deploy.dir"     value="dist"/>
-  <property name="build.data"     value="${ooo.build.data}/bang_client"/>
   <property name="app.name"       value="bang"/>
   <property name="extlibs.dir"    value="extlibs/java"/>
   <property name="javadoc.title"  value="Bang! Howdy API"/>
@@ -16,6 +15,9 @@
   <!-- jetty needs to import server.conf, not bang.conf which is the default -->
   <property name="jetty.app.conf" value="server.conf"/>
   <import file="build/etc/build-support.xml"/>
+
+  <!-- the location that build artifiacts can be stored on the build server -->
+  <property name="build.data"     value="${ooo.build.data}/bang_client"/>
 
   <!-- force the hemiptera-map package to install in production even if building testing -->
   <if><equals arg1="${props.dist}" arg2="test"/><then>
