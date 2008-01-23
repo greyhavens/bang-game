@@ -7,6 +7,8 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.BIcon;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * A button that may have alternate icons for states other than {@link #DEFAULT}.
  */
@@ -15,6 +17,7 @@ public class MultiIconButton extends BButton
     public MultiIconButton (BIcon icon, ActionListener listener, String action)
     {
         super(icon, listener, action);
+        initIcons();
         _icons[DEFAULT] = icon;
     }
 
@@ -23,6 +26,7 @@ public class MultiIconButton extends BButton
      */
     public void setIcon (BIcon icon, int state)
     {
+        initIcons();
         _icons[state] = icon;
         updateIcon();
     }
@@ -32,6 +36,7 @@ public class MultiIconButton extends BButton
      */
     public BIcon getIcon (int state)
     {
+        initIcons();
         BIcon icon = _icons[state];
         return (icon == null) ? _icons[DEFAULT] : icon;
     }
@@ -59,6 +64,13 @@ public class MultiIconButton extends BButton
         _label.setIcon(getIcon());
     }
 
+    protected void initIcons ()
+    {
+        if (_icons == null) {
+            _icons = new BIcon[getStateCount()];
+        }
+    }
+
     /** Icons for each state. */
-    protected BIcon[] _icons = new BIcon[getStateCount()];
+    protected BIcon[] _icons;
 }
