@@ -63,7 +63,7 @@ public class Unit extends Piece
             unit.init(config);
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to create unit [type=" + type +
-                    ", class=" + config.unitClass + "].", e);
+                    ", class=" + (config == null ? "unknown" : config.unitClass) + "].", e);
         }
         return unit;
     }

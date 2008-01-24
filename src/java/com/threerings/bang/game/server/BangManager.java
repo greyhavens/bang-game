@@ -77,6 +77,7 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
+import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.game.data.Award;
@@ -1386,7 +1387,8 @@ public class BangManager extends GameManager
                     }
                     UnitConfig config = units[ii].getConfig();
                     if (config == null || config.scripCost < 0 || !config.hasAccess(user) ||
-                            config.rank != UnitConfig.Rank.NORMAL) {
+                            config.rank != UnitConfig.Rank.NORMAL ||
+                            ServerConfig.townIndex < BangUtil.getTownIndex(config.getTownId())) {
                         log.warning("Player requested to purchase illegal unit [who=" + user.who() +
                                     ", unit=" + config.type + "].");
                         units[ii] = null;
