@@ -49,7 +49,6 @@
     <file name="${extlibs.dir}/commons-io.jar"/>
     <file name="${extlibs.dir}/commons-lang.jar"/>
     <file name="${extlibs.dir}/commons-logging.jar"/>
-    <file name="${extlibs.dir}/getdown.jar"/>
     <file name="${extlibs.dir}/google-collect.jar"/>
     <file name="${extlibs.dir}/gwt-user.jar"/>
     <file name="${extlibs.dir}/jarbundler-1.2.jar"/>
@@ -791,7 +790,14 @@
     <property file="${cert_dir}/certificate.properties"/>
 
     <!-- copy the applet jar file into place and sign it -->
-    <copy file="${extlibs.dir}/getdown-retro-pro.jar" todir="${applet.base}/client"/>
+    <artifact:dependencies filesetId="getdown-retro-pro.fileset">
+      <remoteRepository refid="maven.depends.repo"/>
+      <dependency groupId="com.threerings" artifactId="getdown-retro-pro" version="0.0-SNAPSHOT"/>
+    </artifact:dependencies>
+    <copy todir="${applet.base}/client">
+      <fileset refid="getdown-retro-pro.fileset"/>
+      <mergemapper to="getdown-retro-pro-new.jar"/>
+    </copy>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
       <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
     </signjar>
