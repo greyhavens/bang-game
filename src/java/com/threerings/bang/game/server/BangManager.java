@@ -2346,7 +2346,7 @@ public class BangManager extends GameManager
         }
 
         // validate that the move is still legal
-        if (!_moves.contains(x, y) && x != unit.x && y != unit.y) {
+        if (!_moves.contains(x, y) && (x != unit.x || y != unit.y)) {
 //             log.info("Unit requested invalid move [unit=" + unit + ", x=" + x + ", y=" + y +
 //                      ", moves=" + _moves + "].");
             throw new InvocationException(MOVE_BLOCKED);
