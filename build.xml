@@ -796,7 +796,7 @@
     </artifact:dependencies>
     <copy todir="${applet.base}/client">
       <fileset refid="getdown-retro-pro.fileset"/>
-      <mergemapper to="getdown-retro-pro-new.jar"/>
+      <mergemapper to="getdown-retro-pro.jar"/>
     </copy>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
       <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
