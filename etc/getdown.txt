@@ -38,13 +38,15 @@ code = code/commons-logging.jar
 resource = code/getdown-pro-new.jar
 
 # Native library bits
+resource = [linux] native/liblwjgl64.so
 resource = [linux] native/liblwjgl.so
 resource = [linux] native/libopenal.so
 resource = [windows] native/lwjgl.dll
-resource = [windows] native/jinput-dxplugin.dll
+resource = [windows] native/jinput-dx8.dll
+resource = [windows] native/jinput-raw.dll
 resource = [windows] native/OpenAL32.dll
 resource = [mac os x] native/liblwjgl.jnilib
-resource = [mac os x] native/libjinput.jnilib
+resource = [mac os x] native/libjinput-osx.jnilib
 resource = [mac os x] native/openal.dylib
 
 # Our media resources
