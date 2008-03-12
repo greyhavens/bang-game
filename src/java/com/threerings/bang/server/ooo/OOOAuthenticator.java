@@ -98,7 +98,7 @@ public class OOOAuthenticator extends BangAuthenticator
 
         try {
             // make sure that this machine identifier is allowed to create a new account
-            int rv = _authrep.checkCanCreate(machIdent);
+            int rv = _authrep.checkCanCreate(machIdent, OOOUser.BANGHOWDY_SITE_ID);
             switch(rv) {
             case OOOUserRepository.NEW_ACCOUNT_TAINTED:
                 return MACHINE_TAINTED;
@@ -327,7 +327,8 @@ public class OOOAuthenticator extends BangAuthenticator
 
         // check to see whether this account has been banned or if this is a first time user
         // logging in from a tainted machine
-        int vc = anonymous ? _authrep.validateMachIdent(creds.ident, prec == null) :
+        int vc = anonymous ?
+                _authrep.validateMachIdent(creds.ident, prec == null, OOOUser.BANGHOWDY_SITE_ID) :
                 _authrep.validateUser(OOOUser.BANGHOWDY_SITE_ID, user, creds.ident, prec == null);
         switch (vc) {
         case OOOUserRepository.ACCOUNT_BANNED:
