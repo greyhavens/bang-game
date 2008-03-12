@@ -8,7 +8,7 @@
 
   <!-- sneakily have our thunderbird pick up a bonus -->
   <add_piece what="unit" id="2000" type="indian_post/thunderbird"
-             location="25,20" owner="1"/>
+             location="24,20" owner="1"/>
   <add_piece what="bonus" id="1012" type="indian_post/totem_medium"
              location="19,20" owner="-1"/>
   <move_unit id="2000" location="19,20"/>
