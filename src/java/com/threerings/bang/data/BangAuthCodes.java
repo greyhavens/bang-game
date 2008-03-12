@@ -28,6 +28,9 @@ public interface BangAuthCodes extends AuthCodes
      * be able to logon from it. */
     public static final String MACHINE_TAINTED = "m.machine_tainted";
 
+    /** A code indicating that this machine is reached its limit of free accounts. */
+    public static final String NO_NEW_FREE_ACCOUNT = "m.no_new_free_account";
+
     /** A code indicating that this server is not open to the public. */
     public static final String NON_PUBLIC_SERVER = "m.non_public_server";
 

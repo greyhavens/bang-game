@@ -344,6 +344,10 @@ public class OOOAuthenticator extends BangAuthenticator
                      ", ident=" + creds.ident + "].");
             rdata.code = MACHINE_TAINTED;
             return;
+        case OOOUserRepository.NO_NEW_FREE_ACCOUNT:
+            log.info("Rejecting new free account [who=" + username + "].");
+            rdata.code = NO_NEW_FREE_ACCOUNT;
+            return;
         }
 
         if (prec != null && prec.banExpires != null &&
