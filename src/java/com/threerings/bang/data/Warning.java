@@ -60,7 +60,7 @@ public class Warning extends Notification
     @Override // documentation inherited
     public String [] getResponses ()
     {
-        return new String[] { "m.i_understand" };
+        return new String[] { type + "_button" };
     }
 
     @Override // documentation inherited
