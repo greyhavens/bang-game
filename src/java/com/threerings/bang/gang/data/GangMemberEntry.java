@@ -60,6 +60,9 @@ public class GangMemberEntry extends SimpleStreamableObject
     /** Whether or not the member has logged in recently. */
     public boolean wasActive;
 
+    /** Whether or not the member needs reimbursement. */
+    public boolean needsReimbursement;
+
     /** The member's avatar, if they're in the Hideout (on any server). */
     public AvatarInfo avatar;
 
@@ -104,6 +107,8 @@ public class GangMemberEntry extends SimpleStreamableObject
     {
         wasActive = (isOnline() ||
             (System.currentTimeMillis() - lastSession) < GangCodes.ACTIVITY_DELAY);
+        needsReimbursement = wasActive ||
+            (System.currentTimeMillis() - lastSession) < GangCodes.DONATION_ACTIVITY_DELAY;
     }
 
     /**
@@ -155,6 +160,9 @@ public class GangMemberEntry extends SimpleStreamableObject
      */
     public int getDonationReimbursementPct ()
     {
+        if (!needsReimbursement) {
+            return GangCodes.INACTIVE_REIMBURSEMENT_PCT;
+        }
         return (System.currentTimeMillis() - joined >= GangCodes.DONATION_DELAY ?
                 GangCodes.DONATION_REIMBURSEMENT_PCT : GangCodes.EARLY_REIMBURSEMENT_PCT);
     }
