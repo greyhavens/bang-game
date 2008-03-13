@@ -19,11 +19,6 @@
   <!-- the location that build artifiacts can be stored on the build server -->
   <property name="build.data"     value="${ooo.build.data}/bang_client"/>
 
-  <!-- force the hemiptera-map package to install in production even if building testing -->
-  <if><equals arg1="${props.dist}" arg2="test"/><then>
-    <property name="${app.name}-hemiptera-map.apt.dist" value="${production.apt.dist}"/>
-  </then></if>
-
   <!-- declare artifacts to be deployed using maven -->
   <filelist dir="." id="bang.deploy">
     <file name="${deploy.dir}/bang-support.jar"/>
