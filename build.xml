@@ -182,10 +182,10 @@
       <dependency groupId="com.threerings.vilya" artifactId="vilya-stats" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="getdown" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.underwire.${maven.dist}" artifactId="underwire"
-                  version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.hemiptera.${maven.dist}" artifactId="hemiptera"
-                  version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.underwire.${ooo.maven.distribution}"
+                  artifactId="underwire" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.hemiptera.${ooo.maven.distribution}"
+                  artifactId="hemiptera" version="0.0-SNAPSHOT"/>
     </artifact:dependencies>
     <copy todir="${deploy.dir}/lib">
       <fileset refid="dependency.fileset"/>
