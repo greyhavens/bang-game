@@ -9,10 +9,6 @@
     Architecture    all
     Description A meta package that depends on packages needed for a Bang game server
 
-    # Maintainer Scripts
-    # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
-    PreInstall      @SCRIPTPATH@/bang-game-server-preinst
-
     Depends     bang-server (= @VERSION@)
     Depends     bang-pages
     Depends     bang-client-current (= @VERSION@)

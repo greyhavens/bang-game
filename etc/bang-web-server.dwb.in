@@ -9,10 +9,6 @@
     Architecture    all
     Description A meta package that depends on packages needed for a Bang web server
 
-    # Maintainer Scripts
-    # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
-    PreInstall      @SCRIPTPATH@/bang-web-server-preinst
-
     Depends     bang-pages
     Depends     bang-installer (= @VERSION@)
     Depends     bang-applet (= @VERSION@)
