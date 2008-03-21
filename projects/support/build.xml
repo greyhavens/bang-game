@@ -24,7 +24,7 @@
       <include name="threerings-gwt-0.0-SNAPSHOT.jar"/>
       <include name="underwire-gwt-0.0-SNAPSHOT.jar"/>
     </fileset>
-    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+    <fileset dir="${deploy.dir}/lib" includes="*.jar"/>
     <pathelement location="src/gwt"/>
   </path>
 
