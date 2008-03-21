@@ -1,0 +1,5 @@
+<module>
+  <inherits name='user'/>
+  <entry-point class='client.user'/>
+  <public path="public/bang_user"/>
+</module>

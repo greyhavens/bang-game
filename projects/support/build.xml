@@ -1,0 +1,92 @@
+<!-- build configuration -->
+<project name="Bang Support web application" default="compile" basedir=".">
+
+  <!-- the base directory from which we get our bundles and jar files -->
+  <property name="base.dir" value="../.."/>
+
+  <!-- the web application name and properties file -->
+  <property name="app.name"        value="support"/>
+  <property name="properties.file" value="server.properties"/>
+
+  <!-- import the generic webapp build file and library dependencies -->
+  <property name="dist.depends" value="gcompile"/>
+  <property name="distclean.depends" value="clean-gwtcache"/>
+  <import file="${base.dir}/build/etc/webapp-build.xml"/>
+  <import file="etc/libs-incl.xml"/>
+
+  <!-- special bits used by GWT -->
+  <path id="gwt.classpath">
+    <fileset dir="${base.dir}/extlibs/java">
+      <include name="gwt-dev-linux.jar"/>
+      <include name="gwt-widgets.jar"/>
+    </fileset>
+    <fileset dir="${base.dir}/${deploy.dir}/lib">
+      <include name="threerings-gwt-0.0-SNAPSHOT.jar"/>
+      <include name="underwire-gwt-0.0-SNAPSHOT.jar"/>
+    </fileset>
+    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+    <pathelement location="src/gwt"/>
+  </path>
+
+  <!-- prepares the application directories -->
+  <target name="prepare">
+    <antcall target="common-webapp-prepare"/>
+    <!-- we also need bang-code.jar which doesn't fit into our libs.dir scheme -->
+    <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>
+  </target>
+
+  <!-- runs the GWT debugging shell -->
+  <property name="module"  value="bang_user"/>
+  <target name="gshell">
+    <java classpathref="gwt.classpath" fork="true" classname="com.google.gwt.dev.GWTShell">
+      <arg value="${module}/index.html"/>
+    </java>
+  </target>
+
+  <!-- runs the GWT compiler -->
+  <target name="gcompile">
+    <for list="bang_user,bang_admin" param="module">
+      <sequential>
+        <java fork="true" failonerror="false" resultproperty="gwt.result"
+              classpathref="gwt.classpath" classname="com.google.gwt.dev.GWTCompiler">
+          <!--<arg value="-style"/><arg value="PRETTY"/>-->
+          <arg value="-out"/><arg value="${deploy.dir}/www"/>
+          <arg value="@{module}"/>
+          <!-- gather all the compiler output into a property -->
+          <redirector outputproperty="redirector.out"/>
+        </java>
+
+        <!-- until the GWT compiler does the right thing echo errors/warnings correctly -->
+        <if><contains string="${redirector.out}" substring="[ERROR]"/><then>
+          <echo level="error">${redirector.out}</echo>
+          <!-- be really, really sure that the build fails if we get an error logs -->
+          <property name="has.errors" value="true"/>
+        </then><elseif><contains string="${redirector.out}" substring="[WARNING]"/><then>
+          <echo level="warning">${redirector.out}</echo>
+        </then></elseif><else>
+          <echo level="info">${redirector.out}</echo>
+        </else></if>
+
+        <!-- fail the build if the GWT compiler returned 1 or errors were detected -->
+        <fail><condition><or>
+          <equals arg1="${gwt.result}" arg2="1"/>
+          <isset property="has.errors"/>
+        </or></condition></fail>
+
+        <!-- if we're being built by a developer, copy our results right into -->
+        <!-- the document tree -->
+        <if><isset property="bang_web_dir"/><then>
+          <copy todir="${bang_web_dir}/support">
+            <fileset dir="${deploy.dir}/www/@{module}" includes="**/*"/>
+          </copy>
+        </then></if>
+      </sequential>
+    </for>
+  </target>
+
+  <!-- cleans out the .gwt-cache-->
+  <target name="clean-gwtcache">
+    <delete dir=".gwt-cache"/>
+  </target>
+
+</project>
