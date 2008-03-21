@@ -11,7 +11,7 @@
   <property name="towns"          value="frontier_town,indian_post,boom_town"/>
 
   <!-- define our subprojects and include the standard build system -->
-  <property name="webapps" value="office"/>
+  <property name="webapps" value="office,support"/>
   <!-- jetty needs to import server.conf, not bang.conf which is the default -->
   <property name="jetty.app.conf" value="server.conf"/>
   <import file="build/etc/build-support.xml"/>
@@ -39,6 +39,7 @@
     <file name="${extlibs.dir}/commons-io.jar"/>
     <file name="${extlibs.dir}/commons-lang.jar"/>
     <file name="${extlibs.dir}/commons-logging.jar"/>
+    <file name="${extlibs.dir}/ehcache-1.2.jar"/>
     <file name="${extlibs.dir}/google-collect.jar"/>
     <file name="${extlibs.dir}/gwt-user.jar"/>
     <file name="${extlibs.dir}/jarbundler-1.2.jar"/>
@@ -175,8 +176,9 @@
       <dependency groupId="com.threerings.nenya" artifactId="nenya-cast" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.vilya" artifactId="vilya-parlor" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.vilya" artifactId="vilya-stats" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="getdown" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings" artifactId="threerings-gwt" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.underwire" artifactId="underwire" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.underwire" artifactId="underwire-gwt"
                   version="0.0-SNAPSHOT"/>
