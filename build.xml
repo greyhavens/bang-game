@@ -19,11 +19,6 @@
   <!-- the location that build artifiacts can be stored on the build server -->
   <property name="build.data"     value="${ooo.build.data}/bang_client"/>
 
-  <!-- declare artifacts to be deployed using maven -->
-  <filelist dir="." id="bang.deploy">
-    <file name="${deploy.dir}/bang-support.jar"/>
-  </filelist>
-
   <!-- declare the properties files. -->
   <property name="props.list" value="server.properties,deployment.properties"/>
 
@@ -182,8 +177,9 @@
       <dependency groupId="com.threerings.vilya" artifactId="vilya-stats" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="getdown" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.underwire.${ooo.maven.distribution}"
-                  artifactId="underwire" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.underwire" artifactId="underwire" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.underwire" artifactId="underwire-gwt"
+                  version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.hemiptera.${ooo.maven.distribution}"
                   artifactId="hemiptera" version="0.0-SNAPSHOT"/>
     </artifact:dependencies>
@@ -191,14 +187,6 @@
       <fileset refid="dependency.fileset"/>
       <mapper type="flatten"/>
     </copy>
-  </target>
-
-  <!-- install maven artifacts int the local ~/.m2 repository. useful for development only. -->
-  <target name="maven-install"
-          description="Installs locally built libraries into your local Maven repository." >
-    <antcall target="maven-install-filelist">
-      <reference refid="bang.deploy" torefid="install.maven.filelist"/>
-    </antcall>
   </target>
 
   <!-- generates fields for persistent record classes -->
@@ -818,11 +806,6 @@
   <target name="dist" depends="prepare,compile">
     <!-- create the main jar file with all the code and fiddly bits -->
     <jar file="${deploy.dir}/bang-code.jar" basedir="${deploy.dir}/classes" includes="com/**"/>
-    <!-- create a jar file for use by the Underwire support system -->
-    <jar file="${deploy.dir}/bang-support.jar" basedir="${deploy.dir}/classes">
-      <include name="com/threerings/bang/server/persist/**"/>
-      <include name="com/threerings/bang/data/Handle.class"/>
-    </jar>
   </target>
 
   <!-- builds the avatar, media and sounds jar files -->
@@ -986,12 +969,6 @@
         </exec>
       </then></if>
     </then></if>
-
-    <!-- deploy the bang-support artifact to the maven repository to a namespace that
-         includes the current "distribution", e.g. "devel" -->
-    <antcall target="maven-deploy-to-dist">
-      <reference refid="bang.deploy" torefid="deploy.dist.filelist"/>
-    </antcall>
   </target>
 
   <!-- cleans out the application and all subprojects -->
