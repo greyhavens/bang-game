@@ -1,0 +1,26 @@
+# bangsupport-webapp.dwb vi:ts=4:sw=4:expandtab:
+# Bang Support Webapp Dweeb Configuration File
+
+<Package>
+    Name        bangsupport-webapp
+    Version     @VERSION@
+    Maintainer  Bang <bang-dev@threerings.net>
+    Section     webapps
+    Architecture    all
+    Description Bang Support web application
+    # Maintainer Scripts
+    # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
+    # PreInstall      @SCRIPTPATH@/bangsupport-webapp-preinst
+    PostInstall     @SCRIPTPATH@/bangsupport-webapp-postinst
+    PreUninstall    @SCRIPTPATH@/bangsupport-webapp-prerm
+    # PostUninstall   @SCRIPTPATH@/webapp-postrm
+
+    # log/ and run/ need special permissions
+    <Permissions>
+        Path        @PREFIX@/log
+        Path        @PREFIX@/run
+        User        @APPUSER@
+        Group       @APPUSER@
+        Recursive   yes
+    </Permissions>
+</Package>
