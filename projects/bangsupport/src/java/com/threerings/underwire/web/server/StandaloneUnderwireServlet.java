@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.samskivert.util.Config;
 import com.samskivert.util.Tuple;
 
 import com.samskivert.io.PersistenceException;
@@ -23,8 +24,6 @@ import com.samskivert.servlet.user.Password;
 import com.samskivert.servlet.user.User;
 import com.samskivert.servlet.user.UserManager;
 import com.samskivert.servlet.user.UserRepository;
-
-import com.threerings.util.OOOConfig;
 
 import com.threerings.underwire.server.BangGameActionHandler;
 import com.threerings.underwire.server.BangGameInfoProvider;
@@ -82,7 +81,7 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
     protected ConnectionProvider getConnectionProvider ()
     {
         if (_conprov == null) {
-            _conprov = new StaticConnectionProvider(OOOConfig.getJDBCConfig());
+            _conprov = new StaticConnectionProvider(_config.getSubProperties("db"));
         }
         return _conprov;
     }
@@ -95,7 +94,7 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
     {
         if (_usermgr == null) {
             _usermgr = new OOOUserManager(
-                    OOOConfig.getUserManagerConfig(), getConnectionProvider()) {
+                _config.getSubProperties("oooauth"), getConnectionProvider()) {
                 protected UserRepository createRepository (ConnectionProvider conprov)
                     throws PersistenceException
                 {
@@ -172,6 +171,9 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
         }
         return ahandler;
     }
+
+    /** Contains our configuration. */
+    protected Config _config = new Config("server");
 
     /** Provides JDBC connections. */
     protected ConnectionProvider _conprov;
