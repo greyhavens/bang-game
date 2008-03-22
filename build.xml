@@ -916,6 +916,12 @@
       <fileset dir="${extlibs.dir}/lwjgl" includes="**/*.jnilib"/>
       <fileset dir="${extlibs.dir}/lwjgl" includes="**/*.dylib"/>
     </copy>
+    <!-- copy our support GWT pages into ${deploy.dir}/support-gwt -->
+    <mkdir dir="${deploy.dir}/support-gwt/pages/support"/>
+    <copy todir="${deploy.dir}/support-gwt/pages/support">
+      <fileset dir="projects/support/dist/www/bang_user" includes="**"/>
+      <fileset dir="projects/support/dist/www/bang_admin" includes="**"/>
+    </copy>
   </target>
 
   <!-- rebuilds everything and extra bits for packaging -->
@@ -984,6 +990,10 @@
     <antcallback target="prepare-server" return="pkg.base"/>
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
+    <antcall target="prepare-extra">
+      <param name="extra.type" value="support-gwt"/>
+      <param name="pkg.name" value="support-webapp"/>
+    </antcall>
     <antcall target="prepare-extra">
       <param name="extra.type" value="installer"/>
     </antcall>
