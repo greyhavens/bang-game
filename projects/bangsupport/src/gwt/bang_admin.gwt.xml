@@ -1,5 +1,6 @@
 <module>
   <inherits name='admin'/>
-  <entry-point class='com.threerings.underwire.gwt.client.AdminPage'/>
+  <source path="client"/>
+  <entry-point class='client.admin'/>
   <public path="public/bang_admin"/>
 </module>
