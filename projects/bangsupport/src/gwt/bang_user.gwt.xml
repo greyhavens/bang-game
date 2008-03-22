@@ -1,5 +1,5 @@
 <module>
   <inherits name='user'/>
-  <entry-point class='client.user'/>
+  <entry-point class='com.threerings.underwire.gwt.client.UserPage'/>
   <public path="public/bang_user"/>
 </module>
