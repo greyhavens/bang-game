@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- declare the libraries needed to build this webapp -->
 <project name="library-dependencies">
-  <filelist dir="${libs.dir}" id="support.libs">
+  <filelist dir="${libs.dir}" id="bangsupport.libs">
     <file name="ehcache-1.2.jar"/>
     <file name="gwt-user.jar"/>
     <file name="junit4.jar"/>

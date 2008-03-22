@@ -11,7 +11,7 @@
   <property name="towns"          value="frontier_town,indian_post,boom_town"/>
 
   <!-- define our subprojects and include the standard build system -->
-  <property name="webapps" value="office,support"/>
+  <property name="webapps" value="office,bangsupport"/>
   <!-- jetty needs to import server.conf, not bang.conf which is the default -->
   <property name="jetty.app.conf" value="server.conf"/>
   <import file="build/etc/build-support.xml"/>
@@ -916,12 +916,6 @@
       <fileset dir="${extlibs.dir}/lwjgl" includes="**/*.jnilib"/>
       <fileset dir="${extlibs.dir}/lwjgl" includes="**/*.dylib"/>
     </copy>
-    <!-- copy our support GWT pages into ${deploy.dir}/support-gwt -->
-    <mkdir dir="${deploy.dir}/support-gwt/pages/support"/>
-    <copy todir="${deploy.dir}/support-gwt/pages/support">
-      <fileset dir="projects/support/dist/www/bang_user" includes="**"/>
-      <fileset dir="projects/support/dist/www/bang_admin" includes="**"/>
-    </copy>
   </target>
 
   <!-- rebuilds everything and extra bits for packaging -->
@@ -991,12 +985,15 @@
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
     <antcall target="prepare-extra">
-      <param name="extra.type" value="support-gwt"/>
-      <param name="pkg.name" value="support-webapp"/>
-    </antcall>
-    <antcall target="prepare-extra">
       <param name="extra.type" value="installer"/>
     </antcall>
+
+    <!-- copy our support GWT pages into support-webapp's pages directory -->
+    <mkdir dir="${destroot}/bangsupport-webapp/${prefix.app}/pages/support"/>
+    <copy todir="${destroot}/bangsupport-webapp/${prefix.app}/pages/support">
+      <fileset dir="projects/bangsupport/dist/www/bang_user" includes="**"/>
+      <fileset dir="projects/bangsupport/dist/www/bang_admin" includes="**"/>
+    </copy>
 
     <!-- only package the pseditor for the devel builds -->
     <if><equals arg1="${props.dist}" arg2="devel"/><then>

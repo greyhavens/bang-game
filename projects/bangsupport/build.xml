@@ -5,7 +5,7 @@
   <property name="base.dir" value="../.."/>
 
   <!-- the web application name and properties file -->
-  <property name="app.name"        value="support"/>
+  <property name="app.name"        value="bangsupport"/>
   <property name="properties.file" value="server.properties"/>
 
   <!-- import the generic webapp build file and library dependencies -->
