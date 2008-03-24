@@ -23,6 +23,13 @@ public class BangGameActionHandler extends GameActionHandler
     }
 
     @Override // from GameActionHandler
+    public void ban (String accountName)
+        throws PersistenceException
+    {
+        // nothing doing
+    }
+
+    @Override // from GameActionHandler
     public void tempBan (String accountName, Timestamp expires, String warning)
         throws PersistenceException
     {
