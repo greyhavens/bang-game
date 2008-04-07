@@ -156,7 +156,7 @@
   <!-- fetches our library dependencies -->
   <target name="mavendeps" depends="prepare">
     <artifact:dependencies filesetId="dependency.fileset">
-      <remoteRepository refid="maven.depends.repo"/>
+      <remoteRepository refid="ooo.maven.depends.repo"/>
       <dependency groupId="com.jme" artifactId="jme" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.jme" artifactId="jme-awt" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.jme" artifactId="jme-effects" version="0.0-SNAPSHOT"/>
@@ -539,7 +539,7 @@
       <fileset dir="${deploy.dir}/lib" includes="commons-logging.jar"/>
     </copy>
     <artifact:dependencies filesetId="getdown-pro.fileset">
-      <remoteRepository refid="maven.depends.repo"/>
+      <remoteRepository refid="ooo.maven.depends.repo"/>
       <dependency groupId="com.threerings" artifactId="getdown-pro" version="0.0-SNAPSHOT"/>
     </artifact:dependencies>
     <copy todir="${client_dir}/code">
@@ -776,7 +776,7 @@
 
     <!-- copy the applet jar file into place and sign it -->
     <artifact:dependencies filesetId="getdown-retro-pro.fileset">
-      <remoteRepository refid="maven.depends.repo"/>
+      <remoteRepository refid="ooo.maven.depends.repo"/>
       <dependency groupId="com.threerings" artifactId="getdown-retro-pro" version="0.0-SNAPSHOT"/>
     </artifact:dependencies>
     <copy todir="${applet.base}/client">
