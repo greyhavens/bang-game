@@ -59,9 +59,6 @@
     <file name="lib/jl1.0.jar"/>
   </filelist>
 
-  <!-- declare the libraries in dist.libs needed only at build time and are not to be packaged. -->
-  <property name="build.only.libs" value="ant.jar,proguard.jar,s3lib.jar,s3upload.jar"/>
-
   <!-- declare our classpath -->
   <path id="classpath">
     <pathelement location="${deploy.dir}/classes"/>
@@ -987,6 +984,12 @@
   <!-- prepare ${destroot} for all the packages being built -->
   <target name="preppkg" depends="copydistprops">
     <antcallback target="prepare-server" return="pkg.base"/>
+    <!-- remove a few conflicting buildtime libraries from the runtime set -->
+    <delete file="${pkg.base}/${deploy.dir}/lib/ant.jar"/>
+    <delete file="${pkg.base}/${deploy.dir}/lib/proguard.jar"/>
+    <delete file="${pkg.base}/${deploy.dir}/lib/s3lib.jar"/>
+    <delete file="${pkg.base}/${deploy.dir}/lib/s3upload.jar"/>
+
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
     <antcall target="prepare-extra">
