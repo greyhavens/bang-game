@@ -78,12 +78,17 @@
   </path>
 
   <!-- prepares the application directories -->
-  <target name="prepare" depends="copydistlibs,copydistprops,lists">
+  <target name="prepare" depends="copydistprops,lists">
     <mkdir dir="${deploy.dir}"/>
     <mkdir dir="${deploy.dir}/tmp"/>
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/rsrc"/>
+
+    <!-- Copy all the libs we depend on. -->
+    <copyfilelist dest="${deploy.dir}/lib">
+      <filelist refid="dist.libs"/>
+    </copyfilelist>
 
     <!-- copy global static resources -->
     <copy todir="${deploy.dir}/rsrc">
