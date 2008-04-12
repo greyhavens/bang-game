@@ -7,20 +7,11 @@
 # Java configuration
 export JAVA_HOME=/usr/local/java
 
-# Database server configuration
-DBSERVER=localhost
-DBUSER=bang
-DBPASSWD=PASSWORD
-DBPORT=3306
-
 # General configurations
 BANG_USER=bang
 LOG_EMAIL=bang-logs@DOMAIN
 STATS_EMAIL=bang-stats@DOMAIN
 LOGLEVEL=info
-
-# The node name for this server instance. frontier_town, indian_post etc.
-NODE=frontier_town
 
 # These is passed to the various JVMs
 SERVER_MEMORY=384M

@@ -1,0 +1,55 @@
+#
+# $Id$
+#
+# Configuration for the Bang! build
+
+#
+# Enumerates all nodes build for this distribution
+
+nodes = frontier_town, indian_post
+
+#
+# Enumerates all towns built for this distribution
+
+towns = frontier_town, indian_post, boom_town
+
+#
+# The directory where we find our signing certificate
+
+cert_dir = /export/threerings
+
+#
+# Tells the bangsupport build where to jam its GWT pages when developers are
+# doing edit/compile/debug development.
+
+bang_web_dir = /export/howdy/pages
+
+#
+# Whether or not we build the pseditor (we don't want to for production)
+
+build_pseditor = true
+
+#
+# The target used to build the client: client or devclient
+
+client_build_target = devclient
+
+#
+# Whether to commit artifacts generated during the build process. Setting this
+# to true on your local machine is almost surely a Bad Idea.
+
+should_commit_build_artifacts = false
+
+#
+# Whether to commit proguard maps. Setting this to true on your local machine
+# is almost surely a Bad Idea.
+
+should_commit_proguard_maps = false
+
+#
+# S3 client upload configuration
+
+# client_s3enable = true
+# client_s3bucket = s3download.banghowdy.com
+# client_s3id = AWS ID
+# client_s3key = SECRET KEY

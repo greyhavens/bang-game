@@ -9,12 +9,6 @@ BANG_HOME=`cd $BANG_HOME/.. ; pwd`
 
 umask 002
 
-JAVA_VM="$JAVA_HOME/bin/java"
-if [ ! -e $JAVA_VM ]; then
-    echo "$0: Cannot find JVM in $JAVA_HOME. Exiting."
-    exit 255
-fi
-
 # set up our java arguments
 JAVA_ARGS="-Dno_unpack_resources=true \
     -Dbang.home=$BANG_HOME \
@@ -51,7 +45,7 @@ while [ ! -z "$1" ]; do
 done
 
 # Some temporary business for multiprocessor FreeBSD machines
-NEEDS_MEMBAR=`$JAVA_VM -fullversion 2>&1 | grep diablo`
+NEEDS_MEMBAR=`java -fullversion 2>&1 | grep diablo`
 if [ ! -z "$NEEDS_MEMBAR" ]; then
      JAVA_ARGS="$JAVA_ARGS -XX:+UseMembar"
 fi
@@ -98,4 +92,4 @@ else
 fi
 
 # do the deed
-eval $JAVA_VM $JAVA_ARGS $ARGS
+eval java $JAVA_ARGS $ARGS
