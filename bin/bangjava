@@ -51,7 +51,17 @@ if [ ! -z "$NEEDS_MEMBAR" ]; then
 fi
 
 # add all necessary JAR files and $BANG_HOME to the CLASSPATH
-CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
+CLASSPATH="$BANG_HOME/dist"
+if [ -z "$NODEVLIBS" -a -d $BANG_HOME/dist/classes ]; then
+    CLASSPATH=$BANG_HOME/dist/classes:$CLASSPATH
+else
+    for JAR in $BANG_HOME/dist/bang-*.jar; do
+        # skip the bang-support jar, it duplicates what's in bang-code
+        if [ "$JAR" != "$BANG_HOME/dist/bang-support.jar" ]; then
+            CLASSPATH=$CLASSPATH:$JAR
+        fi
+    done
+fi
 for JAR in $BANG_HOME/dist/lib/*.jar; do
     # if we're using devlibs and this jar file exists in projects/*/dist; use
     # that one instead of the one in dist/lib
@@ -64,17 +74,6 @@ for JAR in $BANG_HOME/dist/lib/*.jar; do
     fi
     CLASSPATH=$CLASSPATH:$JAR
 done
-if [ -z "$NODEVLIBS" -a -d $BANG_HOME/dist/classes ]; then
-    CLASSPATH=$BANG_HOME/dist/classes:$CLASSPATH
-else
-    for JAR in $BANG_HOME/dist/bang-*.jar; do
-        # skip the bang-support jar, it duplicates what's in bang-code
-        if [ "$JAR" != "$BANG_HOME/dist/bang-support.jar" ]; then
-            CLASSPATH=$JAR:$CLASSPATH
-        fi
-    done
-fi
-CLASSPATH=$BANG_HOME/dist:$CLASSPATH
 export CLASSPATH
 
 OS=`uname -s`

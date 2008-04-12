@@ -2,10 +2,7 @@
 #
 # $Id$
 #
-# Local configuration for this Bang installation.
-
-# Java configuration
-export JAVA_HOME=/usr/local/java
+# Script configuration for this Bang installation.
 
 # General configurations
 BANG_USER=bang

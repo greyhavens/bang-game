@@ -83,20 +83,15 @@ if [ $NODE = "frontier_town" ]; then
     fi
 fi
 
-# Start with the standard Java classes
-CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
-
-# Add all necessary JAR files to the CLASSPATH
-for jar in $BANG_HOME/dist/lib/*.jar $BANG_HOME/dist/bang-*.jar; do
+# Add the deployment directory (so that $BANG_HOME/rsrc is accessible) and all
+# necessary jar files to the CLASSPATH
+CLASSPATH="$BANG_HOME/dist"
+for JAR in $BANG_HOME/dist/lib/*.jar $BANG_HOME/dist/bang-*.jar; do
     # skip the bang-support jar, it duplicates what's in bang-code
     if [ "$JAR" != "$BANG_HOME/dist/bang-support.jar" ]; then
-        CLASSPATH=$jar:$CLASSPATH
+        CLASSPATH=$CLASSPATH:$JAR
     fi
 done
-
-# Add the deployment directory to the CLASSPATH (so that $BANG_HOME/rsrc is
-# accessible)
-CLASSPATH=$BANG_HOME/dist:$CLASSPATH
 export CLASSPATH
 
 # Set up the LD_LIBRARY_PATH to include our shared libraries
