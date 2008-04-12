@@ -4,7 +4,11 @@
   <!-- load up our configuration information -->
   <property name="deploy.dir" value="dist"/>
   <property name="base.dir" value="../../.."/>
+
+  <!-- load up our build settings and deployment (just for default_locale) -->
   <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
+  <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
+
   <!-- needed for ${version} -->
   <property file="${base.dir}/${deploy.dir}/build.properties"/>
   <property name="jdir" value="Contents/Resources/Java"/>

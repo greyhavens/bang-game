@@ -5,7 +5,10 @@
   <property name="base.dir" value="${basedir}/../../.."/>
   <property name="deploy.dir" value="dist"/>
   <property name="temp.dir" value="bang_install"/>
-  <property file="${base.dir}/dist/build_settings.properties"/>
+
+  <!-- load up our build settings and deployment (just for default_locale) -->
+  <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
+  <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
 
   <!-- creates an install -->
   <target name="client">
