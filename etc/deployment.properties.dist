@@ -2,22 +2,8 @@
 # $Id$
 #
 # Configuration for the Bang! client/editor deployment
-
 #
-# The base URL for downloading and patching the client and the document root
-# for said server
 # *IMPORTANT* This file is shipped to the client. Be careful what you put in here.
-
-root_url = http://localhost
-web_dir = pages
-
-#
-# The base URL for downloading the production client.
-# download_root_url = http://s3download.banghowdy.com/bang
-
-#
-# The base URL for downloading the pseditor. Only used for the development environment.
-# pseditor_root_url = http://localhost
 
 #
 # The standard ports on which the server listens for client connections. These
@@ -50,11 +36,3 @@ pass_url = https://billing.banghowdy.com/billing/checkpw.wm?susername=USERNAME&s
 # same language specific name handling routines are used on client and server.
 
 default_locale = en
-
-#
-# These are used by the installer and game launcher.
-
-client_ident = bang_local
-client_title = Bang! Howdy (Local)
-editor_title = Bang! Howdy Editor (Local)
-viewer_title = Bang! Howdy Model Viewer (Local)

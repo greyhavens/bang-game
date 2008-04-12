@@ -11,8 +11,8 @@
   <property name="dist.jar"     value="${app.name}.jar"/>
   <property name="install.dir"  value="${base.dir}/${deploy.dir}/pseditor/pages/${app.name}"/>
 
-  <!-- read in our deployment properties -->
-  <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
+  <!-- read in our build settings -->
+  <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
 
   <!-- import some targets to enumerate library dependencies -->
   <property name="libs.dir" value="${base.dir}/${deploy.dir}/lib"/>
