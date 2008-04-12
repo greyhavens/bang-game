@@ -4,7 +4,7 @@
   <!-- load up our configuration information -->
   <property name="deploy.dir" value="dist"/>
   <property name="base.dir" value="../../.."/>
-  <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
+  <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
   <!-- needed for ${version} -->
   <property file="${base.dir}/${deploy.dir}/build.properties"/>
   <property name="jdir" value="Contents/Resources/Java"/>

@@ -5,7 +5,7 @@
   <property name="base.dir" value="${basedir}/../.."/>
   <property name="deploy.dir" value="dist"/>
   <property name="install.dir" value="${base.dir}/${deploy.dir}/installer/pages"/>
-  <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
+  <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
 
   <!-- we want some tasks from ant-contrib -->
   <taskdef resource="net/sf/antcontrib/antlib.xml">
