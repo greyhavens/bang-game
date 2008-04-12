@@ -1126,6 +1126,18 @@
             <email>${bang.maintainer.email}</email>
           </maintainer>
         </info>
+        <permissions>
+          <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="false">
+            <path>log/</path>
+            <path>logs/</path>
+            <path>run/</path>
+            <path>pages/stats/</path>
+            <path>data/downloads/</path>
+          </permission>
+          <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="true">
+            <path>rsrc/boards/</path>
+          </permission>
+        </permissions>
       </package>
     </dpkg>
 
@@ -1137,7 +1149,7 @@
       <mkdir dir="${approot.node}"/>
 
       <startupscript name="bang_server_@{node}" runas="${bang.user}"
-                     output="${approot.node}/etc/rc.d/bang-server-@{node}.sh">
+                     output="${approot.node}/etc/rc.d/${app.name}-server-@{node}.sh">
         <commands>
           <start cmdline="${ooo.prefix}/${app.name}/bin/bang start @{node}"/>
           <stop cmdline="${ooo.prefix}/${app.name}/bin/bang stop @{node}"/>
@@ -1160,6 +1172,11 @@
           <dependencies>
             <require package="bang-game-server"/>
           </dependencies>
+          <permissions>
+            <permission mode="555">
+              <path>etc/rc.d/${app.name}-server-@{node}.sh</path>
+            </permission>
+          </permissions>
         </package>
       </dpkg>
     </sequential></for>
