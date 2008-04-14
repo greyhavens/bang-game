@@ -990,6 +990,8 @@
           <replacement package="bang-applet"/>
           <conflict package="office-webapp"/>
           <replacement package="office-webapp"/>
+          <conflict package="bang-pseditor"/>
+          <replacement package="bang-pseditor"/>
         </dependencies>
       </package>
     </dpkg>
