@@ -1137,6 +1137,9 @@
           <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="true">
             <path>rsrc/boards/</path>
           </permission>
+          <permission user="${bang.user}" group="${bang.user}" mode="555" recursive="true">
+            <path>bin/</path>
+          </permission>
         </permissions>
       </package>
     </dpkg>
