@@ -1410,7 +1410,7 @@
           </maintainer>
         </info>
         <scripts>
-          <postinst command="ln -sf ../${clientVersion}/getdown.txt ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
+          <postinst command="ln -sf ${clientVersion}/getdown.txt ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
           <prerm command="rm ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
         </scripts>
         <dependencies>
