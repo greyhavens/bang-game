@@ -1376,7 +1376,6 @@
           </maintainer>
         </info>
         <dependencies>
-          <require package="bang-client-version-update"/>
           <require package="bang-hemiptera-map">
             <equalOrGreaterThan>${pkgVersion}</equalOrGreaterThan>
           </require>
