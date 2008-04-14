@@ -626,7 +626,7 @@
     </copy>
 
     <!-- copy the getdown.txt file into the right place -->
-    <property name="client.base" value="${deploy.dir}/client/pages/bang/client"/>
+    <property name="client.base" value="${deploy.dir}/client/pages/bang/client/${clientVersion}"/>
     <mkdir dir="${client.base}"/>
     <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt"
           overwrite="true" encoding="UTF-8">
@@ -1410,8 +1410,8 @@
           </maintainer>
         </info>
         <scripts>
-          <postinst command="ln -sf ../${clientVersion}/getdown.txt ${ooo.prefix}/download/pages/${client_ident}/client/getdown.txt"/>
-          <prerm command="rm ${ooo.prefix}/download/pages/${client_ident}/client/getdown.txt"/>
+          <postinst command="ln -sf ../${clientVersion}/getdown.txt ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
+          <prerm command="rm ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
         </scripts>
         <dependencies>
           <require package="${client_package_name}"><equalTo>${pkgVersion}</equalTo></require>
