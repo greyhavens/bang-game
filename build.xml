@@ -1274,6 +1274,11 @@
         <scripts>
           <rcrestart script="${ooo.prefix}/${app.name}/etc/rc.d/jetty-bangsupport.sh"/>
         </scripts>
+        <dependencies>
+          <!-- TEMP: remove this when we've updated web1/2 -->
+          <conflict package="bang-underwire-pages"/>
+          <replacement package="bang-underwire-pages"/>
+        </dependencies>
       </package>
     </dpkg>
   </target>
