@@ -1146,14 +1146,16 @@
 
     <!-- create a package for each node -->
     <for list="${nodes}" param="node" trim="true"><sequential>
+      <!-- our node names contain _ which we can't use in package names; change to - -->
+      <propertyregex property="pnode" input="@{node}" regexp="_" replace="-"/>
       <!-- define the root of the bang-server package -->
-      <var name="pkgroot.node" value="${pkgroot.root}/${app.name}-server-@{node}"/>
+      <var name="pkgroot.node" value="${pkgroot.root}/${app.name}-server-@{pnode}"/>
       <var name="approot.node" value="${pkgroot.node}/${ooo.prefix}/${app.name}"/>
       <mkdir dir="${approot.node}"/>
       <mkdir dir="${approot.node}/etc/rc.d"/>
 
       <startupscript name="bang_server_@{node}" runas="${bang.user}"
-                     output="${approot.node}/etc/rc.d/${app.name}-server-@{node}.sh">
+                     output="${approot.node}/etc/rc.d/${app.name}-server-@{pnode}.sh">
         <commands>
           <start cmdline="${ooo.prefix}/${app.name}/bin/bang start @{node}"/>
           <stop cmdline="${ooo.prefix}/${app.name}/bin/bang stop @{node}"/>
@@ -1164,7 +1166,7 @@
             distribution="${ooo.distribution}">
         <package destroot="${pkgroot.server}">
           <info>
-            <name>${app.name}-server-@{node}</name>
+            <name>${app.name}-server-@{pnode}</name>
             <version>${pkgVersion}</version>
             <arch>${ooo.architecture}</arch>
             <description>Bang Game Server Node: @{node}</description>
@@ -1178,7 +1180,7 @@
           </dependencies>
           <permissions>
             <permission mode="555">
-              <path>etc/rc.d/${app.name}-server-@{node}.sh</path>
+              <path>etc/rc.d/${app.name}-server-@{pnode}.sh</path>
             </permission>
           </permissions>
         </package>
