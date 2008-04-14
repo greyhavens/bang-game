@@ -1280,7 +1280,7 @@
   <target name="pages-extra-package" depends="prepare-package">
     <!-- define the root of the package -->
     <property name="pkgroot.pages-extra" value="${pkgroot.root}/${app.name}-pages-extra"/>
-    <property name="approot.pages-extra" value="${pkgroot.client}/${ooo.prefix}/${app.name}"/>
+    <property name="approot.pages-extra" value="${pkgroot.pages-extra}/${ooo.prefix}/${app.name}"/>
     <mkdir dir="${approot.pages-extra}"/>
 
     <!-- copy a whole heap of client stuff into the package -->
@@ -1360,11 +1360,6 @@
       </copy>
     </then></if>
 
-    <!-- define the root of the client-current package -->
-    <property name="pkgroot.client-current" value="${pkgroot.root}/${app.name}-client-current"/>
-    <property name="approot.client-current" value="${pkgroot.client}/${ooo.prefix}/download"/>
-    <mkdir dir="${approot.client-current}"/>
-
     <!-- build the actual Debian packages -->
     <property name="client_package_name" value="bang-client-${clientVersion}"/>
     <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
@@ -1388,6 +1383,12 @@
         </dependencies>
       </package>
     </dpkg>
+
+    <!-- define the root of the client-current package -->
+    <property name="pkgroot.client-current" value="${pkgroot.root}/${app.name}-client-current"/>
+    <property name="approot.client-current" value="${pkgroot.client-current}/${ooo.prefix}/download"/>
+    <mkdir dir="${approot.client-current}"/>
+
 
     <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
           distribution="${ooo.distribution}">
