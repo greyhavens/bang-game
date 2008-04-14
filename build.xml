@@ -1199,7 +1199,8 @@
 
     <!-- create webapp jetty scripts and copy in the war file -->
     <jettystartup webapp="${app.name}office" base="${ooo.prefix}/${app.name}" runas="${bang.user}"
-                  outputdir="${approot.office}" port="${bangoffice.jetty.port}"/>
+                  outputdir="${approot.office}" port="${bangoffice.jetty.port}" context="/office"/>
+
     <copy file="${deploy.dir}/office.war"
           tofile="${approot.office}/webapps/${app.name}office/${app.name}office.war"/>
 
