@@ -1141,6 +1141,7 @@
           </permission>
           <permission user="${bang.user}" group="${bang.user}" mode="555" recursive="true">
             <path>bin/</path>
+            <path>tools/bin/</path>
           </permission>
         </permissions>
       </package>
