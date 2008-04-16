@@ -1391,11 +1391,9 @@
       </package>
     </dpkg>
 
-    <!-- define the root of the client-current package -->
+    <!-- define the root of the client-current package. leave it empty. -->
     <property name="pkgroot.client-current" value="${pkgroot.root}/${app.name}-client-current"/>
-    <property name="approot.client-current" value="${pkgroot.client-current}/${ooo.prefix}/download"/>
-    <mkdir dir="${approot.client-current}"/>
-
+    <mkdir dir="${pkgroot.client-current}"/>
 
     <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
           distribution="${ooo.distribution}">
