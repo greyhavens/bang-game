@@ -631,7 +631,7 @@
     <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt"
           overwrite="true" encoding="UTF-8">
       <filterset>
-        <filter token="appbase_line" value="appbase = ${root_url}/client"/>
+        <filter token="appbase_line" value="appbase = ${root_url}/client/${clientVersion}"/>
         <filter token="version_line" value=""/>
         <filter token="tracking_url" value="${root_url}/tracking/"/>
         <filter token="auxgroups_line" value="auxgroups = indian_post, boom_town"/>
