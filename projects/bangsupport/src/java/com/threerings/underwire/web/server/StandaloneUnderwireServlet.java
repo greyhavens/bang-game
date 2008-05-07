@@ -36,6 +36,7 @@ import com.threerings.underwire.server.persist.OOOUserSupportRepository;
 import com.threerings.underwire.server.persist.SupportRepository;
 import com.threerings.underwire.server.persist.UnderwireRepository;
 
+import com.threerings.user.OOOUser;
 import com.threerings.user.OOOUserManager;
 import java.util.logging.Level;
 
@@ -46,66 +47,42 @@ import static com.threerings.underwire.Log.log;
  */
 public class StandaloneUnderwireServlet extends UnderwireServlet
 {
-    // documentation inherited from UnderwireServlet
-    public SiteIdentifier createSiteIdentifier ()
+    @Override // from UnderwireServlet
+    protected SiteIdentifier createSiteIdentifier ()
         throws PersistenceException
     {
         return new JDBCTableSiteIdentifier(getConnectionProvider());
     }
 
-    // documentation inherited from UnderwireServlet
-    public SupportRepository createSupportRepository ()
+    @Override // from UnderwireServlet
+    protected SupportRepository createSupportRepository ()
         throws PersistenceException
     {
         return (OOOUserSupportRepository)getUserManager().getRepository();
     }
 
-    // documentation inherited from UnderwireServlet
-    public UnderwireRepository createUnderwireRepository ()
+    @Override // from UnderwireServlet
+    protected UnderwireRepository createUnderwireRepository ()
         throws PersistenceException
     {
         return new UnderwireRepository(_conprov);
     }
 
-    // documentation inherited from UnderwireServlet
-    public Tuple<User,String> userLogin (String username, String password, int expireDays)
+    @Override // from UnderwireServlet
+    protected Caller userLogin (String username, String password, int expireDays)
         throws PersistenceException, AuthenticationFailedException, InvalidPasswordException
     {
-        return getUserManager().login(username, Password.makeFromCrypto(password), expireDays,
-                                      OOOUserManager.AUTH_PASSWORD);
+        Tuple<User,String> bits = getUserManager().login(
+            username, Password.makeFromCrypto(password), expireDays, OOOUserManager.AUTH_PASSWORD);
+        Caller caller = new Caller();
+        caller.authtok = bits.right;
+        caller.username = bits.left.username;
+        caller.email = bits.left.email;
+        caller.isSupport = ((OOOUser)bits.left).isSupportPlus();
+        return caller;
     }
 
-    /**
-     * Returns the connection provider, creating it if necessary.
-     */
-    protected ConnectionProvider getConnectionProvider ()
-    {
-        if (_conprov == null) {
-            _conprov = new StaticConnectionProvider(_config.getSubProperties("db"));
-        }
-        return _conprov;
-    }
-
-    /**
-     * Returns the user manager, creating it if necessary.
-     */
-    protected UserManager getUserManager ()
-        throws PersistenceException
-    {
-        if (_usermgr == null) {
-            _usermgr = new OOOUserManager(
-                _config.getSubProperties("oooauth"), getConnectionProvider()) {
-                protected UserRepository createRepository (ConnectionProvider conprov)
-                    throws PersistenceException
-                {
-                    return new OOOUserSupportRepository(conprov);
-                }
-            };
-        }
-        return _usermgr;
-    }
-
-    // documentation inherited from UnderwireServlet
+    @Override // from UnderwireServlet
     protected GameInfoProvider getInfoProvider ()
         throws PersistenceException
     {
@@ -138,7 +115,7 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
         return inprov;
     }
 
-    // documentation inherited from UnderwireServlet
+    @Override // from UnderwireServlet
     protected GameActionHandler getActionHandler ()
         throws PersistenceException
     {
@@ -170,6 +147,36 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
             _ahandlers.put(ahClass, ahandler);
         }
         return ahandler;
+    }
+
+    /**
+     * Returns the connection provider, creating it if necessary.
+     */
+    protected ConnectionProvider getConnectionProvider ()
+    {
+        if (_conprov == null) {
+            _conprov = new StaticConnectionProvider(_config.getSubProperties("db"));
+        }
+        return _conprov;
+    }
+
+    /**
+     * Returns the user manager, creating it if necessary.
+     */
+    protected UserManager getUserManager ()
+        throws PersistenceException
+    {
+        if (_usermgr == null) {
+            _usermgr = new OOOUserManager(
+                _config.getSubProperties("oooauth"), getConnectionProvider()) {
+                protected UserRepository createRepository (ConnectionProvider conprov)
+                    throws PersistenceException
+                {
+                    return new OOOUserSupportRepository(conprov);
+                }
+            };
+        }
+        return _usermgr;
     }
 
     /** Contains our configuration. */
