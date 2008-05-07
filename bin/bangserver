@@ -10,8 +10,8 @@ JARGS=""
 NODE="frontier_town"
 
 SERVER_MEMORY=384M
-if [ -f $BANG_HOME/server.conf ]; then
-    . $BANG_HOME/server.conf
+if [ -f $BANG_HOME/dist/server.conf ]; then
+    . $BANG_HOME/dist/server.conf
 else
     echo "Can't load $BANG_HOME/server.conf; can't run tool."
     exit 255
