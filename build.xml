@@ -1189,6 +1189,9 @@
           </permissions>
         </package>
       </dpkg>
+
+      <!-- unset this so that next time through the loop we can set it anew -->
+      <var name="pnode" unset="true"/>
     </sequential></for>
   </target>
 
