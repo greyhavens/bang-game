@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.RepositoryUnit;
+import com.samskivert.jdbc.WriteOnlyUnit;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
@@ -675,7 +676,7 @@ public class GangHandler
 
         // update the database
         final GangMemberEntry entry = member;
-        BangServer.invoker.postUnit(new RepositoryUnit() {
+        BangServer.invoker.postUnit(new RepositoryUnit("grantAces") {
             public void invokePersist ()
                 throws PersistenceException {
                 // notoriety points are simply accumulated aces
@@ -764,13 +765,9 @@ public class GangHandler
                     _gangobj.removeFromInventory(key);
                     itemIds.add(key.intValue());
                 }
-                BangServer.invoker.postUnit(new RepositoryUnit("expireItems") {
+                BangServer.invoker.postUnit(new WriteOnlyUnit("expireItems") {
                     public void invokePersist () throws PersistenceException {
                         BangServer.itemrepo.deleteItems(itemIds, "Gang item expired");
-                    }
-                    public void handleSuccess () {
-                    }
-                    public void handleFailure (Exception cause) {
                     }
                 });
             }
@@ -1191,7 +1188,7 @@ public class GangHandler
                     "[caller=" + caller + ", ie=" + ie + "].");
         }
 
-        BangServer.invoker.postUnit(new RepositoryUnit() {
+        BangServer.invoker.postUnit(new RepositoryUnit("updateCoins") {
             public void invokePersist () throws Exception {
                 _coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
                     _gangobj.getCoinAccount());
@@ -1200,8 +1197,7 @@ public class GangHandler
                 _gangobj.setCoins(_coins);
             }
             public void handleFailure (Exception err) {
-                log.log(Level.WARNING, "Error updating gang coin count. [id=" +
-                    _gangId + "].", err);
+                log.log(Level.WARNING, "Error updating gang coin count. [id=" + _gangId + "].", err);
             }
             protected int _coins;
         });
@@ -1674,23 +1670,20 @@ public class GangHandler
         }
         citem.setGangId(_gangobj.gangId);
         citem.setGangOwned(false);
-        BangServer.invoker.postUnit(
-            new RepositoryUnit("distributeRental") {
-                public void invokePersist () throws PersistenceException {
-                    BangServer.itemrepo.insertItems(citem, userIds, _items);
-                }
-                public void handleSuccess () {
-                    for (Item item : _items) {
-                        PlayerObject user = BangServer.lookupPlayer(item.getOwnerId());
-                        if (user != null) {
-                            user.addToInventory(item);
-                        }
+        BangServer.invoker.postUnit(new RepositoryUnit("distributeRental") {
+            public void invokePersist () throws PersistenceException {
+                BangServer.itemrepo.insertItems(citem, userIds, _items);
+            }
+            public void handleSuccess () {
+                for (Item item : _items) {
+                    PlayerObject user = BangServer.lookupPlayer(item.getOwnerId());
+                    if (user != null) {
+                        user.addToInventory(item);
                     }
                 }
-                public void handleFailure (Exception cause) {
-                }
-                protected ArrayList<Item> _items = new ArrayList<Item>();
-            });
+            }
+            protected ArrayList<Item> _items = new ArrayList<Item>();
+        });
     }
 
     /**
@@ -1716,8 +1709,7 @@ public class GangHandler
         }
 
         BangServer.invoker.postUnit(new RepositoryUnit("deliverGangItems") {
-            public void invokePersist ()
-                throws PersistenceException {
+            public void invokePersist () throws PersistenceException {
                 for (Item item : added) {
                     BangServer.itemrepo.insertItem(item);
                 }
@@ -1899,46 +1891,45 @@ public class GangHandler
      */
     protected void loadFromDatabase ()
     {
-        BangServer.invoker.postUnit(
-            new RepositoryUnit("loadGang") {
-                public void invokePersist () throws PersistenceException {
-                    _grec = BangServer.gangrepo.loadGang(_gangId, true);
+        BangServer.invoker.postUnit(new RepositoryUnit("loadGang") {
+            public void invokePersist () throws PersistenceException {
+                _grec = BangServer.gangrepo.loadGang(_gangId, true);
+                if (_grec == null) {
+                    return;
+                }
 
-                    if (_grec == null) {
-                        return;
-                    }
+                // TEMP: validate the buckle and weight class, fixing as necessary
+                validateBuckle(_grec);
+                validateWeightClass(_grec);
 
-                    // TEMP: validate the buckle and weight class, fixing as necessary
-                    validateBuckle(_grec);
-                    validateWeightClass(_grec);
-
-                    // check for expired items
-                    long now = System.currentTimeMillis();
-                    Item[] items = _grec.inventory.toArray(new Item[_grec.inventory.size()]);
-                    ArrayIntSet removals = new ArrayIntSet();
-                    for (Item item : items) {
-                        if (item.isExpired(now) || ((item instanceof WeightClassUpgrade) &&
-                                ((WeightClassUpgrade)item).getWeightClass() != _grec.weightClass)) {
-                            removals.add(item.getItemId());
-                            _grec.inventory.remove(item);
-                        }
-                    }
-                    if (!removals.isEmpty()) {
-                        BangServer.itemrepo.deleteItems(removals, "Gang item expired");
+                // check for expired items
+                long now = System.currentTimeMillis();
+                Item[] items = _grec.inventory.toArray(new Item[_grec.inventory.size()]);
+                ArrayIntSet removals = new ArrayIntSet();
+                for (Item item : items) {
+                    if (item.isExpired(now) ||
+                        ((item instanceof WeightClassUpgrade) &&
+                         ((WeightClassUpgrade)item).getWeightClass() != _grec.weightClass)) {
+                        removals.add(item.getItemId());
+                        _grec.inventory.remove(item);
                     }
                 }
-                public void handleSuccess () {
-                    if (_grec == null) {
-                        initFailed(new Exception("No such gang"));
-                    } else {
-                        createGangObject(_grec);
-                    }
+                if (!removals.isEmpty()) {
+                    BangServer.itemrepo.deleteItems(removals, "Gang item expired");
                 }
-                public void handleFailure (Exception cause) {
-                    initFailed(cause);
+            }
+            public void handleSuccess () {
+                if (_grec == null) {
+                    initFailed(new Exception("No such gang"));
+                } else {
+                    createGangObject(_grec);
                 }
-                protected GangRecord _grec;
-            });
+            }
+            public void handleFailure (Exception cause) {
+                initFailed(cause);
+            }
+            protected GangRecord _grec;
+        });
     }
 
     /**
@@ -2474,7 +2465,7 @@ public class GangHandler
             return;
         }
         _avatarId = leader.playerId;
-        BangServer.invoker.postUnit(new RepositoryUnit() {
+        BangServer.invoker.postUnit(new RepositoryUnit("updateAvatar") {
             public void invokePersist () throws PersistenceException {
                 _avatar = BangServer.lookrepo.loadSnapshot(leader.playerId);
             }

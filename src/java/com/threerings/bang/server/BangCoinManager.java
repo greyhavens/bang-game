@@ -42,7 +42,7 @@ public class BangCoinManager extends CoinManager
      */
     public void updateCoinCount (final PlayerObject user)
     {
-        _invoker.postUnit(new RepositoryUnit() {
+        _invoker.postUnit(new RepositoryUnit("updateCoinCount") {
             public void invokePersist () throws Exception {
                 _coins = _coinRepo.getCoinCount(user.username.toString());
             }
@@ -63,7 +63,7 @@ public class BangCoinManager extends CoinManager
     public void grantRewardCoins (final PlayerObject user, final int coins)
     {
         final String accountName = user.username.toString();
-        _invoker.postUnit(new RepositoryUnit() {
+        _invoker.postUnit(new RepositoryUnit("grantRewardCoins") {
             public void invokePersist () throws Exception {
                 _coinRepo.addCoins(
                     accountName, coins, CoinTransaction.PROMOTIONAL_GRANT, "m.reward_grant");

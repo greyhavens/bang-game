@@ -521,7 +521,7 @@ public class GangManager
      */
     public void erodeNotoriety ()
     {
-        BangServer.invoker.postUnit(new RepositoryUnit() {
+        BangServer.invoker.postUnit(new RepositoryUnit("erodeNotoriety") {
             public void invokePersist ()
                 throws PersistenceException {
                 BangServer.gangrepo.erodeNotoriety();
@@ -543,7 +543,7 @@ public class GangManager
      */
     public void syncNotoriety ()
     {
-        BangServer.invoker.postUnit(new RepositoryUnit() {
+        BangServer.invoker.postUnit(new RepositoryUnit("syncNotoriety") {
             public void invokePersist ()
                 throws PersistenceException {
                 _notMap = BangServer.gangrepo.loadGangsNotoriety(_gangs.keys());
