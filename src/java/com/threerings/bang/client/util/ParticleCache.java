@@ -86,7 +86,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
         TextureKey.setLocationOverride(new TextureKey.LocationOverride() {
             public URL getLocation (String file)
                 throws MalformedURLException {
-                return new URL(parent.toURL(), file);
+                return new URL(parent.toURI().toURL(), file);
             }
         });
         Spatial particles = (Spatial)BinaryImporter.getInstance().load(
