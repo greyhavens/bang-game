@@ -128,8 +128,7 @@ public class EditCharacterView extends BContainer
 
     protected void configureLook (Look.Pose pose, Look look)
     {
-        AvatarService asvc = (AvatarService)
-            _ctx.getClient().requireService(AvatarService.class);
+        AvatarService asvc = _ctx.getClient().requireService(AvatarService.class);
         asvc.selectLook(_ctx.getClient(), pose, look.name);
     }
 

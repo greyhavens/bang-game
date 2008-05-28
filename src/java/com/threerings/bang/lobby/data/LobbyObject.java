@@ -152,7 +152,7 @@ public class LobbyObject extends PlaceObject
         String[] ovalue = this.scenarios;
         requestAttributeChange(
             SCENARIOS, value, ovalue);
-        this.scenarios = (value == null) ? null : (String[])value.clone();
+        this.scenarios = (value == null) ? null : value.clone();
     }
 
     /**

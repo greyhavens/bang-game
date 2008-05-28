@@ -698,7 +698,7 @@ public class HideoutManager extends MatchHostManager
                     return true;
 
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to load top-ranked gangs.", pe);
+                    log.warning("Failed to load top-ranked gangs.", pe);
                     return false;
                 }
             }

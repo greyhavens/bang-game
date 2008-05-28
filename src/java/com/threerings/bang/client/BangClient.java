@@ -144,7 +144,7 @@ public class BangClient extends BasicClient
             ps.println(vers);
             ps.close();
         } catch (IOException ioe) {
-            log.log(Level.WARNING, "Error creating '" + vfile + "'", ioe);
+            log.warning("Error creating '" + vfile + "'", ioe);
             return false;
         }
 
@@ -192,7 +192,7 @@ public class BangClient extends BasicClient
             try {
                 mfile.createNewFile();
             } catch (IOException ioe) {
-                log.log(Level.WARNING, "Failed to create marker file '" + mfile + "'.", ioe);
+                log.warning("Failed to create marker file '" + mfile + "'.", ioe);
             }
         }
 
@@ -252,7 +252,7 @@ public class BangClient extends BasicClient
                 }
             }
             public void requestFailed (Exception cause) {
-                log.log(Level.WARNING, "Bug submission failed.", cause);
+                log.warning("Bug submission failed.", cause);
                 ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_failed");
             }
         };
@@ -784,7 +784,7 @@ public class BangClient extends BasicClient
             }
 
         } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to start music [path=" + mfile + "].", t);
+            log.warning("Failed to start music [path=" + mfile + "].", t);
         }
     }
 
@@ -819,7 +819,7 @@ public class BangClient extends BasicClient
     public void startTestGame (boolean tutorial)
     {
         ReportingListener rl = new ReportingListener(_ctx, BANG_MSGS, "m.quick_start_failed");
-        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
 
         // start a tutorial if requested
         if (tutorial) {
@@ -922,14 +922,14 @@ public class BangClient extends BasicClient
         }
 
         // update our title to contain our username
-        PlayerObject user = (PlayerObject)_ctx.getUserObject();
+        PlayerObject user = _ctx.getUserObject();
         if (!user.tokens.isAnonymous()) {
             Display.setTitle(
                 _msgmgr.getBundle(BangCodes.BANG_MSGS).get("m.online_title", user.username));
         }
 
         // get a reference to the player service
-        _psvc = (PlayerService)_client.requireService(PlayerService.class);
+        _psvc = _client.requireService(PlayerService.class);
 
         // create the mute director here because the mute list is specific to
         // the account
@@ -1350,7 +1350,7 @@ public class BangClient extends BasicClient
         try {
             Runtime.getRuntime().exec(args, null);
         } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failed to run getdown", ioe);
+            log.warning("Failed to run getdown", ioe);
             return false;
         }
 
@@ -1415,8 +1415,7 @@ public class BangClient extends BasicClient
             _isIdle = isIdle;
             log.info("Setting idle " + isIdle + " [time=" + idleTime + "].");
             if (_ctx.getClient().isLoggedOn()) {
-                BodyService bsvc = (BodyService)
-                    _ctx.getClient().requireService(BodyService.class);
+                BodyService bsvc = _ctx.getClient().requireService(BodyService.class);
                 bsvc.setIdle(_ctx.getClient(), isIdle);
             }
         }

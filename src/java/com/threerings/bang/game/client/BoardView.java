@@ -1288,7 +1288,7 @@ public class BoardView extends BComponent
                     }
 
                 } catch (Throwable t) {
-                    log.log(Level.WARNING, "Board action choked: " + action, t);
+                    log.warning("Board action choked: " + action, t);
                 }
 
                 // note that this action is completed
@@ -1501,7 +1501,7 @@ public class BoardView extends BComponent
      */
     protected void createPieceSprite (Piece piece, short tick)
     {
-        log.fine("Creating sprite for " + piece + ".");
+        log.debug("Creating sprite for " + piece + ".");
         PieceSprite sprite = piece.createSprite();
         sprite.init(_ctx, this, _bangobj.board, _sounds, piece, tick);
         _pieces.put(piece.pieceId, sprite);
@@ -1515,7 +1515,7 @@ public class BoardView extends BComponent
     {
         PieceSprite sprite = _pieces.remove(pieceId);
         if (sprite != null) {
-            log.fine("Removing sprite [id=" + pieceId + ", why=" + why + "].");
+            log.debug("Removing sprite [id=" + pieceId + ", why=" + why + "].");
             removeSprite(sprite);
 
         } else {

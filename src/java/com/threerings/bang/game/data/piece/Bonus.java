@@ -75,7 +75,7 @@ public class Bonus extends Piece
             buf.append(config.type).append(" ").append(weights[ii]);
         }
 
-        log.fine("Selecting bonus [turn=" + bangobj.tick + ", avgpow=" + avgpow +
+        log.debug("Selecting bonus [turn=" + bangobj.tick + ", avgpow=" + avgpow +
                 ", avgdam=" + avgdam + ", avgpc=" + avgunits + ", pointDiff=" + pointDiff +
                 ", reachers=" + reachers + ", weights=(" + buf + ")].");
 
@@ -121,7 +121,7 @@ public class Bonus extends Piece
             return bonus;
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to instantiate custom bonus class " +
+            log.warning("Failed to instantiate custom bonus class " +
                     "[class=" + config.bonusClass + "].", e);
             return null;
         }
@@ -185,7 +185,7 @@ public class Bonus extends Piece
             }
             return effect;
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to instantiate effect class " +
+            log.warning("Failed to instantiate effect class " +
                     "[class=" + _config.effectClass + "].", e);
             return null;
         }

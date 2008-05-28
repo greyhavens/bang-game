@@ -82,7 +82,7 @@ public class TableGameObject extends DObject
         int[] ovalue = this.playerOids;
         requestAttributeChange(
             PLAYER_OIDS, value, ovalue);
-        this.playerOids = (value == null) ? null : (int[])value.clone();
+        this.playerOids = (value == null) ? null : value.clone();
     }
 
     /**

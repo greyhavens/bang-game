@@ -190,7 +190,7 @@ public class BasicClient
             public void initializationFailed (Exception e) {
                 // TODO: we need to get back onto a safe thread
                 // TODO: report to the client
-                log.log(Level.WARNING, "Failed to initialize rsrcmgr.", e);
+                log.warning("Failed to initialize rsrcmgr.", e);
             }
         };
         try {
@@ -198,7 +198,7 @@ public class BasicClient
                 null, "config/resource/manager.properties", obs);
         } catch (IOException ioe) {
             // TODO: report to the client
-            log.log(Level.WARNING, "Failed to initialize rsrcmgr.", ioe);
+            log.warning("Failed to initialize rsrcmgr.", ioe);
         }
     }
 
@@ -217,7 +217,7 @@ public class BasicClient
 
         } catch (IOException ioe) {
             // TODO: report to the client
-            log.log(Level.WARNING, "Initialization failed.", ioe);
+            log.warning("Initialization failed.", ioe);
         }
     }
 

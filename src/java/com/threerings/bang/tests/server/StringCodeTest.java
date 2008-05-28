@@ -5,9 +5,6 @@ package com.threerings.bang.tests.server;
 
 import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.jdbc.depot.PersistenceContext;
-import com.samskivert.util.Log;
-import com.samskivert.util.LoggingLogProvider;
-import com.samskivert.util.OneLineLogFormatter;
 
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.ServerConfig;
@@ -21,10 +18,6 @@ public class StringCodeTest
 {
     public static void main (String[] args)
     {
-        // set up the proper logging services
-        Log.setLogProvider(new LoggingLogProvider());
-        OneLineLogFormatter.configureDefaultHandler(false);
-
         try {
             BangStatRepository statrepo = new BangStatRepository(
                 new PersistenceContext(

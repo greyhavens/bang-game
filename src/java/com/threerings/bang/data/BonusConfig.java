@@ -125,35 +125,33 @@ public class BonusConfig
         // add contributions from each of our affinities
         int eweight = 0, ecount = 0;
         if (damageAffinity != 0) {
-            eweight += (int)Math.round(averageDamage * damageAffinity);
+            eweight += Math.round(averageDamage * damageAffinity);
             ecount++;
         }
 
         int maxedAP = Math.min(10, averagePieces);
         if (manyPiecesAffinity != 0) {
-            eweight += (int)Math.round(10 * maxedAP * manyPiecesAffinity);
+            eweight += Math.round(10 * maxedAP * manyPiecesAffinity);
             ecount++;
         }
         if (fewPiecesAffinity != 0) {
-            eweight += (int)Math.round(10 * (11-maxedAP) * fewPiecesAffinity);
+            eweight += Math.round(10 * (11-maxedAP) * fewPiecesAffinity);
             ecount++;
         }
 
         if (lowPowerAffinity != 0) {
             double maxedPower = Math.min(1.0, averagePower);
-            eweight += (int)Math.round(
-                100 * (1.0-maxedPower) * lowPowerAffinity);
+            eweight += Math.round(100 * (1.0-maxedPower) * lowPowerAffinity);
             ecount++;
         }
 
         int scaledTurn = 100 * Math.min(bangobj.tick, 60) / 60;
         if (earlyGameAffinity != 0) {
-            eweight += (int)Math.round(
-                (100 - scaledTurn) * earlyGameAffinity);
+            eweight += Math.round((100 - scaledTurn) * earlyGameAffinity);
             ecount++;
         }
         if (lateGameAffinity != 0) {
-            eweight += (int)Math.round(scaledTurn * lateGameAffinity);
+            eweight += Math.round(scaledTurn * lateGameAffinity);
             ecount++;
         }
 

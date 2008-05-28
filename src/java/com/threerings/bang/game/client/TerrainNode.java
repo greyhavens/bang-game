@@ -383,8 +383,7 @@ public class TerrainNode extends Node
                     belev = minElev;
                 }
                 int maxelev = _board.getMaxHeightfieldElevation(tx, ty);
-                height = (float)(Math.max(minElev, Math.max(belev, maxelev)) *
-                        _elevationScale);
+                height = (Math.max(minElev, Math.max(belev, maxelev)) * _elevationScale);
 
             } else if (_onTile && overPieces) {
                 int helev = _board.getHeightfieldElevation(tx, ty);

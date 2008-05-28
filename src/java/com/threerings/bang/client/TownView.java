@@ -114,7 +114,7 @@ public class TownView extends BWindow
             ClassLoader loader = getClass().getClassLoader();
             props.load(loader.getResourceAsStream(mpath));
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to load menu properties [path=" + mpath + "].", e);
+            log.warning("Failed to load menu properties [path=" + mpath + "].", e);
         }
 
         // register the commands for our various shops

@@ -207,7 +207,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
                     BangServer.playrepo.grantScrip(info.accountName, currency);
                     return true;
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to grant scrip to player " + "[offer=" + info +
+                    log.warning("Failed to grant scrip to player " + "[offer=" + info +
                             ", amount=" + currency + ", type=" + msg + "].", pe);
                     return false;
                 }

@@ -166,7 +166,6 @@ public class RocketHandler extends EffectHandler
             _bangobj.board.getElevation(tx, ty) * escale + TILE_SIZE/2);
         PathParams pparams;
         Vector3f gravity;
-        RocketEffect bshot = (RocketEffect)_shot;
         Vector3f velocity = end.subtract(start);
         float length = velocity.length();
         pparams = new PathParams(
@@ -174,7 +173,7 @@ public class RocketHandler extends EffectHandler
             length / FLAT_TRAJECTORY_SPEED);
         gravity = Vector3f.ZERO;
 
-        final ShotSprite ssprite = new ShotSprite(_ctx, bshot.getShotType(),
+        final ShotSprite ssprite = new ShotSprite(_ctx, _shot.getShotType(),
             (usprite == null) ? null : usprite.getColorizations());
 
         ssprite.setLocalTranslation(start);

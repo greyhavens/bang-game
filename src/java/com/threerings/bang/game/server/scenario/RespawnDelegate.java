@@ -83,7 +83,7 @@ public class RespawnDelegate extends ScenarioDelegate
             }
 
             Unit unit = _respawns.poll();
-            log.fine("Respawning " + unit + ".");
+            log.debug("Respawning " + unit + ".");
 
             // figure out where to put this guy
             Point spot = _parent.getStartSpot(unit.owner);
@@ -156,7 +156,7 @@ public class RespawnDelegate extends ScenarioDelegate
         }
 
         _respawns.add(unit);
-        log.fine("Queued for respawn " + unit + ".");
+        log.debug("Queued for respawn " + unit + ".");
     }
 
     @Override // documentation inherited

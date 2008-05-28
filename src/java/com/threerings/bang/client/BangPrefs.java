@@ -441,7 +441,7 @@ public class BangPrefs
             return c;
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Unable to enumerate display modes.", e);
+            log.warning("Unable to enumerate display modes.", e);
             return null;
         }
     }

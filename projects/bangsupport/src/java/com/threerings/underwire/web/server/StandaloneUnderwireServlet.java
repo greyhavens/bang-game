@@ -38,7 +38,6 @@ import com.threerings.underwire.server.persist.UnderwireRepository;
 
 import com.threerings.user.OOOUser;
 import com.threerings.user.OOOUserManager;
-import java.util.logging.Level;
 
 import static com.threerings.underwire.Log.log;
 
@@ -96,7 +95,7 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
         } else if (serverName != null && serverName.endsWith("threerings.net")) {
             ipClass = DummyGameInfoProvider.class;
         } else {
-            log.log(Level.WARNING, "Unknown Underwire domain '" + serverName + "'.");
+            log.warning("Unknown Underwire domain '" + serverName + "'.");
             ipClass = DummyGameInfoProvider.class;
         }
 
@@ -106,7 +105,7 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
             try {
                 inprov = (GameInfoProvider)ipClass.newInstance();
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to instantiate info provider '" + ipClass + "'.", e);
+                log.warning("Failed to instantiate info provider '" + ipClass + "'.", e);
                 inprov = new DummyGameInfoProvider();
             }
             inprov.init(_conprov);
@@ -129,7 +128,7 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
         } else if (serverName != null && serverName.endsWith("threerings.net")) {
             ahClass = DummyGameActionHandler.class;
         } else {
-            log.log(Level.WARNING, "Unknown Underwire domain '" + serverName + "'.");
+            log.warning("Unknown Underwire domain '" + serverName + "'.");
             ahClass = DummyGameActionHandler.class;
         }
 
@@ -139,8 +138,7 @@ public class StandaloneUnderwireServlet extends UnderwireServlet
             try {
                 ahandler = (GameActionHandler)ahClass.newInstance();
             } catch (Exception e) {
-                log.log(Level.WARNING,
-                        "Failed to instantiate action handler '" + ahClass + "'.", e);
+                log.warning("Failed to instantiate action handler '" + ahClass + "'.", e);
                 ahandler = new DummyGameActionHandler();
             }
             ahandler.init(_conprov);

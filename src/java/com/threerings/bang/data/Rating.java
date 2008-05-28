@@ -223,7 +223,7 @@ public class Rating extends SimpleStreamableObject
         float pctdiff = ((float)(erat - trat) / trat);
 
         // update the player's rating
-        int nrat = (int) Math.round(ratings[pidx].rating + pctdiff * K);
+        int nrat = Math.round(ratings[pidx].rating + pctdiff * K);
 
         // make sure the rating remains within a valid range
         return MathUtil.bound(MINIMUM_RATING, nrat, MAXIMUM_RATING);

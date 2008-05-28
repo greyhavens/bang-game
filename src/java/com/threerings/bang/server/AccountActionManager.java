@@ -67,7 +67,7 @@ public class AccountActionManager
                 try {
                     _actions = _repo.getActions(ServerConfig.nodename, MAX_ACTIONS);
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to get list of new account actions!", pe);
+                    log.warning("Failed to get list of new account actions!", pe);
                 }
                 return true;
             }
@@ -95,7 +95,7 @@ public class AccountActionManager
                 handleAccountAction(ba);
             } catch (Throwable t) {
                 itr.remove(); // remove that action from our list
-                log.log(Level.WARNING, "Failure handling account action, skipping. " +
+                log.warning("Failure handling account action, skipping. " +
                         "[action=" + ba + "].", t);
             }
         }

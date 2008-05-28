@@ -106,7 +106,7 @@ public class BoardManager
                     choices[ii] = new BoardRecord(BoardFile.loadFrom(round.bdata));
                     continue;
                 } catch (Exception e) {
-                    log.log(Level.WARNING, "Failed to load board data [round=" + round + "].", e);
+                    log.warning("Failed to load board data [round=" + round + "].", e);
                 }
             }
 

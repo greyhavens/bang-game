@@ -50,7 +50,7 @@ public class BangCoinManager extends CoinManager
                 user.setCoins(_coins);
             }
             public void handleFailure (Exception err) {
-                log.log(Level.WARNING, "Error updating coin count for " + user.who() + ".", err);
+                log.warning("Error updating coin count for " + user.who() + ".", err);
             }
             protected int _coins;
         });
@@ -73,7 +73,7 @@ public class BangCoinManager extends CoinManager
                 user.setCoins(_coins);
             }
             public void handleFailure (Exception err) {
-                log.log(Level.WARNING, "Error granting reward coins to " + accountName + ".", err);
+                log.warning("Error granting reward coins to " + accountName + ".", err);
             }
             protected int _coins;
         });

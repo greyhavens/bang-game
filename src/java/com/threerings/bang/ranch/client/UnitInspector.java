@@ -212,8 +212,7 @@ public class UnitInspector extends BContainer
 
         } else if ("practice".equals(event.getAction())) {
             if (_config != null) {
-                PlayerService psvc = (PlayerService)
-                    _ctx.getClient().requireService(PlayerService.class);
+                PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
                 ReportingListener rl = new ReportingListener(
                     _ctx, "ranch", "m.start_prac_failed");
                 psvc.playPractice(_ctx.getClient(), _config.type, rl);

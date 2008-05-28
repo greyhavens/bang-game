@@ -105,8 +105,7 @@ public class BountyGameOverView extends SteelWindow
         } else if (action.startsWith("play_")) {
             final BButton play = (BButton)event.getSource();
             play.setEnabled(false);
-            PlayerService psvc = (PlayerService)
-                _bctx.getClient().requireService(PlayerService.class);
+            PlayerService psvc = _bctx.getClient().requireService(PlayerService.class);
             psvc.playBountyGame(_bctx.getClient(), _bounty.ident, action.substring(5),
                                 new PlayerService.InvocationListener() {
                 public void requestFailed (String cause) {

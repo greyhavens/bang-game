@@ -48,8 +48,8 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         float sratio = BASE_SUPER_RATIO + SUPER_RATIO_INCREMENT * difficulty;
 
         int units = (_bangmgr.getTeamSize() + 1) * _bangmgr.getPlayerCount();
-        int rcount = Math.min(MAX_ROBOTS, (int)Math.round(units * ratio)); // total bots
-        int scount = (int)Math.round(rcount * sratio); // super bots
+        int rcount = Math.min(MAX_ROBOTS, Math.round(units * ratio)); // total bots
+        int scount = Math.round(rcount * sratio); // super bots
         int ncount = rcount - scount; // non-super bots
 
         _target[LoggingRobot.LOCUST] = ncount / 2;

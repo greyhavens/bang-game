@@ -388,7 +388,7 @@ public class ServerConfigObject extends ConfigObject
         float[] ovalue = this.rentMultiplier;
         requestAttributeChange(
             RENT_MULTIPLIER, value, ovalue);
-        this.rentMultiplier = (value == null) ? null : (float[])value.clone();
+        this.rentMultiplier = (value == null) ? null : value.clone();
     }
 
     /**
@@ -421,7 +421,7 @@ public class ServerConfigObject extends ConfigObject
         float[] ovalue = this.articleRentMultiplier;
         requestAttributeChange(
             ARTICLE_RENT_MULTIPLIER, value, ovalue);
-        this.articleRentMultiplier = (value == null) ? null : (float[])value.clone();
+        this.articleRentMultiplier = (value == null) ? null : value.clone();
     }
 
     /**

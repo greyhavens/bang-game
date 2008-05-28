@@ -61,7 +61,7 @@ public class InviteMemberDialog extends RequestDialog
     // documentation inherited
     protected void fireRequest (Object result)
     {
-        GangService gsvc = (GangService)_ctx.getClient().requireService(GangService.class);
+        GangService gsvc = _ctx.getClient().requireService(GangService.class);
         if (_hfield != null) {
             _handle = new Handle(_hfield.getText());
         }

@@ -81,7 +81,7 @@ public class Prop extends BigPiece
             }
             prop.init(config);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to create prop [type=" + type +
+            log.warning("Failed to create prop [type=" + type +
                     ", class=" + config.propClass + "].", e);
         }
         return prop;

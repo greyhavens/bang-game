@@ -135,7 +135,7 @@ public class DeploymentConfig
             }
             return new URL(url);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to parse " + key + ": " + url, e);
+            log.warning("Failed to parse " + key + ": " + url, e);
             return null;
         }
     }
@@ -155,7 +155,7 @@ public class DeploymentConfig
         try {
             return new URL(url);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to parse " + key + ": " + url, e);
+            log.warning("Failed to parse " + key + ": " + url, e);
             return null;
         }
     }

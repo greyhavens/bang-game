@@ -334,7 +334,7 @@ public class BangApp extends JmeApp
      */
     protected static void reportInitFailure (BangClient client, Throwable t)
     {
-        log.log(Level.WARNING, "JME initalization failed.", t);
+        log.warning("JME initalization failed.", t);
 
         // if we don't have a client yet, create a bare bones client that we
         // can use to get our context

@@ -74,7 +74,7 @@ public class ServerConfig
                 return (BangAuthenticator)Class.forName(aclass).newInstance();
             }
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to instantiate authenticator " +
+            log.warning("Failed to instantiate authenticator " +
                     "[class=" + aclass + "]", e);
         }
         return null;

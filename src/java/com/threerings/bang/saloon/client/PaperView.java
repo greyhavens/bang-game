@@ -195,7 +195,7 @@ public class PaperView extends BContainer
                 news = new CachedDocument(nurl, NEWS_REFRESH_INTERVAL);
                 _news.put(townId, news);
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to create news URL [base=" + base +
+                log.warning("Failed to create news URL [base=" + base +
                         ", path=" + npath + "].", e);
                 return;
             }
@@ -212,7 +212,7 @@ public class PaperView extends BContainer
             updateNews(result);
         }
         public void requestFailed (Exception cause) {
-            log.log(Level.WARNING, "Failed to load the news.", cause);
+            log.warning("Failed to load the news.", cause);
             updateNews("m.news_load_failed");
         }
         protected void updateNews (final String text) {

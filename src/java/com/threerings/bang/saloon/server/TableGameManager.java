@@ -344,7 +344,7 @@ public class TableGameManager implements TableGameProvider
             BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
             startingGame(mgr.getPlaceObject());
         } catch (Exception e) {
-            log.log(Level.WARNING, "Choked creating game " + config + ".", e);
+            log.warning("Choked creating game " + config + ".", e);
         }
 
         // and clear out our parlor bits

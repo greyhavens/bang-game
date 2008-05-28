@@ -75,7 +75,8 @@ public class EntryReplacedEvent<T extends DSet.Entry> extends EntryRemovedEvent<
     {
         super.notifyListener(listener);
         if (listener instanceof SetListener) {
-            ((SetListener)listener).entryAdded(_addedEvent);
+            @SuppressWarnings("unchecked") SetListener<T> setlist = (SetListener<T>)listener;
+            setlist.entryAdded(_addedEvent);
         }
     }
 

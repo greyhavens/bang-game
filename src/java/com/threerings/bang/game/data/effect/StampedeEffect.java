@@ -320,8 +320,7 @@ public class StampedeEffect extends Effect
                             nlocs.add(nloc);
                         }
                     }
-                    Point nloc = (nlocs.size() > 0 ?
-                        (Point)RandomUtil.pickRandom(nlocs) : loc);
+                    Point nloc = (nlocs.size() > 0 ? RandomUtil.pickRandom(nlocs) : loc);
                     int damage = Math.min(100, unit.damage + COLLISION_DAMAGE);
                     dammap.increment(unit.owner, damage - unit.damage);
                     Effect deffect = null;

@@ -94,7 +94,7 @@ public class SaloonManager extends MatchHostManager
                     return true;
 
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to load top-ranked players.", pe);
+                    log.warning("Failed to load top-ranked players.", pe);
                     return false;
                 }
             }
@@ -249,7 +249,7 @@ public class SaloonManager extends MatchHostManager
             }
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to create parlor " + info + ".", e);
+            log.warning("Failed to create parlor " + info + ".", e);
             if (rl != null) {
                 rl.requestFailed(INTERNAL_ERROR);
             }
@@ -283,7 +283,7 @@ public class SaloonManager extends MatchHostManager
                 commitList();
             }
             public void requestFailed (Exception cause) {
-                log.log(Level.WARNING, "Failed to obtain top-ranked player snapshot " +
+                log.warning("Failed to obtain top-ranked player snapshot " +
                         "[list=" + list + "].", cause);
                 // ah well, we'll have no avatar
                 commitList();

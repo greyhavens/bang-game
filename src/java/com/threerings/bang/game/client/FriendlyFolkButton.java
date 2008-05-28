@@ -149,8 +149,7 @@ public class FriendlyFolkButton extends BButton
                         MessageBundle.tcompose("m.folk_note_failed", cause));
                 }
             };
-            PlayerService psvc = (PlayerService)
-                _ctx.getClient().requireService(PlayerService.class);
+            PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
             psvc.noteFolk(_ctx.getClient(), _playerId, opinion, listener);
         }
 

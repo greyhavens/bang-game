@@ -71,7 +71,7 @@ public class OOOAuthenticator extends BangAuthenticator
 
             _rewardrep = new RewardRepository(BangServer.conprov);
         } catch (PersistenceException pe) {
-            log.log(Level.WARNING, "Failed to initialize OOO authenticator. " +
+            log.warning("Failed to initialize OOO authenticator. " +
                     "Users will be unable to log in.", pe);
         }
     }
@@ -130,7 +130,7 @@ public class OOOAuthenticator extends BangAuthenticator
             return NAME_IN_USE;
 
         } catch (PersistenceException pe) {
-            log.log(Level.WARNING, "Error creating arround [username=" + username + ", password=" +
+            log.warning("Error creating arround [username=" + username + ", password=" +
                     password + ", siteId=" + siteId + ", ident=" + machIdent + "].", pe);
             return SERVER_ERROR;
         }
@@ -153,7 +153,7 @@ public class OOOAuthenticator extends BangAuthenticator
                 }
             }
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to redeem rewards [who=" + username + "].", e);
+            log.warning("Failed to redeem rewards [who=" + username + "].", e);
         }
         return rdata;
     }

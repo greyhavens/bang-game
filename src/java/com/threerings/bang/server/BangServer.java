@@ -333,7 +333,7 @@ public class BangServer extends CrowdServer
                 try {
                     finishInit();
                 } catch (Exception e) {
-                    log.log(Level.WARNING, "Server initialization failed.", e);
+                    log.warning("Server initialization failed.", e);
                     System.exit(-1);
                 }
             }
@@ -630,7 +630,7 @@ public class BangServer extends CrowdServer
             // being; when run() returns the dobj mgr and invoker thread will already have exited
             System.exit(0);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Server initialization failed.", e);
+            log.warning("Server initialization failed.", e);
             System.exit(-1);
         }
     }

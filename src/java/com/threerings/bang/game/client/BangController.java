@@ -123,7 +123,7 @@ public class BangController extends GameController
             try {
                 _tutcont.handleEvent(event, id);
             } catch (Exception e) {
-                log.log(Level.WARNING, "Tutorial controller choked on '" +
+                log.warning("Tutorial controller choked on '" +
                         event + "'.", e);
             }
         }

@@ -244,7 +244,7 @@ public abstract class MatchHostManager extends ShopManager
                     BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
                     match.startingMatch(mgr.getPlaceObject());
                 } catch (Exception e) {
-                    log.log(Level.WARNING, "Choked creating game " + config + ".", e);
+                    log.warning("Choked creating game " + config + ".", e);
                 }
                 clearMatch(match);
             }

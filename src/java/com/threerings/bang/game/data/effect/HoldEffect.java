@@ -72,7 +72,7 @@ public class HoldEffect extends BonusEffect
             effect.drop.position(unit.x, unit.y);
             return effect;
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to instantiate effect class " +
+            log.warning("Failed to instantiate effect class " +
                     "[class=" + bonus.getConfig().effectClass + "].", e);
             return null;
         }

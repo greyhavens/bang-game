@@ -110,8 +110,7 @@ public class TourneyConfigView extends BDecoratedWindow
             }
         };
 
-        TourniesService tsvc = (TourniesService)
-            _ctx.getClient().requireService(TourniesService.class);
+        TourniesService tsvc = _ctx.getClient().requireService(TourniesService.class);
         tsvc.createTourney(_ctx.getClient(), config, rl);
     }
 

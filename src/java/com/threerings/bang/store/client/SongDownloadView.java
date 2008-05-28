@@ -128,7 +128,7 @@ public class SongDownloadView extends BDecoratedWindow
     protected void startDownload ()
     {
         // request a temporary identifier through which to download this song
-        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
         psvc.prepSongForDownload(_ctx.getClient(), _song, new PlayerService.ResultListener() {
             public void requestProcessed (Object result) {
                 actuallyStartDownload((String)result);
@@ -273,7 +273,7 @@ public class SongDownloadView extends BDecoratedWindow
                 }
 
             } catch (IOException ioe) {
-                log.log(Level.WARNING, "Download failed [source=" + getInput() +
+                log.warning("Download failed [source=" + getInput() +
                         ", target=" + _target + "].", ioe);
                 reportError(ioe.getMessage());
             }

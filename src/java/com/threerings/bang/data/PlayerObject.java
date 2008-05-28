@@ -780,7 +780,7 @@ public class PlayerObject extends BodyObject
         String[] ovalue = this.poses;
         requestAttributeChange(
             POSES, value, ovalue);
-        this.poses = (value == null) ? null : (String[])value.clone();
+        this.poses = (value == null) ? null : value.clone();
     }
 
     /**
@@ -957,7 +957,7 @@ public class PlayerObject extends BodyObject
         int[] ovalue = this.friends;
         requestAttributeChange(
             FRIENDS, value, ovalue);
-        this.friends = (value == null) ? null : (int[])value.clone();
+        this.friends = (value == null) ? null : value.clone();
     }
 
     /**
@@ -990,7 +990,7 @@ public class PlayerObject extends BodyObject
         int[] ovalue = this.foes;
         requestAttributeChange(
             FOES, value, ovalue);
-        this.foes = (value == null) ? null : (int[])value.clone();
+        this.foes = (value == null) ? null : value.clone();
     }
 
     /**

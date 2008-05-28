@@ -318,7 +318,7 @@ public class BangManager extends GameManager
         try {
             listener.requestProcessed(brec.getBoardData());
         } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failed to decode board " + brec + ".", ioe);
+            log.warning("Failed to decode board " + brec + ".", ioe);
             throw new InvocationException(INTERNAL_ERROR);
         }
     }
@@ -619,7 +619,7 @@ public class BangManager extends GameManager
                 ShotEffect effect;
                 if (meffect == null || !(meffect instanceof MoveShootEffect)) {
                     // effect the initial shot
-                    log.fine("Shooting " + target + " with " + unit);
+                    log.debug("Shooting " + target + " with " + unit);
                     effect = unit.shoot(_bangobj, target, 1f);
                     // the initial shot updates the shooter's last acted
                     effect.shooterLastActed = _bangobj.tick;
@@ -1118,7 +1118,7 @@ public class BangManager extends GameManager
                 }
             }
             public void requestFailed (Exception cause) {
-                log.log(Level.WARNING, "Failed to load or decode board data [brec=" + brec + "].",
+                log.warning("Failed to load or decode board data [brec=" + brec + "].",
                         cause);
                 cancelGame();
             }
@@ -1150,7 +1150,7 @@ public class BangManager extends GameManager
             try {
                 _scenario = (Scenario)Class.forName(sclass).newInstance();
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to instantiate scenario class: " + sclass, e);
+                log.warning("Failed to instantiate scenario class: " + sclass, e);
                 cancelGame();
                 return;
             }
@@ -1305,7 +1305,7 @@ public class BangManager extends GameManager
     {
         for (int ii = 0; ii < _precords.length; ii++) {
             if (!isAI(ii) && isActivePlayer(ii) && _bangobj.playerInfo[ii].readyState < phase) {
-                log.fine(getPlayer(ii) + " (" + ii + ") not ready for " + phase + ". Waiting.");
+                log.debug(getPlayer(ii) + " (" + ii + ") not ready for " + phase + ". Waiting.");
                 return false;
             }
         }
@@ -1462,7 +1462,7 @@ public class BangManager extends GameManager
             return;
         }
 
-        log.fine("Starting next phase [cur=" + _bangobj.state + "].");
+        log.debug("Starting next phase [cur=" + _bangobj.state + "].");
         switch (_bangobj.state) {
         case BangObject.SELECT_PHASE:
         case BangObject.SKIP_SELECT_PHASE:
@@ -1619,7 +1619,7 @@ public class BangManager extends GameManager
      */
     protected void tick (short tick)
     {
-        log.fine("Ticking [tick=" + tick + ", pcount=" + _bangobj.pieces.size() + "].");
+        log.debug("Ticking [tick=" + tick + ", pcount=" + _bangobj.pieces.size() + "].");
 
         // allow pieces to tick down and possibly die
         Piece[] pieces = _bangobj.getPieceArray();
@@ -1627,7 +1627,7 @@ public class BangManager extends GameManager
             Piece p = pieces[ii];
             if (!p.isAlive()) {
                 if (p.expireWreckage(tick)) {
-                    log.fine("Expiring wreckage " + p.pieceId + " l:" + p.lastActed + " t:" + tick);
+                    log.debug("Expiring wreckage " + p.pieceId + " l:" + p.lastActed + " t:" + tick);
                     _bangobj.removeFromPieces(p.getKey());
                     _bangobj.board.clearShadow(p);
                 }
@@ -2106,7 +2106,7 @@ public class BangManager extends GameManager
                 try {
                     recordStats(prec.user, ii, award, gameSecs/60, allRoundsCoop);
                 } catch (Throwable t) {
-                    log.log(Level.WARNING, "Failed to record stats [who=" + _bangobj.players[ii] +
+                    log.warning("Failed to record stats [who=" + _bangobj.players[ii] +
                             ", idx=" + ii + ", award=" + award + "].", t);
                 }
 
@@ -2906,7 +2906,7 @@ public class BangManager extends GameManager
             BangServer.generalLog(buf.toString());
 
         } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to log game data.", t);
+            log.warning("Failed to log game data.", t);
         }
     }
 
@@ -2945,7 +2945,7 @@ public class BangManager extends GameManager
                         try {
                             BangServer.playrepo.grantScrip(prec.playerId, award.cashEarned);
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to award scrip [who=" + prec.playerId +
+                            log.warning("Failed to award scrip [who=" + prec.playerId +
                                     ", scrip=" + award.cashEarned + "]", pe);
                         }
                     }
@@ -2959,7 +2959,7 @@ public class BangManager extends GameManager
                                 BangServer.itemrepo.updateItem(award.item);
                             }
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to store item " + award.item, pe);
+                            log.warning("Failed to store item " + award.item, pe);
                         }
                     }
 
@@ -2968,7 +2968,7 @@ public class BangManager extends GameManager
                         try {
                             BangServer.itemrepo.insertItem(_tickets[pidx]);
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to store ticket " + _tickets[pidx], pe);
+                            log.warning("Failed to store ticket " + _tickets[pidx], pe);
                         }
                     }
 
@@ -2981,7 +2981,7 @@ public class BangManager extends GameManager
                         try {
                             BangServer.ratingrepo.updateRatings(prec.playerId, ratings);
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to persist ratings " +
+                            log.warning("Failed to persist ratings " +
                                     "[pid=" + prec.playerId +
                                     ", ratings=" + StringUtil.toString(ratings) + "]", pe);
                         }
@@ -3034,7 +3034,7 @@ public class BangManager extends GameManager
     protected void notePlayedCards (final ArrayList<StartingCard> updates,
                                     final ArrayList<StartingCard> removals)
     {
-        log.fine("Noting played cards [updates=" + updates.size() +
+        log.debug("Noting played cards [updates=" + updates.size() +
                  ", removals=" + removals.size() + "].");
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
@@ -3042,7 +3042,7 @@ public class BangManager extends GameManager
                     try {
                         BangServer.itemrepo.updateItem(scard.item);
                     } catch (PersistenceException pe) {
-                        log.log(Level.WARNING, "Failed to update played card " +
+                        log.warning("Failed to update played card " +
                                 "[item=" + scard.item + "]", pe);
                     }
                 }
@@ -3053,7 +3053,7 @@ public class BangManager extends GameManager
                             BangServer.itemrepo.deleteItem(scard.item, "played_last_card");
                         }
                     } catch (PersistenceException pe) {
-                        log.log(Level.WARNING, "Failed to delete played card " +
+                        log.warning("Failed to delete played card " +
                                 "[item=" + scard.item + "]", pe);
                     }
                 }
@@ -3287,7 +3287,7 @@ public class BangManager extends GameManager
                     plogic.init(BangManager.this, piece);
                     _pLogics.put(piece.pieceId, plogic);
                 } catch (Exception e) {
-                    log.log(Level.WARNING, "Failed to create piece logic " +
+                    log.warning("Failed to create piece logic " +
                             "[piece=" + piece + ", class=" + pieceLogic + "].", e);
                 }
             }

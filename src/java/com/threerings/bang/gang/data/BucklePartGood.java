@@ -93,7 +93,7 @@ public class BucklePartGood extends GangGood
     {
         // clone the colorizations because the character rendering code keeps a reference
         // for caching
-        zations = (Colorization[])zations.clone();
+        zations = zations.clone();
         CharacterComponent ccomp = getCharacterComponent(ctx);
         BufferedImage bufimg = (ccomp == null) ?
             ImageUtil.createErrorImage(GOOD_PART_WIDTH, GOOD_PART_HEIGHT) :

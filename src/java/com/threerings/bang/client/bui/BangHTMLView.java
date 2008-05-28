@@ -58,7 +58,7 @@ public class BangHTMLView extends HTMLView
             getEditorKit().read(new StringReader(text), doc, 0);
             setContents(doc);
         } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to parse HTML '" + text + "'.", t);
+            log.warning("Failed to parse HTML '" + text + "'.", t);
         }
     }
 }

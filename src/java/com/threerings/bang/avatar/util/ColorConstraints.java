@@ -40,8 +40,7 @@ public class ColorConstraints
     {
         ArrayList<ColorRecord> records =
             getAvailableColors(pository, colorClass, entity);
-        return records.size() == 0 ? null :
-            (ColorRecord)RandomUtil.pickRandom(records);
+        return records.size() == 0 ? null : RandomUtil.pickRandom(records);
     }
 
     /**

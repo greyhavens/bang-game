@@ -104,7 +104,7 @@ public class OfficeManager extends ShopManager
                     _gconfig = (BangConfig)BinaryImporter.getInstance().load(
                         BangServer.rsrcmgr.getResource(path));
                 } catch (Exception e) {
-                    log.log(Level.WARNING, "Failed to load bounty game [key=" + key + "].", e);
+                    log.warning("Failed to load bounty game [key=" + key + "].", e);
                 }
                 return true;
             }
@@ -158,7 +158,7 @@ public class OfficeManager extends ShopManager
                 try {
                     BangServer.bountyrepo.storeCompleters(record);
                 } catch (Exception e) {
-                    log.log(Level.WARNING, "Failed to store recent completers " + record + ".", e);
+                    log.warning("Failed to store recent completers " + record + ".", e);
                 }
                 return false;
             };
@@ -218,7 +218,7 @@ public class OfficeManager extends ShopManager
             BangManager bangmgr = (BangManager)BangServer.plreg.createPlace(gconfig);
             bangmgr.setBountyConfig(bounty, gameId);
         } catch (InstantiationException ie) {
-            log.log(Level.WARNING, "Error instantiating bounty game [for=" + user.who() +
+            log.warning("Error instantiating bounty game [for=" + user.who() +
                     ", bounty=" + bounty + ", gconfig=" + gconfig + "].", ie);
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -271,7 +271,7 @@ public class OfficeManager extends ShopManager
                 _offobj.setCompleters(new DSet<RecentCompleters>(_comps));
             }
             public void handleFailure (Exception cause) {
-                log.log(Level.WARNING, "Failed to load recent completers.", cause);
+                log.warning("Failed to load recent completers.", cause);
                 _offobj.setCompleters(new DSet<RecentCompleters>());
             }
             protected ArrayList<RecentCompleters> _comps = new ArrayList<RecentCompleters>();

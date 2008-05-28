@@ -321,7 +321,7 @@ public class OptionsView extends BDecoratedWindow
             _modes.selectItem(current);
 
         } catch (LWJGLException e) {
-            log.log(Level.WARNING, "Failed to obtain display modes", e);
+            log.warning("Failed to obtain display modes", e);
         }
     }
 

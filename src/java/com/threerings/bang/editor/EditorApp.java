@@ -40,7 +40,7 @@ public class EditorApp extends JmeCanvasApp
         try {
             server.init();
         } catch (Exception e) {
-            log.log(Level.WARNING, "Unable to initialize server.", e);
+            log.warning("Unable to initialize server.", e);
         }
 
         // let the BangClientController know we're in editor mode

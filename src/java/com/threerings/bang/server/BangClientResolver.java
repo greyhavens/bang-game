@@ -391,7 +391,7 @@ public class BangClientResolver extends CrowdClientResolver
                             BangServer.itemrepo.insertItem(item);
                         }
                     } catch (PersistenceException pe) {
-                        log.log(Level.WARNING, "Failed to update player gang items. [user=" +
+                        log.warning("Failed to update player gang items. [user=" +
                             buser.who() + "].", pe);
                     }
                     return true;

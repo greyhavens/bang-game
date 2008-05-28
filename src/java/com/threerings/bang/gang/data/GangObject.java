@@ -473,7 +473,7 @@ public class GangObject extends DObject
         int[] ovalue = this.buckle;
         requestAttributeChange(
             BUCKLE, value, ovalue);
-        this.buckle = (value == null) ? null : (int[])value.clone();
+        this.buckle = (value == null) ? null : value.clone();
     }
 
     /**
@@ -506,7 +506,7 @@ public class GangObject extends DObject
         OutfitArticle[] ovalue = this.outfit;
         requestAttributeChange(
             OUTFIT, value, ovalue);
-        this.outfit = (value == null) ? null : (OutfitArticle[])value.clone();
+        this.outfit = (value == null) ? null : value.clone();
     }
 
     /**

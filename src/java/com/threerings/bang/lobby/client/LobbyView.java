@@ -234,7 +234,7 @@ public class LobbyView extends BWindow
         }
 
         // remove this item from the user interface
-        BContainer parent = (BContainer)item.getParent();
+        BContainer parent = item.getParent();
         parent.remove(item);
 
         // let the little fellow know that we gave him the boot

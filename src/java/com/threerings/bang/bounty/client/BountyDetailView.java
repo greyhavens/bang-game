@@ -111,7 +111,7 @@ public class BountyDetailView extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         _games.setEnabled(false);
-        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
         psvc.playBountyGame(_ctx.getClient(), _config.ident, event.getAction(),
                             new PlayerService.InvocationListener() {
             public void requestFailed (String cause) {

@@ -132,20 +132,16 @@ public class CreateAvatarView extends SteelWindow
         } else {
             first = NameFactory.getCreator().getHandleRoots(isMale);
             second = NameFactory.getCreator().getHandleFamily();
-            initial =
-                " " + (String)RandomUtil.pickRandom(initials.iterator(), initials.size()) + " ";
+            initial = " " + RandomUtil.pickRandom(initials.iterator(), initials.size()) + " ";
         }
-        String fname = (String)
-            RandomUtil.pickRandom(first.iterator(), first.size());
-        String sname = (String)
-            RandomUtil.pickRandom(second.iterator(), second.size());
+        String fname = RandomUtil.pickRandom(first.iterator(), first.size());
+        String sname = RandomUtil.pickRandom(second.iterator(), second.size());
         _handle.setText(fname + initial + sname);
     }
 
     protected void createAvatar ()
     {
-        AvatarService asvc = (AvatarService)
-            _ctx.getClient().requireService(AvatarService.class);
+        AvatarService asvc = _ctx.getClient().requireService(AvatarService.class);
         AvatarService.ConfirmListener cl = new AvatarService.ConfirmListener() {
             public void requestProcessed () {
                 // move to the next phase of the intro

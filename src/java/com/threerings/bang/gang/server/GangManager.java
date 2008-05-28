@@ -558,7 +558,7 @@ public class GangManager
                 }
             }
             public void handleFailure (Exception cause) {
-                log.log(Level.WARNING, "Failed to sync gang notorieties.", cause);
+                log.warning("Failed to sync gang notorieties.", cause);
             }
 
             protected IntIntMap _notMap;

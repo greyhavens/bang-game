@@ -79,7 +79,7 @@ public abstract class FieldEditor extends BContainer
         try {
             return _field.get(_object);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to fetch field [field=" + _field +
+            log.warning("Failed to fetch field [field=" + _field +
                     ", object=" + _object + "].", e);
             return null;
         }

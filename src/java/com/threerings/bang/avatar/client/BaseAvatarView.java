@@ -309,7 +309,7 @@ public abstract class BaseAvatarView extends BLabel
         int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0);
         BufferedImage image = ctx.getImageManager().createImage(
             width, height, Transparency.BITMASK);
-        Graphics2D gfx = (Graphics2D)image.createGraphics();
+        Graphics2D gfx = image.createGraphics();
         try {
             mfi.paintFrame(gfx, 0, width/2-ox, height-oy);
         } finally {
@@ -339,7 +339,7 @@ public abstract class BaseAvatarView extends BLabel
                 af = _ctx.getCharacterManager().getActionFrames(
                     _cdesc, _avatar.getCharacterAction());
             } catch (Exception e) {
-                log.log(Level.WARNING, "Unable to load action frames " + _cdesc + ".", e);
+                log.warning("Unable to load action frames " + _cdesc + ".", e);
                 // return a blank image rather than null
                 _image = _ctx.getImageCache().createCompatibleImage(
                     _avatar.getWidth(), _avatar.getHeight(), true);

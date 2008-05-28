@@ -114,7 +114,7 @@ public class OutlawView extends BComponent
     // from interface ResultListener<BImage>
     public void requestFailed (Exception cause)
     {
-        log.log(Level.WARNING, "Failed to load outlaw image " + _outlaw + ".", cause);
+        log.warning("Failed to load outlaw image " + _outlaw + ".", cause);
     }
 
     @Override // from BComponent

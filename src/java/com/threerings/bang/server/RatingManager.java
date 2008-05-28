@@ -113,7 +113,7 @@ public class RatingManager
                     log.info("Recalculating rankings...");
                     _ratingrepo.calculateRanks(null);
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to recalculate ranks.", pe);
+                    log.warning("Failed to recalculate ranks.", pe);
                 }
                 return false;
             }
@@ -126,7 +126,7 @@ public class RatingManager
                     log.info("Recalculating weekly rankings...");
                     _ratingrepo.calculateRanks(week);
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to recalculate weekly ranks[week=" +
+                    log.warning("Failed to recalculate weekly ranks[week=" +
                             week + "].", pe);
                 }
                 return false;
@@ -152,7 +152,7 @@ public class RatingManager
                 try {
                     _ratingrepo.deleteRatings(week);
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to purge weekly ratings [week=" +
+                    log.warning("Failed to purge weekly ratings [week=" +
                             week + "].", pe);
                 }
                 return false;
@@ -220,7 +220,7 @@ public class RatingManager
                     }
                     _rankLevels = newMap;
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failure while reloading rank data", pe);
+                    log.warning("Failure while reloading rank data", pe);
                 }
                 return false;
             }

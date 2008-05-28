@@ -140,8 +140,7 @@ public class TutorialGameOverView extends SteelWindow
             _bctx.getBangClient().showTownView();
 
         } else {
-            PlayerService psvc = (PlayerService)
-                _bctx.getClient().requireService(PlayerService.class);
+            PlayerService psvc = _bctx.getClient().requireService(PlayerService.class);
             ReportingListener rl = new ReportingListener(
                 _bctx, BangCodes.BANG_MSGS, "m.start_tut_failed") {
                 public void requestFailed (String cause) {

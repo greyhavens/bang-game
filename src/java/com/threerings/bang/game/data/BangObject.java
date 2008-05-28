@@ -511,7 +511,7 @@ public class BangObject extends GameObject
                 tcount++;
             }
         }
-        return (int)Math.round(tunits / tcount);
+        return Math.round(tunits / tcount);
     }
 
     /**
@@ -527,7 +527,7 @@ public class BangObject extends GameObject
                 tcount++;
             }
         }
-        return (int)Math.round(tunits / tcount);
+        return Math.round(tunits / tcount);
     }
 
     /**
@@ -785,7 +785,7 @@ public class BangObject extends GameObject
         if (_trackBoardHash == null || !Arrays.equals(_trackBoardHash, boardHash)) {
             // boardHash is null when testing uploaded boards
             if (boardHash != null) {
-                _trackBoardHash = (byte[])boardHash.clone();
+                _trackBoardHash = boardHash.clone();
             }
             _tracks = new HashIntMap<Track>();
             for (Piece piece : pieces) {
@@ -805,7 +805,7 @@ public class BangObject extends GameObject
         if (_teleporterBoardHash == null || !Arrays.equals(_teleporterBoardHash, boardHash)) {
             // boardHash is null when testing uploaded boards
             if (boardHash != null) {
-                _teleporterBoardHash = (byte[])boardHash.clone();
+                _teleporterBoardHash = boardHash.clone();
             }
             _teleporters = new HashIntMap<Teleporter>();
             for (Piece piece : pieces) {
@@ -867,7 +867,7 @@ public class BangObject extends GameObject
         BangObject.PlayerInfo[] ovalue = this.playerInfo;
         requestAttributeChange(
             PLAYER_INFO, value, ovalue);
-        this.playerInfo = (value == null) ? null : (BangObject.PlayerInfo[])value.clone();
+        this.playerInfo = (value == null) ? null : value.clone();
     }
 
     /**
@@ -900,7 +900,7 @@ public class BangObject extends GameObject
         int[] ovalue = this.teams;
         requestAttributeChange(
             TEAMS, value, ovalue);
-        this.teams = (value == null) ? null : (int[])value.clone();
+        this.teams = (value == null) ? null : value.clone();
     }
 
     /**
@@ -933,7 +933,7 @@ public class BangObject extends GameObject
         StatSet[] ovalue = this.stats;
         requestAttributeChange(
             STATS, value, ovalue);
-        this.stats = (value == null) ? null : (StatSet[])value.clone();
+        this.stats = (value == null) ? null : value.clone();
     }
 
     /**
@@ -1110,7 +1110,7 @@ public class BangObject extends GameObject
         byte[] ovalue = this.boardHash;
         requestAttributeChange(
             BOARD_HASH, value, ovalue);
-        this.boardHash = (value == null) ? null : (byte[])value.clone();
+        this.boardHash = (value == null) ? null : value.clone();
     }
 
     /**
@@ -1143,7 +1143,7 @@ public class BangObject extends GameObject
         Piece[] ovalue = this.boardUpdates;
         requestAttributeChange(
             BOARD_UPDATES, value, ovalue);
-        this.boardUpdates = (value == null) ? null : (Piece[])value.clone();
+        this.boardUpdates = (value == null) ? null : value.clone();
     }
 
     /**
@@ -1176,7 +1176,7 @@ public class BangObject extends GameObject
         StreamablePoint[] ovalue = this.startPositions;
         requestAttributeChange(
             START_POSITIONS, value, ovalue);
-        this.startPositions = (value == null) ? null : (StreamablePoint[])value.clone();
+        this.startPositions = (value == null) ? null : value.clone();
     }
 
     /**
@@ -1209,7 +1209,7 @@ public class BangObject extends GameObject
         Unit[] ovalue = this.bigShots;
         requestAttributeChange(
             BIG_SHOTS, value, ovalue);
-        this.bigShots = (value == null) ? null : (Unit[])value.clone();
+        this.bigShots = (value == null) ? null : value.clone();
     }
 
     /**
@@ -1466,7 +1466,7 @@ public class BangObject extends GameObject
         int[] ovalue = this.points;
         requestAttributeChange(
             POINTS, value, ovalue);
-        this.points = (value == null) ? null : (int[])value.clone();
+        this.points = (value == null) ? null : value.clone();
     }
 
     /**
@@ -1499,7 +1499,7 @@ public class BangObject extends GameObject
         int[][] ovalue = this.perRoundPoints;
         requestAttributeChange(
             PER_ROUND_POINTS, value, ovalue);
-        this.perRoundPoints = (value == null) ? null : (int[][])value.clone();
+        this.perRoundPoints = (value == null) ? null : value.clone();
     }
 
     /**
@@ -1532,7 +1532,7 @@ public class BangObject extends GameObject
         short[][] ovalue = this.perRoundRanks;
         requestAttributeChange(
             PER_ROUND_RANKS, value, ovalue);
-        this.perRoundRanks = (value == null) ? null : (short[][])value.clone();
+        this.perRoundRanks = (value == null) ? null : value.clone();
     }
 
     /**
@@ -1565,7 +1565,7 @@ public class BangObject extends GameObject
         Award[] ovalue = this.awards;
         requestAttributeChange(
             AWARDS, value, ovalue);
-        this.awards = (value == null) ? null : (Award[])value.clone();
+        this.awards = (value == null) ? null : value.clone();
     }
 
     /**

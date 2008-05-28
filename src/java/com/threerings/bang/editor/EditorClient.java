@@ -155,7 +155,7 @@ public class EditorClient extends BasicClient
             }
 
             public void resolutionFailed (Name username, Exception reason) {
-                log.log(Level.WARNING, "Failed to resolve client [who=" +
+                log.warning("Failed to resolve client [who=" +
                         username + "].", reason);
                 // TODO: display this error
             }

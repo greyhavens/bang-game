@@ -89,7 +89,7 @@ public class OfficeApp extends Application
 	    log.info("Sheriff's Office initialized.");
 
 	} catch (Throwable t) {
-	    log.log(Level.WARNING, "Error initializing Sheriff's Office.", t);
+	    log.warning("Error initializing Sheriff's Office.", t);
 	}
     }
 
@@ -128,8 +128,8 @@ public class OfficeApp extends Application
     protected String handleException (
         HttpServletRequest req, Logic logic, Exception error)
     {
-        log.log(Level.WARNING, logic.getClass().getName() +
-                " failed for: " + RequestUtils.reconstructURL(req), error);
+        log.warning(logic.getClass().getName() + " failed for: " +
+                    RequestUtils.reconstructURL(req), error);
         return "error.internal";
     }
 

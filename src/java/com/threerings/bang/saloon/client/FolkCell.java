@@ -165,8 +165,7 @@ public class FolkCell extends BContainer
                     }
                 };
 
-                PlayerService psvc = (PlayerService)
-                    _ctx.getClient().requireService(PlayerService.class);
+                PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
                 psvc.noteFolk(_ctx.getClient(), playerId,
                               PlayerService.FOLK_NEUTRAL, listener);
 

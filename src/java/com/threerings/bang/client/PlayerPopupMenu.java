@@ -181,7 +181,7 @@ public class PlayerPopupMenu extends BPopupMenu
                     // nothing doing
                 }
                 public void requestFailed (Exception cause) {
-                    log.log(Level.WARNING, "Failed to show account info.", cause);
+                    log.warning("Failed to show account info.", cause);
                 }
             };
             try {
@@ -281,7 +281,7 @@ public class PlayerPopupMenu extends BPopupMenu
 
     protected void bootPlayer ()
     {
-        PlayerService psvc = ((PlayerService)_ctx.getClient().requireService(PlayerService.class));
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
         psvc.bootPlayer(_ctx.getClient(), _handle, new PlayerService.ConfirmListener() {
             public void requestProcessed () {
                 String msg = MessageBundle.tcompose("m.player_booted", _handle);
@@ -295,7 +295,7 @@ public class PlayerPopupMenu extends BPopupMenu
 
     protected void removePardner ()
     {
-        PlayerService psvc = ((PlayerService)_ctx.getClient().requireService(PlayerService.class));
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
         psvc.removePardner(_ctx.getClient(), _handle, new PlayerService.ConfirmListener() {
             public void requestProcessed () {
                 String msg = MessageBundle.tcompose("m.pardner_removed", _handle);
@@ -340,7 +340,7 @@ public class PlayerPopupMenu extends BPopupMenu
 
     protected void submitComplaint (String reason)
     {
-        PlayerService psvc = ((PlayerService)_ctx.getClient().requireService(PlayerService.class));
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
         PlayerService.ConfirmListener listener = new PlayerService.ConfirmListener() {
             public void requestProcessed () {
                 String msg = MessageBundle.tcompose("m.comp_submitted", _handle);

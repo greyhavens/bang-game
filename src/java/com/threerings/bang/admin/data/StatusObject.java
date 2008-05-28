@@ -127,7 +127,7 @@ public class StatusObject extends DObject
     public void updatePlayersOnline (int players)
     {
         if (players > 1000) {
-            players = 5 * (int)Math.round(players/5f);
+            players = 5 * Math.round(players/5f);
         }
         setPlayersOnline(players);
     }

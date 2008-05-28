@@ -110,7 +110,7 @@ public class Config
                 }
 
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to configure field from prefs " +
+                log.warning("Failed to configure field from prefs " +
                         "[field=" + field.getName() +
                         ", type=" + ftype + "].", e);
             }
@@ -155,7 +155,7 @@ public class Config
         try {
             field.set(null, value);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to updated config field " +
+            log.warning("Failed to updated config field " +
                     "[field=" + name + ", value=" + value + "].", e);
             return;
         }

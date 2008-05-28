@@ -55,7 +55,7 @@ public class ToggleSwitchEffect extends Effect
     public int[] getAffectedPieces ()
     {
         if (switchIds != null) {
-            int[] pieces = (int[])switchIds.clone();
+            int[] pieces = switchIds.clone();
             pieces = ArrayUtil.append(pieces, switchId);
             return pieces;
         }

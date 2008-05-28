@@ -1165,7 +1165,7 @@ public class GangHandler
                     BangServer.gangrepo.grantScrip(_gangId, scrip);
                     return true;
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to grant scrip to gang " + "[id=" + _gangId +
+                    log.warning("Failed to grant scrip to gang " + "[id=" + _gangId +
                             ", amount=" + scrip + "].", pe);
                     return false;
                 }
@@ -1197,7 +1197,7 @@ public class GangHandler
                 _gangobj.setCoins(_coins);
             }
             public void handleFailure (Exception err) {
-                log.log(Level.WARNING, "Error updating gang coin count. [id=" + _gangId + "].", err);
+                log.warning("Error updating gang coin count. [id=" + _gangId + "].", err);
             }
             protected int _coins;
         });

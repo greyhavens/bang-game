@@ -187,7 +187,7 @@ public abstract class Scenario
             try {
                 validate = delegate.tick(bangobj, tick) || validate;
             } catch (Exception e) {
-                log.log(Level.WARNING, "Delegate choked on tick " +
+                log.warning("Delegate choked on tick " +
                         "[game=" + _bangmgr.where() + ", tick=" + tick +
                         ", delegate=" + delegate + "].", e);
             }
@@ -221,7 +221,7 @@ public abstract class Scenario
         int bprob = bangobj.gdata.livePlayers - bonuses - 1;
         int rando = RandomUtil.getInt(40);
         if (bprob < 0 || rando > bprob*10) {
-            log.fine("No bonus, probability " + bprob + " in 10 (" +
+            log.debug("No bonus, probability " + bprob + " in 10 (" +
                      rando + ").");
             return false;
         }
@@ -403,7 +403,7 @@ public abstract class Scenario
             }
         }
 
-        log.fine("Noting earnings p:" + bangobj.players[pidx] +
+        log.debug("Noting earnings p:" + bangobj.players[pidx] +
                     " r:" + ridx + " (" + precords[pidx].finishedTick[ridx] +
                     " * " + BASE_EARNINGS[defeated] + " / " +
                     rounds[ridx].lastTick + ").");
@@ -497,7 +497,7 @@ public abstract class Scenario
         // now select a spot based on our weightings
         int spidx = RandomUtil.getWeightedIndex(weights);
         Point spot = new Point(spots.getX(spidx), spots.getY(spidx));
-        log.fine("Selecting from " + StringUtil.toString(weights) + ": " +
+        log.debug("Selecting from " + StringUtil.toString(weights) + ": " +
                  spidx + " -> " + spot.x + "/" + spot.y + ".");
 
         // locate the nearest spot to that which can be occupied by our piece
@@ -526,7 +526,7 @@ public abstract class Scenario
         bonus.assignPieceId(bangobj);
         bonus.position(x, y);
         _bangmgr.addPiece(bonus);
-        log.fine("Placed bonus: " + bonus);
+        log.debug("Placed bonus: " + bonus);
     }
 
     /**

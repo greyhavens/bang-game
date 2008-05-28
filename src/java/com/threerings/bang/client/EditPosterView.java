@@ -216,11 +216,9 @@ public class EditPosterView extends BContainer
             stmt = StringUtil.truncate(stmt, MAX_STATEMENT_LENGTH);
 
             // and send the update request
-            PlayerService psvc = (PlayerService)
-                _ctx.getClient().requireService(PlayerService.class);
+            PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
             psvc.updatePosterInfo(
-                _ctx.getClient(), _ctx.getUserObject().playerId,
-                stmt, _poster.badgeIds, listener);
+                _ctx.getClient(), _ctx.getUserObject().playerId, stmt, _poster.badgeIds, listener);
         }
 
         protected BTextField _statement;

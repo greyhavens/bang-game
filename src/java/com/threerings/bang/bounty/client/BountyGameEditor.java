@@ -428,7 +428,7 @@ public class BountyGameEditor extends BDecoratedWindow
                               MessageBundle.tcompose("m.loaded_game", file), false);
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to load bounty game.", e);
+            log.warning("Failed to load bounty game.", e);
             _status.setStatus(OfficeCodes.OFFICE_MSGS,
                               MessageBundle.tcompose("m.load_game_failed", e.getMessage()), true);
         }
@@ -443,7 +443,7 @@ public class BountyGameEditor extends BDecoratedWindow
                               MessageBundle.tcompose("m.saved_game", file), false);
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to save bounty game.", e);
+            log.warning("Failed to save bounty game.", e);
             _status.setStatus(OfficeCodes.OFFICE_MSGS,
                               MessageBundle.tcompose("m.save_game_failed", e.getMessage()), true);
         }

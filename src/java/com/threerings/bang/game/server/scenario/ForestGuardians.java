@@ -109,8 +109,7 @@ public class ForestGuardians extends Scenario
         }
         float rratio = ((float)(trating / nplayers) - Rating.DEFAULT_RATING) /
             (Rating.MAXIMUM_RATING - Rating.DEFAULT_RATING);
-        _difficulty = (int)Math.max(0,
-            Math.round(rratio * MAX_INITIAL_DIFFICULTY));
+        _difficulty = Math.max(0, Math.round(rratio * MAX_INITIAL_DIFFICULTY));
 
         String sdata = _bangmgr.getBangConfig().getScenarioData(bangobj.roundId - 1);
         if (!StringUtil.isBlank(sdata)) {
@@ -287,7 +286,7 @@ public class ForestGuardians extends Scenario
             }
         }
         players = Math.max(1, players);
-        return (int)Math.round(units / players);
+        return Math.round(units / players);
     }
 
     /**

@@ -119,8 +119,7 @@ public class FirstBigShotView extends SteelWindow
 
     protected void pickBigShot ()
     {
-        PlayerService psvc = (PlayerService)
-            _ctx.getClient().requireService(PlayerService.class);
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
         PlayerService.ConfirmListener cl = new PlayerService.ConfirmListener() {
             public void requestProcessed () {
                 // move to the next phase of the intro

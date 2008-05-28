@@ -667,7 +667,7 @@ public class EditorController extends GameController
             _ctx.displayStatus(_msgs.get("m.loaded", _target));
 
         } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failed to load board " + target + ".", ioe);
+            log.warning("Failed to load board " + target + ".", ioe);
             _ctx.displayStatus(_msgs.get("m.load_error", ioe.getMessage()));
         }
     }

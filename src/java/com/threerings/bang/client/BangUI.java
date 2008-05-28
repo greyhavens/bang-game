@@ -205,7 +205,7 @@ public class BangUI
             InputStream is = _ctx.getResourceManager().getResource("ui/html_style.css");
             css.loadRules(new InputStreamReader(is), null);
         } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to load HTML style sheet.", t);
+            log.warning("Failed to load HTML style sheet.", t);
         }
 
         // create our BUI stylesheet
@@ -285,14 +285,14 @@ public class BangUI
                 Image icon = ImageCache.createImage(bicon, false);
                 icons[ii] = icon.getData();
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to load icon [path=" + path + "].", e);
+                log.warning("Failed to load icon [path=" + path + "].", e);
                 return;
             }
         }
         try {
             Display.setIcon(icons);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to set icons.", e);
+            log.warning("Failed to set icons.", e);
         }
     }
 
@@ -309,7 +309,7 @@ public class BangUI
             Toolkit.getDefaultToolkit().getSystemSelection().setContents(sel, null);
             return true;
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to copy text to clipboard '" + text + "'.", e);
+            log.warning("Failed to copy text to clipboard '" + text + "'.", e);
             return false;
         }
     }
@@ -388,7 +388,7 @@ public class BangUI
             InputStream is = _ctx.getResourceManager().getResource("ui/style.bss");
             stylesheet = new BStyleSheet(new InputStreamReader(is, "UTF-8"), rp);
         } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failed to load stylesheet", ioe);
+            log.warning("Failed to load stylesheet", ioe);
         }
     }
 
@@ -531,7 +531,7 @@ public class BangUI
         try {
             font = Font.createFont(type, ctx.getResourceManager().getResourceFile(path));
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to load font '" + path + "'.", e);
+            log.warning("Failed to load font '" + path + "'.", e);
             font = new Font("Dialog", Font.PLAIN, 16);
         }
         return font;
@@ -584,7 +584,7 @@ public class BangUI
                             size -= 2;
                         }
                     } catch (Throwable t) {
-                        log.log(Level.WARNING, "StyleConstants choked looking up size " +
+                        log.warning("StyleConstants choked looking up size " +
                                 "[font=" + variant + ", attrs=" + attrs + "].", t);
                         size = 9;
                     }

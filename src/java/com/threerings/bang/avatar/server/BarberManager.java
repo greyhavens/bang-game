@@ -322,7 +322,7 @@ public class BarberManager extends ShopManager
                     BangServer.lookrepo.insertLook(user.playerId, look);
 
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Error creating avatar " +
+                    log.warning("Error creating avatar " +
                             "[for=" + user.who() + ", look=" + look + "].", pe);
                     _error = INTERNAL_ERROR;
                 }
@@ -376,7 +376,7 @@ public class BarberManager extends ShopManager
                 try {
                     BangServer.lookrepo.updateSnapshot(user.playerId, avatar.print);
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Error updating snapshot " +
+                    log.warning("Error updating snapshot " +
                             "[for=" + user.who() + ", look=" + look + "].", pe);
                     _error = INTERNAL_ERROR;
                 }

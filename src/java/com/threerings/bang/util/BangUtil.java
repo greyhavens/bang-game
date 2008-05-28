@@ -69,7 +69,7 @@ public class BangUtil
             }
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to read resource file " +
+            log.warning("Failed to read resource file " +
                     "[path=" + path + "].", e);
 
         } finally {
@@ -122,7 +122,7 @@ public class BangUtil
                 bin.close();
 
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to read resource file " +
+                log.warning("Failed to read resource file " +
                         "[path=" + path + "].", e);
             }
         }
@@ -154,7 +154,7 @@ public class BangUtil
             }
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to read resource file " +
+            log.warning("Failed to read resource file " +
                     "[path=" + path + "].", e);
 
         } finally {
@@ -196,7 +196,7 @@ public class BangUtil
                 return new FileInputStream(file);
             }
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to look up resource " +
+            log.warning("Failed to look up resource " +
                     "[path=" + path + "].", e);
         }
         return null;

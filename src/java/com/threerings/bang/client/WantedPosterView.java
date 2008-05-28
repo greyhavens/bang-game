@@ -168,10 +168,8 @@ public class WantedPosterView extends BContainer
                 }
             };
 
-        PlayerService psvc = (PlayerService)
-            _ctx.getClient().requireService(PlayerService.class);
-        psvc.getPosterInfo(
-            _ctx.getClient(), handle, listener);
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
+        psvc.getPosterInfo(_ctx.getClient(), handle, listener);
     }
 
     /**

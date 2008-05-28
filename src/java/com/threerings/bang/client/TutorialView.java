@@ -231,8 +231,7 @@ public class TutorialView extends SteelWindow
             _ctx.getBangClient().showTownView();
 
         } else {
-            PlayerService psvc = (PlayerService)
-                _ctx.getClient().requireService(PlayerService.class);
+            PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
             ReportingListener rl = new ReportingListener(
                 _ctx, BangCodes.BANG_MSGS, "m.start_tut_failed") {
                 public void requestFailed (String cause) {

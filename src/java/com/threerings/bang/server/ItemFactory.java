@@ -79,7 +79,7 @@ public class ItemFactory
     {
         int type = ++_nextType;
         _typeToClass.put(type, typeClass);
-        log.fine("Registering [class=" + typeClass + ", type=" + type + "].");
+        log.debug("Registering [class=" + typeClass + ", type=" + type + "].");
         _classToType.put(typeClass, type);
     }
 

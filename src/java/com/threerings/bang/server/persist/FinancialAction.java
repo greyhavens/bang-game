@@ -76,7 +76,7 @@ public abstract class FinancialAction extends Invoker.Unit
             }
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Financial action failed " + this, e);
+            log.warning("Financial action failed " + this, e);
             fail(BangCodes.INTERNAL_ERROR);
         }
 
@@ -208,7 +208,7 @@ public abstract class FinancialAction extends Invoker.Unit
                     log.warning("Failed to return coins " + this + ".");
                 }
             } catch (PersistenceException pe) {
-                log.log(Level.WARNING, "Failed to return coins " + this, pe);
+                log.warning("Failed to return coins " + this, pe);
             }
         }
 
@@ -216,7 +216,7 @@ public abstract class FinancialAction extends Invoker.Unit
             try {
                 grantCash();
             } catch (PersistenceException pe) {
-                log.log(Level.WARNING, "Failed to return cash " + this, pe);
+                log.warning("Failed to return cash " + this, pe);
             }
         }
 
@@ -224,7 +224,7 @@ public abstract class FinancialAction extends Invoker.Unit
             try {
                 rollbackPersistentAction();
             } catch (PersistenceException pe) {
-                log.log(Level.WARNING, "Failed to rollback action " + this, pe);
+                log.warning("Failed to rollback action " + this, pe);
             }
         }
     }

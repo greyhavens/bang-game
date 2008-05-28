@@ -158,7 +158,7 @@ public class InitFailedDialog extends JFrame
                     "GLU Extensions", GLU.gluGetString(GLU.GLU_EXTENSIONS));
             }
         } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to get GL info.", t);
+            log.warning("Failed to get GL info.", t);
         }
 
         URL submitURL = DeploymentConfig.getBugSubmitURL();
@@ -173,7 +173,7 @@ public class InitFailedDialog extends JFrame
             String[] files = { BangClient.localDataDir("bang.log")};
             SendReportUtil.submitReport(submitURL, report, files);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to submit bug report.", e);
+            log.warning("Failed to submit bug report.", e);
         }
     }
 

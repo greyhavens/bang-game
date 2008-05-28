@@ -933,7 +933,7 @@ public class BangBoard extends SimpleStreamableObject
 
         } else {
             _tstate[_width*piece.y+piece.x] = (piece.isAirborne() && piece.isAlive()) ?
-                O_AIRBORNE : (byte)getTeam(piece);
+                O_AIRBORNE : getTeam(piece);
         }
     }
 
@@ -951,7 +951,7 @@ public class BangBoard extends SimpleStreamableObject
         if (piece instanceof Cow || piece instanceof Train || piece.owner < 0) {
             _tstate[idx] = O_OCCUPIED;
         } else {
-            _tstate[idx] = (byte)getTeam(piece);
+            _tstate[idx] = getTeam(piece);
         }
         return old;
     }

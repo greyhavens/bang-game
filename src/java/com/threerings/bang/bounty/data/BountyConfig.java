@@ -459,7 +459,7 @@ public class BountyConfig extends SimpleStreamableObject
             log.warning("Bounty name collision [which=" + which + ", old=" + collide + "].");
         }
 
-        log.fine("Registered " + config + ".");
+        log.debug("Registered " + config + ".");
     }
 
     protected static Quote parseQuote (String which, Properties props, String prefix)

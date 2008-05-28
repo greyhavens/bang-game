@@ -92,7 +92,7 @@ public class TreeBedDelegate extends ScenarioDelegate
         // determine the desired number of trees and add/remove accordingly
         float ratio = BASE_TREE_RATIO + TREE_RATIO_INCREMENT * difficulty;
         int units = (_bangmgr.getTeamSize() + 1) * _bangmgr.getPlayerCount();
-        int ntrees = Math.min(MAX_TREES, (int)Math.round(units * ratio));
+        int ntrees = Math.min(MAX_TREES, Math.round(units * ratio));
         _ctrees.clear();
         for (TreeBed tree : _trees) {
             if (ntrees-- > 0) {

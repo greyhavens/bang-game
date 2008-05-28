@@ -105,7 +105,7 @@ public class BangClient extends CrowdClient
         user.tokens.setToken(BangTokenRing.ANONYMOUS, creds.anonymous);
 
         // make a note of their current avatar poses for later comparison and potential updating
-        _startPoses = (String[])user.poses.clone();
+        _startPoses = user.poses.clone();
 
         // check to see if this player has any rewards and redeem them if so
         BangServer.author.getInvoker().postUnit(new Invoker.Unit("redeemRewards:" + _username) {
@@ -193,7 +193,7 @@ public class BangClient extends CrowdClient
                 changed[ii] = !ObjectUtil.equals(_startPoses[ii], user.poses[ii]);
             }
             BangServer.playrepo.noteSessionEnded(
-                user.playerId, user.poses, changed, (int)Math.round(_connectTime / 60f));
+                user.playerId, user.poses, changed, Math.round(_connectTime / 60f));
 
             // if our wanted poster look changed, generate a new snapshot
             if (updatedWanted || changed[Look.Pose.WANTED_POSTER.ordinal()]) {
@@ -205,7 +205,7 @@ public class BangClient extends CrowdClient
             }
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to note ended session [user=" + user.who() + "].", e);
+            log.warning("Failed to note ended session [user=" + user.who() + "].", e);
         }
     }
 

@@ -286,7 +286,7 @@ public class HideoutObject extends PlaceObject
         ConsolidatedOffer[] ovalue = this.sellOffers;
         requestAttributeChange(
             SELL_OFFERS, value, ovalue);
-        this.sellOffers = (value == null) ? null : (ConsolidatedOffer[])value.clone();
+        this.sellOffers = (value == null) ? null : value.clone();
     }
 
     /**

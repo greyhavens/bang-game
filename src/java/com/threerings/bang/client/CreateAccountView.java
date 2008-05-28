@@ -199,7 +199,7 @@ public class CreateAccountView extends SteelWindow
             return;
         }
 
-        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
+        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
         PlayerService.ConfirmListener cl = new PlayerService.ConfirmListener() {
             public void requestProcessed () {
                 BangPrefs.config.setValue("username", uname);

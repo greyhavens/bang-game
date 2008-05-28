@@ -347,7 +347,7 @@ public class PlayerManager
 
             } catch (Exception e) {
                 // sorry kid, not much we can do for you
-                log.log(Level.WARNING, "Failed to award reward to player [who=" + player.who() +
+                log.warning("Failed to award reward to player [who=" + player.who() +
                         ", reward=" + reward + "].", e);
             }
         }
@@ -487,7 +487,7 @@ public class PlayerManager
     {
         // make sure the pardner entry is present
         final PlayerObject player = (PlayerObject)caller;
-        PardnerEntry entry = (PardnerEntry)player.pardners.get(handle);
+        PardnerEntry entry = player.pardners.get(handle);
         if (entry == null) {
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -1011,8 +1011,7 @@ public class PlayerManager
                         BangServer.generalLog("create_account " + user.playerId);
                     }
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING,
-                        "Failed to create account for [who=" + user.who() + "]", pe);
+                    log.warning("Failed to create account for [who=" + user.who() + "]", pe);
                     _errmsg = INTERNAL_ERROR;
                 }
                 return true;
@@ -1293,7 +1292,7 @@ public class PlayerManager
             return bangobj;
 
         } catch (InstantiationException ie) {
-            log.log(Level.WARNING, "Error instantiating game " +
+            log.warning("Error instantiating game " +
                     "[for=" + player.who() + ", config=" + config + "].", ie);
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -1497,7 +1496,7 @@ public class PlayerManager
             }
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failure running ln command.", e);
+            log.warning("Failure running ln command.", e);
         }
 
         return ident;
@@ -1619,7 +1618,7 @@ public class PlayerManager
                 BangServer.itemLog("gold_pass " + user.playerId + " t:" + pass.getTownId());
             }
             public void handleFailure (Exception err) {
-                log.log(Level.WARNING, "Failed to add gold pass to repository " +
+                log.warning("Failed to add gold pass to repository " +
                     "[who=" + user.who() + ", item=" + pass + "]", err);
             }
         });

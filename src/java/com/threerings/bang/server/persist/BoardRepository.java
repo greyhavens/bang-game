@@ -138,7 +138,7 @@ public class BoardRepository extends JORARepository
         FieldMask mask = _btable.getFieldMask();
         mask.setModified("name");
         mask.setModified("players");
-        BoardRecord orecord = (BoardRecord)loadByExample(_btable, record, mask);
+        BoardRecord orecord = loadByExample(_btable, record, mask);
         if (orecord != null) {
             record.boardId = orecord.boardId;
             update(_btable, record);
@@ -157,8 +157,7 @@ public class BoardRepository extends JORARepository
     public int clearStaleBoards (ArrayIntSet except)
         throws PersistenceException
     {
-        return update("delete from BOARDS where CREATOR is NULL " +
-                      "and BOARD_ID not in " + except);
+        return update("delete from BOARDS where CREATOR is NULL and BOARD_ID not in " + except);
     }
 
     @Override // documentation inherited

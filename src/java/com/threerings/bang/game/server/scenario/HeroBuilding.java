@@ -231,7 +231,7 @@ public class HeroBuilding extends Scenario
      */
     protected void respawnUnit (BangObject bangobj, Unit unit, Point spot)
     {
-        log.fine("Respawning " + unit + ".");
+        log.debug("Respawning " + unit + ".");
 
         // figure out where to put this guy
         Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);

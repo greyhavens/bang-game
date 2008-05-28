@@ -55,8 +55,7 @@ public class RuntimeConfigView extends BDecoratedWindow
 
         // ship off a getConfigInfo request to find out what config objects are
         // available for editing
-        AdminService service = (AdminService)
-            ctx.getClient().requireService(AdminService.class);
+        AdminService service = ctx.getClient().requireService(AdminService.class);
         service.getConfigInfo(ctx.getClient(), this);
     }
 

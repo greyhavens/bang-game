@@ -478,13 +478,10 @@ public class MobileSprite extends ActiveSprite
         }
 
         Vector3f start = toWorldCoords(
-            _px, _py, _piece.computeElevation(board, _px, _py),
-            new Vector3f());
-        Vector3f end = toWorldCoords(_piece.x, _piece.y,
-            _piece.computeElevation(board, _piece.x, _piece.y),
-            new Vector3f());
-        float duration = (float)MathUtil.distance(
-            _px, _py, _piece.x, _piece.y) * .003f;
+            _px, _py, _piece.computeElevation(board, _px, _py), new Vector3f());
+        Vector3f end = toWorldCoords(
+            _piece.x, _piece.y, _piece.computeElevation(board, _piece.x, _piece.y), new Vector3f());
+        float duration = MathUtil.distance(_px, _py, _piece.x, _piece.y) * .003f;
         return new LinePath(this, start, end, duration);
     }
 
