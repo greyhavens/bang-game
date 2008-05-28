@@ -13,7 +13,6 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 

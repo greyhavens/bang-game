@@ -20,8 +20,6 @@ import com.threerings.bang.game.data.piece.Homestead;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.LandGrabInfo;
-import com.threerings.bang.game.server.BangManager;
-import com.threerings.bang.game.util.PieceSet;
 
 import static com.threerings.bang.Log.log;
 

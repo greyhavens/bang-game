@@ -4,14 +4,10 @@
 package com.threerings.bang.server;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.StringUtil;
-
-import com.threerings.presents.client.Client;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.server.BangAuthenticator;

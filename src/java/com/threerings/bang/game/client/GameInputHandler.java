@@ -3,17 +3,11 @@
 
 package com.threerings.bang.game.client;
 
-import java.awt.Rectangle;
-
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
 
-import com.jmex.bui.event.KeyEvent;
-import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseWheelListener;
 
@@ -23,11 +17,8 @@ import com.threerings.jme.camera.GodViewHandler;
 import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.camera.SwingPath;
 
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.piece.Piece;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

@@ -3,13 +3,9 @@
 
 package com.threerings.bang.ranch.client;
 
-import java.util.Iterator;
-
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
-import com.threerings.presents.dobj.EntryRemovedEvent;
-import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.client.bui.IconPalette;

@@ -7,12 +7,10 @@ import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.GangPeerService;
-import com.threerings.bang.gang.data.GangGood;
-import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
+import com.threerings.presents.net.Transport;
 
 /**
  * Provides the implementation of the {@link GangPeerService} interface

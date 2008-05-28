@@ -8,13 +8,11 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
-import com.samskivert.util.Tuple;
 
 import com.threerings.parlor.rating.util.Percentiler;
 

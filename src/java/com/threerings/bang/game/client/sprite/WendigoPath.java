@@ -11,7 +11,6 @@ import com.threerings.jme.sprite.CubicSplinePath;
 import com.threerings.jme.sprite.PathUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
-import static com.threerings.bang.Log.log;
 
 /**
  * Handles the movement of a wendigo.

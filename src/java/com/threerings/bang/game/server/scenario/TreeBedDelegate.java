@@ -5,16 +5,11 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.IntListUtil;
 import com.samskivert.util.QuickSort;
-
-import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ClearPieceEffect;
@@ -24,7 +19,6 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 
 import static com.threerings.bang.Log.log;
 

@@ -22,15 +22,12 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.StatType;
 
-import com.threerings.bang.game.client.GameOverView;
 import com.threerings.bang.game.client.StatsView;
 
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangObject;
 
-import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
-import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 
 import com.threerings.bang.tests.TestApp;

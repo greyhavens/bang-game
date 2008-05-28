@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.data.effect;
 
-import com.samskivert.util.ArrayUtil;
-
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.game.data.BangObject;

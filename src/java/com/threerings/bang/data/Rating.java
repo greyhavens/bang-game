@@ -8,7 +8,6 @@ import java.util.Calendar;
 
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.MathUtil;
-import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 

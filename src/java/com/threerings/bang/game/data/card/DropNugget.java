@@ -9,7 +9,6 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HoldEffect;
-import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;

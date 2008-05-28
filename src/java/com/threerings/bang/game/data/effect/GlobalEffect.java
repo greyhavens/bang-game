@@ -10,8 +10,6 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Performs an effect on some set of pieces on the board.
  */

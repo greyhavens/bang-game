@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
@@ -39,7 +38,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
-import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
@@ -63,11 +61,8 @@ import com.threerings.util.StreamableHashMap;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.server.persist.LookRepository;
-import com.threerings.bang.gang.data.GangCodes;
-import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.saloon.data.SaloonCodes;
-import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.saloon.server.Match;
 
 import com.threerings.bang.game.data.BangAI;
@@ -82,12 +77,9 @@ import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.PlayerService;
-import com.threerings.bang.data.Article;
-import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
-import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.EntryReplacedEvent;
 import com.threerings.bang.data.GoldPass;
@@ -111,9 +103,7 @@ import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.PosterRecord;
 import com.threerings.bang.server.persist.PosterRepository;
-import com.threerings.bang.server.persist.RatingRepository.RankLevels;
 import com.threerings.bang.server.persist.RatingRepository;
-import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
 
@@ -1639,7 +1629,6 @@ public class PlayerManager
             }
         }
     };
-
 
     /** Provides access to the pardner database. */
     protected PardnerRepository _pardrepo;

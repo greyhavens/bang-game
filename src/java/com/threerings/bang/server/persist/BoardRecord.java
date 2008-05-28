@@ -13,8 +13,6 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.util.BangUtil;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Contains all information about a board for storage in the database.
  */

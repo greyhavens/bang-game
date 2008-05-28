@@ -6,11 +6,8 @@ package com.threerings.bang.editor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.util.Iterator;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -27,11 +24,8 @@ import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 
-import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
-import com.samskivert.swing.util.SwingUtil;
 
-import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;

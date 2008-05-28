@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import com.samskivert.util.StringUtil;
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -30,7 +29,6 @@ import com.threerings.util.Name;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.server.BangServer;
 
 import static com.threerings.bang.Log.log;
 

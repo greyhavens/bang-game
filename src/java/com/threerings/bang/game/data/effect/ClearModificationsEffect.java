@@ -5,8 +5,6 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
-import com.threerings.util.MessageBundle;
-
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;

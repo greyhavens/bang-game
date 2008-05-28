@@ -28,7 +28,6 @@ import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
-import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
 
 /**
  * Test harness for the game over view.

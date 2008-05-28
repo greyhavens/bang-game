@@ -3,7 +3,6 @@
 
 package com.threerings.bang.saloon.client;
 
-import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Point;

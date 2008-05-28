@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Contains metadata on each of our avatar aspects.
  */

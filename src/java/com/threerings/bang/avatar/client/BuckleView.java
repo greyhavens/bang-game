@@ -3,7 +3,6 @@
 
 package com.threerings.bang.avatar.client;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;

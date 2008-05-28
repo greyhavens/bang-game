@@ -6,9 +6,7 @@ package com.threerings.bang.server;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Level;
 
-import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.jdbc.TransitionRepository;
@@ -21,7 +19,6 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.OneLineLogFormatter;
-import com.samskivert.util.Tuple;
 
 import com.threerings.admin.server.AdminProvider;
 import com.threerings.admin.server.ConfigRegistry;
@@ -41,9 +38,7 @@ import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.data.BodyObject;
-import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.CrowdServer;
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.parlor.server.ParlorManager;
 

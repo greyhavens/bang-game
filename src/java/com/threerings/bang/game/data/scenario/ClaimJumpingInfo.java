@@ -4,7 +4,6 @@
 package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.piece.Marker;
 
 /**

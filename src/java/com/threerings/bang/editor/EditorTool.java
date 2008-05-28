@@ -3,7 +3,6 @@
 
 package com.threerings.bang.editor;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import com.jmex.bui.event.KeyEvent;

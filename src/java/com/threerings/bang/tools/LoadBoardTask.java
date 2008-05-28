@@ -6,7 +6,6 @@ package com.threerings.bang.tools;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -17,7 +16,6 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.jdbc.StaticConnectionProvider;
 
-import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.util.BoardFile;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;

@@ -8,8 +8,6 @@ import java.util.Properties;
 
 import java.io.IOException;
 
-import java.lang.ClassNotFoundException;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
@@ -24,7 +22,6 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jmex.effects.particles.ParticleMesh;
 
-import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.RenderUtil;

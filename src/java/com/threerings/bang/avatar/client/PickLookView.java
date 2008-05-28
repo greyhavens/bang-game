@@ -3,9 +3,6 @@
 
 package com.threerings.bang.avatar.client;
 
-import java.util.Iterator;
-
-import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
@@ -16,7 +13,6 @@ import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
-import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.GuestHandle;

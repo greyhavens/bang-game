@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.SimpleStreamableObject;
 import com.threerings.io.Streamable;
 
 /**

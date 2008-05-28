@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import com.samskivert.util.QuickSort;
 import com.samskivert.util.RandomUtil;
 
-import com.threerings.presents.server.InvocationException;
-
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangAI;

@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.zip.CRC32;
 
 import com.samskivert.io.StreamUtil;

@@ -3,33 +3,20 @@
 
 package com.threerings.bang.editor;
 
-import java.awt.Cursor;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import java.nio.FloatBuffer;
-
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.Line;
 import com.jme.scene.Node;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.WireframeState;
-import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
 
-import com.jmex.bui.event.MouseEvent;
-import com.jmex.bui.event.MouseListener;
-import com.jmex.bui.event.MouseWheelListener;
 
 import com.jmex.terrain.util.AbstractHeightMap;
 import com.jmex.terrain.util.FaultFractalHeightMap;
@@ -62,7 +49,6 @@ import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.editor.EditorContext;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

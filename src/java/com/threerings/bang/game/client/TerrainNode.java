@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
@@ -27,34 +25,27 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.CompositeMesh;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
-import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
-import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.CullState;
 import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.ZBufferState;
 import com.jme.util.geom.BufferUtils;
 
-import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interator;
 import com.samskivert.util.Invoker;
 
-import com.threerings.media.image.ColorUtil;
 import com.threerings.jme.util.ShaderCache;
 
 import com.threerings.bang.client.BangPrefs;

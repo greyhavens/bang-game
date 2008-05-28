@@ -14,8 +14,6 @@ import com.jmex.bui.event.TextEvent;
 import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.GroupLayout;
 
-import com.samskivert.util.StringUtil;
-
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 

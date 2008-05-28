@@ -5,9 +5,6 @@ package com.threerings.bang.ranch.client;
 
 import com.jme.renderer.Renderer;
 
-import com.jmex.bui.util.Dimension;
-import com.jmex.bui.util.Insets;
-
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;

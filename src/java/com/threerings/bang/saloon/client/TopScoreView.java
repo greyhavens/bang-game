@@ -25,8 +25,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
-import com.threerings.bang.gang.client.DirectoryView;
-
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;

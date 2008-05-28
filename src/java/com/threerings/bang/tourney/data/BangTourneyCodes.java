@@ -5,7 +5,6 @@ package com.threerings.bang.tourney.data;
 
 import com.threerings.parlor.tourney.data.TourneyCodes;
 
-
 /**
  * Constants for bang tournaments.
  */

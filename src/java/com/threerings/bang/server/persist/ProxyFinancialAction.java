@@ -7,7 +7,6 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.server.BangServer;
 
 /**
  * Handles a financial action undertaken on a peer node.

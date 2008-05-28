@@ -8,11 +8,9 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
-import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
 

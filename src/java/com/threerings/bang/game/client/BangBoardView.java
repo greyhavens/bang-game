@@ -12,22 +12,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.lwjgl.input.Cursor;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.light.DirectionalLight;
 import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import com.jme.scene.shape.Quad;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -35,14 +31,11 @@ import com.jme.scene.state.TextureState;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BCursor;
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.Spacer;
 import com.jmex.bui.event.InputEvent;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
@@ -51,24 +44,19 @@ import com.jmex.bui.util.Rectangle;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.RandomUtil;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.StreamablePoint;
 
 import com.threerings.media.util.AStarPathUtil;
 
-import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.SwingPath;
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.model.Model;
-import com.threerings.jme.sprite.Path;
-import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.util.ImageCache;
 import com.threerings.jme.util.LinearTimeFunction;
-import com.threerings.jme.util.TimeFunction;
 
 import com.threerings.openal.Sound;
 
@@ -81,13 +69,10 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.bui.WindowFader;
 import com.threerings.bang.client.util.ResultAttacher;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.ParticleUtil;
 import com.threerings.bang.util.RenderUtil;
-import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.effect.IconViz;
 import com.threerings.bang.game.client.sprite.ActiveSprite;
@@ -95,7 +80,6 @@ import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.Bouncer;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.Spinner;
 import com.threerings.bang.game.client.sprite.Targetable;
 import com.threerings.bang.game.client.sprite.UnitSprite;
@@ -106,7 +90,6 @@ import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 

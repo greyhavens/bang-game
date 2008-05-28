@@ -12,7 +12,6 @@ import com.jme.scene.BillboardNode;
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;

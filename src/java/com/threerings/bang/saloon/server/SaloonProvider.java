@@ -4,10 +4,8 @@
 package com.threerings.bang.saloon.server;
 
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorInfo;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;

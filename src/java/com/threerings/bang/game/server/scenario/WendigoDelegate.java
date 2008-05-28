@@ -9,7 +9,6 @@ import java.util.Iterator;
 
 import java.awt.Rectangle;
 
-import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.StatType;

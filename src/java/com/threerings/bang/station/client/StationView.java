@@ -18,8 +18,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.station.data.StationCodes;
 import com.threerings.bang.station.data.StationObject;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Displays the Train Station interface where players can purchase tickets to
  * the next town and travel between towns.

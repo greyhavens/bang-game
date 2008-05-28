@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.server.ai;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 import com.samskivert.util.RandomUtil;

@@ -23,7 +23,6 @@ import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
-import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.Path;
 

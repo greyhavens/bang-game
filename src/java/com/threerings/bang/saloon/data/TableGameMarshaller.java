@@ -4,11 +4,10 @@
 package com.threerings.bang.saloon.data;
 
 import com.threerings.bang.saloon.client.TableGameService;
-import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
+import com.threerings.presents.net.Transport;
 
 /**
  * Provides the implementation of the {@link TableGameService} interface

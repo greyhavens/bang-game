@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
-import com.jme.renderer.RenderContext;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.lwjgl.records.TextureStateRecord;

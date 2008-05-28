@@ -3,8 +3,6 @@
 
 package com.threerings.bang.store.client;
 
-import java.util.ArrayList;
-
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.util.Insets;
 
@@ -12,12 +10,10 @@ import com.threerings.presents.dobj.DObject;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BasicContext;
 
-import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardTripletGood;
 import com.threerings.bang.store.data.Good;
 

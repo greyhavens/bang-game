@@ -4,7 +4,6 @@
 package com.threerings.bang.server;
 
 import java.lang.reflect.Field;
-import java.util.logging.Level;
 
 import com.threerings.util.MessageBundle;
 

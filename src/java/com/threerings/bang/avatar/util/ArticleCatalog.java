@@ -13,8 +13,6 @@ import java.util.HashMap;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Contains metadata on the various avatar articles.
  */

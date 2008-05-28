@@ -3,12 +3,8 @@
 
 package com.threerings.bang.saloon.data;
 
-import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.dobj.DSet;
-
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.bang.data.Handle;
 
 /**
  * Contains information shared among all occupants of a back parlor room.

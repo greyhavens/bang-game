@@ -4,35 +4,23 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.util.ArrayList;
-import java.util.Properties;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
-import com.jme.bounding.BoundingVolume;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jmex.effects.particles.ParticleMesh;
 
-import com.samskivert.util.PropertiesUtil;
-import com.samskivert.util.ResultListener;
-import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.jme.model.Model;
-import com.threerings.jme.sprite.LinePath;
-import com.threerings.jme.sprite.LineSegmentPath;
-import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.media.image.Colorization;
-import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.client.Config;

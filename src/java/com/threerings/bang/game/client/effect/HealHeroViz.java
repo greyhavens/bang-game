@@ -6,10 +6,7 @@ package com.threerings.bang.game.client.effect;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
-import com.jme.system.DisplaySystem;
 import com.jmex.effects.particles.ParticleMesh;
-
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;

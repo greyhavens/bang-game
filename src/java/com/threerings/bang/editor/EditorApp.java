@@ -5,7 +5,6 @@ package com.threerings.bang.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.logging.Level;
 import javax.swing.JFrame;
 
 import com.jme.math.FastMath;
@@ -15,7 +14,6 @@ import com.jme.math.Vector3f;
 import com.threerings.jme.JmeCanvasApp;
 
 import com.threerings.bang.client.BangApp;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 

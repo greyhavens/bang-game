@@ -3,16 +3,8 @@
 
 package com.threerings.bang.store.server;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-
-import com.samskivert.util.ListUtil;
-import com.threerings.cast.ComponentRepository;
-import com.threerings.media.image.ColorPository;
-import com.threerings.resource.ResourceManager;
-import com.threerings.util.CompiledConfig;
 
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
@@ -30,14 +22,10 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Purse;
-import com.threerings.bang.data.Song;
 import com.threerings.bang.data.Star;
 import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.data.UnitPass;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.server.ServerConfig;
-import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardPackGood;

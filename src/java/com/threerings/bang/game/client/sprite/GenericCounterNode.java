@@ -19,10 +19,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.client.BoardView;
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.CounterInterface;
-import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.client.BangMetrics.*;
 

@@ -6,7 +6,6 @@ package com.threerings.bang.gang.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 
@@ -17,7 +16,6 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
-import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
 import com.samskivert.util.StringUtil;
@@ -37,18 +35,15 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.ObjectDeathListener;
 import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.SetListener;
-import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.peer.data.NodeObject.Lock;
 import com.threerings.presents.peer.server.PeerManager.DroppedLockObserver;
 import com.threerings.presents.peer.util.PeerUtil;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.util.PersistingUnit;
 import com.threerings.presents.util.ResultAdapter;
 

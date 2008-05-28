@@ -6,8 +6,6 @@ package com.threerings.bang.ranch.client;
 import java.util.Properties;
 
 import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;

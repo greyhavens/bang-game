@@ -10,7 +10,6 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.state.RenderState;
-import com.jme.scene.state.TextureState;
 
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.RandomUtil;

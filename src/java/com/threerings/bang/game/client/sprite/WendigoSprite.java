@@ -14,7 +14,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 
 import com.jme.scene.Controller;
-import com.jme.scene.Node;
 import com.jme.scene.state.MaterialState;
 
 import com.threerings.jme.sprite.Path;
@@ -33,7 +32,6 @@ import com.threerings.bang.game.util.PointList;
 import com.threerings.openal.SoundGroup;
 
 import static com.threerings.bang.client.BangMetrics.*;
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays the wendigo.

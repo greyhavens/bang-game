@@ -5,8 +5,6 @@ package com.threerings.bang.game.data.piece;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Level;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
@@ -19,11 +17,9 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.effect.ExpireHindranceEffect;
 import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
-import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.PuntEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.util.PointSet;

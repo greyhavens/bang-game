@@ -20,7 +20,6 @@ import com.threerings.stats.data.StatSet;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 
-import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.piece.Counter;
@@ -32,7 +31,6 @@ import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.CattleRustlingLogic;
 import com.threerings.bang.game.util.PieceSet;
-import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 

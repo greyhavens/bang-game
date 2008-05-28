@@ -5,10 +5,7 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
 
-import com.samskivert.util.HashIntMap;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;

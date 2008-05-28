@@ -16,10 +16,6 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
-import com.threerings.crowd.chat.data.ChatCodes;
-import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.chat.data.UserMessage;
-
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.AvatarInfo;

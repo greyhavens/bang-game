@@ -12,7 +12,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;

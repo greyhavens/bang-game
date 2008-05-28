@@ -10,16 +10,12 @@ import com.samskivert.util.ListUtil;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.UnitConfig;
 
-import com.threerings.bang.game.client.sprite.MobileSprite;
-import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.BuzzsawShotEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
-import com.threerings.bang.game.data.effect.TreeBedEffect;
 
 import static com.threerings.bang.Log.*;
 

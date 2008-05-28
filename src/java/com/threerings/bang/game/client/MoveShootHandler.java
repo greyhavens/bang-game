@@ -11,7 +11,6 @@ import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;

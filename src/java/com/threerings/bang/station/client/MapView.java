@@ -18,9 +18,7 @@ import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.station.data.StationCodes;

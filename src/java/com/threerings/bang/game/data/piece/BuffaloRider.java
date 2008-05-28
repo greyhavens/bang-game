@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.data.piece;
 
-import java.awt.Point;
-
 import com.threerings.bang.game.client.sprite.BuffaloRiderSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 
@@ -15,7 +13,6 @@ import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * Handles some special custom behavior needed for the Buffalo Rider.

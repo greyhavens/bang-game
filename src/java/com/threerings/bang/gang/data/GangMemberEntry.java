@@ -11,7 +11,6 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 
 /**

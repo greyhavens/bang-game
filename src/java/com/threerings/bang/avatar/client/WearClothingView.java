@@ -15,7 +15,6 @@ import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.StringUtil;
-import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.HackyTabs;

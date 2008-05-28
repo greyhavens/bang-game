@@ -9,8 +9,6 @@ import java.util.HashSet;
 
 import javax.swing.JPanel;
 
-import com.jme.math.Vector3f;
-
 import com.jmex.bui.event.MouseEvent;
 
 /**

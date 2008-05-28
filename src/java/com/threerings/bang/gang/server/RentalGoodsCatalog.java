@@ -14,7 +14,6 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;

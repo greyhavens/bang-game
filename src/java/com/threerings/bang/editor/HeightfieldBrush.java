@@ -29,12 +29,9 @@ import com.jme.math.Vector3f;
 
 import com.jmex.bui.event.MouseEvent;
 
-import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
-import com.samskivert.swing.util.SwingUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
-import com.threerings.bang.util.BasicContext;
 
 /**
  * Allows the user to raise, lower, and set parts of the heightfield.

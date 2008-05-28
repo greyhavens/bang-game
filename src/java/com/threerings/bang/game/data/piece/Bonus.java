@@ -5,8 +5,6 @@ package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.logging.Level;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.RandomUtil;

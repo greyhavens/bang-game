@@ -10,8 +10,6 @@ import com.threerings.bang.game.client.sprite.MobileSprite;
 
 import com.threerings.bang.game.data.effect.ShotEffect;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Waits for all the sprites involved in a shot to stop moving and then
  * animates the misfire.

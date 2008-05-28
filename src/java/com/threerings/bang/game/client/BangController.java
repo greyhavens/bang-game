@@ -10,12 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.logging.Level;
 
 import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
-import com.jmex.bui.BDecoratedWindow;
-import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 
 import com.samskivert.util.ArrayIntSet;
@@ -23,10 +20,7 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Multex;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.StringUtil;
 import com.samskivert.swing.event.CommandEvent;
-
-import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -49,7 +43,6 @@ import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.AvatarView;
-import com.threerings.bang.bounty.data.BountyConfig;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -58,7 +51,6 @@ import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 

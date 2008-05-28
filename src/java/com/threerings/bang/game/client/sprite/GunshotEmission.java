@@ -18,7 +18,6 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
-import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
@@ -30,15 +29,12 @@ import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.geom.BufferUtils;
-import com.jmex.effects.particles.ParticleFactory;
-import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
-import com.threerings.jme.sprite.PathUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;

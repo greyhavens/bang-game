@@ -3,15 +3,11 @@
 
 package com.threerings.bang.chat.client;
 
-import java.util.ArrayList;
-
 import com.jme.scene.Controller;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.event.BEvent;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 

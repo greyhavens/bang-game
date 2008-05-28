@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
@@ -26,7 +25,6 @@ import com.samskivert.util.StringUtil;
 import com.threerings.presents.data.ConMgrStats;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;

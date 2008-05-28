@@ -5,8 +5,6 @@ package com.threerings.bang.bank.server;
 
 import com.threerings.bang.bank.client.BankService;
 import com.threerings.bang.bank.data.BankMarshaller;
-import com.threerings.coin.data.CoinExOfferInfo;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -27,13 +25,14 @@ public class BankDispatcher extends InvocationDispatcher
         this.provider = provider;
     }
 
-    // from InvocationDispatcher
+    @Override // documentation inherited
     public InvocationMarshaller createMarshaller ()
     {
         return new BankMarshaller();
     }
 
-    @SuppressWarnings("unchecked") // from InvocationDispatcher
+    @SuppressWarnings("unchecked")
+    @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
         throws InvocationException

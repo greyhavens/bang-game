@@ -13,7 +13,6 @@ import com.samskivert.util.Interval;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Sprite;
-import com.threerings.openal.Sound;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
@@ -28,7 +27,6 @@ import com.threerings.bang.game.data.effect.WendigoEffect;
 import com.threerings.bang.game.data.effect.WendigoEffect.Collision;
 import com.threerings.bang.game.data.piece.Piece;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

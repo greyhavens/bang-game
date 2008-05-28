@@ -9,7 +9,6 @@ import com.samskivert.servlet.util.FriendlyException;
 import com.samskivert.servlet.util.ParameterUtil;
 import com.samskivert.util.SortableArrayList;
 import com.samskivert.util.StringUtil;
-import com.samskivert.util.Tuple;
 import com.samskivert.velocity.InvocationContext;
 
 import com.threerings.stats.data.Stat;

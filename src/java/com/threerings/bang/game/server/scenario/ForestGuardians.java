@@ -3,21 +3,14 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.awt.Point;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntListUtil;
-import com.samskivert.util.QuickSort;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
@@ -41,7 +34,6 @@ import com.threerings.bang.game.server.ai.ForestGuardiansLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * A gameplay scenario wherein:

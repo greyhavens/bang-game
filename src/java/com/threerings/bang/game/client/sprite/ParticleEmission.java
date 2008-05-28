@@ -8,11 +8,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
-import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.OutputCapsule;

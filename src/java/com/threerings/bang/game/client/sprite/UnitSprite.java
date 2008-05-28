@@ -6,25 +6,16 @@ package com.threerings.bang.game.client.sprite;
 import java.util.HashMap;
 
 import com.jme.image.Texture;
-import com.jme.util.geom.BufferUtils;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
-import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 
-import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 
-import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 
-import com.jme.scene.shape.Quad;
-
-import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 
 import com.samskivert.util.ObjectUtil;
@@ -37,7 +28,6 @@ import com.threerings.jme.sprite.SpriteObserver;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
-import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
@@ -53,11 +43,9 @@ import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.client.effect.InfluenceViz;
-import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;

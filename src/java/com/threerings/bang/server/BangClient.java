@@ -5,7 +5,6 @@ package com.threerings.bang.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObjectUtil;
@@ -14,14 +13,12 @@ import com.threerings.crowd.server.CrowdClient;
 import com.threerings.presents.net.BootstrapData;
 import com.threerings.stats.data.Stat;
 
-import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.StatType;
 
 import static com.threerings.bang.Log.log;
 

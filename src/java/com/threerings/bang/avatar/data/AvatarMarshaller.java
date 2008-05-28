@@ -4,13 +4,11 @@
 package com.threerings.bang.avatar.data;
 
 import com.threerings.bang.avatar.client.AvatarService;
-import com.threerings.bang.avatar.data.Look;
-import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
+import com.threerings.presents.net.Transport;
 
 /**
  * Provides the implementation of the {@link AvatarService} interface

@@ -5,25 +5,14 @@ package com.threerings.bang.game.client.effect;
 
 import com.jme.light.PointLight;
 import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Controller;
-import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
-import com.jme.scene.VBOInfo;
-import com.jme.scene.shape.Sphere;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.TextureState;
 import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.client.BangPrefs;
-import com.threerings.bang.data.TerrainConfig;
-import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
 

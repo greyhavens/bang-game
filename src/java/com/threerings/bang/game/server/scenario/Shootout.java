@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.util.ArrayList;
-
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 
@@ -17,7 +15,6 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceSet;
-import com.threerings.bang.game.util.PointSet;
 
 /**
  * A gameplay scenario where the last player standing is the winner.

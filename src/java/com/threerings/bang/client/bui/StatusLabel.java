@@ -3,9 +3,6 @@
 
 package com.threerings.bang.client.bui;
 
-import com.jme.renderer.Renderer;
-
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.icon.ImageIcon;
 

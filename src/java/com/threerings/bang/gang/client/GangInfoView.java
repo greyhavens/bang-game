@@ -28,7 +28,6 @@ import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;

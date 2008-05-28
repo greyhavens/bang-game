@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import com.samskivert.util.Interval;
-
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 

@@ -6,7 +6,6 @@ package com.threerings.bang.tests;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.Invoker;
@@ -43,7 +42,6 @@ import com.threerings.openal.SoundManager;
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
-import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.GlobalKeyManager;

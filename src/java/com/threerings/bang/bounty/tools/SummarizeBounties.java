@@ -9,8 +9,6 @@ import java.util.HashMap;
 
 import com.jme.util.export.binary.BinaryImporter;
 
-import com.samskivert.util.StringUtil;
-
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 

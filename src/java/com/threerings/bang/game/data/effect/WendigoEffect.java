@@ -5,10 +5,8 @@ package com.threerings.bang.game.data.effect;
 
 import java.util.ArrayList;
 
-import java.awt.Point;
 import java.awt.Rectangle;
 
-import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.client.EffectHandler;
@@ -21,7 +19,6 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Wendigo;
 
-import com.threerings.bang.game.util.PointList;
 import com.threerings.bang.game.util.PointSet;
 
 import com.threerings.io.SimpleStreamableObject;

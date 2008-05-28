@@ -6,9 +6,6 @@ package com.threerings.bang.game.data.piece;
 import java.util.ArrayList;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.client.sprite.TargetableActiveSprite;
-import com.threerings.bang.game.client.sprite.GenericCounterNode;
-import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 
@@ -18,8 +15,6 @@ import com.threerings.bang.game.data.effect.DamageEffect;
 import com.threerings.bang.game.data.effect.ExplodeEffect;
 import com.threerings.bang.game.data.piece.CounterInterface;
 import com.threerings.bang.game.client.sprite.BreakableSprite;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Handles breakable pieces in Boom Town.

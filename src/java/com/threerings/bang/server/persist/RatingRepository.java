@@ -31,11 +31,8 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
-import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.saloon.data.TopRankedList;
 import com.threerings.bang.server.ServerConfig;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Responsible for the persistent storage of per-player ratings.

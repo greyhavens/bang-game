@@ -11,16 +11,12 @@ import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.event.TextEvent;
-import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
-import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
@@ -30,8 +26,6 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.util.BangContext;
-
-import com.threerings.bang.gang.data.GangCodes;
 
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorObject;

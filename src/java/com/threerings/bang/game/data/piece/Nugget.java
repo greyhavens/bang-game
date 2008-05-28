@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.data.piece;
 
-import java.util.ArrayList;
 import java.awt.Point;
 
 import com.threerings.bang.game.data.BangObject;

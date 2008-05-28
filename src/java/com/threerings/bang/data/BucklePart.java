@@ -18,8 +18,6 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Represents part of a gang buckle.
  */

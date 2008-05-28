@@ -5,7 +5,6 @@ package com.threerings.bang.game.client.sprite;
 
 import com.threerings.openal.SoundGroup;
 
-import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 import com.jme.scene.BillboardNode;
@@ -15,15 +14,12 @@ import com.jme.scene.state.TextureState;
 import com.samskivert.util.ArrayUtil;
 
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.IconConfig;
 import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.OneArmedBandit;
-import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.CounterInterface;
 import com.threerings.bang.game.data.effect.RandomInfluenceEffect;
 import com.threerings.bang.game.client.BoardView;

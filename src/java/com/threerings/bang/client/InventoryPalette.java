@@ -5,7 +5,6 @@ package com.threerings.bang.client;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 
 import com.samskivert.util.Predicate;
 

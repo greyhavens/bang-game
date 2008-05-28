@@ -11,8 +11,6 @@ import java.util.HashMap;
 
 import com.samskivert.util.RandomUtil;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Contains metadata on each of our buckle parts.
  */

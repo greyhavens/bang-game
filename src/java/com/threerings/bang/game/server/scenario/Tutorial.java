@@ -4,17 +4,11 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.BonusConfig;
@@ -38,7 +32,6 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.scenario.TutorialInfo;
 import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.PieceSet;
-import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import static com.threerings.bang.Log.log;

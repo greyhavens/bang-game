@@ -5,7 +5,6 @@ package com.threerings.bang.game.data.effect;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**

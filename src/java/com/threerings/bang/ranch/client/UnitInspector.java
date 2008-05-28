@@ -9,13 +9,10 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.layout.AbsoluteLayout;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
-import com.jmex.bui.util.Point;
 
 import com.samskivert.util.StringUtil;
 
@@ -27,7 +24,6 @@ import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;

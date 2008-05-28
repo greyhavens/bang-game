@@ -8,8 +8,6 @@ import com.samskivert.util.ArrayUtil;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HoldEffect;
-import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
-import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 

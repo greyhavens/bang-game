@@ -4,7 +4,6 @@
 package com.threerings.bang.admin.client;
 
 import java.lang.reflect.Field;
-import java.util.logging.Level;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.event.ActionEvent;

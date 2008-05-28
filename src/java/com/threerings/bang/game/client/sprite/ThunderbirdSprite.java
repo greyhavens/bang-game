@@ -18,7 +18,6 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.Path;
 
-
 /**
  * Sprite for the Thunderbird unit.
  */

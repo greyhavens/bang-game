@@ -26,8 +26,6 @@ import com.threerings.bang.store.data.StoreObject;
 
 import com.threerings.crowd.data.PlaceObject;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Displays the main interface for the General Store.
  */

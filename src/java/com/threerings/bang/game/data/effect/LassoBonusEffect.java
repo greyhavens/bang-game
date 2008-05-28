@@ -6,7 +6,6 @@ package com.threerings.bang.game.data.effect;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;

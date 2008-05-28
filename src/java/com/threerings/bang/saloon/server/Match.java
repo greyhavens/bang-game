@@ -3,16 +3,12 @@
 
 package com.threerings.bang.saloon.server;
 
-import java.util.HashSet;
-
 import com.samskivert.util.Interval;
-import com.samskivert.util.IntSet;
 import com.threerings.util.Name;
 
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
-import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.BangAI;
@@ -24,12 +20,10 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.admin.server.RuntimeConfig;
-import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.MatchObject;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * Contains information about a pending match-up.

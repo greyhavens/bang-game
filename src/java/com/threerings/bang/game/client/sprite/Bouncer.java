@@ -7,8 +7,6 @@ import com.jme.math.FastMath;
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
 
-import com.threerings.jme.sprite.Sprite;
-
 /**
  * Bounces a sprite (or any spatial) up and down along the Z axis. Used for the
  * cursor.

@@ -4,7 +4,6 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;

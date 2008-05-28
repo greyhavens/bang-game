@@ -5,7 +5,6 @@ package com.threerings.bang.chat.client;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
@@ -13,7 +12,6 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import com.jmex.bui.BComponent;
@@ -47,8 +45,6 @@ import com.threerings.bang.util.BangContext;
 // this seems strange but we need it so that we can use our own inner class to
 // parameterize the type of our parent class
 import com.threerings.bang.chat.client.ComicChatView.EntryBuilder;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays chat with avatar icons and speech balloons.

@@ -12,17 +12,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.shape.Quad;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -40,11 +37,9 @@ import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
-import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BLayoutManager;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
-import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.Invoker;
@@ -57,7 +52,6 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.util.SafeSubscriber;
@@ -68,7 +62,6 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;

@@ -22,7 +22,6 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-
 /**
  * A helper class that highlights which sides of a tile can be crossed.
  */

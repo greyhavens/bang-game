@@ -3,26 +3,19 @@
 
 package com.threerings.bang.game.client;
 
-import java.util.HashMap;
-
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 
 import com.threerings.util.StreamablePoint;
 
 import com.threerings.jme.model.Model;
-import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.OrientingBallisticPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.openal.Sound;
-import com.threerings.openal.SoundGroup;
 
-import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.client.sprite.FireworksSprite;
@@ -32,8 +25,6 @@ import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.RocketEffect;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.util.SoundUtil;
 import com.threerings.bang.util.BangContext;
 
 

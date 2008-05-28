@@ -9,7 +9,6 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;

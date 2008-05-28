@@ -5,7 +5,6 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;

@@ -4,7 +4,6 @@
 package com.threerings.bang.saloon.server;
 
 import java.util.HashSet;
-import java.util.logging.Level;
 
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;

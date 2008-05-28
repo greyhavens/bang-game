@@ -5,7 +5,6 @@ package com.threerings.bang.saloon.server;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import com.samskivert.util.Interval;
 
@@ -13,10 +12,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.crowd.chat.data.SpeakMarshaller;
-import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;

@@ -6,12 +6,9 @@ package com.threerings.bang.client.bui;
 import java.util.ArrayList;
 
 import com.jme.input.KeyInput;
-import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BButton;
-import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
@@ -22,8 +19,6 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.bang.client.BangUI;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays a palette of icons that can be selected by the user.

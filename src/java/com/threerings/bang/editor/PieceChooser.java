@@ -3,8 +3,6 @@
 
 package com.threerings.bang.editor;
 
-import java.awt.Color;
-
 import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.border.EtchedBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -28,7 +25,6 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
-import com.threerings.bang.game.data.piece.SafeMarker;
 import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.util.BasicContext;
 

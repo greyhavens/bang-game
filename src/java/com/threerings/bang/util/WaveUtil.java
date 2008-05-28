@@ -3,16 +3,9 @@
 
 package com.threerings.bang.util;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
-
-import java.io.File;
-import java.io.IOException;
-
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import javax.imageio.ImageIO;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;

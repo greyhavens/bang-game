@@ -10,8 +10,6 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.util.BangUtil;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Represents a free ticket that grants access to a particular town for 24 hours from the time
  * of activation.

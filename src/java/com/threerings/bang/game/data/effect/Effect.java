@@ -8,7 +8,6 @@ import java.awt.Point;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.samskivert.util.IntIntMap;
 import com.threerings.util.MessageBundle;
@@ -20,7 +19,6 @@ import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;

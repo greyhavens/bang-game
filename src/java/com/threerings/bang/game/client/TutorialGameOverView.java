@@ -34,7 +34,6 @@ import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.TutorialCodes;
-import com.threerings.bang.game.data.TutorialConfig;
 
 /**
  * Displays the results of a Tutorial.

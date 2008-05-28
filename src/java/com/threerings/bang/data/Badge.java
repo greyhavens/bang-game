@@ -3,11 +3,9 @@
 
 package com.threerings.bang.data;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;

@@ -4,8 +4,6 @@
 package com.threerings.bang.bank.server;
 
 import com.threerings.bang.bank.client.BankService;
-import com.threerings.coin.data.CoinExOfferInfo;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;

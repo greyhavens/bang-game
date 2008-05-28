@@ -81,7 +81,6 @@ public class FinalistView extends BContainer
 
         Name name = bangobj.players[pidx];
 
-
         // load up our background
         Colorization[] zations = {
             ctx.getAvatarLogic().getColorPository().getColorization("metal", rank + 1)

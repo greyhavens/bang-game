@@ -6,7 +6,7 @@ package com.threerings.bang.admin.data;
 import com.threerings.bang.admin.client.BangAdminService;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
+import com.threerings.presents.net.Transport;
 
 /**
  * Provides the implementation of the {@link BangAdminService} interface

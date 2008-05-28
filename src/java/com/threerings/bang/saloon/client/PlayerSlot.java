@@ -6,13 +6,10 @@ package com.threerings.bang.saloon.client;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BImage;
-import com.jmex.bui.BLabel;
 import com.jmex.bui.event.BEvent;
-import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.bang.avatar.client.AvatarView;
-import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.PlayerPopupMenu;
 
 import com.threerings.bang.data.BangOccupantInfo;
@@ -21,8 +18,6 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.MatchObject;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays a player during match-making.

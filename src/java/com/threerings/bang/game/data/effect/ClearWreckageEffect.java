@@ -7,8 +7,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Clears all wreckage from the board.
  */

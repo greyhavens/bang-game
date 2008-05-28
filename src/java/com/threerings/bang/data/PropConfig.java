@@ -10,8 +10,6 @@ import java.util.Properties;
 import com.samskivert.util.StringUtil;
 import com.threerings.bang.util.BangUtil;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Loads and manages prop configuration information.
  */

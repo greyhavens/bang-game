@@ -18,7 +18,6 @@ import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.piece.Piece;
 
 import com.threerings.openal.Sound;
 

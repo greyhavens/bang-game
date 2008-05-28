@@ -4,7 +4,6 @@
 package com.threerings.bang.gang.server;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 
@@ -31,23 +30,18 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangServer;
-import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.server.BarberManager;
 
-import com.threerings.bang.game.data.BangConfig;
-
 import com.threerings.bang.saloon.data.Criterion;
-import com.threerings.bang.saloon.server.Match;
 import com.threerings.bang.saloon.server.MatchHostManager;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
 
 import com.threerings.bang.gang.client.HideoutService;
-import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangGood;

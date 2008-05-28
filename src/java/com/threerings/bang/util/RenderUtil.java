@@ -16,25 +16,14 @@ import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import java.io.File;
-import java.io.IOException;
-
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Stack;
-import java.util.logging.Level;
 
-import javax.imageio.ImageIO;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.Pbuffer;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
-import com.jme.light.DirectionalLight;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
@@ -49,8 +38,6 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
@@ -61,8 +48,6 @@ import com.jmex.bui.util.Dimension;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.RandomUtil;
 
-import com.threerings.jme.JmeCanvasApp;
-import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.TerrainConfig;

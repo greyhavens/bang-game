@@ -3,30 +3,20 @@
 
 package com.threerings.bang.game.client.effect;
 
-import java.util.Iterator;
-
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.LightState;
 
 import com.threerings.jme.sprite.PathUtil;
 
 import com.threerings.bang.util.IconConfig;
-import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.card.Card;
-import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
-import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.*;

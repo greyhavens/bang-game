@@ -3,16 +3,13 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.math.Quaternion;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
-import com.jme.system.DisplaySystem;
 
 import com.samskivert.util.HashIntMap;
 
@@ -23,7 +20,6 @@ import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.SafeMarker;
 
 import com.threerings.openal.SoundGroup;

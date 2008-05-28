@@ -6,7 +6,6 @@ package com.threerings.bang.saloon.client;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BMenuItem;
-import com.jmex.bui.BPopupMenu;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -22,13 +21,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.bang.chat.client.PardnerChatView;
-import com.threerings.bang.client.BangUI;
-import com.threerings.bang.client.InvitePardnerDialog;
 import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.client.PlayerService;
-import com.threerings.bang.client.WantedPosterView;
 import com.threerings.bang.data.AvatarInfo;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
@@ -36,8 +31,6 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Represents one player in the friendly folks list.

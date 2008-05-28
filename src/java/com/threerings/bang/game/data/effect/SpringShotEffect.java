@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.RandomUtil;
-import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.ReboundHandler;
@@ -18,7 +17,6 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.LoggingRobot;
 
 import static com.threerings.bang.Log.log;
-
 
 /**
  * Communicates that a proximity shot was fired from one piece to adjacent

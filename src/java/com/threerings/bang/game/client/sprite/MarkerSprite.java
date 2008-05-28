@@ -9,7 +9,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
-import com.jme.system.DisplaySystem;
 
 import com.samskivert.util.HashIntMap;
 

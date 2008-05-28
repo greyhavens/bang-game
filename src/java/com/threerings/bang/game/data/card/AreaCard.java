@@ -5,7 +5,6 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
 
 /**
  * Provides default implementations for Area effect cards.

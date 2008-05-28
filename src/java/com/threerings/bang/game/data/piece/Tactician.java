@@ -3,14 +3,10 @@
 
 package com.threerings.bang.game.data.piece;
 
-import java.util.Iterator;
-
 import com.samskivert.util.RandomUtil;
 
-import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;
-import com.threerings.bang.game.data.effect.BallisticShotEffect;
 
 import static com.threerings.bang.Log.log;
 

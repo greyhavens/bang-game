@@ -5,7 +5,6 @@ package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
 
-import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.UnitConfig;
@@ -19,7 +18,6 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.ToggleSwitch;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.data.piece.Wendigo;
 import com.threerings.bang.game.util.PointSet;
 
 /**

@@ -5,8 +5,6 @@ package com.threerings.bang.game.client.effect;
 
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 import com.threerings.bang.util.BasicContext;

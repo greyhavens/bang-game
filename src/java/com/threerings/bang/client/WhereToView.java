@@ -3,8 +3,6 @@
 
 package com.threerings.bang.client;
 
-import java.util.ArrayList;
-
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
@@ -15,34 +13,21 @@ import com.jmex.bui.Spacer;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 
-import com.threerings.presents.client.InvocationService.ConfirmListener;
-import com.threerings.parlor.game.data.GameAI;
 
-import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.TutorialCodes;
-import com.threerings.bang.game.data.TutorialConfig;
-import com.threerings.bang.game.util.TutorialUtil;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.SteelWindow;
-import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays a list of completed and uncompleted tutorials and allows the user to (re)play them

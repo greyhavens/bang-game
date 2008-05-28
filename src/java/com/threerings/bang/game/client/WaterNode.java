@@ -3,20 +3,10 @@
 
 package com.threerings.bang.game.client;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
-import java.io.File;
-import java.io.IOException;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import javax.imageio.ImageIO;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -30,13 +20,9 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
-import com.jme.scene.Skybox;
 import com.jme.scene.TriMesh;
-import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.GLSLShaderObjectsState;
@@ -44,14 +30,10 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.ZBufferState;
 import com.jme.scene.state.lwjgl.LWJGLTextureState;
 import com.jme.scene.state.lwjgl.records.TextureStateRecord;
-import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
-import com.jme.util.geom.Debugger;
 
-import com.threerings.jme.util.JmeUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.game.data.BangBoard;

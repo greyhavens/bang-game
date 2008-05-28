@@ -6,7 +6,6 @@ package com.threerings.bang.bounty.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.logging.Level;
 
 import com.jme.util.export.binary.BinaryImporter;
 import com.samskivert.jdbc.RepositoryUnit;

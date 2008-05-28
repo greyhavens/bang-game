@@ -31,7 +31,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
-import com.threerings.bang.client.WhereToView;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;

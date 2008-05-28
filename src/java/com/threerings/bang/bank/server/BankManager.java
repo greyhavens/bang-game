@@ -15,7 +15,6 @@ import com.threerings.coin.server.CoinExOffer;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangCoinExchangeManager;
@@ -26,8 +25,6 @@ import com.threerings.bang.bank.client.BankService;
 import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankMarshaller;
 import com.threerings.bang.bank.data.BankObject;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Handles the server-side operation of the Bank.

@@ -11,8 +11,6 @@ import com.jmex.effects.particles.ParticleMesh;
 
 import com.threerings.bang.client.util.ResultAttacher;
 
-import com.threerings.bang.game.client.sprite.PieceSprite;
-
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

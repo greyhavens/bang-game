@@ -3,27 +3,19 @@
 
 package com.threerings.bang.store.client;
 
-import java.awt.image.BufferedImage;
-
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextArea;
-import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.icon.BlankIcon;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.threerings.media.image.Colorization;
-import com.threerings.media.image.ImageUtil;
 
 import com.threerings.util.MessageBundle;
 

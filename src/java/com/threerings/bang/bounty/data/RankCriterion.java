@@ -11,8 +11,6 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 
-import com.threerings.util.MessageBundle;
-
 import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;

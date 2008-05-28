@@ -6,7 +6,6 @@ package com.threerings.bang.tests.game;
 import java.util.logging.Level;
 
 import com.jme.util.LoggingSystem;
-import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.bui.BWindow;
 
 import com.samskivert.util.RandomUtil;
@@ -17,11 +16,9 @@ import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.GuestHandle;
-import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
-import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.tests.TestApp;
 

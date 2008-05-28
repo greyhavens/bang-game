@@ -4,11 +4,11 @@
 package com.threerings.bang.game.data;
 
 import com.threerings.bang.game.client.BangService;
-import com.threerings.bang.game.data.BoardData;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.dobj.InvocationResponseEvent;
+import com.threerings.presents.net.Transport;
 
 /**
  * Provides the implementation of the {@link BangService} interface
@@ -36,7 +36,7 @@ public class BangMarshaller extends InvocationMarshaller
             _invId = null;
             omgr.postEvent(new InvocationResponseEvent(
                                callerOid, requestId, REQUEST_PROCESSED,
-                               new Object[] { arg1 }));
+                               new Object[] { arg1 }, transport));
         }
 
         @Override // from InvocationMarshaller

@@ -5,8 +5,6 @@ package com.threerings.bang.gang.client;
 
 import java.text.SimpleDateFormat;
 
-import java.util.Date;
-
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
@@ -16,7 +14,6 @@ import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ArrayUtil;
 

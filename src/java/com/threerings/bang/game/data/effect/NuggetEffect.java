@@ -3,23 +3,17 @@
 
 package com.threerings.bang.game.data.effect;
 
-import java.awt.Point;
-
 import com.samskivert.util.ArrayUtil;
-import com.samskivert.util.IntIntMap;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.BonusConfig;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.NuggetScenarioInfo;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * Causes the activating piece to "pick up" the nugget.

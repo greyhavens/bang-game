@@ -16,9 +16,6 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
-import com.samskivert.util.ResultListener;
-import com.threerings.util.Name;
-
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;

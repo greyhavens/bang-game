@@ -15,14 +15,11 @@ import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
-import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.ResultListener;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 
-import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
@@ -36,7 +33,6 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.media.image.Colorization;
 
 import static com.threerings.bang.client.BangMetrics.*;
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays a team's avatars and names at the end of a game.

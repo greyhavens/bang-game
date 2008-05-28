@@ -3,8 +3,6 @@
 
 package com.threerings.bang.ranch.server;
 
-import com.threerings.bang.ranch.client.RanchService;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;

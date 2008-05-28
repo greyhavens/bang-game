@@ -9,16 +9,12 @@ import java.lang.ref.WeakReference;
 
 import java.io.File;
 
-import java.nio.ByteOrder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.opengl.ARBBufferObject;
 import org.lwjgl.opengl.GL11;
 
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.state.GLSLShaderObjectsState;
@@ -27,15 +23,12 @@ import com.jme.scene.state.TextureState;
 import com.jme.util.ShaderAttribute;
 import com.jme.util.geom.BufferUtils;
 
-import com.samskivert.util.ChainedResultListener;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
-import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultHandler;
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.SoftCache;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.ModelMesh;
@@ -49,7 +42,6 @@ import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * Maintains a cache of resolved 3D models.

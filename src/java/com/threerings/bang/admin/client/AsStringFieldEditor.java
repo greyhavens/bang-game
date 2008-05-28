@@ -5,7 +5,6 @@ package com.threerings.bang.admin.client;
 
 import java.lang.reflect.Field;
 
-import com.jmex.bui.BComponent;
 import com.jmex.bui.BTextField;
 
 import com.samskivert.util.StringUtil;

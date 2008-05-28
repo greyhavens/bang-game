@@ -4,7 +4,6 @@
 package com.threerings.bang.client;
 
 import java.net.URL;
-import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;

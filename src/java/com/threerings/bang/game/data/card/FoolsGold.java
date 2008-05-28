@@ -7,7 +7,6 @@ import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BonusConfig;
 
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.scenario.NuggetScenarioInfo;

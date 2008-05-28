@@ -5,19 +5,14 @@ package com.threerings.bang.server;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.ArrayUtil;
-import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
@@ -36,7 +31,6 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.saloon.data.TopRankedList;
 import com.threerings.bang.saloon.data.TopRankObject;
 
-import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;

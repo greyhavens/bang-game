@@ -3,10 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.math.FastMath;
-
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.client.sprite.ActiveSprite;
 

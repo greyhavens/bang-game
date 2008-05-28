@@ -12,7 +12,6 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
-import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ResultListener;
 import com.threerings.util.BrowserUtil;

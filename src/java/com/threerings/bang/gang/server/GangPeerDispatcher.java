@@ -6,11 +6,9 @@ package com.threerings.bang.gang.server;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.gang.client.GangPeerService;
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangPeerMarshaller;
 import com.threerings.bang.gang.data.OutfitArticle;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -31,13 +29,14 @@ public class GangPeerDispatcher extends InvocationDispatcher
         this.provider = provider;
     }
 
-    // from InvocationDispatcher
+    @Override // documentation inherited
     public InvocationMarshaller createMarshaller ()
     {
         return new GangPeerMarshaller();
     }
 
-    @SuppressWarnings("unchecked") // from InvocationDispatcher
+    @SuppressWarnings("unchecked")
+    @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
         throws InvocationException

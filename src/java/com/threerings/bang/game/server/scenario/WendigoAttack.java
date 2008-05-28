@@ -4,7 +4,6 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 
 import com.samskivert.util.RandomUtil;
@@ -19,7 +18,6 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.server.ai.AILogic;
-import com.threerings.bang.game.server.ai.RandomLogic;
 import com.threerings.bang.game.server.ai.WendigoLogic;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -34,8 +32,6 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * A gameply scenario wherein:

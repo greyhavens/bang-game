@@ -53,8 +53,6 @@ import com.threerings.bang.saloon.data.ParlorGameConfig.Slot;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.TableGameObject;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Handles the interface for configuring a game in a Back Parlor.
  */

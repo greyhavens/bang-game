@@ -4,7 +4,6 @@
 package com.threerings.bang.gang.client;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 
 import com.jmex.bui.BButton;
@@ -21,9 +20,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ArrayUtil;
-import com.samskivert.util.QuickSort;
 
-import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.util.MessageBundle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -38,17 +35,13 @@ import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
-import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Item;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.client.ColorSelector;
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.avatar.util.ArticleCatalog;
 
-import com.threerings.bang.store.client.GoodsInspector;
 import com.threerings.bang.store.client.GoodsPalette;
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
@@ -61,7 +54,6 @@ import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.RentalGood;
 import com.threerings.bang.gang.data.GangGood;
-import com.threerings.bang.gang.util.GangUtil;
 import com.threerings.bang.store.client.GoodsIcon;
 import com.threerings.media.image.Colorization;
 

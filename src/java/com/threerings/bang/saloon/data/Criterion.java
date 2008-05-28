@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.io.SimpleStreamableObject;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Defines various criterion for finding opponents.
  */

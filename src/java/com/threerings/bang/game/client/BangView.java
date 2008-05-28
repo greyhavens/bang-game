@@ -3,20 +3,14 @@
 
 package com.threerings.bang.game.client;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import org.lwjgl.opengl.GL11;
 
-import com.jme.input.KeyInput;
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Controller;
 
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
@@ -42,7 +36,6 @@ import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.card.Card;
-import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 

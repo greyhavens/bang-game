@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.data.effect;
 
-import com.samskivert.util.IntIntMap;
-
 import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.BangObject;

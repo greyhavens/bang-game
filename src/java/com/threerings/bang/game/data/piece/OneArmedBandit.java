@@ -13,10 +13,8 @@ import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.RandomInfluenceEffect;
 import com.threerings.bang.game.data.effect.UpdateEffect;
 
-import com.threerings.bang.game.client.sprite.GenericCounterNode;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.OneArmedBanditSprite;
-
 
 /**
  * Handles some special custom behavior needed for the One Armed Jack.

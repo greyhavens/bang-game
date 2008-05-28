@@ -148,7 +148,6 @@ public class GangInventory extends BDecoratedWindow
         dcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"), GroupLayout.FIXED);
         ccont.add(dcont, GroupLayout.FIXED);
 
-
         add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
         _status.setStatus(" ", false); // make sure it takes up space
     }

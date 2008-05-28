@@ -13,8 +13,6 @@ import java.util.Properties;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
@@ -28,15 +26,11 @@ import com.jme.util.export.JMEImporter;
 import com.jme.util.export.Savable;
 import com.jme.util.geom.BufferUtils;
 
-import com.samskivert.util.StringUtil;
-
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
-import com.threerings.jme.sprite.PathUtil;
 
 import com.threerings.bang.util.RenderUtil;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * A dud shot effect.

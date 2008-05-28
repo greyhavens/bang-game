@@ -12,7 +12,6 @@ import com.threerings.util.CompiledConfig;
 import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.avatar.util.AspectCatalog;
-import com.threerings.bang.avatar.util.AvatarLogic;
 
 /**
  * A tool to generate a comparsion chart of the aspect catalog.

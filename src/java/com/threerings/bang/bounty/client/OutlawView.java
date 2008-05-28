@@ -3,16 +3,12 @@
 
 package com.threerings.bang.bounty.client;
 
-import java.util.Arrays;
-import java.util.logging.Level;
-
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BImage;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.bounty.data.BountyConfig;

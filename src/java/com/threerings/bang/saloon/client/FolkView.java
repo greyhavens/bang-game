@@ -24,15 +24,12 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
-import com.threerings.bang.client.bui.BangHTMLView;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.util.BangContext;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays what folks are present, and lets us chat with them.

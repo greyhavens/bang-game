@@ -7,11 +7,9 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.HashIntMap;
-import com.samskivert.util.Invoker;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.servlet.JDBCTableSiteIdentifier;
@@ -417,7 +415,6 @@ public class OOOAuthenticator extends BangAuthenticator
                 }
             }
         }
-
 
         if (prec != null) {
             // pass their player record to the client resolver for use later

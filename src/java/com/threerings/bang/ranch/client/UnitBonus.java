@@ -5,7 +5,6 @@ package com.threerings.bang.ranch.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;

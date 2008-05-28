@@ -6,14 +6,10 @@ package com.threerings.bang.game.data.piece;
 import java.awt.Point;
 import java.util.List;
 
-import com.samskivert.util.HashIntMap;
-import com.samskivert.util.RandomUtil;
-
 import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TrainSprite;
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;

@@ -9,12 +9,9 @@ import com.jme.math.Vector3f;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathUtil;
 
-import com.threerings.media.image.Colorization;
-
 import com.threerings.bang.client.Config;
 
 import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Train;
 
 import static com.threerings.bang.client.BangMetrics.*;

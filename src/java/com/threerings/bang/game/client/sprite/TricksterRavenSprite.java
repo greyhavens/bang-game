@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.util.Iterator;
 import java.util.List;
 
 import java.awt.Point;

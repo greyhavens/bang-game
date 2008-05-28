@@ -9,9 +9,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.effect.Effect;
 
-
-import static com.threerings.bang.Log.log;
-
 /**
  * Clears a piece from the board.
  */

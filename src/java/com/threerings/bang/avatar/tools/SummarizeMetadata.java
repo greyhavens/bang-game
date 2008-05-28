@@ -12,7 +12,6 @@ import com.threerings.bang.data.BangCodes;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AspectCatalog;
-import com.threerings.bang.avatar.util.AvatarLogic;
 
 /**
  * Provides support to the article and aspect summarization tools.

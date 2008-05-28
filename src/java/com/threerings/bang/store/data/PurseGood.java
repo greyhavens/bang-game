@@ -3,8 +3,6 @@
 
 package com.threerings.bang.store.data;
 
-import com.threerings.util.MessageBundle;
-
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;

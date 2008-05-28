@@ -6,12 +6,9 @@ package com.threerings.bang.game.client;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
 import com.jmex.bui.BCheckBox;
-import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.ActionEvent;
@@ -21,7 +18,6 @@ import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.client.BangPrefs;
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;

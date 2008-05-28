@@ -3,22 +3,14 @@
 
 package com.threerings.bang.game.client.effect;
 
-import java.util.Iterator;
-
 import com.jme.util.geom.BufferUtils;
 import com.jme.image.Texture;
 import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 
-import com.jme.scene.BillboardNode;
-import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 
-import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
@@ -27,7 +19,6 @@ import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;

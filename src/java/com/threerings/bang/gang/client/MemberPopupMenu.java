@@ -22,7 +22,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
-import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 

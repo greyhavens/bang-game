@@ -9,6 +9,7 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.dobj.InvocationResponseEvent;
+import com.threerings.presents.net.Transport;
 
 /**
  * Provides the implementation of the {@link BankService} interface
@@ -36,7 +37,7 @@ public class BankMarshaller extends InvocationMarshaller
             _invId = null;
             omgr.postEvent(new InvocationResponseEvent(
                                callerOid, requestId, GOT_OFFERS,
-                               new Object[] { arg1, arg2 }));
+                               new Object[] { arg1, arg2 }, transport));
         }
 
         @Override // from InvocationMarshaller

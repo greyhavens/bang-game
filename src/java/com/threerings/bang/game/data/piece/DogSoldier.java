@@ -12,8 +12,6 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Handles some special custom behavior needed for the Dog Soldier.
  */

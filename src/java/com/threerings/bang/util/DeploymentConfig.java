@@ -4,7 +4,6 @@
 package com.threerings.bang.util;
 
 import java.net.URL;
-import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 

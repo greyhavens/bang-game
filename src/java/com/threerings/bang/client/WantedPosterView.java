@@ -3,7 +3,6 @@
 
 package com.threerings.bang.client;
 
-import java.util.Map;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 

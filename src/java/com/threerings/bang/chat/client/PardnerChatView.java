@@ -16,7 +16,6 @@ import com.jmex.bui.util.Dimension;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.TellFeedbackMessage;
 
 import com.threerings.bang.chat.data.PlayerMessage;
@@ -26,10 +25,8 @@ import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.MainView;
-import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;

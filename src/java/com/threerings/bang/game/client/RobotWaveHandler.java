@@ -18,7 +18,6 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
-import com.jmex.bui.util.Point;
 
 import com.samskivert.util.ArrayUtil;
 

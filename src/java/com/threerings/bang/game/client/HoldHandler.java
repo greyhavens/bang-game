@@ -6,7 +6,6 @@ package com.threerings.bang.game.client;
 import java.awt.Point;
 
 import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.state.MaterialState;
@@ -17,13 +16,10 @@ import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.client.sprite.BonusSprite;
-import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.client.sprite.Spinner;
 import com.threerings.bang.game.client.sprite.TotemBaseSprite;
-import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;

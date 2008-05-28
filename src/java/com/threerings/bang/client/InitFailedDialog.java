@@ -6,7 +6,6 @@ package com.threerings.bang.client;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.net.URL;
-import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;

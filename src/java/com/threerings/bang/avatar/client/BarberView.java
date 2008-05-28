@@ -26,8 +26,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.data.BarberObject;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Displays the main barber interface wherein the player can create new "looks"
  * for their avatar and purchase them.

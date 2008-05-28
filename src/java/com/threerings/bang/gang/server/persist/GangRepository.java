@@ -23,13 +23,10 @@ import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Table;
 
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.StringUtil;
 import com.samskivert.util.Interator;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.util.MessageBundle;
-
-import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
@@ -40,7 +37,6 @@ import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangInfo;
 import com.threerings.bang.gang.data.GangMemberEntry;
-import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.TopRankedGangList;

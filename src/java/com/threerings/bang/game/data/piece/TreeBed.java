@@ -11,9 +11,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
-import com.threerings.bang.game.util.PieceUtil;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * A tree bed that grows a tree in distinct phases, with the damage keeping

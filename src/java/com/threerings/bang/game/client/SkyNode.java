@@ -3,36 +3,26 @@
 
 package com.threerings.bang.game.client;
 
-import java.awt.image.BufferedImage;
-
-import java.io.File;
-
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import javax.imageio.ImageIO;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
-import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
-import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.shape.Disk;
 import com.jme.scene.shape.Dome;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
-import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.client.Config;
@@ -40,7 +30,6 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * Used to display the sky.

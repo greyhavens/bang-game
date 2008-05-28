@@ -11,7 +11,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
-import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.ObjectDeathListener;
@@ -22,7 +21,6 @@ import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.saloon.data.SaloonObject;
 
-import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 

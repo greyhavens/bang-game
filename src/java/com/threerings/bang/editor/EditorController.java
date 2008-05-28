@@ -3,29 +3,20 @@
 
 package com.threerings.bang.editor;
 
-import java.awt.Color;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
-import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
-
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 
 import com.threerings.util.MessageBundle;
 
@@ -46,12 +37,10 @@ import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
-import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;

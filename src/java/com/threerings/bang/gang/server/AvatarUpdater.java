@@ -9,7 +9,6 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.avatar.data.Look;
 

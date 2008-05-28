@@ -8,7 +8,6 @@ import java.nio.FloatBuffer;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Line;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.state.LightState;

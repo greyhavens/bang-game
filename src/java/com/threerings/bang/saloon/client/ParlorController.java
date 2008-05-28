@@ -3,8 +3,6 @@
 
 package com.threerings.bang.saloon.client;
 
-import com.threerings.presents.dobj.AttributeChangedEvent;
-
 import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceConfig;

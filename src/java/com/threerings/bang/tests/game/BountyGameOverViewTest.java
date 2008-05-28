@@ -15,7 +15,6 @@ import com.threerings.util.Name;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.stats.data.StatSet;
 
-import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;

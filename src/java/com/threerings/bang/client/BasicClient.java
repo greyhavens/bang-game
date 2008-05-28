@@ -5,8 +5,6 @@ package com.threerings.bang.client;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import javax.imageio.ImageIO;
 
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
@@ -26,7 +24,6 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.util.CompiledConfig;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 

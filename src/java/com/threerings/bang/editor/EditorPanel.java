@@ -5,7 +5,6 @@ package com.threerings.bang.editor;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
@@ -13,14 +12,12 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import com.jme.system.DisplaySystem;
@@ -29,7 +26,6 @@ import com.jmex.bui.layout.BorderLayout;
 
 import com.samskivert.swing.Controller;
 import com.samskivert.swing.ControllerProvider;
-import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
 
 import com.threerings.util.MessageBundle;
@@ -37,7 +33,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 
 import static com.threerings.bang.client.BangMetrics.*;

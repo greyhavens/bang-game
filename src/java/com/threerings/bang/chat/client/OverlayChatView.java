@@ -17,7 +17,6 @@ import com.samskivert.util.Interval;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
-import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;

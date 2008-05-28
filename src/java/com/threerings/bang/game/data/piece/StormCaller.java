@@ -14,8 +14,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ChainingShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Handles special custom behavior for the Storm Caller.
  */

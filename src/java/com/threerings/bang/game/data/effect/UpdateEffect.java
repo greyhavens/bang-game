@@ -7,8 +7,6 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Simply calls a piece to update itself
  */

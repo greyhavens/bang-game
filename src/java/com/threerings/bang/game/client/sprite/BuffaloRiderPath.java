@@ -11,8 +11,6 @@ import com.threerings.bang.game.client.MoveShootHandler;
 
 import com.threerings.jme.model.Model;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Handles a buffalo rider ramming movement.
  */

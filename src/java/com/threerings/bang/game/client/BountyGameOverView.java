@@ -29,7 +29,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.avatar.client.AvatarView;
-import com.threerings.bang.bounty.client.OutlawView;
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
 

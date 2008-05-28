@@ -12,16 +12,10 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Controller;
-import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
-import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.ZBufferState;
-import com.jme.system.DisplaySystem;
 import com.jmex.effects.particles.ParticleController;
 import com.jmex.effects.particles.ParticleFactory;
-import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleMesh;
 import com.samskivert.util.ResultListener;
 

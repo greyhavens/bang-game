@@ -5,13 +5,8 @@ package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.samskivert.util.ArrayUtil;
-import com.samskivert.util.IntListUtil;
-import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.UnitConfig;
 

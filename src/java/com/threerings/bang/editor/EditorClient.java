@@ -13,10 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-
-import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;

@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.data.effect;
 
-import java.util.Iterator;
-
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.util.MessageBundle;

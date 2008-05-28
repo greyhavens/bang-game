@@ -15,11 +15,8 @@ import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Homestead;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.LandGrabLogic;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Implements the server side of the Land Grab gameplay scenario.

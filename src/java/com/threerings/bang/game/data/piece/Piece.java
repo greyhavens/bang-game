@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
@@ -15,12 +14,10 @@ import com.jme.util.export.InputCapsule;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
 
-import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.Streamable;
 import com.threerings.media.util.AStarPathUtil;
-import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.DSet;
 
@@ -29,7 +26,6 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.PuntEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.util.PointSet;

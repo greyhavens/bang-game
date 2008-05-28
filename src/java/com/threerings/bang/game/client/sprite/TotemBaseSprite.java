@@ -4,16 +4,12 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.bounding.BoundingVolume;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-
-import com.samskivert.util.ResultListener;
 
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.model.Model;
@@ -21,13 +17,10 @@ import com.threerings.jme.model.Model;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
-import com.threerings.bang.game.data.piece.TotemBonus;
-import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.media.image.Colorization;
 
 import static com.threerings.bang.client.BangMetrics.*;
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays the totem base for the Totem Building scenario.

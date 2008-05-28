@@ -8,15 +8,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 import com.threerings.io.Streamable;
-import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;

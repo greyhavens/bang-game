@@ -4,7 +4,6 @@
 package com.threerings.bang.game.util;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.CompiledConfig;

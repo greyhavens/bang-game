@@ -5,7 +5,6 @@ package com.threerings.bang.game.data.effect;
 
 import java.awt.Rectangle;
 
-import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;

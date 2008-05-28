@@ -3,9 +3,7 @@
 
 package com.threerings.bang.store.server;
 
-import com.threerings.bang.store.client.StoreService;
 import com.threerings.bang.store.data.StoreMarshaller;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -26,13 +24,14 @@ public class StoreDispatcher extends InvocationDispatcher
         this.provider = provider;
     }
 
-    // from InvocationDispatcher
+    @Override // documentation inherited
     public InvocationMarshaller createMarshaller ()
     {
         return new StoreMarshaller();
     }
 
-    @SuppressWarnings("unchecked") // from InvocationDispatcher
+    @SuppressWarnings("unchecked")
+    @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
         throws InvocationException

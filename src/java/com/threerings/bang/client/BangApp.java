@@ -49,9 +49,7 @@ import com.threerings.bang.game.client.GameInputHandler;
 
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.DeploymentConfig;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 

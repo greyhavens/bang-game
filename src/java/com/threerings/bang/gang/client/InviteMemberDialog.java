@@ -9,8 +9,6 @@ import com.jmex.bui.Spacer;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.LengthLimitedDocument;
 
-import com.threerings.util.MessageBundle;
-
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;

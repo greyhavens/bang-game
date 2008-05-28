@@ -3,11 +3,9 @@
 
 package com.threerings.bang.saloon.server;
 
-import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorMarshaller;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -28,13 +26,14 @@ public class ParlorDispatcher extends InvocationDispatcher
         this.provider = provider;
     }
 
-    // from InvocationDispatcher
+    @Override // documentation inherited
     public InvocationMarshaller createMarshaller ()
     {
         return new ParlorMarshaller();
     }
 
-    @SuppressWarnings("unchecked") // from InvocationDispatcher
+    @SuppressWarnings("unchecked")
+    @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
         throws InvocationException

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.CompiledConfig;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;

@@ -4,9 +4,6 @@
 package com.threerings.bang.game.client.sprite;
 
 import com.jme.image.Texture;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Renderer;
-import com.jme.scene.SharedMesh;
 import com.jme.scene.state.TextureState;
 
 import com.threerings.jme.sprite.Path;
@@ -14,10 +11,8 @@ import com.threerings.jme.sprite.Path;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.piece.Piece;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

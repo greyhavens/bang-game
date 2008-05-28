@@ -6,7 +6,6 @@ package com.threerings.bang.bounty.client;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Level;
 
 import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.export.binary.BinaryImporter;
@@ -19,7 +18,6 @@ import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
-import com.jmex.bui.util.Dimension;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
@@ -32,10 +30,8 @@ import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.client.util.StateSaver;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
 

@@ -5,8 +5,6 @@ package com.threerings.bang.gang.server.persist;
 
 import com.samskivert.io.PersistenceException;
 
-import com.threerings.util.Name;
-
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.persist.FinancialAction;
 

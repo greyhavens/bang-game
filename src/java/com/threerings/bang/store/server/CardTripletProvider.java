@@ -3,10 +3,6 @@
 
 package com.threerings.bang.store.server;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import com.samskivert.io.PersistenceException;
 
 import com.threerings.presents.server.InvocationException;
@@ -14,7 +10,6 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.CardItem;
-import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.store.data.CardPackGood;

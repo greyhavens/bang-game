@@ -3,11 +3,7 @@
 
 package com.threerings.bang.avatar.server;
 
-import java.io.IOException;
-import java.util.logging.Level;
-
 import com.samskivert.io.PersistenceException;
-import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
@@ -22,8 +18,6 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.cast.CharacterComponent;
-import com.threerings.cast.NoSuchComponentException;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;

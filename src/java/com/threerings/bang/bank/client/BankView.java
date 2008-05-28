@@ -5,7 +5,6 @@ package com.threerings.bang.bank.client;
 
 import java.net.URL;
 
-import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
@@ -137,7 +136,6 @@ public class BankView extends ShopView
             }
         }
     }
-
 
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)

@@ -8,12 +8,8 @@ import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.client.sprite.UnitSprite;
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;

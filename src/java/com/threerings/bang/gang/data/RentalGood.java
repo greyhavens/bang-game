@@ -16,8 +16,6 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
-import com.threerings.bang.gang.util.GangUtil;
-
 
 /**
  * A good that may be rented in the gang store.

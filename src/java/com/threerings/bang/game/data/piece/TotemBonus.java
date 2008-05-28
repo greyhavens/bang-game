@@ -4,7 +4,6 @@
 package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.threerings.bang.data.StatType;

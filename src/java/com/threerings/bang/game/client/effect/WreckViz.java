@@ -8,7 +8,6 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.state.MaterialState;
 import com.jmex.effects.particles.ParticleMesh;
@@ -22,7 +21,6 @@ import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
 

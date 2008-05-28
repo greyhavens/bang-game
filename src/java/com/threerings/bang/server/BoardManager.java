@@ -8,13 +8,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Invoker;
-import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
 import com.samskivert.util.StringUtil;
@@ -26,7 +24,6 @@ import com.threerings.bang.game.util.BoardFile;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.server.persist.BoardRepository.BoardList;
 import com.threerings.bang.server.persist.BoardRepository;
-import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 

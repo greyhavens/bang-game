@@ -6,20 +6,15 @@ package com.threerings.bang.saloon.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
-import com.threerings.jme.chat.ChatView;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.ObjectAccessException;
@@ -28,11 +23,8 @@ import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.bang.util.BangContext;
 
-import com.threerings.bang.chat.client.BangChatDirector;
-
 import com.threerings.bang.saloon.data.MatchObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
-import com.threerings.bang.saloon.data.SaloonObject;
 
 import static com.threerings.bang.Log.log;
 

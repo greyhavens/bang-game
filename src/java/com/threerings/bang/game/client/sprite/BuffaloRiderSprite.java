@@ -8,7 +8,6 @@ import java.awt.Point;
 
 import com.jme.math.Vector3f;
 
-import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ListUtil;
 
 import com.threerings.openal.Sound;

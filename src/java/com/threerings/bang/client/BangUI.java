@@ -3,7 +3,6 @@
 
 package com.threerings.bang.client;
 
-
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -20,7 +19,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.html.CSS;
 import javax.swing.text.html.StyleSheet;
 
-import java.lang.ref.WeakReference;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,9 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.Display;
@@ -45,7 +41,6 @@ import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
-import com.jmex.bui.BToggleButton;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.icon.BIcon;
@@ -69,8 +64,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.gang.client.GangPopupMenu;
 
 import com.threerings.bang.client.util.TexturePool;
-import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangUtil;

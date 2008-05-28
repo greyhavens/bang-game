@@ -5,8 +5,6 @@ package com.threerings.bang.server;
 
 import java.util.Date;
 
-import com.samskivert.io.PersistenceException;
-import com.samskivert.util.HashIntMap;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.Tuple;
@@ -14,13 +12,6 @@ import com.threerings.util.StreamableTuple;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.EntryAddedEvent;
-import com.threerings.presents.dobj.EntryRemovedEvent;
-import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.ObjectAccessException;
-import com.threerings.presents.dobj.SetListener;
-import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.util.ResultAdapter;
 
 import com.threerings.presents.peer.data.ClientInfo;
@@ -42,9 +33,7 @@ import com.threerings.bang.data.BangNodeObject;
 import com.threerings.bang.data.BangPeerMarshaller;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
-import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 

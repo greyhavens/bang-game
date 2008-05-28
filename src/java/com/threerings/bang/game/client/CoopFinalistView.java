@@ -20,9 +20,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 
-import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;

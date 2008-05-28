@@ -26,9 +26,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.io.ObjectInputStream;
 
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.Streamable;
 
-import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ItemFactory;

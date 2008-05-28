@@ -3,21 +3,10 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.awt.Graphics2D;
-import java.awt.geom.Arc2D;
-import java.awt.image.BufferedImage;
-
 import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
-import com.jme.scene.Spatial;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.TextureState;
 
 import com.jmex.bui.background.BBackground;
 
@@ -27,9 +16,7 @@ import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Influence;
 
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

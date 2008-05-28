@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashSet;
-import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;

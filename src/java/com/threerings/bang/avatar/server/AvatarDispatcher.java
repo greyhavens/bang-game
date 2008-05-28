@@ -3,12 +3,10 @@
 
 package com.threerings.bang.avatar.server;
 
-import com.threerings.bang.avatar.client.AvatarService;
 import com.threerings.bang.avatar.data.AvatarMarshaller;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.data.Handle;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -29,13 +27,14 @@ public class AvatarDispatcher extends InvocationDispatcher
         this.provider = provider;
     }
 
-    // from InvocationDispatcher
+    @Override // documentation inherited
     public InvocationMarshaller createMarshaller ()
     {
         return new AvatarMarshaller();
     }
 
-    @SuppressWarnings("unchecked") // from InvocationDispatcher
+    @SuppressWarnings("unchecked")
+    @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
         throws InvocationException

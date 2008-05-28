@@ -7,7 +7,6 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.data.piece.UnderdogSoldier;
 
 /**
  * Adds a underdog soldier to the board.

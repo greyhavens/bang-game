@@ -7,17 +7,12 @@ import java.awt.Rectangle;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.IntListUtil;
 
-import com.threerings.bang.data.StatType;
-import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.game.client.BallisticShotHandler;
 import com.threerings.bang.game.client.InstantShotHandler;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
 

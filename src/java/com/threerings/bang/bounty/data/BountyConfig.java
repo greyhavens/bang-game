@@ -11,14 +11,12 @@ import java.util.Properties;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.util.MessageBundle;
 
 import com.threerings.stats.data.StringSetStat;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Badge;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;

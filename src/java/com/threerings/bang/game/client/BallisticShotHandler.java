@@ -21,7 +21,6 @@ import com.threerings.openal.SoundGroup;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.BallisticShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;

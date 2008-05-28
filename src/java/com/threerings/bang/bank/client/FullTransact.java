@@ -38,8 +38,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankObject;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Displays an interface for posting a buy or sell offer and for viewing one's
  * outstanding offers.

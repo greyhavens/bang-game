@@ -8,7 +8,6 @@ import com.threerings.jme.model.Model;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.game.client.sprite.BreakableSprite;
 
-
 /**
  * Sprite for Fireworks
  */

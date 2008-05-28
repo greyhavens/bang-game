@@ -7,8 +7,6 @@ import com.jme.math.Quaternion;
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
 
-import com.threerings.jme.sprite.Sprite;
-
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

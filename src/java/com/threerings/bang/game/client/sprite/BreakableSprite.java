@@ -8,23 +8,17 @@ import com.threerings.openal.SoundGroup;
 import java.util.ArrayList;
 
 import com.jme.scene.Spatial;
-import com.jme.math.FastMath;
 
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.ParticleUtil;
 
 import com.threerings.bang.game.client.effect.WreckViz;
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
 //import com.threerings.bang.game.data.piece.CounterInterface;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.TargetableActiveSprite;
 import com.threerings.bang.client.util.ResultAttacher;
-
-
 
 /**
  * Sprite for Breakables

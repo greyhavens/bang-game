@@ -9,7 +9,6 @@ import java.awt.geom.Arc2D;
 
 import com.jme.image.Texture;
 import com.jme.math.Quaternion;
-import com.jme.math.Ray;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;

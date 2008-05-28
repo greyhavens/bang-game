@@ -6,7 +6,6 @@ package com.threerings.bang.game.data;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -24,7 +23,6 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.TermUtil;
-import com.samskivert.util.Tuple;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.SimpleStreamableObject;

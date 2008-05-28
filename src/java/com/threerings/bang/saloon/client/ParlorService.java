@@ -7,7 +7,6 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
 import com.threerings.bang.saloon.data.Criterion;
-import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 
 /**

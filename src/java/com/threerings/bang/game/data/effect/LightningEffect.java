@@ -13,10 +13,8 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.LightningHandler;
 

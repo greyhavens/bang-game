@@ -4,15 +4,12 @@
 package com.threerings.bang.game.client;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BComponent;
-import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.icon.ImageIcon;
-import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.StringUtil;
@@ -25,7 +22,6 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;

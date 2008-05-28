@@ -4,7 +4,6 @@
 package com.threerings.bang.server.persist;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;

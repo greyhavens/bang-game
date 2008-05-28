@@ -3,18 +3,9 @@
 
 package com.threerings.bang.game.data.effect;
 
-import java.awt.Rectangle;
-
-import java.util.Iterator;
-
-import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.IntIntMap;
-
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * A base class for an effect that affects all pieces in a particular

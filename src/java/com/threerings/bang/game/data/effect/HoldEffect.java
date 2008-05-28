@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import java.util.HashSet;
-import java.util.logging.Level;
 
 import com.samskivert.util.IntIntMap;
 
@@ -17,7 +16,6 @@ import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.HoldHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;

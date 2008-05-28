@@ -6,7 +6,6 @@ package com.threerings.bang.avatar.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
@@ -19,13 +18,10 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.util.Dimension;
-import com.jmex.bui.util.Insets;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.cast.CharacterComponent;

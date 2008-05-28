@@ -3,11 +3,9 @@
 
 package com.threerings.bang.avatar.server;
 
-import com.threerings.bang.avatar.client.BarberService;
 import com.threerings.bang.avatar.data.BarberMarshaller;
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.data.Handle;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -28,13 +26,14 @@ public class BarberDispatcher extends InvocationDispatcher
         this.provider = provider;
     }
 
-    // from InvocationDispatcher
+    @Override // documentation inherited
     public InvocationMarshaller createMarshaller ()
     {
         return new BarberMarshaller();
     }
 
-    @SuppressWarnings("unchecked") // from InvocationDispatcher
+    @SuppressWarnings("unchecked")
+    @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
         throws InvocationException

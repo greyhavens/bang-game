@@ -7,7 +7,6 @@ import com.threerings.crowd.chat.client.MuteDirector;
 
 import com.threerings.parlor.util.ParlorContext;
 
-import com.threerings.bang.chat.client.BangChatDirector;
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.util.BoardCache;
 import com.threerings.bang.data.PlayerObject;

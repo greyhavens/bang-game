@@ -5,7 +5,6 @@ package com.threerings.bang.game.data.effect;
 
 import com.threerings.bang.data.UnitConfig;
 
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.client.effect.InfluenceViz;

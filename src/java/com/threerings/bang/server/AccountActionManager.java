@@ -5,7 +5,6 @@ package com.threerings.bang.server;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Interval;

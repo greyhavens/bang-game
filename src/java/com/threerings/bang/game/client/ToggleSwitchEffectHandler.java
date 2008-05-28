@@ -3,20 +3,15 @@
 
 package com.threerings.bang.game.client;
 
-import com.threerings.bang.game.client.sprite.MarkerSprite;
 import com.threerings.bang.game.client.sprite.SafeMarkerSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ToggleSwitchEffect;
-import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.SafeMarker;
-import com.threerings.bang.game.data.piece.ToggleSwitch;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.openal.SoundGroup;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Handles updating highlights during a switch.

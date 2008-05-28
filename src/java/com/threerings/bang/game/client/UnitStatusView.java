@@ -5,9 +5,6 @@ package com.threerings.bang.game.client;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.HashMap;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -48,7 +45,6 @@ import com.threerings.bang.ranch.client.UnitBonus;
 
 import com.threerings.util.MessageBundle;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -575,7 +571,6 @@ public class UnitStatusView extends BWindow
                 */
             }
         }
-
 
         @Override // documentation inherited
         public BBackground getBackground () {

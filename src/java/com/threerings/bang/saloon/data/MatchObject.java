@@ -7,7 +7,6 @@ import com.threerings.io.Streamable;
 
 import com.threerings.presents.dobj.DObject;
 
-import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.data.SpeakObject;
 
 import com.threerings.bang.data.AvatarInfo;

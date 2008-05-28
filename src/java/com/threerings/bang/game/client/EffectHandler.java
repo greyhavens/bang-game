@@ -53,7 +53,6 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
 
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AddSpawnedBonusEffect;
-import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HealHeroEffect;
 import com.threerings.bang.game.data.effect.HighNoonEffect;
@@ -62,7 +61,6 @@ import com.threerings.bang.game.data.effect.LevelEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
-import com.threerings.bang.game.data.effect.ResurrectEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
 
@@ -77,7 +75,6 @@ import com.threerings.bang.game.data.piece.TotemBonus;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Breakable;
-
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;

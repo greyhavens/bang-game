@@ -4,12 +4,10 @@
 package com.threerings.bang.data;
 
 import com.threerings.bang.client.BangPeerService;
-import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.Item;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
+import com.threerings.presents.net.Transport;
 
 /**
  * Provides the implementation of the {@link BangPeerService} interface

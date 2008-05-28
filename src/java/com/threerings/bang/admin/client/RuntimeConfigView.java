@@ -19,7 +19,6 @@ import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.util.SafeSubscriber;

@@ -3,7 +3,6 @@
 
 package com.threerings.bang.editor;
 
-import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
@@ -22,7 +21,6 @@ import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseWheelListener;
 import com.jmex.bui.event.MouseAdapter;
-import com.samskivert.swing.Controller;
 import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
 import com.samskivert.swing.util.SwingUtil;

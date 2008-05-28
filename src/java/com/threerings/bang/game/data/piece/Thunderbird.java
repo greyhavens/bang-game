@@ -17,8 +17,6 @@ import com.threerings.bang.game.data.effect.MoveShootEffect;
 
 import com.threerings.bang.game.util.PointSet;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Handles the special capabilities of the Thunderbird unit.
  */

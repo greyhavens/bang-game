@@ -152,7 +152,6 @@ public class TutorialView extends SteelWindow
         BContainer list = new BContainer(new TableLayout(3, 5, 10));
         right.add(list);
 
-
         String[] tutorials = TutorialCodes.NEW_TUTORIALS[_townIdx];
         String currentTut = null;
 

@@ -6,11 +6,6 @@ package com.threerings.bang.game.client;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-
-import java.io.File;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,35 +15,24 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.logging.Level;
 
-import org.lwjgl.opengl.GL11;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Texture;
 import com.jme.intersection.PickData;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.light.DirectionalLight;
 import com.jme.light.PointLight;
 import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.util.geom.BufferUtils;
 
 import com.jme.scene.Controller;
-import com.jme.scene.Geometry;
 import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
-import com.jme.scene.Skybox;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
@@ -64,25 +48,19 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
-import com.jmex.bui.layout.BorderLayout;
-import com.jmex.bui.text.BText;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Insets;
 
 import com.jmex.effects.particles.ParticleGeometry;
-import com.jmex.effects.particles.ParticleInfluence;
 import com.jmex.effects.particles.SimpleParticleInfluenceFactory;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.jme.effect.FadeInOutEffect;
-import com.threerings.jme.sprite.Path;
-import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.util.LinearTimeFunction;
 import com.threerings.jme.util.SpatialVisitor;
@@ -102,8 +80,6 @@ import com.threerings.bang.client.Config;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.client.sprite.PropSprite;
-import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;

@@ -11,15 +11,11 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BMenuItem;
 import com.jmex.bui.BScrollPane;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.event.MouseAdapter;
-import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
@@ -36,24 +32,18 @@ import com.samskivert.util.StringUtil;
 import com.threerings.media.image.Colorization;
 import com.threerings.util.MessageBundle;
 
-import com.threerings.presents.client.InvocationService;
 import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.SteelWindow;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
-import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.BangObject.PlayerInfo;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

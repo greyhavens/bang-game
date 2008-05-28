@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.data.scenario;
 
-import java.awt.Point;
-import java.util.Iterator;
  
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.StatType;

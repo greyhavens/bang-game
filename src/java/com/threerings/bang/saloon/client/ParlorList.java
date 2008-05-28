@@ -35,8 +35,6 @@ import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Displays a list of back parlors and allows a player to enter those parlors or create a new
  * parlor.

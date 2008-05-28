@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.server;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import java.awt.Point;
@@ -11,20 +10,17 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.IntListUtil;
 import com.samskivert.util.IntSet;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
@@ -43,7 +39,6 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.server.PresentsServer;
@@ -52,7 +47,6 @@ import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.admin.data.StatusObject;
@@ -1641,7 +1635,6 @@ public class BangManager extends GameManager
                 }
             }
         }
-
 
         // note that all active players completed this tick
         _rounds[_activeRoundId].lastTick = tick;

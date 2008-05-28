@@ -3,21 +3,13 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Node;
-import com.jme.scene.shape.Box;
-
 import com.threerings.jme.model.Model;
 
-import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Track;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

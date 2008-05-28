@@ -3,8 +3,6 @@
 
 package com.threerings.bang.util;
 
-import java.awt.image.BufferedImage;
-
 import com.jme.scene.Spatial;
 
 import com.jmex.bui.BImage;
@@ -31,7 +29,6 @@ import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.TextureCache;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * Provides access to the various services needed by any application associated

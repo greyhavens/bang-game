@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Tuple;
 
 import com.threerings.presents.server.InvocationException;
@@ -25,7 +24,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AddHeroEffect;
 import com.threerings.bang.game.data.effect.HealHeroEffect;
-import com.threerings.bang.game.data.effect.LevelEffect;
 import com.threerings.bang.game.data.effect.RemovePieceEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
@@ -33,7 +31,6 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Revolutionary;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceSet;
-import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.HeroLogic;
 

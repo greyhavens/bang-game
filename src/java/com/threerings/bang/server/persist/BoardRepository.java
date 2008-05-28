@@ -16,7 +16,6 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
-import com.samskivert.jdbc.jora.Cursor;
 import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Table;
 

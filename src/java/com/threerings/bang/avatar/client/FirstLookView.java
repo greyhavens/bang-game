@@ -10,10 +10,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.jmex.bui.BButton;
-import com.jmex.bui.BConstants;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -23,7 +21,6 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.RandomUtil;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.ComponentRepository;
@@ -38,7 +35,6 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberCodes;
-import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.avatar.util.AspectCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;

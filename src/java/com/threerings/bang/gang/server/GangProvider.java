@@ -4,8 +4,6 @@
 package com.threerings.bang.gang.server;
 
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.gang.client.GangService;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;

@@ -3,7 +3,6 @@
 
 package com.threerings.bang.bank.data;
 
-
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.dobj.ChangeListener;

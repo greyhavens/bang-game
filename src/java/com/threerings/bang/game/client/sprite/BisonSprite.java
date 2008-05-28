@@ -14,7 +14,6 @@ import com.jme.scene.Controller;
 import com.jme.scene.state.MaterialState;
 
 import com.threerings.jme.model.Model;
-import com.threerings.jme.sprite.Path;
 
 import com.threerings.bang.util.RenderUtil;
 

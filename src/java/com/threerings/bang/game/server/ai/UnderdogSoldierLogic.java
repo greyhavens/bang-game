@@ -6,9 +6,7 @@ package com.threerings.bang.game.server.ai;
 import java.awt.Point;
 
 import java.util.Arrays;
-import java.util.ArrayList;
 
-import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.RandomUtil;
 
@@ -17,8 +15,6 @@ import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.util.PointSet;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Handles controlling the Underdog Soldier.

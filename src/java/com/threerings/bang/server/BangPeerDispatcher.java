@@ -3,11 +3,9 @@
 
 package com.threerings.bang.server;
 
-import com.threerings.bang.client.BangPeerService;
 import com.threerings.bang.data.BangPeerMarshaller;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -28,13 +26,14 @@ public class BangPeerDispatcher extends InvocationDispatcher
         this.provider = provider;
     }
 
-    // from InvocationDispatcher
+    @Override // documentation inherited
     public InvocationMarshaller createMarshaller ()
     {
         return new BangPeerMarshaller();
     }
 
-    @SuppressWarnings("unchecked") // from InvocationDispatcher
+    @SuppressWarnings("unchecked")
+    @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
         throws InvocationException

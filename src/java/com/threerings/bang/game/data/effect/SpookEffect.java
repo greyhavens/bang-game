@@ -13,8 +13,6 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.util.PointSet;
 import com.samskivert.util.IntIntMap;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * A move effect for a cow that also changes its ownership.
  */

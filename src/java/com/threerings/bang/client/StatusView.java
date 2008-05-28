@@ -32,7 +32,6 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.client.bui.HackyTabs;
 import com.threerings.bang.client.bui.PaletteIcon;

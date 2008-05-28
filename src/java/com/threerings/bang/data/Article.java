@@ -6,9 +6,6 @@ package com.threerings.bang.data;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.text.SimpleDateFormat;
-
-import com.jme.renderer.Renderer;
 
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
@@ -27,7 +24,6 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;

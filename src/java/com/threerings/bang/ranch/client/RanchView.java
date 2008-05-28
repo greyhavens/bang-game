@@ -4,18 +4,12 @@
 package com.threerings.bang.ranch.client;
 
 import java.util.Arrays;
-import java.util.EnumSet;
 
-import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTabbedPane;
-import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
-import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
@@ -27,8 +21,6 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.ranch.data.RanchObject;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays the main ranch interface wherein a player's Big Shot units can

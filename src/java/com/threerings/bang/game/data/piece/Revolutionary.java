@@ -5,11 +5,8 @@ package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
 
-import com.samskivert.util.ArrayUtil;
-
 import com.threerings.bang.data.UnitConfig;
 
-import com.threerings.bang.game.client.sprite.PieceSprite;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;

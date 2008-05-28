@@ -3,14 +3,10 @@
 
 package com.threerings.bang.game.data.piece;
 
-import java.awt.Rectangle;
-
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.WendigoSprite;
 
 import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.WendigoEffect;
 
 /**
  * Handles the behavior of the wendigo in the wendigo attack scenario.

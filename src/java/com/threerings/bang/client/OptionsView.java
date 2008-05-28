@@ -6,7 +6,6 @@ package com.threerings.bang.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import com.jme.system.DisplaySystem;
 import com.jmex.bui.BButton;

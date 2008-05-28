@@ -17,7 +17,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 

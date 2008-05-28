@@ -3,17 +3,9 @@
 
 package com.threerings.bang.saloon.server;
 
-import java.util.HashSet;
-import java.util.logging.Level;
-
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.IntListUtil;
-import com.samskivert.util.Interval;
-import com.samskivert.util.RandomUtil;
-import com.samskivert.util.StringUtil;
 import com.samskivert.util.Throttle;
 
-import com.threerings.media.util.MathUtil;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -26,23 +18,15 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.chat.server.SpeakUtil;
 
-import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.BangOccupantInfo;
-import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
 
-import com.threerings.bang.game.data.BangAI;
-import com.threerings.bang.game.data.BangConfig;
-import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.scenario.ScenarioInfo;
-import com.threerings.bang.game.server.BangManager;
 
 import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
-import com.threerings.bang.saloon.data.ParlorGameConfig.Slot;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorMarshaller;
 import com.threerings.bang.saloon.data.ParlorObject;

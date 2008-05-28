@@ -7,8 +7,6 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.BIcon;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * A button that may have alternate icons for states other than {@link #DEFAULT}.
  */

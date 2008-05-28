@@ -14,10 +14,8 @@ import java.net.URL;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.util.TextureManager;
 
 import com.jmex.bui.BButton;
-import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BPasswordField;

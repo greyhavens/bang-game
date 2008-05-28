@@ -6,8 +6,6 @@ package com.threerings.bang.game.client.sprite;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.ToggleSwitch;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Displays a toggle switch for the Wendigo Attack scenario.
  */

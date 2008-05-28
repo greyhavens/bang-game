@@ -14,7 +14,6 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 
@@ -28,7 +27,6 @@ import com.jmex.bui.util.Rectangle;
 import com.samskivert.util.Interval;
 
 import com.threerings.media.image.Colorization;
-import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;

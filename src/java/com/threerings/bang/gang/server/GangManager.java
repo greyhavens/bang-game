@@ -3,12 +3,9 @@
 
 package com.threerings.bang.gang.server;
 
-import java.lang.ref.SoftReference;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 
@@ -29,7 +26,6 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 

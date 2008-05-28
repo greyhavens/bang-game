@@ -9,7 +9,6 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.Item;
 
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.OutfitArticle;

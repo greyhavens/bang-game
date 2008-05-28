@@ -8,7 +8,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import javax.imageio.ImageIO;
 
 import com.jme.input.KeyInput;
@@ -28,7 +27,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.client.AvatarView;

@@ -18,7 +18,6 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
-import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.CollectionUtil;
@@ -37,15 +36,12 @@ import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.ranch.client.UnitPalette;
 import com.threerings.bang.ranch.client.UnitView;
 
-import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays an interface for selecting a big shot and a starting hand of cards from a player's

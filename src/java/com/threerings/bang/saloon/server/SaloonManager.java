@@ -7,22 +7,15 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayUtil;
-import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.StringUtil;
-
-import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.dobj.ObjectAccessException;
-import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -34,18 +27,13 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 
-import com.threerings.bang.game.data.BangConfig;
-import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
-import com.threerings.bang.game.server.BangManager;
 
-import com.threerings.bang.gang.data.GangCodes;
 
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.ParlorConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorObject;
-import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonMarshaller;
 import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.saloon.data.TopRankObject;

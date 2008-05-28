@@ -7,7 +7,6 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -20,7 +19,6 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.util.StateSaver;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.Criterion;

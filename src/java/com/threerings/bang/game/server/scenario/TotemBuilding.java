@@ -6,24 +6,19 @@ package com.threerings.bang.game.server.scenario;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.TotemLogic;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
 import com.threerings.bang.game.data.effect.TotemEffect;
-import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
@@ -35,8 +30,6 @@ import com.threerings.bang.game.util.PointSet;
 
 import com.threerings.parlor.game.data.GameAI;
 import com.threerings.presents.server.InvocationException;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * A gameplay scenario wherein:

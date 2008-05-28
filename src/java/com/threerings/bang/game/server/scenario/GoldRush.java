@@ -19,7 +19,6 @@ import com.threerings.bang.data.StatType;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;

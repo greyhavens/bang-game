@@ -4,8 +4,6 @@
 package com.threerings.bang.game.server;
 
 import com.threerings.bang.game.client.BangService;
-import com.threerings.bang.game.data.BoardData;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;

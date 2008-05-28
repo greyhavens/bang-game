@@ -9,7 +9,6 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.Item;

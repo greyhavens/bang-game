@@ -12,7 +12,6 @@ import com.threerings.jme.sprite.PathUtil;
 
 import com.threerings.bang.client.Config;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

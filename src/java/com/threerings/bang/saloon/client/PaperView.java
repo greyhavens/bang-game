@@ -3,22 +3,16 @@
 
 package com.threerings.bang.saloon.client;
 
-import java.io.StringReader;
 import java.net.URL;
-import javax.swing.text.html.HTMLDocument;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import com.jme.input.KeyInput;
-import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -26,7 +20,6 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.chat.client.PlaceChatView;
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.BangHTMLView;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.CachedDocument;
@@ -34,7 +27,6 @@ import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
-import com.threerings.bang.saloon.data.TopRankedList;
 
 import static com.threerings.bang.Log.log;
 

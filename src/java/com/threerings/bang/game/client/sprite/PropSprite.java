@@ -6,12 +6,8 @@ package com.threerings.bang.game.client.sprite;
 import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
-import com.jme.math.Quaternion;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
 import com.jme.scene.shape.Box;
-import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
 import com.threerings.openal.SoundGroup;
@@ -24,9 +20,7 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

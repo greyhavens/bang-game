@@ -5,16 +5,12 @@ package com.threerings.bang.game.data.effect;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.ListUtil;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.util.MessageBundle;

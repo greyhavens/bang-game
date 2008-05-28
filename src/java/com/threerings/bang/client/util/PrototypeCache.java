@@ -7,7 +7,6 @@ import java.lang.ref.WeakReference;
 
 import java.util.HashMap;
 
-import com.samskivert.util.ChainedResultListener;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultHandler;
 import com.samskivert.util.ResultListener;

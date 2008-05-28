@@ -4,19 +4,14 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
-import com.jmex.bui.util.Point;
-import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.RocketEffect;
-import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.DamageEffect;
 import com.threerings.bang.game.data.effect.UpdateEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.FireworksSprite;
-
 
 /**
  * Handles fireworks pieces in Boom Town.

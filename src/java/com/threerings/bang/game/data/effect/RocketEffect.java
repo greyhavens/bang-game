@@ -3,9 +3,7 @@
 
 package com.threerings.bang.game.data.effect;
 
-import com.jmex.bui.util.Point;
 import com.threerings.util.StreamablePoint;
-import com.threerings.bang.util.RenderUtil;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ArrayIntSet;
@@ -16,8 +14,6 @@ import com.threerings.bang.game.client.EffectHandler;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Communicates that a ballistic shot was fired from one piece to another.

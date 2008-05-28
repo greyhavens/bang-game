@@ -3,8 +3,6 @@
 
 package com.threerings.bang.server;
 
-import java.util.logging.Level;
-
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryUnit;

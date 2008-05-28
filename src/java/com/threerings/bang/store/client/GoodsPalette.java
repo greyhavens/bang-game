@@ -6,7 +6,6 @@ package com.threerings.bang.store.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.samskivert.util.ListUtil;
 

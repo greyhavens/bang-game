@@ -9,7 +9,6 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.game.client.sprite.MarkerSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TotemBaseSprite;
 import com.threerings.bang.game.data.BangObject;

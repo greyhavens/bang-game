@@ -10,7 +10,6 @@ import com.jmex.bui.BWindow;
 
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.ranch.client.UnitIcon;
-import com.threerings.bang.util.BasicContext;
 
 /**
  * A test program for displaying unit model icons.

@@ -5,9 +5,7 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
@@ -24,7 +22,6 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.data.BangConfig;

@@ -5,13 +5,11 @@ package com.threerings.bang.client.bui;
 
 import java.io.StringReader;
 import java.net.URL;
-import java.util.logging.Level;
 import javax.swing.text.html.HTMLDocument;
 
 import com.jmex.bui.text.HTMLView;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 

@@ -17,8 +17,6 @@ import com.threerings.stats.data.Stat;
 
 import com.threerings.bang.data.BangCodes;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Enumerates the various stats used in Bang! Howdy.
  */

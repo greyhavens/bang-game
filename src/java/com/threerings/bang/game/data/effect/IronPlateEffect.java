@@ -9,8 +9,6 @@ import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * An effect that causes the piece in question to become invincible for seven
  * ticks.

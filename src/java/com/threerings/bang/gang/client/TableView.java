@@ -14,7 +14,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.saloon.client.TableGameView;
 import com.threerings.bang.saloon.data.TableGameObject;
 
-
 /**
  * Hideout support for a table game.
  */

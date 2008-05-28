@@ -24,14 +24,11 @@ import com.threerings.bang.data.BangCodes;
 
 import com.threerings.bang.util.BangContext;
 
-import com.threerings.bang.tourney.data.BangTourneyConfig;
 import com.threerings.bang.tourney.data.TourneyListingEntry;
 import com.threerings.bang.tourney.data.TourniesObject;
 
 import com.threerings.presents.util.SafeSubscriber;
 
-import com.threerings.presents.dobj.AttributeChangeListener;
-import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 
@@ -105,7 +102,6 @@ public class TourneyListView extends BDecoratedWindow
     {
         _safesub.subscribe(_ctx.getDObjectManager());
     }
-
 
     // documentation inherited
     protected void wasRemoved ()

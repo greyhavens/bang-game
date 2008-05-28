@@ -6,7 +6,6 @@ package com.threerings.bang.game.data.piece;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.util.logging.Level;
 
 import com.jme.math.Vector3f;
 import com.jme.util.export.JMEExporter;

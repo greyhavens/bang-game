@@ -17,12 +17,10 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.bounty.data.OfficeCodes;
 

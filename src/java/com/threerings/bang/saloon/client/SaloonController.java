@@ -6,8 +6,6 @@ package com.threerings.bang.saloon.client;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 
-import com.threerings.presents.client.InvocationService;
-
 import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceConfig;
@@ -19,10 +17,8 @@ import com.threerings.parlor.client.GameReadyObserver;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.Criterion;
-import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
 
-import static com.threerings.bang.Log.log;
 
 /**
  * Manages the client side of the Saloon.

@@ -7,7 +7,6 @@ import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
@@ -18,7 +17,6 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;

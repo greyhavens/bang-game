@@ -22,11 +22,9 @@ import com.threerings.parlor.tourney.data.TourneyObject;
 
 import com.threerings.presents.util.SafeSubscriber;
 
-import com.threerings.presents.dobj.DEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.EventListener;
 import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.dobj.Subscriber;

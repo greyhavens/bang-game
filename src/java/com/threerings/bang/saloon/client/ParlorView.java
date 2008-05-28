@@ -4,33 +4,21 @@
 package com.threerings.bang.saloon.client;
 
 import com.jmex.bui.BButton;
-import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
-import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.StringUtil;
 
-import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.AttributeChangeListener;
-import com.threerings.presents.dobj.EntryAddedEvent;
-import com.threerings.presents.dobj.EntryRemovedEvent;
-import com.threerings.presents.dobj.ObjectAccessException;
-import com.threerings.presents.dobj.SetAdapter;
-import com.threerings.presents.dobj.Subscriber;
-import com.threerings.presents.util.SafeSubscriber;
-import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 
 import com.threerings.bang.chat.client.PlaceChatView;
 import com.threerings.bang.client.ShopView;
-import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangBootstrapData;
@@ -39,9 +27,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
-import com.threerings.bang.saloon.data.TableGameObject;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Displays the main Parlor interface wherein a player can meet up with other

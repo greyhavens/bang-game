@@ -5,7 +5,6 @@ package com.threerings.bang.web.logic;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.EnumSet;
 
 import com.samskivert.servlet.util.ParameterUtil;
 import com.samskivert.util.ComparableArrayList;

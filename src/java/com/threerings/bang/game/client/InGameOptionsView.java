@@ -18,7 +18,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.OptionsView;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.TabbedPane;
-import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;

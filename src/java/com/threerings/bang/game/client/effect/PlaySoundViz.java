@@ -6,8 +6,6 @@ package com.threerings.bang.game.client.effect;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
-import com.threerings.bang.game.client.sprite.PieceSprite;
-
 /**
  * Plays the sound that goes along with an effect.
  */

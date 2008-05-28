@@ -5,7 +5,6 @@ package com.threerings.bang.gang.client;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.Spacer;

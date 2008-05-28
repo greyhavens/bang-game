@@ -14,8 +14,6 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +34,6 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
-import com.samskivert.util.Tuple;
 import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -89,7 +86,6 @@ import com.threerings.bang.saloon.data.SaloonObject;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.util.BoardCache;
-import com.threerings.bang.client.util.PerfMonitor;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangAuthResponseData;
@@ -1134,7 +1130,6 @@ public class BangClient extends BasicClient
         _mview.pack();
         _mview.center();
     }
-
 
     protected Handle[] createHandles (String[] strings)
     {

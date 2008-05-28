@@ -3,20 +3,14 @@
 
 package com.threerings.bang.game.data.effect;
 
-import java.awt.Point;
-
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ListUtil;
 
 import com.threerings.bang.game.data.BangObject;
 
-import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.data.piece.Unit;
 
-import static com.threerings.bang.Log.log;
-import java.util.HashMap;
 
 /**
  * Effects that deal with totem pieces.

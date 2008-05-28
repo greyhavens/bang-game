@@ -240,7 +240,6 @@ public class HeroDelegate extends CounterDelegate
         return bonuses;
     }
 
-
     protected byte[] _levels;
     protected int[] _xp;
 

@@ -3,13 +3,10 @@
 
 package com.threerings.bang.game.client.effect;
 
-import java.awt.Point;
 import com.jme.math.Vector3f;
-import com.jme.math.Quaternion;
 
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.client.BangMetrics.*;

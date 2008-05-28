@@ -14,8 +14,6 @@ import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.scenario.HeroDelegate;
 import com.threerings.bang.game.util.PointSet;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * A simple AI for the Hero Building scenario.
  */

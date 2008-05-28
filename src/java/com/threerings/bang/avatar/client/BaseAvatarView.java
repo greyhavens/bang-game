@@ -14,7 +14,6 @@ import java.nio.FloatBuffer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import com.jme.math.Vector2f;
 import com.jme.renderer.Renderer;

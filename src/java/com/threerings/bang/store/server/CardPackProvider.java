@@ -5,7 +5,6 @@ package com.threerings.bang.store.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.samskivert.io.PersistenceException;
 

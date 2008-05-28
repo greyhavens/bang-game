@@ -5,7 +5,6 @@ package com.threerings.bang.web;
 
 import java.io.File;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;

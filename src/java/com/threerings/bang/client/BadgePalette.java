@@ -3,7 +3,6 @@
 
 package com.threerings.bang.client;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 import com.threerings.bang.data.Badge;

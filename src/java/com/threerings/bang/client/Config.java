@@ -8,12 +8,7 @@ import java.lang.reflect.Modifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.prefs.Preferences;
-
-import com.jmex.bui.BCheckBox;
-import com.jmex.bui.event.ActionEvent;
-import com.jmex.bui.event.ActionListener;
 
 import com.threerings.bang.client.util.PerfMonitor;
 import com.threerings.bang.util.BasicContext;

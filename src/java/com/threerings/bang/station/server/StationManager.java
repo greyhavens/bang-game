@@ -118,7 +118,6 @@ public class StationManager extends ShopManager
             return;
         }
 
-
         // go activate the ticket
         BangServer.invoker.postUnit(new PersistingUnit("activateTicket", listener) {
             public void invokePersistent() throws PersistenceException {
