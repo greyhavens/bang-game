@@ -56,7 +56,6 @@
   <path id="classpath">
     <pathelement location="${deploy.dir}/classes"/>
     <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-    <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
   </path>
 
   <!-- declare a classpath for tool tasks -->
