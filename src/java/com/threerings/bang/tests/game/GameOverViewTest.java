@@ -69,7 +69,7 @@ public class GameOverViewTest extends TestApp
         };
         bangobj.playerInfo = new BangObject.PlayerInfo[bangobj.players.length];
         bangobj.awards = new Award[bangobj.players.length];
-        bangobj.roundId = 3;
+        bangobj.sessionId = 3;
         bangobj.scenario = new ForestGuardiansInfo();
         bangobj.perRoundRanks = new short[][] {
             { 0, 1, 2, 3 },

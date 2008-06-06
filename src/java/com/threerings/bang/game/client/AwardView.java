@@ -52,11 +52,11 @@ public class AwardView extends BContainer
               setGap(25).setOffAxisPolicy(GroupLayout.STRETCH));
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
-        boolean isShort =
-            (bconfig.type == BangConfig.Type.BOUNTY || bconfig.type == BangConfig.Type.TUTORIAL ||
-             bconfig.duration == BangConfig.Duration.PRACTICE);
-        boolean isCoop =
-            bangobj.roundId == 1 && bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP;
+        boolean isShort = (bconfig.type == BangConfig.Type.BOUNTY ||
+                           bconfig.type == BangConfig.Type.TUTORIAL ||
+                           bconfig.duration == BangConfig.Duration.PRACTICE);
+        boolean isCoop = (bangobj.roundId == 0 &&
+                          bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP);
 
         BContainer econt = new BContainer(new BorderLayout(0, award.acesEarned > 0 ? 5 : 15));
         econt.setStyleClass("endgame_border");
@@ -72,8 +72,8 @@ public class AwardView extends BContainer
             txt = msgs.get("m.tover_earnings");
             break;
         default:
-            txt = (isCoop ?
-                msgs.get("m.endgame_coop_earnings") : msgs.get("m.endgame_earnings", rankstr));
+            txt = (isCoop ? msgs.get("m.endgame_coop_earnings") :
+                   msgs.get("m.endgame_earnings", rankstr));
         }
         econt.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
 
@@ -109,8 +109,8 @@ public class AwardView extends BContainer
             txt = msgs.get("m.tover_reward");
             break;
         default:
-            txt = (isCoop ?
-                msgs.get("m.endgame_coop_reward") : msgs.get("m.endgame_reward", rankstr));
+            txt = (isCoop ? msgs.get("m.endgame_coop_reward") :
+                   msgs.get("m.endgame_reward", rankstr));
         }
         _table.add(new BLabel(txt, "endgame_smallheader"));
 

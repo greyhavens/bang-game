@@ -792,7 +792,7 @@ public class BangBoardView extends BoardView
         // add some additional information in the center colum
         BContainer info = GroupLayout.makeVBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(
-            "m.marquee_header", MessageBundle.taint(String.valueOf(_bangobj.getRoundIndex() + 1)),
+            "m.marquee_header", MessageBundle.taint(String.valueOf(_bangobj.roundId + 1)),
             MessageBundle.taint(String.valueOf(_bangobj.perRoundRanks.length)),
             _bangobj.scenario.getName());
         _pmarquees.add(new BLabel(msgs.xlate(msg), "marquee_subtitle"),

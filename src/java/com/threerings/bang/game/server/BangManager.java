@@ -288,11 +288,11 @@ public class BangManager extends GameManager
      */
     public String getBoardInfo ()
     {
-        if (_rounds == null || _activeRoundId < 0 || _activeRoundId >= _rounds.length ||
+        if (_rounds == null || _bangobj.roundId < 0 || _bangobj.roundId >= _rounds.length ||
             _bangobj == null || _bangobj.players == null) {
             return "unknown";
         }
-        return _rounds[_activeRoundId].board.name + ":" + Math.max(_bangobj.players.length, 2);
+        return _rounds[_bangobj.roundId].board.name + ":" + Math.max(_bangobj.players.length, 2);
     }
 
     // documentation inherited from interface BangProvider
@@ -308,7 +308,7 @@ public class BangManager extends GameManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        BoardRecord brec = _rounds[_activeRoundId].board;
+        BoardRecord brec = _rounds[_bangobj.roundId].board;
         try {
             listener.requestProcessed(brec.getBoardData());
         } catch (IOException ioe) {
@@ -1041,7 +1041,9 @@ public class BangManager extends GameManager
     /** Starts the pre-game buying phase. */
     protected void startRound (boolean firstRound)
     {
-        _activeRoundId = _bangobj.roundId;
+        // increment the round id
+        _bangobj.setRoundId(_bangobj.roundId+1);
+
         // set the tick to -1 during the pre-round
         _bangobj.tick((short)-1);
 
@@ -1050,7 +1052,7 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < stats.length; ii++) {
             stats[ii] = new StatSet();
         }
-        _rounds[_activeRoundId].stats = stats;
+        _rounds[_bangobj.roundId].stats = stats;
         _bangobj.stats = stats;
 
         // if this is not the first round, we'll have to reset already booted players oids to -1
@@ -1089,31 +1091,30 @@ public class BangManager extends GameManager
         }
 
         // make sure we have a board at all
-        final BoardRecord brec = _rounds[_activeRoundId].board;
-        if (brec == null) {
+        final RoundRecord round = _rounds[_bangobj.roundId];
+        if (round.board == null) {
             log.warning("Missing board, cannot start round [where=" + where() + "].");
             cancelGame();
             return;
         }
 
         // find out if the desired board has been loaded, loading it if not
-        if (_rounds[_activeRoundId].bdata != null) {
+        if (round.bdata != null) {
             continueStartingRound();
             return;
         }
 
-        BangServer.boardmgr.loadBoardData(brec, new ResultListener<BoardRecord>() {
+        BangServer.boardmgr.loadBoardData(round.board, new ResultListener<BoardRecord>() {
             public void requestCompleted (BoardRecord record) {
                 try {
-                    _rounds[_activeRoundId].bdata = record.getBoardData();
+                    round.bdata = record.getBoardData();
                     continueStartingRound();
                 } catch (IOException ioe) {
                     requestFailed(ioe);
                 }
             }
             public void requestFailed (Exception cause) {
-                log.warning("Failed to load or decode board data [brec=" + brec + "].",
-                        cause);
+                log.warning("Failed to load or decode board data", "brec", round.board, cause);
                 cancelGame();
             }
         });
@@ -1138,7 +1139,7 @@ public class BangManager extends GameManager
             break;
 
         default:
-            ScenarioInfo info = ScenarioInfo.getScenarioInfo(_bconfig.getScenario(_activeRoundId));
+            ScenarioInfo info = ScenarioInfo.getScenarioInfo(_bconfig.getScenario(_bangobj.roundId));
             _bangobj.setScenario(info);
             String sclass = info.getScenarioClass();
             try {
@@ -1151,7 +1152,7 @@ public class BangManager extends GameManager
         }
         _scenario.init(this, _bangobj.scenario);
 
-        RoundRecord round = _rounds[_activeRoundId];
+        RoundRecord round = _rounds[_bangobj.roundId];
         round.scenario = _scenario;
 
         // create the logic for our ai players, if any
@@ -1529,7 +1530,7 @@ public class BangManager extends GameManager
                 _bangobj.setLastTick((short)(_bangobj.duration - 1));
 
                 // note this round's duration for later processing
-                _rounds[_activeRoundId].duration = _bangobj.duration;
+                _rounds[_bangobj.roundId].duration = _bangobj.duration;
 
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
@@ -1542,14 +1543,14 @@ public class BangManager extends GameManager
                 // skip players that have abandoned ship
                 if (!isActivePlayer(ii)) {
                     // scenario.roundWillStart could have given players some points
-                    _bangobj.perRoundPoints[_activeRoundId][ii] = -1;
+                    _bangobj.perRoundPoints[_bangobj.roundId][ii] = -1;
                     continue;
                 }
 
                 // note that this player is participating in this round by changing their
                 // perRoundPoints from -1 to zero (since scenario.roundWillStart could have already
                 // added points to this value, will just increase by 1)
-                _bangobj.perRoundPoints[_activeRoundId][ii]++;
+                _bangobj.perRoundPoints[_bangobj.roundId][ii]++;
 
                 // first filter out this player's pieces
                 ArrayList<Piece> ppieces = new ArrayList<Piece>();
@@ -1637,10 +1638,10 @@ public class BangManager extends GameManager
         }
 
         // note that all active players completed this tick
-        _rounds[_activeRoundId].lastTick = tick;
+        _rounds[_bangobj.roundId].lastTick = tick;
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (isActivePlayer(ii)) {
-                _precords[ii].finishedTick[_activeRoundId] = tick;
+                _precords[ii].finishedTick[_bangobj.roundId] = tick;
             }
         }
 
@@ -1716,9 +1717,8 @@ public class BangManager extends GameManager
 
         // determine whether we should end the game
         if (tick >= _bangobj.lastTick) {
-
             // if this is the last round, end the game
-            if (_bangobj.roundId == _bconfig.getRounds()) {
+            if (_bangobj.roundId >= _bconfig.getRounds()-1) {
                 endGame();
             } else {
                 endRound();
@@ -1770,8 +1770,8 @@ public class BangManager extends GameManager
                 if (user != null) {
                     try {
                         user.startTransaction();
-                        user.setLastScenId(_bconfig.getScenario(_activeRoundId));
-                        user.setLastBoardId(_rounds[_activeRoundId].board.boardId);
+                        user.setLastScenId(_bconfig.getScenario(_bangobj.roundId));
+                        user.setLastBoardId(_rounds[_bangobj.roundId].board.boardId);
                     } finally {
                         user.commitTransaction();
                     }
@@ -1781,11 +1781,11 @@ public class BangManager extends GameManager
             // calculate per round rankings
             RankRecord[] ranks = new RankRecord[_bangobj.points.length];
             int[] points = _bangobj.isTeamGame() ?
-                _bangobj.getTeamPoints(_bangobj.perRoundPoints[_activeRoundId]) :
-                _bangobj.perRoundPoints[_activeRoundId];
+                _bangobj.getTeamPoints(_bangobj.perRoundPoints[_bangobj.roundId]) :
+                _bangobj.perRoundPoints[_bangobj.roundId];
             for (int ii = 0; ii < ranks.length; ii++) {
                 ranks[ii] = new RankRecord( ii, points[ii],
-                    _rounds[_activeRoundId].stats[ii].getIntStat(StatType.UNITS_KILLED),
+                    _rounds[_bangobj.roundId].stats[ii].getIntStat(StatType.UNITS_KILLED),
                     (isActivePlayer(ii) ? 1 : 0));
             }
 
@@ -1793,7 +1793,7 @@ public class BangManager extends GameManager
             Arrays.sort(ranks);
             short rank = 0;
             boolean coop = (_bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP);
-            int[] scores = _bangobj.perRoundPoints[_activeRoundId];
+            int[] scores = _bangobj.perRoundPoints[_bangobj.roundId];
             if (coop) {
                 int avgscore = getAverageScore(scores);
                 rank = (short)(BangObject.COOP_RANK + BangServer.ratingmgr.getPercentile(
@@ -1808,7 +1808,7 @@ public class BangManager extends GameManager
                         high = ppoints;
                     }
                 }
-                _bangobj.perRoundRanks[_activeRoundId][ranks[ii].pidx] = rank;
+                _bangobj.perRoundRanks[_bangobj.roundId][ranks[ii].pidx] = rank;
             }
 
             // only count unit usage for rated games
@@ -1832,8 +1832,8 @@ public class BangManager extends GameManager
         // process any played cards
         ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
         ArrayList<StartingCard> removals = new ArrayList<StartingCard>();
-        boolean shortRound = _rounds[_activeRoundId].duration == 0 ||
-                _rounds[_activeRoundId].lastTick < _rounds[_activeRoundId].duration/2;
+        RoundRecord round = _rounds[_bangobj.roundId];
+        boolean shortRound = round.duration == 0 || (round.lastTick < round.duration/2);
         for (Iterator<StartingCard> iter = _scards.values().iterator(); iter.hasNext(); ) {
             StartingCard scard = iter.next();
             if (!scard.played) {
@@ -3481,9 +3481,6 @@ public class BangManager extends GameManager
 
     /** The extra time to take for the current tick to allow extended effects to complete. */
     protected long _extraTickTime;
-
-    /** Store the round id here as the BangObject doesn't track it the way we want. */
-    protected int _activeRoundId;
 
     /** Track failed bounty criteria. */
     protected int _failed = 1;

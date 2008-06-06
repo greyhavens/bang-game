@@ -495,11 +495,12 @@ public class BangController extends GameController
     }
 
     /**
-     * Retrieve stored StatSet from previous rounds.
+     * Retrieve the StatSet for the specified round.
      */
-    public StatSet[] getStatSetArray (int round)
+    public StatSet[] getStatSetArray (int roundId)
     {
-        return _statMap.get(round);
+        // the stats for the current round are in the game object, the rest are cached
+        return (roundId == _bangobj.roundId) ? _bangobj.stats : _statMap.get(roundId);
     }
 
     /**

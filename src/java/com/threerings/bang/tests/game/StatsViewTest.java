@@ -66,7 +66,7 @@ public class StatsViewTest extends TestApp
         bangobj.playerInfo = new BangObject.PlayerInfo[bangobj.players.length];
         bangobj.awards = new Award[bangobj.players.length];
         bangobj.stats = new StatSet[bangobj.players.length];
-        bangobj.roundId = 1;
+        bangobj.sessionId = 1;
         bangobj.state = BangObject.GAME_OVER;
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();

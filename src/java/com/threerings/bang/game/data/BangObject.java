@@ -118,6 +118,9 @@ public class BangObject extends GameObject
     }
 
     // AUTO-GENERATED: FIELDS START
+    /** The field name of the <code>roundId</code> field. */
+    public static final String ROUND_ID = "roundId";
+
     /** The field name of the <code>playerInfo</code> field. */
     public static final String PLAYER_INFO = "playerInfo";
 
@@ -234,6 +237,9 @@ public class BangObject extends GameObject
     /** The minimum card and bonus weight that is allowed in this game or 100 to disable cards and
      * bonuses completely. */
     public transient int minCardBonusWeight;
+
+    /** The id of the current round (counting from zero) or -1 if we haven't started yet. */
+    public int roundId = -1;
 
     /** Avatar fingerprints and other data for each of the players in the game.  We need these in
      * case the player leaves early and so that we can provide fake info for AIs. */
@@ -724,7 +730,7 @@ public class BangObject extends GameObject
     public void grantPoints (int pidx, int amount)
     {
         setPointsAt(points[pidx] + amount, pidx);
-        perRoundPoints[roundId-1][pidx] += amount;
+        perRoundPoints[roundId][pidx] += amount;
         stats[pidx].incrementStat(StatType.POINTS_EARNED, amount);
 
         // keep our point factors up to date (on the server)
@@ -762,16 +768,6 @@ public class BangObject extends GameObject
             }
         }
         return apoints;
-    }
-
-    /**
-     * Returns the current index into any round-related array. Because the {@link #roundId} field
-     * is updated at slightly wonky times, this method has to do some figuring out to return the
-     * proper index.
-     */
-    public int getRoundIndex ()
-    {
-        return roundId - (state == IN_PLAY || state == POST_ROUND || state == GAME_OVER ? 1 : 0);
     }
 
     /**
@@ -852,6 +848,22 @@ public class BangObject extends GameObject
     }
 
     // AUTO-GENERATED: METHODS START
+    /**
+     * Requests that the <code>roundId</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setRoundId (int value)
+    {
+        int ovalue = this.roundId;
+        requestAttributeChange(
+            ROUND_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.roundId = value;
+    }
+
     /**
      * Requests that the <code>playerInfo</code> field be set to the
      * specified value. The local value will be updated immediately and an

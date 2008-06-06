@@ -103,7 +103,7 @@ public class ForestGuardians extends Scenario
             (Rating.MAXIMUM_RATING - Rating.DEFAULT_RATING);
         _difficulty = Math.max(0, Math.round(rratio * MAX_INITIAL_DIFFICULTY));
 
-        String sdata = _bangmgr.getBangConfig().getScenarioData(bangobj.roundId - 1);
+        String sdata = _bangmgr.getBangConfig().getScenarioData(bangobj.roundId);
         if (!StringUtil.isBlank(sdata)) {
             try {
                 int diff = Integer.parseInt(sdata);
@@ -207,7 +207,7 @@ public class ForestGuardians extends Scenario
         Arrays.fill(_payouts,
                 (maxPoints > 0 ? _waveBonus + 60 + (95 - 60) * treePoints / maxPoints : 0));
 
-        int[] points = bangobj.perRoundPoints[bangobj.roundId-1];
+        int[] points = bangobj.perRoundPoints[bangobj.roundId];
         int[] spoints = new ArrayIntSet(points).toIntArray();
         if (spoints.length >= 2) {
             for (int ii = 0; ii < _payouts.length; ii++) {

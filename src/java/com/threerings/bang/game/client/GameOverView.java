@@ -95,7 +95,7 @@ public class GameOverView extends SteelWindow
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
 
         // display the players' avatars in rank order
-        if (bangobj.roundId == 1 && bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP) {
+        if (bangobj.roundId == 0 && bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP) {
             BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
             _contents.add(row);
             row.add(new CoopFinalistView(ctx, bangobj, ctrl));
@@ -128,7 +128,7 @@ public class GameOverView extends SteelWindow
                         if (rank == 0) {
                             who.add(view);
                             who.add(split);
-                            if (bangobj.roundId > 1) {
+                            if (bangobj.roundId > 0) {
                                 split.add(new Spacer(1, 20));
                             }
                             split.add(losers);
@@ -155,7 +155,7 @@ public class GameOverView extends SteelWindow
                     if (ii == 0) {
                         who.add(view);
                         who.add(split);
-                        if (bangobj.roundId > 1) {
+                        if (bangobj.roundId > 0) {
                             split.add(new Spacer(1, 20));
                         }
                         split.add(losers);
@@ -167,7 +167,7 @@ public class GameOverView extends SteelWindow
             _contents.add(who);
 
             // display a summary of your round ranks for a multi-round game
-            if (bangobj.roundId > 1 && pidx > -1) {
+            if (bangobj.roundId > 0 && pidx > -1) {
                 BContainer ranks = new BContainer(new TableLayout(3, 2, 5));
                 for (int ii = 0; ii < bangobj.perRoundRanks.length; ii++) {
                     String msg = msgs.get("m.endgame_round", "" + (ii + 1));

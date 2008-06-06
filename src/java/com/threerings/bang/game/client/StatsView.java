@@ -44,6 +44,7 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 
+import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -139,19 +140,27 @@ public class StatsView extends SteelWindow
     protected void showPage (int page)
     {
         switch (page) {
-          case 0:
+        case 0:
             showPoints(false);
             break;
-          case 1:
-            showStats(0);
+        case 1:
+            // if the game is over, show the overall stats
+            if (_bobj.state == BangObject.GAME_OVER) {
+                // but if this was a one round game, skip the summarizing
+                showStats(_bobj.roundId > 0 ? -1 : 0);
+            } else {
+                // otherwise show the just finished round's stats; the server has already advanced
+                // roundId to the next round, so we have to back up one
+                showStats(_bobj.roundId-1);
+            }
             break;
-          default:
-            // show the rounds in reverse order
-            showStats(_bobj.roundId + 2 - page);
+        default:
+            showStats(_bobj.roundId + (2-page)); // show the rounds in reverse order
+            break;
         }
 
-        if (_bobj.state == BangObject.GAME_OVER && _bobj.roundId > 1) {
-            _forward.setEnabled(page < _bobj.roundId + 1);
+        if (_bobj.state == BangObject.GAME_OVER && _bobj.roundId > 0) {
+            _forward.setEnabled(page < _bobj.roundId + 2);
         } else {
             _forward.setEnabled(page < 1);
         }
@@ -314,8 +323,7 @@ public class StatsView extends SteelWindow
             BContainer cont = new BContainer(hlay);
             cont.setPreferredSize(new Dimension(400, 50));
             int secondary = 0;
-            _labels[ii] = new BLabel[_objectives[ii] + secLabels +
-                (_showMultiplier ? 2 : 1)];
+            _labels[ii] = new BLabel[_objectives[ii] + secLabels + (_showMultiplier ? 2 : 1)];
             Dimension apref = aview.getPreferredSize(-1, -1);
             int y = (apref.height - _objectiveIcons[0][0].getHeight()) / 2;
 
@@ -326,32 +334,28 @@ public class StatsView extends SteelWindow
                 cont.add(_labels[ii][0], GroupLayout.FIXED);
                 final int lwidth = offset - iwidth - 20;
                 _labels[ii][1] = new BLabel("" + secondary, "endgame_total") {
-                    protected Dimension computePreferredSize (
-                            int hhint, int vhint) {
+                    protected Dimension computePreferredSize (int hhint, int vhint) {
                         Dimension d = super.computePreferredSize(hhint, vhint);
                         d.width = Math.max(lwidth, d.width);
                         return d;
                     }
                 };
                 cont.add(_labels[ii][1], GroupLayout.FIXED);
-                cont.add(_labels[ii][2] = new BLabel("+", "endgame_smalltotal"),
-                        GroupLayout.FIXED);
+                cont.add(_labels[ii][2] = new BLabel("+", "endgame_smalltotal"), GroupLayout.FIXED);
                 if (_objectives[ii] == 0) {
                     _labels[ii][2].setAlpha(0f);
                     _labels[ii][2] = new BLabel("");
                 }
             }
 
-            cont.add(objectiveIconContainer(
-                        ii, secLabels, maxobjectives, maxIcons, iwidth, y),
+            cont.add(objectiveIconContainer(ii, secLabels, maxobjectives, maxIcons, iwidth, y),
                      GroupLayout.FIXED);
 
             // Add the multiplier label
             if (_showMultiplier) {
                 _labels[ii][_objectives[ii] + secLabels] = new BLabel(
-                        _msgs.xlate(MessageBundle.tcompose(
-                                "m.multiplier", _objectives[ii])),
-                        "endgame_total");
+                    _msgs.xlate(MessageBundle.tcompose("m.multiplier", _objectives[ii])),
+                    "endgame_total");
                 if (_objectives[ii] > 0 || _secStatType == null) {
                     cont.add(_labels[ii][_objectives[ii] + secLabels]);
                 } else {
@@ -364,8 +368,7 @@ public class StatsView extends SteelWindow
 
             // Add the total label
             _labels[ii][_labels[ii].length - 1] = new BLabel(
-                    _msgs.xlate(MessageBundle.tcompose(
-                            "m.equals", _scenPoints[ii])), "endgame_total");
+                _msgs.xlate(MessageBundle.tcompose("m.equals", _scenPoints[ii])), "endgame_total");
             _objcont.add(_labels[ii][_labels[ii].length - 1]);
 
             // Start everything as invisible
@@ -382,11 +385,10 @@ public class StatsView extends SteelWindow
     }
 
     /**
-     * Returns a container with all the primary and secondary objective
-     * icons and scoring values.
+     * Returns a container with all the primary and secondary objective icons and scoring values.
      */
-    protected BContainer objectiveIconContainer (int pidx, int secLabels,
-            int maxobjectives, int maxIcons, int iwidth, int y)
+    protected BContainer objectiveIconContainer (
+        int pidx, int secLabels, int maxobjectives, int maxIcons, int iwidth, int y)
     {
         iwidth--;
         BContainer icont = new BContainer(new AbsoluteLayout());
@@ -402,11 +404,9 @@ public class StatsView extends SteelWindow
                 idx++;
             }
             objs[idx]--;
-            _labels[pidx][jj + secLabels] = new BLabel(
-                    _objectiveIcons[pidx][idx]);
+            _labels[pidx][jj + secLabels] = new BLabel(_objectiveIcons[pidx][idx]);
             if (maxobjectives > maxIcons) {
-                x += jj * (maxIcons - 1) * iwidth /
-                    (maxobjectives - 1);
+                x += jj * (maxIcons - 1) * iwidth / (maxobjectives - 1);
             } else {
                 x += jj * iwidth;
             }
@@ -440,11 +440,10 @@ public class StatsView extends SteelWindow
      */
     protected void startObjectiveAnimation ()
     {
-        // Add an interval to have the icons appear in sequence after
-        // a short delay
+        // add an interval to have the icons appear in sequence after a short delay
         _showing = 0;
         _closeBtn.setEnabled(false);
-        Interval showObjectives = new Interval(_ctx.getApp()) {
+        new Interval(_ctx.getApp()) {
             public void expired () {
                 if (!showObjectiveLabels(_showing)) {
                     BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
@@ -452,21 +451,18 @@ public class StatsView extends SteelWindow
                         int length = _labels[ii].length;
                         _labels[ii][length - 1].setAlpha(1f);
                     }
-                    Interval showPoints = new Interval(_ctx.getApp()) {
+                    new Interval(_ctx.getApp()) {
                         public void expired () {
                             showPoints(true);
                         }
-                    };
-                    showPoints.schedule(OBJECTIVE_DISPLAY);
+                    }.schedule(OBJECTIVE_DISPLAY);
                 } else {
                     BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
                     _showing++;
                     this.schedule(ANIM_DELAY);
                 }
             }
-        };
-        showObjectives.schedule(1000L);
-
+        }.schedule(1000L);
     }
 
     /**
@@ -503,33 +499,30 @@ public class StatsView extends SteelWindow
             _ptscont.setPreferredSize(TABLE_DIMS);
 
             // add the titles
-            if (_bobj.roundId > 1 || _bobj.state != BangObject.GAME_OVER) {
-                _ptscont.add(new BLabel(_msgs.xlate(MessageBundle.tcompose(
-                                    "m.stats_round_header", _bobj.roundId)),
-                            "endgame_title"));
+            if (_bobj.roundId > 0 || _bobj.state != BangObject.GAME_OVER) {
+                // the server starts the new round immediately, so _bangobj.roundId is already set
+                // to the next round when we're showing points for the previous round; so unless
+                // the game is over (in which case roundId will remain at the last round's id) we
+                // need to account for the roundId mismatch
+                int round = _bobj.roundId + (_bobj.state == BangObject.GAME_OVER ? 1 : 0);
+                String msg = MessageBundle.tcompose("m.stats_round_header", round);
+                _ptscont.add(new BLabel(_msgs.xlate(msg), "endgame_title"));
             } else {
                 _ptscont.add(new Spacer(0, height));
             }
-            _ptscont.add(new BLabel(_msgs.get(_objectivePoints),
-                        "endgame_smallheader"));
+            _ptscont.add(new BLabel(_msgs.get(_objectivePoints), "endgame_smallheader"));
             _ptscont.add(new Spacer(0, height));
-            _ptscont.add(new BLabel(_msgs.get("m.damage_points"),
-                        "endgame_smallheader"));
+            _ptscont.add(new BLabel(_msgs.get("m.damage_points"), "endgame_smallheader"));
             _ptscont.add(new Spacer(0, height));
-            _ptscont.add(new BLabel(_msgs.get("m.star_points"),
-                        "endgame_smallheader"));
+            _ptscont.add(new BLabel(_msgs.get("m.star_points"), "endgame_smallheader"));
             _ptscont.add(new Spacer(0, height));
-            _ptscont.add(new BLabel(_msgs.get("m.total"),
-                        "endgame_header"));
+            _ptscont.add(new BLabel(_msgs.get("m.total"), "endgame_header"));
 
-            BIcon damageIcon = new ImageIcon(_ctx.loadImage(
-                            "ui/postgame/icons/damage.png"));
-            BIcon starIcon = new ImageIcon(_ctx.loadImage(
-                            "ui/postgame/icons/star.png"));
-
-            _labels = new BLabel[size][];
+            BIcon damageIcon = new ImageIcon(_ctx.loadImage("ui/postgame/icons/damage.png"));
+            BIcon starIcon = new ImageIcon(_ctx.loadImage("ui/postgame/icons/star.png"));
 
             // add the data
+            _labels = new BLabel[size][];
             for (int ii = 0; ii < size; ii++) {
                 BLabel[] labels = new BLabel[7];
                 int points = getIntStat(ii, StatType.POINTS_EARNED);
@@ -538,8 +531,7 @@ public class StatsView extends SteelWindow
                 _ptscont.add(makeAvatarView(ii));
                 _ptscont.add(labels[0] = new BLabel(
                         String.valueOf(_scenPoints[ii]), "endgame_smalltotal"));
-                labels[0].setIcon(_statTypes.length == 1 ?
-                    _objectiveIcons[0][0] : _secIcon);
+                labels[0].setIcon(_statTypes.length == 1 ? _objectiveIcons[0][0] : _secIcon);
                 _ptscont.add(labels[1] = new BLabel("+", "endgame_smalltotal"));
                 _ptscont.add(labels[2] = new BLabel(
                         String.valueOf(damagePoints), "endgame_smalltotal"));
@@ -549,16 +541,14 @@ public class StatsView extends SteelWindow
                         String.valueOf(starPoints), "endgame_smalltotal"));
                 labels[4].setIcon(starIcon);
                 _ptscont.add(labels[5] = new BLabel("=", "endgame_total"));
-                _ptscont.add(labels[6] = new BLabel(
-                        String.valueOf(points), "endgame_total"));
+                _ptscont.add(labels[6] = new BLabel(String.valueOf(points), "endgame_total"));
                 _labels[ii] = labels;
             }
         } else {
             setContents(_ptscont);
         }
 
-        // Add an interval to have the icons appear in sequence after
-        // a short delay
+        // Add an interval to have the icons appear in sequence after a short delay
         if (animate) {
             for (int ii = 0; ii < _labels.length; ii++) {
                 for (int jj = 0; jj < _labels[ii].length; jj++) {
@@ -566,7 +556,7 @@ public class StatsView extends SteelWindow
                 }
             }
             _showing = 0;
-            Interval showTotals = new Interval(_ctx.getApp()) {
+            new Interval(_ctx.getApp()) {
                 public void expired () {
                     for (int ii = 0; ii < _labels.length; ii++) {
                         if (_showing < _labels[ii].length) {
@@ -584,8 +574,7 @@ public class StatsView extends SteelWindow
                         startCountdown();
                     }
                 }
-            };
-            showTotals.schedule(1000L);
+            }.schedule(1000L);
         } else {
             _forward.setEnabled(true);
             _closeBtn.setEnabled(true);
@@ -596,12 +585,9 @@ public class StatsView extends SteelWindow
     /**
      * Shows the detailed stats view.
      */
-    protected void showStats (int round)
+    protected void showStats (int roundId)
     {
-        if (_bobj.state != BangObject.GAME_OVER || _bobj.roundId == 1) {
-            round = _bobj.roundId;
-        }
-        BContainer statcont = _statmap.get(round);
+        BContainer statcont = _statmap.get(roundId);
         if (statcont != null) {
             setContents(statcont);
             return;
@@ -623,7 +609,7 @@ public class StatsView extends SteelWindow
         statcont = new BContainer(hlay);
         statcont.setPreferredSize(TABLE_DIMS);
         setContents(statcont);
-        _statmap.put(round, statcont);
+        _statmap.put(roundId, statcont);
 
         GroupLayout vlay = GroupLayout.makeVert(GroupLayout.TOP);
         vlay.setGap(2);
@@ -632,18 +618,16 @@ public class StatsView extends SteelWindow
 
         // add a round header if necessary
         String roundheader = null;
-        if (_bobj.roundId != 1 || _bobj.state != BangObject.GAME_OVER) {
-            if (round == 0) {
+        if (_bobj.roundId != 0 || _bobj.state != BangObject.GAME_OVER) {
+            if (roundId == -1) {
                 roundheader = _msgs.get("m.overall");
-            } else if (_bobj.roundId > 1) {
-                roundheader = _msgs.xlate(MessageBundle.tcompose(
-                                "m.stats_round_header", round));
+            } else if (_bobj.roundId > 0) {
+                roundheader = _msgs.xlate(MessageBundle.tcompose("m.stats_round_header", roundId+1));
             }
         }
         if (roundheader != null) {
             avcont.add(new BLabel(roundheader, "endgame_title") {
-                protected Dimension computePreferredSize (
-                        int hhint, int vhint) {
+                protected Dimension computePreferredSize (int hhint, int vhint) {
                     Dimension d = super.computePreferredSize(hhint, vhint);
                     d.height = Math.max(HEADER_HEIGHT - 2, d.height);
                     return d;
@@ -661,28 +645,23 @@ public class StatsView extends SteelWindow
 
         statcont.add(new Spacer(1, 1));
 
-        // Get the statSet, or generate a cummulative statSet for an
-        // overall display
+        // get the statSet for this round, or generate a cummulative set for an overall display
         StatSet[] statSet;
-        if (round == _bobj.roundId) {
-            statSet = _bobj.stats;
-        } else if (round == 0) {
+        if (roundId == -1) {
             statSet = new StatSet[_bobj.stats.length];
-            for (int ii = 1; ii <= _bobj.roundId; ii++) {
-                StatSet[] tmpset = (ii == _bobj.roundId) ?
-                    _bobj.stats : _ctrl.getStatSetArray(ii);
-                for (int jj = 0; jj < statSet.length; jj++) {
-                    if (statSet[jj] == null) {
-                        statSet[jj] = new StatSet();
-                    }
+            for (int ii = 0; ii < statSet.length; ii++) {
+                statSet[ii] = new StatSet();
+            }
+            for (int rr = 0; rr <= _bobj.roundId; rr++) {
+                StatSet[] tmpset = _ctrl.getStatSetArray(rr);
+                for (int ii = 0; ii < statSet.length; ii++) {
                     for (StatType type : BASE_STAT_TYPES) {
-                        statSet[jj].incrementStat(
-                                type, getIntStat(jj, tmpset, type));
+                        statSet[ii].incrementStat(type, getIntStat(ii, tmpset, type));
                     }
                 }
             }
         } else {
-            statSet = _ctrl.getStatSetArray(round);
+            statSet = _ctrl.getStatSetArray(roundId);
         }
         if (statSet == null) {
             return;
