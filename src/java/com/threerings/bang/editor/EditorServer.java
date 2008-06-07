@@ -3,6 +3,8 @@
 
 package com.threerings.bang.editor;
 
+import com.google.inject.Injector;
+
 import com.threerings.presents.server.LocalDObjectMgr;
 import com.threerings.presents.server.PresentsDObjectMgr;
 
@@ -16,27 +18,26 @@ import static com.threerings.bang.Log.log;
  */
 public class EditorServer extends CrowdServer
 {
+    /** Configures dependencies needed by the Editor server. */
+    public static class Module extends CrowdServer.Module
+    {
+        @Override protected void configure () {
+            bind(PresentsDObjectMgr.class).to(LocalDObjectMgr.class);
+        }
+    }
+
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
 
-    /**
-     * Initializes all of the server services and prepares for operation.
-     */
-    public void init ()
+    @Override // from CrowdServer
+    public void init (Injector injector)
         throws Exception
     {
-        // do the base server initialization
-        super.init();
+        super.init(injector);
 
         // initialize our managers
         parmgr.init(invmgr, plreg);
 
         log.info("Bang! Editor server initialized.");
-    }
-
-    // documentation inherited
-    protected PresentsDObjectMgr createDObjectManager ()
-    {
-        return new LocalDObjectMgr();
     }
 }

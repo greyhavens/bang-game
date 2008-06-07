@@ -3,47 +3,51 @@
 
 package com.threerings.bang.tourney.server;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.RunQueue;
 
-import com.threerings.bang.server.BangServer;
-import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.tourney.data.TourniesObject;
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.ShutdownManager;
 
 import com.threerings.parlor.tourney.server.TourneyManager;
 import com.threerings.parlor.tourney.server.TourniesManager;
 import com.threerings.parlor.tourney.server.TourniesDispatcher;
 import com.threerings.parlor.tourney.data.TourneyConfig;
 
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.server.InvocationException;
+import com.threerings.bang.server.BangServer;
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.tourney.data.TourniesObject;
 
 /**
  * Manages all tournaments running on a bang server.
  */
+@Singleton
 public class BangTourniesManager extends TourniesManager
     implements BangCodes
 {
     public static final String TOURNEY_DB_IDENT = "tourneydb";
 
-    public BangTourniesManager (ConnectionProvider conprov)
-        throws PersistenceException
+    @Inject public BangTourniesManager (ShutdownManager shutmgr)
     {
-        super(conprov);
+        super(shutmgr);
     }
 
-    @Override // documentation inherited
-    public void init ()
+    @Override // from TourniesManager
+    public void init (ConnectionProvider conprov)
+        throws PersistenceException
     {
         // create the distributed object that holds the active tournies
         _tobj = BangServer.omgr.registerObject(new TourniesObject());
         BangServer.invmgr.registerDispatcher(new TourniesDispatcher(this), GLOBAL_GROUP);
-        BangServer.registerShutdowner(this);
 
-        super.init();
+        super.init(conprov);
     }
 
     // documentation inherited

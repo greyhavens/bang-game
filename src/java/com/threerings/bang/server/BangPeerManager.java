@@ -5,6 +5,8 @@ package com.threerings.bang.server;
 
 import java.util.Date;
 
+import com.google.inject.Inject;
+
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.Tuple;
@@ -20,6 +22,7 @@ import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.peer.server.persist.NodeRecord;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
+import com.threerings.presents.server.ShutdownManager;
 
 import com.threerings.crowd.peer.server.CrowdPeerManager;
 
@@ -64,6 +67,14 @@ public class BangPeerManager extends CrowdPeerManager
          * Called when a remote player changes his handle.
          */
         public void remotePlayerChangedHandle (int townIndex, Handle oldHandle, Handle newHandle);
+    }
+
+    /**
+     * Creates an uninitialized peer manager.
+     */
+    @Inject public BangPeerManager (ShutdownManager shutmgr)
+    {
+        super(shutmgr);
     }
 
     /**

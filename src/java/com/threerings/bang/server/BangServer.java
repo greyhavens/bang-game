@@ -7,6 +7,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.jdbc.TransitionRepository;
@@ -16,9 +19,7 @@ import com.samskivert.util.AuditLogger;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
-import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.ObserverList;
-import com.samskivert.util.OneLineLogFormatter;
 
 import com.threerings.admin.server.AdminProvider;
 import com.threerings.admin.server.ConfigRegistry;
@@ -35,6 +36,7 @@ import com.threerings.presents.server.ClientFactory;
 import com.threerings.presents.server.ClientResolver;
 import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.server.PresentsDObjectMgr;
+import com.threerings.presents.server.ReportManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.data.BodyObject;
@@ -88,6 +90,15 @@ import static com.threerings.bang.Log.log;
  */
 public class BangServer extends CrowdServer
 {
+    /** Configures dependencies needed by the Bang server. */
+    public static class Module extends CrowdServer.Module
+    {
+        @Override protected void configure () {
+            super.configure();
+            bind(ReportManager.class).to(BangReportManager.class);
+        }
+    }
+
     /**
      * Implemented by objects that wish to be notified when players log on and off,
      * or changes their handle.
@@ -249,8 +260,32 @@ public class BangServer extends CrowdServer
         }
     }
 
+    /**
+     * The main entry point for the Bang server.
+     */
+    public static void main (String[] args)
+    {
+        // if we're on the dev server, up our long invoker warning to 3 seconds
+        if (ServerConfig.config.getValue("auto_restart", false)) {
+            Invoker.setDefaultLongThreshold(3000L);
+        }
+
+        Injector injector = Guice.createInjector(new Module());
+        BangServer server = injector.getInstance(BangServer.class);
+        try {
+            server.init(injector);
+            server.run();
+            // annoyingly some background threads are hanging, so stick a fork in them for the time
+            // being; when run() returns the dobj mgr and invoker thread will already have exited
+            System.exit(0);
+        } catch (Exception e) {
+            log.warning("Server initialization failed.", e);
+            System.exit(-1);
+        }
+    }
+
     @Override // documentation inherited
-    public void init ()
+    public void init (Injector injector)
         throws Exception
     {
         // create out database connection provider this must be done before calling super.init()
@@ -265,7 +300,7 @@ public class BangServer extends CrowdServer
         playrepo = new PlayerRepository(conprov);
 
         // do the base server initialization
-        super.init();
+        super.init(injector);
 
         // create and start up our auth invoker
         authInvoker = new Invoker("auth_invoker", omgr);
@@ -302,8 +337,8 @@ public class BangServer extends CrowdServer
         // create our various supporting managers
         playmgr = new PlayerManager();
         gangmgr = new GangManager();
-        tournmgr = new BangTourniesManager(conprov);
-        ratingmgr = new RatingManager();
+        tournmgr = injector.getInstance(BangTourniesManager.class);
+        ratingmgr = injector.getInstance(RatingManager.class);
         coinmgr = new BangCoinManager(conprov, actionrepo);
         coinexmgr = new BangCoinExchangeManager(conprov);
         actionmgr = new AccountActionManager(omgr, actionrepo);
@@ -313,7 +348,7 @@ public class BangServer extends CrowdServer
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
             log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
-            peermgr = new BangPeerManager();
+            peermgr = injector.getInstance(BangPeerManager.class);
         }
 
         // create and set up our configuration registry and admin service
@@ -373,7 +408,7 @@ public class BangServer extends CrowdServer
         boardmgr.init(conprov);
         playmgr.init(conprov);
         gangmgr.init(conprov);
-        tournmgr.init();
+        tournmgr.init(conprov);
         ratingmgr.init(conprov);
         coinexmgr.init();
         adminmgr.init(this);
@@ -568,12 +603,6 @@ public class BangServer extends CrowdServer
         return DeploymentConfig.getServerPorts(ServerConfig.townId);
     }
 
-    @Override // documentation inherited
-    protected void logReport (String report)
-    {
-        _stlog.log(report);
-    }
-
     @Override // from PresentsServer
     protected void invokerDidShutdown ()
     {
@@ -606,27 +635,11 @@ public class BangServer extends CrowdServer
         }
     }
 
-    public static void main (String[] args)
+    /** Used to direct our server reports to an audit log file. */
+    protected static class BangReportManager extends ReportManager
     {
-        // set up the proper logging services
-        com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
-        OneLineLogFormatter.configureDefaultHandler();
-
-        // if we're on the dev server, up our long invoker warning to 3 seconds
-        if (ServerConfig.config.getValue("auto_restart", false)) {
-            Invoker.setDefaultLongThreshold(3000L);
-        }
-
-        BangServer server = new BangServer();
-        try {
-            server.init();
-            server.run();
-            // annoyingly some background threads are hanging, so stick a fork in them for the time
-            // being; when run() returns the dobj mgr and invoker thread will already have exited
-            System.exit(0);
-        } catch (Exception e) {
-            log.warning("Server initialization failed.", e);
-            System.exit(-1);
+        @Override protected void logReport (String report) {
+            _stlog.log(report);
         }
     }
 

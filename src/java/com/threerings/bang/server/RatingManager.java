@@ -9,17 +9,21 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.inject.Inject;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 
+import com.threerings.presents.server.ShutdownManager;
+
 import com.threerings.parlor.rating.util.Percentiler;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.server.persist.RatingRepository.RankLevels;
 import com.threerings.bang.server.persist.RatingRepository.TrackerKey;
+import com.threerings.bang.server.persist.RatingRepository;
 
 import static com.threerings.bang.Log.*;
 
@@ -27,8 +31,13 @@ import static com.threerings.bang.Log.*;
  * Manages rating bits.
  */
 public class RatingManager
-    implements BangServer.Shutdowner
+    implements ShutdownManager.Shutdowner
 {
+    @Inject public RatingManager (ShutdownManager shutmgr)
+    {
+        shutmgr.registerShutdowner(this);
+    }
+
     /**
      * Prepares the rating manager for operation.
      */
@@ -40,9 +49,6 @@ public class RatingManager
         // load up our scoring percentile trackers
         _trackers = new HashMap<TrackerKey, Percentiler>();
         _ratingrepo.loadScoreTrackers(_trackers);
-
-        // register to be shutdown when the server shuts down
-        BangServer.registerShutdowner(this);
 
         // if we're a town server, queue up an interval to periodically grind our ratings tables
         // and one to sync our score trackers
@@ -92,7 +98,7 @@ public class RatingManager
         return pct;
     }
 
-    // from BangServer.Shutdowner
+    // from RatingManager.Shutdowner
     public void shutdown ()
     {
         log.info("Rating manager shutting down.");
