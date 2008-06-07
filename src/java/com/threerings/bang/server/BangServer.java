@@ -411,7 +411,7 @@ public class BangServer extends CrowdServer
         tournmgr.init(conprov);
         ratingmgr.init(conprov);
         coinexmgr.init();
-        adminmgr.init(this);
+        adminmgr.init(_shutmgr, omgr);
         if (peermgr != null) {
             peermgr.init(perCtx, invoker, ServerConfig.nodename, ServerConfig.sharedSecret,
                          ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);

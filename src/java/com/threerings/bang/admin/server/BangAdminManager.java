@@ -7,7 +7,9 @@ import com.samskivert.util.Interval;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.RebootManager;
+import com.threerings.presents.server.ShutdownManager;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -30,10 +32,10 @@ public class BangAdminManager
     /**
      * Prepares the admin manager for operation.
      */
-    public void init (BangServer server)
+    public void init (ShutdownManager shutmgr, RootDObjectManager omgr)
     {
-        _server = server;
-        _rebmgr = new BangRebootManager(server);
+        _shutmgr = shutmgr;
+        _rebmgr = new BangRebootManager(shutmgr, omgr);
 
         // create and configure our status object
         statobj = BangServer.omgr.registerObject(new StatusObject());
@@ -56,7 +58,7 @@ public class BangAdminManager
         // if this is a zero minute reboot, just do the deed
         if (minutes == 0) {
             log.info("Performing immediate shutdown [for=" + initiator + "].");
-            _server.shutdown();
+            _shutmgr.shutdown();
             return;
         }
 
@@ -80,8 +82,8 @@ public class BangAdminManager
     /** Used to manage automatic reboots. */
     protected class BangRebootManager extends RebootManager
     {
-        public BangRebootManager (BangServer server) {
-            super(server);
+        public BangRebootManager (ShutdownManager shutmgr, RootDObjectManager omgr) {
+            super(shutmgr, omgr);
         }
 
         public void scheduleReboot (long rebootTime, String initiator) {
@@ -122,6 +124,6 @@ public class BangAdminManager
         }
     };
 
-    protected BangServer _server;
+    protected ShutdownManager _shutmgr;
     protected BangRebootManager _rebmgr;
 }

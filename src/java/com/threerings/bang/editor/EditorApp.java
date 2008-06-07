@@ -7,6 +7,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
@@ -32,11 +35,11 @@ public class EditorApp extends JmeCanvasApp
         // save these for later
         appArgs = args;
 
-        // create our editor server which we're going to run in the same
-        // JVM with the client
-        EditorServer server = new EditorServer();
+        // create our editor server which we're going to run in the same JVM with the client
+        Injector injector = Guice.createInjector(new EditorServer.Module());
+        EditorServer server = injector.getInstance(EditorServer.class);
         try {
-            server.init();
+            server.init(injector);
         } catch (Exception e) {
             log.warning("Unable to initialize server.", e);
         }
