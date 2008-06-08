@@ -3,6 +3,7 @@
 
 package com.threerings.bang.chat.server;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.threerings.presents.server.InvocationManager;
