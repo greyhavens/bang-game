@@ -192,7 +192,7 @@ public class ParlorManager extends PlaceManager
         }
 
         SpeakUtil.sendAttention(other, SALOON_MSGS, "m.booted");
-        BangServer.plreg.locprov.moveBody(other, _salmgr.getLocation());
+        BangServer.locman.moveBody(other, _salmgr.getLocation());
         _bootSet.add(boi.playerId);
     }
 
