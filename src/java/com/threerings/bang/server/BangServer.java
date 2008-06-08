@@ -316,11 +316,11 @@ public class BangServer extends CrowdServer
 
         // configure the client manager to use the appropriate client class
         clmgr.setClientFactory(new ClientFactory() {
-            public PresentsClient createClient (AuthRequest areq) {
-                return new BangClient();
+            public Class<? extends PresentsClient> getClientClass (AuthRequest areq) {
+                return BangClient.class;
             }
-            public ClientResolver createClientResolver (Name username) {
-                return new BangClientResolver();
+            public Class<? extends ClientResolver> getClientResolverClass (Name username) {
+                return BangClientResolver.class;
             }
         });
 
