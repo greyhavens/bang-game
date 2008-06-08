@@ -37,9 +37,8 @@ public class BangPeerNode extends PeerNode
     /** A mapping from playerId to client info record for all players online on this peer. */
     public HashIntMap<BangClientInfo> players = new HashIntMap<BangClientInfo>();
 
-    public BangPeerNode (BangPeerManager peermgr, NodeRecord record)
+    public BangPeerNode (BangPeerManager peermgr)
     {
-        super(peermgr, record);
         _bpmgr = peermgr;
     }
 

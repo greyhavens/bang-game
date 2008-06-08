@@ -9,8 +9,9 @@ import java.util.Properties;
 import com.samskivert.util.Config;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.presents.server.Authenticator;
+
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.server.BangAuthenticator;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -62,16 +63,17 @@ public class ServerConfig
      * Instantiates and returns the authenticator that the server will use to authenticate client
      * connections.
      */
-    public static BangAuthenticator getAuthenticator ()
+    public static Class<? extends Authenticator> getAuthenticator ()
     {
         String aclass = config.getValue("server_auth", "");
         try {
             if (!StringUtil.isBlank(aclass)) {
-                return (BangAuthenticator)Class.forName(aclass).newInstance();
+                @SuppressWarnings("unchecked") Class<? extends Authenticator> clazz =
+                    (Class<? extends Authenticator>)Class.forName(aclass);
+                return clazz;
             }
         } catch (Exception e) {
-            log.warning("Failed to instantiate authenticator " +
-                    "[class=" + aclass + "]", e);
+            log.warning("Failed to instantiate authenticator [class=" + aclass + "]", e);
         }
         return null;
     }

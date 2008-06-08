@@ -293,9 +293,9 @@ public class BangPeerManager extends CrowdPeerManager
     }
 
     @Override // from PeerManager
-    protected PeerNode createPeerNode (NodeRecord record)
+    protected PeerNode createPeerNode ()
     {
-        return new BangPeerNode(this, record);
+        return new BangPeerNode(this);
     }
 
     @Override // from CrowdPeerManager

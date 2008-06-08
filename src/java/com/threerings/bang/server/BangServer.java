@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -97,6 +98,7 @@ public class BangServer extends CrowdServer
             super.configure();
             bind(ReportManager.class).to(BangReportManager.class);
             bind(ChatProvider.class).to(BangChatProvider.class);
+            bind(Authenticator.class).to(ServerConfig.getAuthenticator());
         }
     }
 
@@ -307,6 +309,10 @@ public class BangServer extends CrowdServer
         authInvoker = new Invoker("auth_invoker", omgr);
         authInvoker.setDaemon(true);
         authInvoker.start();
+
+        // set up our authenticator
+        author = (BangAuthenticator)_author;
+        author.init();
 
         // configure the client manager to use the appropriate client class
         clmgr.setClientFactory(new ClientFactory() {
@@ -582,17 +588,6 @@ public class BangServer extends CrowdServer
     }
 
     @Override // documentation inherited
-    protected Authenticator createAuthenticator ()
-    {
-        // set up our authenticator (and keep a reference to it)
-        author = ServerConfig.getAuthenticator();
-        if (author == null) {
-            throw new RuntimeException("Unable to create authenticator. We're doomed!");
-        }
-        return author;
-    }
-
-    @Override // documentation inherited
     protected int[] getListenPorts ()
     {
         return DeploymentConfig.getServerPorts(ServerConfig.townId);
@@ -637,6 +632,9 @@ public class BangServer extends CrowdServer
             _stlog.log(report);
         }
     }
+
+    /** Our configured authenticator. */
+    @Inject Authenticator _author;
 
     protected long _codeModified;
 

@@ -17,6 +17,11 @@ import com.threerings.presents.server.Authenticator;
 public abstract class BangAuthenticator extends Authenticator
 {
     /**
+     * Called during server initialization to initialize our authenticator.
+     */
+    public abstract void init ();
+
+    /**
      * Called to indicate that an account has become an active Bang! player (played for the first
      * time) or is no longer an active Bang! player (their Bang! data has been purged).
      */
@@ -34,10 +39,4 @@ public abstract class BangAuthenticator extends Authenticator
      * Checks whether the specified player has any pending rewards, redeeming them in the process.
      */
     public abstract ArrayList<String> redeemRewards (String username, String ident);
-
-    @Override // from Authenticator
-    protected Invoker getInvoker ()
-    {
-        return BangServer.authInvoker;
-    }
 }

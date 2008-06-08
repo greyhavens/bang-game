@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.StringUtil;
@@ -56,9 +58,11 @@ import static com.threerings.bang.data.BangAuthCodes.*;
 /**
  * Delegates authentication to the OOO user manager.
  */
+@Singleton
 public class OOOAuthenticator extends BangAuthenticator
 {
-    public OOOAuthenticator ()
+    @Override // from abstract BangAuthenticator
+    public void init ()
     {
         try {
             // we get our user manager configuration from the ocean config
@@ -66,15 +70,14 @@ public class OOOAuthenticator extends BangAuthenticator
                                           BangServer.conprov);
             _authrep = (OOOUserRepository)_usermgr.getRepository();
             _siteident = new JDBCTableSiteIdentifier(BangServer.conprov);
-
             _rewardrep = new RewardRepository(BangServer.conprov);
+
         } catch (PersistenceException pe) {
-            log.warning("Failed to initialize OOO authenticator. " +
-                    "Users will be unable to log in.", pe);
+            log.warning("Failed to initialize OOO authenticator.", pe);
         }
     }
 
-    // from abstract BangAuthenticator
+    @Override // from abstract BangAuthenticator
     public void setAccountIsActive (String username, boolean isActive)
         throws PersistenceException
     {
@@ -82,7 +85,7 @@ public class OOOAuthenticator extends BangAuthenticator
         _authrep.updateUserIsActive(username, OOOUser.IS_ACTIVE_BANG_PLAYER, isActive);
     }
 
-    // from abstract BangAuthenticator
+    @Override // from abstract BangAuthenticator
     public String createAccount (String username, String password, String email, String affiliate,
             String machIdent, Date birthdate)
         throws PersistenceException
@@ -134,7 +137,7 @@ public class OOOAuthenticator extends BangAuthenticator
         }
     }
 
-    // from abstract BangAuthenticator
+    @Override // from abstract BangAuthenticator
     public ArrayList<String> redeemRewards (String username, String ident)
     {
         // redeem any rewards for which they have become eligible
@@ -162,7 +165,7 @@ public class OOOAuthenticator extends BangAuthenticator
         return new BangAuthResponseData();
     }
 
-    // from abstract Authenticator
+    @Override // from abstract Authenticator
     protected void processAuthentication (AuthingConnection conn, AuthResponse rsp)
         throws PersistenceException
     {
@@ -312,7 +315,8 @@ public class OOOAuthenticator extends BangAuthenticator
                     townidx++;
                 }
             }
-            log.info("townidx=" + townidx + ", townId=" + townId + ", serverTownIdx=" + serverTownIdx);
+            log.info("townidx=" + townidx + ", townId=" + townId +
+                     ", serverTownIdx=" + serverTownIdx);
 
             if (townidx < serverTownIdx && !user.isAdmin()) {
                 log.warning("Rejecting access to town server by non-ticket-holder " +
