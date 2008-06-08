@@ -3,6 +3,10 @@
 
 package com.threerings.bang.chat.server;
 
+import com.google.inject.Singleton;
+
+import com.threerings.presents.server.InvocationManager;
+
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.data.BodyObject;
@@ -15,11 +19,16 @@ import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
 
 /**
- * Extends the normal {@link ChatProvider} so that we can avatar information
- * along with our tells.
+ * Extends the normal {@link ChatProvider} so that we can avatar information along with our tells.
  */
+@Singleton
 public class BangChatProvider extends ChatProvider
 {
+    @Inject public BangChatProvider (InvocationManager invmgr)
+    {
+        super(invmgr);
+    }
+
     @Override // documentation inherited
     public void deliverTell (BodyObject target, UserMessage message)
     {

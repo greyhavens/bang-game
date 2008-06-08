@@ -96,6 +96,7 @@ public class BangServer extends CrowdServer
         @Override protected void configure () {
             super.configure();
             bind(ReportManager.class).to(BangReportManager.class);
+            bind(ChatProvider.class).to(BangChatProvider.class);
         }
     }
 
@@ -389,12 +390,6 @@ public class BangServer extends CrowdServer
                 return _players.get(visibleName);
             }
         };
-    }
-
-    @Override // documentation inherited
-    protected ChatProvider createChatProvider ()
-    {
-        return new BangChatProvider();
     }
 
     /**
