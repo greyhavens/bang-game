@@ -41,7 +41,6 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
-import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.crowd.data.BodyObject;
@@ -854,8 +853,7 @@ public class BangManager extends GameManager
 
         // set up the bang object
         _bangobj = (BangObject)_gameobj;
-        _bangobj.setService((BangMarshaller)
-                            PresentsServer.invmgr.registerDispatcher(new BangDispatcher(this)));
+        _bangobj.setService((BangMarshaller)_invmgr.registerDispatcher(new BangDispatcher(this)));
         _bangobj.addListener(_ticklst);
         _bangobj.addListener(BangServer.playmgr.receivedChatListener);
         _bconfig = (BangConfig)_gameconfig;
@@ -918,7 +916,7 @@ public class BangManager extends GameManager
     protected void didShutdown ()
     {
         super.didShutdown();
-        PresentsServer.invmgr.clearDispatcher(_bangobj.service);
+        _invmgr.clearDispatcher(_bangobj.service);
         BangServer.adminmgr.statobj.removeFromGames(_bangobj.getOid());
         _bangobj.removeListener(BangServer.playmgr.receivedChatListener);
         log.info("Manager shutdown [where=" + where() + "].");
@@ -3222,7 +3220,7 @@ public class BangManager extends GameManager
         public int state;
 
         public PreGameTimer () {
-            super(BangServer.omgr);
+            super(_omgr);
         }
 
         public void expired () {
@@ -3249,7 +3247,7 @@ public class BangManager extends GameManager
     }
 
     /** Triggers our board tick once every N seconds. */
-    protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
+    protected Interval _ticker = _ticker = new Interval(_omgr) {
         public void expired () {
             // cope if the game has been ended and destroyed since we were queued up for execution
             if (!_bangobj.isActive() || _bangobj.state != BangObject.IN_PLAY) {
