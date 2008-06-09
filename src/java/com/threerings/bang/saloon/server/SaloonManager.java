@@ -254,7 +254,12 @@ public class SaloonManager extends MatchHostManager
         ParlorObject parobj = (ParlorObject)parmgr.getPlaceObject();
         Handle creator = parobj.info.creator;
         _parlors.remove(creator);
-        _salobj.removeFromParlors(creator);
+
+        // if the parlor is shutting down during server shutdown we may not have our saloon object
+        // anymore, in which case we need not worry about updating it
+        if (_salobj != null) {
+            _salobj.removeFromParlors(creator);
+        }
     }
 
     protected static void commitTopRanked (final TopRankObject rankobj, final TopRankedList list)
