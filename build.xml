@@ -1168,7 +1168,7 @@
 
       <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
             distribution="${ooo.distribution}">
-        <package destroot="${pkgroot.server}">
+        <package destroot="${pkgroot.node}">
           <info>
             <name>${app.name}-server-${pnode}</name>
             <version>${pkgVersion}</version>
