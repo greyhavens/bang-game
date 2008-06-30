@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-
 import com.jme.intersection.PickData;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.light.DirectionalLight;

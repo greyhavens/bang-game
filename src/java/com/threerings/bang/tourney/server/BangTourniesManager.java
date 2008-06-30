@@ -8,7 +8,6 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.samskivert.io.PersistenceException;
-import com.samskivert.util.RunQueue;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -24,7 +23,6 @@ import com.threerings.parlor.tourney.data.TourneyConfig;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.server.BangServer;
 import com.threerings.bang.tourney.data.TourniesObject;
 
 /**

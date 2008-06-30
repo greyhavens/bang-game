@@ -11,9 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-
-
-
 import com.threerings.bang.game.data.BangBoard;
 
 /**

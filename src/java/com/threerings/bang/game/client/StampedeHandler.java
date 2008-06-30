@@ -14,7 +14,6 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.StampedeEffect;
 
-
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

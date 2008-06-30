@@ -100,7 +100,6 @@ import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.client.BangService;
 import com.threerings.bang.game.data.BangConfig;
-import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.ModifiableDSet;

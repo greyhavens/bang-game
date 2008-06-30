@@ -4,7 +4,6 @@
 package com.threerings.bang.server;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import com.google.inject.Guice;
@@ -17,10 +16,8 @@ import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.jdbc.depot.PersistenceContext;
 
 import com.samskivert.util.AuditLogger;
-import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
-import com.samskivert.util.ObserverList;
 
 import com.threerings.admin.server.AdminProvider;
 import com.threerings.admin.server.ConfigRegistry;
@@ -40,7 +37,6 @@ import com.threerings.presents.server.PresentsDObjectMgr;
 import com.threerings.presents.server.ReportManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
-import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.server.BodyLocator;
 import com.threerings.crowd.server.CrowdServer;
 
@@ -76,7 +72,6 @@ import com.threerings.bang.store.data.StoreConfig;
 import com.threerings.bang.store.server.StoreManager;
 import com.threerings.bang.tourney.server.BangTourniesManager;
 
-import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.TownObject;
 import com.threerings.bang.server.persist.BangStatRepository;

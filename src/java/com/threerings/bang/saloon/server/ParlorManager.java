@@ -6,7 +6,6 @@ package com.threerings.bang.saloon.server;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Throttle;
 
-
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
@@ -28,7 +27,6 @@ import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
-import com.threerings.bang.saloon.data.ParlorMarshaller;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 

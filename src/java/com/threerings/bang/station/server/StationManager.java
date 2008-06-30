@@ -26,7 +26,6 @@ import com.threerings.bang.server.persist.FinancialAction;
 
 import com.threerings.bang.station.client.StationService;
 import com.threerings.bang.station.data.StationCodes;
-import com.threerings.bang.station.data.StationMarshaller;
 import com.threerings.bang.station.data.StationObject;
 
 import static com.threerings.bang.Log.log;

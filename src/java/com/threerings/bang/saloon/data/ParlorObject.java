@@ -5,7 +5,6 @@ package com.threerings.bang.saloon.data;
 
 import com.threerings.crowd.data.PlaceObject;
 
-
 /**
  * Contains information shared among all occupants of a back parlor room.
  */

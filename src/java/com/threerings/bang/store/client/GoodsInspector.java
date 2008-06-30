@@ -311,7 +311,6 @@ public class GoodsInspector extends BContainer
         }
     }
 
-
     protected ActionListener _colorpal = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             ColorSelector colorsel = (ColorSelector)event.getSource();

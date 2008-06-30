@@ -29,7 +29,6 @@ import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.TextureCache;
 
-
 /**
  * Provides access to the various services needed by any application associated
  * with Bang!.

@@ -13,7 +13,6 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.presents.peer.server.PeerNode;
-import com.threerings.presents.peer.server.persist.NodeRecord;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
 

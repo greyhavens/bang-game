@@ -5,11 +5,7 @@ package com.threerings.bang.tourney.server;
 
 import com.threerings.util.Name;
 
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.crowd.data.BodyObject;
 

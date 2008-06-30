@@ -17,7 +17,6 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.WireframeState;
 import com.jme.util.geom.Debugger;
 
-
 import com.jmex.terrain.util.AbstractHeightMap;
 import com.jmex.terrain.util.FaultFractalHeightMap;
 import com.jmex.terrain.util.MidPointHeightMap;

@@ -78,7 +78,6 @@ public class Tactician extends Unit
         return ((shooter instanceof Unit) && effect.isDeflectable());
     }
 
-
     /** Used to deflect shots. */
     protected static short[] DX = { 0, -1, 0, 1 }, DY = { -1, 0, 1, 0 };
 }

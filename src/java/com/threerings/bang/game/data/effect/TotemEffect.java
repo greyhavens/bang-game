@@ -11,7 +11,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.data.piece.Unit;
 
-
 /**
  * Effects that deal with totem pieces.
  */

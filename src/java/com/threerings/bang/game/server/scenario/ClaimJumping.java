@@ -26,7 +26,6 @@ import com.threerings.bang.game.server.ai.GoldLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
-
 /**
  * A gameplay scenario wherein:
  * <ul>

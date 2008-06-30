@@ -19,7 +19,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.SaloonObject;
 
-
 /**
  * Manages the client side of the Saloon.
  */

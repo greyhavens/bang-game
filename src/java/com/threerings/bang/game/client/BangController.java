@@ -209,7 +209,6 @@ public class BangController extends GameController
         // determine our player index
         _pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
 
-
         // we may be returning to an already started game
         if (_bangobj.state != BangObject.PRE_GAME) {
             stateDidChange(_bangobj.state);

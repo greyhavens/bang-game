@@ -16,7 +16,6 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-
 import com.samskivert.swing.GroupLayout;
 import com.samskivert.swing.VGroupLayout;
 

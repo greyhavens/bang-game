@@ -29,12 +29,10 @@ import com.threerings.bang.server.ServerConfig;
 
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
-
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.ParlorConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorObject;
-import com.threerings.bang.saloon.data.SaloonMarshaller;
 import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;

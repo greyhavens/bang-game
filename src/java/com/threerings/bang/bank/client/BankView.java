@@ -167,7 +167,6 @@ public class BankView extends ShopView
         cost.add(new BLabel(_msgs.get("m.cost_pass"), "pass_cost"));
         _contents.add(cost, new Rectangle(507, 183, 285, 50));
 
-
         _contents.add(new BLabel(new BlankIcon(800, 24), "bank_divider"), new Point(30, 118));
         _contents.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/bank/heading_gold_coins.png"))),
                     new Point(60, 128));

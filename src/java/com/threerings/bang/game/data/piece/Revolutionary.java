@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import com.threerings.bang.data.UnitConfig;
 
-
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;
 

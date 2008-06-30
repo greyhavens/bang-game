@@ -5,7 +5,6 @@ package com.threerings.bang.admin.server;
 
 import com.threerings.bang.admin.data.BangAdminMarshaller;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
 

@@ -6,7 +6,6 @@ package com.threerings.bang.game.data.effect;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
-
 /**
  * A base class for an effect that affects all pieces in a particular
  * area.

@@ -9,7 +9,6 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.server.InvocationException;
 
-
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.CardItem;

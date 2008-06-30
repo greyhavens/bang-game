@@ -5,7 +5,6 @@ package com.threerings.bang.game.client.sprite;
 
 import com.threerings.bang.game.data.piece.Piece;
 
-
 /**
  * Displays homesteads for the land grab scenario.
  */

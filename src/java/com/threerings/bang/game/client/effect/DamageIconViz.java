@@ -11,7 +11,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
 
-
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.IconConfig;

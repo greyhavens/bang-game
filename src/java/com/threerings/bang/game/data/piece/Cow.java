@@ -16,7 +16,6 @@ import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.util.PieceUtil;
 import com.threerings.bang.game.util.PointSet;
 
-
 /**
  * Handles the behavior of the cow piece which is used in cattle rustling and
  * other scenarios.

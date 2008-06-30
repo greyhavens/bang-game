@@ -13,7 +13,6 @@ import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
-
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;

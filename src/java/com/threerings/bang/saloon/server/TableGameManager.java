@@ -34,7 +34,6 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorGameConfig.Slot;
 import com.threerings.bang.saloon.data.SaloonCodes;
-import com.threerings.bang.saloon.data.TableGameMarshaller;
 import com.threerings.bang.saloon.data.TableGameObject;
 
 import static com.threerings.bang.Log.log;

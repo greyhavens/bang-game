@@ -13,7 +13,6 @@ import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
-
 /**
  * Handles some special custom behavior needed for the Buffalo Rider.
  */

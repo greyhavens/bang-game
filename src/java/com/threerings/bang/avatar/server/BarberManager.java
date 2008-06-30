@@ -18,7 +18,6 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
 
-
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.GuestHandle;
@@ -33,7 +32,6 @@ import com.threerings.bang.avatar.client.AvatarService;
 import com.threerings.bang.avatar.client.BarberService;
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberCodes;
-import com.threerings.bang.avatar.data.BarberMarshaller;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;

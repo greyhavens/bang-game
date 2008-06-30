@@ -6,7 +6,6 @@ package com.threerings.bang.game.client;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;

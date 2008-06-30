@@ -6,7 +6,6 @@ package com.threerings.bang.util;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;

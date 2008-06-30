@@ -5,7 +5,6 @@ package com.threerings.bang.game.client.sprite;
 
 import com.threerings.jme.model.Model;
 
-
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Track;

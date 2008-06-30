@@ -23,7 +23,6 @@ import com.threerings.bang.server.ShopManager;
 
 import com.threerings.bang.store.client.StoreService;
 import com.threerings.bang.store.data.Good;
-import com.threerings.bang.store.data.StoreMarshaller;
 import com.threerings.bang.store.data.StoreObject;
 
 import static com.threerings.bang.Log.log;

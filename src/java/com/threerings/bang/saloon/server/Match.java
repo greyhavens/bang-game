@@ -24,7 +24,6 @@ import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.MatchObject;
 
-
 /**
  * Contains information about a pending match-up.
  */

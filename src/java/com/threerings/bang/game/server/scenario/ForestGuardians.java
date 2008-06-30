@@ -11,7 +11,6 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 
-
 import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
 import com.threerings.stats.data.StatSet;

@@ -6,7 +6,6 @@ package com.threerings.bang.ranch.server;
 import com.threerings.bang.ranch.data.RanchMarshaller;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.util.Name;

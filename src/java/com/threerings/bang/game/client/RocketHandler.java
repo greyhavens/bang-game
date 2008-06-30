@@ -27,7 +27,6 @@ import com.threerings.bang.game.data.effect.RocketEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
-
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 import static com.threerings.bang.game.client.BallisticShotHandler.*;

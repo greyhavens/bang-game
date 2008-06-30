@@ -22,7 +22,6 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jmex.effects.particles.ParticleMesh;
 
-
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.game.client.effect.ParticlePool;

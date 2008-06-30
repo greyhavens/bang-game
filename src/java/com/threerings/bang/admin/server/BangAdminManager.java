@@ -15,7 +15,6 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
 
-import com.threerings.bang.admin.data.BangAdminMarshaller;
 import com.threerings.bang.admin.data.StatusObject;
 
 import static com.threerings.bang.Log.log;

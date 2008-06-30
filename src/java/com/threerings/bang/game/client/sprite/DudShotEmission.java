@@ -31,7 +31,6 @@ import com.threerings.jme.model.TextureProvider;
 
 import com.threerings.bang.util.RenderUtil;
 
-
 /**
  * A dud shot effect.
  */

@@ -44,7 +44,6 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 
-import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

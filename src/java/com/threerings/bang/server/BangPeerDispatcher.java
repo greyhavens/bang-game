@@ -8,7 +8,6 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
 

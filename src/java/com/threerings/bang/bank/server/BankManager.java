@@ -23,7 +23,6 @@ import com.threerings.bang.server.ShopManager;
 
 import com.threerings.bang.bank.client.BankService;
 import com.threerings.bang.bank.data.BankCodes;
-import com.threerings.bang.bank.data.BankMarshaller;
 import com.threerings.bang.bank.data.BankObject;
 
 /**

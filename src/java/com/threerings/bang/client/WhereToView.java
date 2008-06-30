@@ -18,7 +18,6 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
-
 import com.threerings.bang.game.data.TutorialCodes;
 
 import com.threerings.bang.client.bui.SteelWindow;

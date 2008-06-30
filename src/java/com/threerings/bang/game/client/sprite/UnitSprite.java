@@ -28,7 +28,6 @@ import com.threerings.jme.sprite.SpriteObserver;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
-
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.BangCodes;

@@ -47,7 +47,6 @@ import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
-import com.threerings.bang.gang.data.HideoutMarshaller;
 import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.RentalGood;

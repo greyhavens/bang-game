@@ -7,7 +7,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import com.samskivert.io.PersistenceException;
-import com.samskivert.util.Invoker;
 
 import com.threerings.presents.server.Authenticator;
 

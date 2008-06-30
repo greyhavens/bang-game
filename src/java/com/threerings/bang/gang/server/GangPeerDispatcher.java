@@ -11,7 +11,6 @@ import com.threerings.bang.gang.data.GangPeerMarshaller;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
 

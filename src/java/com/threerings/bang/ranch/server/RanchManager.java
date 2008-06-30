@@ -25,7 +25,6 @@ import com.threerings.bang.server.persist.FinancialAction;
 
 import com.threerings.bang.ranch.client.RanchService;
 import com.threerings.bang.ranch.data.RanchCodes;
-import com.threerings.bang.ranch.data.RanchMarshaller;
 import com.threerings.bang.ranch.data.RanchObject;
 
 import static com.threerings.bang.Log.log;

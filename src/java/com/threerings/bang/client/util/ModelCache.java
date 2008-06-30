@@ -42,7 +42,6 @@ import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
 
-
 /**
  * Maintains a cache of resolved 3D models.
  */

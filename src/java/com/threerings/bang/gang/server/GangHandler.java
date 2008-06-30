@@ -51,7 +51,6 @@ import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.chat.server.SpeakHandler;
@@ -98,7 +97,6 @@ import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
-import com.threerings.bang.gang.data.GangPeerMarshaller;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
