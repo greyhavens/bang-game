@@ -85,7 +85,7 @@ public class BarberManager extends ShopManager
     public void getSnapshot (int playerId, ResultListener<AvatarInfo> listener)
     {
         // if they're online it's easy peasy
-        PlayerObject user = BangServer.lookupPlayer(playerId);
+        PlayerObject user = BangServer.locator.lookupPlayer(playerId);
         if (user != null) {
             listener.requestCompleted(user.getLook(Look.Pose.WANTED_POSTER).getAvatar(user));
             return;
@@ -333,7 +333,7 @@ public class BarberManager extends ShopManager
                     user.addToInventory(article);
                     // register the player with their handle as we were unable
                     // to do so when they logged on
-                    BangServer.updatePlayer(user, ohandle);
+                    BangServer.locator.updatePlayer(user, ohandle);
                     continueCreatingAvatar(user, look, cl);
                 }
             }
@@ -514,7 +514,7 @@ public class BarberManager extends ShopManager
         protected void actionCompleted () {
             Handle ohandle = _user.handle;
             _user.setHandle(_handle);
-            BangServer.updatePlayer(_user, ohandle);
+            BangServer.locator.updatePlayer(_user, ohandle);
             _listener.requestProcessed();
             super.actionCompleted();
         }

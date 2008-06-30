@@ -75,8 +75,8 @@ import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.WeightClassUpgrade;
 import com.threerings.bang.server.BangPeerManager.RemotePlayerObserver;
+import com.threerings.bang.server.PlayerLocator;
 import com.threerings.bang.server.BangServer;
-import com.threerings.bang.server.BangServer.PlayerObserver;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.PeerFinancialAction;
 import com.threerings.bang.server.persist.ProxyFinancialAction;
@@ -115,9 +115,9 @@ import static com.threerings.bang.Log.*;
  * Manages a single gang from resolution to destruction.
  */
 public class GangHandler
-    implements DroppedLockObserver, PlayerObserver, RemotePlayerObserver, MessageListener,
-        AttributeChangeListener, SetListener, ObjectDeathListener, SpeakHandler.SpeakerValidator,
-        GangPeerProvider, GangCodes
+    implements DroppedLockObserver, PlayerLocator.PlayerObserver, RemotePlayerObserver,
+               MessageListener, AttributeChangeListener, SetListener, ObjectDeathListener,
+               SpeakHandler.SpeakerValidator, GangPeerProvider, GangCodes
 {
     /** The amount of time in hours required between leader commands for each leader level. */
     public static final int[] LEADER_LEVEL_WAITS = {
@@ -363,19 +363,19 @@ public class GangHandler
         }
     }
 
-    // documentation inherited from interface PlayerObserver
+    // documentation inherited from interface PlayerLocator.PlayerObserver
     public void playerLoggedOn (PlayerObject user)
     {
         playerLocationChanged(user.handle, -1, ServerConfig.townIndex);
     }
 
-    // documentation inherited from interface PlayerObserver
+    // documentation inherited from interface PlayerLocator.PlayerObserver
     public void playerLoggedOff (PlayerObject user)
     {
         playerLocationChanged(user.handle, ServerConfig.townIndex, -1);
     }
 
-    // documentation inherited from interface PlayerObserver
+    // documentation inherited from interface PlayerLocator.PlayerObserver
     public void playerChangedHandle (PlayerObject user, Handle oldHandle)
     {
         // we handle this the same way for local and remote users
@@ -420,7 +420,7 @@ public class GangHandler
         UserMessage umsg = (UserMessage)msg;
         for (GangMemberEntry member : _gangobj.members) {
             if (member.townIdx == ServerConfig.townIndex && !member.isInHideout()) {
-                PlayerObject user = BangServer.lookupPlayer(member.playerId);
+                PlayerObject user = BangServer.locator.lookupPlayer(member.playerId);
                 if (user != null) {
                     BangServer.chatprov.deliverTell(user, umsg);
                 } else {
@@ -474,7 +474,7 @@ public class GangHandler
 
         // set the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
-        PlayerObject user = BangServer.lookupPlayer(entry.playerId);
+        PlayerObject user = BangServer.locator.lookupPlayer(entry.playerId);
         if (user != null) {
             initPlayer(user, entry);
         }
@@ -560,7 +560,7 @@ public class GangHandler
         // clear the user's gang fields, reimburse part of his donation (if he's getting kicked
         // out), and purge his looks if he's online
         Handle handle = (Handle)event.getKey();
-        PlayerObject user = BangServer.lookupPlayer(handle);
+        PlayerObject user = BangServer.locator.lookupPlayer(handle);
         if (user == null) {
             return;
         }
@@ -623,7 +623,7 @@ public class GangHandler
 
         // update the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
-        PlayerObject user = BangServer.lookupPlayer(entry.playerId);
+        PlayerObject user = BangServer.locator.lookupPlayer(entry.playerId);
         if (user == null) {
             return;
         }
@@ -1655,7 +1655,7 @@ public class GangHandler
         boolean maleItem = true;
         final Item citem = (Item)item.clone();
         for (GangMemberEntry member : _gangobj.members) {
-            PlayerObject user = BangServer.lookupPlayer(member.playerId);
+            PlayerObject user = BangServer.locator.lookupPlayer(member.playerId);
             if (user != null && item.canBeOwned(user) && !user.holdsEquivalentItem(citem)) {
                 userIds.add(user.playerId);
             }
@@ -1671,7 +1671,7 @@ public class GangHandler
             }
             public void handleSuccess () {
                 for (Item item : _items) {
-                    PlayerObject user = BangServer.lookupPlayer(item.getOwnerId());
+                    PlayerObject user = BangServer.locator.lookupPlayer(item.getOwnerId());
                     if (user != null) {
                         user.addToInventory(item);
                     }
@@ -2068,7 +2068,7 @@ public class GangHandler
         for (GangMemberEntry entry : _gangobj.members) {
             initTownIndex(entry);
         }
-        BangServer.addPlayerObserver(this);
+        BangServer.locator.addPlayerObserver(this);
         if (BangServer.peermgr != null) {
             BangServer.peermgr.addPlayerObserver(this);
             BangServer.peermgr.addDroppedLockObserver(this);
@@ -2352,7 +2352,7 @@ public class GangHandler
         GangMemberEntry[] members = _gangobj.members.toArray(
             new GangMemberEntry[_gangobj.members.size()]);
         for (GangMemberEntry member : members) {
-            PlayerObject user = BangServer.lookupPlayer(member.playerId);
+            PlayerObject user = BangServer.locator.lookupPlayer(member.playerId);
             if (user != null) {
                 initPlayer(user, member);
             }
@@ -2392,7 +2392,7 @@ public class GangHandler
         // if there are members still online, we will have to re-resolve; hopefully
         // this will happen so quickly that no one will notice
         for (GangMemberEntry member : _gangobj.members) {
-            if (BangServer.lookupPlayer(member.playerId) != null) {
+            if (BangServer.locator.lookupPlayer(member.playerId) != null) {
                 log.warning("Proxied gang vanished while members still online [gang=" +
                     this + "].");
                 BangServer.gangmgr.resolveGang(_gangId);
@@ -2410,7 +2410,7 @@ public class GangHandler
         _actival.cancel();
         _unloadval.cancel();
 
-        BangServer.removePlayerObserver(this);
+        BangServer.locator.removePlayerObserver(this);
         if (BangServer.peermgr != null) {
             BangServer.peermgr.removePlayerObserver(this);
             BangServer.peermgr.removeDroppedLockObserver(this);
@@ -2439,7 +2439,7 @@ public class GangHandler
         final GangMemberEntry leader = _gangobj.getSeniorLeader();
         PlayerObject user = (leader == null) ? null :
             ((player != null && player.playerId == leader.playerId) ?
-                player : BangServer.lookupPlayer(leader.playerId));
+                player : BangServer.locator.lookupPlayer(leader.playerId));
         if (user != null) {
             if (_avupdater == null || _avatarId != user.playerId) {
                 if (_avupdater != null) {
@@ -2494,7 +2494,7 @@ public class GangHandler
         InvocationService.ConfirmListener listener)
     {
         // TODO: notify the inviter if he's on another server
-        PlayerObject invobj = BangServer.lookupPlayer(inviter);
+        PlayerObject invobj = BangServer.locator.lookupPlayer(inviter);
         if (invobj != null) {
             SpeakUtil.sendInfo(invobj, GANG_MSGS,
                 MessageBundle.tcompose(
@@ -2522,7 +2522,7 @@ public class GangHandler
      */
     protected void initTownIndex (GangMemberEntry entry)
     {
-        PlayerObject user = BangServer.lookupPlayer(entry.playerId);
+        PlayerObject user = BangServer.locator.lookupPlayer(entry.playerId);
         if (user != null) {
             entry.townIdx = (byte)ServerConfig.townIndex;
             return;

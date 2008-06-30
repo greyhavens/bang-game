@@ -77,7 +77,7 @@ public class BangClient extends CrowdClient
                 " sid:" + creds.affiliate);
 
         // register the player with their handle
-        BangServer.registerPlayer(user);
+        BangServer.locator.registerPlayer(user);
 
         // if we have auth data in the form of a token ring, use it
         if (_authdata instanceof BangTokenRing) {
@@ -134,7 +134,7 @@ public class BangClient extends CrowdClient
 
         // clear out our handle to player object registration
         PlayerObject user = (PlayerObject)_clobj;
-        BangServer.clearPlayer(user);
+        BangServer.locator.clearPlayer(user);
 
         // this session is over, make a note of it
         recordEndedSession();

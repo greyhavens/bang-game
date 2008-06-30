@@ -488,7 +488,7 @@ public class GangManager
     public void sendGangInvite (
         Handle invitee, Handle inviter, int gangId, Handle name, String message)
     {
-        PlayerObject user = BangServer.lookupPlayer(invitee);
+        PlayerObject user = BangServer.locator.lookupPlayer(invitee);
         if (user != null) {
             sendGangInviteLocal(user, inviter, gangId, name, message);
         } else if (BangServer.peermgr != null) {

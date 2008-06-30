@@ -32,7 +32,7 @@ public class LobbyManager extends PlaceManager
         _lobobj.setScenarios(ScenarioInfo.getScenarioIds(ServerConfig.townId, false));
 
         // create a manager for our tables
-        _tablemgr = new TableManager(getPlaceObject());
+        _tablemgr = new TableManager(_omgr, _invmgr, _registry, getPlaceObject());
     }
 
     @Override // documentation inherited

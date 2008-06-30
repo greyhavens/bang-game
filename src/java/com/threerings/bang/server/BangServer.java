@@ -41,6 +41,7 @@ import com.threerings.presents.server.ReportManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.data.BodyObject;
+import com.threerings.crowd.server.BodyLocator;
 import com.threerings.crowd.server.CrowdServer;
 
 import com.threerings.parlor.server.ParlorManager;
@@ -96,32 +97,14 @@ public class BangServer extends CrowdServer
     {
         @Override protected void configure () {
             super.configure();
+            ConnectionProvider conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+            bind(ConnectionProvider.class).toInstance(conprov);
+            bind(PersistenceContext.class).toInstance(new PersistenceContext("bangdb", conprov));
             bind(ReportManager.class).to(BangReportManager.class);
             bind(ChatProvider.class).to(BangChatProvider.class);
             bind(Authenticator.class).to(ServerConfig.getAuthenticator());
+            bind(BodyLocator.class).to(PlayerLocator.class);
         }
-    }
-
-    /**
-     * Implemented by objects that wish to be notified when players log on and off,
-     * or changes their handle.
-     */
-    public static interface PlayerObserver
-    {
-        /**
-         * Called when a player logs on.
-         */
-        public void playerLoggedOn (PlayerObject user);
-
-        /**
-         * Called when a player logs off.
-         */
-        public void playerLoggedOff (PlayerObject user);
-
-        /**
-         * Called when a player changes their handle.
-         */
-        public void playerChangedHandle (PlayerObject user, Handle oldHandle);
     }
 
     /** The connection provider used to obtain access to our JDBC databases. */
@@ -133,9 +116,8 @@ public class BangServer extends CrowdServer
     /** Used to coordinate transitions to persistent data. */
     public static TransitionRepository transitrepo;
 
-    /** A resource manager with which we can load resources in the same manner
-     * that the client does (for resources that are used on both the server and
-     * client). */
+    /** A resource manager with which we can load resources in the same manner that the client does
+     * (for resources that are used on both the server and client). */
     public static ResourceManager rsrcmgr;
 
     /** Maintains a registry of runtime configuration information. */
@@ -154,11 +136,14 @@ public class BangServer extends CrowdServer
     /** A reference to the authenticator in use by the server. */
     public static BangAuthenticator author;
 
+    /** Used to lookup players that are online. */
+    public static PlayerLocator locator;
+
     /** Communicates with the other servers in our cluster. */
     public static BangPeerManager peermgr;
 
     /** The parlor manager in operation on this server. */
-    public static ParlorManager parmgr = new ParlorManager();
+    public static ParlorManager parmgr;
 
     /** Handles the processing of account actions. */
     public static AccountActionManager actionmgr;
@@ -288,19 +273,23 @@ public class BangServer extends CrowdServer
     }
 
     @Override // documentation inherited
-    public void init (Injector injector)
+    public void init (final Injector injector)
         throws Exception
     {
         // create out database connection provider this must be done before calling super.init()
-        conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+        conprov = _conprov;
         perCtx = new PersistenceContext("bangdb", conprov);
 
         // create our transition manager prior to doing anything else
         transitrepo = new TransitionRepository(conprov);
 
-        // TEMP: the authenticator is going to access the player repository, so it needs to
-        // be created here
+        // TEMP: the authenticator is going to access the player repository, so it needs to be
+        // created here
         playrepo = new PlayerRepository(conprov);
+
+        // set up some legacy static references
+        locator = _locator;
+        parmgr = _parmgr;
 
         // do the base server initialization
         super.init(injector);
@@ -368,7 +357,7 @@ public class BangServer extends CrowdServer
         omgr.postRunnable(new PresentsDObjectMgr.LongRunnable () {
             public void run () {
                 try {
-                    finishInit();
+                    finishInit(injector);
                 } catch (Exception e) {
                     log.warning("Server initialization failed.", e);
                     System.exit(-1);
@@ -388,33 +377,22 @@ public class BangServer extends CrowdServer
         }
     }
 
-    @Override // documentation inherited
-    protected BodyLocator createBodyLocator ()
-    {
-        return new BodyLocator() {
-            public BodyObject get (Name visibleName) {
-                return _players.get(visibleName);
-            }
-        };
-    }
-
     /**
      * This is called once our runtime configuration is available.
      */
-    protected void finishInit ()
+    protected void finishInit (Injector injector)
         throws Exception
     {
         // initialize our managers
-        parmgr.init(invmgr, plreg);
         boardmgr.init(conprov);
         playmgr.init(conprov);
         gangmgr.init(conprov);
-        tournmgr.init(conprov);
+        tournmgr.init(injector);
         ratingmgr.init(conprov);
         coinexmgr.init();
         adminmgr.init(_shutmgr, omgr);
         if (peermgr != null) {
-            peermgr.init(perCtx, invoker, ServerConfig.nodename, ServerConfig.sharedSecret,
+            peermgr.init(injector, ServerConfig.nodename, ServerConfig.sharedSecret,
                          ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
         }
 
@@ -428,128 +406,11 @@ public class BangServer extends CrowdServer
         hideoutmgr = (HideoutManager)plreg.createPlace(new HideoutConfig());
         officemgr = (OfficeManager)plreg.createPlace(new OfficeConfig());
 
-        // create the town object and an interval to keep it up-to-date
+        // create the town object and initialize the locator which will keep it up-to-date
         townobj = omgr.registerObject(new TownObject());
-        createTownObjectUpdateInterval();
+        _locator.init();
 
         log.info("Bang server v" + DeploymentConfig.getVersion() + " initialized.");
-    }
-
-    /**
-     * Creates the interval that updates the town object's population once every thirty seconds.
-     */
-    protected void createTownObjectUpdateInterval ()
-    {
-        new Interval(omgr) {
-            public void expired () {
-                int npop = _players.size();
-                if (npop != townobj.population) {
-                    townobj.setPopulation(npop);
-                }
-            }
-        }.schedule(30000L, true);
-    }
-
-    /**
-     * Registers a player observer.
-     */
-    public static void addPlayerObserver (PlayerObserver observer)
-    {
-        _playobs.add(observer);
-    }
-
-    /**
-     * Removes a player observer registration.
-     */
-    public static void removePlayerObserver (PlayerObserver observer)
-    {
-        _playobs.remove(observer);
-    }
-
-    /**
-     * Returns the player object for the specified user if they are online currently, null
-     * otherwise. This should only be called from the dobjmgr thread.
-     */
-    public static PlayerObject lookupPlayer (Handle handle)
-    {
-        return _players.get(handle);
-    }
-
-    /**
-     * Returns the player object for the specified id if they are online currently, null
-     * otherwise. This should only be called from the dobjmgr thread.
-     */
-    public static PlayerObject lookupPlayer (int playerId)
-    {
-        return _playerIds.get(playerId);
-    }
-
-    /**
-     * Returns the player object for the specified user if they are online currently, null
-     * otherwise. This should only be called from the dobjmgr thread.
-     */
-    public static PlayerObject lookupByAccountName (Name accountName)
-    {
-        return (PlayerObject)clmgr.getClientObject(accountName);
-    }
-
-    /**
-     * Called when a player starts their session to associate the handle with the player's
-     * distributed object.
-     */
-    public static void registerPlayer (final PlayerObject player)
-    {
-        _players.put(player.handle, player);
-        _playerIds.put(player.playerId, player);
-
-        // update our players online count in the status object
-        adminmgr.statobj.updatePlayersOnline(clmgr.getClientCount());
-
-        // notify our player observers
-        _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
-            public boolean apply (PlayerObserver observer) {
-                observer.playerLoggedOn(player);
-                return true;
-            }
-        });
-    }
-
-    /**
-     * Called when a player sets their handle for the first time, or changes it later on,
-     * to change the handle association.
-     */
-    public static void updatePlayer (final PlayerObject player, final Handle oldHandle)
-    {
-        _players.remove(oldHandle);
-        _players.put(player.handle, player);
-
-        // notify our player observers
-        _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
-            public boolean apply (PlayerObserver observer) {
-                observer.playerChangedHandle(player, oldHandle);
-                return true;
-            }
-        });
-    }
-
-    /**
-     * Called when a player ends their session to clear their handle to player object mapping.
-     */
-    public static void clearPlayer (final PlayerObject player)
-    {
-        _players.remove(player.handle);
-        _playerIds.remove(player.playerId);
-
-        // update our players online count in the status object
-        adminmgr.statobj.updatePlayersOnline(clmgr.getClientCount());
-
-        // notify our player observers
-        _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
-            public boolean apply (PlayerObserver observer) {
-                observer.playerLoggedOff(player);
-                return true;
-            }
-        });
     }
 
     /**
@@ -633,16 +494,12 @@ public class BangServer extends CrowdServer
         }
     }
 
-    /** Our configured authenticator. */
-    @Inject Authenticator _author;
-
     protected long _codeModified;
 
-    protected static HashMap<Handle,PlayerObject> _players = new HashMap<Handle,PlayerObject>();
-    protected static HashIntMap<PlayerObject> _playerIds = new HashIntMap<PlayerObject>();
-
-    protected static ObserverList<PlayerObserver> _playobs =
-        new ObserverList<PlayerObserver>(ObserverList.FAST_UNSAFE_NOTIFY);
+    @Inject protected ConnectionProvider _conprov;
+    @Inject protected Authenticator _author;
+    @Inject protected PlayerLocator _locator;
+    @Inject protected ParlorManager _parmgr;
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server");

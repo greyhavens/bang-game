@@ -129,7 +129,7 @@ public class PlayerManager
             }
             Name speaker = ((UserMessage)msg).speaker;
             if (speaker != null) {
-                PlayerObject user = (PlayerObject)BangServer.lookupBody(speaker);
+                PlayerObject user = (PlayerObject)BangServer.locator.lookupBody(speaker);
                 if (user != null) {
                     user.stats.incrementStat(StatType.CHAT_SENT, 1);
                 }
@@ -652,7 +652,7 @@ public class PlayerManager
         }
 
         // if the player is online, populate the poster directly from there
-        final PlayerObject posterPlayer = BangServer.lookupPlayer(handle);
+        final PlayerObject posterPlayer = BangServer.locator.lookupPlayer(handle);
         if (posterPlayer != null) {
             Look look = posterPlayer.getLook(Look.Pose.WANTED_POSTER);
             if (look != null) {
@@ -856,7 +856,7 @@ public class PlayerManager
         event.chatHistory = chatHistory.toString();
 
         // if the target is online, get their username from their player object
-        PlayerObject tuser = BangServer.lookupPlayer(target);
+        PlayerObject tuser = BangServer.locator.lookupPlayer(target);
         event.targetHandle = target.toString();
         if (tuser != null) {
             event.target = tuser.username.toString();
@@ -1030,7 +1030,7 @@ public class PlayerManager
             throw new InvocationException(ACCESS_DENIED);
         }
 
-        PlayerObject target = BangServer.lookupPlayer(handle);
+        PlayerObject target = BangServer.locator.lookupPlayer(handle);
         if (target == null) {
             log.warning("Unable to find target to boot [handle=" + handle + "].");
             throw new InvocationException(INTERNAL_ERROR);
@@ -1056,7 +1056,7 @@ public class PlayerManager
     public void deliverItem (Item item, String source)
     {
         int ownerId = item.getOwnerId();
-        PlayerObject user = BangServer.lookupPlayer(ownerId);
+        PlayerObject user = BangServer.locator.lookupPlayer(ownerId);
         if (user != null) {
             deliverItemLocal(user, item, source);
         } else if (BangServer.peermgr != null) {
@@ -1080,7 +1080,7 @@ public class PlayerManager
      */
     public void sendPardnerInvite (Handle invitee, Handle inviter, String message)
     {
-        PlayerObject user = BangServer.lookupPlayer(invitee);
+        PlayerObject user = BangServer.locator.lookupPlayer(invitee);
         if (user != null) {
             sendPardnerInviteLocal(user, inviter, message, new Date());
         } else if (BangServer.peermgr != null) {
@@ -1109,7 +1109,7 @@ public class PlayerManager
     public void respondToPardnerInvite (
         Handle inviter, Handle invitee, boolean accept, boolean full)
     {
-        PlayerObject user = BangServer.lookupPlayer(inviter);
+        PlayerObject user = BangServer.locator.lookupPlayer(inviter);
         if (user != null) {
             respondToPardnerInviteLocal(user, invitee, accept, full);
         } else if (BangServer.peermgr != null) {
@@ -1138,7 +1138,7 @@ public class PlayerManager
      */
     public void removePardner (Handle removee, Handle remover)
     {
-        PlayerObject user = BangServer.lookupPlayer(removee);
+        PlayerObject user = BangServer.locator.lookupPlayer(removee);
         if (user != null) {
             removePardnerLocal(user, remover);
         } else if (BangServer.peermgr != null) {
@@ -1316,7 +1316,7 @@ public class PlayerManager
         }
 
         // check whether the player is online on this server
-        PlayerObject player = BangServer.lookupPlayer(handle);
+        PlayerObject player = BangServer.locator.lookupPlayer(handle);
         if (player != null) {
             _updaters.put(handle, updater = new PardnerEntryUpdater(player));
             return updater.entry;
@@ -1623,7 +1623,7 @@ public class PlayerManager
         }
 
         public void apply (Name username) {
-            PlayerObject user = (PlayerObject)BangServer.lookupBody(username);
+            PlayerObject user = (PlayerObject)BangServer.locator.lookupBody(username);
             if (user != null) {
                 user.stats.incrementStat(StatType.CHAT_RECEIVED, 1);
             }

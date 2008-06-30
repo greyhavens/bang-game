@@ -147,7 +147,7 @@ public class AccountActionManager
     protected void coinsUpdated (String accountName)
     {
         // if this player is online, update their coin count
-        PlayerObject player = BangServer.lookupByAccountName(new Name(accountName));
+        PlayerObject player = BangServer.locator.lookupByAccountName(new Name(accountName));
         if (player != null) {
             BangServer.coinmgr.updateCoinCount(player);
         }
@@ -159,7 +159,7 @@ public class AccountActionManager
     protected void logInitialCoinPurchase (final String accountName)
     {
         // if this player is online, update their coin count
-        PlayerObject player = BangServer.lookupByAccountName(new Name(accountName));
+        PlayerObject player = BangServer.locator.lookupByAccountName(new Name(accountName));
         if (player != null) {
             BangServer.coinmgr.coinlog.log("first_coins " + player.playerId);
             return;

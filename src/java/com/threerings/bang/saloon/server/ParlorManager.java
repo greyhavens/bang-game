@@ -115,7 +115,7 @@ public class ParlorManager extends PlaceManager
 
         case PARDNERS_ONLY:
             // make sure they're a pardner of the creator if that is required
-            PlayerObject creator = BangServer.lookupPlayer(_parobj.info.creator);
+            PlayerObject creator = BangServer.locator.lookupPlayer(_parobj.info.creator);
             if (creator == null) {
                 throw new InvocationException(CREATOR_NOT_ONLINE);
             }
@@ -185,7 +185,7 @@ public class ParlorManager extends PlaceManager
             return;
         }
 
-        PlayerObject other = BangServer.lookupPlayer(boi.playerId);
+        PlayerObject other = BangServer.locator.lookupPlayer(boi.playerId);
         // and you can't boot a power user
         if (other == null || _parobj.info.powerUser(other)) {
             return;
@@ -205,7 +205,7 @@ public class ParlorManager extends PlaceManager
             gameobj.addListener(_gameOverListener);
 
             // if the creator is still around, mark them as having hosted a game
-            PlayerObject creator = BangServer.lookupPlayer(_parobj.info.creator);
+            PlayerObject creator = BangServer.locator.lookupPlayer(_parobj.info.creator);
             if (creator != null) {
                 creator.stats.incrementStat(StatType.GAMES_HOSTED, 1);
             }

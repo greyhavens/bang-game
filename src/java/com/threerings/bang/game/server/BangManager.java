@@ -2877,7 +2877,7 @@ public class BangManager extends GameManager
 
                 // note players that left the game early
                 if (!isActivePlayer(ii)) {
-                    PlayerObject pobj = BangServer.lookupPlayer(_precords[ii].user.handle);
+                    PlayerObject pobj = BangServer.locator.lookupPlayer(_precords[ii].user.handle);
                     if (pobj == null) {
                         buf.append("*"); // no longer online
                     } else if (pobj.status == OccupantInfo.DISCONNECTED) {

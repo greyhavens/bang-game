@@ -182,7 +182,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             }
             return;
         }
-        PlayerObject player = BangServer.lookupByAccountName(new Name(accountName));
+        PlayerObject player = BangServer.locator.lookupByAccountName(new Name(accountName));
         if (player != null) {
             BangServer.coinmgr.updateCoinCount(player);
         }
@@ -213,7 +213,8 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             }
 
             public void handleResult () {
-                PlayerObject player = BangServer.lookupByAccountName(new Name(info.accountName));
+                PlayerObject player =
+                    BangServer.locator.lookupByAccountName(new Name(info.accountName));
                 if (player != null) {
                     player.setScrip(player.scrip + currency);
                 }
@@ -297,7 +298,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             }
             return;
         }
-        PlayerObject player = BangServer.lookupByAccountName(new Name(buyer));
+        PlayerObject player = BangServer.locator.lookupByAccountName(new Name(buyer));
         if (player != null) {
             _audit.log("bought_excoins " + player.playerId);
             return;

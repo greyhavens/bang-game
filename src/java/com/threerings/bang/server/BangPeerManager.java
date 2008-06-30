@@ -131,7 +131,7 @@ public class BangPeerManager extends CrowdPeerManager
     public void deliverPardnerInvite (
         ClientObject caller, Handle invitee, Handle inviter, String message)
     {
-        PlayerObject user = BangServer.lookupPlayer(invitee);
+        PlayerObject user = BangServer.locator.lookupPlayer(invitee);
         if (user != null) {
             BangServer.playmgr.sendPardnerInviteLocal(user, inviter, message, new Date());
         }
@@ -160,7 +160,7 @@ public class BangPeerManager extends CrowdPeerManager
     public void deliverPardnerInviteResponse (
         ClientObject caller, Handle inviter, Handle invitee, boolean accept, boolean full)
     {
-        PlayerObject user = BangServer.lookupPlayer(inviter);
+        PlayerObject user = BangServer.locator.lookupPlayer(inviter);
         if (user != null) {
             BangServer.playmgr.respondToPardnerInviteLocal(user, invitee, accept, full);
         }
@@ -187,7 +187,7 @@ public class BangPeerManager extends CrowdPeerManager
     // from interface BangPeerProvider
     public void deliverPardnerRemoval (ClientObject caller, Handle removee, Handle remover)
     {
-        PlayerObject user = BangServer.lookupPlayer(removee);
+        PlayerObject user = BangServer.locator.lookupPlayer(removee);
         if (user != null) {
             BangServer.playmgr.removePardnerLocal(user, remover);
         }
@@ -211,7 +211,7 @@ public class BangPeerManager extends CrowdPeerManager
         ClientObject caller, Handle invitee, Handle inviter, int gangId, Handle name,
         String message)
     {
-        PlayerObject user = BangServer.lookupPlayer(invitee);
+        PlayerObject user = BangServer.locator.lookupPlayer(invitee);
         if (user != null) {
             BangServer.gangmgr.sendGangInviteLocal(user, inviter, gangId, name, message);
         }
@@ -240,7 +240,7 @@ public class BangPeerManager extends CrowdPeerManager
     // from interface BangPeerProvider
     public void deliverItem (ClientObject caller, Item item, String source)
     {
-        PlayerObject user = BangServer.lookupPlayer(item.getOwnerId());
+        PlayerObject user = BangServer.locator.lookupPlayer(item.getOwnerId());
         if (user != null) {
             BangServer.playmgr.deliverItemLocal(user, item, source);
         }
@@ -336,7 +336,7 @@ public class BangPeerManager extends CrowdPeerManager
             (BangPeerMarshaller)BangServer.invmgr.registerDispatcher(new BangPeerDispatcher(this)));
 
         // subscribe to server for handle change notifications
-        BangServer.addPlayerObserver(new BangServer.PlayerObserver() {
+        BangServer.locator.addPlayerObserver(new PlayerLocator.PlayerObserver() {
             public void playerLoggedOn (PlayerObject user) {
                 // no-op
             }
@@ -443,6 +443,5 @@ public class BangPeerManager extends CrowdPeerManager
             });
     }
 
-    protected ObserverList<RemotePlayerObserver> _remobs = new ObserverList<RemotePlayerObserver>(
-        ObserverList.FAST_UNSAFE_NOTIFY);
+    protected ObserverList<RemotePlayerObserver> _remobs = ObserverList.newFastUnsafe();
 }

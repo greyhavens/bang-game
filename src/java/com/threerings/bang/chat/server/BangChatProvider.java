@@ -36,7 +36,7 @@ public class BangChatProvider extends ChatProvider
         PlayerObject user = (PlayerObject)target;
         user.stats.incrementStat(StatType.CHAT_RECEIVED, 1);
 
-        user = (PlayerObject)BangServer.lookupBody(message.speaker);
+        user = (PlayerObject)BangServer.locator.lookupBody(message.speaker);
         if (user != null) {
             user.stats.incrementStat(StatType.CHAT_SENT, 1);
         }

@@ -61,7 +61,7 @@ public class PardnerEntryUpdater extends SetAdapter
             entry = (PardnerEntry)oentry.clone();
             entry.handle = _player.handle;
             for (PardnerEntry pard : _player.pardners) {
-                PlayerObject pardner = BangServer.lookupPlayer(pard.handle);
+                PlayerObject pardner = BangServer.locator.lookupPlayer(pard.handle);
                 if (pardner != null) {
                     pardner.startTransaction();
                     try {
@@ -125,7 +125,7 @@ public class PardnerEntryUpdater extends SetAdapter
     public void updateEntries ()
     {
         for (PardnerEntry pard : _player.pardners) {
-            PlayerObject pardner = BangServer.lookupPlayer(pard.handle);
+            PlayerObject pardner = BangServer.locator.lookupPlayer(pard.handle);
             if (pardner != null) {
                 // this may be missing temporarily due to peer inconsistency
                 if (pardner.pardners.containsKey(entry.handle)) {

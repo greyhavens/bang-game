@@ -4,15 +4,17 @@
 package com.threerings.bang.tourney.server;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.RunQueue;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.ShutdownManager;
 
 import com.threerings.parlor.tourney.server.TourneyManager;
@@ -20,9 +22,9 @@ import com.threerings.parlor.tourney.server.TourniesManager;
 import com.threerings.parlor.tourney.server.TourniesDispatcher;
 import com.threerings.parlor.tourney.data.TourneyConfig;
 
-import com.threerings.bang.server.BangServer;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.server.BangServer;
 import com.threerings.bang.tourney.data.TourniesObject;
 
 /**
@@ -34,34 +36,32 @@ public class BangTourniesManager extends TourniesManager
 {
     public static final String TOURNEY_DB_IDENT = "tourneydb";
 
-    @Inject public BangTourniesManager (ShutdownManager shutmgr)
+    @Inject public BangTourniesManager (InvocationManager invmgr, ShutdownManager shutmgr)
     {
         super(shutmgr);
+        invmgr.registerDispatcher(new TourniesDispatcher(this), GLOBAL_GROUP);
     }
 
     @Override // from TourniesManager
-    public void init (ConnectionProvider conprov)
+    public void init (Injector injector)
         throws PersistenceException
     {
-        // create the distributed object that holds the active tournies
-        _tobj = BangServer.omgr.registerObject(new TourniesObject());
-        BangServer.invmgr.registerDispatcher(new TourniesDispatcher(this), GLOBAL_GROUP);
+        super.init(injector);
 
-        super.init(conprov);
+        // create the distributed object that holds the active tournies
+        _tobj = _omgr.registerObject(new TourniesObject());
     }
 
     // documentation inherited
     public void createTourney (ClientObject caller, TourneyConfig config,
-            final InvocationService.ResultListener listener)
+                               InvocationService.ResultListener listener)
         throws InvocationException
     {
+        // only admins can create tournaments
         PlayerObject player = (PlayerObject)caller;
-
-        // only admins cna create tournaments
         if (!player.tokens.isAdmin()) {
             throw new InvocationException("m.not_admin");
         }
-
         super.createTourney(caller, config, listener);
     }
 
@@ -73,32 +73,22 @@ public class BangTourniesManager extends TourniesManager
         return _tobj;
     }
 
-    // documentation inherited
-    protected TourneyManager makeTourneyManager(
-            TourneyConfig config, Comparable key, InvocationService.ResultListener listener)
+    @Override // from TourniesManager
+    protected Class<? extends TourneyManager> getTourneyManagerClass ()
     {
-        return new BangTourneyManager(config, this, key, listener);
+        return BangTourneyManager.class;
     }
 
-    // documentation inherited
-    protected String getDBIdent ()
-    {
-        return TOURNEY_DB_IDENT;
-    }
-
-    // documentation inherited
-    protected RunQueue getRunQueue ()
-    {
-        return BangServer.omgr;
-    }
-
-    // documentation inherited
+    @Override // from TourniesManager
     protected long getIntervalDelay ()
     {
         return TWENTY_SECONDS;
     }
 
-    protected static final long TWENTY_SECONDS = 1000L * 20;
-
     protected TourniesObject _tobj;
+
+    @Inject protected RootDObjectManager _omgr;
+    @Inject protected InvocationManager _invmgr;
+
+    protected static final long TWENTY_SECONDS = 1000L * 20;
 }

@@ -5,37 +5,40 @@ package com.threerings.bang.tourney.server;
 
 import com.threerings.util.Name;
 
-import com.threerings.bang.server.BangServer;
-import com.threerings.bang.tourney.data.TourneyListingEntry;
-import com.threerings.bang.tourney.data.BangTourneyConfig;
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.dobj.RootDObjectManager;
+import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
+import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.crowd.data.BodyObject;
 
 import com.threerings.parlor.tourney.data.TourneyConfig;
 import com.threerings.parlor.tourney.server.TourneyManager;
 
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.server.PresentsDObjectMgr;
+import com.threerings.bang.server.BangServer;
+import com.threerings.bang.tourney.data.TourneyListingEntry;
+import com.threerings.bang.tourney.data.BangTourneyConfig;
 
 /**
  * Manages running an individual tournament.
  */
 public class BangTourneyManager extends TourneyManager
 {
-    public BangTourneyManager (TourneyConfig config, BangTourniesManager tmgr,
-            Comparable key, InvocationService.ResultListener listener)
+    @Override // from TourneyManager
+    public int init (TourneyConfig config, Comparable key)
     {
-        super(config, tmgr, key, listener);
+        int tournOid = super.init(config, key);
 
         // keep track of our start time in millis
         _startTime = System.currentTimeMillis() + (MINUTE * _config.startsIn);
 
         // add us to the list of pending tournies
         TourneyListingEntry entry = new TourneyListingEntry(
-                ((BangTourneyConfig)config).desc, key, _trobj.getOid(), config.startsIn);
-        tmgr.getTourniesObject().addToTournies(entry);
+            ((BangTourneyConfig)config).desc, key, _trobj.getOid(), config.startsIn);
+        ((BangTourniesManager)_tmgr).getTourniesObject().addToTournies(entry);
+
+        return tournOid;
     }
 
     // documentation inherited
@@ -44,21 +47,9 @@ public class BangTourneyManager extends TourneyManager
     }
 
     // documentation inherited
-    protected PresentsDObjectMgr getOMgr ()
-    {
-        return BangServer.omgr;
-    }
-
-    // documentation inherited
-    protected InvocationManager getInvMgr ()
-    {
-        return BangServer.invmgr;
-    }
-
-    // documentation inherited
     protected BodyObject lookupBody (Name username)
     {
-        return BangServer.lookupBody(username);
+        return BangServer.locator.lookupBody(username);
     }
 
     // documentation inherited
