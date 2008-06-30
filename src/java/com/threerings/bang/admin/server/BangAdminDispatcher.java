@@ -12,7 +12,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link BangAdminProvider}.
  */
-public class BangAdminDispatcher extends InvocationDispatcher
+public class BangAdminDispatcher extends InvocationDispatcher<BangAdminMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -24,7 +24,7 @@ public class BangAdminDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public BangAdminMarshaller createMarshaller ()
     {
         return new BangAdminMarshaller();
     }

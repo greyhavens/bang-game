@@ -853,7 +853,7 @@ public class BangManager extends GameManager
 
         // set up the bang object
         _bangobj = (BangObject)_gameobj;
-        _bangobj.setService((BangMarshaller)_invmgr.registerDispatcher(new BangDispatcher(this)));
+        _bangobj.setService(_invmgr.registerDispatcher(new BangDispatcher(this)));
         _bangobj.addListener(_ticklst);
         _bangobj.addListener(BangServer.playmgr.receivedChatListener);
         _bconfig = (BangConfig)_gameconfig;

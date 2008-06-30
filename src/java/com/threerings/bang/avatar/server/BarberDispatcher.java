@@ -15,7 +15,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link BarberProvider}.
  */
-public class BarberDispatcher extends InvocationDispatcher
+public class BarberDispatcher extends InvocationDispatcher<BarberMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -27,7 +27,7 @@ public class BarberDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public BarberMarshaller createMarshaller ()
     {
         return new BarberMarshaller();
     }

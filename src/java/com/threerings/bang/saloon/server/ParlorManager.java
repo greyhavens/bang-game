@@ -231,8 +231,7 @@ public class ParlorManager extends PlaceManager
         super.didStartup();
 
         _parobj = (ParlorObject)_plobj;
-        _parobj.setService((ParlorMarshaller)
-                           BangServer.invmgr.registerDispatcher(new ParlorDispatcher(this)));
+        _parobj.setService(BangServer.invmgr.registerDispatcher(new ParlorDispatcher(this)));
         _parobj.addListener(BangServer.playmgr.receivedChatListener);
     }
 

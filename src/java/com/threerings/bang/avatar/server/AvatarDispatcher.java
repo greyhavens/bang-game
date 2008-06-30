@@ -16,7 +16,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link AvatarProvider}.
  */
-public class AvatarDispatcher extends InvocationDispatcher
+public class AvatarDispatcher extends InvocationDispatcher<AvatarMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -28,7 +28,7 @@ public class AvatarDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public AvatarMarshaller createMarshaller ()
     {
         return new AvatarMarshaller();
     }

@@ -14,7 +14,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link BankProvider}.
  */
-public class BankDispatcher extends InvocationDispatcher
+public class BankDispatcher extends InvocationDispatcher<BankMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -26,7 +26,7 @@ public class BankDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public BankMarshaller createMarshaller ()
     {
         return new BankMarshaller();
     }

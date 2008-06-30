@@ -14,7 +14,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link OfficeProvider}.
  */
-public class OfficeDispatcher extends InvocationDispatcher
+public class OfficeDispatcher extends InvocationDispatcher<OfficeMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -26,7 +26,7 @@ public class OfficeDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public OfficeMarshaller createMarshaller ()
     {
         return new OfficeMarshaller();
     }

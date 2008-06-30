@@ -567,8 +567,7 @@ public class HideoutManager extends MatchHostManager
 
         // register our invocation service
         _hobj = (HideoutObject)_plobj;
-        _hobj.setService((HideoutMarshaller)
-                         BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this)));
+        _hobj.setService(BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this)));
         _hobj.setGoods(new DSet<Good>(_goods.getGoods()));
         _hobj.setRentalGoods(new DSet<Good>(_rentalGoods.getGoods()));
 

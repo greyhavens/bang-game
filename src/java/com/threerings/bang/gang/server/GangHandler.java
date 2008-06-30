@@ -2076,11 +2076,10 @@ public class GangHandler
 
         // register the service for peers
         _gangobj.gangPeerService =
-            (GangPeerMarshaller)BangServer.invmgr.registerDispatcher(
-                new GangPeerDispatcher(this));
+            BangServer.invmgr.registerDispatcher(new GangPeerDispatcher(this));
 
         // register the speak service for local users
-        _gangobj.speakService = (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
+        _gangobj.speakService = BangServer.invmgr.registerDispatcher(
             new SpeakDispatcher(new SpeakHandler(_gangobj, this)));
 
         // create our table game manager for this town
@@ -2316,14 +2315,13 @@ public class GangHandler
 
         // rewrite the speak service with a provider of our own that forwards speech to
         // the controlling node
-        _gangobj.speakService =
-            (SpeakMarshaller)BangServer.invmgr.registerDispatcher(new SpeakDispatcher(
-                new SpeakProvider() {
-                    public void speak (ClientObject caller, String message, byte mode) {
-                        _gangobj.gangPeerService.sendSpeak(
-                            _client, ((PlayerObject)caller).handle, message, mode);
-                    }
-                }));
+        _gangobj.speakService = BangServer.invmgr.registerDispatcher(
+            new SpeakDispatcher(new SpeakProvider() {
+            public void speak (ClientObject caller, String message, byte mode) {
+                _gangobj.gangPeerService.sendSpeak(
+                    _client, ((PlayerObject)caller).handle, message, mode);
+            }
+        }));
 
         // create our local TableGameManager
         _tmgr = new TableGameManager();

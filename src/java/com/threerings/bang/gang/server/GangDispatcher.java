@@ -14,7 +14,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link GangProvider}.
  */
-public class GangDispatcher extends InvocationDispatcher
+public class GangDispatcher extends InvocationDispatcher<GangMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -26,7 +26,7 @@ public class GangDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public GangMarshaller createMarshaller ()
     {
         return new GangMarshaller();
     }

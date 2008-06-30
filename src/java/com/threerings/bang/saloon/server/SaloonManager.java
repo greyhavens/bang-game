@@ -180,8 +180,7 @@ public class SaloonManager extends MatchHostManager
 
         // register our invocation service
         _salobj = (SaloonObject)_plobj;
-        _salobj.setService((SaloonMarshaller)
-                           BangServer.invmgr.registerDispatcher(new SaloonDispatcher(this)));
+        _salobj.setService(BangServer.invmgr.registerDispatcher(new SaloonDispatcher(this)));
 
         // create our default parlor
         createParlor(new Handle("!!!SERVER!!!"), ParlorInfo.Type.SOCIAL, null, true, 0, true, null);

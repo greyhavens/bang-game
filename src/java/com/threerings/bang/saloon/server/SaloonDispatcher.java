@@ -16,7 +16,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link SaloonProvider}.
  */
-public class SaloonDispatcher extends InvocationDispatcher
+public class SaloonDispatcher extends InvocationDispatcher<SaloonMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -28,7 +28,7 @@ public class SaloonDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public SaloonMarshaller createMarshaller ()
     {
         return new SaloonMarshaller();
     }

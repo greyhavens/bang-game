@@ -15,7 +15,7 @@ import com.threerings.util.Name;
 /**
  * Dispatches requests to the {@link PlayerProvider}.
  */
-public class PlayerDispatcher extends InvocationDispatcher
+public class PlayerDispatcher extends InvocationDispatcher<PlayerMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -27,7 +27,7 @@ public class PlayerDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public PlayerMarshaller createMarshaller ()
     {
         return new PlayerMarshaller();
     }

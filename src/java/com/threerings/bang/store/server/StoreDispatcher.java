@@ -13,7 +13,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link StoreProvider}.
  */
-public class StoreDispatcher extends InvocationDispatcher
+public class StoreDispatcher extends InvocationDispatcher<StoreMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -25,7 +25,7 @@ public class StoreDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public StoreMarshaller createMarshaller ()
     {
         return new StoreMarshaller();
     }

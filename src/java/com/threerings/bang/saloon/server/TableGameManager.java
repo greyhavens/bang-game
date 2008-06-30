@@ -48,8 +48,7 @@ public class TableGameManager implements TableGameProvider
     {
         _tobj = new TableGameObject();
         BangServer.omgr.registerObject(_tobj);
-        _tobj.setService((TableGameMarshaller)
-                BangServer.invmgr.registerDispatcher(new TableGameDispatcher(this)));
+        _tobj.setService(BangServer.invmgr.registerDispatcher(new TableGameDispatcher(this)));
     }
 
     /**

@@ -14,7 +14,7 @@ import com.threerings.util.Name;
 /**
  * Dispatches requests to the {@link RanchProvider}.
  */
-public class RanchDispatcher extends InvocationDispatcher
+public class RanchDispatcher extends InvocationDispatcher<RanchMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -26,7 +26,7 @@ public class RanchDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public RanchMarshaller createMarshaller ()
     {
         return new RanchMarshaller();
     }

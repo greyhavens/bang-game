@@ -128,8 +128,7 @@ public class BankManager extends ShopManager
 
         // register our invocation service
         _bankobj = (BankObject)_plobj;
-        _bankobj.setService(
-            (BankMarshaller)BangServer.invmgr.registerDispatcher(new BankDispatcher(this)));
+        _bankobj.setService(BangServer.invmgr.registerDispatcher(new BankDispatcher(this)));
 
         // register with the coin exchange manager
         BangServer.coinexmgr.registerPublisher(this);

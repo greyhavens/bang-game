@@ -15,7 +15,7 @@ import com.threerings.presents.server.InvocationException;
 /**
  * Dispatches requests to the {@link BangPeerProvider}.
  */
-public class BangPeerDispatcher extends InvocationDispatcher
+public class BangPeerDispatcher extends InvocationDispatcher<BangPeerMarshaller>
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
@@ -27,7 +27,7 @@ public class BangPeerDispatcher extends InvocationDispatcher
     }
 
     @Override // documentation inherited
-    public InvocationMarshaller createMarshaller ()
+    public BangPeerMarshaller createMarshaller ()
     {
         return new BangPeerMarshaller();
     }

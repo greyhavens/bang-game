@@ -421,8 +421,7 @@ public class BarberManager extends ShopManager
 
         // register our invocation service
         _bobj = (BarberObject)_plobj;
-        _bobj.setService((BarberMarshaller)
-                         BangServer.invmgr.registerDispatcher(new BarberDispatcher(this)));
+        _bobj.setService(BangServer.invmgr.registerDispatcher(new BarberDispatcher(this)));
     }
 
     /** Used to purchase a new avatar look. */

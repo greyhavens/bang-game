@@ -333,7 +333,7 @@ public class BangPeerManager extends CrowdPeerManager
         final BangNodeObject bnodeobj = (BangNodeObject)_nodeobj;
         bnodeobj.setTownId(ServerConfig.townId);
         bnodeobj.setBangPeerService(
-            (BangPeerMarshaller)BangServer.invmgr.registerDispatcher(new BangPeerDispatcher(this)));
+            BangServer.invmgr.registerDispatcher(new BangPeerDispatcher(this)));
 
         // subscribe to server for handle change notifications
         BangServer.locator.addPlayerObserver(new PlayerLocator.PlayerObserver() {

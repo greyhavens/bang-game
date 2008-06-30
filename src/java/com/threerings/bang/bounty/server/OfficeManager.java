@@ -37,7 +37,6 @@ import com.threerings.bang.bounty.client.OfficeService;
 import com.threerings.bang.bounty.data.BoardInfo;
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
-import com.threerings.bang.bounty.data.OfficeMarshaller;
 import com.threerings.bang.bounty.data.OfficeObject;
 import com.threerings.bang.bounty.data.RecentCompleters;
 import com.threerings.bang.bounty.server.persist.RecentCompletersRecord;
@@ -242,8 +241,7 @@ public class OfficeManager extends ShopManager
 
         // register our invocation service
         _offobj = (OfficeObject)_plobj;
-        _offobj.setService((OfficeMarshaller)
-                           BangServer.invmgr.registerDispatcher(new OfficeDispatcher(this)));
+        _offobj.setService(BangServer.invmgr.registerDispatcher(new OfficeDispatcher(this)));
 
         // publish all known boards as board info records
         ArrayList<BoardInfo> infos = new ArrayList<BoardInfo>();
