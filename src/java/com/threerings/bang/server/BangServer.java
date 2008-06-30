@@ -31,14 +31,19 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.ClientFactory;
+import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.ClientResolver;
+import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.server.PresentsDObjectMgr;
 import com.threerings.presents.server.ReportManager;
+import com.threerings.presents.server.net.ConnectionManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.server.BodyLocator;
 import com.threerings.crowd.server.CrowdServer;
+import com.threerings.crowd.server.LocationManager;
+import com.threerings.crowd.server.PlaceRegistry;
 
 import com.threerings.parlor.server.ParlorManager;
 
@@ -131,14 +136,8 @@ public class BangServer extends CrowdServer
     /** A reference to the authenticator in use by the server. */
     public static BangAuthenticator author;
 
-    /** Used to lookup players that are online. */
-    public static PlayerLocator locator;
-
     /** Communicates with the other servers in our cluster. */
     public static BangPeerManager peermgr;
-
-    /** The parlor manager in operation on this server. */
-    public static ParlorManager parmgr;
 
     /** Handles the processing of account actions. */
     public static AccountActionManager actionmgr;
@@ -219,6 +218,19 @@ public class BangServer extends CrowdServer
     /** Contains information about the whole town. */
     public static TownObject townobj;
 
+    // legacy static Presents services; try not to use these
+    public static Invoker invoker;
+    public static ConnectionManager conmgr;
+    public static ClientManager clmgr;
+    public static PresentsDObjectMgr omgr;
+    public static InvocationManager invmgr;
+
+    // legacy static Crowd services; try not to use these
+    public static PlayerLocator locator;
+    public static PlaceRegistry plreg;
+    public static ChatProvider chatprov;
+    public static LocationManager locman;
+
     /**
      * Ensures that the calling thread is the distributed object event dispatch thread, throwing an
      * {@link IllegalStateException} if it is not.
@@ -283,8 +295,15 @@ public class BangServer extends CrowdServer
         playrepo = new PlayerRepository(conprov);
 
         // set up some legacy static references
+        invoker = _invoker;
+        conmgr = _conmgr;
+        clmgr = _clmgr;
+        omgr = _omgr;
+        invmgr = _invmgr;
         locator = _locator;
-        parmgr = _parmgr;
+        plreg = _plreg;
+        chatprov = _chatprov;
+        locman = _locman;
 
         // do the base server initialization
         super.init(injector);
