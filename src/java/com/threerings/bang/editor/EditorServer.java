@@ -23,6 +23,7 @@ public class EditorServer extends CrowdServer
     public static class Module extends CrowdServer.Module
     {
         @Override protected void configure () {
+            super.configure();
             bind(PresentsDObjectMgr.class).to(LocalDObjectMgr.class);
         }
     }

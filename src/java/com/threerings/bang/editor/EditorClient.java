@@ -14,9 +14,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import com.samskivert.swing.GroupLayout;
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
-import com.samskivert.swing.GroupLayout;
 
 import com.threerings.util.Name;
 
@@ -24,8 +27,11 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.SessionObserver;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.net.BootstrapData;
+import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.ClientResolutionListener;
+import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.crowd.client.PlaceView;
 
@@ -37,11 +43,23 @@ import static com.threerings.bang.Log.log;
  * Takes care of instantiating all of the proper managers and loading up
  * all of the necessary configuration and getting the client bootstrapped.
  */
+@Singleton
 public class EditorClient extends BasicClient
     implements RunQueue, SessionObserver
 {
-    /** Initializes the editor client and prepares it for operation. */
-    public EditorClient (EditorApp app, JFrame frame)
+    /**
+     * Returns a reference to the context in effect for this client. This
+     * reference is valid for the lifetime of the application.
+     */
+    public EditorContext getContext ()
+    {
+        return _ctx;
+    }
+
+    /**
+     * Initializes the editor client and prepares it for operation.
+     */
+    public void init (EditorApp app, JFrame frame)
     {
         // create our context
         _ctx = new EditorContextImpl();
@@ -60,15 +78,6 @@ public class EditorClient extends BasicClient
 
         // listen for logon/logoff
         _ctx.getClient().addClientObserver(this);
-    }
-
-    /**
-     * Returns a reference to the context in effect for this client. This
-     * reference is valid for the lifetime of the application.
-     */
-    public EditorContext getContext ()
-    {
-        return _ctx;
     }
 
     /**
@@ -144,10 +153,10 @@ public class EditorClient extends BasicClient
                 // ...fake up a bootstrap...
                 BootstrapData data = new BootstrapData();
                 data.clientOid = clobj.getOid();
-                data.services = EditorServer.invmgr.getBootstrapServices(groups);
+                data.services = _invmgr.getBootstrapServices(groups);
 
                 // ...and configure the client to use the server's distributed object manager
-                _ctx.getClient().standaloneLogon(data, EditorServer.omgr);
+                _ctx.getClient().standaloneLogon(data, _omgr);
             }
 
             public void resolutionFailed (Name username, Exception reason) {
@@ -156,7 +165,7 @@ public class EditorClient extends BasicClient
                 // TODO: display this error
             }
         };
-        EditorServer.clmgr.resolveClientObject(new Name("editor"), clr);
+        _clmgr.resolveClientObject(new Name("editor"), clr);
     }
 
     /**
@@ -226,4 +235,8 @@ public class EditorClient extends BasicClient
     protected JFrame _frame;
     protected JLabel _status;
     protected JLabel _coords;
+
+    @Inject protected ClientManager _clmgr;
+    @Inject protected RootDObjectManager _omgr;
+    @Inject protected InvocationManager _invmgr;
 }

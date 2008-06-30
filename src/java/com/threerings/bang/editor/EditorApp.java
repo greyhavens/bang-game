@@ -8,7 +8,9 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
@@ -23,6 +25,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Sets up the necessary business for the Bang! editor.
  */
+@Singleton
 public class EditorApp extends JmeCanvasApp
 {
     public static String[] appArgs;
@@ -48,7 +51,7 @@ public class EditorApp extends JmeCanvasApp
         System.setProperty("editor", "true");
 
         // this is the entry point for all the "client-side" stuff
-        EditorApp app = new EditorApp();
+        EditorApp app = injector.getInstance(EditorApp.class);
         app.create();
         app.run();
     }
@@ -59,20 +62,17 @@ public class EditorApp extends JmeCanvasApp
         if (super.init()) {
             // two-pass transparency is expensive
             _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
-        
-            // queue an update to make sure that the context is current
-            // before the client's event handlers start firing.  somehow
-            // calling repaint() doesn't have the same effect.
+
+            // queue an update to make sure that the context is current before the client's event
+            // handlers start firing.  somehow calling repaint() doesn't have the same effect.
             postRunnable(new Runnable() {
                 public void run () {
                     _canvas.update(_canvas.getGraphics());
                 }
             });
-            
-            // create and initialize our client instance
-            _client = new EditorClient(this, _frame);
 
-            // start up the client
+            // initialize and start our client instance
+            _client.init(this, _frame);
             _client.start();
 
             return true;
@@ -120,5 +120,6 @@ public class EditorApp extends JmeCanvasApp
     }
 
     protected JFrame _frame;
-    protected EditorClient _client;
+
+    @Inject protected EditorClient _client;
 }
