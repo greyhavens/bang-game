@@ -1103,6 +1103,7 @@
 
     <!-- create the various runtime directories needed on the server -->
     <mkdir dir="${approot.server}/run"/>
+    <mkdir dir="${approot.server}/log"/>
     <mkdir dir="${approot.server}/logs"/>
     <mkdir dir="${approot.server}/pages/stats"/>
     <mkdir dir="${approot.server}/data"/>
@@ -1139,7 +1140,7 @@
           <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="true">
             <path>rsrc/boards/</path>
           </permission>
-          <permission user="${bang.user}" group="${bang.user}" mode="555" recursive="true">
+          <permission mode="555" recursive="true">
             <path>bin/</path>
             <path>etc/rc.d/</path>
             <path>tools/bin/</path>
