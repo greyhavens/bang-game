@@ -30,7 +30,6 @@ public class RanchDispatcher extends InvocationDispatcher<RanchMarshaller>
         return new RanchMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -39,8 +38,7 @@ public class RanchDispatcher extends InvocationDispatcher<RanchMarshaller>
         switch (methodId) {
         case RanchMarshaller.RECRUIT_BIG_SHOT:
             ((RanchProvider)provider).recruitBigShot(
-                source,
-                (String)args[0], (Name)args[1], (InvocationService.ResultListener)args[2]
+                source, (String)args[0], (Name)args[1], (InvocationService.ResultListener)args[2]
             );
             return;
 

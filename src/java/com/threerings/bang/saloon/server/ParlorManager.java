@@ -22,7 +22,6 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
 
-
 import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorGameConfig;

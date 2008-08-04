@@ -29,7 +29,6 @@ public class StoreDispatcher extends InvocationDispatcher<StoreMarshaller>
         return new StoreMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -38,8 +37,7 @@ public class StoreDispatcher extends InvocationDispatcher<StoreMarshaller>
         switch (methodId) {
         case StoreMarshaller.BUY_GOOD:
             ((StoreProvider)provider).buyGood(
-                source,
-                (String)args[0], (Object[])args[1], (InvocationService.ConfirmListener)args[2]
+                source, (String)args[0], (Object[])args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 

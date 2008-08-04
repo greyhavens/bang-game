@@ -33,7 +33,6 @@ import com.jme.scene.state.lwjgl.LWJGLTextureState;
 import com.jme.scene.state.lwjgl.records.TextureStateRecord;
 import com.jme.util.geom.BufferUtils;
 
-
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BasicContext;

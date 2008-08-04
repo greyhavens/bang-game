@@ -125,8 +125,7 @@ public class InitFailedDialog extends JFrame
     protected void showURL (String path)
     {
         try {
-            BrowserUtil.browseURL(
-                new URL(path), new ResultListener.NOOP<Object>());
+            BrowserUtil.browseURL(new URL(path), new ResultListener.NOOP<Void>());
         } catch (Exception e) {
             log.warning("Failed to create URL from path '" + path + "': " + e);
         }

@@ -47,7 +47,6 @@ import com.jmex.bui.util.Dimension;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.RandomUtil;
 
-
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;

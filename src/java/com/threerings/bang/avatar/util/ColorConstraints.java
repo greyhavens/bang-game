@@ -87,7 +87,7 @@ public class ColorConstraints
         if (clrec == null || preds == null) {
             return false;
         }
-        ColorRecord crec = (ColorRecord)clrec.colors.get(colorId);
+        ColorRecord crec = clrec.colors.get(colorId);
         if (crec == null) {
             return false;
         }

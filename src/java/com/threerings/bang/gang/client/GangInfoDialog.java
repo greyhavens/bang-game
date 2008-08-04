@@ -24,15 +24,11 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
-import com.samskivert.util.ResultListener;
-
-import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MainView;
 import com.threerings.bang.client.PlayerPopupMenu;
-import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
@@ -67,14 +63,7 @@ public class GangInfoDialog extends BWindow
     {
         String action = event.getAction();
         if (action.equals("home_page")) {
-            BrowserUtil.browseURL(_url, new ResultListener() {
-                public void requestCompleted (Object result) {
-                }
-                public void requestFailed (Exception cause) {
-                    String msg = MessageBundle.tcompose("m.browser_launch_failed", _url);
-                    _ctx.getChatDirector().displayFeedback(BangAuthCodes.AUTH_MSGS, msg);
-                }
-            });
+            _ctx.showURL(_url);
         } else if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
         }

@@ -20,9 +20,6 @@ import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.GroupLayout;
 
-import com.samskivert.util.ResultListener;
-
-import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -175,21 +172,12 @@ public class PlayerPopupMenu extends BPopupMenu
             WantedPosterView.displayWantedPoster(_ctx, _handle);
 
         } else if ("view_account".equals(event.getAction())) {
-            ResultListener<Object> listener = new ResultListener<Object>() {
-                public void requestCompleted (Object object) {
-                    // nothing doing
-                }
-                public void requestFailed (Exception cause) {
-                    log.warning("Failed to show account info.", cause);
-                }
-            };
             try {
                 // the handle seems to get magically URL encoded; so we don't have to
-                URL url = new URL(DeploymentConfig.getNewAccountURL(null),
-                                  "/office/player.xhtml?handle=" + _handle.toString());
-                BrowserUtil.browseURL(url, listener);
+                _ctx.showURL(new URL(DeploymentConfig.getNewAccountURL(null),
+                                     "/office/player.xhtml?handle=" + _handle.toString()));
             } catch (Exception e) {
-                listener.requestFailed(e);
+                log.warning("Failed to show account URL.", e);
             }
         }
     }

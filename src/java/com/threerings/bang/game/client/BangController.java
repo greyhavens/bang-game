@@ -848,7 +848,6 @@ public class BangController extends GameController
             return;
         }
 
-
         // for team games, futz around with the ranks
         boolean team = _bangobj.isTeamGame();
         int[] points = team ? _bangobj.getTeamPoints(_bangobj.points) : _bangobj.points;

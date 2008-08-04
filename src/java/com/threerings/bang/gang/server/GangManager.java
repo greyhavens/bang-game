@@ -3,9 +3,9 @@
 
 package com.threerings.bang.gang.server;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import com.samskivert.io.PersistenceException;
 
@@ -158,7 +158,7 @@ public class GangManager
      * persistent data.
      */
     public void initPlayer (
-        PlayerObject player, GangMemberRecord mrec, ArrayList<GangInviteRecord> invites)
+        PlayerObject player, GangMemberRecord mrec, List<GangInviteRecord> invites)
     {
         BangServer.requireDObjThread(); // safety first
 
@@ -377,10 +377,10 @@ public class GangManager
     /**
      * Loads the list of gangs asynchronously on the invoker thread.
      */
-    public void loadGangs (final ResultListener<ArrayList<GangEntry>> listener)
+    public void loadGangs (final ResultListener<List<GangEntry>> listener)
     {
-        BangServer.invoker.postUnit(new RepositoryListenerUnit<ArrayList<GangEntry>>(listener) {
-            public ArrayList<GangEntry> invokePersistResult ()
+        BangServer.invoker.postUnit(new RepositoryListenerUnit<List<GangEntry>>(listener) {
+            public List<GangEntry> invokePersistResult ()
                 throws PersistenceException {
                 return _gangrepo.loadGangs();
             }
@@ -619,7 +619,7 @@ public class GangManager
     protected static GangInfo.Member[] getSortedMembers (
         Iterable<GangMemberEntry> members, boolean leaders)
     {
-        ArrayList<GangMemberEntry> entries = GangUtil.getSortedMembers(members, false, leaders);
+        List<GangMemberEntry> entries = GangUtil.getSortedMembers(members, false, leaders);
         GangInfo.Member[] info = new GangInfo.Member[entries.size()];
         for (int ii = 0; ii < info.length; ii++) {
             GangMemberEntry entry = entries.get(ii);

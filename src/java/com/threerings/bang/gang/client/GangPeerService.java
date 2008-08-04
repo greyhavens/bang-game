@@ -79,7 +79,7 @@ public interface GangPeerService extends InvocationService
     /**
      * Reserves scrip to be used in an exchange offer.
      */
-    public void reserveScrip (Client client, int scrip, ResultListener listener);
+    public void reserveScrip (Client client, int scrip, ConfirmListener listener);
 
     /**
      * Grants scrip from a failed exchange offer.

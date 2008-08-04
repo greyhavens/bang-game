@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
@@ -145,7 +148,7 @@ public class BangClientResolver extends CrowdClientResolver
         int gangId = (_grecord == null ? 0 : _grecord.gangId);
 
         // load up this player's items
-        ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
+        List<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
         long now = System.currentTimeMillis();
         // check for expired items
         ArrayIntSet removals = new ArrayIntSet();
@@ -161,7 +164,7 @@ public class BangClientResolver extends CrowdClientResolver
         buser.inventory = new DSet<Item>(items.iterator());
 
         // load up this player's persistent stats
-        ArrayList<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);
+        List<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);
         buser.stats = new StatSet(stats.iterator());
         buser.stats.setContainer(buser);
 
@@ -239,8 +242,8 @@ public class BangClientResolver extends CrowdClientResolver
         }
 
         // load up this player's avatar looks and modify any looks that have now expired articles
-        ArrayList<Look> looks = BangServer.lookrepo.loadLooks(player.playerId);
-        ArrayList<Look> modified = AvatarLogic.stripLooks(removals, buser.inventory, looks);
+        List<Look> looks = BangServer.lookrepo.loadLooks(player.playerId);
+        List<Look> modified = AvatarLogic.stripLooks(removals, buser.inventory, looks);
         for (Look look : modified) {
             BangServer.lookrepo.updateLook(buser.playerId, look);
         }
@@ -268,7 +271,7 @@ public class BangClientResolver extends CrowdClientResolver
         _precords = BangServer.playmgr.getPardnerRepository().getPardnerRecords(player.playerId);
 
         // load this player's friends and foes
-        ArrayList<FolkRecord> folks = BangServer.playrepo.loadOpinions(buser.playerId);
+        List<FolkRecord> folks = BangServer.playrepo.loadOpinions(buser.playerId);
         ArrayIntSet friends = new ArrayIntSet(), foes = new ArrayIntSet();
         for (FolkRecord folk : folks) {
             (folk.opinion == FolkRecord.FRIEND ? friends : foes).add(folk.targetId);
@@ -324,8 +327,8 @@ public class BangClientResolver extends CrowdClientResolver
     public void updateRentedItems (final PlayerObject buser, GangObject gangobj)
     {
         final ArrayIntSet removed = new ArrayIntSet();
-        final ArrayList<Item> updated = new ArrayList<Item>();
-        final ArrayList<Item> added = new ArrayList<Item>();
+        final List<Item> updated = new ArrayList<Item>();
+        final List<Item> added = new ArrayList<Item>();
         for (Item item : buser.inventorySnapshot()) {
             if (item.getGangId() == 0) {
                 continue;
@@ -363,8 +366,7 @@ public class BangClientResolver extends CrowdClientResolver
             }
         }
 
-        final ArrayList<Look> modified =
-            AvatarLogic.stripLooks(removed, buser.inventory, buser.looks);
+        final List<Look> modified = AvatarLogic.stripLooks(removed, buser.inventory, buser.looks);
         for (Look look : modified) {
             buser.updateLooks(look);
         }
@@ -418,22 +420,22 @@ public class BangClientResolver extends CrowdClientResolver
     }
 
     /** A temporary handle on this player's pardner records. */
-    protected ArrayList<PardnerRecord> _precords;
+    protected List<PardnerRecord> _precords;
 
     /** A temporary handle on this player's gang membership information (or null). */
     protected GangMemberRecord _grecord;
 
     /** A temporary list of this player's gang invitations (or null). */
-    protected ArrayList<GangInviteRecord> _ginvites;
+    protected List<GangInviteRecord> _ginvites;
 
     /** Activated rewards that were redeemed for this player during authentication. */
-    protected ArrayList<String> _rewards;
+    protected List<String> _rewards;
 
     /** Used to temporarily store player records during resolution. */
-    protected static HashMap<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();
+    protected static Map<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();
 
     /** Used to temporarily store player age during resolution. */
-    protected static HashSet<String> _astash = new HashSet<String>();
+    protected static Set<String> _astash = new HashSet<String>();
 
     /** The number of rated games a player has to have played to get a free ticket to ITP. */
     protected static final int FREE_ITP_GP_REQUIREMENT = 20;

@@ -13,7 +13,6 @@ import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.scenario.NuggetScenarioInfo;
 
-
 /**
  * Causes the activating piece to "pick up" the nugget.
  */

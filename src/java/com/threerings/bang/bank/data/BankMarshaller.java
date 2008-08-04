@@ -21,7 +21,7 @@ public class BankMarshaller extends InvocationMarshaller
     implements BankService
 {
     /**
-     * Marshalls results to implementations of {@link OfferListener}.
+     * Marshalls results to implementations of {@link BankService.OfferListener}.
      */
     public static class OfferMarshaller extends ListenerMarshaller
         implements OfferListener

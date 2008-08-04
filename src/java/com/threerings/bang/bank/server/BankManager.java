@@ -53,7 +53,7 @@ public class BankManager extends ShopManager
         offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
         offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
         BangServer.coinexmgr.postOffer(
-            caller, offer, immediate, new ResultAdapter<Object>(listener));
+            caller, offer, immediate, new ResultAdapter<CoinExOfferInfo>(listener));
     }
 
     // documentation inherited from interface BankProvider

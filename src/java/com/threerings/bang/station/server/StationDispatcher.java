@@ -29,7 +29,6 @@ public class StationDispatcher extends InvocationDispatcher<StationMarshaller>
         return new StationMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -38,15 +37,13 @@ public class StationDispatcher extends InvocationDispatcher<StationMarshaller>
         switch (methodId) {
         case StationMarshaller.ACTIVATE_TICKET:
             ((StationProvider)provider).activateTicket(
-                source,
-                (InvocationService.ConfirmListener)args[0]
+                source, (InvocationService.ConfirmListener)args[0]
             );
             return;
 
         case StationMarshaller.BUY_TICKET:
             ((StationProvider)provider).buyTicket(
-                source,
-                (InvocationService.ConfirmListener)args[0]
+                source, (InvocationService.ConfirmListener)args[0]
             );
             return;
 

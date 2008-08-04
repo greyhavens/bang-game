@@ -225,9 +225,9 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int RESERVE_SCRIP = 17;
 
     // from interface GangPeerService
-    public void reserveScrip (Client arg1, int arg2, InvocationService.ResultListener arg3)
+    public void reserveScrip (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
         listener3.listener = arg3;
         sendRequest(arg1, RESERVE_SCRIP, new Object[] {
             Integer.valueOf(arg2), listener3
@@ -299,8 +299,6 @@ public class GangPeerMarshaller extends InvocationMarshaller
     // from interface GangPeerService
     public void updateCoins (Client arg1)
     {
-        sendRequest(arg1, UPDATE_COINS, new Object[] {
-            
-        });
+        sendRequest(arg1, UPDATE_COINS, new Object[] {});
     }
 }

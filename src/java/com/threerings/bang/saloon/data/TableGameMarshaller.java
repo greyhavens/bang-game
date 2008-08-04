@@ -24,9 +24,7 @@ public class TableGameMarshaller extends InvocationMarshaller
     // from interface TableGameService
     public void joinMatch (Client arg1)
     {
-        sendRequest(arg1, JOIN_MATCH, new Object[] {
-            
-        });
+        sendRequest(arg1, JOIN_MATCH, new Object[] {});
     }
 
     /** The method id used to dispatch {@link #joinMatchSlot} requests. */
@@ -46,9 +44,7 @@ public class TableGameMarshaller extends InvocationMarshaller
     // from interface TableGameService
     public void leaveMatch (Client arg1)
     {
-        sendRequest(arg1, LEAVE_MATCH, new Object[] {
-            
-        });
+        sendRequest(arg1, LEAVE_MATCH, new Object[] {});
     }
 
     /** The method id used to dispatch {@link #startMatchMaking} requests. */

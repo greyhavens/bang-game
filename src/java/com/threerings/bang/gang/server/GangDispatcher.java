@@ -30,7 +30,6 @@ public class GangDispatcher extends InvocationDispatcher<GangMarshaller>
         return new GangMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -39,15 +38,13 @@ public class GangDispatcher extends InvocationDispatcher<GangMarshaller>
         switch (methodId) {
         case GangMarshaller.GET_GANG_INFO:
             ((GangProvider)provider).getGangInfo(
-                source,
-                (Handle)args[0], (InvocationService.ResultListener)args[1]
+                source, (Handle)args[0], (InvocationService.ResultListener)args[1]
             );
             return;
 
         case GangMarshaller.INVITE_MEMBER:
             ((GangProvider)provider).inviteMember(
-                source,
-                (Handle)args[0], (String)args[1], (InvocationService.ConfirmListener)args[2]
+                source, (Handle)args[0], (String)args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 

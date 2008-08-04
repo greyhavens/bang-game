@@ -31,7 +31,6 @@ public class ParlorDispatcher extends InvocationDispatcher<ParlorMarshaller>
         return new ParlorMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -40,36 +39,31 @@ public class ParlorDispatcher extends InvocationDispatcher<ParlorMarshaller>
         switch (methodId) {
         case ParlorMarshaller.BOOT_PLAYER:
             ((ParlorProvider)provider).bootPlayer(
-                source,
-                ((Integer)args[0]).intValue()
+                source, ((Integer)args[0]).intValue()
             );
             return;
 
         case ParlorMarshaller.FIND_SALOON_MATCH:
             ((ParlorProvider)provider).findSaloonMatch(
-                source,
-                (Criterion)args[0], (InvocationService.ResultListener)args[1]
+                source, (Criterion)args[0], (InvocationService.ResultListener)args[1]
             );
             return;
 
         case ParlorMarshaller.LEAVE_SALOON_MATCH:
             ((ParlorProvider)provider).leaveSaloonMatch(
-                source,
-                ((Integer)args[0]).intValue()
+                source, ((Integer)args[0]).intValue()
             );
             return;
 
         case ParlorMarshaller.UPDATE_PARLOR_CONFIG:
             ((ParlorProvider)provider).updateParlorConfig(
-                source,
-                (ParlorInfo)args[0], ((Boolean)args[1]).booleanValue()
+                source, (ParlorInfo)args[0], ((Boolean)args[1]).booleanValue()
             );
             return;
 
         case ParlorMarshaller.UPDATE_PARLOR_PASSWORD:
             ((ParlorProvider)provider).updateParlorPassword(
-                source,
-                (String)args[0]
+                source, (String)args[0]
             );
             return;
 

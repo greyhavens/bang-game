@@ -6,6 +6,7 @@ package com.threerings.bang.server.persist;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -61,7 +62,7 @@ public class ItemRepository extends SimpleRepository
     /**
      * Loads the items owned by the specified player.
      */
-    public ArrayList<Item> loadItems (final int playerId)
+    public List<Item> loadItems (final int playerId)
         throws PersistenceException
     {
         return loadItems(playerId, false);
@@ -70,10 +71,10 @@ public class ItemRepository extends SimpleRepository
     /**
      * Loads the items owned by the specified player or gang.
      */
-    public ArrayList<Item> loadItems (final int ownerId, final boolean gangOwned)
+    public List<Item> loadItems (final int ownerId, final boolean gangOwned)
         throws PersistenceException
     {
-        final ArrayList<Item> items = new ArrayList<Item>();
+        final List<Item> items = new ArrayList<Item>();
         final String query = "select ITEM_ID, ITEM_TYPE, ITEM_DATA, GANG_ID, EXPIRES " +
             "from ITEMS where GANG_OWNED = " + gangOwned + " and OWNER_ID = " + ownerId;
         execute(new Operation<Object>() {
@@ -222,8 +223,7 @@ public class ItemRepository extends SimpleRepository
      * Inserts copies of the given prototype item into the inventories of the identified
      * users and stores the created items in the provided list.
      */
-    public void insertItems (
-        final Item prototype, final ArrayIntSet userIds, final ArrayList<Item> items)
+    public void insertItems (final Item prototype, final ArrayIntSet userIds, final List<Item> items)
         throws PersistenceException
     {
         // determine the prototype's assigned item type and serialize it

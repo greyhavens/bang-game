@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server;
 
+import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -18,96 +19,96 @@ public interface PlayerProvider extends InvocationProvider
     /**
      * Handles a {@link PlayerService#bootPlayer} request.
      */
-    public void bootPlayer (ClientObject caller, Handle arg1, InvocationService.ConfirmListener arg2)
+    void bootPlayer (ClientObject caller, Handle arg1, InvocationService.ConfirmListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#createAccount} request.
      */
-    public void createAccount (ClientObject caller, String arg1, String arg2, String arg3, String arg4, long arg5, InvocationService.ConfirmListener arg6)
+    void createAccount (ClientObject caller, String arg1, String arg2, String arg3, String arg4, long arg5, InvocationService.ConfirmListener arg6)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#destroyItem} request.
      */
-    public void destroyItem (ClientObject caller, int arg1, InvocationService.ConfirmListener arg2)
+    void destroyItem (ClientObject caller, int arg1, InvocationService.ConfirmListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#getPosterInfo} request.
      */
-    public void getPosterInfo (ClientObject caller, Handle arg1, InvocationService.ResultListener arg2)
+    void getPosterInfo (ClientObject caller, Handle arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#invitePardner} request.
      */
-    public void invitePardner (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
+    void invitePardner (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#noteFolk} request.
      */
-    public void noteFolk (ClientObject caller, int arg1, int arg2, InvocationService.ConfirmListener arg3)
+    void noteFolk (ClientObject caller, int arg1, int arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#pickFirstBigShot} request.
      */
-    public void pickFirstBigShot (ClientObject caller, String arg1, Name arg2, InvocationService.ConfirmListener arg3)
+    void pickFirstBigShot (ClientObject caller, String arg1, Name arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#playBountyGame} request.
      */
-    public void playBountyGame (ClientObject caller, String arg1, String arg2, InvocationService.InvocationListener arg3)
+    void playBountyGame (ClientObject caller, String arg1, String arg2, InvocationService.InvocationListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#playComputer} request.
      */
-    public void playComputer (ClientObject caller, int arg1, String[] arg2, String arg3, boolean arg4, InvocationService.InvocationListener arg5)
+    void playComputer (ClientObject caller, int arg1, String[] arg2, String arg3, boolean arg4, InvocationService.InvocationListener arg5)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#playPractice} request.
      */
-    public void playPractice (ClientObject caller, String arg1, InvocationService.InvocationListener arg2)
+    void playPractice (ClientObject caller, String arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#playTutorial} request.
      */
-    public void playTutorial (ClientObject caller, String arg1, InvocationService.InvocationListener arg2)
+    void playTutorial (ClientObject caller, String arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#prepSongForDownload} request.
      */
-    public void prepSongForDownload (ClientObject caller, String arg1, InvocationService.ResultListener arg2)
+    void prepSongForDownload (ClientObject caller, String arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#registerComplaint} request.
      */
-    public void registerComplaint (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
+    void registerComplaint (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#removePardner} request.
      */
-    public void removePardner (ClientObject caller, Handle arg1, InvocationService.ConfirmListener arg2)
+    void removePardner (ClientObject caller, Handle arg1, InvocationService.ConfirmListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#respondToNotification} request.
      */
-    public void respondToNotification (ClientObject caller, Comparable arg1, int arg2, InvocationService.ConfirmListener arg3)
+    void respondToNotification (ClientObject caller, Comparable arg1, int arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#updatePosterInfo} request.
      */
-    public void updatePosterInfo (ClientObject caller, int arg1, String arg2, int[] arg3, InvocationService.ConfirmListener arg4)
+    void updatePosterInfo (ClientObject caller, int arg1, String arg2, int[] arg3, InvocationService.ConfirmListener arg4)
         throws InvocationException;
 }

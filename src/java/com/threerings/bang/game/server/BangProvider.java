@@ -17,33 +17,33 @@ public interface BangProvider extends InvocationProvider
     /**
      * Handles a {@link BangService#cancelOrder} request.
      */
-    public void cancelOrder (ClientObject caller, int arg1);
+    void cancelOrder (ClientObject caller, int arg1);
 
     /**
      * Handles a {@link BangService#getBoard} request.
      */
-    public void getBoard (ClientObject caller, BangService.BoardListener arg1)
+    void getBoard (ClientObject caller, BangService.BoardListener arg1)
         throws InvocationException;
 
     /**
      * Handles a {@link BangService#order} request.
      */
-    public void order (ClientObject caller, int arg1, short arg2, short arg3, int arg4, InvocationService.ResultListener arg5)
+    void order (ClientObject caller, int arg1, short arg2, short arg3, int arg4, InvocationService.ResultListener arg5)
         throws InvocationException;
 
     /**
      * Handles a {@link BangService#playCard} request.
      */
-    public void playCard (ClientObject caller, int arg1, Object arg2, InvocationService.ConfirmListener arg3)
+    void playCard (ClientObject caller, int arg1, Object arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link BangService#reportPerformance} request.
      */
-    public void reportPerformance (ClientObject caller, String arg1, String arg2, int[] arg3);
+    void reportPerformance (ClientObject caller, String arg1, String arg2, int[] arg3);
 
     /**
      * Handles a {@link BangService#selectTeam} request.
      */
-    public void selectTeam (ClientObject caller, int arg1, String[] arg2, int[] arg3);
+    void selectTeam (ClientObject caller, int arg1, String[] arg2, int[] arg3);
 }

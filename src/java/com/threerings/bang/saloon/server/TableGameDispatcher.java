@@ -30,7 +30,6 @@ public class TableGameDispatcher extends InvocationDispatcher<TableGameMarshalle
         return new TableGameMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -39,34 +38,31 @@ public class TableGameDispatcher extends InvocationDispatcher<TableGameMarshalle
         switch (methodId) {
         case TableGameMarshaller.JOIN_MATCH:
             ((TableGameProvider)provider).joinMatch(
-                source                
+                source
             );
             return;
 
         case TableGameMarshaller.JOIN_MATCH_SLOT:
             ((TableGameProvider)provider).joinMatchSlot(
-                source,
-                ((Integer)args[0]).intValue()
+                source, ((Integer)args[0]).intValue()
             );
             return;
 
         case TableGameMarshaller.LEAVE_MATCH:
             ((TableGameProvider)provider).leaveMatch(
-                source                
+                source
             );
             return;
 
         case TableGameMarshaller.START_MATCH_MAKING:
             ((TableGameProvider)provider).startMatchMaking(
-                source,
-                (ParlorGameConfig)args[0], (byte[])args[1], (InvocationService.ConfirmListener)args[2]
+                source, (ParlorGameConfig)args[0], (byte[])args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 
         case TableGameMarshaller.UPDATE_GAME_CONFIG:
             ((TableGameProvider)provider).updateGameConfig(
-                source,
-                (ParlorGameConfig)args[0]
+                source, (ParlorGameConfig)args[0]
             );
             return;
 

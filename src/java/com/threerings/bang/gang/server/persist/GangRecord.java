@@ -4,10 +4,9 @@
 package com.threerings.bang.gang.server.persist;
 
 import java.nio.ByteBuffer;
-
 import java.sql.Timestamp;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
@@ -64,13 +63,13 @@ public class GangRecord
     public transient int coins;
 
     /** The items owned by the gang. */
-    public transient ArrayList<Item> inventory;
+    public transient List<Item> inventory;
 
     /** The currently configured gang outfit. */
     public transient OutfitArticle[] outfit;
 
     /** The members of the gang. */
-    public transient ArrayList<GangMemberEntry> members;
+    public transient List<GangMemberEntry> members;
 
     /** The avatar of the most senior leader. */
     public transient AvatarInfo avatar;

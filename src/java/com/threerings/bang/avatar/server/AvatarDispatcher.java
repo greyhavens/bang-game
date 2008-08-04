@@ -32,7 +32,6 @@ public class AvatarDispatcher extends InvocationDispatcher<AvatarMarshaller>
         return new AvatarMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -41,15 +40,13 @@ public class AvatarDispatcher extends InvocationDispatcher<AvatarMarshaller>
         switch (methodId) {
         case AvatarMarshaller.CREATE_AVATAR:
             ((AvatarProvider)provider).createAvatar(
-                source,
-                (Handle)args[0], ((Boolean)args[1]).booleanValue(), (LookConfig)args[2], ((Integer)args[3]).intValue(), (InvocationService.ConfirmListener)args[4]
+                source, (Handle)args[0], ((Boolean)args[1]).booleanValue(), (LookConfig)args[2], ((Integer)args[3]).intValue(), (InvocationService.ConfirmListener)args[4]
             );
             return;
 
         case AvatarMarshaller.SELECT_LOOK:
             ((AvatarProvider)provider).selectLook(
-                source,
-                (Look.Pose)args[0], (String)args[1]
+                source, (Look.Pose)args[0], (String)args[1]
             );
             return;
 

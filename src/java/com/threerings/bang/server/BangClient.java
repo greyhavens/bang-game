@@ -3,7 +3,7 @@
 
 package com.threerings.bang.server;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Iterator;
 
 import com.samskivert.util.Invoker;
@@ -113,7 +113,7 @@ public class BangClient extends CrowdClient
             public void handleResult () {
                 BangServer.playmgr.redeemRewards((PlayerObject)_clobj, _rewards);
             }
-            protected ArrayList<String> _rewards;
+            protected List<String> _rewards;
         });
     }
 

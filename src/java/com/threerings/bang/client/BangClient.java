@@ -34,6 +34,7 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
+import com.threerings.util.BrowserUtil;
 import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -1444,6 +1445,17 @@ public class BangClient extends BasicClient
 
         public BoardCache getBoardCache () {
             return _bcache;
+        }
+
+        public void showURL (final URL url) {
+            BrowserUtil.browseURL(url, new ResultListener<Void>() {
+                public void requestCompleted (Void result) {
+                }
+                public void requestFailed (Exception cause) {
+                    String msg = MessageBundle.tcompose("m.browser_launch_failed", url);
+                    getChatDirector().displayFeedback(BangAuthCodes.AUTH_MSGS, msg);
+                }
+            });
         }
 
         public void setPlaceView (PlaceView view) {

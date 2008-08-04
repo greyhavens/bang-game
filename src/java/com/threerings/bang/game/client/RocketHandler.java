@@ -31,7 +31,6 @@ import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 import static com.threerings.bang.game.client.BallisticShotHandler.*;
 
-
 /**
  * Waits for all sprites involved in a shot to stop moving and then
  * animates the fired shot.

@@ -33,7 +33,6 @@ import com.threerings.bang.game.server.ai.ForestGuardiansLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
-
 /**
  * A gameplay scenario wherein:
  * <ul>

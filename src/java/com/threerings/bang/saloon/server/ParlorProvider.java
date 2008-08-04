@@ -3,6 +3,7 @@
 
 package com.threerings.bang.saloon.server;
 
+import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.presents.client.InvocationService;
@@ -18,26 +19,26 @@ public interface ParlorProvider extends InvocationProvider
     /**
      * Handles a {@link ParlorService#bootPlayer} request.
      */
-    public void bootPlayer (ClientObject caller, int arg1);
+    void bootPlayer (ClientObject caller, int arg1);
 
     /**
      * Handles a {@link ParlorService#findSaloonMatch} request.
      */
-    public void findSaloonMatch (ClientObject caller, Criterion arg1, InvocationService.ResultListener arg2)
+    void findSaloonMatch (ClientObject caller, Criterion arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link ParlorService#leaveSaloonMatch} request.
      */
-    public void leaveSaloonMatch (ClientObject caller, int arg1);
+    void leaveSaloonMatch (ClientObject caller, int arg1);
 
     /**
      * Handles a {@link ParlorService#updateParlorConfig} request.
      */
-    public void updateParlorConfig (ClientObject caller, ParlorInfo arg1, boolean arg2);
+    void updateParlorConfig (ClientObject caller, ParlorInfo arg1, boolean arg2);
 
     /**
      * Handles a {@link ParlorService#updateParlorPassword} request.
      */
-    public void updateParlorPassword (ClientObject caller, String arg1);
+    void updateParlorPassword (ClientObject caller, String arg1);
 }

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.admin.server;
 
+import com.threerings.bang.admin.client.BangAdminService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationProvider;
 
@@ -14,5 +15,5 @@ public interface BangAdminProvider extends InvocationProvider
     /**
      * Handles a {@link BangAdminService#scheduleReboot} request.
      */
-    public void scheduleReboot (ClientObject caller, int arg1);
+    void scheduleReboot (ClientObject caller, int arg1);
 }

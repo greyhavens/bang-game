@@ -4,6 +4,7 @@
 package com.threerings.bang.gang.server;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.samskivert.io.PersistenceException;
 
@@ -574,8 +575,8 @@ public class HideoutManager extends MatchHostManager
         BangServer.coinexmgr.registerPublisher(this);
 
         // load up the gangs for the directory
-        BangServer.gangmgr.loadGangs(new ResultListener<ArrayList<GangEntry>>() {
-            public void requestCompleted (ArrayList<GangEntry> result) {
+        BangServer.gangmgr.loadGangs(new ResultListener<List<GangEntry>>() {
+            public void requestCompleted (List<GangEntry> result) {
                 _hobj.setGangs(new DSet<GangEntry>(result.iterator()));
             }
             public void requestFailed (Exception cause) {
@@ -702,14 +703,14 @@ public class HideoutManager extends MatchHostManager
                 }
             }
 
-            protected ArrayList<TopRankedGangList> _lists;
+            protected List<TopRankedGangList> _lists;
         });
     }
 
     protected void purgeInactiveGangs ()
     {
         long cutoff = System.currentTimeMillis() - ACTIVITY_DELAY;
-        ArrayList<GangEntry> removals = new ArrayList<GangEntry>();
+        List<GangEntry> removals = new ArrayList<GangEntry>();
         for (GangEntry entry : _hobj.gangs) {
             if (entry.lastPlayed < cutoff) {
                 removals.add(entry);

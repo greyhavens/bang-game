@@ -20,7 +20,7 @@ public class BangMarshaller extends InvocationMarshaller
     implements BangService
 {
     /**
-     * Marshalls results to implementations of {@link BoardListener}.
+     * Marshalls results to implementations of {@link BangService.BoardListener}.
      */
     public static class BoardMarshaller extends ListenerMarshaller
         implements BoardListener

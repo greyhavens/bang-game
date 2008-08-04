@@ -16,8 +16,8 @@ import com.samskivert.util.ResultListener;
 
 import com.threerings.util.Name;
 
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.util.InvocationAdapter;
 
 import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.coin.server.CoinExOffer;
@@ -223,8 +223,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     }
 
     @Override // documentation inherited
-    protected void reserveCurrency (
-        Object user, final int cost, final ResultListener<Object> listener)
+    protected void reserveCurrency (Object user, final int cost, final ResultListener<Void> listener)
     {
         if (user instanceof GangObject) {
             reserveGangCurrency((GangObject)user, cost, listener);
@@ -270,7 +269,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
      * Special handling for gang exchange offers.
      */
     protected void reserveGangCurrency (
-            GangObject gang, final int cost, final ResultListener<Object> listener)
+        GangObject gang, final int cost, final ResultListener<Void> listener)
     {
         if (gang.scrip < cost) {
             listener.requestFailed(new InvocationException(BangCodes.E_INSUFFICIENT_FUNDS));
@@ -278,7 +277,14 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         }
         try {
             BangServer.gangmgr.requireGangPeerProvider(gang.gangId).reserveScrip(
-                    null, cost, new InvocationAdapter(listener));
+                null, cost, new InvocationService.ConfirmListener() {
+                    public void requestProcessed () {
+                        listener.requestCompleted(null);
+                    }
+                    public void requestFailed (String cause) {
+                        listener.requestFailed(new InvocationException(cause));
+                    }
+                });
         } catch (InvocationException ie) {
             log.warning("Unable to reserve gang currency! [ie=" + ie + "].");
             listener.requestFailed(ie);
@@ -381,7 +387,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         return list.toArray(new CoinExOfferInfo[list.size()]);
     }
 
-    protected ArrayList<OfferPublisher> _publishers = new ArrayList<OfferPublisher>();
+    protected List<OfferPublisher> _publishers = new ArrayList<OfferPublisher>();
 
     /** Used to reverse sort our offers. */
     protected Comparator<ConsolidatedOffer> _revcmp = new Comparator<ConsolidatedOffer>() {

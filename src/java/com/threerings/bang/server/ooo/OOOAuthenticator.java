@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import com.google.inject.Singleton;
 
@@ -138,12 +139,12 @@ public class OOOAuthenticator extends BangAuthenticator
     }
 
     @Override // from abstract BangAuthenticator
-    public ArrayList<String> redeemRewards (String username, String ident)
+    public List<String> redeemRewards (String username, String ident)
     {
         // redeem any rewards for which they have become eligible
-        ArrayList<String> rdata = new ArrayList<String>();
+        List<String> rdata = new ArrayList<String>();
         try {
-            ArrayList<RewardRecord> rewards = _rewardrep.loadActivatedRewards(username, ident);
+            List<RewardRecord> rewards = _rewardrep.loadActivatedRewards(username, ident);
             for (RewardRecord record : rewards) {
                 if (record.account.equals(username) &&
                     StringUtil.isBlank(record.redeemerIdent)) {
@@ -431,7 +432,7 @@ public class OOOAuthenticator extends BangAuthenticator
      * string if so, null otherwise.
      */
     protected String maybeRedeemReward (String username, String machIdent, RewardRecord record,
-                                        ArrayList<RewardRecord> records)
+                                        List<RewardRecord> records)
         throws PersistenceException
     {
         // otherwise load up the reward info

@@ -32,7 +32,6 @@ public class SaloonDispatcher extends InvocationDispatcher<SaloonMarshaller>
         return new SaloonMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -41,29 +40,25 @@ public class SaloonDispatcher extends InvocationDispatcher<SaloonMarshaller>
         switch (methodId) {
         case SaloonMarshaller.CREATE_PARLOR:
             ((SaloonProvider)provider).createParlor(
-                source,
-                (ParlorInfo.Type)args[0], (String)args[1], ((Boolean)args[2]).booleanValue(), (InvocationService.ResultListener)args[3]
+                source, (ParlorInfo.Type)args[0], (String)args[1], ((Boolean)args[2]).booleanValue(), (InvocationService.ResultListener)args[3]
             );
             return;
 
         case SaloonMarshaller.FIND_MATCH:
             ((SaloonProvider)provider).findMatch(
-                source,
-                (Criterion)args[0], (InvocationService.ResultListener)args[1]
+                source, (Criterion)args[0], (InvocationService.ResultListener)args[1]
             );
             return;
 
         case SaloonMarshaller.JOIN_PARLOR:
             ((SaloonProvider)provider).joinParlor(
-                source,
-                (Handle)args[0], (String)args[1], (InvocationService.ResultListener)args[2]
+                source, (Handle)args[0], (String)args[1], (InvocationService.ResultListener)args[2]
             );
             return;
 
         case SaloonMarshaller.LEAVE_MATCH:
             ((SaloonProvider)provider).leaveMatch(
-                source,
-                ((Integer)args[0]).intValue()
+                source, ((Integer)args[0]).intValue()
             );
             return;
 

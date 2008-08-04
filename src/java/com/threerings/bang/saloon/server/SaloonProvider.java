@@ -4,6 +4,7 @@
 package com.threerings.bang.saloon.server;
 
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.presents.client.InvocationService;
@@ -19,23 +20,23 @@ public interface SaloonProvider extends InvocationProvider
     /**
      * Handles a {@link SaloonService#createParlor} request.
      */
-    public void createParlor (ClientObject caller, ParlorInfo.Type arg1, String arg2, boolean arg3, InvocationService.ResultListener arg4)
+    void createParlor (ClientObject caller, ParlorInfo.Type arg1, String arg2, boolean arg3, InvocationService.ResultListener arg4)
         throws InvocationException;
 
     /**
      * Handles a {@link SaloonService#findMatch} request.
      */
-    public void findMatch (ClientObject caller, Criterion arg1, InvocationService.ResultListener arg2)
+    void findMatch (ClientObject caller, Criterion arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link SaloonService#joinParlor} request.
      */
-    public void joinParlor (ClientObject caller, Handle arg1, String arg2, InvocationService.ResultListener arg3)
+    void joinParlor (ClientObject caller, Handle arg1, String arg2, InvocationService.ResultListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link SaloonService#leaveMatch} request.
      */
-    public void leaveMatch (ClientObject caller, int arg1);
+    void leaveMatch (ClientObject caller, int arg1);
 }

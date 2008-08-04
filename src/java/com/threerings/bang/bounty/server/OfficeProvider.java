@@ -3,6 +3,7 @@
 
 package com.threerings.bang.bounty.server;
 
+import com.threerings.bang.bounty.client.OfficeService;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -17,6 +18,6 @@ public interface OfficeProvider extends InvocationProvider
     /**
      * Handles a {@link OfficeService#testBountyGame} request.
      */
-    public void testBountyGame (ClientObject caller, BangConfig arg1, InvocationService.InvocationListener arg2)
+    void testBountyGame (ClientObject caller, BangConfig arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 }

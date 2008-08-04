@@ -4,7 +4,7 @@
 package com.threerings.bang.server;
 
 import java.sql.Date;
-import java.util.ArrayList;
+import java.util.List;
 
 import com.samskivert.io.PersistenceException;
 
@@ -37,5 +37,5 @@ public abstract class BangAuthenticator extends Authenticator
     /**
      * Checks whether the specified player has any pending rewards, redeeming them in the process.
      */
-    public abstract ArrayList<String> redeemRewards (String username, String ident);
+    public abstract List<String> redeemRewards (String username, String ident);
 }

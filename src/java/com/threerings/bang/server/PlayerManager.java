@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.samskivert.io.PersistenceException;
@@ -240,7 +241,7 @@ public class PlayerManager
      * Populates the identified player's set of pardners, performing any notifications and updates
      * that were being held until the player logged on.
      */
-    public void initPardners (final PlayerObject player, ArrayList<PardnerRecord> records)
+    public void initPardners (final PlayerObject player, List<PardnerRecord> records)
     {
         // TEMP: sanity check since I've seen duplicates
         HashSet<Handle> temp = new HashSet<Handle>();
@@ -258,7 +259,7 @@ public class PlayerManager
         // END TEMP
 
         // collect active players, send invitations
-        ArrayList<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
+        List<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
         for (PardnerRecord record : records) {
             if (record.isActive()) {
                 pardners.add(getPardnerEntry(record.handle, record.lastSession));
@@ -306,7 +307,7 @@ public class PlayerManager
      * Called from {@link BangClientResolver#finishResolution} to redeem any rewards for which this
      * player is eligible.
      */
-    public void redeemRewards (PlayerObject player, ArrayList<String> rewards)
+    public void redeemRewards (PlayerObject player, List<String> rewards)
     {
         for (String reward : rewards) {
             try {
@@ -1199,7 +1200,7 @@ public class PlayerManager
             public long getLongThreshold () {
                 return 4000L; // this seems to take about ~3600ms every time...
             }
-            protected ArrayList<PlayerRecord> _players;
+            protected List<PlayerRecord> _players;
         });
     }
 
@@ -1409,7 +1410,7 @@ public class PlayerManager
      */
     protected void clearPardnerInvites (PlayerObject player)
     {
-        ArrayList<Comparable> keys = new ArrayList<Comparable>();
+        List<Comparable> keys = new ArrayList<Comparable>();
         for (Notification notification : player.notifications) {
             if (notification instanceof PardnerInvite) {
                 keys.add(notification.getKey());

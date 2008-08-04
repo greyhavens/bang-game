@@ -18,21 +18,15 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Rectangle;
 import com.jmex.bui.util.Point;
 
-import com.samskivert.util.ResultListener;
-
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.coin.data.CoinExOfferInfo;
 
-import com.threerings.util.BrowserUtil;
-import com.threerings.util.MessageBundle;
-
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
-import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -126,8 +120,7 @@ public class BankView extends ShopView
     public void actionPerformed (ActionEvent event)
     {
         if ("get_pass".equals(event.getAction())) {
-            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getBillingPassURL(
-                        _ctx, _ctx.getUserObject().townId), _browlist);
+            _ctx.showURL(DeploymentConfig.getBillingPassURL(_ctx, _ctx.getUserObject().townId));
         } else if ("exchange".equals(event.getAction())) {
             if (_ctx.getUserObject().canExchange()) {
                 showExchangeView();
@@ -244,16 +237,6 @@ public class BankView extends ShopView
             }
         }
     }
-
-    protected ResultListener _browlist = new ResultListener() {
-        public void requestCompleted (Object result) {
-        }
-        public void requestFailed (Exception cause) {
-            String msg = MessageBundle.tcompose(
-                    "m.browser_launch_failed", _shownURL.toString());
-            _status.setStatus(_ctx.xlate(BangAuthCodes.AUTH_MSGS, msg), true);
-        }
-    };
 
     protected BangContext _ctx;
     protected StatusLabel _status;

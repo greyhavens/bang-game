@@ -28,7 +28,6 @@ public class BangAdminDispatcher extends InvocationDispatcher<BangAdminMarshalle
         return new BangAdminMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -37,8 +36,7 @@ public class BangAdminDispatcher extends InvocationDispatcher<BangAdminMarshalle
         switch (methodId) {
         case BangAdminMarshaller.SCHEDULE_REBOOT:
             ((BangAdminProvider)provider).scheduleReboot(
-                source,
-                ((Integer)args[0]).intValue()
+                source, ((Integer)args[0]).intValue()
             );
             return;
 

@@ -30,7 +30,6 @@ public class OfficeDispatcher extends InvocationDispatcher<OfficeMarshaller>
         return new OfficeMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -39,8 +38,7 @@ public class OfficeDispatcher extends InvocationDispatcher<OfficeMarshaller>
         switch (methodId) {
         case OfficeMarshaller.TEST_BOUNTY_GAME:
             ((OfficeProvider)provider).testBountyGame(
-                source,
-                (BangConfig)args[0], (InvocationService.InvocationListener)args[1]
+                source, (BangConfig)args[0], (InvocationService.InvocationListener)args[1]
             );
             return;
 

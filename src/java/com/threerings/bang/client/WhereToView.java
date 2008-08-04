@@ -27,7 +27,6 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
-
 /**
  * Displays a list of completed and uncompleted tutorials and allows the user to (re)play them
  * along with pointers toward the Saloon and Sheriff's Office.

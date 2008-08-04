@@ -3,8 +3,6 @@
 
 package com.threerings.bang.bank.client;
 
-import java.net.URL;
-
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
@@ -13,13 +11,10 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
-import com.samskivert.util.ResultListener;
-import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.StatusLabel;
-import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -38,8 +33,7 @@ public class BuyCoinsView extends BContainer
         _ctx = ctx;
         _status = status;
 
-        MessageBundle msgs =
-            ctx.getMessageManager().getBundle(BankCodes.BANK_MSGS);
+        MessageBundle msgs = ctx.getMessageManager().getBundle(BankCodes.BANK_MSGS);
 
         TableLayout tlay = new TableLayout(3, 5, 15);
         tlay.setHorizontalAlignment(TableLayout.CENTER);
@@ -65,24 +59,12 @@ public class BuyCoinsView extends BContainer
 
     protected ActionListener _purchaser = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
-            BrowserUtil.browseURL(
-                _shownURL = DeploymentConfig.getBillingURL(_ctx), _browlist);
-        }
-    };
-
-    protected ResultListener _browlist = new ResultListener() {
-        public void requestCompleted (Object result) {
-        }
-        public void requestFailed (Exception cause) {
-            String msg = MessageBundle.tcompose(
-                "m.browser_launch_failed", _shownURL.toString());
-            _status.setStatus(_ctx.xlate(BangAuthCodes.AUTH_MSGS, msg), true);
+            _ctx.showURL(DeploymentConfig.getBillingURL(_ctx));
         }
     };
 
     protected BangContext _ctx;
     protected StatusLabel _status;
-    protected URL _shownURL;
 
     protected static final int[] PACKAGES = { 12, 42, 90 };
 }

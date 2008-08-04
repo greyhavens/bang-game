@@ -17,9 +17,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.IntegerDocument;
 import com.jmex.bui.util.Dimension;
 
-import com.samskivert.util.ResultListener;
-
-import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -30,7 +27,6 @@ import com.threerings.presents.dobj.SetAdapter;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
-import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.WeightClassUpgrade;
 import com.threerings.bang.util.BangContext;
 
@@ -137,14 +133,7 @@ public class GangInfoView extends BContainer
     {
         String action = event.getAction();
         if (action.equals("page")) {
-            BrowserUtil.browseURL(_gangobj.getURL(), new ResultListener() {
-                public void requestCompleted (Object result) {
-                }
-                public void requestFailed (Exception cause) {
-                    String msg = MessageBundle.tcompose("m.browser_launch_failed", _gangobj.url);
-                    _status.setStatus(BangAuthCodes.AUTH_MSGS, msg, true);
-                }
-            });
+            _ctx.showURL(_gangobj.getURL());
         } else if (action.equals("edit_statement")) {
             _ctx.getBangClient().displayPopup(new StatementDialog(_ctx, _status), true, 400);
         } else if (action.equals("donate")) {

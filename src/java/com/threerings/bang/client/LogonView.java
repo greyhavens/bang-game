@@ -32,11 +32,9 @@ import com.jmex.bui.util.Rectangle;
 import com.jmex.bui.util.Point;
 
 import com.samskivert.util.RandomUtil;
-import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
 
-import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -268,13 +266,13 @@ public class LogonView extends BWindow
             _ctx.getBangClient().displayPopup(new OptionsView(_ctx, this), true);
 
         } else if ("server_status".equals(event.getAction())) {
-            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getServerStatusURL(), _browlist);
+            _ctx.showURL(DeploymentConfig.getServerStatusURL());
             _status.setStatus(_msgs.get("m.server_status_launched"), false);
 
         } else if ("new_account".equals(event.getAction())) {
             String affsuf = BangClient.getAffiliateFromInstallFile();
             affsuf = (affsuf == null) ? null : ("affiliate=" + affsuf);
-            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getNewAccountURL(affsuf), _browlist);
+            _ctx.showURL(DeploymentConfig.getNewAccountURL(affsuf));
             _status.setStatus(_msgs.get("m.new_account_launched"), false);
 
         } else if ("anon_account".equals(event.getAction())) {
@@ -392,8 +390,7 @@ public class LogonView extends BWindow
                 new String[] { "m.exit", "m.tb_tos" }, new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 if (button == 1) {
-                    BrowserUtil.browseURL(
-                        _shownURL = DeploymentConfig.getTosURL(), _browlist);
+                    _ctx.showURL(DeploymentConfig.getTosURL());
                 }
                 _ctx.getApp().stop();
             }
@@ -469,14 +466,6 @@ public class LogonView extends BWindow
                 String reason = cmsg.substring(BangAuthCodes.BANNED.length());
                 showBannedDialog(reason);
             }
-        }
-    };
-
-    protected ResultListener _browlist = new ResultListener() {
-        public void requestCompleted (Object result) {
-        }
-        public void requestFailed (Exception cause) {
-            _status.setStatus(_msgs.get("m.browser_launch_failed", _shownURL.toString()), true);
         }
     };
 

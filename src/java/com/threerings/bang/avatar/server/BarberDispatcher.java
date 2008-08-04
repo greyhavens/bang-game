@@ -31,7 +31,6 @@ public class BarberDispatcher extends InvocationDispatcher<BarberMarshaller>
         return new BarberMarshaller();
     }
 
-    @SuppressWarnings("unchecked")
     @Override // documentation inherited
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
@@ -40,22 +39,19 @@ public class BarberDispatcher extends InvocationDispatcher<BarberMarshaller>
         switch (methodId) {
         case BarberMarshaller.CHANGE_HANDLE:
             ((BarberProvider)provider).changeHandle(
-                source,
-                (Handle)args[0], (InvocationService.ConfirmListener)args[1]
+                source, (Handle)args[0], (InvocationService.ConfirmListener)args[1]
             );
             return;
 
         case BarberMarshaller.CONFIGURE_LOOK:
             ((BarberProvider)provider).configureLook(
-                source,
-                (String)args[0], (int[])args[1]
+                source, (String)args[0], (int[])args[1]
             );
             return;
 
         case BarberMarshaller.PURCHASE_LOOK:
             ((BarberProvider)provider).purchaseLook(
-                source,
-                (LookConfig)args[0], (InvocationService.ConfirmListener)args[1]
+                source, (LookConfig)args[0], (InvocationService.ConfirmListener)args[1]
             );
             return;
 

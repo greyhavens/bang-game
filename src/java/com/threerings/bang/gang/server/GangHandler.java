@@ -6,6 +6,7 @@ package com.threerings.bang.gang.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import com.samskivert.io.PersistenceException;
 
@@ -57,6 +58,7 @@ import com.threerings.crowd.chat.server.SpeakHandler;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.chat.server.SpeakUtil;
 
+import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.coin.server.CoinExOffer;
 import com.threerings.coin.server.persist.CoinTransaction;
 
@@ -261,7 +263,7 @@ public class GangHandler
      * because it simply reads the entries from the database.
      */
     public void getHistoryEntries (final int offset, final int count, final String filter,
-            final InvocationService.ResultListener listener)
+                                   final InvocationService.ResultListener listener)
     {
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
@@ -270,7 +272,7 @@ public class GangHandler
             public void handleSuccess () {
                 listener.requestProcessed(_entries.toArray(new HistoryEntry[_entries.size()]));
             }
-            protected ArrayList<HistoryEntry> _entries;
+            protected List<HistoryEntry> _entries;
         });
     }
 
@@ -278,9 +280,8 @@ public class GangHandler
      * Transfers money from the user to the gang's coffers.  This must be coordinated between the
      * peer on which the user is logged in and the controlling peer.
      */
-    public void addToCoffers (
-        PlayerObject user, final int scrip, final int coins,
-        final InvocationService.ConfirmListener listener)
+    public void addToCoffers (PlayerObject user, final int scrip, final int coins,
+                              final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
         new ProxyFinancialAction(user, scrip, coins) { {
@@ -319,7 +320,8 @@ public class GangHandler
         offer.buy = true;
         offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
         offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
-        BangServer.coinexmgr.postOffer(_gangobj, offer, true, new ResultAdapter<Object>(listener));
+        BangServer.coinexmgr.postOffer(
+            _gangobj, offer, true, new ResultAdapter<CoinExOfferInfo>(listener));
     }
 
     /**
@@ -497,7 +499,7 @@ public class GangHandler
     public void initPlayer (PlayerObject user, GangMemberEntry entry)
     {
         // remove all outstanding gang invitations
-        ArrayList<Comparable> ikeys = new ArrayList<Comparable>();
+        List<Comparable> ikeys = new ArrayList<Comparable>();
         for (Notification note : user.notifications) {
             if (note instanceof GangInvite) {
                 ikeys.add(note.getKey());
@@ -567,7 +569,7 @@ public class GangHandler
             refund[0] = refund[1] = 0;
         }
         ArrayIntSet removals = new ArrayIntSet();
-        ArrayList<Look> modified = stripLooks(user.inventory, user.looks, removals);
+        List<Look> modified = stripLooks(user.inventory, user.looks, removals);
         user.startTransaction();
         try {
             user.setGangId(0);
@@ -742,7 +744,7 @@ public class GangHandler
             _gangobj.updateMembers(member);
 
             // removed any expired items from the inventory
-            ArrayList<Integer> removals = null;
+            List<Integer> removals = null;
             long now = System.currentTimeMillis();
             for (Item item : _gangobj.inventory) {
                 if (item.isExpired(now)) {
@@ -1105,8 +1107,8 @@ public class GangHandler
     }
 
     // documentation inherited from interface GangPeerProvider
-    public void reserveScrip (
-            ClientObject caller, final int scrip, final InvocationService.ResultListener listener)
+    public void reserveScrip (ClientObject caller, final int scrip,
+                              final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure is comes from this server or a peer
@@ -1128,7 +1130,7 @@ public class GangHandler
 
             public void handleResult () {
                 if (_error == null) {
-                    listener.requestProcessed(null);
+                    listener.requestProcessed();
                 } else {
                     // return the scrip to the player object before failing
                     _gangobj.setScrip(_gangobj.scrip + scrip);
@@ -1675,7 +1677,7 @@ public class GangHandler
                     }
                 }
             }
-            protected ArrayList<Item> _items = new ArrayList<Item>();
+            protected List<Item> _items = new ArrayList<Item>();
         });
     }
 
@@ -1684,7 +1686,7 @@ public class GangHandler
      */
     protected void deliverGangItems (final PlayerObject user)
     {
-        final ArrayList<Item> added = new ArrayList<Item>();
+        final List<Item> added = new ArrayList<Item>();
         long now = System.currentTimeMillis();
         for (Item item : _gangobj.inventory) {
             if (item.canBeOwned(user) && !user.holdsEquivalentItem(item) && !item.isExpired(now)) {
@@ -1793,7 +1795,7 @@ public class GangHandler
                 return "Outfits";
             }
 
-            protected ArrayList<Item> _items = new ArrayList<Item>();
+            protected List<Item> _items = new ArrayList<Item>();
             protected int _memberCount;
             protected int _entryId;
         }.start();
@@ -2126,7 +2128,7 @@ public class GangHandler
     protected void updateActivity ()
     {
         // find out who's inactive
-        ArrayList<GangMemberEntry> updates = new ArrayList<GangMemberEntry>();
+        List<GangMemberEntry> updates = new ArrayList<GangMemberEntry>();
         for (GangMemberEntry entry : _gangobj.members) {
             boolean oactive = entry.wasActive;
             entry.updateWasActive();
@@ -2538,8 +2540,8 @@ public class GangHandler
         BangServer.gangrepo.deleteMember(playerId);
 
         ArrayIntSet removals = new ArrayIntSet();
-        ArrayList<Look> modified = stripLooks(BangServer.itemrepo.loadItems(playerId),
-                BangServer.lookrepo.loadLooks(playerId), removals);
+        List<Look> modified = stripLooks(BangServer.itemrepo.loadItems(playerId),
+                                         BangServer.lookrepo.loadLooks(playerId), removals);
 
         for (Look look : modified) {
             BangServer.lookrepo.updateLook(playerId, look);
@@ -2552,8 +2554,8 @@ public class GangHandler
     /**
      * Returns a list of modified looks with all gang owned articles removed.
      */
-    protected ArrayList<Look> stripLooks (
-            Iterable<Item> items, Iterable<Look> looks, ArrayIntSet removals)
+    protected List<Look> stripLooks (Iterable<Item> items, Iterable<Look> looks,
+                                     ArrayIntSet removals)
     {
         for (Item item : items) {
             if (item.getGangId() == _gangId) {

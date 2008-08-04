@@ -29,7 +29,6 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-
 /**
  * Used to display the sky.
  */
