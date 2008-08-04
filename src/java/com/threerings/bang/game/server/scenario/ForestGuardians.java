@@ -225,7 +225,6 @@ public class ForestGuardians extends Scenario
     {
         super.recordStats(stats, gameTime, pidx, user);
 
-
         // record the number of trees they grew
         for (int ii = 0; ii < ForestGuardiansInfo.GROWTH_STATS.length; ii++) {
             StatType stat = ForestGuardiansInfo.GROWTH_STATS[ii];
