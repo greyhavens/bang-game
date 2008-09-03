@@ -23,38 +23,50 @@ public class BangGameInfoProvider extends GameInfoProvider
 {
     @Override // from GameInfoProvider
     public void init (ConnectionProvider conprov)
-        throws PersistenceException
     {
-        _playrepo = new PlayerRepository(conprov);
+        try {
+            _playrepo = new PlayerRepository(conprov);
+        } catch (PersistenceException pe) {
+            throw new RuntimeException(pe);
+        }
     }
 
     @Override // from GameInfoProvider
     public HashMap<String,String> resolveGameNames (HashSet<String> names)
-        throws PersistenceException
     {
-        return _playrepo.resolveHandles(names);
+        try {
+            return _playrepo.resolveHandles(names);
+        } catch (PersistenceException pe) {
+            throw new RuntimeException(pe);
+        }
     }
 
     @Override // from GameInfoProvider
     public String[] lookupAccountNames (String gameName)
-        throws PersistenceException
     {
-        PlayerRecord player = _playrepo.loadByHandle(new Handle(gameName));
-        return (player == null) ? null : new String[] { player.accountName };
+        try {
+            PlayerRecord player = _playrepo.loadByHandle(new Handle(gameName));
+            return (player == null) ? null : new String[] { player.accountName };
+        } catch (PersistenceException pe) {
+            throw new RuntimeException(pe);
+        }
     }
 
     @Override // from GameInfoProvider
     public void populateAccount (Account account)
-        throws PersistenceException
     {
-        PlayerRecord player = _playrepo.loadPlayer(account.name.accountName);
-        if (player != null) {
-            account.firstSession = new Date(player.created.getTime());
-            account.lastSession = new Date(player.lastSession.getTime());
-            if (player.banExpires != null) {
-                account.tempBan = new Date(player.banExpires.getTime());
+        try {
+            PlayerRecord player = _playrepo.loadPlayer(account.name.accountName);
+            if (player != null) {
+                account.firstSession = new Date(player.created.getTime());
+                account.lastSession = new Date(player.lastSession.getTime());
+                if (player.banExpires != null) {
+                    account.tempBan = new Date(player.banExpires.getTime());
+                }
+                account.warning = player.warning;
             }
-            account.warning = player.warning;
+        } catch (PersistenceException pe) {
+            throw new RuntimeException(pe);
         }
     }
 

@@ -17,30 +17,38 @@ public class BangGameActionHandler extends GameActionHandler
 {
     @Override // from GameInfoProvider
     public void init (ConnectionProvider conprov)
-        throws PersistenceException
     {
-        _playrepo = new PlayerRepository(conprov);
+        try {
+            _playrepo = new PlayerRepository(conprov);
+        } catch (PersistenceException pe) {
+            throw new RuntimeException(pe);
+        }
     }
 
     @Override // from GameActionHandler
     public void ban (String accountName)
-        throws PersistenceException
     {
         // nothing doing
     }
 
     @Override // from GameActionHandler
     public void tempBan (String accountName, Timestamp expires, String warning)
-        throws PersistenceException
     {
-        _playrepo.setTempBan(accountName, expires, warning);
+        try {
+            _playrepo.setTempBan(accountName, expires, warning);
+        } catch (PersistenceException pe) {
+            throw new RuntimeException(pe);
+        }
     }
 
     @Override // from GameActionHandler
     public void warn (String accountName, String warning)
-        throws PersistenceException
     {
-        _playrepo.setWarning(accountName, warning);
+        try {
+            _playrepo.setWarning(accountName, warning);
+        } catch (PersistenceException pe) {
+            throw new RuntimeException(pe);
+        }
     }
 
     protected PlayerRepository _playrepo;
