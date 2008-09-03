@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.depot.PersistenceContext;
@@ -41,7 +40,6 @@ public class BangStatRepository extends StatRepository
      * Constructs a new statistics repository with the specified persistence context.
      */
     public BangStatRepository (PersistenceContext ctx)
-        throws PersistenceException
     {
         super(ctx);
     }
@@ -55,7 +53,6 @@ public class BangStatRepository extends StatRepository
      * be cached for at least 12 hours. (Stats don't change that frequently in the aggregate.)
      */
     public void processStats (final Processor processor, Stat.Type type)
-        throws PersistenceException
     {
         final Stat stat = type.newStat();
         final String query = "select STATS.PLAYER_ID, ACCOUNT_NAME, HANDLE, CREATED, " +
@@ -84,7 +81,6 @@ public class BangStatRepository extends StatRepository
 
     @Override // documentation inherited
     protected void loadStringCodes (Stat.Type type)
-        throws PersistenceException
     {
         // we need to make sure StatType has been initialized
         StatType stattype = StatType.UNUSED;
