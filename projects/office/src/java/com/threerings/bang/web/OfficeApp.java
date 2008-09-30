@@ -75,7 +75,7 @@ public class OfficeApp extends Application
 	try {
             // create a static connection provider
             _conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
-            _perCtx = new PersistenceContext("bangdb", _conprov);
+            _perCtx = new PersistenceContext("bangdb", _conprov, null);
 
             // create our user manager
             _usermgr = new OOOUserManager(
