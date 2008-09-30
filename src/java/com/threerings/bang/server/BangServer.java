@@ -99,7 +99,8 @@ public class BangServer extends CrowdServer
             super.configure();
             ConnectionProvider conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
             bind(ConnectionProvider.class).toInstance(conprov);
-            bind(PersistenceContext.class).toInstance(new PersistenceContext("bangdb", conprov));
+            bind(PersistenceContext.class).toInstance(
+                new PersistenceContext("bangdb", conprov, null));
             bind(ReportManager.class).to(BangReportManager.class);
             bind(ChatProvider.class).to(BangChatProvider.class);
             bind(Authenticator.class).to(ServerConfig.getAuthenticator());
@@ -285,7 +286,7 @@ public class BangServer extends CrowdServer
     {
         // create out database connection provider this must be done before calling super.init()
         conprov = _conprov;
-        perCtx = new PersistenceContext("bangdb", conprov);
+        perCtx = _perCtx;
 
         // create our transition manager prior to doing anything else
         transitrepo = new TransitionRepository(conprov);
@@ -511,6 +512,7 @@ public class BangServer extends CrowdServer
     protected long _codeModified;
 
     @Inject protected ConnectionProvider _conprov;
+    @Inject protected PersistenceContext _perCtx;
     @Inject protected Authenticator _author;
     @Inject protected PlayerLocator _locator;
     @Inject protected ParlorManager _parmgr;

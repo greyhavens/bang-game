@@ -60,7 +60,7 @@ public class DumpStat
 
         BangStatRepository statrepo = new BangStatRepository(
             new PersistenceContext(
-                "bangdb", new StaticConnectionProvider(ServerConfig.getJDBCConfig())));
+                "bangdb", new StaticConnectionProvider(ServerConfig.getJDBCConfig()), null));
 
         Grinder grinder = null;
         switch (action) {

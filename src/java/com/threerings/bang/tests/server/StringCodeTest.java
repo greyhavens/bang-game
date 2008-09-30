@@ -21,7 +21,7 @@ public class StringCodeTest
         try {
             BangStatRepository statrepo = new BangStatRepository(
                 new PersistenceContext(
-                    "bangdb", new StaticConnectionProvider(ServerConfig.getJDBCConfig())));
+                    "bangdb", new StaticConnectionProvider(ServerConfig.getJDBCConfig()), null));
 
             // this should generate a warning
             System.out.println("Looking for missing code: " +
