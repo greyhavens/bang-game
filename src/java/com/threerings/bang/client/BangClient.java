@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.glu.GLU;
 
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
@@ -228,7 +227,6 @@ public class BangClient extends BasicClient
         report.setAttribute("GL Vendor", GL11.glGetString(GL11.GL_VENDOR));
         report.setAttribute("GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
         report.setAttribute("GL Extensions", GL11.glGetString(GL11.GL_EXTENSIONS));
-        report.setAttribute("GLU Extensions", GLU.gluGetString(GLU.GLU_EXTENSIONS));
         report.setAttribute("Graphics Detail", BangPrefs.getDetailLevel().toString());
 
         // and send it along with our debug logs

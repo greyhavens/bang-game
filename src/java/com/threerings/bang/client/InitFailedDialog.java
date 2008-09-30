@@ -15,7 +15,6 @@ import javax.swing.border.EmptyBorder;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.glu.GLU;
 
 import com.samskivert.swing.MultiLineLabel;
 import com.samskivert.swing.VGroupLayout;
@@ -141,19 +140,13 @@ public class InitFailedDialog extends JFrame
 
         try {
             report.setAttribute("Driver", Display.getAdapter());
-            report.setAttribute(
-                "GL Display Mode", "" + Display.getDisplayMode());
+            report.setAttribute("GL Display Mode", "" + Display.getDisplayMode());
             if (Display.isCreated()) {
                 // These GL calls can only be made with a valid context
-                report.setAttribute(
-                    "GL Version", GL11.glGetString(GL11.GL_VERSION));
+                report.setAttribute("GL Version", GL11.glGetString(GL11.GL_VERSION));
                 report.setAttribute("GL Vendor", GL11.glGetString(GL11.GL_VENDOR));
-                report.setAttribute(
-                    "GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
-                report.setAttribute(
-                    "GL Extensions", GL11.glGetString(GL11.GL_EXTENSIONS));
-                report.setAttribute(
-                    "GLU Extensions", GLU.gluGetString(GLU.GLU_EXTENSIONS));
+                report.setAttribute("GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
+                report.setAttribute("GL Extensions", GL11.glGetString(GL11.GL_EXTENSIONS));
             }
         } catch (Throwable t) {
             log.warning("Failed to get GL info.", t);
