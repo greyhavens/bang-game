@@ -68,6 +68,7 @@
 
 -libraryjars <java.home>/lib/rt.jar
 -libraryjars ../dist/lib/lwjgl.jar
+-libraryjars ../dist/lib/lwjgl_util.jar
 -libraryjars ../dist/lib/commons-beanutils.jar
 -libraryjars ../dist/lib/commons-digester.jar
 -libraryjars ../dist/lib/commons-logging.jar
