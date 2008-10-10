@@ -34,9 +34,11 @@
   <!-- runs the GWT debugging shell -->
   <property name="module"  value="bang_user"/>
   <target name="gshell">
+    <available property="gwtdir.present" file="${gwt.dir}/gwt-dev-linux.jar"/>
+    <fail message="You must pass -Dgwt.dir=path_to_gwt_install" unless="gwtdir.present"/>
     <java fork="true" classname="com.google.gwt.dev.GWTShell">
       <classpath>
-        <pathelement path="/export/msoy/lib/gwt/gwt-dev-linux.jar"/>
+        <pathelement path="${gwt.dir}/gwt-dev-linux.jar"/>
         <path refid="gwt.classpath"/>
         <!-- for StandaloneUnderwireServlet -->
         <pathelement path="${deploy.dir}/classes"/>
