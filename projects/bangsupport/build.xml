@@ -20,9 +20,6 @@
       <include name="gwt-dev-linux.jar"/>
       <include name="gwt-widgets.jar"/>
     </fileset>
-    <fileset dir="${base.dir}/${deploy.dir}/lib">
-      <include name="*-gwt-0.0-SNAPSHOT.jar"/>
-    </fileset>
     <fileset dir="${deploy.dir}/lib" includes="*.jar"/>
     <pathelement location="src/gwt"/>
   </path>
@@ -37,7 +34,15 @@
   <!-- runs the GWT debugging shell -->
   <property name="module"  value="bang_user"/>
   <target name="gshell">
-    <java classpathref="gwt.classpath" fork="true" classname="com.google.gwt.dev.GWTShell">
+    <java fork="true" classname="com.google.gwt.dev.GWTShell">
+      <classpath>
+        <pathelement path="/export/msoy/lib/gwt/gwt-dev-linux.jar"/>
+        <path refid="gwt.classpath"/>
+        <!-- for StandaloneUnderwireServlet -->
+        <pathelement path="${deploy.dir}/classes"/>
+        <!-- for server.properties -->
+        <pathelement path="../../etc"/>
+      </classpath>
       <arg value="${module}/index.html"/>
     </java>
   </target>

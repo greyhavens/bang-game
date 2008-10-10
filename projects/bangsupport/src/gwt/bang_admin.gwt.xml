@@ -1,5 +1,6 @@
 <module>
-  <inherits name='admin'/>
+  <inherits name='com.threerings.underwire.Admin'/>
+  <inherits name='bang_common'/>
   <source path="client"/>
   <entry-point class='client.admin'/>
   <public path="public/bang_admin"/>

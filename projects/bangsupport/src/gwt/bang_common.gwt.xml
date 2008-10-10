@@ -1,0 +1,5 @@
+<module>
+  <public path="public/bang_common"/>
+  <stylesheet src="support.css"/>
+  <servlet path="/data" class="com.threerings.underwire.web.server.StandaloneUnderwireServlet"/>
+</module>
