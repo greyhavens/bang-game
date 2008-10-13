@@ -79,8 +79,7 @@
           <isset property="has.errors"/>
         </or></condition></fail>
 
-        <!-- if we're being built by a developer, copy our results right into -->
-        <!-- the document tree -->
+        <!-- if we're being built by a developer, copy our results right into the doc tree -->
         <if><isset property="bang_web_dir"/><then>
           <copy todir="${bang_web_dir}/support">
             <fileset dir="${deploy.dir}/www/@{module}" includes="**/*"/>
@@ -95,4 +94,18 @@
     <delete dir=".gwt-cache"/>
   </target>
 
+  <!-- runs our webapp in jetty -->
+  <target name="devmode" depends="compile"> 
+    <jetty tempDirectory="${deploy.dir}/jetty-temp">
+      <webApp name="${app.name}" warfile="${basedir}/${deploy.dir}/${app.name}"
+              contextpath="/bangsupport" scanIntervalSeconds="2">
+        <!-- things that might change -->
+        <scanTargets dir="${basedir}">
+          <include name="etc/web.xml"/>
+          <include name="${deploy.dir}/classes/**/*"/>
+          <include name="${deploy.dir}/lib/**/*.jar"/>
+        </scanTargets>
+      </webApp>
+    </jetty>
+  </target>
 </project>
