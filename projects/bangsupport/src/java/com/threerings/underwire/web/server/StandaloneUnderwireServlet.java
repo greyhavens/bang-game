@@ -46,6 +46,13 @@ import static com.threerings.underwire.Log.log;
  */
 public class StandaloneUnderwireServlet extends UnderwireServlet
 {
+    @Override // from RemoteServiceServlet
+    protected void onBeforeRequestDeserialized (String serreq)
+    {
+        log.info("Content-type:" + getThreadLocalRequest().getHeader("Content-type"));
+        super.onBeforeRequestDeserialized(serreq);
+    }
+
     @Override // from UnderwireServlet
     protected SiteIdentifier createSiteIdentifier ()
         throws PersistenceException
