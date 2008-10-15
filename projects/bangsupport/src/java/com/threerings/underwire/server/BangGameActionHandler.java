@@ -51,5 +51,11 @@ public class BangGameActionHandler extends GameActionHandler
         }
     }
 
+    @Override // from GameActionHandler
+    public void sendMessage (String senderAccount, String recipAccount, String message)
+    {
+        // nothing doing
+    }
+
     protected PlayerRepository _playrepo;
 }
