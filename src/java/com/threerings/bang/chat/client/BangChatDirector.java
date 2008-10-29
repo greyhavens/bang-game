@@ -73,6 +73,13 @@ public class BangChatDirector extends ChatDirector
                 return SUCCESS;
             }
         });
+
+        // override our tell handler
+        registerCommandHandler(msg, "tell", new TellHandler() {
+            protected Name normalizeAsName (String handle) {
+                return new Handle(handle);
+            }
+        });
     }
 
     @Override // documentation inherited
@@ -184,12 +191,9 @@ public class BangChatDirector extends ChatDirector
     }
 
     @Override // documentation inherited
-    public void requestTell (Name target, String msg, ResultListener<Name> rl)
+    public <T extends Name> void requestTell (T target, String msg, ResultListener<T> rl)
     {
-        // we need to convert Name to Handle so that things are properly
-        // dispatched on the server
-        Handle thandle = new Handle(target.toString());
-        super.requestTell(thandle, msg, rl);
+        super.requestTell(target, msg, rl);
         BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
     }
 
