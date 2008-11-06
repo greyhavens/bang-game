@@ -13,7 +13,7 @@ import com.threerings.presents.dobj.Subscriber;
 
 import com.threerings.bang.admin.data.ServerConfigObject;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.server.BangClient;
+import com.threerings.bang.server.BangSession;
 import com.threerings.bang.server.BangServer;
 
 import static com.threerings.bang.Log.log;
@@ -65,9 +65,8 @@ public class RuntimeConfig
     {
         public boolean allowSubscribe (DObject object, Subscriber subscriber) {
             // if the subscriber is a client; make sure they're an admin
-            if (subscriber instanceof BangClient) {
-                PlayerObject user = (PlayerObject)
-                    ((BangClient)subscriber).getClientObject();
+            if (subscriber instanceof BangSession) {
+                PlayerObject user = (PlayerObject)((BangSession)subscriber).getClientObject();
                 return user.tokens.isAdmin();
             }
             return true;

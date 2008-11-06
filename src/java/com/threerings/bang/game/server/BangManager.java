@@ -40,7 +40,7 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.PresentsClient;
+import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.crowd.data.BodyObject;
@@ -1579,7 +1579,7 @@ public class BangManager extends GameManager
     protected void checkTimeStats (long gameStart, PlayerObject user)
     {
         // get a calendar configured in the player's timezone
-        PresentsClient client = BangServer.clmgr.getClient(user.username);
+        PresentsSession client = BangServer.clmgr.getClient(user.username);
         if (client == null) {
             return;
         }

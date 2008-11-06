@@ -20,7 +20,7 @@ import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.PresentsClient;
+import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.server.ShutdownManager;
 
 import com.threerings.crowd.peer.server.CrowdPeerManager;
@@ -309,7 +309,7 @@ public class BangPeerManager extends CrowdPeerManager
     }
 
     @Override // from CrowdPeerManager
-    protected void initClientInfo (PresentsClient client, ClientInfo info)
+    protected void initClientInfo (PresentsSession client, ClientInfo info)
     {
         super.initClientInfo(client, info);
         BangClientInfo binfo = (BangClientInfo)info;

@@ -111,7 +111,7 @@ public class BangClientResolver extends CrowdClientResolver
 
         // if they're not in the db, it's their first time, how nice
         if (player == null) {
-            BangClient client = (BangClient)BangServer.clmgr.getClient(buser.username);
+            BangSession client = (BangSession)BangServer.clmgr.getClient(buser.username);
             boolean anonymous = ((BangCredentials)client.getCredentials()).anonymous;
             player = new PlayerRecord(username, anonymous);
             BangServer.playrepo.insertPlayer(player);

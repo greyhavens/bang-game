@@ -9,7 +9,7 @@ import java.util.Iterator;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObjectUtil;
 
-import com.threerings.crowd.server.CrowdClient;
+import com.threerings.crowd.server.CrowdSession;
 import com.threerings.presents.net.BootstrapData;
 import com.threerings.stats.data.Stat;
 
@@ -23,9 +23,9 @@ import com.threerings.bang.data.PlayerObject;
 import static com.threerings.bang.Log.log;
 
 /**
- * Extends {@link CrowdClient} and customizes it for Bang! Howdy.
+ * Extends {@link CrowdSession} and customizes it for Bang! Howdy.
  */
-public class BangClient extends CrowdClient
+public class BangSession extends CrowdSession
 {
     @Override // documentation inherited
     public void shutdown ()

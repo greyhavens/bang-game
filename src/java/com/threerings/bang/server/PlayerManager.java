@@ -41,7 +41,7 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.PresentsClient;
+import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.chat.data.ChatCodes;
@@ -186,7 +186,7 @@ public class PlayerManager
             // make sure we boot a local client if they login to a remote server
             BangServer.peermgr.addPlayerObserver(new BangPeerManager.RemotePlayerObserver() {
                 public void remotePlayerLoggedOn (int townIndex, BangClientInfo info) {
-                    PresentsClient pclient = BangServer.clmgr.getClient(info.username);
+                    PresentsSession pclient = BangServer.clmgr.getClient(info.username);
                     if (pclient != null) {
                         log.info("Booting user who logged onto remote server [username=" +
                             info.username + ", townIndex=" + townIndex + "].");
@@ -985,7 +985,7 @@ public class PlayerManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        final String machIdent = ((BangCredentials)((BangClient)BangServer.clmgr.getClient(
+        final String machIdent = ((BangCredentials)((BangSession)BangServer.clmgr.getClient(
                         user.username)).getCredentials()).ident;
 
         // prevent multiple requests from coming in
@@ -1037,7 +1037,7 @@ public class PlayerManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        PresentsClient pclient = BangServer.clmgr.getClient(target.username);
+        PresentsSession pclient = BangServer.clmgr.getClient(target.username);
         if (pclient == null) {
             log.warning("Unable to find client to boot [target=" + target.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);

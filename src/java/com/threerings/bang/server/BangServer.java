@@ -30,11 +30,11 @@ import com.threerings.util.Name;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.server.Authenticator;
-import com.threerings.presents.server.ClientFactory;
+import com.threerings.presents.server.SessionFactory;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.ClientResolver;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.server.PresentsClient;
+import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.server.PresentsDObjectMgr;
 import com.threerings.presents.server.ReportManager;
 import com.threerings.presents.server.net.ConnectionManager;
@@ -319,9 +319,9 @@ public class BangServer extends CrowdServer
         author.init();
 
         // configure the client manager to use the appropriate client class
-        clmgr.setClientFactory(new ClientFactory() {
-            public Class<? extends PresentsClient> getClientClass (AuthRequest areq) {
-                return BangClient.class;
+        clmgr.setSessionFactory(new SessionFactory() {
+            public Class<? extends PresentsSession> getSessionClass (AuthRequest areq) {
+                return BangSession.class;
             }
             public Class<? extends ClientResolver> getClientResolverClass (Name username) {
                 return BangClientResolver.class;
