@@ -24,6 +24,7 @@
   <!-- declare the libraries needed by the Bang runtime -->
   <filelist dir="." id="dist.libs">
     <file name="${extlibs.dir}/ant.jar"/>
+    <file name="${extlibs.dir}/backport-util-concurrent-3.1-jdk16.jar"/> <!-- for ehcache -->
     <file name="${extlibs.dir}/commons-beanutils.jar"/>
     <file name="${extlibs.dir}/commons-codec.jar"/>
     <file name="${extlibs.dir}/commons-collections.jar"/>
@@ -32,7 +33,7 @@
     <file name="${extlibs.dir}/commons-io.jar"/>
     <file name="${extlibs.dir}/commons-lang.jar"/>
     <file name="${extlibs.dir}/commons-logging.jar"/>
-    <file name="${extlibs.dir}/ehcache-1.2.jar"/>
+    <file name="${extlibs.dir}/ehcache.jar"/>
     <file name="${extlibs.dir}/google-collect.jar"/>
     <file name="${extlibs.dir}/guice.jar"/>
     <file name="${extlibs.dir}/gwt-user.jar"/>
