@@ -1145,6 +1145,9 @@
             <path>etc/rc.d/</path>
             <path>tools/bin/</path>
           </permission>
+          <permission user="${bang.user}" group="${bang.user}" mode="440">
+            <path>dist/server.properties</path>
+          </permission>
         </permissions>
       </package>
     </dpkg>
