@@ -95,8 +95,7 @@ public class BasicClient
     /**
      * Initializes various standard client services.
      */
-    protected void initClient (
-        BasicContextImpl ctx, JmeApp app, RunQueue rqueue)
+    protected void initClient (BasicContextImpl ctx, JmeApp app, RunQueue rqueue)
     {
         _app = app;
         _ctx = ctx;

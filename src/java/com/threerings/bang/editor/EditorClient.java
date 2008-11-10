@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -45,7 +44,7 @@ import static com.threerings.bang.Log.log;
  */
 @Singleton
 public class EditorClient extends BasicClient
-    implements RunQueue, SessionObserver
+    implements SessionObserver
 {
     /**
      * Returns a reference to the context in effect for this client. This
@@ -74,7 +73,7 @@ public class EditorClient extends BasicClient
         // heavyweight component
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
-        initClient(_ctx, app, this);
+        initClient(_ctx, app, RunQueue.AWT);
 
         // listen for logon/logoff
         _ctx.getClient().addClientObserver(this);
@@ -127,19 +126,6 @@ public class EditorClient extends BasicClient
     public void clientDidLogoff (Client client)
     {
         System.exit(0);
-    }
-
-    // documentation inherited from interface RunQueue
-    public void postRunnable (Runnable run)
-    {
-        // queue it on up on the awt thread
-        EventQueue.invokeLater(run);
-    }
-
-    // documentation inherited from interface RunQueue
-    public boolean isDispatchThread ()
-    {
-        return EventQueue.isDispatchThread();
     }
 
     protected void logon ()
