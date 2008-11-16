@@ -4,7 +4,7 @@
 package com.threerings.bang.tests.server;
 
 import com.samskivert.jdbc.StaticConnectionProvider;
-import com.samskivert.jdbc.depot.PersistenceContext;
+import com.samskivert.depot.PersistenceContext;
 
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.ServerConfig;

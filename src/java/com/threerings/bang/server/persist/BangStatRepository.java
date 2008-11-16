@@ -11,8 +11,8 @@ import java.sql.Statement;
 
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
-import com.samskivert.jdbc.depot.PersistenceContext;
-import com.samskivert.jdbc.depot.Query;
+import com.samskivert.depot.PersistenceContext;
+import com.samskivert.depot.Query;
 
 import com.threerings.stats.data.Stat;
 import com.threerings.stats.server.persist.StatRepository;

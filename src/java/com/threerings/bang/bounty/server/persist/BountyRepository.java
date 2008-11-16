@@ -8,9 +8,9 @@ import java.util.Set;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
-import com.samskivert.jdbc.depot.PersistentRecord;
-import com.samskivert.jdbc.depot.DepotRepository;
-import com.samskivert.jdbc.depot.clause.Where;
+import com.samskivert.depot.PersistentRecord;
+import com.samskivert.depot.DepotRepository;
+import com.samskivert.depot.clause.Where;
 
 /**
  * Tracks recent bounty completers.
