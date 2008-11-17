@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
-import com.samskivert.jdbc.depot.PersistenceContext;
+import com.samskivert.depot.PersistenceContext;
 import com.samskivert.servlet.JDBCTableSiteIdentifier;
 import com.samskivert.servlet.SiteIdentifier;
 import com.samskivert.servlet.util.RequestUtils;
