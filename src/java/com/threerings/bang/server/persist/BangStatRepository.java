@@ -9,10 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.samskivert.depot.PersistenceContext;
+import com.samskivert.depot.Stats;
+import com.samskivert.depot.impl.Query;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
-import com.samskivert.depot.PersistenceContext;
-import com.samskivert.depot.Query;
 
 import com.threerings.stats.data.Stat;
 import com.threerings.stats.server.persist.StatRepository;
@@ -59,8 +60,8 @@ public class BangStatRepository extends StatRepository
             "SESSION_MINUTES, STAT_DATA from STATS, PLAYERS " +
             "where PLAYERS.PLAYER_ID = STATS.PLAYER_ID and STAT_CODE = " + type.code();
         _ctx.invoke(new Query.Trivial<Void>() {
-            public Void invoke (Connection conn, DatabaseLiaison liaison)
-            throws SQLException
+            public Void invoke (PersistenceContext ctx, Connection conn, DatabaseLiaison liaison)
+                throws SQLException
             {
                 Statement stmt = conn.createStatement();
                 try {
@@ -75,6 +76,9 @@ public class BangStatRepository extends StatRepository
                     JDBCUtil.close(stmt);
                 }
                 return null;
+            }
+            public void updateStats (Stats stats) {
+                // nada
             }
         });
     }
