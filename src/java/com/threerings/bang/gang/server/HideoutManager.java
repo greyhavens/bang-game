@@ -621,7 +621,7 @@ public class HideoutManager extends MatchHostManager
             return;
         }
         try {
-            BangOccupantInfo boi = (BangOccupantInfo)getOccupantInfo(bodyOid);
+            BangOccupantInfo boi = (BangOccupantInfo)_occInfo.get(bodyOid);
             BangServer.gangmgr.requireGangPeerProvider(user.gangId).memberEnteredHideout(
                     null, user.handle, boi.avatar);
         } catch (InvocationException e) {

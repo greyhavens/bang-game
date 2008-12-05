@@ -177,7 +177,7 @@ public class ParlorManager extends PlaceManager
             return;
         }
 
-        BangOccupantInfo boi = (BangOccupantInfo)getOccupantInfo(bodyOid);
+        BangOccupantInfo boi = (BangOccupantInfo)_occInfo.get(bodyOid);
         if (boi == null) {
             return;
         }

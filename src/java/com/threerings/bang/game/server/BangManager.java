@@ -817,18 +817,22 @@ public class BangManager extends GameManager
     }
 
     @Override // documentation inherited
-    public void updateOccupantInfo (OccupantInfo occInfo)
+    public <T extends OccupantInfo> boolean updateOccupantInfo (
+        int bodyOid, OccupantInfo.Updater<T> updater)
     {
-        super.updateOccupantInfo(occInfo);
+        boolean updated = super.updateOccupantInfo(bodyOid, updater);
 
         // if an active player disconnected, boot them from the game
-        int pidx = getPlayerIndex(occInfo.username);
-        if (pidx != -1 && occInfo.status == OccupantInfo.DISCONNECTED &&
-            _bangobj.isInPlay() && isActivePlayer(pidx)) {
+        int pidx = getPresentPlayerIndex(bodyOid);
+        OccupantInfo occInfo = _occInfo.get(bodyOid);
+        if (pidx != -1 && isActivePlayer(pidx) && occInfo != null &&
+            occInfo.status == OccupantInfo.DISCONNECTED && _bangobj.isInPlay()) {
             log.info("Booting disconnected player [game=" + where() +
                      ", who=" + occInfo.username + "].");
             endPlayerGame(pidx);
         }
+
+        return updated;
     }
 
     @Override // documentation inherited

@@ -41,6 +41,7 @@ import com.threerings.presents.server.net.ConnectionManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.server.BodyLocator;
+import com.threerings.crowd.server.BodyManager;
 import com.threerings.crowd.server.CrowdServer;
 import com.threerings.crowd.server.LocationManager;
 import com.threerings.crowd.server.PlaceRegistry;
@@ -142,6 +143,9 @@ public class BangServer extends CrowdServer
 
     /** Handles the processing of account actions. */
     public static AccountActionManager actionmgr;
+
+    /** Manages Crowd body stuff. */
+    public static BodyManager bodymgr;
 
     /** Manages global player related bits. */
     public static PlayerManager playmgr;
@@ -303,6 +307,7 @@ public class BangServer extends CrowdServer
         invmgr = _invmgr;
         locator = _locator;
         plreg = _plreg;
+        bodymgr = _bodymgr;
         chatprov = _chatprov;
         locman = _locman;
 
@@ -516,6 +521,7 @@ public class BangServer extends CrowdServer
     @Inject protected Authenticator _author;
     @Inject protected PlayerLocator _locator;
     @Inject protected ParlorManager _parmgr;
+    @Inject protected BodyManager _bodymgr;
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server");

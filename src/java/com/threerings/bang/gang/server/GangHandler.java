@@ -522,16 +522,19 @@ public class GangHandler
         }
 
         // if they're in a place, update their occupant info
-        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.getPlaceOid());
-        if (plmgr != null) {
-            BangOccupantInfo boi = (BangOccupantInfo)plmgr.getOccupantInfo(user.getOid());
-            boi.gangId = _gangId;
-            plmgr.updateOccupantInfo(boi);
-
-            // if they're in the Hideout, update their avatar
-            if (plmgr instanceof HideoutManager) {
-                getPeerProvider().memberEnteredHideout(null, user.handle, boi.avatar);
+        BangServer.bodymgr.updateOccupantInfo(
+            user, new BangOccupantInfo.Updater<BangOccupantInfo>() {
+            public boolean update (BangOccupantInfo info) {
+                info.gangId = _gangId;
+                return true;
             }
+        });
+
+        // if they're in the Hideout, update their avatar
+        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.getPlaceOid());
+        if (plmgr instanceof HideoutManager) {
+            getPeerProvider().memberEnteredHideout(
+                null, user.handle, BangOccupantInfo.getAvatar(user));
         }
 
         // if they're the senior leader, start tracking their avatar
@@ -598,12 +601,13 @@ public class GangHandler
         }
 
         // if they're in a place, update their occupant info
-        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.getPlaceOid());
-        if (plmgr != null) {
-            BangOccupantInfo boi = (BangOccupantInfo)plmgr.getOccupantInfo(user.getOid());
-            boi.gangId = 0;
-            plmgr.updateOccupantInfo(boi);
-        }
+        BangServer.bodymgr.updateOccupantInfo(
+            user, new BangOccupantInfo.Updater<BangOccupantInfo>() {
+            public boolean update (BangOccupantInfo info) {
+                info.gangId = 0;
+                return true;
+            }
+        });
     }
 
     // documentation inherited from interface SetListener
