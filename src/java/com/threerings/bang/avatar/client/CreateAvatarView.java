@@ -19,6 +19,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.LengthLimitedDocument;
 
 import com.samskivert.util.RandomUtil;
+import com.samskivert.util.Runnables;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangClient;
@@ -158,9 +159,7 @@ public class CreateAvatarView extends SteelWindow
                 // move to the next phase of the intro
                 _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
                 _ctx.getBangClient().createAvatarDismissed(true);
-                if (_onCreate != null) {
-                    _onCreate.run();
-                }
+                _onCreate.run();
             }
             public void requestFailed (String reason) {
                 _status.setStatus(_msgs.xlate(reason), true);
@@ -235,8 +234,7 @@ public class CreateAvatarView extends SteelWindow
             }
             text = buf.toString();
 
-            // if we've reduced this to a NOOP, we have to indicate that we've
-            // rejected the edit
+            // if we've reduced this to a NOOP, we have to indicate that we've rejected the edit
             if (length == 0 && text.length() == 0) {
                 return false;
             }
@@ -263,7 +261,7 @@ public class CreateAvatarView extends SteelWindow
     protected MessageBundle _msgs;
     protected StatusLabel _status;
     protected boolean _failed;
-    protected Runnable _onCreate;
+    protected Runnable _onCreate = Runnables.NOOP;
 
     protected BComboBox _gender;
     protected BTextField _handle;
