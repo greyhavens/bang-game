@@ -17,7 +17,6 @@ import com.threerings.media.image.ColorPository;
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.bang.data.Badge;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.gang.data.GangObject;
@@ -127,7 +126,7 @@ public class ColorConstraints
     protected static class Normal extends DoublePredicate {
         public boolean isMatch (PlayerObject user) {
             // available to anyone that has created their initial avatar
-            return !(user.handle instanceof GuestHandle);
+            return user.hasCharacter();
         }
         public boolean isMatch (GangObject gang) {
             return (gang.buckle != null);

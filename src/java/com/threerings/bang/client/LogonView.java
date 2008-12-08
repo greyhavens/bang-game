@@ -133,7 +133,7 @@ public class LogonView extends BWindow
 
         _msgs = ctx.getMessageManager().getBundle(BangAuthCodes.AUTH_MSGS);
         String username = BangPrefs.config.getValue("username", "");
-        if (StringUtil.isBlank(username)) {
+        if (StringUtil.isBlank(username) || Boolean.getBoolean("new_user")) {
             showNewUserView(false);
         } else {
             showLoginView();
@@ -150,7 +150,8 @@ public class LogonView extends BWindow
         _ctx.getClient().addClientObserver(_listener);
     }
 
-    protected void showNewUserView (boolean account) {
+    protected void showNewUserView (boolean account)
+    {
         removeAll();
 
         BContainer cont = new BContainer(GroupLayout.makeHoriz(

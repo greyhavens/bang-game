@@ -26,6 +26,7 @@ import com.threerings.bang.data.Star;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardPackGood;
@@ -89,7 +90,9 @@ public class GoodsCatalog
         // register our purses and exchange pass
         for (int townIdx = 0; townIdx < BangCodes.TOWN_IDS.length; townIdx++) {
             registerGood(new PurseGood(townIdx), pf);
-            registerGood(new ExchangePassGood(BangCodes.TOWN_IDS[townIdx]), pf);
+            if (DeploymentConfig.usesCoins()) {
+                registerGood(new ExchangePassGood(BangCodes.TOWN_IDS[townIdx]), pf);
+            }
         }
 
         // register our unit passes
@@ -113,16 +116,18 @@ public class GoodsCatalog
             }
         }
 
-        // register our music
-        registerGood(new SongGood(BangCodes.FRONTIER_TOWN, BangCodes.FRONTIER_TOWN), pf);
-        registerGood(new SongGood(ClaimJumpingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
-        registerGood(new SongGood(CattleRustlingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
-        registerGood(new SongGood(GoldRushInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
+        if (DeploymentConfig.usesCoins()) {
+            // register our music (if we support micropayments)
+            registerGood(new SongGood(BangCodes.FRONTIER_TOWN, BangCodes.FRONTIER_TOWN), pf);
+            registerGood(new SongGood(ClaimJumpingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
+            registerGood(new SongGood(CattleRustlingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
+            registerGood(new SongGood(GoldRushInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
 
-        registerGood(new SongGood(BangCodes.INDIAN_POST, BangCodes.INDIAN_POST), pf);
-        registerGood(new SongGood(TotemBuildingInfo.IDENT, BangCodes.INDIAN_POST), pf);
-        registerGood(new SongGood(WendigoAttackInfo.IDENT, BangCodes.INDIAN_POST), pf);
-        registerGood(new SongGood(ForestGuardiansInfo.IDENT, BangCodes.INDIAN_POST), pf);
+            registerGood(new SongGood(BangCodes.INDIAN_POST, BangCodes.INDIAN_POST), pf);
+            registerGood(new SongGood(TotemBuildingInfo.IDENT, BangCodes.INDIAN_POST), pf);
+            registerGood(new SongGood(WendigoAttackInfo.IDENT, BangCodes.INDIAN_POST), pf);
+            registerGood(new SongGood(ForestGuardiansInfo.IDENT, BangCodes.INDIAN_POST), pf);
+        }
     }
 
     /**

@@ -114,7 +114,6 @@ public class WhereToView extends SteelWindow
             } else if (action.equals("to_saloon")) {
                 _ctx.getLocationDirector().moveTo(bbd.saloonOid);
             } else if (action.equals("to_town")) {
-                _ctx.getLocationDirector().leavePlace();
                 _ctx.getBangClient().showTownView();
             }
 

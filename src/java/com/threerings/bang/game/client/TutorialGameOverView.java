@@ -23,7 +23,6 @@ import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.client.util.ReportingListener;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.util.BangContext;
@@ -100,7 +99,7 @@ public class TutorialGameOverView extends SteelWindow
         } else {
             // we're done with the tutorials, we can turn off the auto pop-up
             BangPrefs.setNoTutIntro(user);
-            if (townIdx == 0 && user.handle instanceof GuestHandle) {
+            if (townIdx == 0 && !user.hasCharacter()) {
                 list.add(new BLabel(new ImageIcon(ctx.loadImage("ui/tutorials/star_big.png"))));
                 list.add(new BLabel(msgs.get("m.tut_choose"), "tview_list"));
                 _start = new BButton(msgs.get("m.lets_go"), this, "choose");
@@ -127,16 +126,11 @@ public class TutorialGameOverView extends SteelWindow
         String action = event.getAction();
 
         if (action.equals("to_town") || action.equals("choose")) {
+            _bctx.getBangClient().showTownView();
             _bctx.getBangClient().clearPopup(this, true);
             if (action.equals("choose")) {
                 _bctx.getBangClient().showPopupAfterLogon(BangCodes.CREATE_HANDLE);
             }
-            _bctx.getLocationDirector().leavePlace();
-            _bctx.getBangClient().showTownView();
-
-            _bctx.getBangClient().clearPopup(this, true);
-            _bctx.getLocationDirector().leavePlace();
-            _bctx.getBangClient().showTownView();
 
         } else {
             PlayerService psvc = _bctx.getClient().requireService(PlayerService.class);

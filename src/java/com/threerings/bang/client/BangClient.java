@@ -408,18 +408,25 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Called when the client created its first avatar.
+     * Called when the create avatar view is dismissed. Potentially continues the new user
+     * configuration process.
+     *
+     * @param created true if the user created their avatar, false if they canceled the dialog.
      */
-    public void createdAvatar ()
+    public void createAvatarDismissed (boolean created)
     {
-        PlayerObject user = _ctx.getUserObject();
-
-        // if they have no big shots then they need the intro for those
-        if (!(user.handle instanceof GuestHandle) && !user.hasBigShot()) {
-            displayPopup(new FirstBigShotView(_ctx), true, 600);
+        // if we're in a shop and either created our avatar or didn't, then just go back to
+        // whatever we were doing before
+        if (_ctx.getLocationDirector().getPlaceObject() != null) {
             return;
         }
-        resetTownView();
+
+        // if we're in the town view, then maybe move to the free bigshot step
+        if (_ctx.getUserObject().needsFreeBigShot()) {
+            displayPopup(new FirstBigShotView(_ctx), true, FirstBigShotView.WIDTH_HINT);
+        } else {
+            resetTownView();
+        }
     }
 
     /**
@@ -454,14 +461,14 @@ public class BangClient extends BasicClient
 
         // if this player does not have a name, and just finished the tutorials, show them the
         // create avatar view
-        if (user.handle instanceof GuestHandle && CREATE_HANDLE.equals(_popup)) {
-            displayPopup(new CreateAvatarView(_ctx), true, 800);
+        if (!user.hasCharacter() && CREATE_HANDLE.equals(_popup)) {
+            displayPopup(new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
             return true;
         }
 
         // if they have no big shots then they need the intro for those
-        if (!(user.handle instanceof GuestHandle) && !user.hasBigShot()) {
-            displayPopup(new FirstBigShotView(_ctx), true, 600);
+        if (user.needsFreeBigShot()) {
+            displayPopup(new FirstBigShotView(_ctx), true, FirstBigShotView.WIDTH_HINT);
             return true;
         }
 
@@ -507,13 +514,23 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Displays the town view, first fading out any existing main view.
+     * Leaves our current location and displays the town view. Also first fades out any existing
+     * main view.
+     *
+     * @return true if we were able to leave our current location, false if the departure was
+     * vetoed.
      */
-    public void showTownView ()
+    public boolean showTownView ()
     {
+        // if we're currently in a place, attempt to leave it
+        if (_ctx.getLocationDirector().getPlaceObject() != null &&
+            !_ctx.getLocationDirector().leavePlace()) {
+            return false; // sorry charlie
+        }
         if (!isShowingTownView()) {
             setMainView(new TownView(_ctx));
         }
+        return true;
     }
 
     /**
@@ -1524,7 +1541,7 @@ public class BangClient extends BasicClient
             } else {
                 if (CREATE_HANDLE.equals(reason)) {
                     _headingTo = placeId;
-                    displayPopup(new CreateAvatarView(_ctx), true, 800);
+                    displayPopup(new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
                 } else if (SIGN_UP.equals(reason)) {
                     showCreateAccount(false);
                 } else if (UNDER_13.equals(reason)) {

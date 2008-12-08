@@ -16,7 +16,6 @@ import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
 
 import static com.threerings.bang.Log.log;
@@ -35,7 +34,7 @@ public abstract class ShopManager extends PlaceManager
         }
 
         String msg = null;
-        if (requireHandle() && user.handle instanceof GuestHandle) {
+        if (requireHandle() && !user.hasCharacter()) {
             msg = BangCodes.CREATE_HANDLE;
         } else if (!allowAnonymous() && user.tokens.isAnonymous()) {
             msg = BangCodes.SIGN_UP;

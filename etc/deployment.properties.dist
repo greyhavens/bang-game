@@ -36,3 +36,8 @@ pass_url = https://billing.banghowdy.com/billing/checkpw.wm?susername=USERNAME&s
 # same language specific name handling routines are used on client and server.
 
 default_locale = en
+
+#
+# The type of payment system used by this deployment: coins, onetime
+
+payment_type = onetime

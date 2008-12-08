@@ -38,6 +38,8 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 public class CreateAvatarView extends SteelWindow
     implements ActionListener, BangClient.NonClearablePopup
 {
+    public static final int WIDTH_HINT = 800;
+
     public CreateAvatarView (BangContext ctx)
     {
         super(ctx, ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.create_title"));
@@ -89,6 +91,14 @@ public class CreateAvatarView extends SteelWindow
         inner.add(_look = new FirstLookView(ctx, _status));
     }
 
+    /**
+     * Configures a callback to be invoked if the user creates their avatar.
+     */
+    public void setOnCreate (Runnable onCreate)
+    {
+        _onCreate = onCreate;
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
@@ -96,11 +106,13 @@ public class CreateAvatarView extends SteelWindow
         if (cmd.equals("random")) {
             pickRandomHandle();
             maybeClearStatus();
+
         } else if (cmd.equals("done")) {
             createAvatar();
+
         } else if (cmd.equals("cancel")) {
             _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
-            _ctx.getBangClient().resetTownView();
+            _ctx.getBangClient().createAvatarDismissed(false);
         }
     }
 
@@ -145,7 +157,10 @@ public class CreateAvatarView extends SteelWindow
             public void requestProcessed () {
                 // move to the next phase of the intro
                 _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
-                _ctx.getBangClient().createdAvatar();
+                _ctx.getBangClient().createAvatarDismissed(true);
+                if (_onCreate != null) {
+                    _onCreate.run();
+                }
             }
             public void requestFailed (String reason) {
                 _status.setStatus(_msgs.xlate(reason), true);
@@ -159,9 +174,8 @@ public class CreateAvatarView extends SteelWindow
 
         Handle handle = new Handle(_handle.getText());
         boolean isMale = (_gender.getSelectedIndex() == 0);
-        asvc.createAvatar(
-            _ctx.getClient(), handle, isMale, _look.getLookConfig(),
-            _look.getDefaultArticleColorizations(), cl);
+        asvc.createAvatar(_ctx.getClient(), handle, isMale, _look.getLookConfig(),
+                          _look.getDefaultArticleColorizations(), cl);
     }
 
     protected void maybeClearStatus ()
@@ -249,6 +263,7 @@ public class CreateAvatarView extends SteelWindow
     protected MessageBundle _msgs;
     protected StatusLabel _status;
     protected boolean _failed;
+    protected Runnable _onCreate;
 
     protected BComboBox _gender;
     protected BTextField _handle;

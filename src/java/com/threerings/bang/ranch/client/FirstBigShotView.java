@@ -38,6 +38,8 @@ public class FirstBigShotView extends SteelWindow
     implements ActionListener, IconPalette.Inspector,
                BangClient.NonClearablePopup
 {
+    public static final int WIDTH_HINT = 600;
+
     public FirstBigShotView (BangContext ctx)
     {
         super(ctx, ctx.xlate(RanchCodes.RANCH_MSGS, "m.firstbs_title"));

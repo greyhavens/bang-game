@@ -9,6 +9,7 @@ import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 /**
  * Displays a quantity of scrip and coins.
@@ -25,14 +26,25 @@ public class MoneyLabel extends BContainer
         int gap = compact ? 2 : 5;
         _ctx = ctx;
         setLayoutManager(new BorderLayout(gap, gap));
+
+        // we always have a scrip icon
         add(_scrip = new BLabel(BangUI.scripIcon), BorderLayout.WEST);
         _scrip.setIconTextGap(gap);
         _scrip.setStyleClass("money_label");
         _scrip.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.scrip_tip"));
-        add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
-        _coins.setIconTextGap(gap);
-        _coins.setStyleClass("money_label");
-        _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.coin_tip"));
+
+        // we'll either have a coins icon or a one-time purchase icon
+        if (DeploymentConfig.usesCoins()) {
+            add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
+            _coins.setIconTextGap(gap);
+            _coins.setStyleClass("money_label");
+            _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.coin_tip"));
+
+        } else if (DeploymentConfig.usesOneTime()) {
+            add(_coins = new BLabel(BangUI.oneTimeIcon), BorderLayout.CENTER);
+            _coins.setStyleClass("money_label");
+            _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.onetime_tip"));
+        }
 
         setMoney(0, 0, false);
     }
@@ -44,7 +56,13 @@ public class MoneyLabel extends BContainer
     {
         // TODO: animate and bling!
         _scrip.setText(String.valueOf(scrip));
-        _coins.setText(String.valueOf(coins));
+
+        if (DeploymentConfig.usesCoins()) {
+            _coins.setText(String.valueOf(coins));
+        } else if (DeploymentConfig.usesOneTime()) {
+            // non-zero coin price means one-time purchase required
+            _coins.setVisible(coins > 0);
+        }
     }
 
     /**
@@ -53,7 +71,9 @@ public class MoneyLabel extends BContainer
     public void setStyleClass (String styleClass)
     {
         _scrip.setStyleClass(styleClass);
-        _coins.setStyleClass(styleClass);
+        if (_coins != null) {
+            _coins.setStyleClass(styleClass);
+        }
     }
 
     protected BangContext _ctx;

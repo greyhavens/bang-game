@@ -58,13 +58,11 @@ public class QuitterWarningView extends BDecoratedWindow
         String action = event.getAction();
         if ("leave".equals(action)) {
             if (_town) {
-                if (_ctx.getLocationDirector().leavePlace()) {
+                if (_ctx.getBangClient().showTownView()) {
                     clearPopups();
-                    _ctx.getBangClient().showTownView();
                 }
             } else {
-                if (_ctx.getLocationDirector().moveTo(
-                            _ctx.getBangClient().getPriorLocationOid())) {
+                if (_ctx.getLocationDirector().moveTo(_ctx.getBangClient().getPriorLocationOid())) {
                     clearPopups();
                 }
             }

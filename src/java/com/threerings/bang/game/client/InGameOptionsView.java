@@ -114,14 +114,12 @@ public class InGameOptionsView extends BDecoratedWindow
             _ctx.getBangClient().displayPopup(_warning, true, QuitterWarningView.WIDTH_HINT);
 
         } else if ("to_town".equals(action)) {
-            if (_ctx.getLocationDirector().leavePlace()) {
+            if (_ctx.getBangClient().showTownView()) {
                 _ctx.getBangClient().clearPopup(this, true);
-                _ctx.getBangClient().showTownView();
             }
 
         } else if ("to_prior".equals(action)) {
-            if (_ctx.getLocationDirector().moveTo(
-                        _ctx.getBangClient().getPriorLocationOid())) {
+            if (_ctx.getLocationDirector().moveTo(_ctx.getBangClient().getPriorLocationOid())) {
                 _ctx.getBangClient().clearPopup(this, true);
             }
 

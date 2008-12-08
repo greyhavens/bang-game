@@ -23,7 +23,6 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Badge;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
@@ -124,7 +123,7 @@ public class ArticleGood extends Good
 
         }
         // make sure the gender matches
-        return user.handle instanceof GuestHandle || user.isMale == (_type.indexOf("female") == -1);
+        return !user.hasCharacter() || user.isMale == (_type.indexOf("female") == -1);
     }
 
     @Override // from Good

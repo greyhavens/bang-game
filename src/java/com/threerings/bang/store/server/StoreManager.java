@@ -15,7 +15,6 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
@@ -49,7 +48,7 @@ public class StoreManager extends ShopManager
         }
 
         // validate that the client can buy this good
-        if (!good.isAvailable(user) || (user.handle instanceof GuestHandle)) {
+        if (!good.isAvailable(user) || !user.hasCharacter()) {
             log.warning("Requested to buy unavailable good [who=" + user.who() +
                         ", good=" + good + "].");
             throw new InvocationException(InvocationCodes.INTERNAL_ERROR);

@@ -217,7 +217,6 @@ public class GameOverView extends SteelWindow
         if (action.startsWith("to_")) {
             _bctx.getBangClient().clearPopup(this, true);
             if (action.equals("to_town")) {
-                _bctx.getLocationDirector().leavePlace();
                 _bctx.getBangClient().showTownView();
 
             } else if (action.equals("to_tutorial")) {

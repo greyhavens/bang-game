@@ -239,7 +239,6 @@ public abstract class ShopView extends BWindow
                 showHelp();
             } else if ("to_town".equals(event.getAction())) {
                 _townBtn.setEnabled(false);
-                _ctx.getLocationDirector().leavePlace();
                 _ctx.getBangClient().showTownView();
             }
         }

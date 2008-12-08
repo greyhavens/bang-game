@@ -34,11 +34,11 @@ while [ ! -z "$1" ]; do
             ;;
 
         -D*)
-            JAVA_ARGS="$JAVA_ARGS '$1'"
+            JAVA_ARGS="$JAVA_ARGS $1"
             ;;
 
         *)
-            ARGS="$ARGS '$1'"
+            ARGS="$ARGS $1"
             ;;
     esac
     shift
@@ -91,4 +91,4 @@ else
 fi
 
 # do the deed
-eval java $JAVA_ARGS $ARGS
+exec java $JAVA_ARGS $ARGS

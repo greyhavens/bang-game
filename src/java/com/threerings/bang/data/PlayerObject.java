@@ -172,16 +172,33 @@ public class PlayerObject extends BodyObject
     /** Contains all ratings earned by this player. */
     public transient HashMap<Date, HashMap<String, Rating>> ratings;
 
-    // documentation inherited from interface Wallet
+    // from interface Wallet
     public int getScrip ()
     {
         return scrip;
     }
 
-    // documentation inherited from interface Wallet
+    // from interface Wallet
     public int getCoins ()
     {
         return coins;
+    }
+
+    /**
+     * Returns true if this player has configured their character (picked name and gender, set up
+     * default avatar), false if not.
+     */
+    public boolean hasCharacter ()
+    {
+        return !(handle instanceof GuestHandle);
+    }
+
+    /**
+     * Returns true if this player needs their free bigshot unit.
+     */
+    public boolean needsFreeBigShot ()
+    {
+        return hasCharacter() && !hasBigShot();
     }
 
     /**
@@ -233,8 +250,7 @@ public class PlayerObject extends BodyObject
     }
 
     /**
-     * Returns true if this player has at least one {@link BigShotItem} in
-     * their inventory.
+     * Returns true if this player has at least one {@link BigShotItem} in their inventory.
      */
     public boolean hasBigShot ()
     {

@@ -27,7 +27,6 @@ public class TownButton extends BButton
     public void actionPerformed (ActionEvent event)
     {
         setEnabled(false);
-        _ctx.getLocationDirector().leavePlace();
         _ctx.getBangClient().showTownView();
     }
 

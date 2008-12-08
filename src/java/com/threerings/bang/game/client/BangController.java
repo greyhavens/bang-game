@@ -668,8 +668,7 @@ public class BangController extends GameController
 
         // if the game was cancelled there were errors on the server and we are probably in a weird
         // state, so just go back to town
-        if (_ctx.getLocationDirector().leavePlace()) {
-            _ctx.getBangClient().showTownView();
+        if (_ctx.getBangClient().showTownView()) {
             _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, "m.game_cancelled");
         }
     }

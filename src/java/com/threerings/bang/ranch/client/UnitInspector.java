@@ -24,7 +24,6 @@ import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -111,9 +110,7 @@ public class UnitInspector extends BContainer
         btn.setStyleClass("big_button");
         _recruit.add(btn);
         // don't allow anonymous players to recruit big shots
-        if (_ctx.getUserObject().handle instanceof GuestHandle) {
-            btn.setEnabled(false);
-        }
+        btn.setEnabled(_ctx.getUserObject().hasCharacter());
 
         // we'll use this group to start practice scenarios
         _practice = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));

@@ -14,13 +14,12 @@ import com.threerings.bang.data.BangCredentials;
 import static com.threerings.bang.Log.log;
 
 /**
- * Properties that are specific to a particular Bang! game deployment (client
- * and server code plus game media) are accessed via this class.
+ * Properties that are specific to a particular Bang! game deployment (client and server code plus
+ * game media) are accessed via this class.
  */
 public class DeploymentConfig
 {
-    /** Provides access to our config properties. <em>Do not</em> modify these
-     * properties! */
+    /** Provides access to our config properties. <em>Do not</em> modify these properties! */
     public static Config config = new Config("deployment");
 
     /** Contains our deployment version information. */
@@ -35,10 +34,10 @@ public class DeploymentConfig
     }
 
     /**
-     * Returns the default locale for this server. This isn't the actual locale
-     * setting of the server or client (use {@link java.util.Locale#getDefault}
-     * to obtain that), but is used to determine how the server will handle
-     * generation and validation of non-translated proper names.
+     * Returns the default locale for this server. This isn't the actual locale setting of the
+     * server or client (use {@link java.util.Locale#getDefault} to obtain that), but is used to
+     * determine how the server will handle generation and validation of non-translated proper
+     * names.
      */
     public static String getDefaultLocale ()
     {
@@ -46,8 +45,8 @@ public class DeploymentConfig
     }
 
     /**
-     * Returns the hostname of the server to which we should connect when
-     * logging in to the specified town.
+     * Returns the hostname of the server to which we should connect when logging in to the
+     * specified town.
      */
     public static String getServerHost (String townId)
     {
@@ -55,15 +54,13 @@ public class DeploymentConfig
     }
 
     /**
-     * Returns the port on which we should connect to the specified town
-     * server.
+     * Returns the port on which we should connect to the specified town server.
      *
      * @see #getServerHost
      */
     public static int[] getServerPorts (String townId)
     {
-        int[] ports = config.getValue(
-            "server_ports", Client.DEFAULT_SERVER_PORTS);
+        int[] ports = config.getValue("server_ports", Client.DEFAULT_SERVER_PORTS);
         return config.getValue(townId + ".server_ports", ports);
     }
 
@@ -121,6 +118,22 @@ public class DeploymentConfig
     public static URL getBillingPassURL (BangContext ctx, String pass)
     {
         return getCredentialedURL(ctx, "pass_url", pass);
+    }
+
+    /**
+     * Returns true if this deployment uses coins, false if not.
+     */
+    public static boolean usesCoins ()
+    {
+        return config.getValue("payment_type", "").equals("coins");
+    }
+
+    /**
+     * Returns true if this deployment uses a one-time payment, false if not.
+     */
+    public static boolean usesOneTime ()
+    {
+        return config.getValue("payment_type", "").equals("onetime");
     }
 
     /** Helper function for getting URL properties. */

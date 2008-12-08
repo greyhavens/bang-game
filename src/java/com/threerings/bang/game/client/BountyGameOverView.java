@@ -86,9 +86,9 @@ public class BountyGameOverView extends SteelWindow
     {
         String action = event.getAction();
         if (action.equals("to_town")) {
-            _bctx.getBangClient().clearPopup(this, true);
-            _bctx.getLocationDirector().leavePlace();
-            _bctx.getBangClient().showTownView();
+            if (_bctx.getBangClient().showTownView()) {
+                _bctx.getBangClient().clearPopup(this, true);
+            }
 
         } else if (action.equals("to_office")) {
             _bctx.getBangClient().clearPopup(this, true);

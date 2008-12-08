@@ -84,7 +84,6 @@ import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.EntryReplacedEvent;
 import com.threerings.bang.data.GoldPass;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
@@ -395,7 +394,7 @@ public class PlayerManager
     {
         // make sure we're not anonymous (the client should prevent this)
         final PlayerObject inviter = (PlayerObject)caller;
-        if (inviter.tokens.isAnonymous() || inviter.handle instanceof GuestHandle) {
+        if (inviter.tokens.isAnonymous() || !inviter.hasCharacter()) {
             throw new InvocationException(INTERNAL_ERROR);
 
         // make sure it's not the player himself, that it's not already

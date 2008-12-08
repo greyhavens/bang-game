@@ -16,7 +16,6 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.BigShotItem;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
@@ -41,7 +40,7 @@ public class RanchManager extends ShopManager
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
-        if (user.handle instanceof GuestHandle) {
+        if (!user.hasCharacter()) {
             log.warning("Requested to recruit unit from guest user [who=" + user.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }

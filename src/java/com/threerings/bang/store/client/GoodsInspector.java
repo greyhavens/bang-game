@@ -15,23 +15,25 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
-import com.threerings.media.image.Colorization;
+import com.samskivert.util.Runnables;
 
+import com.threerings.media.image.Colorization;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.CardItem;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.ColorSelector;
+import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.store.data.ArticleGood;
@@ -40,6 +42,8 @@ import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.GoodsObject;
 import com.threerings.bang.store.data.SongGood;
 import com.threerings.bang.store.data.StoreCodes;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Displays detailed information on a particular good.
@@ -86,7 +90,6 @@ public class GoodsInspector extends BContainer
 
         // make sure we're showing the buy interface
         showMode(Mode.BUY);
-        _buy.setEnabled(!(_ctx.getUserObject().handle instanceof GuestHandle));
 
         // remove our color selectors
         removeColors();
@@ -141,21 +144,7 @@ public class GoodsInspector extends BContainer
 
         String action = event.getAction();
         if ("buy".equals(action)) {
-            _buy.setEnabled(false);
-            StoreService.ConfirmListener cl = new StoreService.ConfirmListener() {
-                public void requestProcessed () {
-                    boughtGood();
-                }
-                public void requestFailed (String cause) {
-                    _buy.setEnabled(true);
-                    _descrip.setText(_msgs.xlate(cause));
-                    if (BangCodes.E_INSUFFICIENT_FUNDS.equals(cause) &&
-                            _good.getCoinCost(_ctx.getUserObject()) > _ctx.getUserObject().coins) {
-                        _ctx.getBangClient().displayPopup(new BankInfoWindow(), true, 350);
-                    }
-                }
-            };
-            _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
+            buyGood();
 
         } else if ("try".equals(action)) {
             _try.setEnabled(false);
@@ -177,6 +166,48 @@ public class GoodsInspector extends BContainer
     protected void updateCostLabel ()
     {
         _cost.setMoney(_good.getScripCost(), _good.getCoinCost(_ctx.getUserObject()), false);
+    }
+
+    protected void buyGood ()
+    {
+        // if we haven't configured a handle (and our gender), we can't buy things yet, so let's
+        // encourage the user to set themselves up and then we can let them buy
+        if (!_ctx.getUserObject().hasCharacter()) {
+            OptionDialog.showConfirmDialog(_ctx, StoreCodes.STORE_MSGS, "m.buy_needs_handle",
+                                           new OptionDialog.ResponseReceiver() {
+                public void resultPosted (int button, Object result) {
+                    if (button == OptionDialog.OK_BUTTON) {
+                        CreateAvatarView view = new CreateAvatarView(_ctx);
+                        view.setOnCreate(Runnables.asRunnable(GoodsInspector.this, "avatarCreated"));
+                        _ctx.getBangClient().displayPopup(view, true, CreateAvatarView.WIDTH_HINT);
+                    }
+                }
+            });
+            return;
+        }
+
+        _buy.setEnabled(false);
+        StoreService.ConfirmListener cl = new StoreService.ConfirmListener() {
+            public void requestProcessed () {
+                boughtGood();
+            }
+            public void requestFailed (String cause) {
+                _buy.setEnabled(true);
+                _descrip.setText(_msgs.xlate(cause));
+                if (BangCodes.E_INSUFFICIENT_FUNDS.equals(cause) &&
+                    _good.getCoinCost(_ctx.getUserObject()) > _ctx.getUserObject().coins) {
+                    _ctx.getBangClient().displayPopup(new BankInfoWindow(), true, 350);
+                }
+            }
+        };
+        _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
+    }
+
+    protected void avatarCreated ()
+    {
+        // we need to reinitialize our goods display when the user creates their avatar so that we
+        // switch to the appropriate gener-specific goods
+        _palette.reinitGoods(true);
     }
 
     protected void boughtGood ()

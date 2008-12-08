@@ -29,7 +29,6 @@ import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
-import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 
@@ -138,7 +137,7 @@ public class StatusView extends BWindow
         add(_handle = new BLabel("", "status_handle"),
             new Rectangle(40, 590, 195, 33));
         _handle.setFit(BLabel.Fit.SCALE);
-        String poster = user.handle instanceof GuestHandle ? "avatar" : "poster";
+        String poster = user.hasCharacter() ? "poster" : "avatar";
         _posterBtn = new BButton(_msgs.get("m.status_" + poster), this, poster);
         _posterBtn.setStyleClass("big_button");
         add(_posterBtn, new Point(40, 147));
@@ -169,22 +168,21 @@ public class StatusView extends BWindow
     {
         String cmd = event.getAction();
         if (cmd.equals("to_town")) {
-            if (_ctx.getLocationDirector().leavePlace()) {
+            if (_ctx.getBangClient().showTownView()) {
                 _ctx.getBangClient().clearPopup(this, true);
-                _ctx.getBangClient().showTownView();
             }
 
         } else if (cmd.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
 
         } else if (cmd.equals("poster")) {
-            WantedPosterView.displayWantedPoster(
-                _ctx, _ctx.getUserObject().handle);
+            WantedPosterView.displayWantedPoster(_ctx, _ctx.getUserObject().handle);
             _posterBtn.setEnabled(false);
 
         } else if (cmd.equals("avatar")) {
             _ctx.getBangClient().clearPopup(this, true);
-            _ctx.getBangClient().displayPopup(new CreateAvatarView(_ctx), true, 800);
+            _ctx.getBangClient().displayPopup(
+                new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
         }
     }
 
