@@ -130,8 +130,7 @@ public class RatingManager
 //                     log.info("Recalculating weekly rankings...");
 //                     _ratingrepo.calculateRanks(week);
 //                 } catch (PersistenceException pe) {
-//                     log.warning("Failed to recalculate weekly ranks[week=" +
-//                             week + "].", pe);
+//                     log.warning("Failed to recalculate weekly ranks", "week", week, pe);
 //                 }
 //                 return false;
 //             }
