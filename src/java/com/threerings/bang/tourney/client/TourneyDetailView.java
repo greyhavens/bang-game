@@ -24,8 +24,8 @@ import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
-import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.ObjectAccessException;
+import com.threerings.presents.dobj.SetAdapter;
 import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.dobj.Subscriber;
 import com.jmex.bui.BContainer;
@@ -37,12 +37,12 @@ import com.jmex.bui.BScrollPane;
  * Shows a detailed description of a tourney.
  */
 public class TourneyDetailView extends BDecoratedWindow
-    implements ActionListener, SetListener, Subscriber<TourneyObject>
+    implements ActionListener, Subscriber<TourneyObject>
 {
     public TourneyDetailView (BangContext ctx, TourneyListingEntry entry)
     {
         super(ctx.getStyleSheet(), entry.desc);
-        
+
         setModal(true);
 
         _ctx = ctx;
@@ -51,7 +51,7 @@ public class TourneyDetailView extends BDecoratedWindow
         _safesub = new SafeSubscriber<TourneyObject>(entry.oid, this);
 
         add(_loading = new BLabel(_msgs.xlate("m.loading")));
-                
+
     }
 
     // documentation inherited from interface Subscriber
@@ -78,7 +78,7 @@ public class TourneyDetailView extends BDecoratedWindow
         for (Participant part : _tobj.participants) {
             _partList.add(new BLabel(part.username.toString()));
         }
-        _tobj.addListener(this);
+        _tobj.addListener(_partlist);
     }
 
     // documentation inherited from interface Subscriber
@@ -90,44 +90,6 @@ public class TourneyDetailView extends BDecoratedWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-    }
-
-    // documentation inherited from interface SetListener
-    public void entryAdded (EntryAddedEvent event)
-    {
-        if (event.getName().equals(TourneyObject.PARTICIPANTS)) {
-            Participant part = (Participant)event.getEntry();
-            _partList.add(new BLabel(part.username.toString()));
-            
-            if (_ctx.getUserObject().handle.equals(part.username)) {
-                recomputeButtons();
-            }
-        }
-    }
-
-    // documentation inherited from interface SetListener
-    public void entryRemoved (EntryRemovedEvent event)
-    {
-        if (event.getName().equals(TourneyObject.PARTICIPANTS)) {
-            Participant part = (Participant)event.getOldEntry();
-
-            for (int ii = 0, nn = _partList.getComponentCount(); ii < nn; ii++) {
-                if (((BLabel)_partList.getComponent(ii)).getText().equals(part.username)) {
-                    _partList.remove(ii);
-                    break;
-                }
-            }
-
-            if (_ctx.getUserObject().handle.equals(part.username)) {
-                recomputeButtons();
-            }
-        }
-    }
-
-    // documentation inherited from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
-    {
-        // nothing doing
     }
 
     // documentation inherited
@@ -149,11 +111,38 @@ public class TourneyDetailView extends BDecoratedWindow
     {
     }
 
+    protected SetListener<Participant> _partlist = new SetAdapter<Participant>() {
+        public void entryAdded (EntryAddedEvent<Participant> event) {
+            if (event.getName().equals(TourneyObject.PARTICIPANTS)) {
+                Participant part = event.getEntry();
+                _partList.add(new BLabel(part.username.toString()));
+                if (_ctx.getUserObject().handle.equals(part.username)) {
+                    recomputeButtons();
+                }
+            }
+        }
+
+        public void entryRemoved (EntryRemovedEvent<Participant> event) {
+            if (event.getName().equals(TourneyObject.PARTICIPANTS)) {
+                Participant part = event.getOldEntry();
+                for (int ii = 0, nn = _partList.getComponentCount(); ii < nn; ii++) {
+                    if (((BLabel)_partList.getComponent(ii)).getText().equals(part.username)) {
+                        _partList.remove(ii);
+                        break;
+                    }
+                }
+                if (_ctx.getUserObject().handle.equals(part.username)) {
+                    recomputeButtons();
+                }
+            }
+        }
+    };
+
     protected BLabel _loading;
     protected BLabel _startsIn;
     protected BLabel _numParticipants;
     protected BContainer _partList;
-    protected SafeSubscriber _safesub;
+    protected SafeSubscriber<TourneyObject> _safesub;
     protected MessageBundle _msgs;
     protected TourneyObject _tobj;
     protected BangContext _ctx;

@@ -10,7 +10,6 @@ import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
@@ -41,7 +40,6 @@ public class UnitPalette extends IconPalette
     public void setUnits (UnitConfig[] units, boolean disableUnavail)
     {
         for (int ii = 0; ii < units.length; ii++) {
-            String name = _ctx.xlate(BangCodes.UNITS_MSGS, units[ii].getName());
             UnitIcon icon = new UnitIcon(_ctx, units[ii]);
             icon.displayAvail(_ctx, disableUnavail);
             addIcon(icon);
@@ -60,7 +58,6 @@ public class UnitPalette extends IconPalette
         _user.addListener(_invlistener);
 
         for (int ii = 0; ii < units.length; ii++) {
-            String name = _ctx.xlate(BangCodes.UNITS_MSGS, units[ii].getName());
             UnitIcon icon = new UnitIcon(_ctx, units[ii]);
             // if they have a big shot for this icon, switch it
             BigShotItem bsitem = getBigShot(user, units[ii].type);
@@ -167,8 +164,8 @@ public class UnitPalette extends IconPalette
         }
     }
 
-    protected SetAdapter _invlistener = new SetAdapter() {
-        public void entryAdded (EntryAddedEvent event) {
+    protected SetAdapter<Item> _invlistener = new SetAdapter<Item>() {
+        public void entryAdded (EntryAddedEvent<Item> event) {
             if (event.getName().equals(PlayerObject.INVENTORY)) {
                 Object item = event.getEntry();
                 if (item instanceof BigShotItem) {

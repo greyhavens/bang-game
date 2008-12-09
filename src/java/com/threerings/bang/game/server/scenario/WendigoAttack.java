@@ -25,7 +25,6 @@ import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.data.effect.TalismanEffect;
 
-import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
@@ -98,7 +97,7 @@ public class WendigoAttack extends Scenario
         super.roundWillStart(bangobj, starts, purchases);
 
         for (int ii = 0, nn = _talismanSpots.size(); ii < nn; ii++) {
-            Bonus talisman = dropBonus(bangobj, TalismanEffect.TALISMAN_BONUS,
+            dropBonus(bangobj, TalismanEffect.TALISMAN_BONUS, 
                 _talismanSpots.getX(ii), _talismanSpots.getY(ii));
         }
     }

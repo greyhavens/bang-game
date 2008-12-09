@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="extlibs/java/ant.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/backport-util-concurrent-3.1-jdk1.6.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/commons-codec.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/commons-collections.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/commons-digester.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/commons-httpclient.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/commons-io.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/commons-lang.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/commons-logging.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/ehcache.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/getdown.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/google-collect.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/guice.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/gwt-user.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/jarbundler-1.2.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/javassist.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/jl1.0.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/jme/jme-terrain.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/jme/jme-sound.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/junit4.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/mail.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/mysql-connector-java.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/proguard.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/s3lib.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/s3upload.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/servlet-api.jar"/>
+	<classpathentry kind="lib" path="extlibs/java/velocity-1.5-dev.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/vilya"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/hemiptera"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/underwire"/>
+	<classpathentry kind="output" path="dist/classes"/>
+</classpath>

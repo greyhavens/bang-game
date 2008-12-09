@@ -370,7 +370,6 @@ public class UnitConfig
             BangUtil.getIntProperty(type, props, "scrip_cost", 999);
         config.coinCost = BangUtil.getIntProperty(type, props, "coin_cost", 99);
 
-        int idx = 0;
         for (Mode mode : Mode.values()) {
             String key = StringUtil.toUSLowerCase(mode.toString());
             config.damageAdjust[mode.ordinal()] = BangUtil.getIntProperty(

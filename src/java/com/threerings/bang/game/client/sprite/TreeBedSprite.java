@@ -24,8 +24,6 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.TreeBed;
 
-import static com.threerings.bang.client.BangMetrics.*;
-
 /**
  * Displays trees for the forest guardians scenario.
  */

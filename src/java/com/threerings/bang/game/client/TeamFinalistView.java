@@ -18,8 +18,6 @@ import com.jmex.bui.layout.AbsoluteLayout;
 
 import com.samskivert.util.ResultListener;
 
-import com.threerings.util.MessageBundle;
-
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
@@ -28,7 +26,6 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BangConfig;
-import com.threerings.bang.game.data.GameCodes;
 
 import com.threerings.media.image.Colorization;
 
@@ -114,9 +111,6 @@ public class TeamFinalistView extends BContainer
             }
             idx++;
         }
-
-        MessageBundle msgs = ctx.getMessageManager().getBundle(
-            GameCodes.GAME_MSGS);
     }
 
     @Override // documentation inherited

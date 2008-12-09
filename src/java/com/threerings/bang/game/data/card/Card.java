@@ -169,7 +169,7 @@ public abstract class Card extends SimpleStreamableObject
     /**
      * This will be called to determine if a card is playable during a game. If a card needs to
      * inspect the configuration of the game, it can override this method. If it only cares about
-     * the scenario type, it should override {@link #isPlayable(String,ScenarioInfo)}.
+     * the scenario type, it should override {@link #isPlayable(ScenarioInfo,String)}.
      */
     public boolean isPlayable (BangObject bangobj, String townId)
     {
@@ -291,7 +291,7 @@ public abstract class Card extends SimpleStreamableObject
     }
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         if (_key == null) {
             _key = new Integer(cardId);

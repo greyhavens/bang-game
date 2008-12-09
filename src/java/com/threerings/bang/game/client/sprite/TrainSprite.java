@@ -62,7 +62,6 @@ public class TrainSprite extends MobileSprite
         // Special handling for fast animated trains
         if (!isMoving()) {
             Train train = (Train)_piece;
-            boolean last = (_lastLastX != Train.UNSET);
             setLocation(board, train.x, train.y);
 
             // figure out the proper rotation

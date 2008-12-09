@@ -34,8 +34,7 @@ import com.threerings.bang.ranch.data.RanchObject;
 public class RecruitDialog extends BDecoratedWindow
     implements ActionListener
 {
-    public RecruitDialog (BangContext ctx, RanchView view,
-                          RanchObject ranchobj, UnitConfig config)
+    public RecruitDialog (BangContext ctx, RanchView view, RanchObject ranchobj, UnitConfig config)
     {
         super(ctx.getStyleSheet(), null);
         setLayoutManager(new BorderLayout(5, 5));

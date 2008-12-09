@@ -978,7 +978,7 @@ public class BangObject extends GameObject
      * the <code>critStats</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromCritStats (Comparable key)
+    public void removeFromCritStats (Comparable<?> key)
     {
         requestEntryRemove(CRIT_STATS, critStats, key);
     }
@@ -1006,8 +1006,7 @@ public class BangObject extends GameObject
     public void setCritStats (StatSet value)
     {
         requestAttributeChange(CRIT_STATS, value, this.critStats);
-        @SuppressWarnings("unchecked") StatSet clone =
-            (value == null) ? null : (StatSet)value.clone();
+        StatSet clone = (value == null) ? null : (StatSet)value.clone();
         this.critStats = clone;
     }
 
@@ -1302,7 +1301,7 @@ public class BangObject extends GameObject
      * the <code>pieces</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromPieces (Comparable key)
+    public void removeFromPieces (Comparable<?> key)
     {
         requestEntryRemove(PIECES, pieces, key);
     }
@@ -1327,11 +1326,10 @@ public class BangObject extends GameObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setPieces (ModifiableDSet<com.threerings.bang.game.data.piece.Piece> value)
+    public void setPieces (ModifiableDSet<Piece> value)
     {
         requestAttributeChange(PIECES, value, this.pieces);
-        @SuppressWarnings("unchecked") ModifiableDSet<com.threerings.bang.game.data.piece.Piece> clone =
-            (value == null) ? null : (ModifiableDSet<com.threerings.bang.game.data.piece.Piece>)value.clone();
+        ModifiableDSet<Piece> clone = (value == null) ? null : (ModifiableDSet<Piece>)value.clone();
         this.pieces = clone;
     }
 
@@ -1350,7 +1348,7 @@ public class BangObject extends GameObject
      * the <code>debugPieces</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromDebugPieces (Comparable key)
+    public void removeFromDebugPieces (Comparable<?> key)
     {
         requestEntryRemove(DEBUG_PIECES, debugPieces, key);
     }
@@ -1375,11 +1373,10 @@ public class BangObject extends GameObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setDebugPieces (ModifiableDSet<com.threerings.bang.game.data.piece.Piece> value)
+    public void setDebugPieces (ModifiableDSet<Piece> value)
     {
         requestAttributeChange(DEBUG_PIECES, value, this.debugPieces);
-        @SuppressWarnings("unchecked") ModifiableDSet<com.threerings.bang.game.data.piece.Piece> clone =
-            (value == null) ? null : (ModifiableDSet<com.threerings.bang.game.data.piece.Piece>)value.clone();
+        ModifiableDSet<Piece> clone = (value == null) ? null : (ModifiableDSet<Piece>)value.clone();
         this.debugPieces = clone;
     }
 
@@ -1398,7 +1395,7 @@ public class BangObject extends GameObject
      * the <code>cards</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromCards (Comparable key)
+    public void removeFromCards (Comparable<?> key)
     {
         requestEntryRemove(CARDS, cards, key);
     }
@@ -1423,11 +1420,10 @@ public class BangObject extends GameObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setCards (ModifiableDSet<com.threerings.bang.game.data.card.Card> value)
+    public void setCards (ModifiableDSet<Card> value)
     {
         requestAttributeChange(CARDS, value, this.cards);
-        @SuppressWarnings("unchecked") ModifiableDSet<com.threerings.bang.game.data.card.Card> clone =
-            (value == null) ? null : (ModifiableDSet<com.threerings.bang.game.data.card.Card>)value.clone();
+        ModifiableDSet<Card> clone = (value == null) ? null : (ModifiableDSet<Card>)value.clone();
         this.cards = clone;
     }
 

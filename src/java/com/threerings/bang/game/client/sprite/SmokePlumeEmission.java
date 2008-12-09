@@ -34,7 +34,6 @@ import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.game.client.BoardView;
 
 import static com.threerings.bang.Log.*;
-import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * A plume of smoke represented by a particle system.

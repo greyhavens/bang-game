@@ -118,9 +118,9 @@ public class BangNodeObject extends CrowdNodeObject
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setChangedHandle (StreamableTuple<com.threerings.bang.data.Handle, com.threerings.bang.data.Handle> value)
+    public void setChangedHandle (StreamableTuple<Handle, Handle> value)
     {
-        StreamableTuple<com.threerings.bang.data.Handle, com.threerings.bang.data.Handle> ovalue = this.changedHandle;
+        StreamableTuple<Handle, Handle> ovalue = this.changedHandle;
         requestAttributeChange(
             CHANGED_HANDLE, value, ovalue);
         this.changedHandle = value;

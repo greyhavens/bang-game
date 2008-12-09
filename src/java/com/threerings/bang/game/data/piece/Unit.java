@@ -141,7 +141,7 @@ public class Unit extends Piece
      */
     public void setHindrance (Hindrance hindrance)
     {
-        setInfluence(InfluenceType.HINDRANCE, (Influence)hindrance);
+        setInfluence(InfluenceType.HINDRANCE, hindrance);
     }
 
     /**

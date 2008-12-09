@@ -236,7 +236,6 @@ public class WendigoEffect extends Effect
         ArrayList<Collision> colList = new ArrayList<Collision>();
         boolean horiz = (w.orientation == EAST ||
                 w.orientation == WEST);
-        int idx = (horiz ? w.y : w.x);
         int step = (horiz ? w.x : w.y);
         for (Piece p : bangobj.pieces) {
             if (p instanceof Unit && p.isAlive()) {

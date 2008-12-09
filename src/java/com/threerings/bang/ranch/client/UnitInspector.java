@@ -165,16 +165,13 @@ public class UnitInspector extends BContainer
         _uview.setUnit(config);
 
         // Big Shots have some additional user interface bits
-        boolean showRecruit = false,
-                showCustomize = false,
-                showPractice = false;
+        boolean showRecruit = false, showPractice = false;
         if (config.rank == UnitConfig.Rank.BIGSHOT) {
             if (_itemId == -1) {
                 showRecruit = true;
                 _cost.setMoney(config.scripCost, config.getCoinCost(_ctx.getUserObject()), false);
             } else {
                 showPractice = true;
-                showCustomize = true;
             }
         } else {
             showPractice = true;
@@ -199,15 +196,13 @@ public class UnitInspector extends BContainer
             if (_config != null && _itemId == -1 &&
                 _config.rank == UnitConfig.Rank.BIGSHOT) {
                 _ctx.getBangClient().displayPopup(
-                    new RecruitDialog(_ctx, (RanchView)getParent(), _ranchobj,
-                                      _config), true, 400);
+                    new RecruitDialog(_ctx, (RanchView)getParent(), _ranchobj, _config), true, 400);
             }
 
         } else if ("practice".equals(event.getAction())) {
             if (_config != null) {
                 PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
-                ReportingListener rl = new ReportingListener(
-                    _ctx, "ranch", "m.start_prac_failed");
+                ReportingListener rl = new ReportingListener(_ctx, "ranch", "m.start_prac_failed");
                 psvc.playPractice(_ctx.getClient(), _config.type, rl);
                 _practice.setEnabled(false); // prevent double clicky
             }

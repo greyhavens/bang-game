@@ -63,7 +63,6 @@ public class WendigoLogic extends AILogic
         Piece talisman = null, tporter = null;
         ToggleSwitch tswitch = null;
         int safeties = 0;
-        boolean wendigos = true;
         for (Piece p : pieces) {
             if (Bonus.isBonus(p, TalismanEffect.TALISMAN_BONUS)) {
                 if (talisman == null || unit.getDistance(p) <

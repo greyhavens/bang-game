@@ -22,11 +22,12 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
+import com.threerings.bang.client.NeedCoinsView;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.SelectableIcon;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
@@ -196,7 +197,8 @@ public class GoodsInspector extends BContainer
                 _descrip.setText(_msgs.xlate(cause));
                 if (BangCodes.E_INSUFFICIENT_FUNDS.equals(cause) &&
                     _good.getCoinCost(_ctx.getUserObject()) > _ctx.getUserObject().coins) {
-                    _ctx.getBangClient().displayPopup(new BankInfoWindow(), true, 350);
+                    _ctx.getBangClient().displayPopup(
+                        new NeedCoinsView(_ctx), true, NeedCoinsView.WIDTH_HINT);
                 }
             }
         };

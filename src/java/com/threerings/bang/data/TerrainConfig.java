@@ -131,9 +131,8 @@ public class TerrainConfig
         // register our terrain types
         Properties props = BangUtil.resourceToProperties(
             "rsrc/terrain/codes.txt");
-        for (Map.Entry entry : props.entrySet()) {
-            registerTerrain((String)entry.getKey(),
-                Integer.parseInt((String)entry.getValue()));
+        for (Map.Entry<?, ?> entry : props.entrySet()) {
+            registerTerrain((String)entry.getKey(), Integer.parseInt((String)entry.getValue()));
         }
     }
 }

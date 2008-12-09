@@ -25,7 +25,7 @@ public interface TopRankObject
     /**
      * Removes an entry from the set of top-ranked lists.
      */
-    public void removeFromTopRanked (Comparable key);
+    public void removeFromTopRanked (Comparable<?> key);
 
     /**
      * Updates an entry in the set of top-ranked lists.

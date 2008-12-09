@@ -74,7 +74,7 @@ public class StoreObject extends PlaceObject
      * the <code>goods</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromGoods (Comparable key)
+    public void removeFromGoods (Comparable<?> key)
     {
         requestEntryRemove(GOODS, goods, key);
     }
@@ -99,11 +99,10 @@ public class StoreObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setGoods (DSet<com.threerings.bang.store.data.Good> value)
+    public void setGoods (DSet<Good> value)
     {
         requestAttributeChange(GOODS, value, this.goods);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.store.data.Good> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<Good> clone = (value == null) ? null : value.typedClone();
         this.goods = clone;
     }
     // AUTO-GENERATED: METHODS END

@@ -143,7 +143,7 @@ public class HideoutObject extends PlaceObject
      * the <code>gangs</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromGangs (Comparable key)
+    public void removeFromGangs (Comparable<?> key)
     {
         requestEntryRemove(GANGS, gangs, key);
     }
@@ -168,11 +168,10 @@ public class HideoutObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setGangs (DSet<com.threerings.bang.gang.data.GangEntry> value)
+    public void setGangs (DSet<GangEntry> value)
     {
         requestAttributeChange(GANGS, value, this.gangs);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.gang.data.GangEntry> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<GangEntry> clone = (value == null) ? null : value.typedClone();
         this.gangs = clone;
     }
 
@@ -191,7 +190,7 @@ public class HideoutObject extends PlaceObject
      * the <code>topRanked</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromTopRanked (Comparable key)
+    public void removeFromTopRanked (Comparable<?> key)
     {
         requestEntryRemove(TOP_RANKED, topRanked, key);
     }
@@ -216,11 +215,10 @@ public class HideoutObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setTopRanked (DSet<com.threerings.bang.gang.data.TopRankedGangList> value)
+    public void setTopRanked (DSet<TopRankedGangList> value)
     {
         requestAttributeChange(TOP_RANKED, value, this.topRanked);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.gang.data.TopRankedGangList> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<TopRankedGangList> clone = (value == null) ? null : value.typedClone();
         this.topRanked = clone;
     }
 
@@ -239,7 +237,7 @@ public class HideoutObject extends PlaceObject
      * the <code>goods</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromGoods (Comparable key)
+    public void removeFromGoods (Comparable<?> key)
     {
         requestEntryRemove(GOODS, goods, key);
     }
@@ -264,11 +262,10 @@ public class HideoutObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setGoods (DSet<com.threerings.bang.store.data.Good> value)
+    public void setGoods (DSet<Good> value)
     {
         requestAttributeChange(GOODS, value, this.goods);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.store.data.Good> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<Good> clone = (value == null) ? null : value.typedClone();
         this.goods = clone;
     }
 
@@ -320,7 +317,7 @@ public class HideoutObject extends PlaceObject
      * the <code>rentalGoods</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromRentalGoods (Comparable key)
+    public void removeFromRentalGoods (Comparable<?> key)
     {
         requestEntryRemove(RENTAL_GOODS, rentalGoods, key);
     }
@@ -345,11 +342,10 @@ public class HideoutObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setRentalGoods (DSet<com.threerings.bang.store.data.Good> value)
+    public void setRentalGoods (DSet<Good> value)
     {
         requestAttributeChange(RENTAL_GOODS, value, this.rentalGoods);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.store.data.Good> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<Good> clone = (value == null) ? null : value.typedClone();
         this.rentalGoods = clone;
     }
     // AUTO-GENERATED: METHODS END

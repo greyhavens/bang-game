@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.opengl.GL11;
-
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.scene.state.TextureState;
@@ -26,6 +24,7 @@ import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.Interval;
 
+import com.threerings.jme.util.ImageCache;
 import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.util.BasicContext;
@@ -99,7 +98,7 @@ public class TextureCache
             if (bimg.getType() != BufferedImage.TYPE_BYTE_INDEXED) {
                 return getTexture(path, scale);
             }
-            img = _ctx.getImageCache().createImage(bimg, zations, scale, true);
+            img = ImageCache.createImage(bimg, zations, scale, true);
         } else {
             img = _ctx.getImageCache().getImage(path, scale);
         }
@@ -143,8 +142,8 @@ public class TextureCache
         BufferedImage subimg = image.getSubimage(
             region.x, region.y, region.width, region.height);
         Image img = (zations == null) ?
-            _ctx.getImageCache().createImage(subimg, true) :
-            _ctx.getImageCache().createImage(subimg, zations, true);
+            ImageCache.createImage(subimg, true) :
+            ImageCache.createImage(subimg, zations, true);
         texture = new CachedTexture();
         RenderUtil.configureTexture(texture, img);
         texture.setImageLocation(path);

@@ -92,7 +92,7 @@ public class UnderdogSoldierLogic extends PieceLogic
 
     /** A Helper class for finding the optimal target. */
     protected class TargetOption
-        implements Comparable
+        implements Comparable<TargetOption>
     {
         public Piece target;
         public int score;
@@ -104,9 +104,8 @@ public class UnderdogSoldierLogic extends PieceLogic
             score = rank * 6 + (attackable ? 0 : dist);
         }
 
-        public int compareTo (Object o)
+        public int compareTo (TargetOption to)
         {
-            TargetOption to = (TargetOption)o;
             int compare = this.score - to.score;
             return (compare != 0 ? compare : target.damage - to.target.damage);
         }

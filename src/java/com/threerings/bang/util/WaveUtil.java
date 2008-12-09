@@ -453,8 +453,7 @@ public class WaveUtil
     public static void getNormalMap (int numSamplesX, int numSamplesY,
         float sizeX, float sizeY, FloatBuffer vbuf, ByteBuffer nmap)
     {
-        int vwidth = numSamplesX + 1, vheight = numSamplesY + 1,
-            lidx, uidx, idx = 0;
+        int vwidth = numSamplesX + 1, vheight = numSamplesY + 1, lidx, uidx;
         float loff, uoff;
         for (int ii = 0; ii < numSamplesX; ii++) {
             if (ii == 0) {

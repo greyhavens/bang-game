@@ -541,7 +541,7 @@ public class GangObject extends DObject
      * the <code>inventory</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromInventory (Comparable key)
+    public void removeFromInventory (Comparable<?> key)
     {
         requestEntryRemove(INVENTORY, inventory, key);
     }
@@ -566,11 +566,10 @@ public class GangObject extends DObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setInventory (DSet<com.threerings.bang.data.Item> value)
+    public void setInventory (DSet<Item> value)
     {
         requestAttributeChange(INVENTORY, value, this.inventory);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.Item> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<Item> clone = (value == null) ? null : value.typedClone();
         this.inventory = clone;
     }
 
@@ -589,7 +588,7 @@ public class GangObject extends DObject
      * the <code>members</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromMembers (Comparable key)
+    public void removeFromMembers (Comparable<?> key)
     {
         requestEntryRemove(MEMBERS, members, key);
     }
@@ -614,11 +613,10 @@ public class GangObject extends DObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setMembers (DSet<com.threerings.bang.gang.data.GangMemberEntry> value)
+    public void setMembers (DSet<GangMemberEntry> value)
     {
         requestAttributeChange(MEMBERS, value, this.members);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.gang.data.GangMemberEntry> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<GangMemberEntry> clone = (value == null) ? null : value.typedClone();
         this.members = clone;
     }
 
@@ -637,7 +635,7 @@ public class GangObject extends DObject
      * the <code>topRanked</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromTopRanked (Comparable key)
+    public void removeFromTopRanked (Comparable<?> key)
     {
         requestEntryRemove(TOP_RANKED, topRanked, key);
     }
@@ -662,11 +660,10 @@ public class GangObject extends DObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setTopRanked (DSet<com.threerings.bang.saloon.data.TopRankedList> value)
+    public void setTopRanked (DSet<TopRankedList> value)
     {
         requestAttributeChange(TOP_RANKED, value, this.topRanked);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.saloon.data.TopRankedList> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<TopRankedList> clone = (value == null) ? null : value.typedClone();
         this.topRanked = clone;
     }
 

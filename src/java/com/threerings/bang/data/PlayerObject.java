@@ -654,7 +654,7 @@ public class PlayerObject extends BodyObject
      * the <code>inventory</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromInventory (Comparable key)
+    public void removeFromInventory (Comparable<?> key)
     {
         requestEntryRemove(INVENTORY, inventory, key);
     }
@@ -679,11 +679,10 @@ public class PlayerObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setInventory (DSet<com.threerings.bang.data.Item> value)
+    public void setInventory (DSet<Item> value)
     {
         requestAttributeChange(INVENTORY, value, this.inventory);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.Item> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<Item> clone = (value == null) ? null : value.typedClone();
         this.inventory = clone;
     }
 
@@ -750,7 +749,7 @@ public class PlayerObject extends BodyObject
      * the <code>stats</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromStats (Comparable key)
+    public void removeFromStats (Comparable<?> key)
     {
         requestEntryRemove(STATS, stats, key);
     }
@@ -778,8 +777,7 @@ public class PlayerObject extends BodyObject
     public void setStats (StatSet value)
     {
         requestAttributeChange(STATS, value, this.stats);
-        @SuppressWarnings("unchecked") StatSet clone =
-            (value == null) ? null : (StatSet)value.clone();
+        StatSet clone = (value == null) ? null : (StatSet)value.clone();
         this.stats = clone;
     }
 
@@ -831,7 +829,7 @@ public class PlayerObject extends BodyObject
      * the <code>looks</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromLooks (Comparable key)
+    public void removeFromLooks (Comparable<?> key)
     {
         requestEntryRemove(LOOKS, looks, key);
     }
@@ -856,11 +854,10 @@ public class PlayerObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setLooks (DSet<com.threerings.bang.avatar.data.Look> value)
+    public void setLooks (DSet<Look> value)
     {
         requestAttributeChange(LOOKS, value, this.looks);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.avatar.data.Look> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<Look> clone = (value == null) ? null : value.typedClone();
         this.looks = clone;
     }
 
@@ -879,7 +876,7 @@ public class PlayerObject extends BodyObject
      * the <code>pardners</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromPardners (Comparable key)
+    public void removeFromPardners (Comparable<?> key)
     {
         requestEntryRemove(PARDNERS, pardners, key);
     }
@@ -904,11 +901,10 @@ public class PlayerObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setPardners (DSet<com.threerings.bang.data.PardnerEntry> value)
+    public void setPardners (DSet<PardnerEntry> value)
     {
         requestAttributeChange(PARDNERS, value, this.pardners);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.PardnerEntry> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<PardnerEntry> clone = (value == null) ? null : value.typedClone();
         this.pardners = clone;
     }
 
@@ -927,7 +923,7 @@ public class PlayerObject extends BodyObject
      * the <code>notifications</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromNotifications (Comparable key)
+    public void removeFromNotifications (Comparable<?> key)
     {
         requestEntryRemove(NOTIFICATIONS, notifications, key);
     }
@@ -952,11 +948,10 @@ public class PlayerObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setNotifications (DSet<com.threerings.bang.data.Notification> value)
+    public void setNotifications (DSet<Notification> value)
     {
         requestAttributeChange(NOTIFICATIONS, value, this.notifications);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.Notification> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<Notification> clone = (value == null) ? null : value.typedClone();
         this.notifications = clone;
     }
 

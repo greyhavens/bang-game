@@ -9,8 +9,6 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Track;
 
-import static com.threerings.bang.client.BangMetrics.*;
-
 /**
  * Displays a track piece.
  */

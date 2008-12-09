@@ -193,7 +193,7 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     // from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return _type;
     }

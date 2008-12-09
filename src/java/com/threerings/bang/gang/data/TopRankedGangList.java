@@ -26,7 +26,7 @@ public class TopRankedGangList extends SimpleStreamableObject
     public BuckleInfo topDogBuckle;
 
     // documentation inherited from interface DSet.Key
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return criterion;
     }

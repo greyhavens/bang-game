@@ -58,8 +58,8 @@ public class StatsDisplay extends BDecoratedWindow
         // enumerate all the stat types accumulated during the game
         HashSet<StatType> types = new HashSet<StatType>();
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
-            for (Iterator iter = bangobj.stats[ii].iterator(); iter.hasNext(); ) {
-                types.add((StatType)((Stat)iter.next()).getType());
+            for (Iterator<Stat> iter = bangobj.stats[ii].iterator(); iter.hasNext(); ) {
+                types.add((StatType)iter.next().getType());
             }
         }
 

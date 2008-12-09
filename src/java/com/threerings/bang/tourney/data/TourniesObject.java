@@ -35,7 +35,7 @@ public class TourniesObject extends DObject
      * the <code>tournies</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromTournies (Comparable key)
+    public void removeFromTournies (Comparable<?> key)
     {
         requestEntryRemove(TOURNIES, tournies, key);
     }
@@ -60,11 +60,10 @@ public class TourniesObject extends DObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setTournies (DSet<com.threerings.bang.tourney.data.TourneyListingEntry> value)
+    public void setTournies (DSet<TourneyListingEntry> value)
     {
         requestAttributeChange(TOURNIES, value, this.tournies);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.tourney.data.TourneyListingEntry> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<TourneyListingEntry> clone = (value == null) ? null : value.typedClone();
         this.tournies = clone;
     }
     // AUTO-GENERATED: METHODS END

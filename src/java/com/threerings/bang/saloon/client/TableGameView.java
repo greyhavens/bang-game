@@ -149,7 +149,7 @@ public class TableGameView extends BContainer
     }
 
     protected TableGameObject _tobj;
-    protected SafeSubscriber _tablesub;
+    protected SafeSubscriber<TableGameObject> _tablesub;
     protected BangContext _ctx;
     protected StatusLabel _status;
 

@@ -108,7 +108,7 @@ public abstract class Piece
      * automatically.
      *
      * @param tick the current game tick.
-     * @param board the current board.
+     * @param bangobj the current game object.
      * @param pieces all the pieces on the board in easily accessible form.
      *
      * @return a list of effects to apply to the unit as a result of having been ticked or null.
@@ -648,7 +648,7 @@ public abstract class Piece
     }
 
     // documentation inherited from interface Savable
-    public Class getClassTag ()
+    public Class<?> getClassTag ()
     {
         return getClass();
     }
@@ -703,7 +703,7 @@ public abstract class Piece
     }
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         if (_key == null) {
             _key = new Integer(pieceId);
@@ -889,7 +889,7 @@ public abstract class Piece
 
     /**
      * Returns the attack influence icon or null if no attack influence.  Used after a call to
-     * {@link computeScaledDamage}.
+     * {@link #computeScaledDamage}.
      */
     public String[] attackInfluenceIcons ()
     {
@@ -898,7 +898,7 @@ public abstract class Piece
 
     /**
      * Returns the defend influence icon or null if no attack influence.  Used after a call to
-     * {@link computeScaledDamage}.
+     * {@link #computeScaledDamage}.
      */
     public String[] defendInfluenceIcons (Piece target)
     {

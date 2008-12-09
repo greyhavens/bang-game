@@ -39,7 +39,6 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.WaveUtil;
 
-import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

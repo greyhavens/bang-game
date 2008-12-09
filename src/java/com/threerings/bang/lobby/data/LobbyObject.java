@@ -90,7 +90,7 @@ public class LobbyObject extends PlaceObject
      * the <code>tableSet</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromTableSet (Comparable key)
+    public void removeFromTableSet (Comparable<?> key)
     {
         requestEntryRemove(TABLE_SET, tableSet, key);
     }
@@ -115,11 +115,10 @@ public class LobbyObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setTableSet (DSet<com.threerings.parlor.data.Table> value)
+    public void setTableSet (DSet<Table> value)
     {
         requestAttributeChange(TABLE_SET, value, this.tableSet);
-        @SuppressWarnings("unchecked") DSet<com.threerings.parlor.data.Table> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<Table> clone = (value == null) ? null : value.typedClone();
         this.tableSet = clone;
     }
 

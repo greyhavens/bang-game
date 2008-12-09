@@ -6,7 +6,6 @@ package com.threerings.bang.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
@@ -54,7 +53,6 @@ public class WhereToView extends SteelWindow
         _contents.add(horiz);
 
         int townIdx = BangUtil.getTownIndex(self.townId);
-        BImage underline = _ctx.loadImage("ui/window/underline.png");
         BContainer tutcol = new BContainer(GroupLayout.makeVert(
                     GroupLayout.TOP).setGap(5).setOffAxisJustification(GroupLayout.CENTER));
         BLabel tutbubble = new BLabel(_msgs.get("m.whereto_tuts." + self.townId), "where_bubble");

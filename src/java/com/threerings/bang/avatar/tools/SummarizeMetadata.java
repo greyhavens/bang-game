@@ -232,7 +232,6 @@ public class SummarizeMetadata
                 boolean wrotesep = false;
                 do {
                     remain = 0;
-                    StringBuilder buf = new StringBuilder();
                     int wrote = 0;
                     for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
                         cols[tt] = null;

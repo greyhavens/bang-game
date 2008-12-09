@@ -13,7 +13,6 @@ import java.io.IOException;
 
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Properties;
 
 import com.jme.image.Texture;
@@ -78,7 +77,6 @@ import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.tourney.client.TourneyListView;
 
 import static com.threerings.bang.Log.*;
-import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays the main "town" menu interface where a player can navigate to the ranch, the saloon,
@@ -111,7 +109,7 @@ public class TownView extends BWindow
         }
 
         // register the commands for our various shops
-        Enumeration iter = props.propertyNames();
+        Enumeration<?> iter = props.propertyNames();
         while (iter.hasMoreElements()) {
             String command = (String)iter.nextElement();
             _commands.put(props.getProperty(command), command);

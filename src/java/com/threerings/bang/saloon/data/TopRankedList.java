@@ -42,7 +42,7 @@ public class TopRankedList extends SimpleStreamableObject
     public transient Date week;
 
     // documentation inherited from interface DSet.Key
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return criterion + period;
     }

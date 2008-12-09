@@ -208,7 +208,6 @@ public class StatsView extends SteelWindow
         _scenPoints = new int[_bobj.players.length];
         _objectives = new int[_bobj.players.length];
 
-        int objSum;
         for (int ii = 0; ii < _scenPoints.length; ii++) {
             _scenPoints[ii] = (_secStatType == null) ? 0 :
                 getIntStat(ii, _secStatType);
@@ -699,7 +698,6 @@ public class StatsView extends SteelWindow
         statcont.add(new Spacer(20, 0), GroupLayout.FIXED);
 
         Dimension boxdim = new Dimension(width, height);
-        Dimension headerdim = new Dimension(width, HEADER_HEIGHT);
         HashMap<StatType, Integer> map = new HashMap<StatType, Integer>();
 
         // Add the headers

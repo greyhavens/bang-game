@@ -12,7 +12,6 @@ import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
-import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Waits for all sprites involved in a shot to stop moving and then

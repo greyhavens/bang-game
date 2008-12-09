@@ -33,7 +33,7 @@ public class StatusObject extends DObject
         public int players;
 
         // documentation inherited from interface DSet.Entry
-        public Comparable getKey () {
+        public Comparable<?> getKey () {
             return gameOid;
         }
 
@@ -65,7 +65,7 @@ public class StatusObject extends DObject
         public transient long nextPublishStamp;
 
         // documentation inherited from interface DSet.Entry
-        public Comparable getKey () {
+        public Comparable<?> getKey () {
             return ident;
         }
     }
@@ -251,7 +251,7 @@ public class StatusObject extends DObject
      * the <code>places</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromPlaces (Comparable key)
+    public void removeFromPlaces (Comparable<?> key)
     {
         requestEntryRemove(PLACES, places, key);
     }
@@ -276,11 +276,10 @@ public class StatusObject extends DObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setPlaces (DSet<com.threerings.bang.admin.data.StatusObject.PlaceInfo> value)
+    public void setPlaces (DSet<StatusObject.PlaceInfo> value)
     {
         requestAttributeChange(PLACES, value, this.places);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.admin.data.StatusObject.PlaceInfo> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<StatusObject.PlaceInfo> clone = (value == null) ? null : value.typedClone();
         this.places = clone;
     }
 
@@ -315,7 +314,7 @@ public class StatusObject extends DObject
      * the <code>games</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromGames (Comparable key)
+    public void removeFromGames (Comparable<?> key)
     {
         requestEntryRemove(GAMES, games, key);
     }
@@ -340,11 +339,10 @@ public class StatusObject extends DObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setGames (DSet<com.threerings.bang.admin.data.StatusObject.GameInfo> value)
+    public void setGames (DSet<StatusObject.GameInfo> value)
     {
         requestAttributeChange(GAMES, value, this.games);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.admin.data.StatusObject.GameInfo> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<StatusObject.GameInfo> clone = (value == null) ? null : value.typedClone();
         this.games = clone;
     }
     // AUTO-GENERATED: METHODS END

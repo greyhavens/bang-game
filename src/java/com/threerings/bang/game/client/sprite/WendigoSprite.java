@@ -157,7 +157,7 @@ public class WendigoSprite extends MobileSprite
                 toWorldCoords(x, y, elev, temp);
                 coords.add(temp);
                 int dist = Math.abs(lastx - x + lasty - y);
-                durations.add((float)dist / speed);
+                durations.add(dist / speed);
                 lastx = x;
                 lasty = y;
                 pieces = 0;
@@ -172,7 +172,7 @@ public class WendigoSprite extends MobileSprite
                     board, end.x, end.y), temp);
         coords.add(temp);
         int dist = Math.abs(lastx - end.x + lasty - end.y);
-        durations.add((float)dist / speed);
+        durations.add(dist / speed);
         float[] durs = new float[durations.size()];
         for (int ii = 0; ii < durs.length; ii++) {
             durs[ii] = durations.get(ii);

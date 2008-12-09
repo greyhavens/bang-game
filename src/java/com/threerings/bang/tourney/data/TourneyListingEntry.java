@@ -21,7 +21,7 @@ public class TourneyListingEntry
     public int oid;
 
     /** The unique key for the tourney. */
-    public Comparable key;
+    public Comparable<?> key;
 
     /**
      * Blank constructor.
@@ -33,7 +33,7 @@ public class TourneyListingEntry
     /**
      * Creates a configured tourney listing entry.
      */
-    public TourneyListingEntry (String desc, Comparable key, int oid, int startsIn)
+    public TourneyListingEntry (String desc, Comparable<?> key, int oid, int startsIn)
     {
         this.desc = desc;
         this.key = key;
@@ -42,7 +42,7 @@ public class TourneyListingEntry
     }
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return key;
     }

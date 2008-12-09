@@ -31,7 +31,7 @@ public abstract class Item
     /**
      * Returns the key used to identify this item in a {@link DSet}.
      */
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return _itemId;
     }

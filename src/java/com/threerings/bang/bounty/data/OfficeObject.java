@@ -48,7 +48,7 @@ public class OfficeObject extends PlaceObject
      * the <code>boards</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromBoards (Comparable key)
+    public void removeFromBoards (Comparable<?> key)
     {
         requestEntryRemove(BOARDS, boards, key);
     }
@@ -73,11 +73,10 @@ public class OfficeObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setBoards (DSet<com.threerings.bang.bounty.data.BoardInfo> value)
+    public void setBoards (DSet<BoardInfo> value)
     {
         requestAttributeChange(BOARDS, value, this.boards);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.bounty.data.BoardInfo> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<BoardInfo> clone = (value == null) ? null : value.typedClone();
         this.boards = clone;
     }
 
@@ -96,7 +95,7 @@ public class OfficeObject extends PlaceObject
      * the <code>completers</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromCompleters (Comparable key)
+    public void removeFromCompleters (Comparable<?> key)
     {
         requestEntryRemove(COMPLETERS, completers, key);
     }
@@ -121,11 +120,10 @@ public class OfficeObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setCompleters (DSet<com.threerings.bang.bounty.data.RecentCompleters> value)
+    public void setCompleters (DSet<RecentCompleters> value)
     {
         requestAttributeChange(COMPLETERS, value, this.completers);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.bounty.data.RecentCompleters> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<RecentCompleters> clone = (value == null) ? null : value.typedClone();
         this.completers = clone;
     }
 

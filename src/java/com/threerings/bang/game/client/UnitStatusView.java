@@ -71,9 +71,7 @@ public class UnitStatusView extends BWindow
     {
         if (isAdded()) {
             pack();
-            int width = _ctx.getDisplay().getWidth();
-            int height = _ctx.getDisplay().getHeight();
-            setLocation(0, height - getHeight());
+            setLocation(0, _ctx.getDisplay().getHeight()- getHeight());
         }
     }
 

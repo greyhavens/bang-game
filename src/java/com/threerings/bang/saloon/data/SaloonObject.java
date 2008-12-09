@@ -71,7 +71,7 @@ public class SaloonObject extends PlaceObject
      * the <code>parlors</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromParlors (Comparable key)
+    public void removeFromParlors (Comparable<?> key)
     {
         requestEntryRemove(PARLORS, parlors, key);
     }
@@ -96,11 +96,10 @@ public class SaloonObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setParlors (DSet<com.threerings.bang.saloon.data.ParlorInfo> value)
+    public void setParlors (DSet<ParlorInfo> value)
     {
         requestAttributeChange(PARLORS, value, this.parlors);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.saloon.data.ParlorInfo> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<ParlorInfo> clone = (value == null) ? null : value.typedClone();
         this.parlors = clone;
     }
 
@@ -119,7 +118,7 @@ public class SaloonObject extends PlaceObject
      * the <code>topRanked</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromTopRanked (Comparable key)
+    public void removeFromTopRanked (Comparable<?> key)
     {
         requestEntryRemove(TOP_RANKED, topRanked, key);
     }
@@ -144,11 +143,10 @@ public class SaloonObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setTopRanked (DSet<com.threerings.bang.saloon.data.TopRankedList> value)
+    public void setTopRanked (DSet<TopRankedList> value)
     {
         requestAttributeChange(TOP_RANKED, value, this.topRanked);
-        @SuppressWarnings("unchecked") DSet<com.threerings.bang.saloon.data.TopRankedList> clone =
-            (value == null) ? null : value.typedClone();
+        DSet<TopRankedList> clone = (value == null) ? null : value.typedClone();
         this.topRanked = clone;
     }
     // AUTO-GENERATED: METHODS END

@@ -6,6 +6,7 @@ package com.threerings.bang.game.client;
 import java.awt.Rectangle;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -1110,7 +1111,7 @@ public class TerrainNode extends Node
     protected boolean containTriangles (TrianglePickResults results)
     {
         for (int i = 0, size = results.getNumber(); i < size; i++) {
-            ArrayList tris = results.getPickData(i).getTargetTris();
+            List<?> tris = results.getPickData(i).getTargetTris();
             if (tris != null && tris.size() > 0) {
                 Object sprite = _view.getPieceSprite(
                     results.getPickData(i).getTargetMesh().getParentGeom());
@@ -1701,7 +1702,7 @@ public class TerrainNode extends Node
                 int x1 = even ? ebounds.x : (ebounds.x + ebounds.width - 1),
                     x2 = even ? (ebounds.x + ebounds.width) : (ebounds.x - 1),
                     dx = even ? +1 : -1,
-                    iy = y - ebounds.y, ix, px;
+                    iy = y - ebounds.y, ix;
                 for (int x = x1; x != x2; x += dx) {
                     ix = x - ebounds.x;
                     if (x != x2 - dx) {
@@ -1972,7 +1973,7 @@ public class TerrainNode extends Node
             if (_atotals == null) {
                 _atotals = new float[TEXTURE_SIZE * TEXTURE_SIZE];
             }
-            float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE, alpha;
+            float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE;
             int x1 = (int)((rect.x - bounds.x) / step),
                 y1 = (int)((rect.y - bounds.y) / step),
                 x2 = (int)FastMath.ceil((rect.x + rect.width - 1 - bounds.x) /
@@ -2009,10 +2010,8 @@ public class TerrainNode extends Node
             float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE, alpha;
             int x1 = (int)((rect.x - bounds.x) / step),
                 y1 = (int)((rect.y - bounds.y) / step),
-                x2 = (int)FastMath.ceil((rect.x + rect.width - 1 - bounds.x) /
-                    step),
-                y2 = (int)FastMath.ceil((rect.y + rect.height - 1 - bounds.y) /
-                    step), idx, rgba;
+                x2 = (int)FastMath.ceil((rect.x + rect.width - 1 - bounds.x) / step),
+                y2 = (int)FastMath.ceil((rect.y + rect.height - 1 - bounds.y) / step), idx;
             for (int y = y1; y <= y2; y++) {
                 for (int x = x1; x <= x2; x++) {
                     idx = y*TEXTURE_SIZE + x;

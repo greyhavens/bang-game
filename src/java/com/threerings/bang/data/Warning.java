@@ -40,7 +40,7 @@ public class Warning extends Notification
     }
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return "WARNING" + message;
     }
