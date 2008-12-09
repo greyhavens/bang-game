@@ -30,13 +30,11 @@ import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.util.GangUtil;
 
-import static com.threerings.bang.Log.*;
-
 /**
  * Allows the user to browse the list of gang members.
  */
 public class RosterView extends BContainer
-    implements AttributeChangeListener, SetListener, GangCodes, HideoutCodes
+    implements AttributeChangeListener, SetListener<GangMemberEntry>, GangCodes, HideoutCodes
 {
     public RosterView (
         BangContext ctx, HideoutObject hideoutobj, GangObject gangobj, StatusLabel status)
@@ -96,22 +94,22 @@ public class RosterView extends BContainer
     }
 
     // documentation inherited from interface SetListener
-    public void entryAdded (EntryAddedEvent event)
+    public void entryAdded (EntryAddedEvent<GangMemberEntry> event)
     {
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
         }
-        GangMemberEntry entry = (GangMemberEntry)event.getEntry();
+        GangMemberEntry entry = event.getEntry();
         updateMembers(entry.rank == LEADER_RANK);
     }
 
     // documentation inherited from interface SetListener
-    public void entryRemoved (EntryRemovedEvent event)
+    public void entryRemoved (EntryRemovedEvent<GangMemberEntry> event)
     {
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
         }
-        GangMemberEntry entry = (GangMemberEntry)event.getOldEntry();
+        GangMemberEntry entry = event.getOldEntry();
         if (entry.rank == LEADER_RANK) {
             updateMembers(true);
             _lview.update();
@@ -121,13 +119,12 @@ public class RosterView extends BContainer
     }
 
     // documentation inherited from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<GangMemberEntry> event)
     {
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
         }
-        GangMemberEntry oentry = (GangMemberEntry)event.getOldEntry(),
-            nentry = (GangMemberEntry)event.getEntry();
+        GangMemberEntry oentry = event.getOldEntry(), nentry = event.getEntry();
         if (oentry.rank == LEADER_RANK || nentry.rank == LEADER_RANK) {
             updateMembers(true);
             _lview.update();

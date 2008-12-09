@@ -24,8 +24,6 @@ import com.threerings.bang.game.data.piece.SafeMarker;
 
 import com.threerings.openal.SoundGroup;
 
-import static com.threerings.bang.client.BangMetrics.*;
-
 /**
  * Sprite for the safe markers.
  */
@@ -122,7 +120,6 @@ public class SafeMarkerSprite extends MarkerSprite
         TextureState nstate = _ctx.getRenderer().createTextureState();
         for (int ii = 0, nn = ostate.getNumberOfSetTextures(); ii < nn; ii++) {
             Texture ntex = ostate.getTexture(ii).createSimpleClone();
-            Quaternion rot = new Quaternion();
             ntex.setRotation(new Quaternion().fromAngleNormalAxis(angle, Vector3f.UNIT_Z));
             nstate.setTexture(ntex, ii);
         }

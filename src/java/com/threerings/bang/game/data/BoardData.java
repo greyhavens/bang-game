@@ -87,7 +87,7 @@ public class BoardData
     }
 
     // from interface Savable
-    public Class getClassTag ()
+    public Class<?> getClassTag ()
     {
         return BoardData.class;
     }

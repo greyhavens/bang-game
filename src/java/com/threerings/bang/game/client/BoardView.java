@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.jme.intersection.PickData;
@@ -1741,7 +1742,7 @@ public class BoardView extends BComponent
     /**
      * Creates geometry to "target" the supplied set of tiles.
      *
-     * @param valid: If true then render normally, if false, make them
+     * @param valid If true then render normally, if false, make them
      * semi-transparent and red.
      */
     protected void targetTiles (PointSet set, boolean valid)
@@ -1793,7 +1794,7 @@ public class BoardView extends BComponent
     /** JME peskily returns bogus hits when we do triangle level picking. */
     protected boolean notReallyAHit (PickData pdata)
     {
-        ArrayList tris = pdata.getTargetTris();
+        List<?> tris = pdata.getTargetTris();
         Object mesh = pdata.getTargetMesh().getParentGeom();
         return (tris == null || tris.size() == 0 || !(mesh instanceof TriMesh));
     }
@@ -2067,24 +2068,23 @@ public class BoardView extends BComponent
 
     /** Listens for various different events and does the right thing. */
     protected class BoardEventListener
-        implements SetListener, AttributeChangeListener
+        implements SetListener<Piece>, AttributeChangeListener
     {
-        public void entryAdded (EntryAddedEvent event) {
+        public void entryAdded (EntryAddedEvent<Piece> event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                queuePieceCreate((Piece)event.getEntry(), _bangobj.tick);
+                queuePieceCreate(event.getEntry(), _bangobj.tick);
             }
         }
 
-        public void entryUpdated (EntryUpdatedEvent event) {
+        public void entryUpdated (EntryUpdatedEvent<Piece> event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                queuePieceUpdate((Piece)event.getOldEntry(),
-                                 (Piece)event.getEntry());
+                queuePieceUpdate(event.getOldEntry(), event.getEntry());
             }
         }
 
-        public void entryRemoved (EntryRemovedEvent event) {
+        public void entryRemoved (EntryRemovedEvent<Piece> event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                queuePieceRemoval((Piece)event.getOldEntry());
+                queuePieceRemoval(event.getOldEntry());
             }
         }
 

@@ -24,12 +24,10 @@ import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 
-import static com.threerings.bang.Log.*;
-
 /**
  * Listens to users with pardners, updating their pardner list entries.
  */
-public class PardnerEntryUpdater extends SetAdapter
+public class PardnerEntryUpdater extends SetAdapter<DSet.Entry>
     implements AttributeChangeListener, ObjectDeathListener, ElementUpdateListener
 {
     /** The up-to-date entry for the player. */
@@ -87,7 +85,7 @@ public class PardnerEntryUpdater extends SetAdapter
     }
 
     @Override // documentation inherited
-    public void entryUpdated (EntryUpdatedEvent eue)
+    public void entryUpdated (EntryUpdatedEvent<DSet.Entry> eue)
     {
         // if the current look is updated, update their avatar
         String name = eue.getName();
@@ -103,7 +101,7 @@ public class PardnerEntryUpdater extends SetAdapter
     }
 
     @Override // documentation inherited
-    public void entryRemoved (EntryRemovedEvent ere)
+    public void entryRemoved (EntryRemovedEvent<DSet.Entry> ere)
     {
         // if the last pardner is removed, clear out the updater
         if (ere.getName().equals(PlayerObject.PARDNERS) && shouldRemove()) {

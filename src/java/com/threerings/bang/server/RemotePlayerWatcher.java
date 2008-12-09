@@ -4,7 +4,10 @@
 package com.threerings.bang.server;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
@@ -66,7 +69,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
     // from interface BangPeerManager.RemotePlayerObserver
     public void remotePlayerChangedHandle (int townIndex, Handle oldHandle, Handle newHandle)
     {
-        ArrayList<Container<T>> containers = _mapping.remove(oldHandle);
+        List<Container<T>> containers = _mapping.remove(oldHandle);
         if (containers == null) {
             return;
         }
@@ -95,7 +98,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
         }
 
         Handle handle = (Handle)info.visibleName;
-        ArrayList<Container<T>> containers = _mapping.get(handle);
+        List<Container<T>> containers = _mapping.get(handle);
         if (containers == null) {
             return;
         }
@@ -127,7 +130,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
 
     /** Used to keep the {@link #_mapping} mapping up to date. */
     protected class Mapper
-        implements SetListener, ObjectDeathListener
+        implements SetListener<DSet.Entry>, ObjectDeathListener
     {
         public Mapper (Container<T> container) {
             _container = container;
@@ -136,7 +139,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
             }
         }
 
-        public void entryAdded (EntryAddedEvent event) {
+        public void entryAdded (EntryAddedEvent<DSet.Entry> event) {
             // replacement handles will have already been mapped
             if (event.getName().equals(getSetName()) &&
                     !(event instanceof EntryReplacedEvent.ReplacementAddedEvent)) {
@@ -144,10 +147,10 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
                 mapPlayer(entry);
             }
         }
-        public void entryUpdated (EntryUpdatedEvent event) {
+        public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event) {
             // nothing doing
         }
-        public void entryRemoved (EntryRemovedEvent event) {
+        public void entryRemoved (EntryRemovedEvent<DSet.Entry> event) {
             // replaced handles will have already been cleared
             if (event.getName().equals(getSetName()) &&
                     !(event instanceof EntryReplacedEvent)) {
@@ -168,7 +171,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
         }
 
         protected void mapPlayer (T entry) {
-            ArrayList<Container<T>> list = _mapping.get(entry.getKey());
+            List<Container<T>> list = _mapping.get(entry.getKey());
             if (list == null) {
                 _mapping.put(entry.getKey(), list = new ArrayList<Container<T>>());
             }
@@ -179,7 +182,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
             list.add(_container);
         }
         protected void clearPlayer (T entry) {
-            ArrayList<Container<T>> list = _mapping.get(entry.getKey());
+            List<Container<T>> list = _mapping.get(entry.getKey());
             if (list == null) { // sanity check
                 log.warning("Missing list when clearing mapping [entry=" + entry.getKey() +
                             ", container=" + _container + "].");
@@ -195,6 +198,5 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
     }
 
     /** Maps handles to a list of all resolved objects that contain a reference to it. */
-    protected HashMap<Comparable, ArrayList<Container<T>>> _mapping =
-        new HashMap<Comparable, ArrayList<Container<T>>>();
+    protected Map<Comparable<?>, List<Container<T>>> _mapping = Maps.newHashMap();
 }

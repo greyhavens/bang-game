@@ -63,7 +63,7 @@ public class RankCriterion extends Criterion
     }
 
     // from interface Savable
-    public Class getClassTag ()
+    public Class<?> getClassTag ()
     {
         return getClass();
     }

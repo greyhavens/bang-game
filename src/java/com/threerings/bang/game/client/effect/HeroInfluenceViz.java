@@ -149,9 +149,9 @@ public class HeroInfluenceViz extends InfluenceViz
     protected float getAlpha ()
     {
         if (_level < 5) {
-            return (float)_level / 5f * .3f;
+            return _level / 5f * .3f;
         }
-        return .3f + (float)(_level - 5) / 10f;
+        return .3f + (_level - 5) / 10f;
     }
 
     protected int _level, _owner;

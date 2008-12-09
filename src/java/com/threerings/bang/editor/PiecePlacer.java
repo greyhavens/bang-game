@@ -24,8 +24,6 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
 
-import static com.threerings.bang.Log.*;
-
 /**
  * Allows the user to place and manipulate pieces on the board.
  */

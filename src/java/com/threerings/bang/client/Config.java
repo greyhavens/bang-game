@@ -86,7 +86,7 @@ public class Config
                 continue;
             }
 
-            Class ftype = field.getType();
+            Class<?> ftype = field.getType();
             try {
                 if (ftype.equals(Boolean.TYPE)) {
                     boolean val = field.getBoolean(null);

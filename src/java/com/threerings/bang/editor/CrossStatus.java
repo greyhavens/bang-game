@@ -21,6 +21,7 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
+import com.threerings.jme.util.ImageCache;
 
 /**
  * A helper class that highlights which sides of a tile can be crossed.
@@ -102,8 +103,7 @@ public class CrossStatus extends Node
             AffineTransformOp rot90op = new AffineTransformOp(
                     rot90, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
             for (int ii = 0; ii < DIRECTIONS.length; ii++) {
-                _sidetexs[ii] = RenderUtil.createTexture(_ctx,
-                        _ctx.getImageCache().createImage(side, false));
+                _sidetexs[ii] = RenderUtil.createTexture(_ctx, ImageCache.createImage(side, false));
                 RenderUtil.ensureLoaded(_ctx, _sidetexs[ii]);
                 side = rot90op.filter(side, null);
             }

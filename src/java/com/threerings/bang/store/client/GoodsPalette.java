@@ -13,7 +13,6 @@ import com.threerings.presents.dobj.DObject;
 
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.store.data.Good;
@@ -71,7 +70,6 @@ public class GoodsPalette extends IconPalette
 
         // filter out all matching goods
         ArrayList<Good> filtered = new ArrayList<Good>();
-        PlayerObject self = _ctx.getUserObject();
         for (Good good : _goodsobj.getGoods()) {
             if ((_filter == null || _filter.isValid(good)) && isAvailable(good)) {
                 filtered.add(good);

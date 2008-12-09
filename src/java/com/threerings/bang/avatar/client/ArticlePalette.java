@@ -4,7 +4,6 @@
 package com.threerings.bang.avatar.client;
 
 import java.util.Comparator;
-import java.util.Iterator;
 
 import com.samskivert.util.SortableArrayList;
 
@@ -57,8 +56,7 @@ public class ArticlePalette extends IconPalette
 
         // extract the articles from their inventory and sort them
         SortableArrayList<Article> articles = new SortableArrayList<Article>();
-        for (Iterator iter = player.inventory.iterator(); iter.hasNext(); ) {
-            Item item = (Item)iter.next();
+        for (Item item : player.inventory) {
             if (!(item instanceof Article) ||
                 !((Article)item).getSlot().equals(slot)) {
                 continue;

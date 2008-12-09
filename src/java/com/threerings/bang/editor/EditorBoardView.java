@@ -72,21 +72,21 @@ public class EditorBoardView extends BoardView
         super.prepareForRound(bangobj, cfg, pidx);
 
         // add a listener to update highlights for pieces
-        _bangobj.addListener(new SetListener() {
-            public void entryAdded (EntryAddedEvent e) {
+        _bangobj.addListener(new SetListener<Piece>() {
+            public void entryAdded (EntryAddedEvent<Piece> e) {
                 if (e.getName().equals(BangObject.PIECES)) {
-                    updateHighlights((Piece)e.getEntry());
+                    updateHighlights(e.getEntry());
                 }
             }
-            public void entryRemoved (EntryRemovedEvent e) {
+            public void entryRemoved (EntryRemovedEvent<Piece> e) {
                 if (e.getName().equals(BangObject.PIECES)) {
-                    updateHighlights((Piece)e.getOldEntry());
+                    updateHighlights(e.getOldEntry());
                 }
             }
-            public void entryUpdated (EntryUpdatedEvent e) {
+            public void entryUpdated (EntryUpdatedEvent<Piece> e) {
                 if (e.getName().equals(BangObject.PIECES)) {
-                    updateHighlights((Piece)e.getOldEntry());
-                    updateHighlights((Piece)e.getEntry());
+                    updateHighlights(e.getOldEntry());
+                    updateHighlights(e.getEntry());
                 }
             }
             protected void updateHighlights (Piece piece) {

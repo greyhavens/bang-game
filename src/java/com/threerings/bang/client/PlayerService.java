@@ -38,7 +38,7 @@ public interface PlayerService extends InvocationService
     /**
      * Responds to one of our pending notifications.
      */
-    public void respondToNotification (Client client, Comparable key, int resp,
+    public void respondToNotification (Client client, Comparable<?> key, int resp,
                                        ConfirmListener listener);
 
     /**

@@ -21,7 +21,6 @@ import com.threerings.bang.game.data.effect.Effect;
 
 import com.threerings.openal.Sound;
 
-import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.gang.server;
 
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -15,7 +16,7 @@ import com.threerings.bang.avatar.data.Look;
 /**
  * Keeps the avatar of the gang's senior leader up-to-date while he's online.
  */
-public class AvatarUpdater extends SetAdapter
+public class AvatarUpdater extends SetAdapter<DSet.Entry>
     implements ElementUpdateListener
 {
     public AvatarUpdater (GangHandler handler)
@@ -37,7 +38,7 @@ public class AvatarUpdater extends SetAdapter
     }
 
     @Override // documentation inherited
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event)
     {
         if (event.getName().equals(PlayerObject.LOOKS) &&
             event.getEntry() == _player.getLook(Look.Pose.WANTED_POSTER)) {

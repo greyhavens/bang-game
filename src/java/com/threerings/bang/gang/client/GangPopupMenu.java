@@ -12,8 +12,6 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
 
-import com.threerings.util.MessageBundle;
-
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
@@ -52,8 +50,6 @@ public class GangPopupMenu extends BPopupMenu
         _name = name;
         addListener(this);
         setLayer(BangUI.POPUP_MENU_LAYER);
-
-        MessageBundle msgs = ctx.getMessageManager().getBundle(GangCodes.GANG_MSGS);
 
         // add the name as a non-menu item
         String title = "@=u(" + name.toString() + ")";

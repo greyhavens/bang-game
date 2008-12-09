@@ -103,13 +103,10 @@ public class NewLookView extends BContainer
         add(_collabel = new BLabel("", "colorsel_label"),
             new Rectangle(487, 510, 145, 35));
 
-        ColorSelector s, h, e;
-        _colsels.put("head", s = new ColorSelector(_ctx, AvatarLogic.SKIN,
-                                                   _handlers.get("head")));
-        _colsels.put("hair", h = new ColorSelector(_ctx, AvatarLogic.HAIR,
-                                                   _handlers.get("hair")));
-        _colsels.put("eyes", e = new ColorSelector(_ctx, AvatarLogic.EYES,
-                                                   _handlers.get("eyes")));
+        ColorSelector s, h;
+        _colsels.put("head", s = new ColorSelector(_ctx, AvatarLogic.SKIN, _handlers.get("head")));
+        _colsels.put("hair", h = new ColorSelector(_ctx, AvatarLogic.HAIR, _handlers.get("hair")));
+        _colsels.put("eyes", new ColorSelector(_ctx, AvatarLogic.EYES, _handlers.get("eyes")));
 // TODO: give women a colorization for lips?
 //         _colsels.put("mouth", new ColorSelector(_ctx, AvatarLogic.MAKEUP));
 

@@ -8,7 +8,6 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BMenuItem;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
-import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.ImageIcon;

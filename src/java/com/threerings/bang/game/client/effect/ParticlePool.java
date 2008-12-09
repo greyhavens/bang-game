@@ -24,7 +24,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.ParticleUtil;
 import com.threerings.bang.util.RenderUtil;
 
-import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -71,7 +70,6 @@ public class ParticlePool
 
     public static ParticleMesh getDustRing ()
     {
-        int count = 0, index = -1;
         for (int x = 0, tSize = _dustRings.size(); x < tSize; x++) {
             ParticleMesh e = _dustRings.get(x);
             if (!e.isActive()) {
@@ -86,7 +84,6 @@ public class ParticlePool
 
     public static ParticleMesh getStreamer ()
     {
-        int count = 0, index = -1;
         for (int x = 0, tSize = _streamers.size(); x < tSize; x++) {
             ParticleMesh e = _streamers.get(x);
             if (!e.isActive()) {
@@ -101,7 +98,6 @@ public class ParticlePool
 
     public static ParticleMesh getSparkles ()
     {
-        int count = 0, index = -1;
         for (int x = 0, tSize = _sparkles.size(); x < tSize; x++) {
             ParticleMesh e = _sparkles.get(x);
             if (!e.isActive()) {
@@ -116,7 +112,6 @@ public class ParticlePool
 
     public static ParticleMesh getSteamCloud ()
     {
-        int count = 0, index = -1;
         for (int x = 0, tSize = _steamClouds.size(); x < tSize; x++) {
             ParticleMesh e = _steamClouds.get(x);
             if (!e.isActive()) {

@@ -87,7 +87,7 @@ public class BangStatRepository extends StatRepository
     protected void loadStringCodes (Stat.Type type)
     {
         // we need to make sure StatType has been initialized
-        StatType stattype = StatType.UNUSED;
+        @SuppressWarnings("unused") StatType stattype = StatType.UNUSED;
 
         // now back to our regular scheduled programming
         super.loadStringCodes(type);

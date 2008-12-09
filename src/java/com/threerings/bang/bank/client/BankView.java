@@ -18,7 +18,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Rectangle;
 import com.jmex.bui.util.Point;
 
-import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.coin.data.CoinExOfferInfo;

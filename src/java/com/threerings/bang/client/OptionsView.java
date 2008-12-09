@@ -399,7 +399,7 @@ public class OptionsView extends BDecoratedWindow
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 if (button == OptionDialog.OK_BUTTON) {
-                    if (!_ctx.getBangClient().relaunchGetdown(_ctx, 500L)) {
+                    if (!BangClient.relaunchGetdown(_ctx, 500L)) {
                         log.info("Failed to restart Bang, exiting");
                         _ctx.getApp().stop();
                     }
@@ -420,7 +420,7 @@ public class OptionsView extends BDecoratedWindow
                  _mode.getBitsPerPixel() == mode.getBitsPerPixel()));
     }
 
-    protected static class ModeItem implements Comparable
+    protected static class ModeItem implements Comparable<ModeItem>
     {
         public DisplayMode mode;
 
@@ -437,8 +437,8 @@ public class OptionsView extends BDecoratedWindow
             return text;
         }
 
-        public int compareTo (Object other) {
-            DisplayMode omode = ((ModeItem)other).mode;
+        public int compareTo (ModeItem other) {
+            DisplayMode omode = other.mode;
             if (mode.getWidth() != omode.getWidth()) {
                 return mode.getWidth() - omode.getWidth();
             } else if (mode.getHeight() != omode.getHeight()) {

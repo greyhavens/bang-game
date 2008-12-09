@@ -18,8 +18,6 @@ import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 
-import static com.threerings.bang.Log.*;
-
 /**
  * A simple AI for the cattle rustling scenario.
  */
@@ -222,7 +220,7 @@ public class CattleRustlingLogic extends AILogic
 
     /** Contains the effect of moving to a certain location in terms of spooking cows. */
     protected class SpookResult
-        implements Comparable
+        implements Comparable<SpookResult>
     {
         /** The number of cows spooked towards and away from the herd. */
         public int towards, away;
@@ -264,10 +262,9 @@ public class CattleRustlingLogic extends AILogic
         }
 
         // documentation inherited from interface Comparable
-        public int compareTo (Object other)
+        public int compareTo (SpookResult oresult)
         {
             // towards is better than away, but more is better than fewer
-            SpookResult oresult = (SpookResult)other;
             int tdiff = getTotalCows() - oresult.getTotalCows();
             return (tdiff != 0) ? tdiff : (towards - oresult.towards);
         }

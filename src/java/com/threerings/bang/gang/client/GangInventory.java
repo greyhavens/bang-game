@@ -257,7 +257,7 @@ public class GangInventory extends BDecoratedWindow
     }
 
     protected class GangInventoryPalette extends IconPalette
-        implements SetListener
+        implements SetListener<Item>
     {
         public GangInventoryPalette (Inspector inspector)
         {
@@ -267,10 +267,10 @@ public class GangInventory extends BDecoratedWindow
         }
 
         // documentation inherited from SetListener
-        public void entryAdded (EntryAddedEvent event)
+        public void entryAdded (EntryAddedEvent<Item> event)
         {
             if (event.getName().equals(GangObject.INVENTORY)) {
-                Item item = (Item)event.getEntry();
+                Item item = event.getEntry();
                 if (_itemp.isMatch(item)) {
                     int idx = 0;
                     for (SelectableIcon icon : _icons) {
@@ -288,10 +288,10 @@ public class GangInventory extends BDecoratedWindow
         }
 
         // documentation inherited from SetListener
-        public void entryRemoved (EntryRemovedEvent event)
+        public void entryRemoved (EntryRemovedEvent<Item> event)
         {
             if (event.getName().equals(GangObject.INVENTORY)) {
-                Item item = (Item)event.getOldEntry();
+                Item item = event.getOldEntry();
                 if (_itemp.isMatch(item)) {
                     removeIcon(getIcon(item));
                 }
@@ -299,10 +299,10 @@ public class GangInventory extends BDecoratedWindow
         }
 
         // documentation inherited from SetListener
-        public void entryUpdated (EntryUpdatedEvent event)
+        public void entryUpdated (EntryUpdatedEvent<Item> event)
         {
             if (event.getName().equals(GangObject.INVENTORY)) {
-                Item item = (Item)event.getEntry();
+                Item item = event.getEntry();
                 if (_itemp.isMatch(item)) {
                     ItemIcon iicon = getIcon(item);
                     iicon.setItem(item);

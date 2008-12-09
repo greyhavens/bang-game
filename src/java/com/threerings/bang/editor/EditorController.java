@@ -20,6 +20,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -888,13 +889,13 @@ public class EditorController extends GameController
     }
     
     /** Listens for piece additions and removals. */
-    protected SetListener _pclistener = new SetListener() {
-        public void entryAdded (EntryAddedEvent event) {
+    protected SetListener<DSet.Entry> _pclistener = new SetListener<DSet.Entry>() {
+        public void entryAdded (EntryAddedEvent<DSet.Entry> event) {
             updatePlayerCount();
         }
-        public void entryUpdated (EntryUpdatedEvent event) {
+        public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event) {
         }
-        public void entryRemoved (EntryRemovedEvent event) {
+        public void entryRemoved (EntryRemovedEvent<DSet.Entry> event) {
             updatePlayerCount();
         }
     };

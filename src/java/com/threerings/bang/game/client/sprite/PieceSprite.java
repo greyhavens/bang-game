@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -468,7 +469,7 @@ public class PieceSprite extends Sprite
     /**
      * Returns the model controllers attached to the model.
      */
-    public ArrayList getModelControllers ()
+    public List<?> getModelControllers ()
     {
         return (_model == null ? null : _model.getControllers());
     }
@@ -786,8 +787,7 @@ public class PieceSprite extends Sprite
     protected MaterialState _mstate;
 
     /** The emissions associated with the model. */
-    protected ArrayList<SpriteEmission> _emissions =
-        new ArrayList<SpriteEmission>();
+    protected List<SpriteEmission> _emissions = new ArrayList<SpriteEmission>();
 
     /** A place to hang all highlight geometry. */
     protected Node _hnode;

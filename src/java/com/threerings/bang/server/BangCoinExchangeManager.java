@@ -343,19 +343,19 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     /**
      * Helper function for {@link #updatePublishedInfo}.
      */
-    protected ConsolidatedOffer[] summarizeOffers (List offers)
+    protected ConsolidatedOffer[] summarizeOffers (List<CoinExOffer> offers)
     {
         ArrayList<ConsolidatedOffer> list = new ArrayList<ConsolidatedOffer>();
         for (int ii = 0, nn = offers.size(); ii < nn; ii++) {
             // start with an offer containing this info
-            CoinExOffer offer = (CoinExOffer)offers.get(ii);
+            CoinExOffer offer = offers.get(ii);
             ConsolidatedOffer published = new ConsolidatedOffer();
             published.price = offer.price;
             published.volume = offer.volume;
 
             // consolidate all subsequent offers at the same price
             for (int jj = ii + 1; jj < nn; jj++) {
-                offer = (CoinExOffer) offers.get(jj);
+                offer = offers.get(jj);
                 if (offer.price == published.price) {
                     published.volume += offer.volume;
                     ii++;
@@ -375,11 +375,11 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     /**
      * Helper function for {@link #getPlayerOffers(PlayerObject)}.
      */
-    protected CoinExOfferInfo[] getPlayerOffers (String accountName, List offers)
+    protected CoinExOfferInfo[] getPlayerOffers (String accountName, List<CoinExOffer> offers)
     {
         ArrayList<CoinExOfferInfo> list = new ArrayList<CoinExOfferInfo>();
         for (int ii = 0, nn = offers.size(); ii < nn; ii++) {
-            CoinExOffer offer = (CoinExOffer)offers.get(ii);
+            CoinExOffer offer = offers.get(ii);
             if (offer.accountName.equals(accountName)) {
                 list.add(createInfo(offer));
             }

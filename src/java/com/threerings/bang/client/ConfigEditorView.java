@@ -47,7 +47,7 @@ public class ConfigEditorView extends BDecoratedWindow
             }
 
             BComponent editor = null;
-            Class ftype = field.getType();
+            Class<?> ftype = field.getType();
             try {
                 if (ftype.equals(Boolean.TYPE)) {
                     BCheckBox checkbox = new BCheckBox("");

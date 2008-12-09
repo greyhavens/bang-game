@@ -3,6 +3,7 @@
 
 package com.threerings.bang.lobby.server;
 
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
@@ -69,8 +70,8 @@ public class LobbyManager extends PlaceManager
 
     /** Listens for tables shutting down and reports us as empty if there
      * are no people in the lobby and our last table went away. */
-    protected SetAdapter _emptyListener = new SetAdapter() {
-        public void entryRemoved (EntryRemovedEvent event) {
+    protected SetAdapter<DSet.Entry> _emptyListener = new SetAdapter<DSet.Entry>() {
+        public void entryRemoved (EntryRemovedEvent<DSet.Entry> event) {
             if (event.getName().equals(LobbyObject.TABLE_SET)) {
                 if (_lobobj.tableSet.size() == 0 &&
                     _lobobj.occupants.size() == 0) {

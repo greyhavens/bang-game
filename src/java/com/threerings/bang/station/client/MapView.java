@@ -12,16 +12,13 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Rectangle;
 
-import com.threerings.util.MessageBundle;
-
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
-
-import com.threerings.bang.station.data.StationCodes;
 
 /**
  * Displays the map of the different towns and manages the buttons that will
@@ -35,7 +32,6 @@ public class MapView extends BContainer
         setStyleClass("station_map");
         _ctx = ctx;
 
-        MessageBundle msgs = ctx.getMessageManager().getBundle(StationCodes.STATION_MSGS);
         ActionListener disabler = new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 setPending(true);
@@ -136,8 +132,8 @@ public class MapView extends BContainer
 
     /** Listens for additions to the player's inventory and reenables our town buttons if they buy
      * a ticket. */
-    protected SetAdapter _enabler = new SetAdapter() {
-        public void entryAdded (EntryAddedEvent event) {
+    protected SetAdapter<DSet.Entry> _enabler = new SetAdapter<DSet.Entry>() {
+        public void entryAdded (EntryAddedEvent<DSet.Entry> event) {
             if (event.getName().equals(PlayerObject.INVENTORY)) {
                 enableTownButtons();
             }

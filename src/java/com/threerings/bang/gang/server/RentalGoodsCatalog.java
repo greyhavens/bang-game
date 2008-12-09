@@ -102,11 +102,11 @@ public class RentalGoodsCatalog
     }
 
     /**
-     * Requests that a {@link RentalGoodProvider} be created to provide the specified good to the
+     * Requests that a {@link GangGoodProvider} be created to provide the specified good to the
      * specified gang. Resturns null if no provider is registered for the good in question.
      */
-    public GangGoodProvider getProvider (
-            GangObject gang, Handle handle, boolean admin, RentalGood good, Object[] args)
+    public GangGoodProvider getProvider (GangObject gang, Handle handle, boolean admin, 
+                                         RentalGood good, Object[] args)
         throws InvocationException
     {
         ProviderFactory factory = _providers.get(good);

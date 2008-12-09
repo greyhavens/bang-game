@@ -49,7 +49,7 @@ public class DudShotEmission extends SpriteEmission
         }
 
         // documentation inherited
-        public Class getClassTag ()
+        public Class<?> getClassTag ()
         {
             return getClass();
         }

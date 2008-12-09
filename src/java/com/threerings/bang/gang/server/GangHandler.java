@@ -116,8 +116,8 @@ import static com.threerings.bang.Log.*;
  */
 public class GangHandler
     implements DroppedLockObserver, PlayerLocator.PlayerObserver, RemotePlayerObserver,
-               MessageListener, AttributeChangeListener, SetListener, ObjectDeathListener,
-               SpeakHandler.SpeakerValidator, GangPeerProvider, GangCodes
+               MessageListener, AttributeChangeListener, SetListener<DSet.Entry>,
+               ObjectDeathListener, SpeakHandler.SpeakerValidator, GangPeerProvider, GangCodes
 {
     /** The amount of time in hours required between leader commands for each leader level. */
     public static final int[] LEADER_LEVEL_WAITS = {
@@ -443,7 +443,7 @@ public class GangHandler
     }
 
     // documentation inherited from interface SetListener
-    public void entryAdded (EntryAddedEvent event)
+    public void entryAdded (EntryAddedEvent<DSet.Entry> event)
     {
         String name = event.getName();
         if (name.equals(GangObject.INVENTORY)) {
@@ -499,7 +499,7 @@ public class GangHandler
     public void initPlayer (PlayerObject user, GangMemberEntry entry)
     {
         // remove all outstanding gang invitations
-        List<Comparable> ikeys = new ArrayList<Comparable>();
+        List<Comparable<?>> ikeys = new ArrayList<Comparable<?>>();
         for (Notification note : user.notifications) {
             if (note instanceof GangInvite) {
                 ikeys.add(note.getKey());
@@ -509,7 +509,7 @@ public class GangHandler
         // set the gang fields of their player object
         user.startTransaction();
         try {
-            for (Comparable ikey : ikeys) {
+            for (Comparable<?> ikey : ikeys) {
                 user.removeFromNotifications(ikey);
             }
             user.setGangId(_gangId);
@@ -542,7 +542,7 @@ public class GangHandler
     }
 
     // documentation inherited from interface SetListener
-    public void entryRemoved (EntryRemovedEvent event)
+    public void entryRemoved (EntryRemovedEvent<DSet.Entry> event)
     {
         if (!event.getName().equals(GangObject.MEMBERS) || event instanceof EntryReplacedEvent) {
             return; // no need to react to handle changes
@@ -611,7 +611,7 @@ public class GangHandler
     }
 
     // documentation inherited from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event)
     {
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
@@ -705,7 +705,7 @@ public class GangHandler
     }
 
     /**
-     * Sets the gang notoriety, should only be called by {@link Gang Manager}.
+     * Sets the gang notoriety, should only be called by {@link GangManager}.
      */
     public void setNotoriety (int notoriety)
     {
@@ -1656,7 +1656,6 @@ public class GangHandler
     protected void distributeRental (Item item)
     {
         final ArrayIntSet userIds = new ArrayIntSet();
-        boolean maleItem = true;
         final Item citem = (Item)item.clone();
         for (GangMemberEntry member : _gangobj.members) {
             PlayerObject user = BangServer.locator.lookupPlayer(member.playerId);
@@ -1944,7 +1943,6 @@ public class GangHandler
         }
 
         DSet<Item> inventory = new DSet<Item>(record.inventory);
-        boolean update = false;
         for (int ii = 0; ii < buckle.length; ii++) {
             Item item = inventory.get(buckle[ii]);
             if (!(item instanceof BucklePart)) {

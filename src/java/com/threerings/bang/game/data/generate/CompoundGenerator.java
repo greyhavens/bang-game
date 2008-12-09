@@ -14,8 +14,6 @@ import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Scatters props haphazardly around to create a random board.
  */
@@ -149,7 +147,7 @@ public class CompoundGenerator extends EnvironmentGenerator
                 continue;
             }
 
-            int dist = Integer.MAX_VALUE, tdist;
+            int dist = Integer.MAX_VALUE;
             switch (direction) {
             case Piece.NORTH:
                 dist = piece.getBounds().y - cpiece.getBounds().y;

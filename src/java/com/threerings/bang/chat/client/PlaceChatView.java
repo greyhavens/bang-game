@@ -20,8 +20,6 @@ import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Extends the {@link TabbedChatView} and adds a tab for speaking on the
  * current PlaceObject chat channel.
@@ -64,9 +62,6 @@ public class PlaceChatView extends TabbedChatView
     /**
      * A place chat view can be used on a custom speak service by calling this method. It should be
      * paired with a call to {@link #clearSpeakService}.
-     *
-     * <p><em>Note:</em> in that case, {@link #getSpeakerAvatar} will likely need to be overridden
-     * as the default implementation obtains avatars from the occupant director.
      */
     public void setSpeakService (SpeakService spsvc)
     {

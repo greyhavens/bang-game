@@ -216,7 +216,7 @@ public class CreateAccountView extends SteelWindow
 
         psvc.createAccount(_ctx.getClient(), uname,
                 Password.makeFromClear(_password.getText()).getEncrypted(), _email.getText(),
-                _ctx.getBangClient().getAffiliateFromInstallFile(), _birthdate.getTime(), cl);
+                BangClient.getAffiliateFromInstallFile(), _birthdate.getTime(), cl);
     }
 
     /**
@@ -226,7 +226,7 @@ public class CreateAccountView extends SteelWindow
     {
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
-                if (!_ctx.getBangClient().relaunchGetdown(_ctx, 500L)) {
+                if (!BangClient.relaunchGetdown(_ctx, 500L)) {
                     log.info("Failed to restart Bang, exiting");
                     _ctx.getApp().stop();
                 }

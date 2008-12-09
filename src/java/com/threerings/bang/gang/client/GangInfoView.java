@@ -21,6 +21,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
@@ -167,7 +168,7 @@ public class GangInfoView extends BContainer
         return "\"" + _ctx.xlate(GangCodes.GANG_MSGS, msg) + "\"";
     }
 
-    protected class Updater extends SetAdapter
+    protected class Updater extends SetAdapter<DSet.Entry>
         implements AttributeChangeListener
     {
         // documentation inherited from interface AttributeChangeListener
@@ -188,7 +189,7 @@ public class GangInfoView extends BContainer
         }
 
         @Override // from SetAdapter
-        public void entryAdded (EntryAddedEvent event)
+        public void entryAdded (EntryAddedEvent<DSet.Entry> event)
         {
             if (event.getName().equals(GangObject.INVENTORY) &&
                 event.getEntry() instanceof WeightClassUpgrade) {

@@ -16,6 +16,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -33,7 +34,7 @@ import com.threerings.bang.game.data.GameCodes;
  * Displays bounty game criteria during a game.
  */
 public class InGameBountyView extends BWindow
-    implements AttributeChangeListener, SetListener
+    implements AttributeChangeListener, SetListener<DSet.Entry>
 {
     public InGameBountyView (BangContext ctx, BangConfig config, BangObject bangobj)
     {
@@ -49,7 +50,7 @@ public class InGameBountyView extends BWindow
         int idx = 0;
         for (Criterion crit : config.criteria) {
             String text = ctx.xlate(GameCodes.GAME_MSGS, crit.getDescription());
-            add(_descrip[idx] = new BLabel("", "bounty_req_status"));
+            add(_descrip[idx] = new BLabel(text, "bounty_req_status"));
             add(_state[idx] = new BLabel("", "bounty_req_status"));
             add(_current[idx++] = new BLabel("", "bounty_req_status"));
         }
@@ -76,7 +77,7 @@ public class InGameBountyView extends BWindow
     }
 
     // from interface SetListener
-    public void entryAdded (EntryAddedEvent event)
+    public void entryAdded (EntryAddedEvent<DSet.Entry> event)
     {
         if (event.getName().equals(BangObject.CRIT_STATS)) {
             updateCurrent();
@@ -84,7 +85,7 @@ public class InGameBountyView extends BWindow
     }
 
     // from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event)
     {
         if (event.getName().equals(BangObject.CRIT_STATS)) {
             updateCurrent();
@@ -92,7 +93,7 @@ public class InGameBountyView extends BWindow
     }
 
     // from interface SetListener
-    public void entryRemoved (EntryRemovedEvent event)
+    public void entryRemoved (EntryRemovedEvent<DSet.Entry> event)
     {
         // shouldn't happen
     }

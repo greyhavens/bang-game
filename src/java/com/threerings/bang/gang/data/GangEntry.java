@@ -39,7 +39,7 @@ public class GangEntry extends SimpleStreamableObject
     }
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return name;
     }

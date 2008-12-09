@@ -44,8 +44,6 @@ import com.threerings.bang.store.data.GoodsObject;
 import com.threerings.bang.store.data.SongGood;
 import com.threerings.bang.store.data.StoreCodes;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Displays detailed information on a particular good.
  */

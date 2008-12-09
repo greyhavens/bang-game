@@ -92,7 +92,6 @@ public class CoopFinalistView extends BContainer
             add(new BLabel(ribbon), new Point(RIBBON_OFFSET[ii] + ax, 20));
             Handle phandle = (bangobj.playerInfo[ii].playerId > 0) ?
                 (Handle)bangobj.players[ii] : null;
-            String sclass = phandle == null ? "endgame_player_small" : "endgame_player_small_hand";
             BLabel handle = FinalistView.createPopupLabel(
                     _ctx, bangobj.players[ii].toString(), phandle, "endgame_player_small");
             handle.setFit(BLabel.Fit.SCALE);

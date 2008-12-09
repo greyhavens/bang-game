@@ -63,10 +63,11 @@ public class RuntimeConfig
      * configuration objects. */
     protected static AccessController ADMIN_CONTROLLER = new AccessController()
     {
-        public boolean allowSubscribe (DObject object, Subscriber subscriber) {
+        public boolean allowSubscribe (DObject object, Subscriber<?> subscriber) {
             // if the subscriber is a client; make sure they're an admin
-            if (subscriber instanceof BangSession) {
-                PlayerObject user = (PlayerObject)((BangSession)subscriber).getClientObject();
+            if (BangSession.class.isInstance(subscriber)) {
+                PlayerObject user = (PlayerObject)
+                    BangSession.class.cast(subscriber).getClientObject();
                 return user.tokens.isAdmin();
             }
             return true;

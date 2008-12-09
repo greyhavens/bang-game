@@ -173,8 +173,7 @@ public class RocketHandler extends EffectHandler
             usprite.getRocketDelay() : 0f;
         ssprite.setCullMode(Spatial.CULL_ALWAYS);
         ssprite.move(new OrientingBallisticPath(ssprite,
-            new Vector3f(1, 0, 0), start, pparams.velocity, gravity,
-            pparams.duration) {
+            new Vector3f(1, 0, 0), start, pparams.velocity, gravity, pparams.duration) {
             public void update (float time) {
                 if ((_daccum += time) < delay) {
                     return;
@@ -182,8 +181,7 @@ public class RocketHandler extends EffectHandler
                 ssprite.setCullMode(Spatial.CULL_DYNAMIC);
                 super.update(time);
             }
-            float _daccum;
-            boolean _blocking;
+            protected float _daccum;
         });
 
         // play the launch sound if we have one

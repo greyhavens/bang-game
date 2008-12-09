@@ -46,7 +46,7 @@ public class LogOffView extends BDecoratedWindow
     {
         if ("restart".equals(event.getAction())) {
             _restart.setEnabled(false);
-            if (!_ctx.getBangClient().relaunchGetdown(_ctx, 500L)) {
+            if (!BangClient.relaunchGetdown(_ctx, 500L)) {
                 log.info("Failed to restart Bang, exiting");
                 _ctx.getApp().stop();
             }

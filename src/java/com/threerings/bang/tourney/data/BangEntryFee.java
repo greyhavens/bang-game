@@ -27,7 +27,7 @@ public class BangEntryFee extends EntryFee
     }
 
     // documentation inherited
-    public void reserveFee (BodyObject body, ResultListener listener)
+    public void reserveFee (BodyObject body, ResultListener<Void> listener)
     {
     }
 

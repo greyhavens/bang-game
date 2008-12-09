@@ -19,7 +19,6 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangOccupantInfo;

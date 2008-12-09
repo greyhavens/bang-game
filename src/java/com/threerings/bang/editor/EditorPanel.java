@@ -35,8 +35,6 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.game.data.BangObject;
 
-import static com.threerings.bang.client.BangMetrics.*;
-
 /**
  * Contains the primary user interface for the editor mode.
  */
@@ -73,7 +71,6 @@ public class EditorPanel extends JPanel
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         MessageBundle msgs = ctx.getMessageManager().getBundle("editor");
-        MessageBundle gmsgs = ctx.getMessageManager().getBundle("game");
 	    VGroupLayout gl = new VGroupLayout(VGroupLayout.STRETCH);
 	    gl.setOffAxisPolicy(VGroupLayout.EQUALIZE);
 	    gl.setJustification(VGroupLayout.TOP);

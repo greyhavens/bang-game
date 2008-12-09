@@ -139,7 +139,7 @@ public class BangConfig extends GameConfig
         }
 
         // from interface Savable
-        public Class getClassTag () {
+        public Class<?> getClassTag () {
             return getClass();
         }
 
@@ -195,7 +195,7 @@ public class BangConfig extends GameConfig
         }
 
         // from interface Savable
-        public Class getClassTag () {
+        public Class<?> getClassTag () {
             return getClass();
         }
 
@@ -365,7 +365,7 @@ public class BangConfig extends GameConfig
     }
 
     // from interface Savable
-    public Class getClassTag ()
+    public Class<?> getClassTag ()
     {
         return getClass();
     }

@@ -36,8 +36,6 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Extends the standard peer services and handles some Bang specific business
  * like pardner presence reporting.

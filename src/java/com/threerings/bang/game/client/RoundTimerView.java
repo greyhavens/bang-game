@@ -18,6 +18,7 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.threerings.jme.util.ImageCache;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
@@ -39,7 +40,7 @@ public class RoundTimerView extends BWindow
         _ctx = ctx;
         _pin = new ImageIcon(ctx.loadImage("ui/gauge/pin.png"));
         _needle = ctx.getImageCache().getBufferedImage("ui/gauge/needle.png");
-        _overimg = _ctx.getImageCache().createCompatibleImage(78, 78, true);
+        _overimg = ImageCache.createCompatibleImage(78, 78, true);
 
         setStatus(0, 0, 0);
     }

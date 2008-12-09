@@ -155,7 +155,6 @@ public class PieceTarget extends Node
     {
         _tick = tick;
         _piece = (Piece)piece.clone();
-        int ticks = piece.ticksUntilMovable(tick);
 
         // clear our pending shot once we've been ticked (or if we die)
         if (!piece.isAlive() || (_pendingTick != -1 && tick > _pendingTick)) {

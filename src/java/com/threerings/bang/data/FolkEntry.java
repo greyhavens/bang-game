@@ -24,7 +24,7 @@ public class FolkEntry
     }
 
     // from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return playerId;
     }

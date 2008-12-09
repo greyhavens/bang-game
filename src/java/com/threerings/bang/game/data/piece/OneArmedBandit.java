@@ -7,7 +7,6 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.data.piece.CounterInterface;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.RandomInfluenceEffect;

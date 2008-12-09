@@ -4,7 +4,6 @@
 package com.threerings.bang.editor;
 
 import java.awt.BorderLayout;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import javax.swing.JFrame;

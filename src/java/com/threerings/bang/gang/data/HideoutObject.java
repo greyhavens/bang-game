@@ -5,7 +5,6 @@ package com.threerings.bang.gang.data;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.PlaceObject;

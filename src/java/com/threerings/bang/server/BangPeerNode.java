@@ -7,6 +7,7 @@ import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Tuple;
 
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -28,7 +29,7 @@ import static com.threerings.bang.Log.log;
  * Handles Bang-specific peer bits.
  */
 public class BangPeerNode extends PeerNode
-    implements SetListener
+    implements SetListener<DSet.Entry>
 {
     /** The index of the town managed by this peer. */
     public int townIndex;
@@ -77,7 +78,7 @@ public class BangPeerNode extends PeerNode
     }
 
     // from interface SetListener
-    public void entryAdded (EntryAddedEvent event)
+    public void entryAdded (EntryAddedEvent<DSet.Entry> event)
     {
         // log.info("Remote entry added " + event);
         if (event.getName().equals(NodeObject.CLIENTS)) {
@@ -88,13 +89,13 @@ public class BangPeerNode extends PeerNode
     }
 
     // from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event)
     {
         // nada
     }
 
     // from interface SetListener
-    public void entryRemoved (EntryRemovedEvent event)
+    public void entryRemoved (EntryRemovedEvent<DSet.Entry> event)
     {
         // log.info("Remote entry removed " + event);
         if (event.getName().equals(NodeObject.CLIENTS)) {

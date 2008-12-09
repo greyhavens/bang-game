@@ -8,7 +8,6 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
 import com.jmex.effects.particles.ParticleMesh;
 
-import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

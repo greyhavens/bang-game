@@ -69,13 +69,11 @@ public class FinalistView extends BContainer
      *
      * @param pidx the player's index in the game (so we can display a medal of the correct player
      * color).
-     * @param name the player's name.
-     * @param avatar the player's avatar information.
      * @param rank the plaer's rank at the end of the game. If their rank is zero (1st place) the
      * view will be in the large format, otherwise it will be in the small format.
      */
-    public FinalistView (BasicContext ctx, BangObject bangobj,
-            BangController ctrl, int pidx, int rank)
+    public FinalistView (BasicContext ctx, BangObject bangobj, BangController ctrl,
+                         int pidx, int rank)
     {
         super(new AbsoluteLayout());
 

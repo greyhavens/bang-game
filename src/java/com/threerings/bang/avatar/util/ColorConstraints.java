@@ -58,9 +58,9 @@ public class ColorConstraints
         }
 
         HashMap<String,Predicate<DObject>> preds = _preds.get(colorClass);
-        Iterator iter = clrec.colors.values().iterator();
+        Iterator<ColorRecord> iter = clrec.colors.values().iterator();
         while (iter.hasNext()) {
-            ColorRecord crec = (ColorRecord)iter.next();
+            ColorRecord crec = iter.next();
             Predicate<DObject> pred = preds.get(crec.name);
             if (pred == null) {
                 log.warning("Missing predicate for color [class=" + colorClass +

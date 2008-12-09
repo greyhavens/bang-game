@@ -130,31 +130,30 @@ public class GangChatView extends BContainer
     protected PlaceChatView _pcview;
 
     /** Listens to the gang object for changes in membership and avatar updates. */
-    protected SetAdapter _memberlist = new SetAdapter() {
-        public void entryAdded (EntryAddedEvent event) {
+    protected SetAdapter<GangMemberEntry> _memberlist = new SetAdapter<GangMemberEntry>() {
+        public void entryAdded (EntryAddedEvent<GangMemberEntry> event) {
             if (!event.getName().equals(GangObject.MEMBERS)) {
                 return;
             }
-            GangMemberEntry entry = (GangMemberEntry)event.getEntry();
+            GangMemberEntry entry = event.getEntry();
             if (entry.isInHideout()) {
                 updateMembersInHideout();
             }
         }
-        public void entryRemoved (EntryRemovedEvent event) {
+        public void entryRemoved (EntryRemovedEvent<GangMemberEntry> event) {
             if (!event.getName().equals(GangObject.MEMBERS)) {
                 return;
             }
-            GangMemberEntry entry = (GangMemberEntry)event.getOldEntry();
+            GangMemberEntry entry = event.getOldEntry();
             if (entry.isInHideout()) {
                 updateMembersInHideout();
             }
         }
-        public void entryUpdated (EntryUpdatedEvent event) {
+        public void entryUpdated (EntryUpdatedEvent<GangMemberEntry> event) {
             if (!event.getName().equals(GangObject.MEMBERS)) {
                 return;
             }
-            GangMemberEntry oentry = (GangMemberEntry)event.getOldEntry(),
-                nentry = (GangMemberEntry)event.getEntry();
+            GangMemberEntry oentry = event.getOldEntry(), nentry = event.getEntry();
             if (oentry.isInHideout() != nentry.isInHideout()) {
                 updateMembersInHideout();
             }

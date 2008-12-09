@@ -75,9 +75,6 @@ public class OutfitDialog extends BDecoratedWindow
 
         ((GroupLayout)getLayoutManager()).setGap(0);
 
-        // remember the current gang outfit by article type
-        ArticleCatalog acat = _ctx.getAvatarLogic().getArticleCatalog();
-
         BContainer pcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         pcont.setStyleClass("outfit_articles");
         ((GroupLayout)pcont.getLayoutManager()).setOffAxisJustification(GroupLayout.TOP);

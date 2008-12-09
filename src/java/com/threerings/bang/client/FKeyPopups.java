@@ -321,13 +321,13 @@ public class FKeyPopups
                 String who;
                 ColorRGBA color;
                 if (umsg instanceof TellFeedbackMessage) {
-                    who = _cmsgs.tcompose("m.history_tell", umsg.speaker);
+                    who = MessageBundle.tcompose("m.history_tell", umsg.speaker);
                     color = ColorRGBA.magenta;
                 } else if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
-                    who = _cmsgs.tcompose("m.history_told", umsg.speaker);
+                    who = MessageBundle.tcompose("m.history_told", umsg.speaker);
                     color = ColorRGBA.magenta;
                 } else {
-                    who = _cmsgs.tcompose("m.history_speak", umsg.speaker);
+                    who = MessageBundle.tcompose("m.history_speak", umsg.speaker);
                     color = ColorRGBA.blue;
                 }
                 history.appendText(_cmsgs.xlate(who), color);

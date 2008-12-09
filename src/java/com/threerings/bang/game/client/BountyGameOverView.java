@@ -192,8 +192,9 @@ public class BountyGameOverView extends SteelWindow
                     survived++;
                 }
             }
-            _stats.add(new BLabel(_msgs.xlate(_msgs.compose(
-                "m.at_least_descrip", "m.bover_units_survived", _msgs.taint("1"))), "bover_crit"));
+            _stats.add(new BLabel(_msgs.xlate(MessageBundle.compose(
+                "m.at_least_descrip", "m.bover_units_survived", MessageBundle.taint("1"))), 
+                "bover_crit"));
             _stats.add(new BLabel("" + survived, "bover_rcrit"));
             _stats.add(new BLabel(_msgs.get("m.bover_equals"), "bover_result"));
             _stats.add(new BLabel(_msgs.get("m.bover_" + (survived > 0 ? "complete" : "failed")),

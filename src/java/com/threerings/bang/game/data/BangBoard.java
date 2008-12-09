@@ -44,8 +44,6 @@ import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.util.ArrayDiffUtil;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Describes the terrain of the game board.
  */
@@ -304,7 +302,7 @@ public class BangBoard extends SimpleStreamableObject
             return 0;
 
         } else {
-            return (int)_shadows[y*_hfwidth + x] + 128;
+            return _shadows[y*_hfwidth + x] + 128;
         }
     }
 
@@ -1403,7 +1401,6 @@ public class BangBoard extends SimpleStreamableObject
 
         // if the attack set is non-null, compute our attacks as well
         if (attacks != null && remain > 0) {
-            PointSet set = moves;
             considerFiring(attacks, piece.x, piece.y, remain, false);
             for (int ii = 0, ll = moves.size(); ii < ll; ii++) {
                 int mx = moves.getX(ii), my = moves.getY(ii);
@@ -1450,7 +1447,7 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     // documentation inherited from interface Savable
-    public Class getClassTag ()
+    public Class<?> getClassTag ()
     {
         return getClass();
     }
@@ -1711,7 +1708,6 @@ public class BangBoard extends SimpleStreamableObject
     /** Helper function for {@link computeMoves} */
     protected boolean hasReachableNeighbor (Piece piece, int x, int y)
     {
-        int idx = y * _width + x;
         byte weight = _pgrid[y * _width + x];
         return canMoveTo(piece, x + 1, y, weight) ||
                canMoveTo(piece, x - 1, y, weight) ||

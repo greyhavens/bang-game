@@ -193,11 +193,11 @@ public class ParlorMatchView extends BContainer
     {
         _rounds.setText(_msgs.get("m.cr_rounds", "" + _tobj.game.rounds));
         _teams.setText(_msgs.get("m.cr_teamsize", "" + _tobj.game.teamSize));
-        _mode.setText(_msgs.xlate(_msgs.compose(
-                        "m.cr_mode", MODES[_tobj.game.mode.ordinal()])));
-        _duration.setText(_msgs.xlate(_msgs.compose(
-                        "m.cr_duration", _tobj.game.duration.key())));
-        _speed.setText(_msgs.xlate(_msgs.compose("m.cr_speed", _tobj.game.speed.key())));
+        _mode.setText(_msgs.xlate(
+            MessageBundle.compose("m.cr_mode", MODES[_tobj.game.mode.ordinal()])));
+        _duration.setText(_msgs.xlate(
+            MessageBundle.compose("m.cr_duration", _tobj.game.duration.key())));
+        _speed.setText(_msgs.xlate(MessageBundle.compose("m.cr_speed", _tobj.game.speed.key())));
 // TODO
 //         _scenarios.setText(_msgs.get("m.cr_scenarios", "" + TODO));
     }

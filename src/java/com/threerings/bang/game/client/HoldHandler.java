@@ -29,7 +29,6 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.*;
-import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Handles the visualization of {@link HoldEffect}s not embedded within another

@@ -31,7 +31,7 @@ public class BoardInfo implements DSet.Entry
     }
 
     // from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return name + "@" + players;
     }

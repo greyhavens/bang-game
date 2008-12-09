@@ -790,7 +790,6 @@ public class BangBoardView extends BoardView
         _pmarquees.add(gangs, new Rectangle(0, 50, BangUI.MIN_WIDTH, 180));
 
         // add some additional information in the center colum
-        BContainer info = GroupLayout.makeVBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(
             "m.marquee_header", MessageBundle.taint(String.valueOf(_bangobj.roundId + 1)),
             MessageBundle.taint(String.valueOf(_bangobj.perRoundRanks.length)),

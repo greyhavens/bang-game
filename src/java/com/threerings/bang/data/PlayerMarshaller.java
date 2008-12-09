@@ -205,7 +205,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int RESPOND_TO_NOTIFICATION = 15;
 
     // from interface PlayerService
-    public void respondToNotification (Client arg1, Comparable arg2, int arg3, InvocationService.ConfirmListener arg4)
+    public void respondToNotification (Client arg1, Comparable<?> arg2, int arg3, InvocationService.ConfirmListener arg4)
     {
         InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
         listener4.listener = arg4;

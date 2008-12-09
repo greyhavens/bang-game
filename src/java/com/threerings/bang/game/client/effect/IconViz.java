@@ -19,7 +19,6 @@ import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
-import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

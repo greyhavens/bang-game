@@ -82,7 +82,7 @@ public class RecentCompletersRecord extends PersistentRecord
 
     // AUTO-GENERATED: METHODS START
     /**
-     * Create and return a primary {@link Key} to identify a {@link #RecentCompletersRecord}
+     * Create and return a primary {@link Key} to identify a {@link RecentCompletersRecord}
      * with the supplied key values.
      */
     public static Key<RecentCompletersRecord> getKey (String bountyId)

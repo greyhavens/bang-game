@@ -50,6 +50,7 @@ import com.samskivert.util.RandomUtil;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.jme.util.ImageCache;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -288,8 +289,7 @@ public class RenderUtil
         int tsize = nextPOT(Math.max(width, Math.max(height, 1)));
 
         // render the text into the image
-        BufferedImage image = ctx.getImageCache().createCompatibleImage(
-            tsize, tsize, true);
+        BufferedImage image = ImageCache.createCompatibleImage(tsize, tsize, true);
         gfx = image.createGraphics();
         try {
             gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -300,7 +300,7 @@ public class RenderUtil
                 if (outline > 1) {
                     gfx.setColor(oacolor);
                     Stroke oldstroke = gfx.getStroke();
-                    gfx.setStroke(new BasicStroke((float)outline));
+                    gfx.setStroke(new BasicStroke(outline));
                     gfx.draw(layout.getOutline(null));
                     gfx.setStroke(oldstroke);
                     gfx.setColor(acolor);
@@ -325,7 +325,7 @@ public class RenderUtil
         tcoords[2] = new Vector2f(width/tsf, height/tsf);
         tcoords[3] = new Vector2f(width/tsf, 0);
 
-        return createTexture(ctx, ctx.getImageCache().convertImage(image));
+        return createTexture(ctx, ImageCache.convertImage(image));
     }
 
     /**

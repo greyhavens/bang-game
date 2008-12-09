@@ -33,6 +33,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.jme.util.ImageCache;
 
 /**
  * Displays the results at the end of the game.
@@ -52,7 +53,7 @@ public class GameOverView extends SteelWindow
             "ui/postgame/" + info.getIdent() + "_off.png");
         int width = (int)(on.getWidth() * (small ? 0.5 : 1)),
             height = (int)(on.getHeight() * (small ? 0.5 : 1));
-        BufferedImage bar = ctx.getImageCache().createCompatibleImage(width, height, true);
+        BufferedImage bar = ImageCache.createCompatibleImage(width, height, true);
         Graphics2D g = bar.createGraphics();
         AffineTransformOp halfOp = (small ? new AffineTransformOp(
                                         AffineTransform.getScaleInstance(0.5, 0.5),

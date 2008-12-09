@@ -9,10 +9,6 @@ import com.jme.util.LoggingSystem;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.layout.GroupLayout;
 
-import com.threerings.util.Name;
-
-import com.threerings.bang.game.client.FinalistView;
-
 import com.threerings.bang.tests.TestApp;
 
 /**

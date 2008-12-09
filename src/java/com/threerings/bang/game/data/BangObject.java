@@ -37,8 +37,6 @@ import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.util.PieceUtil;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Contains all distributed information for the game.
  */
@@ -209,7 +207,7 @@ public class BangObject extends GameObject
     /** A {@link #state} constant indicating the post-round phase. */
     public static final int POST_ROUND = 6;
 
-    /** An offset for {@link #perRoundRank} for coop ranks. */
+    /** An offset for {@link #perRoundRanks} for coop ranks. */
     public static final short COOP_RANK = 100;
 
     /** Contains the representation of the game board. */
@@ -685,7 +683,6 @@ public class BangObject extends GameObject
         }
 
         Piece[] pieces = getPieceArray();
-        int pcount = players.length;
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
             if (p.isAlive() && p.owner >= 0) {
@@ -707,7 +704,7 @@ public class BangObject extends GameObject
 
         gdata.averagePower = (float)gdata.totalPower / gdata.livePlayers;
         for (int ii = 0; ii < pdata.length; ii++) {
-            pdata[ii].powerFactor = (float)pdata[ii].power / gdata.averagePower;
+            pdata[ii].powerFactor = pdata[ii].power / gdata.averagePower;
         }
 
 //         log.info("Updated stats " + gdata + ": " + StringUtil.toString(pdata));

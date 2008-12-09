@@ -24,7 +24,6 @@ import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.client.BangMetrics.*;
-import static com.threerings.bang.Log.*;
 
 /**
  * An effect visualization that floats a damage indicator and possible
@@ -89,11 +88,8 @@ public class DamageIconViz extends IconViz
         } else {
             diviz = new DamageIconViz(iname, damage, color, dcolor, showText);
         }
-
-        if (diviz != null) {
-            diviz.init(ctx, view, sprite, null);
-            diviz.display();
-        }
+        diviz.init(ctx, view, sprite, null);
+        diviz.display();
     }
 
     protected DamageIconViz (String iname, int damage, ColorRGBA color,

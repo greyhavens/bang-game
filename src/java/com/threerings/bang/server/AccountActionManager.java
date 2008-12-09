@@ -161,7 +161,7 @@ public class AccountActionManager
         // if this player is online, update their coin count
         PlayerObject player = BangServer.locator.lookupByAccountName(new Name(accountName));
         if (player != null) {
-            BangServer.coinmgr.coinlog.log("first_coins " + player.playerId);
+            BangCoinManager.coinlog.log("first_coins " + player.playerId);
             return;
         }
 
@@ -178,7 +178,7 @@ public class AccountActionManager
             }
 
             public void handleResult () {
-                BangServer.coinmgr.coinlog.log("first_coins " + _user.playerId);
+                BangCoinManager.coinlog.log("first_coins " + _user.playerId);
             }
 
             protected PlayerRecord _user;

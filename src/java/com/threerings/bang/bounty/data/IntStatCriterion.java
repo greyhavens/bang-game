@@ -107,7 +107,7 @@ public class IntStatCriterion extends Criterion
     }
 
     // from interface Savable
-    public Class getClassTag ()
+    public Class<?> getClassTag ()
     {
         return getClass();
     }

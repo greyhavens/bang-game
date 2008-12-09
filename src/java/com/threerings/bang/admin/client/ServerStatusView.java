@@ -25,6 +25,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.presents.data.ConMgrStats;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -48,7 +49,8 @@ import static com.threerings.bang.Log.log;
  * Displays the status of the running server.
  */
 public class ServerStatusView extends BDecoratedWindow
-    implements ActionListener, Subscriber<StatusObject>, AttributeChangeListener, SetListener
+    implements ActionListener, Subscriber<StatusObject>, AttributeChangeListener,
+        SetListener<DSet.Entry>
 {
     public ServerStatusView (BangContext ctx)
     {
@@ -206,19 +208,19 @@ public class ServerStatusView extends BDecoratedWindow
     }
 
     // from interface SetListener
-    public void entryAdded (EntryAddedEvent event)
+    public void entryAdded (EntryAddedEvent<DSet.Entry> event)
     {
         updateStats(event);
     }
 
     // from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event)
     {
         updateStats(event);
     }
 
     // from interface SetListener
-    public void entryRemoved (EntryRemovedEvent event)
+    public void entryRemoved (EntryRemovedEvent<DSet.Entry> event)
     {
         updateStats(event);
     }

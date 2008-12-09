@@ -17,6 +17,7 @@ import com.jmex.bui.util.Dimension;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.SetAdapter;
@@ -156,18 +157,18 @@ public class DirectoryView extends BContainer
     protected int _pidx;
 
     /** Refresh the page when entries are added to or removed from it. */
-    protected SetAdapter _dirlist = new SetAdapter() {
-        public void entryAdded (EntryAddedEvent event) {
+    protected SetAdapter<DSet.Entry> _dirlist = new SetAdapter<DSet.Entry>() {
+        public void entryAdded (EntryAddedEvent<DSet.Entry> event) {
             if (isOnCurrentPage(event.getEntry().getKey())) {
                 showPage(_pidx);
             }
         }
-        public void entryRemoved (EntryRemovedEvent event) {
+        public void entryRemoved (EntryRemovedEvent<DSet.Entry> event) {
             if (isOnCurrentPage(event.getKey())) {
                 showPage(_pidx);
             }
         }
-        protected boolean isOnCurrentPage (Comparable key) {
+        protected boolean isOnCurrentPage (Comparable<?> key) {
             String lstr = _lbuttons[_pidx].getAction();
             return StringUtil.toUSLowerCase(key.toString()).startsWith(lstr);
         }

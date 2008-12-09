@@ -25,6 +25,7 @@ import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -50,7 +51,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Displays the name, score, cash and cards held by a particular player.
  */
 public class PlayerStatusView extends BContainer
-    implements AttributeChangeListener, ElementUpdateListener, SetListener,
+    implements AttributeChangeListener, ElementUpdateListener, SetListener<DSet.Entry>,
                ActionListener
 {
     public PlayerStatusView (BangContext ctx, BangObject bangobj,
@@ -168,7 +169,7 @@ public class PlayerStatusView extends BContainer
     }
 
     // documentation inherited from interface SetListener
-    public void entryAdded (EntryAddedEvent event)
+    public void entryAdded (EntryAddedEvent<DSet.Entry> event)
     {
         String name = event.getName();
         if (name.equals(BangObject.CARDS)) {
@@ -216,12 +217,12 @@ public class PlayerStatusView extends BContainer
     }
 
     // documentation inherited from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event)
     {
     }
 
     // documentation inherited from interface SetListener
-    public void entryRemoved (EntryRemovedEvent event)
+    public void entryRemoved (EntryRemovedEvent<DSet.Entry> event)
     {
         String name = event.getName();
         if (name.equals(BangObject.CARDS)) {

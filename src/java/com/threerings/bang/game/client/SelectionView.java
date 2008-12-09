@@ -39,7 +39,6 @@ import com.threerings.bang.ranch.client.UnitView;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -63,7 +62,6 @@ public class SelectionView extends SteelWindow
         _tconfigs = new UnitConfig[bangobj.scenario.getTeamSize(config, pidx)];
         BangConfig.Player player = config.plist.get(pidx);
 
-        BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(
             "m.round_header", MessageBundle.taint(String.valueOf(bangobj.roundId + 1)),
             bangobj.scenario.getName(), bangobj.marquee);
@@ -266,7 +264,6 @@ public class SelectionView extends SteelWindow
         // determine which units are available for selection
         ArrayList<UnitConfig> units = new ArrayList<UnitConfig>();
         CollectionUtil.addAll(units, UnitConfig.getTownUnits(_bangobj.townId));
-        PlayerObject user = _ctx.getUserObject();
         for (Iterator<UnitConfig> iter = units.iterator(); iter.hasNext(); ) {
             // filter out bigshots and special units
             UnitConfig uc = iter.next();

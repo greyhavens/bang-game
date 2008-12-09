@@ -123,19 +123,19 @@ public class RatingManager
             }
         };
 
-        final Invoker.Unit weekGrinder = new Invoker.Unit("rankGrinder") {
-            public boolean invoke () {
-                Date week = getGrindWeek();
-                try {
-                    log.info("Recalculating weekly rankings...");
-                    _ratingrepo.calculateRanks(week);
-                } catch (PersistenceException pe) {
-                    log.warning("Failed to recalculate weekly ranks[week=" +
-                            week + "].", pe);
-                }
-                return false;
-            }
-        };
+//         final Invoker.Unit weekGrinder = new Invoker.Unit("rankGrinder") {
+//             public boolean invoke () {
+//                 Date week = getGrindWeek();
+//                 try {
+//                     log.info("Recalculating weekly rankings...");
+//                     _ratingrepo.calculateRanks(week);
+//                 } catch (PersistenceException pe) {
+//                     log.warning("Failed to recalculate weekly ranks[week=" +
+//                             week + "].", pe);
+//                 }
+//                 return false;
+//             }
+//         };
 
         // regrind 5 minutes after reboot and then every six hours
         new Interval(BangServer.omgr) {

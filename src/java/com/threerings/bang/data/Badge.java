@@ -808,7 +808,6 @@ public class Badge extends Item
 
         Type () {
             // compute our unique code
-            StringBuilder codestr = new StringBuilder();
             _code = BangUtil.crc32(name());
 
             if (_codeToType == null) {

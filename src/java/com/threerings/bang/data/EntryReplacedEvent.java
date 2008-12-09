@@ -35,7 +35,7 @@ public class EntryReplacedEvent<T extends DSet.Entry> extends EntryRemovedEvent<
      * with the supplied set attribute name, old key, and new entry, and effects the
      * replacement immediately on the server.
      */
-    public EntryReplacedEvent (DObject target, String name, Comparable oldKey, T newEntry)
+    public EntryReplacedEvent (DObject target, String name, Comparable<?> oldKey, T newEntry)
     {
         _toid = target.getOid();
         _name = name;

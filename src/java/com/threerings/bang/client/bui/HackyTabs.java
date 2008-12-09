@@ -164,7 +164,7 @@ public class HackyTabs extends BComponent
             if (changeCursor()) {
                 updateCursor((tabidx == -1 || tabidx == _selidx) ? _cursor : _hcursor);
             }
-            _hoverIdx = tabidx;
+            // _hoverIdx = tabidx;
         }
         protected int getTabIdx (MouseEvent event) {
             int mx = event.getX() - getAbsoluteX(),
@@ -175,7 +175,7 @@ public class HackyTabs extends BComponent
             }
             return -1;
         }
-        int _hoverIdx = -1;
+        // int _hoverIdx = -1;
     };
 
     protected BangContext _ctx;

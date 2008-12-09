@@ -16,7 +16,7 @@ import com.threerings.bang.data.Handle;
  * An entry in the list of pardners.
  */
 public class PardnerEntry
-    implements DSet.Entry, Comparable, Cloneable
+    implements DSet.Entry, Comparable<PardnerEntry>, Cloneable
 {
     /** The pardner is not logged in. */
     public static final byte OFFLINE = 0;
@@ -42,7 +42,7 @@ public class PardnerEntry
     /** The pardner's avatar. */
     public AvatarInfo avatar;
 
-    /** The pardner's status ({@link #OFFLINE}, {@link #IN_TOWN}, etc). */
+    /** The pardner's status ({@link #OFFLINE}, {@link #IN_SALOON}, etc). */
     public byte status;
 
     /** The place oid of the game your pardner is in. */
@@ -122,16 +122,15 @@ public class PardnerEntry
     }
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return handle;
     }
 
     // documentation inherited from interface Comparable
-    public int compareTo (Object other)
+    public int compareTo (PardnerEntry oentry)
     {
         // sort online pardners above offline ones and available ones above unavailable ones
-        PardnerEntry oentry = (PardnerEntry)other;
         if (isOnline() != oentry.isOnline()) {
             return isOnline() ? -1 : +1;
 

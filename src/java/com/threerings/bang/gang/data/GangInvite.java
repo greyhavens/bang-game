@@ -42,7 +42,7 @@ public class GangInvite extends Notification
     }
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return "GANG" + gang.toString();
     }

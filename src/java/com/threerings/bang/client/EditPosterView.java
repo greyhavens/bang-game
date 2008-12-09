@@ -19,10 +19,7 @@ import com.samskivert.util.StringUtil;
 
 import static com.threerings.bang.Log.log;
 
-import com.threerings.bang.client.BangUI.FeedbackSound;
-import com.threerings.bang.client.MainView.Type;
 import com.threerings.bang.client.bui.IconPalette.Inspector;
-import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;

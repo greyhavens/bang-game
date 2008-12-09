@@ -37,7 +37,7 @@ public class ItemFactory
      * {@link Item}. -1 is returned if the specified class has not been
      * registered with the item factory. A log message is also generated.
      */
-    public static int getType (Class itemClass)
+    public static int getType (Class<?> itemClass)
     {
         // make sure the item classes are registered
         if (_classToType == null) {
@@ -60,7 +60,7 @@ public class ItemFactory
      * the specified type code. null is returned of no item class is
      * registered for the specified type.
      */
-    public static Class getClass (int type)
+    public static Class<?> getClass (int type)
     {
         // make sure the item classes are registered
         if (_typeToClass == null) {
@@ -75,7 +75,7 @@ public class ItemFactory
      * Registers the item class with the item factory. This should be
      * called below in the canonical list of item registrations.
      */
-    protected static void registerItemClass (Class typeClass)
+    protected static void registerItemClass (Class<?> typeClass)
     {
         int type = ++_nextType;
         _typeToClass.put(type, typeClass);
@@ -94,8 +94,8 @@ public class ItemFactory
     protected static void registerItemClasses ()
     {
         // create our tables
-        _typeToClass = new HashIntMap<Class>();
-        _classToType = new HashMap<Class,Integer>();
+        _typeToClass = new HashIntMap<Class<?>>();
+        _classToType = new HashMap<Class<?>,Integer>();
 
         // register the item classes (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
         registerItemClass(BigShotItem.class);
@@ -117,10 +117,10 @@ public class ItemFactory
     }
 
     /** The table mapping item types to classes. */
-    protected static HashIntMap<Class> _typeToClass;
+    protected static HashIntMap<Class<?>> _typeToClass;
 
     /** The table mapping item classes to types. */
-    protected static HashMap<Class,Integer> _classToType;
+    protected static HashMap<Class<?>,Integer> _classToType;
 
     /** A counter used in assigning types to classes. */
     protected static int _nextType = 0;

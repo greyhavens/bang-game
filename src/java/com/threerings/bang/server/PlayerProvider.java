@@ -103,7 +103,7 @@ public interface PlayerProvider extends InvocationProvider
     /**
      * Handles a {@link PlayerService#respondToNotification} request.
      */
-    void respondToNotification (ClientObject caller, Comparable arg1, int arg2, InvocationService.ConfirmListener arg3)
+    void respondToNotification (ClientObject caller, Comparable<?> arg1, int arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**

@@ -172,7 +172,7 @@ public class Look extends SimpleStreamableObject
     }
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return name;
     }

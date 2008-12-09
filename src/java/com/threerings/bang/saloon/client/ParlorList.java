@@ -40,7 +40,7 @@ import com.threerings.bang.saloon.data.SaloonObject;
  * parlor.
  */
 public class ParlorList extends BContainer
-    implements ActionListener, SetListener
+    implements ActionListener, SetListener<ParlorInfo>
 {
     public ParlorList (BangContext ctx)
     {
@@ -116,10 +116,10 @@ public class ParlorList extends BContainer
     }
 
     // documentation inherited from interface SetListener
-    public void entryAdded (EntryAddedEvent event)
+    public void entryAdded (EntryAddedEvent<ParlorInfo> event)
     {
         if (SaloonObject.PARLORS.equals(event.getName())) {
-            ParlorInfo info = (ParlorInfo)event.getEntry();
+            ParlorInfo info = event.getEntry();
             maybeAddInfo(info);
             if (_ctx.getUserObject().handle.equals(info.creator)) {
                 updateEnterButton(info);
@@ -128,10 +128,10 @@ public class ParlorList extends BContainer
     }
 
     // documentation inherited from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<ParlorInfo> event)
     {
         if (SaloonObject.PARLORS.equals(event.getName())) {
-            ParlorInfo info = (ParlorInfo)event.getEntry();
+            ParlorInfo info = event.getEntry();
             if (_ctx.getUserObject().handle.equals(info.creator)) {
                 updateEnterButton(info);
             }
@@ -159,7 +159,7 @@ public class ParlorList extends BContainer
     }
 
     // documentation inherited from interface SetListener
-    public void entryRemoved (EntryRemovedEvent event)
+    public void entryRemoved (EntryRemovedEvent<ParlorInfo> event)
     {
         if (SaloonObject.PARLORS.equals(event.getName())) {
             Handle handle = (Handle)event.getKey();

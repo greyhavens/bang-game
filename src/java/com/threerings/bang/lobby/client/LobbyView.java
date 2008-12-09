@@ -5,7 +5,7 @@ package com.threerings.bang.lobby.client;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Iterator;
+
 import org.apache.commons.io.IOUtils;
 
 import com.jme.renderer.ColorRGBA;
@@ -164,8 +164,8 @@ public class LobbyView extends BWindow
         // iterate over the tables already active in this lobby and put
         // them in their respective lists
         TableLobbyObject tlobj = (TableLobbyObject)plobj;
-        for (Iterator iter = tlobj.getTables().iterator(); iter.hasNext(); ) {
-            tableAdded((Table)iter.next());
+        for (Table table : tlobj.getTables()) {
+            tableAdded(table);
         }
 
         // add our scenarios to the drop down

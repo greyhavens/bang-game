@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryUnit;
@@ -117,7 +119,7 @@ public class PlayerManager
 {
     /** Add the receivedChatListener to any SpeakObjects where you want to record messages
      * sent and received in the players stats. */
-    public static MessageListener receivedChatListener = new MessageListener() {
+    public MessageListener receivedChatListener = new MessageListener() {
         public void messageReceived (MessageEvent event)
         {
             if (!event.getName().equals(ChatCodes.CHAT_NOTIFICATION)) {
@@ -179,7 +181,7 @@ public class PlayerManager
             BangServer.peermgr.addStaleCacheObserver(POSTER_CACHE,
                 new PeerManager.StaleCacheObserver() {
                     public void changedCacheData (Streamable data) {
-                        _posterCache.remove((Handle)data);
+                        _posterCache.remove(data);
                     }
                 });
             // make sure we boot a local client if they login to a remote server
@@ -388,8 +390,8 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void invitePardner (ClientObject caller, final Handle handle,
-        final String message, final PlayerService.ConfirmListener listener)
+    public void invitePardner (ClientObject caller, final Handle handle, final String message,
+                               final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure we're not anonymous (the client should prevent this)
@@ -433,9 +435,8 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void respondToNotification (
-        ClientObject caller, final Comparable key, int resp,
-        final PlayerService.ConfirmListener listener)
+    public void respondToNotification (ClientObject caller, final Comparable<?> key, int resp,
+                                       final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure the notification exists
@@ -946,7 +947,7 @@ public class PlayerManager
             public void handleSuccess () {
                 listener.requestProcessed();
             }
-            public void handleFailure (PersistenceException error) {
+            public void handleFailure (Exception error) {
                 super.handleFailure(error);
                 user.addToInventory(item); // put it back
             }
@@ -1409,7 +1410,7 @@ public class PlayerManager
      */
     protected void clearPardnerInvites (PlayerObject player)
     {
-        List<Comparable> keys = new ArrayList<Comparable>();
+        List<Comparable<?>> keys = Lists.newArrayList();
         for (Notification notification : player.notifications) {
             if (notification instanceof PardnerInvite) {
                 keys.add(notification.getKey());
@@ -1417,7 +1418,7 @@ public class PlayerManager
         }
         try {
             player.startTransaction();
-            for (Comparable key : keys) {
+            for (Comparable<?> key : keys) {
                 player.removeFromNotifications(key);
             }
         } finally {

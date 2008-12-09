@@ -22,7 +22,7 @@ import com.threerings.bang.tourney.data.BangTourneyConfig;
 public class BangTourneyManager extends TourneyManager
 {
     @Override // from TourneyManager
-    public int init (TourneyConfig config, Comparable key)
+    public int init (TourneyConfig config, Comparable<?> key)
     {
         int tournOid = super.init(config, key);
 

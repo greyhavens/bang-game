@@ -217,7 +217,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
         {
             _status.setStatus(HIDEOUT_MSGS, MessageBundle.tcompose(
                         "m.title_change_success", _member.handle.toString(),
-                        (String)_titles.getSelectedItem()), false);
+                        _titles.getSelectedItem()), false);
         }
 
         // documentation inherited from interface InvocationService.ConfirmListener

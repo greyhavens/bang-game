@@ -123,7 +123,7 @@ public class PlayerDispatcher extends InvocationDispatcher<PlayerMarshaller>
 
         case PlayerMarshaller.RESPOND_TO_NOTIFICATION:
             ((PlayerProvider)provider).respondToNotification(
-                source, (Comparable)args[0], ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
+                source, (Comparable<?>)args[0], ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
             );
             return;
 

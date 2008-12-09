@@ -18,7 +18,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.bui.SteelWindow;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
@@ -78,7 +77,6 @@ public class PreGameBountyView extends SteelWindow
 
         BContainer ccont = new BContainer(
             GroupLayout.makeVert(GroupLayout.CENTER).setOffAxisJustification(GroupLayout.LEFT));
-        PlayerObject user = ctx.getUserObject();
         ImageIcon star = new ImageIcon(ctx.loadImage("ui/pregame/star.png"));
         for (Criterion crit : config.criteria) {
             BLabel clabel = new BLabel(msgs.xlate(crit.getDescription()), "bounty_pregame_crit");

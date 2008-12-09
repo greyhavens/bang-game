@@ -157,7 +157,7 @@ public class RentalGood extends GangGood
     }
 
     @Override // documentation inherited
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return _good.getKey();
     }

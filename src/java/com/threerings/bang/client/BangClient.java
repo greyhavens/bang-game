@@ -239,7 +239,7 @@ public class BangClient extends BasicClient
         log.info("Submitting bug report '" + descrip + "'.");
         String[] files = { BangClient.localDataDir("old-bang.log"),
                            BangClient.localDataDir("bang.log")};
-        ResultListener rl = new ResultListener() {
+        ResultListener<Object> rl = new ResultListener<Object>() {
             public void requestCompleted (Object result) {
                 ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_completed");
                 if (exitAfterSubmit) {
@@ -1568,11 +1568,11 @@ public class BangClient extends BasicClient
         }
     };
 
-    protected SetAdapter _nlistener = new SetAdapter() {
-        public void entryAdded (EntryAddedEvent event) {
+    protected SetAdapter<Notification> _nlistener = new SetAdapter<Notification>() {
+        public void entryAdded (EntryAddedEvent<Notification> event) {
             if (event.getName().equals(PlayerObject.NOTIFICATIONS) &&
                 canDisplayPopup(MainView.Type.NOTIFICATION)) {
-                displayNotification((Notification)event.getEntry());
+                displayNotification(event.getEntry());
             }
         }
     };

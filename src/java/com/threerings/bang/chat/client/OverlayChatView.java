@@ -185,13 +185,15 @@ public class OverlayChatView extends BWindow
         if ((pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().handle)) != -1) {
             color = JPIECE_COLORS[colorLookup[pidx + 1]];
         }
-        appendMessage(_msgs.xlate(_msgs.tcompose("m.told_format", speaker, message)), color);
+        appendMessage(
+            _msgs.xlate(MessageBundle.tcompose("m.told_format", speaker, message)), color);
     }
 
     protected void appendBroadcast (Name speaker, String message)
     {
         ColorRGBA color = ColorRGBA.white;
-        appendMessage(_msgs.xlate(_msgs.tcompose("m.broadcast_format", speaker, message)), color);
+        appendMessage(
+            _msgs.xlate(MessageBundle.tcompose("m.broadcast_format", speaker, message)), color);
     }
 
     protected void appendMessage (Name speaker, String message, boolean tell)
@@ -202,7 +204,7 @@ public class OverlayChatView extends BWindow
             color = JPIECE_COLORS[colorLookup[pidx + 1]];
         }
         String msg = tell ?
-            _msgs.xlate(_msgs.tcompose("m.tell_format", speaker, message)) :
+            _msgs.xlate(MessageBundle.tcompose("m.tell_format", speaker, message)) :
             speaker + ": " + message;
         appendMessage(msg, color);
     }

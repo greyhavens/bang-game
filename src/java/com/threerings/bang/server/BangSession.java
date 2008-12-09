@@ -4,7 +4,6 @@
 package com.threerings.bang.server;
 
 import java.util.List;
-import java.util.Iterator;
 
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObjectUtil;
@@ -85,6 +84,7 @@ public class BangSession extends CrowdSession
             // add tokens provided by our authentication plugin; we can set things directly here
             // because the user object is not yet out in the wild
             for (int ii = 0; ii < 31; ii++) {
+                // TODO: bug?
                 int token = (1 << ii);
                 if (atokens.holdsToken(ii)) {
                     user.tokens.setToken(ii);
@@ -173,8 +173,7 @@ public class BangSession extends CrowdSession
 
             // write out any modified looks
             boolean updatedWanted = false;
-            for (Iterator iter = user.looks.iterator(); iter.hasNext(); ) {
-                Look look = (Look)iter.next();
+            for (Look look : user.looks) {
                 if (look.modified) {
                     BangServer.lookrepo.updateLook(user.playerId, look);
                     // if this their "wanted poster" look; generate snapshot

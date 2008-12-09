@@ -164,7 +164,7 @@ public class RespawnDelegate extends ScenarioDelegate
     {
         // remove resurrected units from the respawn queue
         if (ResurrectEffect.RESURRECTED.equals(effect) && piece instanceof Unit) {
-            _respawns.remove((Unit)piece);
+            _respawns.remove(piece);
         }
     }
 

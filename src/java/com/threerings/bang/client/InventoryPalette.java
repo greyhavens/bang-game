@@ -26,10 +26,11 @@ import com.threerings.bang.util.BangContext;
  * Displays some subset of the user's inventory.
  */
 public class InventoryPalette extends IconPalette
-    implements SetListener
+    implements SetListener<Item>
 {
     /**
-     * Creates an {@link InventoryPalette} with 5 columns, 3 rows, and no {@link Inspector}.
+     * Creates an {@link InventoryPalette} with 5 columns, 3 rows, and no 
+     * {@link IconPalette.Inspector}.
      */
     public InventoryPalette (BangContext ctx, Predicate<Item> itemp, boolean allowItemPopup)
     {
@@ -37,7 +38,7 @@ public class InventoryPalette extends IconPalette
     }
 
     /**
-     * Creates an {@link InventoryPalette} without {@link Inspector}.
+     * Creates an {@link InventoryPalette} without {@link IconPalette.Inspector}.
      */
     public InventoryPalette (BangContext ctx, Predicate<Item> itemp,
                              int columns, int rows)
@@ -60,10 +61,10 @@ public class InventoryPalette extends IconPalette
     }
 
     // documentation inherited from SetListener
-    public void entryAdded (EntryAddedEvent event)
+    public void entryAdded (EntryAddedEvent<Item> event)
     {
         if (event.getName().equals(PlayerObject.INVENTORY)) {
-            Item item = (Item)event.getEntry();
+            Item item = event.getEntry();
             if (_itemp.isMatch(item)) {
                 int idx = 0;
                 for (SelectableIcon icon : _icons) {
@@ -80,10 +81,10 @@ public class InventoryPalette extends IconPalette
     }
 
     // documentation inherited from SetListener
-    public void entryRemoved (EntryRemovedEvent event)
+    public void entryRemoved (EntryRemovedEvent<Item> event)
     {
         if (event.getName().equals(PlayerObject.INVENTORY)) {
-            Item item = (Item)event.getOldEntry();
+            Item item = event.getOldEntry();
             if (_itemp.isMatch(item)) {
                 removeIcon(getIcon(item));
             }
@@ -91,10 +92,10 @@ public class InventoryPalette extends IconPalette
     }
 
     // documentation inherited from SetListener
-    public void entryUpdated (EntryUpdatedEvent event)
+    public void entryUpdated (EntryUpdatedEvent<Item> event)
     {
         if (event.getName().equals(PlayerObject.INVENTORY)) {
-            Item item = (Item)event.getEntry();
+            Item item = event.getEntry();
             if (_itemp.isMatch(item)) {
                 getIcon(item).setItem(item);
             }

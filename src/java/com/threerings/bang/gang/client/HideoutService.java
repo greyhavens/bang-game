@@ -15,6 +15,7 @@ import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
+import com.threerings.coin.data.CoinExOfferInfo;
 
 /**
  * Provides hideout-related functionality.

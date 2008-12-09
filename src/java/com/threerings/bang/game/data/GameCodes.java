@@ -22,25 +22,25 @@ public interface GameCodes extends InvocationCodes
     /** The number of milliseconds allowed to view stats between rounds. */
     public static final long STATS_TIMEOUT = 30 * 1000L;
 
-    /** A response code for {@link BangService#move}. */
+    /** A response code for {@link BangService#order}. */
     public static final Integer EXECUTED_ORDER = 0;
 
-    /** A response code for {@link BangService#move}. */
+    /** A response code for {@link BangService#order}. */
     public static final Integer QUEUED_ORDER = 1;
 
-    /** An error response code for {@link BangService#move}. */
+    /** An error response code for {@link BangService#order}. */
     public static final String MOVER_NO_LONGER_VALID = "m.mover_invalid";
 
-    /** An error response code for {@link BangService#move}. */
+    /** An error response code for {@link BangService#order}. */
     public static final String MOVE_BLOCKED = "m.move_blocked";
 
-    /** An error response code for {@link BangService#move}. */
+    /** An error response code for {@link BangService#order}. */
     public static final String TARGET_NO_LONGER_VALID = "m.target_invalid";
 
-    /** An error response code for {@link BangService#move}. */
+    /** An error response code for {@link BangService#order}. */
     public static final String TARGET_UNREACHABLE = "m.target_unreachable";
 
-    /** An error response code for {@link BangServer#move}. */
+    /** An error response code for {@link BangService#order}. */
     public static final String GAME_ENDED = "m.game_ended";
 
     /** An error response code for {@link BangService#playCard}. */

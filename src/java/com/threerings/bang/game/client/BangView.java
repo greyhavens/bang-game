@@ -524,7 +524,6 @@ public class BangView extends BWindow
         }
 
         int width = _ctx.getDisplay().getWidth();
-        int height = _ctx.getDisplay().getHeight();
         int gap = 0, wcount = _pswins.length, tgap = 2, offset = 5;
         int tcount = wcount;
         for (int ii = 0; ii < wcount; ii++) {

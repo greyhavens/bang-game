@@ -8,6 +8,7 @@ import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.dobj.ChangeListener;
 
 import com.threerings.bang.data.ConsolidatedOffer;
+import com.threerings.coin.data.CoinExOfferInfo;
 
 /**
  * An interface for getting best buy/sell offers from an exchange object.

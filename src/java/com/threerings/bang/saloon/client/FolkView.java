@@ -17,6 +17,7 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -35,7 +36,7 @@ import com.threerings.bang.util.BangContext;
  * Displays what folks are present, and lets us chat with them.
  */
 public class FolkView extends BContainer
-    implements SetListener, AttributeChangeListener, ElementUpdateListener
+    implements SetListener<DSet.Entry>, AttributeChangeListener, ElementUpdateListener
 {
     public FolkView (BangContext ctx, PlaceObject pobj, boolean ffOnly, boolean showGangMembership)
     {
@@ -61,7 +62,7 @@ public class FolkView extends BContainer
     }
 
     // from interface SetListener
-    public void entryAdded (EntryAddedEvent eae)
+    public void entryAdded (EntryAddedEvent<DSet.Entry> eae)
     {
         if (PlayerObject.PARDNERS.equals(eae.getName())) {
             PardnerEntry entry = (PardnerEntry) eae.getEntry();
@@ -78,7 +79,7 @@ public class FolkView extends BContainer
     }
 
     // from interface SetListener
-    public void entryRemoved (EntryRemovedEvent ere)
+    public void entryRemoved (EntryRemovedEvent<DSet.Entry> ere)
     {
         if (PlayerObject.PARDNERS.equals(ere.getName())) {
             PardnerEntry entry = (PardnerEntry) ere.getOldEntry();
@@ -98,7 +99,7 @@ public class FolkView extends BContainer
     }
 
     // from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent eue)
+    public void entryUpdated (EntryUpdatedEvent<DSet.Entry> eue)
     {
         if (PlaceObject.OCCUPANT_INFO.equals(eue.getName())) {
             maybeInsertCell((BangOccupantInfo)eue.getEntry());

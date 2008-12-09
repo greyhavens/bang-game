@@ -24,6 +24,7 @@ import com.samskivert.swing.event.CommandEvent;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -890,7 +891,7 @@ public class BangController extends GameController
 
     /** Listens for game state changes and calls {@link #updateRank}. */
     protected class RankUpdater
-        implements AttributeChangeListener, SetListener {
+        implements AttributeChangeListener, SetListener<DSet.Entry> {
         public void attributeChanged (AttributeChangedEvent event) {
             if (event.getName().equals(BangObject.TICK)) {
                 updateRank();
@@ -905,17 +906,17 @@ public class BangController extends GameController
             }
         }
 
-        public void entryAdded (EntryAddedEvent event) {
+        public void entryAdded (EntryAddedEvent<DSet.Entry> event) {
             if (event.getName().equals(BangObject.PIECES)) {
                 updateRank();
             }
         }
-        public void entryUpdated (EntryUpdatedEvent event) {
+        public void entryUpdated (EntryUpdatedEvent<DSet.Entry> event) {
             if (event.getName().equals(BangObject.PIECES)) {
                 updateRank();
             }
         }
-        public void entryRemoved (EntryRemovedEvent event) {
+        public void entryRemoved (EntryRemovedEvent<DSet.Entry> event) {
             if (event.getName().equals(BangObject.PIECES)) {
                 updateRank();
             }

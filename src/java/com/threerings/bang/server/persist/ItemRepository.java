@@ -109,7 +109,7 @@ public class ItemRepository extends SimpleRepository
         Exception error = null;
 
         try {
-            Class itemClass = ItemFactory.getClass(itemType);
+            Class<?> itemClass = ItemFactory.getClass(itemType);
             if (itemClass == null) {
                 errmsg = "Unable to decode item " +
                     "[itemId=" + itemId + ", itemType=" + itemType + "]: " +
@@ -499,7 +499,7 @@ public class ItemRepository extends SimpleRepository
         throws PersistenceException
     {
         // determine it's assigned item type
-        Class itemClass = item.getClass();
+        Class<?> itemClass = item.getClass();
         int itemType = ItemFactory.getType(itemClass);
         if (itemType == -1) {
             String errmsg = "Can't insert item of unknown type " +

@@ -26,7 +26,6 @@ import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.util.RenderUtil;
 
-import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**

@@ -30,6 +30,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.cast.ActionFrames;
 import com.threerings.cast.CharacterDescriptor;
 
+import com.threerings.jme.util.ImageCache;
 import com.threerings.media.util.MultiFrameImage;
 
 import com.threerings.bang.data.BaseAvatarInfo;
@@ -340,7 +341,7 @@ public abstract class BaseAvatarView extends BLabel
             } catch (Exception e) {
                 log.warning("Unable to load action frames " + _cdesc + ".", e);
                 // return a blank image rather than null
-                _image = _ctx.getImageCache().createCompatibleImage(
+                _image = ImageCache.createCompatibleImage(
                     _avatar.getWidth(), _avatar.getHeight(), true);
                 return true;
             }

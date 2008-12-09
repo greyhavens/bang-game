@@ -38,7 +38,7 @@ public class ParlorInfo extends SimpleStreamableObject
     public int gangId;
 
     // documentation inherited from interface DSet.Entry
-    public Comparable getKey ()
+    public Comparable<?> getKey ()
     {
         return creator;
     }

@@ -27,6 +27,7 @@ import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.jme.util.ImageCache;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -216,10 +217,8 @@ public class PieceStatus extends Node
             BufferedImage full = _ctx.getImageCache().getBufferedImage(
                 PPRE + "health_meter_full.png");
             _damtexs = new Texture[11];
-            _damtexs[0] = RenderUtil.createTexture(_ctx,
-                _ctx.getImageCache().createImage(full, false));
-            _damtexs[10] = RenderUtil.createTexture(_ctx,
-                _ctx.getImageCache().createImage(empty, false));
+            _damtexs[0] = RenderUtil.createTexture(_ctx, ImageCache.createImage(full, false));
+            _damtexs[10] = RenderUtil.createTexture(_ctx, ImageCache.createImage(empty, false));
             for (int ii = 1; ii < 10; ii++) {
                 _damtexs[ii] = createDamageTexture(_ctx, empty, full, ii*10);
             }
@@ -269,8 +268,7 @@ public class PieceStatus extends Node
     protected static Texture createDamageTexture (
         BasicContext ctx, BufferedImage empty, BufferedImage full, int level)
     {
-        BufferedImage target = ctx.getImageCache().createCompatibleImage(
-            STATUS_SIZE, STATUS_SIZE, true);
+        BufferedImage target = ImageCache.createCompatibleImage(STATUS_SIZE, STATUS_SIZE, true);
         Graphics2D gfx = (Graphics2D)target.getGraphics();
         try {
             // combine the empty and full images with a custom clip
@@ -286,8 +284,7 @@ public class PieceStatus extends Node
         } finally {
             gfx.dispose();
         }
-        return RenderUtil.createTexture(ctx,
-            ctx.getImageCache().convertImage(target));
+        return RenderUtil.createTexture(ctx, ImageCache.convertImage(target));
     }
 
     protected BasicContext _ctx;

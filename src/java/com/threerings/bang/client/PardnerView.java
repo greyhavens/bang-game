@@ -3,9 +3,11 @@
 
 package com.threerings.bang.client;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import java.text.SimpleDateFormat;
+
+import com.google.common.collect.Maps;
 
 import com.jme.renderer.Renderer;
 
@@ -374,28 +376,27 @@ public class PardnerView extends IconPalette
     protected StatusLabel _status;
 
     /** Listens to the object containing the pardner set. */
-    protected SetListener _plist = new SetListener() {
-        public void entryAdded (EntryAddedEvent eae) {
+    protected SetListener<PardnerEntry> _plist = new SetListener<PardnerEntry>() {
+        public void entryAdded (EntryAddedEvent<PardnerEntry> eae) {
             if (PlayerObject.PARDNERS.equals(eae.getName())) {
-                new PardnerIcon((PardnerEntry)eae.getEntry()).insert();
+                new PardnerIcon(eae.getEntry()).insert();
             }
         }
-        public void entryRemoved (EntryRemovedEvent ere) {
+        public void entryRemoved (EntryRemovedEvent<PardnerEntry> ere) {
             if (PlayerObject.PARDNERS.equals(ere.getName())) {
                 _picons.get(ere.getKey()).remove();
             }
         }
-        public void entryUpdated (EntryUpdatedEvent eue) {
+        public void entryUpdated (EntryUpdatedEvent<PardnerEntry> eue) {
             if (PlayerObject.PARDNERS.equals(eue.getName())) {
-                PardnerEntry entry = (PardnerEntry)eue.getEntry();
+                PardnerEntry entry = eue.getEntry();
                 PardnerIcon icon = _picons.get(entry.getKey());
                 icon.update(entry);
             }
         }
     };
 
-    protected HashMap<Comparable, PardnerIcon> _picons =
-        new HashMap<Comparable, PardnerIcon>();
+    protected Map<Comparable<?>, PardnerIcon> _picons = Maps.newHashMap();
 
     protected static final Dimension ICON_SIZE = new Dimension(167, 186);
     protected static final Dimension AVATAR_SIZE = new Dimension(

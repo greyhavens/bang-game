@@ -280,7 +280,6 @@ public class IconPalette extends BContainer
      */
     public void clearSelections ()
     {
-        int sels = _selections.size();
         while (_selections.size() > 0) {
             _selections.remove(0).setSelected(false);
         }

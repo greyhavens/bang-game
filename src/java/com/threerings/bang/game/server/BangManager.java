@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import com.samskivert.io.PersistenceException;
@@ -590,7 +591,6 @@ public class BangManager extends GameManager
             int dam1 = (target == null) ? 0 : target.damage;
 
             // if they specified a non-NOOP move, execute it
-            int oldx = unit.x, oldy = unit.y;
             MoveEffect meffect = null;
             if (x != unit.x || y != unit.y) {
                 meffect = moveUnit(unit, x, y, target);
@@ -1628,8 +1628,7 @@ public class BangManager extends GameManager
                 }
             }
 
-            int ox = p.x, oy = p.y;
-            ArrayList<Effect> teffects = p.tick(tick, _bangobj, pieces);
+            List<Effect> teffects = p.tick(tick, _bangobj, pieces);
             if (teffects != null) {
                 for (Effect e : teffects) {
                     deployEffect(p.owner, e);
@@ -1652,8 +1651,8 @@ public class BangManager extends GameManager
         // each have their first unit execute it's advance order.  This process will continue
         // until all advance orders for this tick have been completed.
         int executed = 0;
-        @SuppressWarnings("unchecked") ArrayList<AdvanceOrder>[] aos =
-            (ArrayList<AdvanceOrder>[]) new ArrayList[getPlayerSlots()];
+        @SuppressWarnings("unchecked") ArrayList<AdvanceOrder>[] aos = 
+            new ArrayList[getPlayerSlots()];
         ArrayIntSet hasOrders = new ArrayIntSet();
         for (AdvanceOrder order : _orders) {
             if (order.unit.ticksUntilMovable(tick) <= 0) {
@@ -3248,7 +3247,7 @@ public class BangManager extends GameManager
     }
 
     /** Triggers our board tick once every N seconds. */
-    protected Interval _ticker = _ticker = new Interval(_omgr) {
+    protected Interval _ticker = new Interval(_omgr) {
         public void expired () {
             // cope if the game has been ended and destroyed since we were queued up for execution
             if (!_bangobj.isActive() || _bangobj.state != BangObject.IN_PLAY) {
@@ -3261,7 +3260,7 @@ public class BangManager extends GameManager
             _bangobj.tick((short)nextTick);
 
             // queue up the next tick
-            long tickTime = (long)Math.round(_scenario.getTickTime(_bconfig, _bangobj) *
+            long tickTime = Math.round(_scenario.getTickTime(_bconfig, _bangobj) *
                                              _bconfig.speed.getAdjustment());
             tickTime += _extraTickTime;
             _ticker.schedule(tickTime);

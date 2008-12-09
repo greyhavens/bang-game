@@ -18,7 +18,6 @@ import com.threerings.bang.data.StatType;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.NuggetEffect;
-import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.server.ai.AILogic;
@@ -89,12 +88,11 @@ public class ClaimJumping extends Scenario
         int[] weights = new int[_lodeSpots.size()];
         Arrays.fill(weights, 1);
 
-        int placed = 0;
         for (int ii = 0; (ii < bangobj.players.length) &&
                     (ii < weights.length); ii++) {
             int idx = RandomUtil.getWeightedIndex(weights);
-            Bonus nugget = dropBonus(bangobj, NuggetEffect.NUGGET_BONUS,
-                _lodeSpots.getX(idx), _lodeSpots.getY(idx));
+            dropBonus(
+                bangobj, NuggetEffect.NUGGET_BONUS, _lodeSpots.getX(idx), _lodeSpots.getY(idx));
             weights[idx] = 0;
         }
     }
