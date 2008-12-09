@@ -189,8 +189,8 @@ public class PlayerManager
                 public void remotePlayerLoggedOn (int townIndex, BangClientInfo info) {
                     PresentsSession pclient = BangServer.clmgr.getClient(info.username);
                     if (pclient != null) {
-                        log.info("Booting user who logged onto remote server [username=" +
-                            info.username + ", townIndex=" + townIndex + "].");
+                        log.info("Booting user who logged onto remote server",
+                                 "username", info.username, "townIndex", townIndex);
                         pclient.endSession();
                     }
                 }
@@ -250,8 +250,8 @@ public class PlayerManager
         while (iter.hasNext()) {
             PardnerRecord record = iter.next();
             if (temp.contains(record.handle)) {
-                log.warning("Player has duplicate pardner record [pid=" + player.playerId +
-                            ", record=" + record + "].");
+                log.warning("Player has duplicate pardner record", "pid", player.playerId,
+                            "record", record);
                 iter.remove();
             } else {
                 temp.add(record.handle);
@@ -315,8 +315,7 @@ public class PlayerManager
                 String[] data = reward.split(":");
                 if (data[1].equalsIgnoreCase("coins")) {
                     int coins = Integer.parseInt(data[2]);
-                    log.info("Granting coin reward [account=" + player.username +
-                             ", coins=" + coins + "].");
+                    log.info("Granting coin reward", "account", player.username, "coins", coins);
                     BangServer.coinmgr.grantRewardCoins(player, coins);
 
                 }  else if (data[1].equalsIgnoreCase("billing") &&
@@ -332,15 +331,15 @@ public class PlayerManager
                         throw new Exception("Invalid townId");
                     }
 
-                    log.info("Granting Gold Pass reward [account=" + player.username +
-                            ", townId=" + townId + "].");
+                    log.info("Granting Gold Pass reward", "account", player.username,
+                             "townId", townId);
                     giveGoldPass(player, townId);
                 }
 
             } catch (Exception e) {
                 // sorry kid, not much we can do for you
-                log.warning("Failed to award reward to player [who=" + player.who() +
-                        ", reward=" + reward + "].", e);
+                log.warning("Failed to award reward to player", "who", player.who(),
+                            "reward", reward, e);
             }
         }
     }
@@ -354,9 +353,8 @@ public class PlayerManager
 
         // sanity check: make sure they don't already have a big shot
         if (user.hasBigShot()) {
-            log.warning("Player requested free big shot but already has one " +
-                        "[who=" + user.who() + ", inventory=" + user.inventory +
-                        ", type=" + type + "].");
+            log.warning("Player requested free big shot but already has one", "who", user.who(),
+                        "inventory", user.inventory, "type", type);
             throw new InvocationException(RanchCodes.INTERNAL_ERROR);
         }
 
@@ -364,8 +362,7 @@ public class PlayerManager
         UnitConfig config = UnitConfig.getConfig(type, false);
         if (config == null ||
             ListUtil.indexOf(RanchCodes.STARTER_BIGSHOTS, config.type) == -1) {
-            log.warning("Player requested invalid free big shot " +
-                        "[who=" + user.who() + ", type=" + type + "].");
+            log.warning("Player requested invalid free big shot", "who", user.who(), "type", type);
             throw new InvocationException(RanchCodes.INTERNAL_ERROR);
         }
 
@@ -443,15 +440,14 @@ public class PlayerManager
         final PlayerObject player = (PlayerObject)caller;
         Notification notification = player.notifications.get(key);
         if (notification == null) {
-            log.warning("Missing notification for response [who=" +
-                player.who() + ", key=" + key + "].");
+            log.warning("Missing notification for response", "who", player.who(), "key", key);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         // make sure the response is valid
         if (resp >= notification.getResponses().length) {
-            log.warning("Received invalid response for notification [who=" + player.who() +
-                ", notification=" + notification + ", response=" + resp + "].");
+            log.warning("Received invalid response for notification", "who", player.who(),
+                        "notification", notification, "response", resp);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -516,8 +512,8 @@ public class PlayerManager
         int tutIdx = ListUtil.indexOf(TutorialCodes.NEW_TUTORIALS[ServerConfig.townIndex], tutId);
         if (!player.tokens.isAdmin() && // allow admin to play test tutorials
             tutIdx == -1) {
-            log.warning("Player req'd invalid tutorial [who=" + player.who() +
-                        ", town=" + player.townId + ", tutid=" + tutId + "].");
+            log.warning("Player req'd invalid tutorial", "who", player.who(),
+                        "town", player.townId, "tutid", tutId);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -605,17 +601,16 @@ public class PlayerManager
         for (String scenId : scenarios) {
             ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenId);
             if (info == null || info.getTownIndex() > ServerConfig.townIndex) {
-                log.warning("Requested to play invalid scenario " +
-                            "[who=" + player.who() + ", scid=" + scenId + "].");
+                log.warning("Requested to play invalid scenario", "who", player.who(),
+                            "scid", scenId);
                 throw new InvocationException(INTERNAL_ERROR);
             }
         }
 
         // make sure non-admins aren't creating autoplay games
         if (autoplay && !player.tokens.isAdmin()) {
-            log.warning("Non-admin requested autoplay game " +
-                        "[who=" + player.who() + ", pl=" + players +
-                        ", scen=" + scenarios[0] + ", board=" + board + "].");
+            log.warning("Non-admin requested autoplay game", "who", player.who(), "pl", players,
+                        "scen", scenarios[0], "board", board);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -870,8 +865,8 @@ public class PlayerManager
                 if (event.target == null) {
                     PlayerRecord tplayer = _playrepo.loadByHandle(target);
                     if (tplayer == null) {
-                        log.warning("Unable to locate target of complaint [event=" + event +
-                                    ", target=" + target + "].");
+                        log.warning("Unable to locate target of complaint", "event", event,
+                                    "target", target);
                     } else {
                         event.target = tplayer.accountName;
                     }
@@ -925,15 +920,15 @@ public class PlayerManager
         final PlayerObject user = (PlayerObject)caller;
         final Item item = user.inventory.get(itemId);
         if (item == null) {
-            log.warning("User requested to destroy invalid item [who=" + user.who() + ", itemId=" +
-                itemId + "].");
+            log.warning("User requested to destroy invalid item", "who", user.who(),
+                        "itemId", itemId);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         // and that it's destroyable
         if (!item.isDestroyable(user)) {
-            log.warning("User tried to destroy indestructable item [who=" + user.who() +
-                ", item=" + item + "].");
+            log.warning("User tried to destroy indestructable item", "who", user.who(),
+                        "item", item);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -972,7 +967,7 @@ public class PlayerManager
 
         // make sure we're anonymous
         if (!user.tokens.isAnonymous()) {
-            log.warning("Non-anonymous user tried to create account [who=" + user.who() + "].");
+            log.warning("Non-anonymous user tried to create account", "who", user.who());
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -981,7 +976,7 @@ public class PlayerManager
         Calendar cal = Calendar.getInstance();
         cal.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
         if (bdate.after(cal.getTime())) {
-            log.warning("Underage user tried to create account [who=" + user.who() + "].");
+            log.warning("Underage user tried to create account", "who", user.who());
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -1002,7 +997,7 @@ public class PlayerManager
                         BangServer.generalLog("create_account " + user.playerId);
                     }
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to create account for [who=" + user.who() + "]", pe);
+                    log.warning("Failed to create account for", "who", user.who(), pe);
                     _errmsg = INTERNAL_ERROR;
                 }
                 return true;
@@ -1026,20 +1021,19 @@ public class PlayerManager
     {
         PlayerObject user = (PlayerObject)client;
         if (!user.tokens.isSupport()) {
-            log.warning("Attempting to boot player from non-support user [who=" +
-                    user.who() + "].");
+            log.warning("Attempting to boot player from non-support user", "who", user.who());
             throw new InvocationException(ACCESS_DENIED);
         }
 
         PlayerObject target = BangServer.locator.lookupPlayer(handle);
         if (target == null) {
-            log.warning("Unable to find target to boot [handle=" + handle + "].");
+            log.warning("Unable to find target to boot", "handle", handle);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         PresentsSession pclient = BangServer.clmgr.getClient(target.username);
         if (pclient == null) {
-            log.warning("Unable to find client to boot [target=" + target.who() + "].");
+            log.warning("Unable to find client to boot", "target", target.who());
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -1189,7 +1183,7 @@ public class PlayerManager
                 try {
                     _players = _playrepo.loadExpiredPlayers(anon, user);
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to load player records to be expired [pe=" + pe + "].");
+                    log.warning("Failed to load player records to be expired", "pe", pe);
                     return false;
                 }
                 return true;
@@ -1283,8 +1277,7 @@ public class PlayerManager
             return bangobj;
 
         } catch (InstantiationException ie) {
-            log.warning("Error instantiating game " +
-                    "[for=" + player.who() + ", config=" + config + "].", ie);
+            log.warning("Error instantiating game", "for", player.who(), "config", config, ie);
             throw new InvocationException(INTERNAL_ERROR);
         }
     }
@@ -1458,7 +1451,7 @@ public class PlayerManager
         File source = new File(ServerConfig.serverRoot, "data" + File.separator + "soundtrack" +
                                File.separator + song + ".mp3");
         if (!source.exists()) {
-            log.warning("Requested to create symlink for missing source [song=" + song + "].");
+            log.warning("Requested to create symlink for missing source", "song", song);
             return null;
         }
 
@@ -1475,15 +1468,15 @@ public class PlayerManager
                 "ln", "-s", source.toString(), dest.toString()).start();
             stderr = IOUtils.toString(proc.getErrorStream());
             if (proc.waitFor() != 0) {
-                log.warning("Failed to create download symlink [song=" + song +
-                            ", ident=" + ident + ", stderr=" + stderr + "].");
+                log.warning("Failed to create download symlink", "song", song, "ident", ident,
+                            "stderr", stderr);
                 return null;
             }
 
             // create a timestamp file
             File stamp = new File(dest.getPath() + ".stamp");
             if (!stamp.createNewFile()) {
-                log.warning("Failed to create timestamp file [stamp=" + stamp + "].");
+                log.warning("Failed to create timestamp file", "stamp", stamp);
             }
 
         } catch (Exception e) {
@@ -1552,8 +1545,8 @@ public class PlayerManager
                                     public void requestFailed (String cause) { }
                                 });
                     } catch (InvocationException ie) {
-                        log.warning("Failure removing purged player from gang! " +
-                                "Proceeding with purge anyway [ie=" + ie + "].");
+                        log.warning("Failure removing purged player from gang! Proceeding with " +
+                                    "purge anyway", "ie", ie);
                     }
                 }
                 _playrepo.deletePlayer(user);
@@ -1582,11 +1575,11 @@ public class PlayerManager
             }
             if (now - file.lastModified() > DOWNLOAD_PURGE_EXPIRE) {
                 if (!file.delete()) {
-                    log.warning("Failed to delete stamp file [file=" + file.getPath() + "].");
+                    log.warning("Failed to delete stamp file", "file", file.getPath());
                 }
                 file = new File(file.getPath().substring(0, file.getPath().length()-6));
                 if (!file.delete()) {
-                    log.warning("Failed to delete symlink file [file=" + file.getPath() + "].");
+                    log.warning("Failed to delete symlink file", "file", file.getPath());
                 }
             }
         }
@@ -1609,8 +1602,8 @@ public class PlayerManager
                 BangServer.itemLog("gold_pass " + user.playerId + " t:" + pass.getTownId());
             }
             public void handleFailure (Exception err) {
-                log.warning("Failed to add gold pass to repository " +
-                    "[who=" + user.who() + ", item=" + pass + "]", err);
+                log.warning("Failed to add gold pass to repository", "who", user.who(),
+                            "item", pass, err);
             }
         });
     }
