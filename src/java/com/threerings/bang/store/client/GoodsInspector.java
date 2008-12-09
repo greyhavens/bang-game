@@ -22,7 +22,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
-import com.threerings.bang.client.NeedCoinsView;
+import com.threerings.bang.client.NeedPremiumView;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -193,11 +193,9 @@ public class GoodsInspector extends BContainer
             public void requestFailed (String cause) {
                 _buy.setEnabled(true);
                 _descrip.setText(_msgs.xlate(cause));
-                if (BangCodes.E_INSUFFICIENT_FUNDS.equals(cause) &&
-                    _good.getCoinCost(_ctx.getUserObject()) > _ctx.getUserObject().coins) {
-                    _ctx.getBangClient().displayPopup(
-                        new NeedCoinsView(_ctx), true, NeedCoinsView.WIDTH_HINT);
-                }
+                // potentially show our need coins or need onetime dialog
+                NeedPremiumView.maybeShowNeedPremium(
+                    _ctx, _good.getCoinCost(_ctx.getUserObject()), cause);
             }
         };
         _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);

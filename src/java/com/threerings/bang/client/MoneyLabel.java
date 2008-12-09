@@ -34,16 +34,19 @@ public class MoneyLabel extends BContainer
         _scrip.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.scrip_tip"));
 
         // we'll either have a coins icon or a one-time purchase icon
-        if (DeploymentConfig.usesCoins()) {
+        switch (DeploymentConfig.getPaymentType()) {
+        case COINS:
             add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
             _coins.setIconTextGap(gap);
             _coins.setStyleClass("money_label");
             _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.coin_tip"));
+            break;
 
-        } else if (DeploymentConfig.usesOneTime()) {
+        case ONETIME:
             add(_coins = new BLabel(BangUI.oneTimeIcon), BorderLayout.CENTER);
             _coins.setStyleClass("money_label");
             _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.onetime_tip"));
+            break;
         }
 
         setMoney(0, 0, false);

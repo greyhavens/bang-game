@@ -280,7 +280,7 @@ public class BangServer extends CrowdServer
             System.exit(0);
         } catch (Exception e) {
             log.warning("Server initialization failed.", e);
-            System.exit(-1);
+            System.exit(255);
         }
     }
 
@@ -291,6 +291,14 @@ public class BangServer extends CrowdServer
         // create out database connection provider this must be done before calling super.init()
         conprov = _conprov;
         perCtx = _perCtx;
+
+        // make sure we have a valid payment type configured
+        try {
+            DeploymentConfig.getPaymentType();
+        } catch (Exception e) {
+            log.warning("deployment.properties payment_type invalid: " + e.getMessage());
+            System.exit(255);
+        }
 
         // create our transition manager prior to doing anything else
         transitrepo = new TransitionRepository(conprov);
@@ -380,7 +388,7 @@ public class BangServer extends CrowdServer
                     finishInit(injector);
                 } catch (Exception e) {
                     log.warning("Server initialization failed.", e);
-                    System.exit(-1);
+                    System.exit(255);
                 }
             }
         });

@@ -121,11 +121,20 @@ public class DeploymentConfig
     }
 
     /**
+     * Returns the payment type in use by this deployment.
+     */
+    public static PaymentType getPaymentType ()
+    {
+        return Enum.valueOf(
+            PaymentType.class, config.getValue("payment_type", "coins").toUpperCase());
+    }
+
+    /**
      * Returns true if this deployment uses coins, false if not.
      */
     public static boolean usesCoins ()
     {
-        return config.getValue("payment_type", "").equals("coins");
+        return getPaymentType() == PaymentType.COINS;
     }
 
     /**
@@ -133,7 +142,7 @@ public class DeploymentConfig
      */
     public static boolean usesOneTime ()
     {
-        return config.getValue("payment_type", "").equals("onetime");
+        return getPaymentType() == PaymentType.ONETIME;
     }
 
     /** Helper function for getting URL properties. */
