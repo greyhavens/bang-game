@@ -19,6 +19,7 @@ import com.threerings.util.Name;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
+import com.threerings.bang.client.NeedPremiumView;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BigShotItem;
@@ -107,6 +108,8 @@ public class RecruitDialog extends BDecoratedWindow
                 }
                 public void requestFailed (String cause) {
                     _status.setStatus(_msgs.xlate(cause), true);
+                    // potentially show our need coins or need onetime dialog
+                    NeedPremiumView.maybeShowNeedPremium(_ctx, cause);
                 }
             };
             _ranchobj.service.recruitBigShot(

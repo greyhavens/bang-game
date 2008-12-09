@@ -937,27 +937,27 @@ public class Badge extends Item
             }
             for (Type type : Type.values()) {
                 if (!laidout.contains(type) && type != Type.UNUSED) {
-                    System.err.println("Not in layout: " + type);
+                    System.out.println("Not in layout: " + type);
                 }
             }
 
         } else if (args.length > 0 && "dump".indexOf(args[0]) != -1) {
             for (Type type : Type.values()) {
-                System.err.println(type + " = " + type.code());
+                System.out.println(type + " = " + type.code());
             }
 
         } else if (args.length > 0 && "xlate".indexOf(args[0]) != -1) {
             for (Type type : Type.values()) {
-                System.err.println(type.key() + " = " + type);
+                System.out.println(type.key() + " = " + type);
             }
 
         } else if (args.length > 0 && "stat".indexOf(args[0]) != -1) {
             for (StatType type : StatType.values()) {
-                System.err.println(type + " = " + type.code());
+                System.out.println(type + " = " + type.code());
             }
 
         } else {
-            System.err.println("Usage: Badge [check|dump|xlate]");
+            System.err.println("Usage: Badge [check|dump|xlate|stat]");
         }
     }
 

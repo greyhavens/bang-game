@@ -23,26 +23,35 @@ import com.threerings.bang.util.DeploymentConfig;
 public class NeedPremiumView extends BDecoratedWindow
     implements ActionListener
 {
-    public static final int WIDTH_HINT = 450;
-
     /**
      * Potentially shows the need onetime view if the supplied purchase error message indicates
      * that the user needs the onetime pass to complete their purchase.
      *
      * @return true if the dialog was shown, false if not.
      */
-    public static boolean maybeShowNeedPremium (BangContext ctx, int coinCost, String error)
+    public static boolean maybeShowNeedPremium (BangContext ctx, String error)
     {
-        if (!BangCodes.E_INSUFFICIENT_FUNDS.equals(error) ||
-            (DeploymentConfig.usesCoins() && coinCost <= ctx.getUserObject().coins) ||
-            (DeploymentConfig.usesOneTime() && coinCost == 0)) {
+        if (!BangCodes.E_INSUFFICIENT_COINS.equals(error) &&
+            !BangCodes.E_LACK_ONETIME.equals(error)) {
             return false;
         }
         ctx.getBangClient().displayPopup(new NeedPremiumView(ctx), true, WIDTH_HINT);
         return true;
     }
 
-    public NeedPremiumView (BangContext ctx)
+    // from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        // always clear
+        _ctx.getBangClient().clearPopup(this, true);
+
+        // only head to the bank if requested
+        if ("get_onetime".equals(event.getAction())) {
+            _ctx.showURL(DeploymentConfig.getBillingPassURL(_ctx, _ctx.getUserObject().townId));
+        }
+    }
+
+    protected NeedPremiumView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), null);
         setModal(true);
@@ -62,17 +71,7 @@ public class NeedPremiumView extends BDecoratedWindow
         add(bcont, GroupLayout.FIXED);
     }
 
-    // from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        // always clear
-        _ctx.getBangClient().clearPopup(this, true);
-
-        // only head to the bank if requested
-        if ("get_onetime".equals(event.getAction())) {
-            _ctx.showURL(DeploymentConfig.getBillingPassURL(_ctx, _ctx.getUserObject().townId));
-        }
-    }
-
     protected BangContext _ctx;
+
+    protected static final int WIDTH_HINT = 450;
 }

@@ -194,8 +194,7 @@ public class GoodsInspector extends BContainer
                 _buy.setEnabled(true);
                 _descrip.setText(_msgs.xlate(cause));
                 // potentially show our need coins or need onetime dialog
-                NeedPremiumView.maybeShowNeedPremium(
-                    _ctx, _good.getCoinCost(_ctx.getUserObject()), cause);
+                NeedPremiumView.maybeShowNeedPremium(_ctx, cause);
             }
         };
         _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);

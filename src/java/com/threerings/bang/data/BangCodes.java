@@ -81,8 +81,19 @@ public interface BangCodes extends InvocationCodes
     public static final String UNDER_13 = "under_13";
 
     /** An error code reported when a financial transaction cannot complete. */
-    public static final String E_INSUFFICIENT_FUNDS =
-        MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");
+    public static final String E_INSUFFICIENT_SCRIP =
+        MessageBundle.qualify(BANG_MSGS, "e.insufficient_scrip");
+
+    /** An error code reported when a financial transaction cannot complete. */
+    public static final String E_INSUFFICIENT_COINS =
+        MessageBundle.qualify(BANG_MSGS, "e.insufficient_coins");
+
+    /** An error code reported when a financial transaction cannot complete. */
+    public static final String E_INSUFFICIENT_ACES =
+        MessageBundle.qualify(BANG_MSGS, "e.insufficient_aces");
+
+    /** An error code reported when a financial transaction cannot complete. */
+    public static final String E_LACK_ONETIME = MessageBundle.qualify(BANG_MSGS, "e.lack_onetime");
 
     /** An error code reported when the player in question does not exist. This message must be
      * accompanied by the handle of the requested player as its first argument. */

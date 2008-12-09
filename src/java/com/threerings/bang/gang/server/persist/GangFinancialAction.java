@@ -5,8 +5,10 @@ package com.threerings.bang.gang.server.persist;
 
 import com.samskivert.io.PersistenceException;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.persist.FinancialAction;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.gang.data.GangObject;
 
@@ -24,9 +26,22 @@ public abstract class GangFinancialAction extends FinancialAction
     }
 
     @Override // documentation inherited
-    protected boolean checkSufficientFunds ()
+    protected String checkSufficientFunds ()
     {
-        return (_gang.scrip >= _scripCost && _gang.coins >= _coinCost && _gang.aces >= _aceCost);
+        if (_gang.scrip < _scripCost) {
+            return BangCodes.E_INSUFFICIENT_SCRIP;
+        }
+        if (_gang.coins < _coinCost) {
+            switch (DeploymentConfig.getPaymentType()) {
+            default:
+            case COINS: return BangCodes.E_INSUFFICIENT_COINS;
+            case ONETIME: return BangCodes.E_LACK_ONETIME;
+            }
+        }
+        if (_gang.aces < _aceCost) {
+            return BangCodes.E_INSUFFICIENT_ACES;
+        }
+        return null;
     }
 
     @Override // documentation inherited

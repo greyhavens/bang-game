@@ -15,6 +15,7 @@ import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
 
@@ -45,7 +46,7 @@ public abstract class FinancialAction extends Invoker.Unit
                     getCoinAccount(), _coinCost);
                 if (_coinres == -1) {
                     log.warning("Failed to reserve coins " + this + ".");
-                    fail(BangCodes.E_INSUFFICIENT_FUNDS);
+                    fail(BangCodes.E_INSUFFICIENT_COINS);
                     return true;
                 }
             }
@@ -244,9 +245,10 @@ public abstract class FinancialAction extends Invoker.Unit
         _accountLock.put(account, ntype);
 
         // check and immediately deduct the necessary funds
-        if (!checkSufficientFunds()) {
+        String errcode = checkSufficientFunds();
+        if (errcode != null) {
             _accountLock.remove(account); // release our lock
-            throw new InvocationException(BangCodes.E_INSUFFICIENT_FUNDS);
+            throw new InvocationException(errcode);
         }
         deductCost();
     }
@@ -261,10 +263,22 @@ public abstract class FinancialAction extends Invoker.Unit
 
     /**
      * Checks whether the account has sufficient funds to complete the transaction.
+     *
+     * @return null if all is well, an error code to be reported to the client if not.
      */
-    protected boolean checkSufficientFunds ()
+    protected String checkSufficientFunds ()
     {
-        return (_user.scrip >= _scripCost && _user.coins >= _coinCost);
+        if (_user.scrip < _scripCost) {
+            return BangCodes.E_INSUFFICIENT_SCRIP;
+        }
+        if (_user.coins < _coinCost) {
+            switch (DeploymentConfig.getPaymentType()) {
+            default:
+            case COINS: return BangCodes.E_INSUFFICIENT_COINS;
+            case ONETIME: return BangCodes.E_LACK_ONETIME;
+            }
+        }
+        return null;
     }
 
     /**
