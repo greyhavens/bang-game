@@ -46,7 +46,7 @@ public class NaughtyPlayerManager
 
         if (throttle.throttleOp()) {
             // TEMP: remove this when we're satisfied that nothing funny is going on
-            log.info("Preventing unrated payout [who=" + user.who() + "].");
+            log.info("Preventing unrated payout", "who", user.who());
             return false;
         }
 

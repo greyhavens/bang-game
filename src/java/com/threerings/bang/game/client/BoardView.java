@@ -752,9 +752,8 @@ public class BoardView extends BComponent
         for (int ii = 0, ll = _ractions.size(); ii < ll; ii++) {
             BoardAction running = _ractions.get(ii);
             if (running.start > 0L && (since = now - running.start) > 8000L) {
-                log.warning("Board action stuck on the queue? " +
-                            "[action=" + running +
-                            ", since=" + since + "ms].");
+                log.warning("Board action stuck on the queue?", "action", running,
+                            "since", since + "ms");
                 running.start = 0L; // avoid repeat warnings
             }
         }
@@ -773,7 +772,7 @@ public class BoardView extends BComponent
         }
 
         if (!_ractions.remove(action)) {
-            log.warning("Action re-completed! [action=" + action + "].");
+            log.warning("Action re-completed!", "action", action);
             Thread.dumpStack();
             return;
         }
@@ -1299,8 +1298,8 @@ public class BoardView extends BComponent
     {
         PieceSprite sprite;
         if ((sprite = getPieceSprite(npiece)) == null) {
-            log.info("Not updating, missing piece sprite [opiece=" + opiece +
-                ", npiece=" + npiece + ", tick=" + tick + "].");
+            log.info("Not updating, missing piece sprite", "opiece", opiece, "npiece", npiece,
+                     "tick", tick);
             return;
         }
 
@@ -1312,8 +1311,7 @@ public class BoardView extends BComponent
         if (PieceSprite.isEditorMode()) {
             // it should finish immediately because we're in the editor
             if (sprite.updatePosition(_bangobj.board)) {
-                log.warning("Piece moved along path after update " +
-                    "[piece=" + npiece + "]!");
+                log.warning("Piece moved along path after update!", "piece", npiece);
             }
         }
     }
@@ -1491,12 +1489,11 @@ public class BoardView extends BComponent
     {
         PieceSprite sprite = _pieces.remove(pieceId);
         if (sprite != null) {
-            log.debug("Removing sprite [id=" + pieceId + ", why=" + why + "].");
+            log.debug("Removing sprite", "id", pieceId, "why", why);
             removeSprite(sprite);
 
         } else {
-            log.warning("No sprite for removed piece [id=" + pieceId +
-                        ", why=" + why + "].");
+            log.warning("No sprite for removed piece", "id", pieceId, "why", why);
         }
         return sprite;
     }
@@ -2019,8 +2016,7 @@ public class BoardView extends BComponent
                         spiece = null;
                     }
                 } else if (comp < 0) {
-                    log.warning("Client has extra piece [piece=" +
-                            cpiece + "].");
+                    log.warning("Client has extra piece", "piece", cpiece);
                     errors = true;
                     if (citer.hasNext()) {
                         cpiece = citer.next();
@@ -2028,8 +2024,7 @@ public class BoardView extends BComponent
                         cpiece = null;
                     }
                 } else {
-                    log.warning("Server has extra piece [piece=" +
-                            spiece + "].");
+                    log.warning("Server has extra piece", "piece", spiece);
                     errors = true;
                     if (siter.hasNext()) {
                         spiece = siter.next();

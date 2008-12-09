@@ -104,8 +104,7 @@ public abstract class MatchView extends BContainer
     // documentation inherited from interface Subscriber
     public void requestFailed (int oid, ObjectAccessException cause)
     {
-        log.warning("Failed to subscribe to match object " +
-                    "[oid=" + oid + ", cause=" + cause + "].");
+        log.warning("Failed to subscribe to match object", "oid", oid, "cause", cause);
         leaveMatch(-1);
     }
 

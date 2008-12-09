@@ -187,8 +187,7 @@ public class PaperView extends BContainer
                 news = new CachedDocument(nurl, NEWS_REFRESH_INTERVAL);
                 _news.put(townId, news);
             } catch (Exception e) {
-                log.warning("Failed to create news URL [base=" + base +
-                        ", path=" + npath + "].", e);
+                log.warning("Failed to create news URL", "base", base, "path", npath, e);
                 return;
             }
         }

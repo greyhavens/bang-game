@@ -424,7 +424,7 @@ public class GangHandler
                 if (user != null) {
                     BangServer.chatprov.deliverTell(user, umsg);
                 } else {
-                    log.warning("Member mistakenly marked as online [member=" + member + "].");
+                    log.warning("Member mistakenly marked as online", "member", member);
                 }
             }
         }
@@ -489,7 +489,7 @@ public class GangHandler
         if (entry != null) {
             initPlayer(user, entry);
         } else {
-            log.warning("User not in gang [gang=" + this + ", who=" + user.who() + "].");
+            log.warning("User not in gang", "gang", this, "who", user.who());
         }
     }
 
@@ -698,8 +698,8 @@ public class GangHandler
                 }
             }
             public void handleFailure (Exception cause) {
-                log.warning("Failed to grant aces [gang=" + GangHandler.this + ", handle=" +
-                    handle + ", aces=" + aces + ", error=" + cause + "].");
+                log.warning("Failed to grant aces", "gang", GangHandler.this, "handle", handle,
+                            "aces", aces, "error", cause);
             }
         });
     }
@@ -810,7 +810,7 @@ public class GangHandler
         // make sure they're in the gang and can recruit
         final GangMemberEntry entry = verifyInGang(handle);
         if (entry.rank < RECRUITER_RANK) {
-            log.warning("Member cannot recruit [gang=" + this + ", member=" + entry + "].");
+            log.warning("Member cannot recruit", "gang", this, "member", entry);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -960,12 +960,12 @@ public class GangHandler
             int itemId = opart.getItemId();
             Item item = _gangobj.inventory.get(itemId);
             if (!opart.isEquivalent(item)) {
-                log.warning("Invalid part for buckle [gang=" + this + ", handle=" + handle +
-                    ", opart=" + opart + ", npart=" + item + "].");
+                log.warning("Invalid part for buckle", "gang", this, "handle", handle,
+                            "opart", opart, "npart", item);
                 throw new InvocationException(INTERNAL_ERROR);
             } else if (IntListUtil.contains(partIds, itemId)) {
-                log.warning("Duplicate part in buckle [gang=" + this + ", handle=" + handle +
-                    ", parts=" + StringUtil.toString(parts) + "].");
+                log.warning("Duplicate part in buckle", "gang", this, "handle", handle,
+                            "parts", StringUtil.toString(parts));
                 throw new InvocationException(INTERNAL_ERROR);
             }
             partIds[ii] = itemId;
@@ -975,8 +975,8 @@ public class GangHandler
                 parts[ii] = null;
             } else if (Math.abs(npart.getX()) > AvatarLogic.BUCKLE_WIDTH / 2 ||
                     Math.abs(npart.getY()) > AvatarLogic.BUCKLE_HEIGHT / 2) {
-                log.warning("Invalid buckle part coordinates [gang=" + this + ", handle=" +
-                    handle + ", part=" + npart + "].");
+                log.warning("Invalid buckle part coordinates", "gang", this, "handle", handle,
+                            "part", npart);
                 throw new InvocationException(INTERNAL_ERROR);
             } else {
                 changed = true;
@@ -992,15 +992,15 @@ public class GangHandler
         for (int ii = 0; ii < ccounts.length; ii++) {
             AvatarLogic.PartClass pclass = AvatarLogic.BUCKLE_PARTS[ii];
             if (!pclass.isOptional() && ccounts[ii] < 1) {
-                log.warning("Buckle missing required part [gang=" + this + ", handle=" + handle +
-                    ", parts=" + StringUtil.toString(parts) + ", pclass=" + pclass.name + "].");
+                log.warning("Buckle missing required part", "gang", this, "handle", handle,
+                            "parts", StringUtil.toString(parts), "pclass", pclass.name);
                 throw new InvocationException(INTERNAL_ERROR);
             }
             int max = (pclass.isMultiple() ? _gangobj.getMaxBuckleIcons() : 1);
             if (ccounts[ii] > max) {
-                log.warning("Buckle has more than allowed number of parts [gang=" + this +
-                    ", handle=" + handle + ", parts=" + StringUtil.toString(parts) + ", pclass=" +
-                    pclass.name + ", max=" + max + "].");
+                log.warning("Buckle has more than allowed number of parts", "gang", this,
+                            "handle", handle, "parts", StringUtil.toString(parts),
+                            "pclass", pclass.name, "max", max);
                 throw new InvocationException(INTERNAL_ERROR);
             }
         }
@@ -1080,8 +1080,8 @@ public class GangHandler
             }
 
             protected void actionCompleted () {
-                log.info("Added to gang coffers [gang=" + GangHandler.this + ", member=" + handle +
-                         ", scrip=" + scrip + ", coins=" + coins + "].");
+                log.info("Added to gang coffers", "gang", GangHandler.this, "member", handle,
+                         "scrip", scrip, "coins", coins);
                 GangMemberEntry member = _gangobj.members.get(handle);
                 _gangobj.startTransaction();
                 try {
@@ -1153,8 +1153,8 @@ public class GangHandler
             // make sure is comes from this server or a peer
             verifyLocalOrPeer(caller);
         } catch (InvocationException ie) {
-            log.warning("Grant scrip request received from illegal caller. " +
-                    "[caller=" + caller + ", ie=" + ie + "].");
+            log.warning("Grant scrip request received from illegal caller.", "caller", caller,
+                        "ie", ie);
         }
 
         // persist this expenditure to the database
@@ -1164,8 +1164,7 @@ public class GangHandler
                     BangServer.gangrepo.grantScrip(_gangId, scrip);
                     return true;
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to grant scrip to gang " + "[id=" + _gangId +
-                            ", amount=" + scrip + "].", pe);
+                    log.warning("Failed to grant scrip to gang", "id", _gangId, "amount", scrip, pe);
                     return false;
                 }
             }
@@ -1183,8 +1182,8 @@ public class GangHandler
             // make sure is comes from this server or a peer
             verifyLocalOrPeer(caller);
         } catch (InvocationException ie) {
-            log.warning("Update Coins request received from illegal caller. " +
-                    "[caller=" + caller + ", ie=" + ie + "].");
+            log.warning("Update Coins request received from illegal caller.", "caller", caller,
+                        "ie", ie);
         }
 
         BangServer.invoker.postUnit(new RepositoryUnit("updateCoins") {
@@ -1196,7 +1195,7 @@ public class GangHandler
                 _gangobj.setCoins(_coins);
             }
             public void handleFailure (Exception err) {
-                log.warning("Error updating gang coin count. [id=" + _gangId + "].", err);
+                log.warning("Error updating gang coin count.", "id", _gangId, err);
             }
             protected int _coins;
         });
@@ -1272,8 +1271,8 @@ public class GangHandler
                     // this should never happen, because the only thing that can cause this is if
                     // we fail to transfer the coins, and we won't be transferring any coins to the
                     // last guy out the door
-                    log.warning("Gang cannot be resurrected for rollback [gang=" +
-                        GangHandler.this + ", leaver=" + target + "].");
+                    log.warning("Gang cannot be resurrected for rollback",
+                                "gang", GangHandler.this, "leaver", target);
                 } else {
                     BangServer.gangrepo.insertMember(new GangMemberRecord(
                         entry.playerId, _gangId, entry.rank, entry.commandOrder, entry.leaderLevel,
@@ -1461,8 +1460,8 @@ public class GangHandler
             catarts[ii] = BangServer.alogic.getArticleCatalog().getArticle(oart.article);
             if (catarts[ii] == null || catarts[ii].qualifier != null ||
                     catarts[ii].start != null || catarts[ii].stop != null) {
-                log.warning("Invalid article requested for outfit [who=" + handle +
-                    ", article=" + oart.article + "].");
+                log.warning("Invalid article requested for outfit", "who", handle,
+                            "article", oart.article);
                 throw new InvocationException(INTERNAL_ERROR);
             }
             articles[ii] = BangServer.alogic.createArticle(-1, catarts[ii], oart.zations);
@@ -1619,7 +1618,7 @@ public class GangHandler
             // make sure it comes from this server or a peer
             verifyLocalOrPeer(caller);
         } catch (InvocationException ie) {
-            log.warning("Failed to log completed trade. [ie=" + ie + "].");
+            log.warning("Failed to log completed trade.", "ie", ie);
             return;
         }
 
@@ -1639,7 +1638,7 @@ public class GangHandler
 
             public void handleResult () {
                 if (_error != null) {
-                    log.warning("Failed to log completed trade. [error=" + _error + "].");
+                    log.warning("Failed to log completed trade.", "error", _error);
                 } else {
                     GangMemberEntry leader = _gangobj.members.get(new Handle(member));
                     _gangobj.updateMembers(leader);
@@ -1723,8 +1722,8 @@ public class GangHandler
                 }
             }
             public void handleFailure (Exception cause) {
-                log.warning("Failed to deliver gang items to new member [gang=" + GangHandler.this +
-                    ", user=" + user.who() + ", error=" + cause + "].");
+                log.warning("Failed to deliver gang items to new member", "gang", GangHandler.this,
+                            "user", user.who(), "error", cause);
             }
         });
     }
@@ -1812,7 +1811,7 @@ public class GangHandler
         throws InvocationException
     {
         if (caller instanceof PlayerObject) {
-            log.warning("Player tried to access gang peer service [who=" + caller.who() + "].");
+            log.warning("Player tried to access gang peer service", "who", caller.who());
             throw new InvocationException(INTERNAL_ERROR);
         }
     }
@@ -1832,8 +1831,7 @@ public class GangHandler
         }
         GangMemberEntry changer = verifyIsLeader(handle);
         if (!changee.canChangeStatus(changer)) {
-            log.warning("User cannot change member [changer=" + changer +
-                ", changee=" + changee + "].");
+            log.warning("User cannot change member", "changer", changer, "changee", changee);
             throw new InvocationException(INTERNAL_ERROR);
         }
         return changee;
@@ -1850,7 +1848,7 @@ public class GangHandler
     {
         GangMemberEntry entry = verifyInGang(handle);
         if (entry.rank != LEADER_RANK) {
-            log.warning("User not leader [entry=" + entry + ", gang=" + this + "].");
+            log.warning("User not leader", "entry", entry, "gang", this);
             throw new InvocationException(INTERNAL_ERROR);
         }
         if (LEADER_LEVEL_WAITS[entry.leaderLevel] > 0 &&
@@ -1878,7 +1876,7 @@ public class GangHandler
     {
         GangMemberEntry entry = _gangobj.members.get(handle);
         if (entry == null) {
-            log.warning("User not in gang [handle=" + handle + ", gang=" + this + "].");
+            log.warning("User not in gang", "handle", handle, "gang", this);
             throw new InvocationException(INTERNAL_ERROR);
         }
         return entry;
@@ -1965,8 +1963,8 @@ public class GangHandler
     protected void recreateBuckle (GangRecord record)
         throws PersistenceException
     {
-        log.info("Recreating invalid buckle [gang=" + this + ", buckle=" +
-            StringUtil.toString(record.getBuckle()) + ", inventory=" + record.inventory + "].");
+        log.info("Recreating invalid buckle", "gang", this, "buckle", record.getBuckle(),
+                 "inventory", record.inventory);
         int[] buckle = new int[2];
         BucklePart[] parts = new BucklePart[2];
         for (Item item : record.inventory) {
@@ -2014,8 +2012,8 @@ public class GangHandler
         if (record.weightClass == weightClass) {
             return;
         }
-        log.info("Correcting weight class [gang=" + this + ", weightClass = " + weightClass +
-            ", inventory=" + record.inventory + "].");
+        log.info("Correcting weight class", "gang", this, "weightClass", weightClass,
+                 "inventory", record.inventory);
         BangServer.gangrepo.updateWeightClass(record.gangId, weightClass);
         record.weightClass = weightClass;
     }
@@ -2194,7 +2192,7 @@ public class GangHandler
                 new InvocationService.ConfirmListener() {
                     public void requestProcessed () {
                         log.info("Automatically promoted senior member due to lack of active " +
-                            "leaders [gang=" + this + ", member=" + handle + "].");
+                                 "leaders", "gang", this, "member", handle);
                         _promoting = false;
                     }
                     public void requestFailed (String cause) {
@@ -2277,8 +2275,7 @@ public class GangHandler
                 }
                 public void requestFailed (Exception cause) {
                     _releasing = null;
-                    log.warning("Failed to release lock [handler=" + this + ", error=" +
-                        cause + "].");
+                    log.warning("Failed to release lock", "handler", this, "error", cause);
                     maybeScheduleUnload();
                 }
             });
@@ -2292,8 +2289,8 @@ public class GangHandler
         _nodeName = nodeName;
         _client = BangServer.peermgr.getPeerClient(nodeName);
         if (_client == null) {
-            log.warning("Not connected to peer that holds gang lock?! [node=" +
-                nodeName + ", gangId=" + _gangId + "].");
+            log.warning("Not connected to peer that holds gang lock?!", "node", nodeName,
+                        "gangId", _gangId);
             initFailed(new InvocationException(INTERNAL_ERROR));
             return;
         }
@@ -2369,8 +2366,7 @@ public class GangHandler
      */
     protected void initFailed (Exception cause)
     {
-        log.warning("Failed to initialize gang [handler=" + this + ", error=" +
-            cause + "].");
+        log.warning("Failed to initialize gang", "handler", this, "error", cause);
         _listeners.requestFailed(cause);
         BangServer.gangmgr.unmapGang(_gangId, null);
     }
@@ -2393,8 +2389,7 @@ public class GangHandler
         // this will happen so quickly that no one will notice
         for (GangMemberEntry member : _gangobj.members) {
             if (BangServer.locator.lookupPlayer(member.playerId) != null) {
-                log.warning("Proxied gang vanished while members still online [gang=" +
-                    this + "].");
+                log.warning("Proxied gang vanished while members still online", "gang", this);
                 BangServer.gangmgr.resolveGang(_gangId);
                 return;
             }
@@ -2468,8 +2463,8 @@ public class GangHandler
                 _gangobj.setAvatar(_avatar);
             }
             public void handleFailure (Exception cause) {
-                log.warning("Failed to load senior leader avatar [gang=" + GangHandler.this +
-                    ", leader=" + leader + ", error=" + cause + "].");
+                log.warning("Failed to load senior leader avatar", "gang", GangHandler.this,
+                            "leader", leader, "error", cause);
             }
             protected AvatarInfo _avatar;
         });

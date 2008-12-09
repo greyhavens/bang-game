@@ -356,8 +356,7 @@ public class FKeyPopups
                     ImageIO.write(image, "PNG", target);
                     _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.avatar_saved");
                 } catch (Exception e) {
-                    log.warning("Failed to write avatar image " +
-                            "[target=" + target + "].", e);
+                    log.warning("Failed to write avatar image", "target", target, e);
                     _ctx.getChatDirector().displayFeedback(
                         BangCodes.BANG_MSGS, "m.avatar_save_failed");
                 }

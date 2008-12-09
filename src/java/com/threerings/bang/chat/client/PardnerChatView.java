@@ -85,8 +85,7 @@ public class PardnerChatView extends BDecoratedWindow
     public void registerPlaceChatView (PlaceChatView placeChat)
     {
         if (_placeChat != null) {
-            log.warning("Cannot register, already have a PlaceChatView " +
-                    "[_placeChat=" + _placeChat + "].");
+            log.warning("Cannot register, already have a PlaceChatView", "_placeChat", _placeChat);
             return;
         }
 
@@ -100,8 +99,8 @@ public class PardnerChatView extends BDecoratedWindow
     public void unregisterPlaceChatView (PlaceChatView placeChat)
     {
         if (_placeChat != placeChat) {
-            log.warning("Attempt to unregister invalid PlaceChatView [_placeChat=" + _placeChat +
-                        ", placeChat=" + placeChat + "].");
+            log.warning("Attempt to unregister invalid PlaceChatView", "_placeChat", _placeChat,
+                        "placeChat", placeChat);
             return;
         }
 

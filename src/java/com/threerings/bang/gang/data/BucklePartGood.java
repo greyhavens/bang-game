@@ -128,7 +128,7 @@ public class BucklePartGood extends GangGood
             return ctx.getCharacterManager().getComponentRepository().getComponent(
                 "buckle/" + getPartClass(), getPartName());
         } catch (NoSuchComponentException e) {
-            log.warning("Missing component for buckle part [type=" + _type + "].");
+            log.warning("Missing component for buckle part", "type", _type);
             return null;
         }
     }

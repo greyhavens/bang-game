@@ -69,8 +69,7 @@ public class FailedShotEffect extends ShotEffect
             }
 
         } else {
-            log.warning("FailedShot effect missing shooter [id=" +
-                    shooterId + "].");
+            log.warning("FailedShot effect missing shooter", "id", shooterId);
         }
     }
 

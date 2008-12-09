@@ -50,9 +50,8 @@ public class PerfMonitor
     public static void recordModelLoad (long startMicros, int bytesLoaded)
     {
         long now = _timer.getElapsedMicros(), elapsed = now - startMicros;
-//         log.info("Loaded model [bytes=" + bytesLoaded +
-//                  ", micros=" + elapsed +
-//                  ", kbps=" + (1000*bytesLoaded/elapsed) + "].");
+//         log.info("Loaded model", "bytes", bytesLoaded, "micros", elapsed,
+//                  "kbps", (1000*bytesLoaded/elapsed));
 
         synchronized (_models) {
             _models[0]++;
@@ -68,9 +67,8 @@ public class PerfMonitor
                 int kb = (int)(_models[1] / 1024);
                 int kbps = (int)(1000 * _models[1] / _models[2]);
                 int millis = (int)(_models[2] / 1000);
-                log.info("Model loader report [loaded=" + _models[0] +
-                         ", kb=" + kb + ", ms=" + millis +
-                         ", kbps=" + kbps + "].");
+                log.info("Model loader report", "loaded", _models[0], "kb", kb, "ms", millis,
+                         "kbps", kbps);
                 if (_reportToChat && _ctx instanceof BangContext) {
                     String msg = "Models: #" + _models[0] + " " + kb +
                         "k " + millis + "ms " + kbps + "kbps";

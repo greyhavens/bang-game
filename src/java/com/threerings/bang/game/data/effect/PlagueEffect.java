@@ -55,10 +55,8 @@ public class PlagueEffect extends BonusEffect
             ucount[ii] = Math.max(0, ucount[ii] - save);
         }
 
-        log.info("Plaguing [avg=" + save +
-                 ", ucount=" + StringUtil.toString(ucount) +
-                 ", ocount=" + StringUtil.toString(bangobj.getUnitCount()) +
-                 "].");
+        log.info("Plaguing", "avg", save, "ucount", StringUtil.toString(ucount),
+                 "ocount", StringUtil.toString(bangobj.getUnitCount()));
 
         // determine which pieces will be affected
         ArrayIntSet pids = new ArrayIntSet();

@@ -89,7 +89,7 @@ public class BangApp extends JmeApp
                 System.setErr(logOut);
 
             } catch (IOException ioe) {
-                log.warning("Failed to open debug log [path=" + nlog + ", error=" + ioe + "].");
+                log.warning("Failed to open debug log", "path", nlog, "error", ioe);
             }
         }
 
@@ -190,8 +190,8 @@ public class BangApp extends JmeApp
         Client client = _client.getContext().getClient();
 
         // configure our server, port and client version
-        log.info("Using [server=" + server + ", ports=" + StringUtil.toString(ports) +
-                 ", version=" + DeploymentConfig.getVersion() + "].");
+        log.info("Using", "server", server, "ports", StringUtil.toString(ports),
+                 "version", DeploymentConfig.getVersion());
         client.setServer(server, ports);
         client.setVersion(String.valueOf(DeploymentConfig.getVersion()));
 

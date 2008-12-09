@@ -101,7 +101,7 @@ public class RocketHandler extends EffectHandler
     {
         _shot = (RocketEffect)_effect;
         if (_shot.shooter == null) {
-            log.warning("Missing shooter? [shot=" + _shot + "].");
+            log.warning("Missing shooter?", "shot", _shot);
             // abandon ship, we're screwed
             return false;
         }

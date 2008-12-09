@@ -188,7 +188,7 @@ public class LobbyView extends BWindow
     // documentation inherited from interface TableObserver
     public void tableAdded (Table table)
     {
-        log.info("Table added [table=" + table + "].");
+        log.info("Table added", "table", table);
 
         // create a table item for this table and insert it into the
         // appropriate list
@@ -199,13 +199,12 @@ public class LobbyView extends BWindow
     // documentation inherited from interface TableObserver
     public void tableUpdated (Table table)
     {
-        log.info("Table updated [table=" + table + "].");
+        log.info("Table updated", "table", table);
 
         // locate the table item associated with this table
         TableItem item = getTableItem(table.tableId);
         if (item == null) {
-            log.warning("Received table updated notification for " +
-                        "unknown table [table=" + table + "].");
+            log.warning("Received table updated notification for unknown table", "table", table);
             return;
         }
 
@@ -223,13 +222,13 @@ public class LobbyView extends BWindow
     // documentation inherited from interface TableObserver
     public void tableRemoved (int tableId)
     {
-        log.info("Table removed [tableId=" + tableId + "].");
+        log.info("Table removed", "tableId", tableId);
 
         // locate the table item associated with this table
         TableItem item = getTableItem(tableId);
         if (item == null) {
-            log.warning("Received table removed notification for " +
-                        "unknown table [tableId=" + tableId + "].");
+            log.warning("Received table removed notification for unknown table",
+                        "tableId", tableId);
             return;
         }
 

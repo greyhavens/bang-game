@@ -179,8 +179,7 @@ public class WendigoEffect extends Effect
         for (Movement m : moves) {
             Piece piece = bangobj.pieces.get(m.pieceId);
             if (piece == null) {
-                log.warning("Missing target for wendigo effect [id=" +
-                        m.pieceId + "].");
+                log.warning("Missing target for wendigo effect", "id", m.pieceId);
                 return false;
             }
             bangobj.board.clearShadow(piece);

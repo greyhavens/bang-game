@@ -134,9 +134,8 @@ public class TextureCache
 
         BufferedImage image = _ctx.getImageCache().getBufferedImage(path);
         if (region.width != region.height) {
-            log.warning("Requested to create sub-image texture of " +
-                        "non-equal width and height [path=" + path +
-                        ", region=" + region + "].");
+            log.warning("Requested to create sub-image texture of non-equal width and height",
+                        "path", path, "region", region);
         }
 
         BufferedImage subimg = image.getSubimage(
@@ -201,7 +200,7 @@ public class TextureCache
 
 //             GL11.glGetTexParameter(texid, GL11.GL_TEXTURE_RESIDENT, _qbuf);
             if (size == 0) {
-                log.warning("Loadaed texture has no image? [key=" + key + "].");
+                log.warning("Loadaed texture has no image?", "key", key);
             } else {
                 counts[3]++;
                 bytes[3] += size;

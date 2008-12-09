@@ -763,7 +763,7 @@ public class BangClient extends BasicClient
             ifile = _rsrcmgr.getResourceFile(prefix + "_intro.ogg");
         }
         if (!mfile.exists()) {
-            log.warning("Requested to play non-existent music [key=" + key + "].");
+            log.warning("Requested to play non-existent music", "key", key);
             return;
         }
 
@@ -796,7 +796,7 @@ public class BangClient extends BasicClient
             }
 
         } catch (Throwable t) {
-            log.warning("Failed to start music [path=" + mfile + "].", t);
+            log.warning("Failed to start music", "path", mfile, t);
         }
     }
 
@@ -892,8 +892,8 @@ public class BangClient extends BasicClient
     public void switchToTown (String townId)
     {
         if (_pendingTownId != null) {
-            log.warning("Refusing to switch to town, we're already headed somewhere " +
-                        "[townId=" + townId + ", pTownId=" + _pendingTownId + "].");
+            log.warning("Refusing to switch to town, we're already headed somewhere",
+                        "townId", townId, "pTownId", _pendingTownId);
             return;
         }
 
@@ -1110,7 +1110,7 @@ public class BangClient extends BasicClient
 
         for (String prefix : LOW_DETAIL) {
             if (renderer.startsWith(prefix)) {
-                log.info("Setting default detail level to low [renderer=" + renderer + "].");
+                log.info("Setting default detail level to low", "renderer", renderer);
                 BangPrefs.updateDetailLevel(BangPrefs.DetailLevel.LOW);
                 return;
             }
@@ -1118,13 +1118,13 @@ public class BangClient extends BasicClient
 
         for (String prefix : MEDIUM_DETAIL) {
             if (renderer.startsWith(prefix)) {
-                log.info("Setting default detail level to medium [renderer=" + renderer + "].");
+                log.info("Setting default detail level to medium", "renderer", renderer);
                 BangPrefs.updateDetailLevel(BangPrefs.DetailLevel.MEDIUM);
                 return;
             }
         }
 
-        log.info("Setting default detail level to high [renderer=" + renderer + "].");
+        log.info("Setting default detail level to high", "renderer", renderer);
         BangPrefs.updateDetailLevel(BangPrefs.DetailLevel.HIGH);
     }
 
@@ -1184,8 +1184,7 @@ public class BangClient extends BasicClient
         // if it comes from a person on our mute list, auto-reject it
         final Handle source = notification.getSource();
         if (source != null && _ctx.getMuteDirector().isMuted(source)) {
-            log.info("Auto-rejecting notification [who=" + source +
-                     ", notification=" + notification + "].");
+            log.info("Auto-rejecting notification", "who", source, "notification", notification);
             _psvc.respondToNotification(
                 _client, notification.getKey(), notification.getRejectIndex(), rl);
             // flag this notification as answered and loop back to checkShowIntro in case there are
@@ -1357,7 +1356,7 @@ public class BangClient extends BasicClient
             });
         }
 
-        log.info("Running " + StringUtil.join(args, "\n  "));
+        log.info("Running " + StringUtil.join(args, "n  "));
         try {
             Runtime.getRuntime().exec(args, null);
         } catch (IOException ioe) {
@@ -1424,7 +1423,7 @@ public class BangClient extends BasicClient
 
         protected void updateIdle (boolean isIdle, long idleTime) {
             _isIdle = isIdle;
-            log.info("Setting idle " + isIdle + " [time=" + idleTime + "].");
+            log.info("Setting idle " + isIdle + "", "time", idleTime);
             if (_ctx.getClient().isLoggedOn()) {
                 BodyService bsvc = _ctx.getClient().requireService(BodyService.class);
                 bsvc.setIdle(_ctx.getClient(), isIdle);

@@ -91,8 +91,7 @@ public class BangSession extends CrowdSession
                 }
             }
         } else {
-            log.warning("Missing or bogus authdata [who=" + _username +
-                        ", adata=" + _authdata + "].");
+            log.warning("Missing or bogus authdata", "who", _username, "adata", _authdata);
         }
 
         // configure the player in the town for this server
@@ -201,7 +200,7 @@ public class BangSession extends CrowdSession
             }
 
         } catch (Exception e) {
-            log.warning("Failed to note ended session [user=" + user.who() + "].", e);
+            log.warning("Failed to note ended session", "user", user.who(), e);
         }
     }
 

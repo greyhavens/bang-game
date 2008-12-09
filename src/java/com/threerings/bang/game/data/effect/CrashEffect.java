@@ -54,7 +54,7 @@ public class CrashEffect extends DamageEffect
 
         Piece piece = bangobj.pieces.get(crasherId);
         if (piece == null) {
-            log.warning("Missing crasher for crash effect [id=" + crasherId + "].");
+            log.warning("Missing crasher for crash effect", "id", crasherId);
             return false;
         }
         removeAndReport(bangobj, piece, obs);

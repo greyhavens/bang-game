@@ -47,8 +47,7 @@ public class ItemFactory
         // now do the lookup
         Integer type = _classToType.get(itemClass);
         if (type == null) {
-            log.warning("No type for item class! " +
-                        "[class=" + itemClass.getName() + "].");
+            log.warning("No type for item class!", "class", itemClass.getName());
             return -1;
         }
 
@@ -79,7 +78,7 @@ public class ItemFactory
     {
         int type = ++_nextType;
         _typeToClass.put(type, typeClass);
-        log.debug("Registering [class=" + typeClass + ", type=" + type + "].");
+        log.debug("Registering", "class", typeClass, "type", type);
         _classToType.put(typeClass, type);
     }
 

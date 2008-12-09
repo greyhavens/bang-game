@@ -178,7 +178,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             try {
                 getGangPeerProvider(accountName).updateCoins(null);
             } catch (InvocationException ie) {
-                log.warning("Failed to load gang to update coins. [ie=" + ie + "].");
+                log.warning("Failed to load gang to update coins.", "ie", ie);
             }
             return;
         }
@@ -196,7 +196,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             try {
                 getGangPeerProvider(info.accountName).grantScrip(null, currency);
             } catch (InvocationException ie) {
-                log.warning("Failed to load gang for distributeCurrency. [ie=" + ie + "].");
+                log.warning("Failed to load gang for distributeCurrency.", "ie", ie);
             }
             return;
         }
@@ -206,8 +206,8 @@ public class BangCoinExchangeManager extends CoinExchangeManager
                     BangServer.playrepo.grantScrip(info.accountName, currency);
                     return true;
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to grant scrip to player " + "[offer=" + info +
-                            ", amount=" + currency + ", type=" + msg + "].", pe);
+                    log.warning("Failed to grant scrip to player", "offer", info,
+                                "amount", currency, "type", msg, pe);
                     return false;
                 }
             }
@@ -286,7 +286,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
                     }
                 });
         } catch (InvocationException ie) {
-            log.warning("Unable to reserve gang currency! [ie=" + ie + "].");
+            log.warning("Unable to reserve gang currency!", "ie", ie);
             listener.requestFailed(ie);
         }
     }
@@ -300,7 +300,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             try {
                 getGangPeerProvider(buyer).tradeCompleted(null, price, vol, buyerGame);
             } catch (InvocationException ie) {
-                log.warning("Failed to load gang! [cause=" + ie + "].");
+                log.warning("Failed to load gang!", "cause", ie);
             }
             return;
         }
@@ -317,7 +317,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
                     _user = BangServer.playrepo.loadPlayer(buyer);
                     return _user != null;
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to load user! [cause=" + pe + "].");
+                    log.warning("Failed to load user!", "cause", pe);
                 }
                 return false;
             }

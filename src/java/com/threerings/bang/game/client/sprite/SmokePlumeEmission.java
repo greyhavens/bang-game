@@ -194,7 +194,7 @@ public class SmokePlumeEmission extends SpriteEmission
     {
         float[] vals = StringUtil.parseFloatArray(value);
         if (vals == null || vals.length < 3) {
-            log.warning("Invalid color value [value=" + value + "].");
+            log.warning("Invalid color value", "value", value);
             return null;
         }
         return new ColorRGBA(vals[0], vals[1], vals[2],

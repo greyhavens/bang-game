@@ -94,8 +94,7 @@ public class AccountActionManager
                 handleAccountAction(ba);
             } catch (Throwable t) {
                 itr.remove(); // remove that action from our list
-                log.warning("Failure handling account action, skipping. " +
-                        "[action=" + ba + "].", t);
+                log.warning("Failure handling account action, skipping.", "action", ba, t);
             }
         }
 
@@ -106,7 +105,7 @@ public class AccountActionManager
                 try {
                     _repo.updateActions(actions, ServerConfig.nodename);
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to mark processed actions! [cause=" + pe + "].");
+                    log.warning("Failed to mark processed actions!", "cause", pe);
                 }
                 return true;
             }
@@ -137,7 +136,7 @@ public class AccountActionManager
             break;
 
         default:
-            log.warning("Unknown account action [action=" + aa + "].");
+            log.warning("Unknown account action", "action", aa);
         }
     }
 
@@ -172,7 +171,7 @@ public class AccountActionManager
                     _user = BangServer.playrepo.loadPlayer(accountName);
                     return _user != null;
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to load user! [cause=" + pe + "].");
+                    log.warning("Failed to load user!", "cause", pe);
                 }
                 return false;
             }
@@ -195,8 +194,8 @@ public class AccountActionManager
                 try {
                     BangServer.playrepo.disablePlayer(accountName, disabledName);
                 } catch (PersistenceException pe) {
-                    log.warning("Error disabling account [oname=" + accountName +
-                                ", dname=" + disabledName + ", cause=" + pe + "].");
+                    log.warning("Error disabling account", "oname", accountName,
+                                "dname", disabledName, "cause", pe);
                 }
                 return false;
             }

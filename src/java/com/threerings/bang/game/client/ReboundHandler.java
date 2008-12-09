@@ -54,8 +54,7 @@ public class ReboundHandler extends EffectHandler
         // launch the piece into the air
         final PieceSprite sprite = _view.getPieceSprite(piece);
         if (sprite == null) {
-            log.warning("Missing target sprite for rebound effect " +
-                "[piece=" + piece + "].");
+            log.warning("Missing target sprite for rebound effect", "piece", piece);
             return;
         }
         Vector3f start = new Vector3f(sprite.getWorldTranslation());

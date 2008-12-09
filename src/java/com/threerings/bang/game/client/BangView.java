@@ -436,12 +436,12 @@ public class BangView extends BWindow
         String boardId = StringUtil.hexlate(_bangobj.boardHash) + ":" + _bangobj.players.length;
         BoardData bdata = _ctx.getBoardCache().loadBoard(_bangobj.boardHash);
         if (bdata != null) {
-            log.info("Loaded board from cache [board=" + boardId + "].");
+            log.info("Loaded board from cache", "board", boardId);
             continuePreparingForRound(config, pidx, bdata);
             return true;
         }
 
-        log.info("Downloading board [board=" + boardId + "].");
+        log.info("Downloading board", "board", boardId);
         _preparing = true;
         _bangobj.service.getBoard(_ctx.getClient(), new BangService.BoardListener() {
             public void requestProcessed (BoardData bdata) {
@@ -588,8 +588,8 @@ public class BangView extends BWindow
             _practiceView = new PracticeView(_ctx, _bangobj);
             _ctx.getRootNode().addWindow(_practiceView);
             _practiceView.pack();
-            log.info("practice view [height=" + _practiceView.getHeight() +
-                     ", width=" + _practiceView.getWidth() + "].");
+            log.info("practice view", "height", _practiceView.getHeight(),
+                     "width", _practiceView.getWidth());
             _practiceView.setLocation(
                 (_ctx.getDisplay().getWidth() - _practiceView.getWidth())/2, 10);
         }

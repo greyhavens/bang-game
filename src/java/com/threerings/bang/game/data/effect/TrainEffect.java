@@ -138,7 +138,7 @@ public class TrainEffect extends Effect
             ox = last.x;
             oy = last.y;
         } else {
-            log.warning("Missing first train piece [pieceId=" + pieceIds[0] + "].");
+            log.warning("Missing first train piece", "pieceId", pieceIds[0]);
         }
     }
 
@@ -159,7 +159,7 @@ public class TrainEffect extends Effect
         // move the first train, if it has anywhere to go
         Train first = (Train)bangobj.pieces.get(pieceIds[0]);
         if (first == null) {
-            log.warning("Missing first train piece [pieceId=" + pieceIds[0] + "].");
+            log.warning("Missing first train piece", "pieceId", pieceIds[0]);
             return false;
         }
         if (nx == Train.UNSET) {
@@ -176,7 +176,7 @@ public class TrainEffect extends Effect
         for (int ii = 1; ii < pieceIds.length; ii++) {
             Train train = (Train)bangobj.pieces.get(pieceIds[ii]);
             if (train == null) {
-                log.warning("Missing train piece [pieceId=" + pieceIds[ii] + "].");
+                log.warning("Missing train piece", "pieceId", pieceIds[ii]);
                 return false;
             }
             moveAndReport(bangobj, train, last.x, last.y, obs, true);

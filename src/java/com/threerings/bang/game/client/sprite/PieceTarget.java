@@ -131,9 +131,8 @@ public class PieceTarget extends Node
     {
         // sanity check
         if (_attackers == 0 && delta < 0) {
-            log.warning("Requested to decrement attackers but we have none! " +
-                        "[sprite=" + this + ", pidx=" + pidx +
-                        ", delta=" + delta + "].");
+            log.warning("Requested to decrement attackers but we have none!", "sprite", this,
+                        "pidx", pidx, "delta", delta);
             Thread.dumpStack();
             return;
         }

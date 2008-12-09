@@ -172,8 +172,7 @@ public class HideoutView extends ShopView
                 _status.setStatus(getShopTip(), false);
             }
             public void requestFailed (int oid, ObjectAccessException cause) {
-                log.warning("Failed to subscribe to gang object [oid=" + oid +
-                    ", cause=" + cause + "].");
+                log.warning("Failed to subscribe to gang object", "oid", oid, "cause", cause);
                 _status.setStatus(_msgs.get("m.internal_error"), true);
             }
         })).subscribe(_ctx.getDObjectManager());

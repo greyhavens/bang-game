@@ -43,8 +43,7 @@ public class ReboundEffect extends TrapEffect
         super.prepare(bangobj, dammap);
         Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
-            log.warning("Missing target for rebound effect " +
-                "[id=" + pieceId + "].");
+            log.warning("Missing target for rebound effect", "id", pieceId);
             return;
         }
         
@@ -59,9 +58,8 @@ public class ReboundEffect extends TrapEffect
             dist--;
         }
         if (pt == null) {
-            log.warning("Couldn't find occupiable spot for rebound effect " +
-                "[x=" + target.x + ", y=" + target.y + ", dist=" + dist +
-                "].");
+            log.warning("Couldn't find occupiable spot for rebound effect", "x", target.x,
+                        "y", target.y, "dist", dist);
             x = target.x;
             y = target.y;
         } else {
@@ -89,8 +87,7 @@ public class ReboundEffect extends TrapEffect
         // move the piece
         Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
-            log.warning("Missing target for rebound effect " +
-                "[id=" + pieceId + "].");
+            log.warning("Missing target for rebound effect", "id", pieceId);
             return false;            
         }
         moveAndReport(bangobj, target, x, y, obs);

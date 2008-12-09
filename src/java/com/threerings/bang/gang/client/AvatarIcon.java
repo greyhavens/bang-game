@@ -55,7 +55,7 @@ public class AvatarIcon extends ImageIcon
     // documentation inherited from interface ResultListener
     public void requestFailed (Exception cause)
     {
-        log.warning("Failed to retrieve avatar image for leader [cause=" + cause + "].");
+        log.warning("Failed to retrieve avatar image for leader", "cause", cause);
     }
 
     @Override // documentation inherited

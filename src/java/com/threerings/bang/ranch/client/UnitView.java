@@ -116,8 +116,8 @@ public class UnitView extends BGeomView
             if (vals != null && vals.length == 3) {
                 loc = new Vector3f(vals[0], vals[1], vals[2]);
             } else {
-                log.warning("Invalid camera position value [model=" +
-                    model.getName() + ", value=" + cpos + "].");
+                log.warning("Invalid camera position value", "model", model.getName(),
+                            "value", cpos);
             }
         }
         float heading = FastMath.PI/6, pitch = 0f;
@@ -127,8 +127,8 @@ public class UnitView extends BGeomView
                 heading = vals[0] * FastMath.DEG_TO_RAD;
                 pitch = vals[1] * FastMath.DEG_TO_RAD;
             } else {
-                log.warning("Invalid camera rotation value [model=" +
-                    model.getName() + ", value=" + crot + "].");
+                log.warning("Invalid camera rotation value", "model", model.getName(),
+                            "value", crot);
             }
         }
         camera.getLocation().set(loc);

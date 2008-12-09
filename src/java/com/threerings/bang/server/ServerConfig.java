@@ -73,7 +73,7 @@ public class ServerConfig
                 return clazz;
             }
         } catch (Exception e) {
-            log.warning("Failed to instantiate authenticator [class=" + aclass + "]", e);
+            log.warning("Failed to instantiate authenticator", "class", aclass, e);
         }
         return null;
     }

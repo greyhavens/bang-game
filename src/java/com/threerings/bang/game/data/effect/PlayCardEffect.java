@@ -93,8 +93,7 @@ public class PlayCardEffect extends Effect
     {
         // make sure the card exists
         if (!bangobj.cards.contains(card)) {
-            log.warning("Missing card for card played effect [card=" +
-                card + ", target=" + target + "].");
+            log.warning("Missing card for card played effect", "card", card, "target", target);
             return false;
         }
         playAndReport(bangobj, card, target, obs);

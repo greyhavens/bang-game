@@ -86,8 +86,7 @@ public class ToggleSwitchEffect extends Effect
     {
         ToggleSwitch ts = (ToggleSwitch)bangobj.pieces.get(switchId);
         if (ts == null) {
-            log.warning("Missing target to toggle switch effect [id=" +
-                    switchId + "].");
+            log.warning("Missing target to toggle switch effect", "id", switchId);
             return false;
         }
         if (tick > 0) {
@@ -117,8 +116,7 @@ public class ToggleSwitchEffect extends Effect
         for (int sid : switchIds) {
             ts = (ToggleSwitch)bangobj.pieces.get(sid);
             if (ts == null) {
-                log.warning("Missing target for toggle effect " +
-                            "[id=" + sid + "].");
+                log.warning("Missing target for toggle effect", "id", sid);
                 return false;
             }
             ts.state = state;

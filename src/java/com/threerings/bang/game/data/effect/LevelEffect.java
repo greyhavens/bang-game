@@ -62,7 +62,7 @@ public class LevelEffect extends Effect
     {
         Unit hero = (Unit)bangobj.pieces.get(pieceId);
         if (hero == null) {
-            log.warning("Unable to find hero for level change [pieceId=" + pieceId + "].");
+            log.warning("Unable to find hero for level change", "pieceId", pieceId);
             return false;
         }
         Influence influence = hero.getInfluence(Unit.InfluenceType.SPECIAL);

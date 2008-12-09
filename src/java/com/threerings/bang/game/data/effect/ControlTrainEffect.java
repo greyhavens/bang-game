@@ -59,8 +59,8 @@ public class ControlTrainEffect extends Effect
         // find the piece of track and its group id
         Track dest = bangobj.getTracks().get(Piece.coord(tx, ty));
         if (dest == null) {
-            log.warning("Missing destination track for control train effect " +
-                "[player=" + player + ", tx=" + tx + ", ty=" + ty + "].");
+            log.warning("Missing destination track for control train effect", "player", player,
+                        "tx", tx, "ty", ty);
             return;
         }
         
@@ -77,8 +77,7 @@ public class ControlTrainEffect extends Effect
             }
         }
         if (engine == null) {
-            log.warning("Missing train engine for control train effect " +
-                "[player=" + player + "].");
+            log.warning("Missing train engine for control train effect", "player", player);
             return;
         }
         
@@ -86,8 +85,8 @@ public class ControlTrainEffect extends Effect
         if ((engine.path = engine.findPath(bangobj, dest)) != null) {
             group = dest.group;
         } else {
-            log.warning("Couldn't find path for control train effect " +
-                "[engine=" + engine + ", dest=" + dest + "].");
+            log.warning("Couldn't find path for control train effect", "engine", engine,
+                        "dest", dest);
         }
     }
 

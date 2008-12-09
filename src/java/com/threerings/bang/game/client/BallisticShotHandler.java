@@ -255,8 +255,7 @@ public class BallisticShotHandler extends ShotHandler
             if (piece != null) {
                 return _view.getUnitSprite(piece);
             } else {
-                log.warning("Missing shot deflector [pieceId=" + pieceId +
-                    "].");
+                log.warning("Missing shot deflector", "pieceId", pieceId);
             }
         }
         return null;

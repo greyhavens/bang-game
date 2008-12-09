@@ -71,8 +71,7 @@ public abstract class BonusEffect extends Effect
             // remove the bonus from the board
             Piece bonus = bangobj.pieces.get(bonusId);
             if (bonus == null) {
-                log.warning("Missing bonus for activated effect? " +
-                            "[id=" + bonusId + "].");
+                log.warning("Missing bonus for activated effect?", "id", bonusId);
             } else {
                 String effect = getActivatedEffect();
                 if (effect != null) {

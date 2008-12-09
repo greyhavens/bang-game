@@ -245,8 +245,7 @@ public class MobileSprite extends ActiveSprite
     public void checkMoveSound (String msg)
     {
         if (_moveSound != null && _moveSound.isPlaying()) {
-            log.warning("Move sound playing when " + msg + " [piece=" +
-                    _piece + "]");
+            log.warning("Move sound playing when " + msg, "piece", _piece);
             stopMoveSound();
         }
     }
@@ -459,9 +458,8 @@ public class MobileSprite extends ActiveSprite
 
         if (path != null) {
             if (path.size() < 2) {
-                log.warning("Created short path? [piece=" + _piece +
-                    ", from=(" + _px + ", " + _py + ")" +
-                    ", path=" + StringUtil.toString(path) + "].");
+                log.warning("Created short path?", "piece", _piece,
+                            "from", "(" + _px + ", " + _py + ")", "path", path);
                 // fall through and create a line path
 
             } else {

@@ -214,8 +214,8 @@ public class Tutorial extends Scenario
             } else if (add.what.equals("bigshot")) {
                 PlayerObject user = (PlayerObject)_bangmgr.getPlayer(0);
                 if (user == null) {
-                    log.warning("No player in tutorial, can't place Big Shot " +
-                                "[game=" + _bangobj.which() + "].");
+                    log.warning("No player in tutorial, can't place Big Shot",
+                                "game", _bangobj.which());
                     return false;
                 }
 
@@ -260,8 +260,7 @@ public class Tutorial extends Scenario
                 } else {
                     Point spot = _bangobj.board.getOccupiableSpot(near.x, near.y, 2, 4, null);
                     if (spot == null) {
-                        log.warning("Can't find spot near piece [piece=" + near +
-                                    ", add=" + add + "].");
+                        log.warning("Can't find spot near piece", "piece", near, "add", add);
                         return false;
                     } else {
                         piece.position(spot.x, spot.y);
@@ -309,8 +308,8 @@ public class Tutorial extends Scenario
                     }
                 }
                 if (!foundMove && !mua.noWarning) {
-                    log.warning("Unable to locate spot near target [tut=" + _config.ident +
-                                ", unit=" + unit + ", target=" + target + "].");
+                    log.warning("Unable to locate spot near target", "tut", _config.ident,
+                                "unit", unit, "target", target);
                 }
             }
 

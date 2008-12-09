@@ -31,14 +31,12 @@ public class TeleportHandler extends EffectHandler
         _teffect = (TeleportEffect)_effect;
         Piece piece = _bangobj.pieces.get(_teffect.pieceId);
         if (piece == null) {
-            log.warning("Couldn't find target for teleporter effect " +
-                "[pieceId=" + _teffect.pieceId + "].");
+            log.warning("Couldn't find target for teleporter effect", "pieceId", _teffect.pieceId);
             return false;
         }
         _sprite = (MobileSprite)_view.getPieceSprite(piece);
         if (_sprite == null) {
-            log.warning("Missing target sprite for teleporter effect " +
-                "[piece=" + piece + "].");
+            log.warning("Missing target sprite for teleporter effect", "piece", piece);
             return false;
         }
         
@@ -49,8 +47,7 @@ public class TeleportHandler extends EffectHandler
             _activateEffect = tporter.getEffect("activate");
             travelEffect = tporter.getEffect("travel");
         } else {
-            log.warning("Couldn't find source for teleporter effect " +
-                "[pieceId=" + _teffect.sourceId + "].");
+            log.warning("Couldn't find source for teleporter effect", "pieceId", _teffect.sourceId);
             _activateEffect = "indian_post/teleporter_1/activate";
             travelEffect = "indian_post/teleporter_1/travel";
         }

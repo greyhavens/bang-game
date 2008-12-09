@@ -157,8 +157,7 @@ public class LoggingRobot extends Unit
     {
         super.init(config);
         if ((_type = ListUtil.indexOf(UNIT_TYPES, config.type)) == -1) {
-            log.warning("Created logging robot of unknown type [type=" +
-                config.type + "].");
+            log.warning("Created logging robot of unknown type", "type", config.type);
             _type = NORMAL;
         }
     }

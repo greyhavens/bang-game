@@ -61,15 +61,15 @@ public class OfficeManager extends ShopManager
 
         final BountyConfig config = BountyConfig.getBounty(bountyId);
         if (config == null) {
-            log.warning("Received request to start unknown bounty [from=" + player.who() +
-                        ", bounty=" + bountyId + ", game=" + gameId + "].");
+            log.warning("Received request to start unknown bounty", "from", player.who(),
+                        "bounty", bountyId, "game", gameId);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         // make sure they haven't hacked their client
         if (!config.isAvailable(player)) {
-            log.warning("Player requested to start unavailable bounty [who=" + player.who() +
-                        ", bounty=" + bountyId + "].");
+            log.warning("Player requested to start unavailable bounty", "who", player.who(),
+                        "bounty", bountyId);
             throw new InvocationException(ACCESS_DENIED);
         }
         if (config.inOrder && !player.tokens.isSupport()) {
@@ -78,9 +78,8 @@ public class OfficeManager extends ShopManager
                     break;
                 } else if (!player.stats.containsValue(StatType.BOUNTY_GAMES_COMPLETED,
                                                        config.getStatKey(game.ident))) {
-                    log.warning("Player tried to play bounty game out of order " +
-                                "[who=" + player.who() + ", bounty=" + bountyId +
-                                ", game=" + gameId + "].");
+                    log.warning("Player tried to play bounty game out of order",
+                                "who", player.who(), "bounty", bountyId, "game", gameId);
                     throw new InvocationException(ACCESS_DENIED);
                 }
             }
@@ -102,7 +101,7 @@ public class OfficeManager extends ShopManager
                     _gconfig = (BangConfig)BinaryImporter.getInstance().load(
                         BangServer.rsrcmgr.getResource(path));
                 } catch (Exception e) {
-                    log.warning("Failed to load bounty game [key=" + key + "].", e);
+                    log.warning("Failed to load bounty game", "key", key, e);
                 }
                 return true;
             }
@@ -216,8 +215,8 @@ public class OfficeManager extends ShopManager
             BangManager bangmgr = (BangManager)BangServer.plreg.createPlace(gconfig);
             bangmgr.setBountyConfig(bounty, gameId);
         } catch (InstantiationException ie) {
-            log.warning("Error instantiating bounty game [for=" + user.who() +
-                    ", bounty=" + bounty + ", gconfig=" + gconfig + "].", ie);
+            log.warning("Error instantiating bounty game", "for", user.who(), "bounty", bounty,
+                        "gconfig", gconfig, ie);
             throw new InvocationException(INTERNAL_ERROR);
         }
     }

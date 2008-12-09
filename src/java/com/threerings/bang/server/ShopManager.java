@@ -119,8 +119,7 @@ public abstract class ShopManager extends PlaceManager
             return (Boolean)field.get(RuntimeConfig.server);
 
         } catch (Exception e) {
-            log.warning("Failed to check shop enabled status " +
-                    "[ident=" + getIdent() + "].", e);
+            log.warning("Failed to check shop enabled status", "ident", getIdent(), e);
             return false;
         }
     }

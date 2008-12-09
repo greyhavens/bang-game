@@ -116,8 +116,7 @@ public class BangController extends GameController
             try {
                 _tutcont.handleEvent(event, id);
             } catch (Exception e) {
-                log.warning("Tutorial controller choked on '" +
-                        event + "'.", e);
+                log.warning("Tutorial controller choked on '" + event + "'.", e);
             }
         }
     }
@@ -402,9 +401,8 @@ public class BangController extends GameController
                     }
 
                 } else {
-                    log.warning("Got unknown response to move(" + unit +
-                                ", " + tx + ", " + ty + ", " + targetId +
-                                ") [result=" + result + "].");
+                    log.warning("Got unknown response to move", "unit", unit, "tx", tx, "ty", ty,
+                                "tid", targetId, "result", result);
                 }
 
                 // clear any pending shot indicator
@@ -419,10 +417,8 @@ public class BangController extends GameController
             }
         };
 
-        log.info("Requesting move and fire [unit=" + unit +
-                 ", to=+" + tx + "+" + ty + ", tid=" + targetId + "].");
-        _bangobj.service.order(
-            _ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, rl);
+        log.info("Requesting move and fire", "[unit", unit, "to", "+"+tx+"+"+ty, "tid", targetId);
+        _bangobj.service.order(_ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, rl);
 
         // clear out our last selected unit as we want to start afresh
         _lastSelection = -1;
@@ -431,7 +427,7 @@ public class BangController extends GameController
     /** Handles a request to cancel a unit's advance order. */
     public void cancelOrder (int pieceId)
     {
-        log.info("Requesting order cancellation [pid=" + pieceId + "].");
+        log.info("Requesting order cancellation", "pid", pieceId);
         // if the order is canceled, we'll hear about it via orderInvalidated
         _bangobj.service.cancelOrder(_ctx.getClient(), pieceId);
     }
@@ -446,8 +442,7 @@ public class BangController extends GameController
         Card card = _bangobj.cards.get(cardId);
         Card activeCard = getPlacingCard();
         if (card == null) {
-            log.warning("Requested to place non-existent card '" +
-                        cardId + "'.");
+            log.warning("Requested to place non-existent card '" + cardId + "'.");
 
         } else if (activeCard != null && activeCard.getPlacementMode() ==
                 Card.PlacementMode.VS_CARD && card.owner != _pidx) {
@@ -480,7 +475,7 @@ public class BangController extends GameController
     {
         _view.view.clearPlacingCard();
         if (_bangobj.cards.get(cardId) == null) {
-            log.warning("Requested to activate expired card [id=" + cardId + "].");
+            log.warning("Requested to activate expired card", "id", cardId);
         } else {
             BangService.ConfirmListener cl = new BangService.ConfirmListener() {
                 public void requestProcessed () {

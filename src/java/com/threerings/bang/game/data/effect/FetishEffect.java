@@ -95,8 +95,7 @@ public class FetishEffect extends HoldEffect
                 }
             };
         } else {
-            log.warning("Fetish effect encountered unknown type [type=" +
-                type + "].");
+            log.warning("Fetish effect encountered unknown type", "type", type);
             return null;
         }
     }

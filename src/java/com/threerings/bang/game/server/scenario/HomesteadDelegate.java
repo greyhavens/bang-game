@@ -93,8 +93,8 @@ public class HomesteadDelegate extends ScenarioDelegate
                 owners[unclaimed.owner] = ii;
 
             } else {
-                log.warning("Unable to find starting homestead for player " +
-                            "[board=" + _bangmgr.getBoardInfo() + ", start=" + start + "].");
+                log.warning("Unable to find starting homestead for player",
+                            "board", _bangmgr.getBoardInfo(), "start", start);
                 break;
             }
         }

@@ -151,9 +151,8 @@ public class PardnerRepository extends SimpleRepository
                     // first look up the playerId for handle2
                     int playerId2 = BangServer.playrepo.getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
-                        log.warning("Failed to update pardners [pid=" + playerId1 +
-                                    ", pardner=" + handle2 + "]. " +
-                                    handle2 + " no longer exists.");
+                        log.warning("Failed to update pardners. Pardner no longer exists.",
+                                    "pid", playerId1, "pardner", handle2);
                         return "e.player_deleted";
                     }
 
@@ -199,8 +198,8 @@ public class PardnerRepository extends SimpleRepository
                     // first look up the playerId for handle2
                     int playerId2 = BangServer.playrepo.getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
-                        log.warning("Failed to delete pardners [pid=" + playerId1 +
-                                    ", pardner=" + handle2 + "]. Pardner no longer exists.");
+                        log.warning("Failed to delete pardners. Pardner no longer exists.",
+                                    "pid", playerId1, "pardner", handle2);
                         return null;
                     }
 

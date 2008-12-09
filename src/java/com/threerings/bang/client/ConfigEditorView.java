@@ -68,9 +68,8 @@ public class ConfigEditorView extends BDecoratedWindow
 //                     field.setInt(null, _prefs.getInt(field.getName(), val));
 
                 } else {
-                    log.warning("Unhandled config field type " +
-                                "[field=" + field.getName() +
-                                ", type=" + ftype + "].");
+                    log.warning("Unhandled config field type", "field", field.getName(),
+                                "type", ftype);
                 }
 
                 if (editor != null) {

@@ -45,8 +45,8 @@ public class EntryReplacedEvent<T extends DSet.Entry> extends EntryRemovedEvent<
         try {
             applyToObject(target);
         } catch (ObjectAccessException e) {
-            log.warning("Error applying replacement [target=" + target.which() + ", name=" + name +
-                ", oldKey=" + oldKey + ", newEntry=" + newEntry + ", error=" + e + "].");
+            log.warning("Error applying replacement", "target", target.which(), "name", name,
+                        "oldKey", oldKey, "newEntry", newEntry, "error", e);
         }
     }
 

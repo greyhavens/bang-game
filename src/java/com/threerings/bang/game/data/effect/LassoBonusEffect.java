@@ -60,14 +60,13 @@ public class LassoBonusEffect extends BonusEffect
             }
         }
         if (bonus == null) {
-            log.warning("Couldn't find bonus for lasso effect [pidx=" +
-                _player + ", x=" + _x + ", y=" + _y + "].");
+            log.warning("Couldn't find bonus for lasso effect", "pidx", _player, "x", _x, "y", _y);
             return;
         }
         String ctype = bonus.getConfig().cardType;
         if (ctype == null) {
-            log.warning("Tried to lasso bonus without corresponding card " +
-                "[pidx=" + _player + ", bonus=" + bonus + "].");
+            log.warning("Tried to lasso bonus without corresponding card", "pidx", _player,
+                        "bonus", bonus);
             return;
         }
         bonusId = bonus.pieceId;

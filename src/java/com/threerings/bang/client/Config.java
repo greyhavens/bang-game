@@ -99,15 +99,13 @@ public class Config
                     int val = field.getInt(null);
                     field.setInt(null, _prefs.getInt(field.getName(), val));
                 } else {
-                    log.warning("Unhandled config field type " +
-                                "[field=" + field.getName() +
-                                ", type=" + ftype + "].");
+                    log.warning("Unhandled config field type", "field", field.getName(),
+                                "type", ftype);
                 }
 
             } catch (Exception e) {
-                log.warning("Failed to configure field from prefs " +
-                        "[field=" + field.getName() +
-                        ", type=" + ftype + "].", e);
+                log.warning("Failed to configure field from prefs", "field", field.getName(),
+                            "type", ftype, e);
             }
         }
 
@@ -150,8 +148,7 @@ public class Config
         try {
             field.set(null, value);
         } catch (Exception e) {
-            log.warning("Failed to updated config field " +
-                    "[field=" + name + ", value=" + value + "].", e);
+            log.warning("Failed to updated config field", "field", name, "value", value, e);
             return;
         }
 
@@ -163,10 +160,8 @@ public class Config
         } else if (value instanceof Float) {
             _prefs.putFloat(name, (Float)value);
         } else {
-            log.warning("Requested to update config field with value of " +
-                        "unhandled type [field=" + name +
-                        ", type=" + value.getClass().getName() +
-                        ", value=" + value + "].");
+            log.warning("Requested to update config field with value of unhandled type",
+                        "field", name, "type", value.getClass().getName(), "value", value);
         }
 
         // run any associated hooks

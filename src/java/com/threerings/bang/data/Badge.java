@@ -1125,8 +1125,8 @@ public class Badge extends Item
     {
         String old = _rewards.put(type, message);
         if (old != null) {
-            log.warning("Badge registered for duplicate rewards [type=" + type + ", old=" + old +
-                        ", new=" + message + "].");
+            log.warning("Badge registered for duplicate rewards", "type", type, "old", old,
+                        "new", message);
         }
     }
 

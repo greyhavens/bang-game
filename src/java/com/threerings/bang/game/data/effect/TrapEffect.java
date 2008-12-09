@@ -51,8 +51,7 @@ public class TrapEffect extends BonusEffect
         // determine the damage for the piece
         Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
-            log.warning("Missing target for trap effect " +
-                "[id=" + pieceId + "].");
+            log.warning("Missing target for trap effect", "id", pieceId);
             return;
         }
         int damage = getDamage(target);
@@ -120,8 +119,7 @@ public class TrapEffect extends BonusEffect
     {
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing target for trap effect " +
-                        "[id=" + pieceId + "].");
+            log.warning("Missing target for trap effect", "id", pieceId);
             return false;
         }
 

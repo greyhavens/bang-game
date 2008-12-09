@@ -56,8 +56,7 @@ public class SpringShotEffect extends ShotEffect
         super.prepare(bangobj, dammap);
         Piece target = bangobj.pieces.get(targetId);
         if (target == null) {
-            log.warning("Missing target for rebound effect " +
-                "[id=" + targetId + "].");
+            log.warning("Missing target for rebound effect", "id", targetId);
             return;
         }
         
@@ -72,9 +71,8 @@ public class SpringShotEffect extends ShotEffect
             dist--;
         }
         if (pt == null) {
-            log.warning("Couldn't find occupiable spot for rebound effect " +
-                "[x=" + target.x + ", y=" + target.y + ", dist=" + dist +
-                "].");
+            log.warning("Couldn't find occupiable spot for rebound effect", "x", target.x,
+                        "y", target.y, "dist", dist);
             x = target.x;
             y = target.y;
         } else {
@@ -104,8 +102,7 @@ public class SpringShotEffect extends ShotEffect
         // move the piece
         Piece target = bangobj.pieces.get(targetId);
         if (target == null) {
-            log.warning("Missing target for spring shot effect " +
-                "[id=" + targetId + "].");
+            log.warning("Missing target for spring shot effect", "id", targetId);
             return false;            
         }
         moveAndReport(bangobj, target, x, y, obs);
@@ -122,8 +119,7 @@ public class SpringShotEffect extends ShotEffect
         Piece shooter = bangobj.pieces.get(shooterId);
         
         if (target == null) {
-            log.warning("Missing target for spring shot effect " +
-                        "[id=" + targetId + "].");
+            log.warning("Missing target for spring shot effect", "id", targetId);
             return false;
         } else {
             damage(bangobj, obs, shooter.owner, shooter, target, getBaseDamage(target),

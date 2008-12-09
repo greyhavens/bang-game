@@ -109,7 +109,7 @@ public class BankView extends ShopView
                 _fsell.notePostedOffers(sells);
             }
             public void requestFailed (String reason) {
-                log.warning("Failed to fetch our posted offers " + "[reason=" + reason + "].");
+                log.warning("Failed to fetch our posted offers", "reason", reason);
             }
         };
         bankobj.service.getMyOffers(_ctx.getClient(), ol);

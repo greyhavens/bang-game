@@ -48,7 +48,7 @@ public class BoardManager
         for (BoardRecord record : _brepo.loadBoards()) {
             // sanity check boards as creators are known to fuck up
             if (record.players < 2 || record.players > GameCodes.MAX_PLAYERS) {
-                log.warning("Invalid board record [record=" + record + "].");
+                log.warning("Invalid board record", "record", record);
                 continue;
             }
 
@@ -103,7 +103,7 @@ public class BoardManager
                     choices[ii] = new BoardRecord(BoardFile.loadFrom(round.bdata));
                     continue;
                 } catch (Exception e) {
-                    log.warning("Failed to load board data [round=" + round + "].", e);
+                    log.warning("Failed to load board data", "round", round, e);
                 }
             }
 
@@ -121,8 +121,7 @@ public class BoardManager
             BoardList[] candvec = _byscenario.get(scenario);
             BoardList candidates = (candvec == null) ? null : candvec[players-2];
             if (candidates == null) {
-                log.warning("Aiya! Missing boards [players=" + players +
-                            ", scenario=" + scenario + "].");
+                log.warning("Aiya! Missing boards", "players", players, "scenario", scenario);
                 continue;
             }
 

@@ -31,8 +31,7 @@ public class TutorialUtil
                 config = (TutorialConfig)
                     CompiledConfig.loadConfig(rmgr.getResource(path));
             } catch (Exception e) {
-                log.warning("Failed to load tutorial config " +
-                        "[path=" + path + "]", e);
+                log.warning("Failed to load tutorial config", "path", path, e);
                 config = _error;
             }
             _configs.put(ident, config);

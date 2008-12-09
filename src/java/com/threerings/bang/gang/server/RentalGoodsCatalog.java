@@ -171,8 +171,8 @@ public class RentalGoodsCatalog
                     ArticleCatalog.Article article =
                         _alogic.getArticleCatalog().getArticle(_good.getType());
                     if (article == null) {
-                        log.warning("Requested to create article for unknown catalog entry " +
-                                "[who=" + _user.who() + ", good=" + _good + "].");
+                        log.warning("Requested to create article for unknown catalog entry",
+                                    "who", _user.who(), "good", _good);
                         throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
                     }
                     // our arguments are colorization ids

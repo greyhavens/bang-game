@@ -65,14 +65,12 @@ public class TeleportEffect extends Effect
     {
         Teleporter source = (Teleporter)bangobj.pieces.get(sourceId);
         if (source == null) {
-            log.warning("Missing source teleporter for teleport effect [id=" +
-                sourceId + "].");
+            log.warning("Missing source teleporter for teleport effect", "id", sourceId);
             return;
         }
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing piece for teleporter effect [id=" +
-                    pieceId + "].");
+            log.warning("Missing piece for teleporter effect", "id", pieceId);
             return;
         }
 
@@ -145,8 +143,7 @@ public class TeleportEffect extends Effect
     {
         _piece = bangobj.pieces.get(pieceId);
         if (_piece == null) {
-            log.warning("Missing teleported piece for teleport effect " +
-                        "[id=" + pieceId + "].");
+            log.warning("Missing teleported piece for teleport effect", "id", pieceId);
             return false;
         }
 

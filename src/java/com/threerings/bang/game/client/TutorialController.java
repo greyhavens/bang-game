@@ -138,7 +138,7 @@ public class TutorialController
 
         if (_pending == null || !event.matches(_pending.getEvent()) ||
             count < _pending.getCount() || (_pending.getId() != -1 && _pending.getId() != id)) {
-            log.info("Ignoring tutorial event: " + event + " (" + count + "), id=" + id +".");
+            log.info("Ignoring tutorial event: " + event + " (" + count + "), id", id +".");
             return;
         }
         log.info("Matched tutorial event: " + event + " (" + count + ").");
@@ -242,8 +242,7 @@ public class TutorialController
                 }
                 _view.view.centerCameraOnPiece(p);
             } else {
-                log.warning("Requested to center camera on unknown entity [what=" + what +
-                            ", id=" + id + "].");
+                log.warning("Requested to center camera on unknown entity", "what", what, "id", id);
             }
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
@@ -279,7 +278,7 @@ public class TutorialController
             // wait for the specified event
             _pending = (TutorialConfig.WaitAction)action;
 
-            log.info("Waiting [event=" + _pending.getEvent() + ", action=" + _pending + "].");
+            log.info("Waiting", "event", _pending.getEvent(), "action", _pending);
 
             boolean completed = false;
 

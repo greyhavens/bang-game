@@ -210,8 +210,7 @@ public class ActiveSprite extends PieceSprite
     {
         if (handler != null) {
             if (_actionHandlers.contains(handler)) {
-                log.warning("Attempting to add duplicate ActionHandler " +
-                        "[handler=" + handler + "].");
+                log.warning("Attempting to add duplicate ActionHandler", "handler", handler);
                 return;
             }
             _actionHandlers.add(handler);

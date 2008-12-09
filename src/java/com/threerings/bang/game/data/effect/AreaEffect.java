@@ -51,8 +51,7 @@ public abstract class AreaEffect extends MultipleTargetEffect
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece target = bangobj.pieces.get(pieces[ii]);
             if (target == null) {
-                log.warning("Missing piece for area effect [pid=" + pieces[ii] +
-                            ", effect=" + this + "].");
+                log.warning("Missing piece for area effect", "pid", pieces[ii], "effect", this);
                 success = false;
                 continue;
             }

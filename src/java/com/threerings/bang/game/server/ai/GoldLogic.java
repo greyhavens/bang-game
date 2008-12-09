@@ -95,8 +95,8 @@ public class GoldLogic extends AILogic
         }
 
         if (oclaim == null) {
-            log.warning("Missing own counter for AI unit [where=" + _bangmgr.where() +
-                        ", pidx=" + _pidx + "].");
+            log.warning("Missing own counter for AI unit", "where", _bangmgr.where(),
+                        "pidx", _pidx);
             return;
         }
         if (_claimloc == null) {

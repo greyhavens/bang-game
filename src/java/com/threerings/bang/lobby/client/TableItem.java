@@ -156,8 +156,8 @@ public class TableItem extends BContainer
 
             // sanity check
             if (position == -1) {
-                log.warning("Unable to figure out what position a <join> " +
-                            "click came from [event=" + event + "].");
+                log.warning("Unable to figure out what position a <join> click came from",
+                            "event", event);
             } else {
                 // otherwise, request to join the table at this position
                 _tdtr.joinTable(table.tableId, position);
@@ -172,7 +172,7 @@ public class TableItem extends BContainer
             _ctx.getLocationDirector().moveTo(table.gameOid);
 
         } else {
-            log.warning("Received unknown action [event=" + event + "].");
+            log.warning("Received unknown action", "event", event);
         }
     }
 

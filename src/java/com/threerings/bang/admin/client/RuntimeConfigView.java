@@ -71,7 +71,7 @@ public class RuntimeConfigView extends BDecoratedWindow
     // documentation inherited from interface AdminService.ConfigInfoListener
     public void requestFailed (String reason)
     {
-        log.warning("Failed to get config info [reason=" + reason + "].");
+        log.warning("Failed to get config info", "reason", reason);
     }
 
     // documentation inherited from interface ActionListener

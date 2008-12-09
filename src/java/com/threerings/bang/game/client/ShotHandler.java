@@ -25,14 +25,14 @@ public abstract class ShotHandler extends EffectHandler
         _shot = (ShotEffect)_effect;
         _shooter = _bangobj.pieces.get(_shot.shooterId);
         if (_shooter == null) {
-            log.warning("Missing shooter? [shot=" + _shot + "].");
+            log.warning("Missing shooter?", "shot", _shot);
             // abandon ship, we're screwed
             return false;
         }
         if (_shot.targetId != -1) {
             _target = _bangobj.pieces.get(_shot.targetId);
             if (_target == null) {
-                log.warning("Missing target? [shot=" + _shot + "].");
+                log.warning("Missing target?", "shot", _shot);
             }
         }
 

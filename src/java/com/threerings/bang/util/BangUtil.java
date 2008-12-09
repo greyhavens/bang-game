@@ -64,12 +64,11 @@ public class BangUtil
                     lines.add(line);
                 }
             } else {
-                log.warning("Missing resource [path=" + path + "].");
+                log.warning("Missing resource", "path", path);
             }
 
         } catch (Exception e) {
-            log.warning("Failed to read resource file " +
-                    "[path=" + path + "].", e);
+            log.warning("Failed to read resource file", "path", path, e);
 
         } finally {
             StreamUtil.close(in);
@@ -121,8 +120,7 @@ public class BangUtil
                 bin.close();
 
             } catch (Exception e) {
-                log.warning("Failed to read resource file " +
-                        "[path=" + path + "].", e);
+                log.warning("Failed to read resource file", "path", path, e);
             }
         }
 
@@ -135,9 +133,8 @@ public class BangUtil
     {
         Properties props = new Properties();
         if (history.contains(path)) {
-            log.warning("Detected loop in properties inheritance " +
-                        "[path=" + path +
-                        ", history=" + StringUtil.toString(history) + "].");
+            log.warning("Detected loop in properties inheritance", "path", path,
+                        "history", StringUtil.toString(history));
             return props;
         }
         history.add(path);
@@ -148,13 +145,12 @@ public class BangUtil
                 props.load(in);
                 in.close();
             } else {
-                log.warning("Missing resource [path=" + path + "].");
+                log.warning("Missing resource", "path", path);
                 Thread.dumpStack();
             }
 
         } catch (Exception e) {
-            log.warning("Failed to read resource file " +
-                    "[path=" + path + "].", e);
+            log.warning("Failed to read resource file", "path", path, e);
 
         } finally {
             StreamUtil.close(in);
@@ -195,8 +191,7 @@ public class BangUtil
                 return new FileInputStream(file);
             }
         } catch (Exception e) {
-            log.warning("Failed to look up resource " +
-                    "[path=" + path + "].", e);
+            log.warning("Failed to look up resource", "path", path, e);
         }
         return null;
     }
@@ -210,8 +205,7 @@ public class BangUtil
     {
         String value = props.getProperty(key);
         if (value == null) {
-            log.warning("Missing config [type=" + type +
-                        ", key=" + key + "].");
+            log.warning("Missing config", "type", type, "key", key);
             value = "";
         }
         return value;
@@ -228,8 +222,7 @@ public class BangUtil
         try {
             return (value != null) ? Integer.parseInt(value) : defval;
         } catch (Exception e) {
-            log.warning("Invalid config [type=" + type +
-                        ", key=" + key + ", value=" + value + "]: " + e);
+            log.warning("Invalid config", "type", type, "key", key, "value", value, "error", e);
             return defval;
         }
     }
@@ -245,8 +238,7 @@ public class BangUtil
         try {
             return (value != null) ? Float.parseFloat(value) : defval;
         } catch (Exception e) {
-            log.warning("Invalid config [type=" + type +
-                        ", key=" + key + ", value=" + value + "]: " + e);
+            log.warning("Invalid config", "type", type, "key", key, "value", value, "error", e);
             return defval;
         }
     }
@@ -274,8 +266,7 @@ public class BangUtil
             try {
                 evalue = Enum.valueOf(etype, StringUtil.toUSUpperCase(value));
             } catch (Exception e) {
-                log.warning("Invalid enum config [type=" + type + ", key=" + key +
-                            ", value=" + value + "].");
+                log.warning("Invalid enum config", "type", type, "key", key, "value", value);
             }
         }
         return (evalue != null) ? evalue : defval;

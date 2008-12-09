@@ -139,8 +139,7 @@ public class TotemBase extends Prop
     public TotemBonus.Type getType (int idx)
     {
         if (idx < 0 || idx >= _pieces.size()) {
-            log.warning("Requested type of OOB totem " +
-                        "[idx=" + idx + ", have=" + _pieces.size() + "].");
+            log.warning("Requested type of OOB totem", "idx", idx, "have", _pieces.size());
             Thread.dumpStack();
             return TotemBonus.Type.TOTEM_SMALL;
         } else {

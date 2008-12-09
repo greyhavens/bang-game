@@ -242,15 +242,14 @@ public class ShotEffect extends Effect
                     preShotEffects = ArrayUtil.concatenate(preShotEffects,
                         shooter.willShoot(bangobj, target, this));
                 } else {
-                    log.warning("Shot effect missing shooter [id=" +
-                        shooterId + "].");
+                    log.warning("Shot effect missing shooter", "id", shooterId);
                 }
             }
             for (Effect effect : preShotEffects) {
                 effect.prepare(bangobj, dammap);
             }
         } else {
-            log.warning("Shot effect missing target [id=" + targetId + "].");
+            log.warning("Shot effect missing target", "id", targetId);
         }
     }
 

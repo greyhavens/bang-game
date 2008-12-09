@@ -124,8 +124,8 @@ public class BountyConfig extends SimpleStreamableObject
                 missing.add("completed_quote");
             }
             if (missing.size() > 0) {
-                log.warning("Bounty game misconfigured [bounty=" + which + ", game=" + ident +
-                            ", missing=" + missing + "].");
+                log.warning("Bounty game misconfigured", "bounty", which, "game", ident,
+                            "missing", missing);
             }
         }
     }
@@ -298,8 +298,7 @@ public class BountyConfig extends SimpleStreamableObject
     {
         GameInfo info = getGame(game);
         if (info == null) {
-            log.warning("Requested opponent for unknown game [bounty=" + ident +
-                        ", game=" + game + "].");
+            log.warning("Requested opponent for unknown game", "bounty", ident, "game", game);
             return oppai;
         }
 
@@ -322,8 +321,7 @@ public class BountyConfig extends SimpleStreamableObject
         if (oppai.avatar != null && oppai.avatar.image == null &&
                 (oppai.avatar.print == null || oppai.avatar.print.length == 0)) {
             oppai.avatar = null;
-            log.warning("Malformed avatar [bounty=" + ident + ", game=" + game +
-                        ", index=" + index + "].");
+            log.warning("Malformed avatar", "bounty", ident, "game", game, "index", index);
         }
 
         return oppai;
@@ -434,8 +432,8 @@ public class BountyConfig extends SimpleStreamableObject
         Article female = parseArticle(which, props.getProperty("reward_article_female", ""));
         if (male != null || female != null) {
             if (male == null || female == null) {
-                log.warning("Missing article for geneder [which=" + which +
-                            ", male=" + male + ", female=" + female + "].");
+                log.warning("Missing article for geneder", "which", which, "male", male,
+                            "female", female);
             } else {
                 config.reward.articles = new Article[] { male, female };
             }
@@ -446,15 +444,15 @@ public class BountyConfig extends SimpleStreamableObject
             try {
                 config.reward.badge = Enum.valueOf(Badge.Type.class, badge);
             } catch (Exception e) {
-                log.warning("Invalid badge reward specified in bounty [which=" + which +
-                            ", badge=" + badge + "].");
+                log.warning("Invalid badge reward specified in bounty", "which", which,
+                            "badge", badge);
             }
         }
 
         // finally map it
         BountyConfig collide = _configs.put(config.ident, config);
         if (collide != null) {
-            log.warning("Bounty name collision [which=" + which + ", old=" + collide + "].");
+            log.warning("Bounty name collision", "which", which, "old", collide);
         }
 
         log.debug("Registered " + config + ".");
@@ -475,8 +473,8 @@ public class BountyConfig extends SimpleStreamableObject
         }
         String[] bits = article.split(":");
         if (bits.length != 3) {
-            log.warning("Invalid article reward specified in bounty [which=" + which +
-                        ", article=" + article + "].");
+            log.warning("Invalid article reward specified in bounty", "which", which,
+                        "article", article);
             return null;
         }
         return new Article(0, bits[0], bits[1], StringUtil.parseIntArray(bits[2]));

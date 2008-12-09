@@ -95,12 +95,11 @@ public class CattleRustling extends Scenario
 
         // freak out if the board is improperly configured
         if (_cattleSpots.size() == 0) {
-            log.warning("Board has no cattle spots! [board=" + _bangmgr.getBoardInfo() + "].");
+            log.warning("Board has no cattle spots!", "board", _bangmgr.getBoardInfo());
             return;
         }
 
-        log.debug("Placing " + cattle + " cattle in " +
-                 _cattleSpots.size() + " spots.");
+        log.debug("Placing " + cattle + " cattle in " + _cattleSpots.size() + " spots.");
 
         // We want to evenly distribute the cattle over the markers, so we'll
         // loop through the list of spots, adding one cow to each, until we've

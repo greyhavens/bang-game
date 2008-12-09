@@ -184,8 +184,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         Point[] bspots = findRobotSpawnPoints(bangobj, count);
         for (Point bspot : bspots) {
             if (bspot == null) {
-                log.warning("Ran out of spawn spots for logging robots " +
-                            "[where=" + _bangmgr.where() + "]");
+                log.warning("Ran out of spawn spots for logging robots", "where", _bangmgr.where());
                 return;
             }
 

@@ -43,7 +43,7 @@ public class DropCardEffect extends Effect
     {
         int ccount = bangobj.countPlayerCards(_player);
         if (ccount == 0) {
-            log.warning("Couldn't find card to drop [pidx=" + _player + "].");
+            log.warning("Couldn't find card to drop", "pidx", _player);
             return;
         }
         int cidx = RandomUtil.getInt(ccount);
@@ -66,7 +66,7 @@ public class DropCardEffect extends Effect
     {
         _card = bangobj.cards.get(cardId);
         if (_card == null) {
-            log.warning("Missing card to drop [cardId=" + cardId + "].");
+            log.warning("Missing card to drop", "cardId", cardId);
             return false;
         }
         removeAndReport(bangobj, _card, obs);

@@ -106,8 +106,7 @@ public class TableGameView extends BContainer
                 }
             }
             public void requestFailed (int oid, ObjectAccessException cause) {
-                log.warning("Failed to subscribe to table game object [oid=" + oid +
-                    ", cause=" + cause + "].");
+                log.warning("Failed to subscribe to table game object", "oid", oid, "cause", cause);
             }
         })).subscribe(_ctx.getDObjectManager());
 

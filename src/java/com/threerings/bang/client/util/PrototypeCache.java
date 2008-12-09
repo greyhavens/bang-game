@@ -96,8 +96,7 @@ public abstract class PrototypeCache<S, T>
                 try {
                     _prototype = loadPrototype(key);
                 } catch (Exception cause) {
-                    log.warning("Failed to load prototype [key=" + key + ", cause=" +
-                        cause + "].");
+                    log.warning("Failed to load prototype", "key", key, "cause", cause);
                     _cause = cause;
                 }
                 return true;

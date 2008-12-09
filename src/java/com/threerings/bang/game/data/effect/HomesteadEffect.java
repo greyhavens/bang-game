@@ -55,8 +55,7 @@ public class HomesteadEffect extends Effect
     {
         Piece claimer = bangobj.pieces.get(claimerId);
         if (claimer == null) {
-            log.warning("Missing claimer for homestead effect [pieceId=" +
-                claimerId + "].");
+            log.warning("Missing claimer for homestead effect", "pieceId", claimerId);
             return false;
         }
         Homestead stead = (Homestead)bangobj.pieces.get(steadId);

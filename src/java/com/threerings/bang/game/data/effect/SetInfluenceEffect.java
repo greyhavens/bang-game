@@ -45,8 +45,7 @@ public abstract class SetInfluenceEffect extends BonusEffect
 
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
-            log.warning("Missing target for set influence effect " +
-                        "[id=" + pieceId + "].");
+            log.warning("Missing target for set influence effect", "id", pieceId);
             return false;
         }
 

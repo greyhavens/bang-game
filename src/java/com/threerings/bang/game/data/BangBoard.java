@@ -1359,8 +1359,7 @@ public class BangBoard extends SimpleStreamableObject
         // clear out the planning grid
         Arrays.fill(_pgrid, (byte)0);
 
-//         log.info("Recomputing sets for " + piece +
-//                  " [mdist=" + mdist + "].");
+//         log.info("Recomputing sets for " + piece, "mdist", mdist);
 
         // start with 10x our movement points at our current coordinate
         // (and add one to ensure that we always end up with 1 in our

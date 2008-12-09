@@ -89,9 +89,8 @@ public class Look extends SimpleStreamableObject
             }
             Object item = player.inventory.get(articles[ii]);
             if (!(item instanceof Article)) {
-                log.warning("Invalid article referenced in look " +
-                            "[who=" + player.who() + ", look=" + this +
-                            ", idx=" + ii + ", item=" + item + "].");
+                log.warning("Invalid article referenced in look", "who", player.who(),
+                            "look", this, "idx", ii, "item", item);
                 continue;
             }
             compids.add(((Article)item).getComponents());
@@ -117,8 +116,8 @@ public class Look extends SimpleStreamableObject
             }
         }
         if (idx == -1) {
-            log.warning("Requested to configure invalid article in look " +
-                        "[look=" + this + ", article=" + article + "].");
+            log.warning("Requested to configure invalid article in look", "look", this,
+                        "article", article);
             return;
         }
 

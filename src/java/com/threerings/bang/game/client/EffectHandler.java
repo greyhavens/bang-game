@@ -184,8 +184,7 @@ public class EffectHandler extends BoardView.BoardAction
 
         final PieceSprite sprite = _view.getPieceSprite(piece);
         if (sprite == null) {
-            log.warning("Missing sprite for effect [piece=" + piece +
-                        ", effect=" + effect + "].");
+            log.warning("Missing sprite for effect", "piece", piece, "effect", effect);
             return;
         }
 
@@ -398,9 +397,8 @@ public class EffectHandler extends BoardView.BoardAction
         _view.pieceDidMove(piece);
 
         if (_bangobj.tick - _tick >= FAST_TICK_DELTA) {
-            log.info("Performing fast animations [effect=" + _effect +
-                    ", tick=" + _tick + ", bangobj.tick=" + _bangobj.tick +
-                    "].");
+            log.info("Performing fast animations", "effect", _effect, "tick", _tick,
+                     "bangobj.tick", _bangobj.tick);
             sprite.fastAnimations(true);
         }
 
@@ -476,14 +474,14 @@ public class EffectHandler extends BoardView.BoardAction
             case VS_PIECE:
                 Piece piece = _bangobj.pieces.get((Integer)target);
                 if (piece == null) {
-                    log.warning("Missing piece for card played effect " +
-                        "[effect=" + _effect + ", pieceId=" + target + "].");
+                    log.warning("Missing piece for card played effect", "effect", _effect,
+                                "pieceId", target);
                     return;
                 }
                 PieceSprite sprite = _view.getPieceSprite(piece);
                 if (sprite == null) {
-                    log.warning("Missing sprite for card played effect " +
-                        "[effect=" + _effect + ", piece=" + piece + "].");
+                    log.warning("Missing sprite for card played effect", "effect", _effect,
+                                "piece", piece);
                     return;
                 } else {
                     iviz = IconViz.createCardViz(card);
@@ -534,8 +532,7 @@ public class EffectHandler extends BoardView.BoardAction
     {
         final int penderId = notePender();
         if (BoardView.ACTION_DEBUG) {
-            log.info("Queueing effect " + this +
-                     " [viz=" + viz + ", pid=" + penderId + "].");
+            log.info("Queueing effect " + this, "viz", viz, "pid", penderId);
         }
         if (sprite != null) {
             viz.init(_ctx, _view, sprite, new EffectViz.Observer() {
@@ -627,8 +624,7 @@ public class EffectHandler extends BoardView.BoardAction
     {
         final int penderId = notePender();
         if (BoardView.ACTION_DEBUG) {
-            log.info("Queueing effect " + this +
-                     " [action=" + action + ", pid=" + penderId + "].");
+            log.info("Queueing effect " + this, "action", action, "pid", penderId);
         }
         sprite.addObserver(new ActiveSprite.ActionObserver() {
             public void actionCompleted (Sprite sprite, String action) {
@@ -899,8 +895,7 @@ public class EffectHandler extends BoardView.BoardAction
             _view.actionCompleted(this);
         } else {
             if (BoardView.ACTION_DEBUG) {
-                log.info("Not completing " + this +
-                         " [penders=" + _penders + "].");
+                log.info("Not completing " + this, "penders", _penders);
             }
         }
     }

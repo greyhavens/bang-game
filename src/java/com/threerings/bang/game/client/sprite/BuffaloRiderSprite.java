@@ -61,8 +61,8 @@ public class BuffaloRiderSprite extends UnitSprite
     {
         super.pathCompleted();
         if (_effectHandler != null) {
-            log.warning("Buffalo Rider completed attack path without firing " +
-                    "[effectHandler=" + _effectHandler + "].");
+            log.warning("Buffalo Rider completed attack path without firing",
+                        "effectHandler", _effectHandler);
             ((MoveShootHandler)_effectHandler).fireShot();
             _effectHandler = null;
         }

@@ -204,7 +204,7 @@ public class AvatarLogic
         } else if (cclass.endsWith("_t")) {
             return 2;
         } else  {
-            log.warning("Requested color index for non-indexed color [cclass=" + cclass + "].");
+            log.warning("Requested color index for non-indexed color", "cclass", cclass);
             return 0;
         }
     }
@@ -475,7 +475,7 @@ public class AvatarLogic
         try {
             ccomp = _crepo.getComponent(componentId);
         } catch (NoSuchComponentException nsce) {
-            log.warning("Avatar contains non-existent component [compId=" + componentId + "].");
+            log.warning("Avatar contains non-existent component", "compId", componentId);
             return null;
         }
 
@@ -539,25 +539,23 @@ public class AvatarLogic
                 if (aclass.optional) {
                     continue;
                 }
-                log.warning("Requested to purchase look that is missing a non-optional aspect " +
-                            "[who=" + user.who() + ", class=" + acname + "].");
+                log.warning("Requested to purchase look that is missing a non-optional aspect",
+                            "who", user.who(), "class", acname);
                 return null;
             }
 
             AspectCatalog.Aspect aspect = _aspcat.getAspect(acname, config.aspects[ii]);
             if (aspect == null) {
-                log.warning("Requested to purchase look with unknown aspect " +
-                            "[who=" + user.who() + ", class=" + acname +
-                            ", choice=" + config.aspects[ii] + "].");
+                log.warning("Requested to purchase look with unknown aspect", "who", user.who(),
+                            "class", acname, "choice", config.aspects[ii]);
                 return null;
             }
 
             // make sure the aspect is from the appropriate town
             if (BangUtil.getTownIndex(aspect.townId) >
                 BangUtil.getTownIndex(user.townId)) {
-                log.warning("Requested to purchase look in invalid town " +
-                            "[who=" + user.who() + ", intown=" + user.townId +
-                            ", aspect=" + aspect + "].");
+                log.warning("Requested to purchase look in invalid town", "who", user.who(),
+                            "intown", user.townId, "aspect", aspect);
                 return null;
             }
 
@@ -657,8 +655,8 @@ public class AvatarLogic
             }
         }
         if (slot == null) {
-            log.warning("Requested to create article for unknown slot " +
-                        "[pid=" + playerId + ", article=" + article + "].");
+            log.warning("Requested to create article for unknown slot", "pid", playerId,
+                        "article", article);
             return null;
         }
         String type = article.townId + "/" + article.name;
@@ -694,7 +692,7 @@ public class AvatarLogic
             }
         }
         if (article == null) {
-            log.warning("Missing starter clothing article [gender=" + prefix + "].");
+            log.warning("Missing starter clothing article", "gender", prefix);
             return null;
         }
         return createArticle(user.playerId, article, zations);
@@ -717,8 +715,8 @@ public class AvatarLogic
             }
             BucklePartCatalog.Part part = _partcat.getStarter(pclass.name);
             if (part == null) {
-                log.warning("Couldn't find starter buckle part [gang=" + gangobj.name +
-                    ", class=" + pclass.name + "].");
+                log.warning("Couldn't find starter buckle part", "gang", gangobj.name,
+                            "class", pclass.name);
                 continue;
             }
             ColorRecord[] crecs = pickRandomColors(getColorizationClasses(part), gangobj);
@@ -769,8 +767,8 @@ public class AvatarLogic
             for (ArticleCatalog.Component comp : article.components) {
                 ComponentClass cclass = _crepo.getComponentClass(comp.cclass);
                 if (cclass == null) {
-                    log.warning("Missing component classs for article [article=" + article +
-                                ", cclass=" + comp.cclass + "].");
+                    log.warning("Missing component classs for article", "article", article,
+                                "cclass", comp.cclass);
                     continue;
                 }
                 for (int ii = 0; ii < cclass.colors.length; ii++) {
@@ -809,8 +807,8 @@ public class AvatarLogic
                 // the zations are already shifted 16 bits left
                 componentIds[idx++] = ccomp.componentId | zations;
             } catch (NoSuchComponentException nsce) {
-                log.warning("Article references unknown component [article=" + article.name +
-                            ", cclass=" + comp.cclass + ", name=" + comp.name + "].");
+                log.warning("Article references unknown component", "article", article.name,
+                            "cclass", comp.cclass, "name", comp.name);
             }
         }
         return componentIds;
@@ -828,8 +826,8 @@ public class AvatarLogic
             CharacterComponent ccomp = _crepo.getComponent(cclass, part.name);
             componentIds = new int[] { ccomp.componentId | zations };
         } catch (NoSuchComponentException nsce) {
-            log.warning("Buckle part does not correspond to component [part=" + part.name +
-                ", cclass=" + cclass + "].");
+            log.warning("Buckle part does not correspond to component", "part", part.name,
+                        "cclass", cclass);
         }
         return componentIds;
     }

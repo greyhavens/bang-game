@@ -78,8 +78,7 @@ public class RepairEffect extends BonusEffect
 
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing target for repair effect " +
-                        "[id=" + pieceId + "].");
+            log.warning("Missing target for repair effect", "id", pieceId);
             return false;
         }
 

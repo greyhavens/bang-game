@@ -44,7 +44,7 @@ public class RemovePieceEffect extends Effect
     {
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Unable to find piece to remove [pieceId=" + pieceId + "].");
+            log.warning("Unable to find piece to remove", "pieceId", pieceId);
             return false;
         }
         removeAndReport(bangobj, piece, obs);

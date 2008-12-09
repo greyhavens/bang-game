@@ -52,8 +52,7 @@ public class ResurrectEffect extends Effect
     {
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing target for resurrect effect " +
-                        "[id=" + pieceId + "].");
+            log.warning("Missing target for resurrect effect", "id", pieceId);
             return false;
         }
 

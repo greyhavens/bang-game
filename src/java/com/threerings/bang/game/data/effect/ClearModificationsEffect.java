@@ -55,8 +55,7 @@ public class ClearModificationsEffect extends Effect
     {
         _unit = (Unit)bangobj.pieces.get(pieceId);
         if (_unit == null) {
-            log.warning("Missing target for clean modifications effect " +
-                        "[id=" + pieceId + "].");
+            log.warning("Missing target for clean modifications effect", "id", pieceId);
             return false;
         }
 

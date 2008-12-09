@@ -44,8 +44,7 @@ public class ClearPieceEffect extends Effect
     {
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing piece for clear piece effect [id=" +
-                pieceId + "].");
+            log.warning("Missing piece for clear piece effect", "id", pieceId);
             return false;
         }
         removeAndReport(bangobj, piece, obs);

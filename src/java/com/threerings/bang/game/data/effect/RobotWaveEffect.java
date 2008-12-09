@@ -108,8 +108,7 @@ public class RobotWaveEffect extends Effect
         for (int treeId : treeIds) {
             TreeBed tree = (TreeBed)bangobj.pieces.get(treeId);
             if (tree == null) {
-                log.warning("Missing tree bed to reset [pieceId=" +
-                    treeId + "].");
+                log.warning("Missing tree bed to reset", "pieceId", treeId);
                 continue;
             }
             if (tree.isAlive()) {

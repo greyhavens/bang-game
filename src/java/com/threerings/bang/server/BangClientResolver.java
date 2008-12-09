@@ -174,9 +174,9 @@ public class BangClientResolver extends CrowdClientResolver
         boolean holdsITPTicket = buser.holdsTicket(BangCodes.INDIAN_POST);
         if (buser.playerId < BangCodes.BETA_PLAYER_CUTOFF && !holdsITPTicket &&
             buser.stats.getIntStat(StatType.GAMES_PLAYED) >= FREE_ITP_GP_REQUIREMENT) {
-            log.info("Granting free ITP ticket to beta player [who=" + username +
-                     ", handle=" + buser.handle + ", pid=" + buser.playerId +
-                     ", games=" + buser.stats.getIntStat(StatType.GAMES_PLAYED) + "].");
+            log.info("Granting free ITP ticket to beta player", "who", username,
+                     "handle", buser.handle, "pid", buser.playerId,
+                     "games", buser.stats.getIntStat(StatType.GAMES_PLAYED));
             TrainTicket ticket = new TrainTicket(buser.playerId, itpidx);
             BangServer.itemrepo.insertItem(ticket);
             BangServer.playrepo.grantTownAccess(buser.playerId, ticket.getTownId());
@@ -387,8 +387,7 @@ public class BangClientResolver extends CrowdClientResolver
                             BangServer.itemrepo.insertItem(item);
                         }
                     } catch (PersistenceException pe) {
-                        log.warning("Failed to update player gang items. [user=" +
-                            buser.who() + "].", pe);
+                        log.warning("Failed to update player gang items.", "user", buser.who(), pe);
                     }
                     return true;
                 }

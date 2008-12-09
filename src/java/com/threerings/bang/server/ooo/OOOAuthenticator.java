@@ -110,8 +110,8 @@ public class OOOAuthenticator extends BangAuthenticator
                 break;
 
             default:
-                log.warning("Unhandled checkCanCreate() response code [ident=" + machIdent +
-                            ", rv=" + rv + "].");
+                log.warning("Unhandled checkCanCreate() response code", "ident", machIdent,
+                            "rv", rv);
                 return SERVER_ERROR;
             }
 
@@ -125,15 +125,15 @@ public class OOOAuthenticator extends BangAuthenticator
 
         } catch (InvalidUsernameException iue) {
             // the client shouldn't allow invalid names, so we just give a generic exception here
-            log.warning("User submitted invalid username? [username=" + username + "].");
+            log.warning("User submitted invalid username?", "username", username);
             return SERVER_ERROR;
 
         } catch (UserExistsException uee) {
             return NAME_IN_USE;
 
         } catch (PersistenceException pe) {
-            log.warning("Error creating arround [username=" + username + ", password=" +
-                    password + ", siteId=" + siteId + ", ident=" + machIdent + "].", pe);
+            log.warning("Error creating arround", "username", username, "password", password,
+                        "siteId", siteId, "ident", machIdent, pe);
             return SERVER_ERROR;
         }
     }
@@ -155,7 +155,7 @@ public class OOOAuthenticator extends BangAuthenticator
                 }
             }
         } catch (Exception e) {
-            log.warning("Failed to redeem rewards [who=" + username + "].", e);
+            log.warning("Failed to redeem rewards", "who", username, e);
         }
         return rdata;
     }
@@ -190,8 +190,8 @@ public class OOOAuthenticator extends BangAuthenticator
         if (svers != cvers) {
             rdata.code = (cvers > svers) ? NEWER_VERSION :
                 MessageBundle.tcompose(VERSION_MISMATCH, "" + svers);
-            log.info("Refusing wrong version [creds=" + req.getCredentials() +
-                     ", cvers=" + cvers + ", svers=" + svers + "].");
+            log.info("Refusing wrong version", "creds", req.getCredentials(), "cvers", cvers,
+                     "svers", svers);
             return;
         }
 
@@ -208,7 +208,7 @@ public class OOOAuthenticator extends BangAuthenticator
         // check their provided machine identifier
         String username = creds.getUsername().toString();
         if (StringUtil.isBlank(creds.ident)) {
-            log.warning("Received blank ident [creds=" + creds + "].");
+            log.warning("Received blank ident", "creds", creds);
             BangServer.generalLog("refusing_spoofed_ident " + username +
                                   " ip:" + conn.getInetAddress());
             rdata.code = SERVER_ERROR;
@@ -229,8 +229,7 @@ public class OOOAuthenticator extends BangAuthenticator
             String prefix = creds.ident.substring(0, 1);
             creds.ident = prefix + IdentUtil.decodeIdent(creds.ident.substring(1));
         } catch (Exception e) {
-            log.warning("Received spoofed ident [who=" + username +
-                        ", err=" + e.getMessage() + "].");
+            log.warning("Received spoofed ident", "who", username, "err", e.getMessage());
             BangServer.generalLog("refusing_spoofed_ident " + username +
                                   " ip:" + conn.getInetAddress() + " id:" + creds.ident);
             rdata.code = SERVER_ERROR;
@@ -316,13 +315,11 @@ public class OOOAuthenticator extends BangAuthenticator
                     townidx++;
                 }
             }
-            log.info("townidx=" + townidx + ", townId=" + townId +
-                     ", serverTownIdx=" + serverTownIdx);
+            log.info("Info", "townidx", townidx, "townId", townId, "serverTownIdx", serverTownIdx);
 
             if (townidx < serverTownIdx && !user.isAdmin()) {
-                log.warning("Rejecting access to town server by non-ticket-holder " +
-                            "[who=" + username + ", stownId=" + ServerConfig.townId +
-                            ", ptownId=" + townId + "].");
+                log.warning("Rejecting access to town server by non-ticket-holder",
+                            "who", username, "stownId", ServerConfig.townId, "ptownId", townId);
                 rdata.code = NO_TICKET;
                 return;
             }
@@ -335,27 +332,26 @@ public class OOOAuthenticator extends BangAuthenticator
                 _authrep.validateUser(OOOUser.BANGHOWDY_SITE_ID, user, creds.ident, prec == null);
         switch (vc) {
         case OOOUserRepository.ACCOUNT_BANNED:
-            log.info("Rejecting banned account [who=" + username + "].");
+            log.info("Rejecting banned account", "who", username);
             rdata.code = BANNED + (prec != null && prec.warning != null ? prec.warning : "");
             return;
         case OOOUserRepository.DEADBEAT:
-            log.info("Rejecting deadbeat account [who=" + username + "].");
+            log.info("Rejecting deadbeat account", "who", username);
             rdata.code = DEADBEAT;
             return;
         case OOOUserRepository.NEW_ACCOUNT_TAINTED:
-            log.info("Rejecting tainted machine [who=" + username +
-                     ", ident=" + creds.ident + "].");
+            log.info("Rejecting tainted machine", "who", username, "ident", creds.ident);
             rdata.code = MACHINE_TAINTED;
             return;
         case OOOUserRepository.NO_NEW_FREE_ACCOUNT:
-            log.info("Rejecting new free account [who=" + username + "].");
+            log.info("Rejecting new free account", "who", username);
             rdata.code = NO_NEW_FREE_ACCOUNT;
             return;
         }
 
         if (prec != null && prec.banExpires != null &&
                 prec.banExpires.after(new Date(System.currentTimeMillis()))) {
-            log.info("Rejecting temp banned account [who=" + username + "].");
+            log.info("Rejecting temp banned account", "who", username);
             rdata.code = TEMP_BANNED + prec.banExpires.getTime() + "|" + prec.warning;
             return;
         }
@@ -402,7 +398,7 @@ public class OOOAuthenticator extends BangAuthenticator
             creds.affiliate = String.valueOf(getSiteId(creds.affiliate));
         }
 
-        // log.info("User logged on [user=" + user.username + "].");
+        // log.info("User logged on", "user", user.username);
         rdata.code = BangAuthResponseData.SUCCESS;
 
         // stash their age information

@@ -259,7 +259,7 @@ public class TabbedChatView extends BContainer
 
             } else {
                 // this should never happen
-                log.warning("Unknown speaker [speaker=" + speaker + ", user=" + _user + "].");
+                log.warning("Unknown speaker", "speaker", speaker, "user", _user);
                 return null;
             }
         }

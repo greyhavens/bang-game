@@ -328,22 +328,19 @@ public class UnitConfig
         try {
             config.mode = Enum.valueOf(Mode.class, modestr);
         } catch (Exception e) {
-            log.warning("Invalid mode specified [type=" + type +
-                        ", mode=" + modestr + "].");
+            log.warning("Invalid mode specified", "type", type, "mode", modestr);
         }
         String makestr = StringUtil.toUSUpperCase(BangUtil.requireProperty(type, props, "make"));
         try {
             config.make = Enum.valueOf(Make.class, makestr);
         } catch (Exception e) {
-            log.warning("Invalid make specified [type=" + type +
-                        ", make=" + makestr + "].");
+            log.warning("Invalid make specified", "type", type, "make", makestr);
         }
         String rankstr = StringUtil.toUSUpperCase(BangUtil.requireProperty(type, props, "rank"));
         try {
             config.rank = Enum.valueOf(Rank.class, rankstr);
         } catch (Exception e) {
-            log.warning("Invalid rank specified [type=" + type +
-                        ", rank=" + rankstr + "].");
+            log.warning("Invalid rank specified", "type", type, "rank", rankstr);
         }
 
         config.sightDistance = BangUtil.getIntProperty(type, props, "sight", 5);

@@ -68,8 +68,7 @@ public abstract class FinancialAction extends Invoker.Unit
             if (_coinCost > 0) {
                 // finally "spend" our reserved coins
                 if (!spendCoins(_coinres)) {
-                    log.warning("Failed to spend coin reservation " + this +
-                                " [resid=" + _coinres + "].");
+                    log.warning("Failed to spend coin reservation " + this, "resid", _coinres);
                     fail(BangCodes.INTERNAL_ERROR);
                     return true;
                 }
@@ -238,8 +237,8 @@ public abstract class FinancialAction extends Invoker.Unit
         String account = getCoinAccount();
         String ntype = getClass().getName(), otype = _accountLock.get(account);
         if (otype != null) {
-            log.info("Preventing overlapping financial action [who=" + account +
-                     ", new=" + ntype + ", old=" + otype + "].");
+            log.info("Preventing overlapping financial action", "who", account, "new", ntype,
+                     "old", otype);
             throw new InvocationException(BangCodes.BANG_MSGS, "e.processing_purchase");
         }
         _accountLock.put(account, ntype);

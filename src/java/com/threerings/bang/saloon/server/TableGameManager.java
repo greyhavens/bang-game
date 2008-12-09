@@ -306,8 +306,8 @@ public class TableGameManager implements TableGameProvider
             case HUMAN:
                 PlayerObject user = (PlayerObject)BangServer.omgr.getObject(_tobj.playerOids[pidx]);
                 if (user == null) {
-                    log.warning("Zoiks! Missing player for table game [game=" + _tobj.game +
-                                ", oid=" + _tobj.playerOids[pidx] + "].");
+                    log.warning("Zoiks! Missing player for table game", "game", _tobj.game,
+                                "oid", _tobj.playerOids[pidx]);
                     // clear our now non-existant player from the match
                     clearPlayer(_tobj.playerOids[pidx]);
                     return; // abandon ship

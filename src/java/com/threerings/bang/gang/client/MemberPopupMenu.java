@@ -70,8 +70,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
 
         Object plobj = ctx.getLocationDirector().getPlaceObject();
         if (!(plobj instanceof HideoutObject)) {
-            log.warning("Created member pop-up outside of hideout [plobj=" +
-                plobj + "].");
+            log.warning("Created member pop-up outside of hideout", "plobj", plobj);
             removeAll();
             return;
         }

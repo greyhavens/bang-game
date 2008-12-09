@@ -68,8 +68,8 @@ public class TourneyListView extends BDecoratedWindow
                     populateTourneyList();
                 }
                 public void requestFailed (int oid, ObjectAccessException cause) {
-                    log.warning("Failed to subscribe to tournies object [oid=" + oid +
-                        ", cause=" + cause + "].");
+                    log.warning("Failed to subscribe to tournies object", "oid", oid,
+                                "cause", cause);
                     showError();
                 }
             });

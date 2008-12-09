@@ -105,7 +105,7 @@ public class TownView extends BWindow
             ClassLoader loader = getClass().getClassLoader();
             props.load(loader.getResourceAsStream(mpath));
         } catch (Exception e) {
-            log.warning("Failed to load menu properties [path=" + mpath + "].", e);
+            log.warning("Failed to load menu properties", "path", mpath, e);
         }
 
         // register the commands for our various shops
@@ -244,7 +244,7 @@ public class TownView extends BWindow
         try {
             _bview.loadBoard(_bctx.getUserObject().townId);
         } catch (IOException ioe) {
-            log.warning("Failed to load town board! [error=" + ioe + "].");
+            log.warning("Failed to load town board!", "error", ioe);
         }
     }
 
@@ -367,8 +367,7 @@ public class TownView extends BWindow
         // from interface Subscriber
         public void requestFailed (int oid, ObjectAccessException cause)
         {
-            log.warning("Failed to subscribe to town object! [oid=" + oid +
-                        ", cause=" + cause + "].");
+            log.warning("Failed to subscribe to town object!", "oid", oid, "cause", cause);
         }
 
         // from interface AttributeChangeListener
@@ -532,7 +531,7 @@ public class TownView extends BWindow
         {
             final String cmd = _commands.get(type);
             if (!moveToViewpoint(cmd, 0.75f)) {
-                log.warning("Missing target viewpoint [cmd=" + cmd  + "].");
+                log.warning("Missing target viewpoint", "cmd", cmd);
                 fireCommand(cmd);
                 return;
             }
@@ -599,7 +598,7 @@ public class TownView extends BWindow
             String path = "props/" + townId + "/structures/pop_sign_" + townId + "/sign.png";
             BufferedImage bimg = _ctx.getImageCache().getBufferedImage(path);
             if (bimg == null) {
-                log.warning("Couldn't find population sign image [path=" + path + "].");
+                log.warning("Couldn't find population sign image", "path", path);
                 return;
             }
 

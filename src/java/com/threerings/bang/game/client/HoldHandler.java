@@ -215,8 +215,7 @@ public class HoldHandler extends EffectHandler
         }
         Sprite psprite = bsprite.getTopPiece();
         if (psprite == null) {
-            log.warning("Totem base sprite missing top piece [base=" + base +
-                "].");
+            log.warning("Totem base sprite missing top piece", "base", base);
             return;
         }
         Vector3f from = bsprite.worldToLocal(

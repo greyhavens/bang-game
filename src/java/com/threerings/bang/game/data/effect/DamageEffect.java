@@ -76,7 +76,7 @@ public class DamageEffect extends Effect
                 }
             }
         } else {
-            log.warning("Damage effect missing piece [id=" + pieceId + "].");
+            log.warning("Damage effect missing piece", "id", pieceId);
         }
     }
 
@@ -88,8 +88,7 @@ public class DamageEffect extends Effect
         }
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing piece for damage effect [id=" +
-                    pieceId + "].");
+            log.warning("Missing piece for damage effect", "id", pieceId);
             return false;
         }
         return damage(bangobj, obs, pidx, null, piece, ndamage,

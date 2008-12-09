@@ -117,14 +117,12 @@ public abstract class Effect extends SimpleStreamableObject
         Piece collider = null;
         if (colliderId != -1 &&
             (collider = bangobj.pieces.get(colliderId)) == null) {
-            log.warning("Missing colliding piece " +
-                        "[colliderId=" + colliderId + "].");
+            log.warning("Missing colliding piece", "colliderId", colliderId);
             return false;
         }
         Piece target = bangobj.pieces.get(targetId);
         if (target == null) {
-            log.warning("Missing collision target " +
-                        "[targetId=" + targetId + "].");
+            log.warning("Missing collision target", "targetId", targetId);
             return false;
         }
         return collide(bangobj, obs, colliderIdx, collider, target,
@@ -180,9 +178,8 @@ public abstract class Effect extends SimpleStreamableObject
     {
         // sanity check
         if (!target.isAlive()) {
-            log.warning("Not damaging already dead target " +
-                        "[target=" + target + ", shooter=" + shooterIdx +
-                        ", nd=" + newDamage + ", effect=" + effect + "].");
+            log.warning("Not damaging already dead target", "target", target,
+                        "shooter", shooterIdx, "nd", newDamage, "effect", effect);
             return false;
         }
 

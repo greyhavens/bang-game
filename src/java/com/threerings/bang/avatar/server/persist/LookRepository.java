@@ -138,8 +138,7 @@ public class LookRepository extends SimpleRepository
         int mods = update("delete from LOOKS where PLAYER_ID = " + playerId +
                           " and convert(NAME using binary) = " + JDBCUtil.escape(name));
         if (mods != 1) {
-            log.warning("Unable to delete look [pid=" + playerId +
-                        ", name=" + name + ", mods=" + mods + "].");
+            log.warning("Unable to delete look", "pid", playerId, "name", name, "mods", mods);
         }
     }
 

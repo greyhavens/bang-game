@@ -67,7 +67,7 @@ public class Prop extends BigPiece
         // END TEMP
         PropConfig config = PropConfig.getConfig(type);
         if (config == null) {
-            log.warning("Requested non-existent prop [type=" + type + "].");
+            log.warning("Requested non-existent prop", "type", type);
             return null;
         }
         Prop prop = null;
@@ -80,8 +80,7 @@ public class Prop extends BigPiece
             }
             prop.init(config);
         } catch (Exception e) {
-            log.warning("Failed to create prop [type=" + type +
-                    ", class=" + config.propClass + "].", e);
+            log.warning("Failed to create prop", "type", type, "class", config.propClass, e);
         }
         return prop;
     }

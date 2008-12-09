@@ -70,8 +70,8 @@ public class HoldEffect extends BonusEffect
             effect.drop.position(unit.x, unit.y);
             return effect;
         } catch (Exception e) {
-            log.warning("Failed to instantiate effect class " +
-                    "[class=" + bonus.getConfig().effectClass + "].", e);
+            log.warning("Failed to instantiate effect class",
+                        "class", bonus.getConfig().effectClass, e);
             return null;
         }
     }
@@ -141,8 +141,7 @@ public class HoldEffect extends BonusEffect
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
-            log.warning(
-                    "Missing unit for hold effect [id=" + pieceId + "].");
+            log.warning("Missing unit for hold effect", "id", pieceId);
             return;
         }
 

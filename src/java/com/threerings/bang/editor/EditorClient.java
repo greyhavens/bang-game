@@ -145,8 +145,7 @@ public class EditorClient extends BasicClient
             }
 
             public void resolutionFailed (Name username, Exception reason) {
-                log.warning("Failed to resolve client [who=" +
-                        username + "].", reason);
+                log.warning("Failed to resolve client", "who", username, reason);
                 // TODO: display this error
             }
         };

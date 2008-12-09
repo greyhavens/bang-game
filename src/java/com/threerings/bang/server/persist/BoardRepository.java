@@ -104,8 +104,7 @@ public class BoardRepository extends JORARepository
                         brec.dataHash = (byte[])rs.getObject(2);
                         
                     } else {
-                        log.warning("Couldn't find board data! [brec=" + brec +
-                            "].");
+                        log.warning("Couldn't find board data!", "brec", brec);
                     }
                     
                 } finally {

@@ -87,7 +87,7 @@ public class RockslideEffect extends Effect
         PointSet slidePts = new PointSet();
         int tx = x, ty = y;
         for (int ii = 0; ii <= SLIDE_DISTANCE; ii++) {
-            log.info("Adding tile to rockslide [x=" + tx + ", y=" + ty + "].");
+            log.info("Adding tile to rockslide", "x", tx, "y", ty);
             slidePts.add(tx, ty);
             tx += DX[dir];
             ty += DY[dir];
@@ -163,8 +163,8 @@ public class RockslideEffect extends Effect
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece target = bangobj.pieces.get(pieces[ii]);
             if (target == null) {
-                log.warning("Missing piece for rockslide effect [pid="
-                        + pieces[ii] + ", effect=" + this + "].");
+                log.warning("Missing piece for rockslide effect", "pid", pieces[ii],
+                            "effect", this);
                 success = false;
                 continue;
             }

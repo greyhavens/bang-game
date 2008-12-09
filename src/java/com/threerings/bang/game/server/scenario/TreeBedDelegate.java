@@ -125,8 +125,7 @@ public class TreeBedDelegate extends ScenarioDelegate
                             ((Unit)piece).generateMoveEffect(
                                 bangobj, spot.x, spot.y, null));
                     } else {
-                        log.warning("Unable to find spot to move unit " +
-                            "[unit=" + piece + "].");
+                        log.warning("Unable to find spot to move unit", "unit", piece);
                     }
                 } else if (piece instanceof Bonus) {
                     PuntEffect effect = PuntEffect.puntBonus(

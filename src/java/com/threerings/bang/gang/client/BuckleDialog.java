@@ -433,7 +433,7 @@ public class BuckleDialog extends BDecoratedWindow
                 if (icon == null) {
                     BucklePart part = _parts.get(partId);
                     if (part == null) {
-                        log.warning("Buckle icon missing from inventory [partId=" + partId + "].");
+                        log.warning("Buckle icon missing from inventory", "partId", partId);
                         continue;
                     }
                     _icons.put(partId, icon = new PreviewIcon(part));

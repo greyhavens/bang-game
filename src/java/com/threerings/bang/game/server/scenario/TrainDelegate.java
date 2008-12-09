@@ -310,9 +310,9 @@ public class TrainDelegate extends ScenarioDelegate
                     RandomUtil.pickRandom(adjacent, behind);
 
             } else {
-                log.warning("Train configured to move to non-existent track!? " +
-                            "[in=" + _bangmgr.where() + ", first=" + first +
-                            ", tracks=" + bangobj.getTracks().keySet() + "].");
+                log.warning("Train configured to move to non-existent track!?",
+                            "in", _bangmgr.where(), "first", first,
+                            "tracks", bangobj.getTracks().keySet());
             }
 
             // if there's nowhere to go, flag to disappear on next tick

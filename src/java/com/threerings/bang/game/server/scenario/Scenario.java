@@ -184,9 +184,8 @@ public abstract class Scenario
             try {
                 validate = delegate.tick(bangobj, tick) || validate;
             } catch (Exception e) {
-                log.warning("Delegate choked on tick " +
-                        "[game=" + _bangmgr.where() + ", tick=" + tick +
-                        ", delegate=" + delegate + "].", e);
+                log.warning("Delegate choked on tick", "game", _bangmgr.where(), "tick", tick,
+                            "delegate", delegate, e);
             }
         }
         return validate;
@@ -218,8 +217,7 @@ public abstract class Scenario
         int bprob = bangobj.gdata.livePlayers - bonuses - 1;
         int rando = RandomUtil.getInt(40);
         if (bprob < 0 || rando > bprob*10) {
-            log.debug("No bonus, probability " + bprob + " in 10 (" +
-                     rando + ").");
+            log.debug("No bonus, probability " + bprob + " in 10 (" + rando + ").");
             return false;
         }
 
@@ -279,8 +277,7 @@ public abstract class Scenario
         // determine who can reach the selected spot and use that information
         // to select and place a bonus there
         ArrayIntSet[] reachers = computeReachers(bangobj, pieces, spots);
-//         log.info("Placing bonus at +" + x + "+" + y +
-//             " [reachers=" + reachers[0] + "].");
+//         log.info("Placing bonus at +" + x + "+" + y +// "", "reachers", reachers[0]);
         placeBonus(bangobj, Bonus.selectBonus(bangobj, reachers[0]), x, y);
         return true;
     }
@@ -535,8 +532,7 @@ public abstract class Scenario
         Bonus drop = Bonus.createBonus(BonusConfig.getConfig(bonusName));
         Point spot = bangobj.board.getOccupiableSpot(x, y, 0, 3, null);
         if (spot == null) {
-            log.info("Unable to drop bonus for lack of spot [x=" + x +
-                    ", y=" + y + "].");
+            log.info("Unable to drop bonus for lack of spot", "x", x, "y", y);
             return null;
         }
         drop.assignPieceId(bangobj);

@@ -154,7 +154,7 @@ public class RenderUtil
         if (texs == null) {
             TerrainConfig terrain = TerrainConfig.getConfig(code);
             if (terrain == null) {
-                log.warning("Requested ground texture for unknown terrain [code=" + code + "].");
+                log.warning("Requested ground texture for unknown terrain", "code", code);
                 return null;
             }
             _groundTexs.put(code, texs = new ArrayList<WeakReference<Texture>>());
@@ -167,7 +167,7 @@ public class RenderUtil
                 texs.add(new WeakReference<Texture>(null));
             }
             if (texs.isEmpty()) {
-                log.warning("Found no ground textures [type=" + terrain + "].");
+                log.warning("Found no ground textures", "type", terrain);
             }
         }
         int tsize = texs.size();

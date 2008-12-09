@@ -149,7 +149,7 @@ public class SongDownloadView extends BDecoratedWindow
             _copier.start();
 
         } catch (Exception e) {
-            log.warning("Unable to start download [ident=" + ident + ", error=" + e + "].");
+            log.warning("Unable to start download", "ident", ident, "error", e);
             reportFailure(_msgs.get("m.internal_error"));
         }
     }
@@ -266,14 +266,13 @@ public class SongDownloadView extends BDecoratedWindow
 
                 // be sure to report completion
                 if (percent != 100) {
-                    log.warning("Didnt't make it to 100%? [expected=" + length +
-                                ", got=" + totalin + ", pct=" + percent + "].");
+                    log.warning("Didnt't make it to 100%?", "expected", length, "got", totalin,
+                                "pct", percent);
                     reportProgress(100);
                 }
 
             } catch (IOException ioe) {
-                log.warning("Download failed [source=" + getInput() +
-                        ", target=" + _target + "].", ioe);
+                log.warning("Download failed", "source", getInput(), "target", _target, ioe);
                 reportError(ioe.getMessage());
             }
 

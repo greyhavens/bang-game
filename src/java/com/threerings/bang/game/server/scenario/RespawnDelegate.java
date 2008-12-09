@@ -89,8 +89,8 @@ public class RespawnDelegate extends ScenarioDelegate
             Point spot = _parent.getStartSpot(unit.owner);
             Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
             if (bspot == null) {
-                log.warning("Unable to locate spawn spot for to-be-respawned unit [unit=" + unit +
-                            ", spot=" + spot + "].");
+                log.warning("Unable to locate spawn spot for to-be-respawned unit", "unit", unit,
+                            "spot", spot);
                 // stick him back on the queue for a few ticks later
                 unit.setRespawnTick((short)(tick + _respawnTicks));
                 _respawns.add(unit);

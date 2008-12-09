@@ -56,8 +56,7 @@ public class Tactician extends Unit
             ntarget = null;
         }
 
-        log.debug("Deflecting shot [ntarget=" + ntarget + ", nx=" + nx +
-                 ", ny=" + ny + "].");
+        log.debug("Deflecting shot", "ntarget", ntarget, "nx", nx, "ny", ny);
         if (ntarget == null) {
             effect.deflectShot(nx, ny);
         } else {

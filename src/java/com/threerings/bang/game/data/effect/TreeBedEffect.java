@@ -109,8 +109,7 @@ public class TreeBedEffect extends Effect
         // find the tree
         TreeBed bed = (TreeBed)bangobj.pieces.get(bedId);
         if (bed == null) {
-            log.warning("Missing piece for tree bed effect [pieceId=" +
-                bedId + "].");
+            log.warning("Missing piece for tree bed effect", "pieceId", bedId);
             return false;
         }
         

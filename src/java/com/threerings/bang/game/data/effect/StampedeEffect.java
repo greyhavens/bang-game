@@ -222,8 +222,7 @@ public class StampedeEffect extends Effect
         path.add(start);
         int hdir = growPath(board, path, -1);
         if (path.size() == 1) {
-            log.warning("Couldn't find anywhere for the bison to go! " +
-                "[effect=" + this + "]."); 
+            log.warning("Couldn't find anywhere for the bison to go!", "effect", this);
             return;
         }
         Collections.reverse(path);

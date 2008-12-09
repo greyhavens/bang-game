@@ -457,8 +457,8 @@ public class LogonView extends BWindow
                         String reason = params.substring(idx + 1);
                         showTempBanDialog(reason, time);
                     } catch (NumberFormatException nfe) {
-                        log.warning("Unable to read time from temp banned message [cmsg="
-                                + cmsg + ".");
+                        log.warning("Unable to read time from temp banned message",
+                                    "cmsg", cmsg + ".");
                     }
                 }
 

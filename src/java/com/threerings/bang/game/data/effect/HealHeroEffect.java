@@ -83,7 +83,7 @@ public class HealHeroEffect extends BonusEffect
 
         Piece piece = bangobj.pieces.get(heroId);
         if (piece == null) {
-            log.warning("Missing hero for hero heal effect [id=" + heroId + "].");
+            log.warning("Missing hero for hero heal effect", "id", heroId);
             return false;
         }
 

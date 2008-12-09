@@ -31,8 +31,7 @@ public class BonusPointEffect extends BonusEffect
 
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing target for bonus point effect " +
-                        "[id=" + pieceId + "].");
+            log.warning("Missing target for bonus point effect", "id", pieceId);
             return false;
         }
         reportEffect(obs, piece, BONUS_POINT);

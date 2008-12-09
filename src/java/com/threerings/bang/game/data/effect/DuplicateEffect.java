@@ -74,7 +74,7 @@ public class DuplicateEffect extends BonusEffect
         // find a place to put our new unit
         Point spot = bangobj.board.getOccupiableSpot(unit.x, unit.y, 2);
         if (spot == null) {
-            log.info("Dropped duplicate effect. No spots [unit=" + unit + "].");
+            log.info("Dropped duplicate effect. No spots", "unit", unit);
             return;
         }
 
@@ -108,7 +108,7 @@ public class DuplicateEffect extends BonusEffect
 
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing target for dup effect [pid=" + pieceId + "].");
+            log.warning("Missing target for dup effect", "pid", pieceId);
             return false;
         }
 

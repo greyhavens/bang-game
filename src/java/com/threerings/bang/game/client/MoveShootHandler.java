@@ -29,14 +29,14 @@ public class MoveShootHandler extends EffectHandler
         _shot = _moveShoot.shotEffect;
         _shooter = _bangobj.pieces.get(_moveShoot.pieceId);
         if (_shooter == null) {
-            log.warning("Missing shooter? [moveShoot=" + _moveShoot + "].");
+            log.warning("Missing shooter?", "moveShoot", _moveShoot);
             return false;
         }
 
         if (_shot.targetId != -1) {
             _target = _bangobj.pieces.get(_shot.targetId);
             if (_target == null) {
-                log.warning("Missing target? [shot=" + _shot + "].");
+                log.warning("Missing target?", "shot", _shot);
             }
         }
 

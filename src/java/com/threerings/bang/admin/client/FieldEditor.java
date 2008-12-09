@@ -78,8 +78,7 @@ public abstract class FieldEditor extends BContainer
         try {
             return _field.get(_object);
         } catch (Exception e) {
-            log.warning("Failed to fetch field [field=" + _field +
-                    ", object=" + _object + "].", e);
+            log.warning("Failed to fetch field", "field", _field, "object", _object, e);
             return null;
         }
     }
@@ -100,8 +99,7 @@ public abstract class FieldEditor extends BContainer
             try {
                 _object.changeAttribute(_field.getName(), value);
             } catch (ObjectAccessException oae) {
-                log.warning("Failed to update field " + _field.getName() +
-                            ": " + oae);
+                log.warning("Failed to update field " + _field.getName() + ": " + oae);
             }
         }
     }

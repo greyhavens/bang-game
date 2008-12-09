@@ -299,10 +299,10 @@ public class BangManager extends GameManager
     {
         PlayerObject user = (PlayerObject)caller;
         if (!_bangobj.occupants.contains(user.getOid())) {
-            log.warning("Rejecting request for board by non-occupant [who=" + user.who() + "].");
+            log.warning("Rejecting request for board by non-occupant", "who", user.who());
             throw new InvocationException(INTERNAL_ERROR);
         } else if (_bangobj.board == null) {
-            log.warning("Rejecting request for non-existent board [who=" + user.who() + "].");
+            log.warning("Rejecting request for non-existent board", "who", user.who());
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -321,13 +321,13 @@ public class BangManager extends GameManager
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
         if (pidx == -1) {
-            log.warning("Request to select team by non-player [who=" + user.who() + "].");
+            log.warning("Request to select team by non-player", "who", user.who());
             return;
         }
 
         // make sure we're allow to select a team and that we haven't already done so
         if (_bconfig.type != BangConfig.Type.SALOON || _bangobj.bigShots[pidx] != null) {
-            log.info("Rejecting repeat team selection [who=" + user.who() + "].");
+            log.info("Rejecting repeat team selection", "who", user.who());
             return;
         }
 
@@ -354,8 +354,8 @@ public class BangManager extends GameManager
                 // TODO: get pissy if they try to use the same card twice
                 Card card = item.getCard();
                 if (!card.isPlayable(_bangobj, ServerConfig.townId)) {
-                    log.warning("Rejecting request to use nonplayable card [who=" + user.who() +
-                                ", card=" + card + "].");
+                    log.warning("Rejecting request to use nonplayable card", "who", user.who(),
+                                "card", card);
                     continue;
                 }
                 cards[ii] = card;
@@ -369,7 +369,7 @@ public class BangManager extends GameManager
         if (bigShotId == -1) {
             String bstype = _bconfig.plist.get(pidx).bigShot;
             if (bstype == null) {
-                log.warning("No default bigshot specified [who=" + user.who() + "].");
+                log.warning("No default bigshot specified", "who", user.who());
                 return;
             }
             bsunit = new BigShotItem(-1, bstype);
@@ -400,20 +400,19 @@ public class BangManager extends GameManager
         int pidx = getPlayerIndex(user.getVisibleName());
 
         if (!isActivePlayer(pidx)) {
-            log.warning("Rejecting order from inactive player [pidx=" + pidx + "].");
+            log.warning("Rejecting order from inactive player", "pidx", pidx);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         Piece piece = _bangobj.pieces.get(pieceId);
         if (piece == null || piece.owner != pidx) {
             // the unit probably died or was hijacked
-            log.info("Rejecting order for invalid piece [who=" + user.who() + " (" + pidx + "), " +
-                     "piece=" + piece + " (" + pieceId + ")].");
+            log.info("Rejecting order for invalid piece", "who", user.who(), "pidx", pidx,
+                     "piece", piece, "id", pieceId);
             throw new InvocationException(MOVER_NO_LONGER_VALID);
         }
         if (!(piece instanceof Unit)) {
-            log.warning("Rejecting illegal move request [who=" + user.who() +
-                        ", piece=" + piece + "].");
+            log.warning("Rejecting illegal move request", "who", user.who(), "piece", piece);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -468,15 +467,15 @@ public class BangManager extends GameManager
         PlayerObject user = (PlayerObject)caller;
         Card card = _bangobj.cards.get(cardId);
         if (card == null) {
-            log.info("Acking dup play card request [who=" + user.who() + ", sid=" + cardId + "].");
+            log.info("Acking dup play card request", "who", user.who(), "sid", cardId);
             listener.requestProcessed();
             return;
         }
 
         int pidx = getPlayerIndex(user.getVisibleName());
         if (card.owner != pidx || !isActivePlayer(pidx)) {
-            log.warning("Rejecting invalid card request [who=" + user.who() + ", sid=" + cardId +
-                        ", card=" + card + "].");
+            log.warning("Rejecting invalid card request", "who", user.who(), "sid", cardId,
+                        "card", card);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -617,9 +616,8 @@ public class BangManager extends GameManager
 
                     // apply the shot effect
                     if (!deployEffect(unit.owner, effect)) {
-                        log.warning("Failed to deploy shot effect [unit=" + unit +
-                                    ", move=" + x + "/" + y + ", target=" + target +
-                                    ", dam1=" + dam1 + ", dam2=" + dam2+ "].");
+                        log.warning("Failed to deploy shot effect", "unit", unit, "move", x+"/"+y,
+                                    "target", target, "dam1", dam1, "dam2", dam2+ "].");
                     } else if (unit.owner != -1) {
                         _bangobj.stats[unit.owner].incrementStat(StatType.SHOTS_FIRED, 1);
                     }
@@ -809,7 +807,7 @@ public class BangManager extends GameManager
             break;
 
         default:
-            log.warning("Unable to start next phase [game=" + where() + ", state=" + state + "].");
+            log.warning("Unable to start next phase", "game", where(), "state", state);
             Thread.dumpStack();
             break;
         }
@@ -826,8 +824,7 @@ public class BangManager extends GameManager
         OccupantInfo occInfo = _occInfo.get(bodyOid);
         if (pidx != -1 && isActivePlayer(pidx) && occInfo != null &&
             occInfo.status == OccupantInfo.DISCONNECTED && _bangobj.isInPlay()) {
-            log.info("Booting disconnected player [game=" + where() +
-                     ", who=" + occInfo.username + "].");
+            log.info("Booting disconnected player", "game", where(), "who", occInfo.username);
             endPlayerGame(pidx);
         }
 
@@ -851,7 +848,7 @@ public class BangManager extends GameManager
     protected void didStartup ()
     {
         super.didStartup();
-        log.info("Manager started up [where=" + where() + "].");
+        log.info("Manager started up", "where", where());
 
         // set up the bang object
         _bangobj = (BangObject)_gameobj;
@@ -921,7 +918,7 @@ public class BangManager extends GameManager
         _invmgr.clearDispatcher(_bangobj.service);
         BangServer.adminmgr.statobj.removeFromGames(_bangobj.getOid());
         _bangobj.removeListener(BangServer.playmgr.receivedChatListener);
-        log.info("Manager shutdown [where=" + where() + "].");
+        log.info("Manager shutdown", "where", where());
     }
 
     @Override // documentation inherited
@@ -1093,7 +1090,7 @@ public class BangManager extends GameManager
         // make sure we have a board at all
         final RoundRecord round = _rounds[_bangobj.roundId];
         if (round.board == null) {
-            log.warning("Missing board, cannot start round [where=" + where() + "].");
+            log.warning("Missing board, cannot start round", "where", where());
             cancelGame();
             return;
         }
@@ -1199,8 +1196,8 @@ public class BangManager extends GameManager
         }
         // if we lack sufficient numbers, freak out
         if (starts.size() < getPlayerSlots()) {
-            log.warning("Board has insufficient start spots [game=" + where() +
-                        ", need=" + getPlayerSlots() + "].");
+            log.warning("Board has insufficient start spots", "game", where(),
+                        "need", getPlayerSlots());
             cancelGame();
             return;
         }
@@ -1384,8 +1381,8 @@ public class BangManager extends GameManager
                     if (config == null || config.scripCost < 0 || !config.hasAccess(user) ||
                             config.rank != UnitConfig.Rank.NORMAL ||
                             ServerConfig.townIndex < BangUtil.getTownIndex(config.getTownId())) {
-                        log.warning("Player requested to purchase illegal unit [who=" + user.who() +
-                                    ", unit=" + config.type + "].");
+                        log.warning("Player requested to purchase illegal unit", "who", user.who(),
+                                    "unit", config.type);
                         units[ii] = null;
                         continue;
                     }
@@ -1457,7 +1454,7 @@ public class BangManager extends GameManager
             return;
         }
 
-        log.debug("Starting next phase [cur=" + _bangobj.state + "].");
+        log.debug("Starting next phase", "cur", _bangobj.state);
         switch (_bangobj.state) {
         case BangObject.SELECT_PHASE:
         case BangObject.SKIP_SELECT_PHASE:
@@ -1485,8 +1482,8 @@ public class BangManager extends GameManager
             break;
 
         default:
-            log.warning("checkStartNextPhase() called during invalid phase! " +
-                        "[where=" + where() + ", state=" + _bangobj.state + "].");
+            log.warning("checkStartNextPhase() called during invalid phase!", "where", where(),
+                        "state", _bangobj.state);
             break;
         }
     }
@@ -1533,8 +1530,8 @@ public class BangManager extends GameManager
                 _rounds[_bangobj.roundId].duration = _bangobj.duration;
 
             } catch (InvocationException ie) {
-                log.warning("Scenario initialization failed [game=" + where() +
-                            ", scen=" + _scenario + ", error=" + ie.getMessage() + "].");
+                log.warning("Scenario initialization failed", "game", where(), "scen", _scenario,
+                            "error", ie.getMessage());
                 SpeakUtil.sendAttention(_bangobj, GAME_MSGS, ie.getMessage());
                 // TODO: cancel the round (or let the scenario cancel it on the first tick?)
             }
@@ -1614,7 +1611,7 @@ public class BangManager extends GameManager
      */
     protected void tick (short tick)
     {
-        log.debug("Ticking [tick=" + tick + ", pcount=" + _bangobj.pieces.size() + "].");
+        log.debug("Ticking", "tick", tick, "pcount", _bangobj.pieces.size());
 
         // allow pieces to tick down and possibly die
         Piece[] pieces = _bangobj.getPieceArray();
@@ -2097,8 +2094,8 @@ public class BangManager extends GameManager
                 try {
                     recordStats(prec.user, ii, award, gameSecs/60, allRoundsCoop);
                 } catch (Throwable t) {
-                    log.warning("Failed to record stats [who=" + _bangobj.players[ii] +
-                            ", idx=" + ii + ", award=" + award + "].", t);
+                    log.warning("Failed to record stats", "who", _bangobj.players[ii], "idx", ii,
+                                "award", award, t);
                 }
 
             } else if (prec.user.isActive()) {
@@ -2284,8 +2281,8 @@ public class BangManager extends GameManager
         // resign anyone that has not selected a team
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (!isAI(ii) && _bangobj.playerInfo[ii].readyState != targetState) {
-                log.info("Player failed to make a selection in time [game=" + where() +
-                         ", state=" + targetState + ", who=" + _bangobj.players[ii] + "].");
+                log.info("Player failed to make a selection in time", "game", where(),
+                         "state", targetState, "who", _bangobj.players[ii]);
                 endPlayerGame(ii);
             }
         }
@@ -2314,8 +2311,8 @@ public class BangManager extends GameManager
             Point spot = unit.computeShotLocation(
                 _bangobj.board, target, _moves, false);
             if (spot == null) {
-//                 log.info("Unable to find place from which to shoot. [piece=" + unit +
-//                          ", target=" + target + ", moves=" + _moves + "].");
+//                 log.info("Unable to find place from which to shoot.", "piece", unit,
+//                          "target", target, "moves", _moves);
                 throw new InvocationException(TARGET_UNREACHABLE);
             }
             x = spot.x;
@@ -2331,15 +2328,15 @@ public class BangManager extends GameManager
         int steps = unit.getDistance(x, y);
         if (!unit.isAlive() ||
                 (!(_scenario instanceof Tutorial) && unit.ticksUntilMovable(_bangobj.tick) > 0)) {
-            log.info("Unit no longer movable [unit=" + unit + ", alive=" + unit.isAlive() +
-                     ", mticks=" + unit.ticksUntilMovable(_bangobj.tick) + "].");
+            log.info("Unit no longer movable", "unit", unit, "alive", unit.isAlive(),
+                     "mticks", unit.ticksUntilMovable(_bangobj.tick));
             throw new InvocationException(MOVER_NO_LONGER_VALID);
         }
 
         // validate that the move is still legal
         if (!_moves.contains(x, y) && (x != unit.x || y != unit.y)) {
-//             log.info("Unit requested invalid move [unit=" + unit + ", x=" + x + ", y=" + y +
-//                      ", moves=" + _moves + "].");
+//             log.info("Unit requested invalid move", "unit", unit, "x", x, "y", y,
+//                      "moves", _moves);
             throw new InvocationException(MOVE_BLOCKED);
         }
 
@@ -2357,8 +2354,7 @@ public class BangManager extends GameManager
                     continue;
                 }
                 if (lapper.preventsOverlap(munit) && lapper != unit) {
-//                     log.info("Cannot overlap on move [unit=" + unit +
-//                              ", x=" + x + ", y=" + y + "].");
+//                     log.info("Cannot overlap on move", "unit", unit, "x", x, "y", y);
                     throw new InvocationException(MOVE_BLOCKED);
                 }
             }
@@ -2414,15 +2410,14 @@ public class BangManager extends GameManager
         // make sure the target is still valid
         if (!shooter.validTarget(_bangobj, target, false)) {
             // target already dead or something
-//             log.info("Target no longer valid [shooter=" + shooter + ", target=" + target + "].");
+//             log.info("Target no longer valid", "shooter", shooter, "target", target);
             throw new InvocationException(TARGET_NO_LONGER_VALID);
         }
 
         // make sure the target is still reachable
         if (!shooter.targetInRange(x, y, target.x, target.y) ||
             !shooter.checkLineOfSight(_bangobj.board, x, y, target)) {
-//             log.info("Target no longer reachable [shooter=" + shooter +
-//                      ", target=" + target + "].");
+//             log.info("Target no longer reachable", "shooter", shooter, "target", target);
             throw new InvocationException(TARGET_UNREACHABLE);
         }
     }
@@ -2489,10 +2484,10 @@ public class BangManager extends GameManager
     {
         PlayerObject user = (PlayerObject)getPlayer(order.unit.owner);
         if (user != null && user.status != OccupantInfo.DISCONNECTED) {
-//             log.info("Advance order failed [order=" + order + ", who=" + user.who() + "].");
+//             log.info("Advance order failed", "order", order, "who", user.who());
             BangSender.orderInvalidated(user, order.unit.pieceId, reason);
 //         } else {
-//             log.info("Advance order failed [order=" + order + "].");
+//             log.info("Advance order failed", "order", order);
         }
     }
 
@@ -2915,9 +2910,9 @@ public class BangManager extends GameManager
                     BangServer.gangmgr.requireGangPeerProvider(prec.gangId).grantAces(
                         null, prec.user.handle, award.acesEarned);
                 } catch (InvocationException e) {
-                    log.warning("Gang not available to grant aces [gangId=" + prec.gangId +
-                        ", handle=" + prec.user.handle + ", aces=" + award.acesEarned +
-                        ", seconds=" + gameSecs + "].");
+                    log.warning("Gang not available to grant aces", "gangId", prec.gangId,
+                                "handle", prec.user.handle, "aces", award.acesEarned,
+                                "seconds", gameSecs);
                 }
             }
         }
@@ -2936,8 +2931,8 @@ public class BangManager extends GameManager
                         try {
                             BangServer.playrepo.grantScrip(prec.playerId, award.cashEarned);
                         } catch (PersistenceException pe) {
-                            log.warning("Failed to award scrip [who=" + prec.playerId +
-                                    ", scrip=" + award.cashEarned + "]", pe);
+                            log.warning("Failed to award scrip", "who", prec.playerId,
+                                        "scrip", award.cashEarned, pe);
                         }
                     }
 
@@ -2972,9 +2967,8 @@ public class BangManager extends GameManager
                         try {
                             BangServer.ratingrepo.updateRatings(prec.playerId, ratings);
                         } catch (PersistenceException pe) {
-                            log.warning("Failed to persist ratings " +
-                                    "[pid=" + prec.playerId +
-                                    ", ratings=" + StringUtil.toString(ratings) + "]", pe);
+                            log.warning("Failed to persist ratings", "pid", prec.playerId,
+                                        "ratings", StringUtil.toString(ratings), pe);
                         }
                     }
                 }
@@ -3025,16 +3019,14 @@ public class BangManager extends GameManager
     protected void notePlayedCards (final ArrayList<StartingCard> updates,
                                     final ArrayList<StartingCard> removals)
     {
-        log.debug("Noting played cards [updates=" + updates.size() +
-                 ", removals=" + removals.size() + "].");
+        log.debug("Noting played cards", "updates", updates.size(), "removals", removals.size());
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 for (StartingCard scard : updates) {
                     try {
                         BangServer.itemrepo.updateItem(scard.item);
                     } catch (PersistenceException pe) {
-                        log.warning("Failed to update played card " +
-                                "[item=" + scard.item + "]", pe);
+                        log.warning("Failed to update played card", "item", scard.item, pe);
                     }
                 }
                 for (StartingCard scard : removals) {
@@ -3044,8 +3036,7 @@ public class BangManager extends GameManager
                             BangServer.itemrepo.deleteItem(scard.item, "played_last_card");
                         }
                     } catch (PersistenceException pe) {
-                        log.warning("Failed to delete played card " +
-                                "[item=" + scard.item + "]", pe);
+                        log.warning("Failed to delete played card", "item", scard.item, pe);
                     }
                 }
                 return true;
@@ -3137,16 +3128,16 @@ public class BangManager extends GameManager
             // sanity check, though I think this bug is fixed
             Object obj = _bangobj.pieces.get(unit.pieceId);
             if (obj != null && !(obj instanceof Unit)) {
-                log.warning("Our unit became a non-unit!? [where=" + where() +
-                            ", unit=" + unit + ", nunit=" + obj + "].");
+                log.warning("Our unit became a non-unit!?", "where", where(), "unit", unit,
+                            "nunit", obj);
                 return INTERNAL_ERROR;
             }
 
             // make sure this unit is still in play
             Unit aunit = (Unit)obj;
             if (aunit == null || !aunit.isAlive()) {
-                log.info("Advance order no longer valid [order=" + this + ", unit=" +
-                         (aunit == null ? "null" : (aunit + " (" + aunit.isAlive() + ")")) + "].");
+                log.info("Advance order no longer valid", "order", this,
+                         "unit", (aunit == null ? "null" : (aunit + " (" + aunit.isAlive() + ")")));
                 return MOVER_NO_LONGER_VALID;
             }
 
@@ -3278,8 +3269,8 @@ public class BangManager extends GameManager
                     plogic.init(BangManager.this, piece);
                     _pLogics.put(piece.pieceId, plogic);
                 } catch (Exception e) {
-                    log.warning("Failed to create piece logic " +
-                            "[piece=" + piece + ", class=" + pieceLogic + "].", e);
+                    log.warning("Failed to create piece logic", "piece", piece,
+                                "class", pieceLogic, e);
                 }
             }
         }

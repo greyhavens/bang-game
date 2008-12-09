@@ -156,8 +156,7 @@ public class RatingManager
                 try {
                     _ratingrepo.deleteRatings(week);
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to purge weekly ratings [week=" +
-                            week + "].", pe);
+                    log.warning("Failed to purge weekly ratings", "week", week, pe);
                 }
                 return false;
             }
@@ -266,9 +265,8 @@ public class RatingManager
                     try {
                         _ratingrepo.storeScoreTracker(keys[ii], tilers[ii]);
                     } catch (PersistenceException pe) {
-                        log.warning("Error storing perf dist [scenario=" +
-                            keys[ii].scenario + ", players=" +
-                            keys[ii].players + ", error=" + pe + "].");
+                        log.warning("Error storing perf dist", "scenario", keys[ii].scenario,
+                                    "players", keys[ii].players, "error", pe);
                     }
                 }
                 return false;

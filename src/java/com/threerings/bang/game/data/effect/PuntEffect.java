@@ -25,8 +25,7 @@ public class PuntEffect extends MoveEffect
     {
         Point spot = bonus.getDropLocation(bangobj);
         if (spot == null) {
-            log.warning("Unable to find spot to punt bonus " +
-                    "[bonus=" + bonus + "].");
+            log.warning("Unable to find spot to punt bonus", "bonus", bonus);
             return null;
         }
         PuntEffect effect = new PuntEffect();

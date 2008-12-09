@@ -92,8 +92,7 @@ public class HighNoonEffect extends Effect
                 unit.setHindrance(hindrance);
                 reportEffect(obs, unit, UPDATED);
             } else {
-                log.warning("Missing piece for high noon effect [id=" +
-                    pieceId + "].");
+                log.warning("Missing piece for high noon effect", "id", pieceId);
             }
         }
         hindrance.init(bangobj.tick);

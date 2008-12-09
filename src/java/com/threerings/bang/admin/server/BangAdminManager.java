@@ -55,7 +55,7 @@ public class BangAdminManager
     {
         // if this is a zero minute reboot, just do the deed
         if (minutes == 0) {
-            log.info("Performing immediate shutdown [for=" + initiator + "].");
+            log.info("Performing immediate shutdown", "for", initiator);
             _shutmgr.shutdown();
             return;
         }
@@ -70,8 +70,7 @@ public class BangAdminManager
     {
         PlayerObject user = (PlayerObject)caller;
         if (!user.tokens.isSupport()) {
-            log.warning("Got reboot schedule request from non-admin/support " +
-                        "[who=" + user.who() + "].");
+            log.warning("Got reboot schedule request from non-admin/support", "who", user.who());
             return;
         }
         scheduleReboot(minutes, user.who());

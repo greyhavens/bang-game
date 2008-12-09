@@ -56,9 +56,8 @@ public class DefectEffect extends BonusEffect
             }
         }
         if (pidx == -1) {
-            log.warning("Failed to find player for defect " +
-                        "[activator=" + activator + ", pdata=" +
-                        StringUtil.toString(bangobj.pdata) + "].");
+            log.warning("Failed to find player for defect", "activator", activator,
+                        "pdata", StringUtil.toString(bangobj.pdata));
             return;
         }
 

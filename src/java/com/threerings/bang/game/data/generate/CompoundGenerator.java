@@ -93,9 +93,8 @@ public class CompoundGenerator extends EnvironmentGenerator
                     int dist = (1 - getDistance(direction, abldg, neigh));
                     int dx = dist * Piece.DX[direction];
                     int dy = dist * Piece.DY[direction];
-//                     log.info(bldg.pieceId + " is too close to " +
-//                              neigh.pieceId + ". Adjusting [dx=" + dx +
-//                              ", dy=" + dy + "].");
+//                     log.info(bldg.pieceId + " is too close to " + neigh.pieceId + ". Adjusting"
+//                              "dx", dx, "dy", dy);
                     abldg.position(abldg.x + dx, abldg.y + dy);
                     adjusted++;
                 }
@@ -113,8 +112,7 @@ public class CompoundGenerator extends EnvironmentGenerator
             if (rect.contains(bldgs[ii].getBounds())) {
                 pieces.add(bldgs[ii]);
             } else {
-//                 log.info("A " + bldgs[ii].getClass().getName() +
-//                          " ended up off the board.");
+//                 log.info("A " + bldgs[ii].getClass().getName() + " ended up off the board.");
                 bldgs[ii] = null;
             }
         }

@@ -49,8 +49,7 @@ public abstract class SetHindranceEffect extends BonusEffect
 
         _unit = (Unit)bangobj.pieces.get(pieceId);
         if (_unit == null) {
-            log.warning("Missing target for set hindrance effect " +
-                        "[id=" + pieceId + "].");
+            log.warning("Missing target for set hindrance effect", "id", pieceId);
             return false;
         }
 

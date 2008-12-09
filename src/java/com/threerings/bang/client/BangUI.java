@@ -282,7 +282,7 @@ public class BangUI
                 Image icon = ImageCache.createImage(bicon, false);
                 icons[ii] = icon.getData();
             } catch (Exception e) {
-                log.warning("Failed to load icon [path=" + path + "].", e);
+                log.warning("Failed to load icon", "path", path, e);
                 return;
             }
         }
@@ -581,8 +581,8 @@ public class BangUI
                             size -= 2;
                         }
                     } catch (Throwable t) {
-                        log.warning("StyleConstants choked looking up size " +
-                                "[font=" + variant + ", attrs=" + attrs + "].", t);
+                        log.warning("StyleConstants choked looking up size", "font", variant,
+                                    "attrs", attrs, t);
                         size = 9;
                     }
                     return base.deriveFont(style, size);

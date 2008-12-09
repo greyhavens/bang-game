@@ -57,14 +57,14 @@ public class BuckleView extends BaseAvatarView
         try {
             ccomp = ctx.getCharacterManager().getComponentRepository().getComponent(componentId);
         } catch (NoSuchComponentException nsce) {
-            log.warning("Buckle part contains unknown component [part=" + part +
-                ", componentId=" + componentId + "].");
+            log.warning("Buckle part contains unknown component", "part", part,
+                        "componentId", componentId);
             return ImageUtil.createErrorImage(iwidth, iheight);
         }
         ActionFrames af = ccomp.getFrames("static", null);
         if (af == null) {
-            log.warning("Buckle part component lacks static action [part=" + part +
-                ", component=" + ccomp + "].");
+            log.warning("Buckle part component lacks static action", "part", part,
+                        "component", ccomp);
             return ImageUtil.createErrorImage(iwidth, iheight);
         }
         if (tbounds != null) {
@@ -77,7 +77,7 @@ public class BuckleView extends BaseAvatarView
         if (cpart != null) {
             colors = al.getColorizationClasses(cpart);
         } else {
-            log.warning("Buckle part not listed in catalog [part=" + part + "].");
+            log.warning("Buckle part not listed in catalog", "part", part);
         }
         Colorization[] zations = ctx.getAvatarLogic().decodeColorizations(fqComponentId, colors);
         return getPartImage(

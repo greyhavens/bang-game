@@ -156,7 +156,7 @@ public class BangBoardView extends BoardView
         updatePlacingCard(_mouse.x, _mouse.y);
         createCardCursor(card);
         _ctx.getChatDirector().displayFeedback(
-                "cards", "m.placement_" + _card.getPlacementMode().name());
+            "cards", "m.placement_" + _card.getPlacementMode().name());
         log.info("Placing " + _card);
     }
 
@@ -329,7 +329,7 @@ public class BangBoardView extends BoardView
 //             log.info("Noting pending " + p);
 //         }
         if (ACTION_DEBUG) {
-            log.info("Note Pending Move [pieceId=" + pieceId + "].");
+            log.info("Note Pending Move", "pieceId", pieceId);
         }
         _pendmap.increment(pieceId, 1);
     }
@@ -344,7 +344,7 @@ public class BangBoardView extends BoardView
 //             log.info("Clearing pending " + p);
 //         }
         if (ACTION_DEBUG) {
-            log.info("Clear Pending Move [pieceId=" + pieceId + "].");
+            log.info("Clear Pending Move", "pieceId", pieceId);
         }
         _pendmap.increment(pieceId, -1);
     }
@@ -672,7 +672,7 @@ public class BangBoardView extends BoardView
             _pointer.setLocalTranslation(new Vector3f(0, 0, psp.getHeight()));
             psp.attachChild(_pointer);
         } else {
-            log.info("Missing sprite for pointing [piece=" + piece + "].");
+            log.info("Missing sprite for pointing", "piece", piece);
         }
     }
 
@@ -1300,8 +1300,8 @@ public class BangBoardView extends BoardView
         // Some effects are valid after a unit is killed, others are not,
         // let's make a note when this happens but it's no longer insane
         if (_pendmap.get(pieceId) > 0) {
-            log.info("Piece with pending actions killed [id=" + pieceId +
-                        ", pendcount=" + _pendmap.get(pieceId) + "].");
+            log.info("Piece with pending actions killed", "id", pieceId,
+                     "pendcount", _pendmap.get(pieceId));
         }
 
         // clear out any advance order for this piece
@@ -1599,7 +1599,7 @@ public class BangBoardView extends BoardView
                 target.setPossibleShot(possible);
                 dest.add(p.x, p.y);
             } else {
-                log.warning("No sprite for unit! [unit=" + p + "].");
+                log.warning("No sprite for unit!", "unit", p);
             }
         }
     }
@@ -1764,8 +1764,7 @@ public class BangBoardView extends BoardView
             // might no longer be valid but handleClickToMove will ignore
             // us in that case
             if (oaction[3] == -1) {
-                log.info("Reissuing click to move +" + oaction[1] +
-                    "+" + oaction[2]);
+                log.info("Reissuing click to move +" + oaction[1] + "+" + oaction[2]);
                 handleClickToMove(oaction[1], oaction[2], false);
             }
         }
@@ -1798,12 +1797,12 @@ public class BangBoardView extends BoardView
         // look up the unit we're "acting" with
         Unit actor = (Unit)_bangobj.pieces.get(unitId);
         if (actor == null) {
-            log.warning("Missing piece for advance order [id=" + unitId + "].");
+            log.warning("Missing piece for advance order", "id", unitId);
             return;
         }
         UnitSprite sprite = getUnitSprite(actor);
         if (sprite == null) {
-            log.warning("Missing sprite for advance order [p=" + actor + "].");
+            log.warning("Missing sprite for advance order", "p", actor);
             return;
         }
         _orders.put(unitId, new AdvanceOrder(sprite, tx, ty, targetId));
@@ -1933,8 +1932,7 @@ public class BangBoardView extends BoardView
                 asprite.addObserver(_deadRemover);
                 return sprite;
             } else {
-                log.info("Removing dead sprite immediately " +
-                         asprite.getPiece() + ".");
+                log.info("Removing dead sprite immediately " + asprite.getPiece() + ".");
             }
         }
         return super.removePieceSprite(pieceId, why);
@@ -1954,7 +1952,7 @@ public class BangBoardView extends BoardView
                     Piece p = usprite.getPiece();
                     if (sprite.isMoving()) {
                         usprite.cancelMove();
-                        log.warning("Jumped sprite to start [piece=" + p + "].");
+                        log.warning("Jumped sprite to start", "piece", p);
                     }
                     usprite.setLocation(_board, p.x, p.y);
                     usprite.snapToTerrain(false);
@@ -2332,8 +2330,7 @@ public class BangBoardView extends BoardView
         public void actionCompleted (Sprite sprite, String action) {
             ActiveSprite asprite = (ActiveSprite)sprite;
             if (!asprite.isAnimating()) {
-                log.info("Removing dead sprite post-fade " +
-                         asprite.getPiece() + ".");
+                log.info("Removing dead sprite post-fade " + asprite.getPiece() + ".");
                 removeSprite(sprite);
 
                 // let our unit status know if a unit just departed

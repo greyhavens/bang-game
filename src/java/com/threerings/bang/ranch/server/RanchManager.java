@@ -41,29 +41,27 @@ public class RanchManager extends ShopManager
     {
         PlayerObject user = requireShopEnabled(caller);
         if (!user.hasCharacter()) {
-            log.warning("Requested to recruit unit from guest user [who=" + user.who() + "].");
+            log.warning("Requested to recruit unit from guest user", "who", user.who());
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         UnitConfig config = UnitConfig.getConfig(type, false);
         if (config == null) {
-            log.warning("Requested to recruit bogus unit [who=" + user.who() +
-                        ", type=" + type + "].");
+            log.warning("Requested to recruit bogus unit", "who", user.who(), "type", type);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         // make sure this big shot is available for sale in this town
         if (!ListUtil.contains(UnitConfig.getTownUnits(user.townId), config)) {
-            log.warning("Requested to recruit illegal unit [who=" + user.who() +
-                        ", town=" + user.townId + ", type=" + type + "].");
+            log.warning("Requested to recruit illegal unit", "who", user.who(),
+                        "town", user.townId, "type", type);
             throw new InvocationException(ACCESS_DENIED);
         }
 
         // the client should prevent this
         if (name.toString().length() > BigShotItem.MAX_NAME_LENGTH) {
-            log.warning("Requested to recruit bigshot with long name " +
-                        "[who=" + user.who() + ", type=" + type +
-                        ", name=" + name + "].");
+            log.warning("Requested to recruit bigshot with long name", "who", user.who(),
+                        "type", type, "name", name);
             throw new InvocationException(INTERNAL_ERROR);
         }
 

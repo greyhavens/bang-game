@@ -55,8 +55,7 @@ public class BarberManager extends ShopManager
     {
         // this should be prevented by the client
         if (!NameFactory.getValidator().isValidHandle(handle)) {
-            log.warning("User tried to use invalid handle [who=" + user.who() +
-                        ", handle=" + handle + "].");
+            log.warning("User tried to use invalid handle", "who", user.who(), "handle", handle);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -123,8 +122,7 @@ public class BarberManager extends ShopManager
 
         if (StringUtil.isBlank(config.name) ||
             config.name.length() > BarberCodes.MAX_LOOK_NAME_LENGTH) {
-            log.warning("Requested to create look with blank name " +
-                        "[who=" + user.who() + "].");
+            log.warning("Requested to create look with blank name", "who", user.who());
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -146,9 +144,8 @@ public class BarberManager extends ShopManager
         if (current != null) {
             look.articles = current.articles;
         } else {
-            log.warning("Player has no current look from which to copy " +
-                        "articles [who=" + user.who() +
-                        ", poses=" + StringUtil.toString(user.poses) + "].");
+            log.warning("Player has no current look from which to copy articles",
+                        "who", user.who(), "poses", StringUtil.toString(user.poses));
             look.articles = new int[0];
         }
 
@@ -165,17 +162,15 @@ public class BarberManager extends ShopManager
         // locate the look in question
         Look look = user.looks.get(name);
         if (look == null) {
-            log.warning("Asked to configure unknown look [who=" + user.who() +
-                        ", look=" + name +
-                        ", articles=" + StringUtil.toString(articles) + "].");
+            log.warning("Asked to configure unknown look", "who", user.who(), "look", name,
+                        "articles", StringUtil.toString(articles));
             return;
         }
 
         // sanity check
         if (articles == null || articles.length != AvatarLogic.SLOTS.length) {
-            log.warning("Requested to configure invalid articles array " +
-                        "[who=" + user.who() + ", look=" + name +
-                        ", articles=" + StringUtil.toString(articles) + "].");
+            log.warning("Requested to configure invalid articles array", "who", user.who(),
+                        "look", name, "articles", StringUtil.toString(articles));
             return;
         }
 
@@ -185,19 +180,17 @@ public class BarberManager extends ShopManager
                 if (AvatarLogic.SLOTS[ii].optional) {
                     continue;
                 }
-                log.warning("Requested to configure look with missing " +
-                            "non-optional articles [who=" + user.who() +
-                            ", idx=" + ii + ", look=" + name +
-                            ", art=" + StringUtil.toString(articles) + "].");
+                log.warning("Requested to configure look with missing non-optional articles",
+                            "who", user.who(), "idx", ii, "look", name,
+                            "art", StringUtil.toString(articles));
                 return;
             }
 
             Article article = (Article)user.inventory.get(articles[ii]);
             if (article == null || !article.isWearable(user) ||
                 !article.getSlot().equals(AvatarLogic.SLOTS[ii].name)) {
-                log.warning("Asked to configure look with invalid article " +
-                            "[who=" + user.who() + ", article=" + article +
-                            ", slot=" + AvatarLogic.SLOTS[ii].name + "].");
+                log.warning("Asked to configure look with invalid article", "who", user.who(),
+                            "article", article, "slot", AvatarLogic.SLOTS[ii].name);
                 return;
             }
         }
@@ -236,8 +229,7 @@ public class BarberManager extends ShopManager
 
         // sanity check
         if (user.hasCharacter() && user.getLook(Look.Pose.DEFAULT) != null) {
-            log.warning("User tried to recreate avatar [who=" + user.who() +
-                        ", handle=" + handle + "].");
+            log.warning("User tried to recreate avatar", "who", user.who(), "handle", handle);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -263,9 +255,8 @@ public class BarberManager extends ShopManager
         if (!ColorConstraints.isValidColor(cpos, "clothes_p", czp, user) ||
             !ColorConstraints.isValidColor(cpos, "clothes_s", czs, user) ||
             !ColorConstraints.isValidColor(cpos, "clothes_t", czt, user)) {
-            log.warning("Tried to create avatar with invalid default article " +
-                        "colorizations [who=" + user.who() + ", look=" + look +
-                        ", zations=" + zations + "].");
+            log.warning("Tried to create avatar with invalid default article colorizations",
+                        "who", user.who(), "look", look, "zations", zations);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -281,9 +272,8 @@ public class BarberManager extends ShopManager
         // doesn't leave too much room for hackery
         maxScrip += AvatarCodes.MAX_STARTER_COST * config.aspects.length;
         if (cost[0] > maxScrip || cost[1] > AvatarCodes.BASE_LOOK_COIN_COST) {
-            log.warning("Tried to create avatar with a non-zero cost look " +
-                        "[who=" + user.who() + ", look=" + look +
-                        ", scrip=" + cost[0] + ", coin=" + cost[1] + "].");
+            log.warning("Tried to create avatar with a non-zero cost look", "who", user.who(),
+                        "look", look, "scrip", cost[0], "coin", cost[1]);
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -313,8 +303,7 @@ public class BarberManager extends ShopManager
                     BangServer.lookrepo.insertLook(user.playerId, look);
 
                 } catch (PersistenceException pe) {
-                    log.warning("Error creating avatar " +
-                            "[for=" + user.who() + ", look=" + look + "].", pe);
+                    log.warning("Error creating avatar", "for", user.who(), "look", look, pe);
                     _error = INTERNAL_ERROR;
                 }
                 return true;
@@ -347,8 +336,7 @@ public class BarberManager extends ShopManager
         // sanity check
         Look look = user.looks.get(name);
         if (look == null) {
-            log.warning("Player requested to select unknown look " +
-                        "[who=" + user.who() + ", look=" + name + "].");
+            log.warning("Player requested to select unknown look", "who", user.who(), "look", name);
             return;
         }
 
@@ -367,8 +355,7 @@ public class BarberManager extends ShopManager
                 try {
                     BangServer.lookrepo.updateSnapshot(user.playerId, avatar.print);
                 } catch (PersistenceException pe) {
-                    log.warning("Error updating snapshot " +
-                            "[for=" + user.who() + ", look=" + look + "].", pe);
+                    log.warning("Error updating snapshot", "for", user.who(), "look", look, pe);
                     _error = INTERNAL_ERROR;
                 }
                 return true;

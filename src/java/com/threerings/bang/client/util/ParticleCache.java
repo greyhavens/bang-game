@@ -113,8 +113,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
         } else if ("sphere".equals(bounds)) {
             bproto = new BoundingSphere();
         } else if (!"none".equals(bounds)) {
-            log.warning("Unknown bounding type for effect [effect=" +
-                key + ", bounds=" + bounds + "].");
+            log.warning("Unknown bounding type for effect", "effect", key, "bounds", bounds);
         }
         if (bproto != null) {
             final BoundingVolume fproto = bproto;

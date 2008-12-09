@@ -135,7 +135,7 @@ public class LightningEffect extends Effect
             }
             Piece target = bangobj.pieces.get(cd.pieceId);
             if (target == null) {
-                log.warning("Missing piece for lightning effect [pieceId=" + cd.pieceId + "].");
+                log.warning("Missing piece for lightning effect", "pieceId", cd.pieceId);
                 continue;
             }
             if (cd.deathEffect != null) {

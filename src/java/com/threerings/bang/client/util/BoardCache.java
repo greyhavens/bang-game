@@ -58,8 +58,7 @@ public class BoardCache
             // make sure we can turn it into a board
             board = BoardData.fromBytes(data);
         } catch (Exception e) {
-            log.warning("Failed to read board from cache! "+
-                        "[bfile=" + bfile + ", error=" + e + "].");
+            log.warning("Failed to read board from cache!", "bfile", bfile, "error", e);
             return null;
         }
 
@@ -96,8 +95,7 @@ public class BoardCache
             fos.write(bdata.toBytes());
             fos.close();
         } catch (IOException e) {
-            log.warning("Failed to store board in cache! [bfile=" + bfile +
-                        ", error=" + e + "].");
+            log.warning("Failed to store board in cache!", "bfile", bfile, "error", e);
         }
     }
 

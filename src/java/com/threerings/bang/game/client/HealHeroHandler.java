@@ -35,26 +35,22 @@ public class HealHeroHandler extends EffectHandler
         }
         Piece source = _bangobj.pieces.get(heal.pieceId);
         if (source == null) {
-            log.warning("Couldn't find source for heal hero effect " +
-                    "[pieceId=" + heal.pieceId + "].");
+            log.warning("Couldn't find source for heal hero effect", "pieceId", heal.pieceId);
             return false;
         }
         MobileSprite ssprite = (MobileSprite)_view.getPieceSprite(source);
         if (ssprite == null) {
-            log.warning("Couldn't find source sprite for heal hero effect " +
-                    "[source=" + source + "].");
+            log.warning("Couldn't find source sprite for heal hero effect", "source", source);
             return false;
         }
         final Piece target = _bangobj.pieces.get(heal.heroId);
         if (target == null) {
-            log.warning("Couldn't find target for heal hero effect " +
-                    "[heroId=" + heal.heroId + "].");
+            log.warning("Couldn't find target for heal hero effect", "heroId", heal.heroId);
             return false;
         }
         final MobileSprite tsprite = (MobileSprite)_view.getPieceSprite(target);
         if (tsprite == null) {
-            log.warning("Couldn't find target sprite for heal hero effect " +
-                    "[target=" + target + "].");
+            log.warning("Couldn't find target sprite for heal hero effect", "target", target);
             return false;
         }
 

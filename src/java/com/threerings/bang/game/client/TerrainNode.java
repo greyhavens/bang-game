@@ -421,18 +421,16 @@ public class TerrainNode extends Node
                     int ur = (sy-sy0)*_vwidth + (sx-sx0),
                         ul = ur - 1, lr = ur - _vwidth, ll = lr - 1;
                     if (_diags.length <= sy+1) {
-                        log.warning("Attempting to access _diags out of " +
-                                "range [_diags.length=" + _diags.length +
-                                ", sy=" + sy + ", sy0=" + sy0 + ", sy1=" +
-                                sy1 + "].");
+                        log.warning("Attempting to access _diags out of range",
+                                    "_diags.length", _diags.length, "sy", sy, "sy0", sy0,
+                                    "sy1", sy1);
                         ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
                         ibuf.put(ll); ibuf.put(lr); ibuf.put(ur);
                         continue;
                     } else if (_diags[sy+1].length <= sx+1) {
-                        log.warning("Attempting to access _diags out of " +
-                                "range [_diags[sy+1].length=" +
-                                _diags[sy+1].length + ", sx=" + sx + ", sx0=" +
-                                sx0 + ", sx1=" + sx1 + "].");
+                        log.warning("Attempting to access _diags out of range",
+                                    "_diags[sy+1].length", _diags[sy+1].length, "sx", sx,
+                                    "sx0", sx0, "sx1", sx1);
                         ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
                         ibuf.put(ll); ibuf.put(lr); ibuf.put(ur);
                         continue;

@@ -121,8 +121,7 @@ public class SaloonManager extends MatchHostManager
         int id = -1;
         if (type == ParlorInfo.Type.RECRUITING) {
             if (!user.canRecruit()) {
-                log.warning("Non-recruiter tried to create recruiting parlor [who=" +
-                    user.who() + "].");
+                log.warning("Non-recruiter tried to create recruiting parlor", "who", user.who());
                 throw new InvocationException(INTERNAL_ERROR);
             }
             creator = BangServer.gangmgr.requireGang(user.gangId).getGangObject().name;
@@ -273,8 +272,7 @@ public class SaloonManager extends MatchHostManager
                 commitList();
             }
             public void requestFailed (Exception cause) {
-                log.warning("Failed to obtain top-ranked player snapshot " +
-                        "[list=" + list + "].", cause);
+                log.warning("Failed to obtain top-ranked player snapshot", "list", list, cause);
                 // ah well, we'll have no avatar
                 commitList();
             }

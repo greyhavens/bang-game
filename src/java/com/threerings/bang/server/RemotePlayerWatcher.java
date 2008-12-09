@@ -78,8 +78,8 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
         for (Container<T> cont : containers) {
             T entry = cont.getEntry(oldHandle);
             if (entry == null) {
-                log.warning("Player registered but missing entry [cont=" + cont +
-                            ", oldHandle=" + oldHandle + ", newHandle=" + newHandle + "].");
+                log.warning("Player registered but missing entry", "cont", cont,
+                            "oldHandle", oldHandle, "newHandle", newHandle);
                 continue; // weirdness?
             }
             cont.renameEntry(entry, newHandle);
@@ -106,8 +106,8 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
         for (Container<T> cont : containers) {
             T entry = cont.getEntry(handle);
             if (entry == null) {
-                log.warning("Player registered but missing entry [cont=" + cont +
-                            ", player=" + handle + "] ("+ where + ").");
+                log.warning("Player registered but missing entry", "cont", cont, "player", handle,
+                            "where", where);
                 continue; // weirdness?
             }
             updateEntry(info, townIndex, entry);
@@ -156,8 +156,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
                     !(event instanceof EntryReplacedEvent)) {
                 @SuppressWarnings("unchecked") T entry = (T)event.getOldEntry();
                 if (entry == null) { // sanity check
-                    log.warning("Missing old entry [event=" + event +
-                            ", container=" + _container + "].");
+                    log.warning("Missing old entry", "event", event, "container", _container);
                 } else {
                     clearPlayer(entry);
                 }
@@ -176,19 +175,18 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
                 _mapping.put(entry.getKey(), list = new ArrayList<Container<T>>());
             }
             if (list.remove(_container)) { // sanity check
-                log.warning("Found stale mapping [entry=" + entry.getKey() +
-                            ", container=" + _container + "].");
+                log.warning("Found stale mapping", "entry", entry.getKey(), "container", _container);
             }
             list.add(_container);
         }
         protected void clearPlayer (T entry) {
             List<Container<T>> list = _mapping.get(entry.getKey());
             if (list == null) { // sanity check
-                log.warning("Missing list when clearing mapping [entry=" + entry.getKey() +
-                            ", container=" + _container + "].");
+                log.warning("Missing list when clearing mapping", "entry", entry.getKey(),
+                            "container", _container);
             } else if (!list.remove(_container)) { // remove and sanity check
-                log.warning("Missing player when clearing mapping [entry=" + entry.getKey() +
-                            ", container=" + _container + "].");
+                log.warning("Missing player when clearing mapping", "entry", entry.getKey(),
+                            "container", _container);
             } else if (list.isEmpty()) {
                 _mapping.remove(entry.getKey());
             }

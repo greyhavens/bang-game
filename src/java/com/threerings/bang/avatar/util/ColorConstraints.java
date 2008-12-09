@@ -52,8 +52,8 @@ public class ColorConstraints
         ArrayList<ColorRecord> colors = new ArrayList<ColorRecord>();
         ClassRecord clrec = pository.getClassRecord(colorClass);
         if (clrec == null) {
-            log.warning("Requested non-existent color class " +
-                        "[class=" + colorClass + ", which=" + entity.which() + "].");
+            log.warning("Requested non-existent color class", "class", colorClass,
+                        "which", entity.which());
             return colors;
         }
 
@@ -63,8 +63,7 @@ public class ColorConstraints
             ColorRecord crec = iter.next();
             Predicate<DObject> pred = preds.get(crec.name);
             if (pred == null) {
-                log.warning("Missing predicate for color [class=" + colorClass +
-                            ", color=" + crec.name + "].");
+                log.warning("Missing predicate for color", "class", colorClass, "color", crec.name);
                 continue;
             }
             if (pred.isMatch(entity)) {
