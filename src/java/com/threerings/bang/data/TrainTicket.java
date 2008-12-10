@@ -6,6 +6,7 @@ package com.threerings.bang.data;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.station.data.StationCodes;
+import com.threerings.bang.util.DeploymentConfig;
 
 /**
  * Represents a train ticket purchased by the player giving them access to a
@@ -54,9 +55,12 @@ public class TrainTicket extends Item
      */
     public int getCoinCost (PlayerObject user)
     {
-        int prevTownIdx = Math.max(0, getTownIndex() - 1);
-        return user.holdsGoldPass(BangCodes.TOWN_IDS[prevTownIdx]) ?
-            0 : StationCodes.TICKET_COINS[getTownIndex()];
+        if (DeploymentConfig.usesOneTime() ||
+            user.holdsGoldPass(BangCodes.TOWN_IDS[Math.max(0, getTownIndex()-1)])) {
+            return 0;
+        } else {
+            return StationCodes.TICKET_COINS[getTownIndex()];
+        }
     }
 
     @Override // documentation inherited
