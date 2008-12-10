@@ -12,13 +12,15 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Lists;
 
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
@@ -447,15 +449,15 @@ public class BangClient extends BasicClient
         PlayerObject user = _ctx.getUserObject();
 
         // see if we're an anonymous user that wants to sign up
-        if (E_SIGN_UP.equals(_popup)) {
-            _popup = null;
+        if (E_SIGN_UP.equals(_whichPopup)) {
+            _whichPopup = null;
             showCreateAccount(false);
             return true;
         }
 
         // if this player does not have a name, and just finished the tutorials, show them the
         // create avatar view
-        if (!user.hasCharacter() && E_CREATE_HANDLE.equals(_popup)) {
+        if (!user.hasCharacter() && E_CREATE_HANDLE.equals(_whichPopup)) {
             displayPopup(new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
             return true;
         }
@@ -1048,9 +1050,9 @@ public class BangClient extends BasicClient
     /**
      * Called to have popup occur after the client has logged on.
      */
-    public void showPopupAfterLogon (String popup)
+    public void showPopupAfterLogon (String whichPopup)
     {
-        _popup = popup;
+        _whichPopup = whichPopup;
     }
 
     /**
@@ -1573,7 +1575,7 @@ public class BangClient extends BasicClient
     protected PlayerService _psvc;
 
     protected BWindow _mview;
-    protected ArrayList<BWindow> _popups = new ArrayList<BWindow>();
+    protected List<BWindow> _popups = Lists.newArrayList();
     protected PardnerChatView _pcview;
     protected SystemChatView _scview;
     protected StatusView _status;
@@ -1589,7 +1591,7 @@ public class BangClient extends BasicClient
     protected String _priorLocationIdent;
     protected int _priorLocationOid;
     protected String _logOffMsg;
-    protected String _popup;
+    protected String _whichPopup;
     protected int _headingTo = -1;
     protected boolean _showingAccount;
 
