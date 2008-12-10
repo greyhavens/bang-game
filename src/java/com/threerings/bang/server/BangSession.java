@@ -84,10 +84,9 @@ public class BangSession extends CrowdSession
             // add tokens provided by our authentication plugin; we can set things directly here
             // because the user object is not yet out in the wild
             for (int ii = 0; ii < 31; ii++) {
-                // TODO: bug?
                 int token = (1 << ii);
-                if (atokens.holdsToken(ii)) {
-                    user.tokens.setToken(ii);
+                if (atokens.holdsToken(token)) {
+                    user.tokens.setToken(token);
                 }
             }
         } else {
