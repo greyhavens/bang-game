@@ -415,7 +415,7 @@
 
   <!-- creates the serialized color repository config -->
   <target name="colorpos">
-    <taskdef name="confcomp" classpathref="btool.classpath"
+    <taskdef name="confcomp" classpathref="tool.classpath"
       classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp dest="${deploy.dir}" parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
               configdef="rsrc/config/media/colordefs.xml"/>
@@ -423,7 +423,7 @@
 
   <!-- creates the serialized article and aspect catalogs -->
   <target name="catalogs">
-    <taskdef name="confcomp" classpathref="tool.classpath"
+    <taskdef name="confcomp" classpathref="btool.classpath"
              classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp dest="${deploy.dir}" configdef="rsrc/avatars/articles.xml"
               parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"/>
