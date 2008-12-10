@@ -278,7 +278,7 @@ public class LogonView extends BWindow
 
         } else if ("anon_account".equals(event.getAction())) {
             String anonymous = BangPrefs.config.getValue("anonymous", "");
-            _ctx.getBangClient().showPopupAfterLogon(BangCodes.SIGN_UP);
+            _ctx.getBangClient().showPopupAfterLogon(BangCodes.E_SIGN_UP);
             logon(BangCodes.FRONTIER_TOWN, anonymous, null);
 
         } else if ("my_account".equals(event.getAction())) {

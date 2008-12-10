@@ -129,7 +129,7 @@ public class TutorialGameOverView extends SteelWindow
             _bctx.getBangClient().showTownView();
             _bctx.getBangClient().clearPopup(this, true);
             if (action.equals("choose")) {
-                _bctx.getBangClient().showPopupAfterLogon(BangCodes.CREATE_HANDLE);
+                _bctx.getBangClient().showPopupAfterLogon(BangCodes.E_CREATE_HANDLE);
             }
 
         } else {

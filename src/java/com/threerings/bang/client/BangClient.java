@@ -447,7 +447,7 @@ public class BangClient extends BasicClient
         PlayerObject user = _ctx.getUserObject();
 
         // see if we're an anonymous user that wants to sign up
-        if (SIGN_UP.equals(_popup)) {
+        if (E_SIGN_UP.equals(_popup)) {
             _popup = null;
             showCreateAccount(false);
             return true;
@@ -455,7 +455,7 @@ public class BangClient extends BasicClient
 
         // if this player does not have a name, and just finished the tutorials, show them the
         // create avatar view
-        if (!user.hasCharacter() && CREATE_HANDLE.equals(_popup)) {
+        if (!user.hasCharacter() && E_CREATE_HANDLE.equals(_popup)) {
             displayPopup(new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
             return true;
         }
@@ -1526,12 +1526,12 @@ public class BangClient extends BasicClient
                     ((BangBootstrapData)_ctx.getClient().getBootstrapData()).saloonOid);
 
             } else {
-                if (CREATE_HANDLE.equals(reason)) {
+                if (E_CREATE_HANDLE.equals(reason)) {
                     _headingTo = placeId;
                     displayPopup(new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
-                } else if (SIGN_UP.equals(reason)) {
+                } else if (E_SIGN_UP.equals(reason)) {
                     showCreateAccount(false);
-                } else if (UNDER_13.equals(reason)) {
+                } else if (E_UNDER_13.equals(reason)) {
                     _headingTo = placeId;
                     displayPopup(new CoppaView(_ctx), true, 800);
                 } else {

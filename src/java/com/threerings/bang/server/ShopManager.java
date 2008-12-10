@@ -35,11 +35,11 @@ public abstract class ShopManager extends PlaceManager
 
         String msg = null;
         if (requireHandle() && !user.hasCharacter()) {
-            msg = BangCodes.CREATE_HANDLE;
+            msg = BangCodes.E_CREATE_HANDLE;
         } else if (!allowAnonymous() && user.tokens.isAnonymous()) {
-            msg = BangCodes.SIGN_UP;
+            msg = BangCodes.E_SIGN_UP;
         } else if (!allowUnder13() && !user.tokens.isOver13()) {
-            msg = BangCodes.UNDER_13;
+            msg = BangCodes.E_UNDER_13;
         }
         return msg;
     }
