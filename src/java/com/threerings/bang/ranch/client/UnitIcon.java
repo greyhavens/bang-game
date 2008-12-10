@@ -15,7 +15,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.bang.client.BangUI;
-
 import com.threerings.bang.client.bui.PaletteIcon;
 
 import com.threerings.bang.data.BangCodes;
@@ -25,8 +24,7 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
 /**
- * Displays a static view of a unit model for use as an icon in interface
- * displays.
+ * Displays a static view of a unit model for use as an icon in interface displays.
  */
 public class UnitIcon extends PaletteIcon
 {
@@ -36,8 +34,7 @@ public class UnitIcon extends PaletteIcon
         _ctx = ctx;
         setText(ctx.xlate(BangCodes.UNITS_MSGS, config.getName()));
         setIcon(BangUI.getUnitIcon(config));
-        String msg = MessageBundle.compose(
-            "m.unit_icon", config.getName(), config.getTip());
+        String msg = MessageBundle.compose("m.unit_icon", config.getName(), config.getTip());
         setTooltipText(ctx.xlate(BangCodes.UNITS_MSGS, msg));
     }
 
@@ -66,8 +63,8 @@ public class UnitIcon extends PaletteIcon
     }
 
     /**
-     * Converts a "recruitable" icon into a "recruited" icon. Clears out any
-     * lock icon being displayed.
+     * Converts a "recruitable" icon into a "recruited" icon. Clears out any lock icon being
+     * displayed.
      */
     public void setItem (int itemId, Name name)
     {
@@ -126,8 +123,7 @@ public class UnitIcon extends PaletteIcon
     @Override // documentation inherited
     protected BComponent createTooltipComponent (String tiptext)
     {
-        // do some hackery to display our badge requirements below our
-        // bonus/penalty stuff
+        // do some hackery to display our badge requirements below our bonus/penalty stuff
         String badgetip = null;
         int sepidx = tiptext.indexOf(BADGE_SEP);
         if (sepidx != -1) {
@@ -136,8 +132,7 @@ public class UnitIcon extends PaletteIcon
         }
 
         BContainer tooltip = GroupLayout.makeVBox(GroupLayout.CENTER);
-        ((GroupLayout)tooltip.getLayoutManager()).setOffAxisJustification(
-            GroupLayout.LEFT);
+        ((GroupLayout)tooltip.getLayoutManager()).setOffAxisJustification(GroupLayout.LEFT);
         ((GroupLayout)tooltip.getLayoutManager()).setGap(15);
         tooltip.add(super.createTooltipComponent(tiptext));
         UnitBonus ubonus = new UnitBonus(_ctx, 25);
