@@ -36,14 +36,16 @@ public class BigShotItem extends Item
         _name = name.toString();
     }
 
-    /** Returns the name given to this Big Shot unit by the player. */
+    /**
+     * Returns the name given to this Big Shot unit by the player or the default name for this Big
+     * Shot if it does not yet have a configured name.
+     */
     public Name getGivenName ()
     {
-        return new Name(_name);
+        return new Name(_name == null ? UnitConfig.getName(_type) : _name);
     }
 
-    /** Returns the type code for this Big Shot. This is the same as the
-     * associated unit type. */
+    /** Returns the type code for this Big Shot. This is the same as the associated unit type. */
     public String getType ()
     {
         return _type;
