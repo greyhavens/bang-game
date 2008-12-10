@@ -208,6 +208,8 @@ public class BangClientResolver extends CrowdClientResolver
 
         // if we're giving out free access to ITP, give the user a temporary ITP ticket for this
         // session (if they don't already have one)
+        int itpidx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
+        boolean holdsITPTicket = buser.holdsTicket(BangCodes.INDIAN_POST);
         if (RuntimeConfig.server.freeIndianPost && !buser.tokens.isAnonymous() && !holdsITPTicket &&
                 !buser.holdsFreeTicket(BangCodes.INDIAN_POST)) {
             buser.addToInventory(new TrainTicket(buser.playerId, itpidx));
