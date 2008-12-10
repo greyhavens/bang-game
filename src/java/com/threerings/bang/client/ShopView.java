@@ -33,8 +33,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 /**
- * Handles some shared stuff for our shop views (General Store, Bank, Barber,
- * etc.)
+ * Handles some shared stuff for our shop views (General Store, Bank, Barber, etc.)
  */
 public abstract class ShopView extends BWindow
     implements PlaceView, MainView
@@ -45,21 +44,18 @@ public abstract class ShopView extends BWindow
     public void showHelp ()
     {
         if (_intro == null) {
-            _intro = new BWindow(_ctx.getStyleSheet(),
-                                 GroupLayout.makeVStretch()) {
+            _intro = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeVStretch()) {
                 protected Dimension computePreferredSize (int wh, int hh) {
                     Dimension d = super.computePreferredSize(wh, hh);
                     d.width = Math.min(d.width, 500);
                     return d;
                 }
             };
-            ((GroupLayout)_intro.getLayoutManager()).setOffAxisPolicy(
-                GroupLayout.CONSTRAIN);
+            ((GroupLayout)_intro.getLayoutManager()).setOffAxisPolicy(GroupLayout.CONSTRAIN);
             ((GroupLayout)_intro.getLayoutManager()).setGap(15);
             _intro.setModal(true);
             _intro.setStyleClass("decoratedwindow");
-            _intro.add(new BLabel(_msgs.get("m.intro_title"), "window_title"),
-                       GroupLayout.FIXED);
+            _intro.add(new BLabel(_msgs.get("m.intro_title"), "window_title"), GroupLayout.FIXED);
 
             BangHTMLView html = new BangHTMLView();
             html.setStyleClass("intro_body");
@@ -92,11 +88,10 @@ public abstract class ShopView extends BWindow
     }
 
     /**
-     * Creates a shop view and sets up its background, shopkeeper and other
-     * standard imagery.
+     * Creates a shop view and sets up its background, shopkeeper and other standard imagery.
      *
-     * @param ident the message bundle identifier and path under the
-     * <code>ui</code> resource directory in which to find this shop's data.
+     * @param ident the message bundle identifier and path under the <code>ui</code> resource
+     * directory in which to find this shop's data.
      */
     protected ShopView (BangContext ctx, String ident)
     {
@@ -126,15 +121,14 @@ public abstract class ShopView extends BWindow
         }
 
         // add our town label
-        add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
-                       "town_name_label"), new Rectangle(851, 637, 165, 20));
-        // add a blank button over the shop image that returns to the town
-        _townBtn = new BButton(new BlankIcon(_shopimg.getWidth(),
-                    _shopimg.getHeight()), _ctrl, "to_town");
-        _townBtn.setStyleClass("def_button");
-        add(_townBtn, new Point(
-                    1012-_shopimg.getWidth(), 756-_shopimg.getHeight()));
+        add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId), "town_name_label"),
+            new Rectangle(851, 637, 165, 20));
 
+        // add a blank button over the shop image that returns to the town
+        _townBtn = new BButton(
+            new BlankIcon(_shopimg.getWidth(), _shopimg.getHeight()), _ctrl, "to_town");
+        _townBtn.setStyleClass("def_button");
+        add(_townBtn, new Point(1012-_shopimg.getWidth(), 756-_shopimg.getHeight()));
     }
 
     @Override // documentation inherited
@@ -152,8 +146,7 @@ public abstract class ShopView extends BWindow
             _keepname.reference();
         }
 
-        // if this is the first time the player has entered this shop, show
-        // them the intro popup
+        // if this is the first time the player has entered this shop, show them the intro popup
 //         showHelp();
     }
 
@@ -184,13 +177,11 @@ public abstract class ShopView extends BWindow
         super.renderBackground(renderer);
 
         _shopkbg.render(renderer, 12, _height-_shopkbg.getHeight()-12, _alpha);
-        _shopkeep.render(
-            renderer, 12, _height-_shopkeep.getHeight()-12, _alpha);
+        _shopkeep.render(renderer, 12, _height-_shopkeep.getHeight()-12, _alpha);
         _shopimg.render(renderer, _width-_shopimg.getWidth()-12,
-                     _height-_shopimg.getHeight()-12, _alpha);
+                        _height-_shopimg.getHeight()-12, _alpha);
         _background.render(renderer, 0, 0, _alpha);
-        _shopname.render(
-            renderer, 273, _height-_shopname.getHeight()-7, _alpha);
+        _shopname.render(renderer, 273, _height-_shopname.getHeight()-7, _alpha);
 
         if (_keepname != null) {
             _keepname.render(renderer, _nameloc.x, _nameloc.y, _alpha);
@@ -198,8 +189,7 @@ public abstract class ShopView extends BWindow
     }
 
     /**
-     * Creates a button labeled "Help" that will show the introductory help
-     * dialog.
+     * Creates a button labeled "Help" that will show the introductory help dialog.
      */
     protected BButton createHelpButton ()
     {
@@ -207,8 +197,8 @@ public abstract class ShopView extends BWindow
     }
 
     /**
-     * Gets a random tip to display upon entering this shop. The tip will be
-     * selected from a set of generic tips and a set of shop-specific tips.
+     * Gets a random tip to display upon entering this shop. The tip will be selected from a set of
+     * generic tips and a set of shop-specific tips.
      */
     protected String getShopTip ()
     {
@@ -216,15 +206,14 @@ public abstract class ShopView extends BWindow
         // get our shop specific tips
         _msgs.getAll("m.shop_tip.", tips, false);
         // get our global tips
-        _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS).getAll(
-            "m.shop_tip.", tips, false);
+        _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS).getAll("m.shop_tip.", tips, false);
         // return a random tip
         return RandomUtil.pickRandom(tips);
     }
 
     /**
-     * Returns the location at which to render the shopkeep name or null if we
-     * don't need a shopkeep name.
+     * Returns the location at which to render the shopkeep name or null if we don't need a
+     * shopkeep name.
      */
     protected Point getShopkeepNameLocation ()
     {
