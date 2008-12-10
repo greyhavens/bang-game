@@ -15,6 +15,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.TextEvent;
 import com.jmex.bui.event.TextListener;
+import com.jmex.bui.layout.BGroup;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.LengthLimitedDocument;
 
@@ -54,7 +55,7 @@ public class CreateAvatarView extends SteelWindow
     protected CreateAvatarView (BangContext ctx)
     {
         super(ctx, ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.create_title"));
-        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(15));
+        _contents.setLayoutManager(BGroup.vert().alignCenter().gap(15).make());
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
@@ -63,10 +64,7 @@ public class CreateAvatarView extends SteelWindow
         _contents.add(new BLabel(_msgs.get("m.create_intro"), "dialog_text"));
         _contents.setStyleClass("padded");
 
-        GroupLayout glay = GroupLayout.makeVert(
-            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
-        glay.setGap(15);
-        BContainer inner = new BContainer(glay);
+        BContainer inner = BGroup.vert().offStretch().alignTop().gap(15).makeBox();
         inner.setStyleClass("fa_inner_box");
         _contents.add(inner);
         _status = new StatusLabel(ctx);
@@ -86,8 +84,8 @@ public class CreateAvatarView extends SteelWindow
         _done.setEnabled(false);
 
         // this all goes in the inner box
-        BContainer row = new BContainer(GroupLayout.makeHStretch());
-        BContainer col = GroupLayout.makeHBox(GroupLayout.LEFT);
+        BContainer row = BGroup.horizStretch().offStretch().makeBox();
+        BContainer col = BGroup.horiz().alignLeft().makeBox();
         col.add(new Spacer(20, 1));
         col.add(new BLabel(_msgs.get("m.persuasion"), "dialog_label"));
         String[] gensel = new String[] {
@@ -102,7 +100,7 @@ public class CreateAvatarView extends SteelWindow
         });
         row.add(col);
 
-        col = GroupLayout.makeHBox(GroupLayout.RIGHT);
+        col = BGroup.horiz().alignRight().makeBox();
         col.add(new BLabel(_msgs.get("m.handle"), "dialog_label"));
         col.add(_handle = new BTextField(""));
         _handle.setPreferredWidth(150);
