@@ -72,6 +72,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.DeploymentConfig;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.tourney.client.TourneyListView;
@@ -112,6 +113,10 @@ public class TownView extends BWindow
         Enumeration<?> iter = props.propertyNames();
         while (iter.hasMoreElements()) {
             String command = (String)iter.nextElement();
+            // disable the bank on non-coin deployments
+            if (!DeploymentConfig.usesCoins() && command.equals("bank")) {
+                continue;
+            }
             _commands.put(props.getProperty(command), command);
         }
 
@@ -422,6 +427,7 @@ public class TownView extends BWindow
             if (!(piece instanceof Prop)) {
                 return super.shouldShowStarter(piece);
             }
+
             // keep bridges and fences, even if they're outside the board
             Prop prop = (Prop)piece;
             String type = prop.getType();
