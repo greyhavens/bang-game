@@ -60,8 +60,14 @@
     <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
   </path>
 
-  <!-- declare a classpath for tool tasks -->
+  <!-- declare a classpath for non-bang tasks -->
   <path id="tool.classpath">
+    <pathelement location="${deploy.dir}"/>
+    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+  </path>
+
+  <!-- declare a classpath for bang tasks -->
+  <path id="btool.classpath">
     <pathelement location="${deploy.dir}"/>
     <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
     <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
@@ -333,12 +339,12 @@
 
   <!-- compiles our models -->
   <target name="models">
-    <taskdef name="compile" classpathref="tool.classpath"
+    <taskdef name="compile" classpathref="btool.classpath"
              classname="com.threerings.jme.tools.CompileModelTask"/>
     <compile dest="${deploy.dir}">
       <fileset dir="rsrc" includes="**/model.properties"/>
     </compile>
-    <taskdef name="updatepropheight" classpathref="tool.classpath"
+    <taskdef name="updatepropheight" classpathref="btool.classpath"
              classname="com.threerings.bang.tools.UpdatePropHeightTask"/>
     <updatepropheight>
       <fileset dir="rsrc" includes="**/prop.properties"/>
@@ -400,7 +406,7 @@
 
   <!-- compiles our tutorial XML definitions -->
   <target name="tutorials">
-    <taskdef name="confcomp" classpathref="tool.classpath"
+    <taskdef name="confcomp" classpathref="btool.classpath"
              classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp dest="${deploy.dir}" parser="com.threerings.bang.game.tools.xml.TutorialConfigParser">
       <fileset dir="rsrc/tutorials" includes="**/*.xml"/>
@@ -409,7 +415,7 @@
 
   <!-- creates the serialized color repository config -->
   <target name="colorpos">
-    <taskdef name="confcomp" classpathref="tool.classpath"
+    <taskdef name="confcomp" classpathref="btool.classpath"
       classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp dest="${deploy.dir}" parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
               configdef="rsrc/config/media/colordefs.xml"/>
@@ -650,21 +656,21 @@
     <!-- generate some game metadata summary pages -->
     <property name="pages.out" value="${basedir}/${deploy.dir}/installer/pages"/>
     <mkdir dir="${pages.out}"/>
-    <java classpathref="tool.classpath" failonerror="true" output="${pages.out}/units.html"
+    <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/units.html"
           fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
       <arg value="boom_town"/>
     </java>
-    <java classpathref="tool.classpath" failonerror="true" output="${pages.out}/aspects.html"
+    <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/aspects.html"
           fork="true" classname="com.threerings.bang.avatar.tools.SummarizeAspects">
        <sysproperty key="no_unpack_resources" value="true"/>
        <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
     </java>
-    <java classpathref="tool.classpath" failonerror="true" output="${pages.out}/aspects.html"
+    <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/aspects.html"
           fork="true" classname="com.threerings.bang.avatar.tools.SummarizeArticles">
        <sysproperty key="no_unpack_resources" value="true"/>
        <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
     </java>
-    <java classpathref="tool.classpath" failonerror="true" output="${pages.out}/ft_bounties.html"
+    <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/ft_bounties.html"
           fork="true" classname="com.threerings.bang.bounty.tools.SummarizeBounties">
        <arg value="frontier_town"/>
     </java>
