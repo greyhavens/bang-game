@@ -17,8 +17,6 @@ import com.jme.scene.state.TextureState;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 
-import com.samskivert.util.StringUtil;
-
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;

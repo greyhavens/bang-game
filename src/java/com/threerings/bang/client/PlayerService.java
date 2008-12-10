@@ -3,8 +3,6 @@
 
 package com.threerings.bang.client;
 
-import com.threerings.util.Name;
-
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 

@@ -64,7 +64,6 @@ import com.threerings.util.StreamableHashMap;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.server.persist.LookRepository;
-import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.server.Match;
 
@@ -83,7 +82,6 @@ import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
-import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.EntryReplacedEvent;
 import com.threerings.bang.data.GoldPass;
 import com.threerings.bang.data.Handle;
@@ -95,7 +93,6 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.StatType;
-import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.data.Warning;
 
 import com.threerings.bang.server.persist.FolkRecord;
