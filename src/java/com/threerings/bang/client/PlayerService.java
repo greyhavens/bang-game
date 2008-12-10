@@ -25,11 +25,6 @@ public interface PlayerService extends InvocationService
     public static final int FOLK_IS_FOE = 3;
 
     /**
-     * Issues a request to create this player's (free) first Big Shot.
-     */
-    public void pickFirstBigShot (Client client, String type, Name name, ConfirmListener cl);
-
-    /**
      * Invite the specified user to be our pardner.
      */
     public void invitePardner (Client client, Handle handle, String message,

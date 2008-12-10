@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Iterables;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Invoker;
@@ -37,6 +39,7 @@ import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
@@ -161,6 +164,15 @@ public class BangClientResolver extends CrowdClientResolver
                 BangServer.itemrepo.deleteItem(item, "Item expired");
             }
         }
+
+        // if they have no bigshots, give them the starter bigshot (first one's free kid)
+        if (!Iterables.filter(items, BigShotItem.class).iterator().hasNext()) {
+            BigShotItem bsitem = new BigShotItem(buser.playerId, FREE_BIGSHOT_TYPE);
+            BangServer.itemrepo.insertItem(bsitem);
+            items.add(bsitem);
+        }
+
+        // finally place their items into their inventory DSet
         buser.inventory = new DSet<Item>(items.iterator());
 
         // load up this player's persistent stats
@@ -418,6 +430,6 @@ public class BangClientResolver extends CrowdClientResolver
     /** Used to temporarily store player age during resolution. */
     protected static Set<String> _astash = new HashSet<String>();
 
-    /** The number of rated games a player has to have played to get a free ticket to ITP. */
-    protected static final int FREE_ITP_GP_REQUIREMENT = 20;
+    /** The type of Big Shot given out free to new players. */
+    protected static final String FREE_BIGSHOT_TYPE = "frontier_town/cavalry";
 }

@@ -345,48 +345,6 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void pickFirstBigShot (ClientObject caller, String type, Name name,
-                                  final PlayerService.ConfirmListener listener)
-        throws InvocationException
-    {
-        final PlayerObject user = (PlayerObject)caller;
-
-        // sanity check: make sure they don't already have a big shot
-        if (user.hasBigShot()) {
-            log.warning("Player requested free big shot but already has one", "who", user.who(),
-                        "inventory", user.inventory, "type", type);
-            throw new InvocationException(RanchCodes.INTERNAL_ERROR);
-        }
-
-        // sanity check: make sure the big shot is valid
-        UnitConfig config = UnitConfig.getConfig(type, false);
-        if (config == null ||
-            ListUtil.indexOf(RanchCodes.STARTER_BIGSHOTS, config.type) == -1) {
-            log.warning("Player requested invalid free big shot", "who", user.who(), "type", type);
-            throw new InvocationException(RanchCodes.INTERNAL_ERROR);
-        }
-
-        // create the BigShot item and stuff it on into their inventory
-        final BigShotItem bsitem = new BigShotItem(user.playerId, config.type);
-        bsitem.setGivenName(name);
-
-        // stick the new item in the database and in their inventory
-        BangServer.invoker.postUnit(new PersistingUnit("pickFirstBigShot", listener) {
-            public void invokePersistent () throws PersistenceException {
-                BangServer.itemrepo.insertItem(bsitem);
-            }
-            public void handleSuccess () {
-                user.addToInventory(bsitem);
-                listener.requestProcessed();
-            }
-            public String getFailureMessage () {
-                return "Failed to add first big shot to repository " +
-                    "[who=" + user.who() + ", item=" + bsitem + "]";
-            }
-        });
-    }
-
-    // documentation inherited from interface PlayerProvider
     public void invitePardner (ClientObject caller, final Handle handle, final String message,
                                final PlayerService.ConfirmListener listener)
         throws InvocationException

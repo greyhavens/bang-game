@@ -12,10 +12,4 @@ public interface RanchCodes extends InvocationCodes
 {
     /** The identifier for our message bundle. */
     public static final String RANCH_MSGS = "ranch";
-
-    /** Big Shots given out to new players. */
-    public static final String[] STARTER_BIGSHOTS = {
-        "frontier_town/cavalry", "frontier_town/codger",
-        "frontier_town/tactician"
-    };
 }

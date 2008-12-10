@@ -12,7 +12,6 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
@@ -47,8 +46,7 @@ public class UnitIcon extends PaletteIcon
             if (locked) {
                 setEnabled(!disableUnavail);
                 setTooltipText(getTooltipText() + BADGE_SEP +
-                    ctx.xlate(BangCodes.UNITS_MSGS,
-                        _config.getName() + "_badge"));
+                               ctx.xlate(BangCodes.UNITS_MSGS, _config.getName() + "_badge"));
             }
         }
     }
@@ -66,10 +64,10 @@ public class UnitIcon extends PaletteIcon
      * Converts a "recruitable" icon into a "recruited" icon. Clears out any lock icon being
      * displayed.
      */
-    public void setItem (int itemId, Name name)
+    public void setItem (int itemId, String name)
     {
         _itemId = itemId;
-        setText(name.toString());
+        setText(_ctx.xlate(BangCodes.UNITS_MSGS, name));
 
         // clear out our lock
         if (_lock != null) {

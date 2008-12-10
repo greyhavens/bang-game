@@ -5,6 +5,7 @@ package com.threerings.bang.data;
 
 import java.io.IOException;
 
+import com.samskivert.util.ObjectUtil;
 import com.threerings.io.ObjectInputStream;
 
 import com.threerings.util.MessageBundle;
@@ -36,15 +37,6 @@ public class BigShotItem extends Item
         _name = name.toString();
     }
 
-    /**
-     * Returns the name given to this Big Shot unit by the player or the default name for this Big
-     * Shot if it does not yet have a configured name.
-     */
-    public Name getGivenName ()
-    {
-        return new Name(_name == null ? UnitConfig.getName(_type) : _name);
-    }
-
     /** Returns the type code for this Big Shot. This is the same as the associated unit type. */
     public String getType ()
     {
@@ -54,7 +46,7 @@ public class BigShotItem extends Item
     @Override // documentation inherited
     public String getName ()
     {
-        return MessageBundle.taint(_name);
+        return (_name == null) ? UnitConfig.getName(_type) : MessageBundle.taint(_name);
     }
 
     @Override // documentation inherited
@@ -85,9 +77,8 @@ public class BigShotItem extends Item
     public boolean isEquivalent (Item other)
     {
         BigShotItem oshot;
-        return super.isEquivalent(other) &&
-            (oshot = (BigShotItem)other)._type.equals(_type) &&
-            oshot._name.equals(_name);
+        return super.isEquivalent(other) && (oshot = (BigShotItem)other)._type.equals(_type) &&
+            ObjectUtil.equals(oshot._name, _name);
     }
 
     protected String _type;

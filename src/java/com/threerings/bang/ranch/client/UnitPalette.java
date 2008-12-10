@@ -62,7 +62,7 @@ public class UnitPalette extends IconPalette
             // if they have a big shot for this icon, switch it
             BigShotItem bsitem = getBigShot(user, units[ii].type);
             if (bsitem != null) {
-                icon.setItem(bsitem.getItemId(), bsitem.getGivenName());
+                icon.setItem(bsitem.getItemId(), bsitem.getName());
             } else {
                 icon.setLocked(_ctx, true);
             }
@@ -98,7 +98,7 @@ public class UnitPalette extends IconPalette
                     continue;
                 }
                 UnitIcon icon = new UnitIcon(_ctx, config);
-                icon.setItem(bsitem.getItemId(), bsitem.getGivenName());
+                icon.setItem(bsitem.getItemId(), bsitem.getName());
                 addIcon(icon);
             }
         }
@@ -155,7 +155,7 @@ public class UnitPalette extends IconPalette
         for (SelectableIcon sicon : _icons) {
             UnitIcon icon = (UnitIcon)sicon;
             if (icon.getUnit().type.equals(unit.getType())) {
-                icon.setItem(unit.getItemId(), unit.getGivenName());
+                icon.setItem(unit.getItemId(), unit.getName());
                 // trigger our inspector to refresh if needed
                 if (_inspector != null) {
                     _inspector.iconUpdated(icon, icon.isSelected());

@@ -9,7 +9,6 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.util.Name;
 
 /**
  * Dispatches requests to the {@link PlayerProvider}.
@@ -70,12 +69,6 @@ public class PlayerDispatcher extends InvocationDispatcher<PlayerMarshaller>
         case PlayerMarshaller.NOTE_FOLK:
             ((PlayerProvider)provider).noteFolk(
                 source, ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
-            );
-            return;
-
-        case PlayerMarshaller.PICK_FIRST_BIG_SHOT:
-            ((PlayerProvider)provider).pickFirstBigShot(
-                source, (String)args[0], (Name)args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 

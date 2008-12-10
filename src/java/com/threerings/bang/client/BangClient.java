@@ -64,7 +64,6 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.admin.data.AdminCodes;
 
 import com.threerings.bang.avatar.client.CreateAvatarView;
-import com.threerings.bang.ranch.client.FirstBigShotView;
 import com.threerings.bang.ranch.data.RanchObject;
 import com.threerings.bang.station.client.FreePassView;
 import com.threerings.bang.station.client.PassDetailsView;
@@ -420,13 +419,8 @@ public class BangClient extends BasicClient
         if (_ctx.getLocationDirector().getPlaceObject() != null) {
             return;
         }
-
-        // if we're in the town view, then maybe move to the free bigshot step
-        if (_ctx.getUserObject().needsFreeBigShot()) {
-            displayPopup(new FirstBigShotView(_ctx), true, FirstBigShotView.WIDTH_HINT);
-        } else {
-            resetTownView();
-        }
+        // otherwise make sure we're in town
+        resetTownView();
     }
 
     /**
@@ -463,12 +457,6 @@ public class BangClient extends BasicClient
         // create avatar view
         if (!user.hasCharacter() && CREATE_HANDLE.equals(_popup)) {
             displayPopup(new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
-            return true;
-        }
-
-        // if they have no big shots then they need the intro for those
-        if (user.needsFreeBigShot()) {
-            displayPopup(new FirstBigShotView(_ctx), true, FirstBigShotView.WIDTH_HINT);
             return true;
         }
 
