@@ -15,8 +15,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
-import com.samskivert.util.Runnables;
-
 import com.threerings.media.image.Colorization;
 import com.threerings.util.MessageBundle;
 
@@ -177,7 +175,13 @@ public class GoodsInspector extends BContainer
                 public void resultPosted (int button, Object result) {
                     if (button == OptionDialog.OK_BUTTON) {
                         CreateAvatarView view = new CreateAvatarView(_ctx);
-                        view.setOnCreate(Runnables.asRunnable(GoodsInspector.this, "avatarCreated"));
+                        view.setOnCreate(new Runnable() {
+                            public void run () {
+                                // we need to reinit our goods display when the user creates their
+                                // avatar so that we switch to the appropriate gener-specific goods
+                                _palette.reinitGoods(true);
+                            }
+                        });
                         _ctx.getBangClient().displayPopup(view, true, CreateAvatarView.WIDTH_HINT);
                     }
                 }
@@ -198,13 +202,6 @@ public class GoodsInspector extends BContainer
             }
         };
         _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
-    }
-
-    protected void avatarCreated ()
-    {
-        // we need to reinitialize our goods display when the user creates their avatar so that we
-        // switch to the appropriate gener-specific goods
-        _palette.reinitGoods(true);
     }
 
     protected void boughtGood ()
