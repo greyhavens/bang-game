@@ -168,28 +168,8 @@ public class BangClientResolver extends CrowdClientResolver
         buser.stats = new StatSet(stats.iterator());
         buser.stats.setContainer(buser);
 
-        // if this player started playing before the end of beta and they've played 20 ranked
-        // games, give them a free permanent ticket to ITP
-        int itpidx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
-        boolean holdsITPTicket = buser.holdsTicket(BangCodes.INDIAN_POST);
-        if (buser.playerId < BangCodes.BETA_PLAYER_CUTOFF && !holdsITPTicket &&
-            buser.stats.getIntStat(StatType.GAMES_PLAYED) >= FREE_ITP_GP_REQUIREMENT) {
-            log.info("Granting free ITP ticket to beta player", "who", username,
-                     "handle", buser.handle, "pid", buser.playerId,
-                     "games", buser.stats.getIntStat(StatType.GAMES_PLAYED));
-            TrainTicket ticket = new TrainTicket(buser.playerId, itpidx);
-            BangServer.itemrepo.insertItem(ticket);
-            BangServer.playrepo.grantTownAccess(buser.playerId, ticket.getTownId());
-            buser.addToInventory(ticket);
-            holdsITPTicket = true;
-
-        // fix bug with ticket granting
-        } else if (holdsITPTicket &&
-                ((player.townId == null) || player.townId.equals(BangCodes.FRONTIER_TOWN))) {
-            BangServer.playrepo.grantTownAccess(buser.playerId, BangCodes.INDIAN_POST);
-
         // clear a players granted access when tickets expire
-        } else if (!buser.holdsTicket(player.townId)) {
+        if (!buser.holdsTicket(player.townId)) {
             String townAccess = BangCodes.FRONTIER_TOWN;
             for (int ii = 1; ii < BangCodes.TOWN_IDS.length; ii++) {
                 if (buser.holdsTicket(BangCodes.TOWN_IDS[ii])) {
@@ -214,7 +194,7 @@ public class BangClientResolver extends CrowdClientResolver
             }
         }
 
-        // Give out a free ticket if a player qualified but never successfully made it to ITP
+        // give out a free ticket if a player qualified but never successfully made it to ITP
         if (noFreeTicket && player.nextTown == null &&
                 buser.stats.containsValue(StatType.FREE_TICKETS, BangCodes.INDIAN_POST) &&
                 !buser.stats.containsValue(StatType.ACTIVATED_TICKETS, BangCodes.INDIAN_POST)) {
