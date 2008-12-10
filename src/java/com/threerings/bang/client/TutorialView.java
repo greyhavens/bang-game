@@ -268,11 +268,9 @@ public class TutorialView extends SteelWindow
     protected void wasRemoved ()
     {
         super.wasRemoved();
-
         if (_notuts != null && _notuts.isSelected()) {
             BangPrefs.setNoTutIntro(_ctx.getUserObject());
         }
-        _ctx.getBangClient().checkShowIntro(true);
     }
 
     protected BangContext _ctx;

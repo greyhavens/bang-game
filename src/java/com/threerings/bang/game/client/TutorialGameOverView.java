@@ -29,6 +29,8 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 
+import com.threerings.bang.avatar.client.CreateAvatarView;
+
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -126,11 +128,15 @@ public class TutorialGameOverView extends SteelWindow
         String action = event.getAction();
 
         if (action.equals("to_town") || action.equals("choose")) {
+            if (action.equals("choose")) {
+                _bctx.getBangClient().queueTownNotificaton(new Runnable() {
+                    public void run () {
+                        CreateAvatarView.show(_bctx);
+                    }
+                });
+            }
             _bctx.getBangClient().showTownView();
             _bctx.getBangClient().clearPopup(this, true);
-            if (action.equals("choose")) {
-                _bctx.getBangClient().showPopupAfterLogon(BangCodes.E_CREATE_HANDLE);
-            }
 
         } else {
             PlayerService psvc = _bctx.getClient().requireService(PlayerService.class);

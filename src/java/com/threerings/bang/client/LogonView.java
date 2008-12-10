@@ -158,12 +158,9 @@ public class LogonView extends BWindow
                     GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.NONE));
         ((GroupLayout)cont.getLayoutManager()).setGap(20);
 
-        String anonymous = BangPrefs.config.getValue("anonymous", "");
-        String btn1 = "m.continue_player";
-        String btn2 = "m.my_account";
-        String act1 = "anonymous";
-        String act2 = "my_account";
-        if (StringUtil.isBlank(anonymous)) {
+        String btn1 = "m.continue_player", act1 = "anonymous";
+        String btn2 = "m.my_account", act2 = "my_account";
+        if (StringUtil.isBlank(BangPrefs.config.getValue("anonymous", ""))) {
             btn1 = "m.new_player";
             btn2 = "m.have_account";
             act2 = "have_account";
@@ -277,9 +274,12 @@ public class LogonView extends BWindow
             _status.setStatus(_msgs.get("m.new_account_launched"), false);
 
         } else if ("anon_account".equals(event.getAction())) {
-            String anonymous = BangPrefs.config.getValue("anonymous", "");
-            _ctx.getBangClient().showPopupAfterLogon(BangCodes.E_SIGN_UP);
-            logon(BangCodes.FRONTIER_TOWN, anonymous, null);
+            _ctx.getBangClient().queueTownNotificaton(new Runnable() {
+                public void run () {
+                    CreateAccountView.show(_ctx, false);
+                }
+            });
+            logon(BangCodes.FRONTIER_TOWN, BangPrefs.config.getValue("anonymous", ""), null);
 
         } else if ("my_account".equals(event.getAction())) {
             showNewUserView(true);
@@ -416,8 +416,8 @@ public class LogonView extends BWindow
             if (BangPrefs.firstTimeUser()) {
                 TrackingUtil.track("first_logon", "Successful First Logon");
             }
-            BangPrefs.config.setValue(
-                    user.tokens.isAnonymous() ? "anonymous" : "username", user.username.toString());
+            BangPrefs.config.setValue(user.tokens.isAnonymous() ? "anonymous" : "username",
+                                      user.username.toString());
         }
 
         public void clientFailedToLogon (Client client, Exception cause) {

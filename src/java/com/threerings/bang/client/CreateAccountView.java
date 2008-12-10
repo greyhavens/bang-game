@@ -41,7 +41,30 @@ import static com.threerings.bang.Log.log;
 public class CreateAccountView extends SteelWindow
     implements ActionListener, BangClient.NonClearablePopup
 {
-    public CreateAccountView (BangContext ctx, boolean onExit)
+    public static void show (BangContext ctx, boolean onExit)
+    {
+        CreateAccountView cav = new CreateAccountView(ctx, onExit);
+        cav.setLayer(BangCodes.NEVER_CLEAR_LAYER);
+        ctx.getBangClient().displayPopup(cav, true, 800);
+    }
+
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        String cmd = event.getAction();
+        if (cmd.equals("create")) {
+            createAccount();
+        } else if (cmd.equals("cancel")) {
+            if (_onExit) {
+                _ctx.getApp().stop();
+            } else {
+                _ctx.getBangClient().clearPopup(this, true);
+                _ctx.getBangClient().resetTownView();
+            }
+        }
+    }
+
+    protected CreateAccountView (BangContext ctx, boolean onExit)
     {
         super(ctx, ctx.xlate(BangCodes.BANG_MSGS, "m.account_title"));
         setModal(true);
@@ -162,22 +185,6 @@ public class CreateAccountView extends SteelWindow
         _months.addListener(alistener);
         _days.addListener(alistener);
 
-    }
-
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        String cmd = event.getAction();
-        if (cmd.equals("create")) {
-            createAccount();
-        } else if (cmd.equals("cancel")) {
-            if (_onExit) {
-                _ctx.getApp().stop();
-            } else {
-                _ctx.getBangClient().clearPopup(this, true);
-                _ctx.getBangClient().resetTownView();
-            }
-        }
     }
 
     /**

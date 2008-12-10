@@ -93,9 +93,8 @@ public class EditCharacterView extends BContainer
 
         // configure our handle text field with standard validators
         _handle.setDocument(new CreateAvatarView.HandleDocument());
-        _handle.addListener(new CreateAvatarView.HandleListener(
-                                _buy, _status, "",
-                                _msgs.get("m.invalid_handle")) {
+        _handle.addListener(
+            new CreateAvatarView.HandleListener(_buy, _status, "", _msgs.get("m.invalid_handle")) {
             public void textChanged (TextEvent event) {
                 super.textChanged(event);
                 if (_handle.getText().equals(

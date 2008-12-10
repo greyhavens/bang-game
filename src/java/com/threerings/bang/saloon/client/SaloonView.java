@@ -132,13 +132,6 @@ public class SaloonView extends ShopView
         return new Point(22, 554);
     }
 
-    @Override // documentation inherited
-    protected void wasAdded ()
-    {
-        super.wasAdded();
-        _ctx.getBangClient().maybeShowPassDetails();
-    }
-
     protected SaloonController _ctrl;
     protected PaperView _paper;
     protected StatusLabel _status;

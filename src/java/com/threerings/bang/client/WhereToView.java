@@ -125,12 +125,10 @@ public class WhereToView extends SteelWindow
     protected void wasRemoved ()
     {
         super.wasRemoved();
-
         if (_nowhere != null && _nowhere.isSelected()) {
             BangPrefs.setNoWhereTo(_ctx.getUserObject());
             _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.whereto_byebye");
         }
-        _ctx.getBangClient().checkShowIntro(true);
     }
 
     protected BangContext _ctx;

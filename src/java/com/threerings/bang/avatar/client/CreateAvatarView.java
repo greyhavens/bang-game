@@ -37,11 +37,21 @@ import com.threerings.bang.avatar.data.AvatarCodes;
  * sex and default look.
  */
 public class CreateAvatarView extends SteelWindow
-    implements ActionListener, BangClient.NonClearablePopup
+    implements BangClient.NonClearablePopup
 {
-    public static final int WIDTH_HINT = 800;
+    public static void show (BangContext ctx)
+    {
+        show(ctx, null);
+    }
 
-    public CreateAvatarView (BangContext ctx)
+    public static void show (BangContext ctx, Runnable onCreate)
+    {
+        CreateAvatarView view = new CreateAvatarView(ctx);
+        view._onCreate = onCreate;
+        ctx.getBangClient().displayPopup(view, true, WIDTH_HINT);
+    }
+
+    protected CreateAvatarView (BangContext ctx)
     {
         super(ctx, ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.create_title"));
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(15));
@@ -62,8 +72,17 @@ public class CreateAvatarView extends SteelWindow
         _status = new StatusLabel(ctx);
         _status.setStyleClass("dialog_text");
         _contents.add(_status);
-        _buttons.add(_cancel = new BButton(_msgs.get("m.cancel"), this, "cancel"));
-        _buttons.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
+        _buttons.add(new BButton(_msgs.get("m.cancel"), new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
+                _ctx.getBangClient().createAvatarDismissed(false);
+            }
+        }, "cancel"));
+        _buttons.add(_done = new BButton(_msgs.get("m.done"), new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                createAvatar();
+            }
+        }, "done"));
         _done.setEnabled(false);
 
         // this all goes in the inner box
@@ -74,7 +93,13 @@ public class CreateAvatarView extends SteelWindow
         String[] gensel = new String[] {
             _msgs.get("m.male"), _msgs.get("m.female") };
         col.add(_gender = new BComboBox(gensel));
-        _gender.addListener(_sexer);
+        _gender.addListener(new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                _look.setGender(_gender.getSelectedIndex() == 0);
+                pickRandomHandle();
+                maybeClearStatus();
+            }
+        });
         row.add(col);
 
         col = GroupLayout.makeHBox(GroupLayout.RIGHT);
@@ -82,39 +107,18 @@ public class CreateAvatarView extends SteelWindow
         col.add(_handle = new BTextField(""));
         _handle.setPreferredWidth(150);
         _handle.setDocument(new HandleDocument());
-        _handle.addListener(new HandleListener(
-                                _done, _status, _msgs.get("m.create_defstatus"),
-                                _msgs.get("m.invalid_handle")));
+        _handle.addListener(new HandleListener(_done, _status, _msgs.get("m.create_defstatus"),
+                                               _msgs.get("m.invalid_handle")));
 
-        col.add(BangUI.createDiceButton(this, "random"), GroupLayout.FIXED);
+        col.add(BangUI.createDiceButton(new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                pickRandomHandle();
+                maybeClearStatus();
+            }
+        }, "random"), GroupLayout.FIXED);
         row.add(col);
         inner.add(row);
         inner.add(_look = new FirstLookView(ctx, _status));
-    }
-
-    /**
-     * Configures a callback to be invoked if the user creates their avatar.
-     */
-    public void setOnCreate (Runnable onCreate)
-    {
-        _onCreate = onCreate;
-    }
-
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        String cmd = event.getAction();
-        if (cmd.equals("random")) {
-            pickRandomHandle();
-            maybeClearStatus();
-
-        } else if (cmd.equals("done")) {
-            createAvatar();
-
-        } else if (cmd.equals("cancel")) {
-            _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
-            _ctx.getBangClient().createAvatarDismissed(false);
-        }
     }
 
     @Override // documentation inherited
@@ -249,14 +253,6 @@ public class CreateAvatarView extends SteelWindow
         }
     };
 
-    protected ActionListener _sexer = new ActionListener() {
-        public void actionPerformed (ActionEvent event) {
-            _look.setGender(_gender.getSelectedIndex() == 0);
-            pickRandomHandle();
-            maybeClearStatus();
-        }
-    };
-
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected StatusLabel _status;
@@ -266,7 +262,7 @@ public class CreateAvatarView extends SteelWindow
     protected BComboBox _gender;
     protected BTextField _handle;
     protected FirstLookView _look;
-    protected BButton _done, _cancel;
+    protected BButton _done;
 
-    protected static final int PREF_WIDTH = 640;
+    protected static final int WIDTH_HINT = 800;
 }

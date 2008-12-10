@@ -174,15 +174,13 @@ public class GoodsInspector extends BContainer
                                            new OptionDialog.ResponseReceiver() {
                 public void resultPosted (int button, Object result) {
                     if (button == OptionDialog.OK_BUTTON) {
-                        CreateAvatarView view = new CreateAvatarView(_ctx);
-                        view.setOnCreate(new Runnable() {
+                        CreateAvatarView.show(_ctx, new Runnable() {
                             public void run () {
                                 // we need to reinit our goods display when the user creates their
                                 // avatar so that we switch to the appropriate gener-specific goods
                                 _palette.reinitGoods(true);
                             }
                         });
-                        _ctx.getBangClient().displayPopup(view, true, CreateAvatarView.WIDTH_HINT);
                     }
                 }
             });

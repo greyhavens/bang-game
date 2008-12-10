@@ -208,7 +208,6 @@ public class TownView extends BWindow
             return _active;
 
         default:
-        case CHAT:
             return true;
         }
     }
@@ -255,7 +254,7 @@ public class TownView extends BWindow
 
     protected void finishedIntroPan ()
     {
-        _active = !_bctx.getBangClient().checkShowIntro(false);
+        _active = !_bctx.getBangClient().checkNotifications();
     }
 
     protected void fireCommand (String command)

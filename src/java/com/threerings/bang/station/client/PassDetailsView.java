@@ -29,11 +29,6 @@ import com.threerings.bang.data.FreeTicket;
 public class PassDetailsView extends SteelWindow
     implements ActionListener
 {
-    public static boolean wasShown ()
-    {
-        return _shown;
-    }
-
     public PassDetailsView (BangContext ctx, FreeTicket ticket, boolean station)
     {
         super(ctx, ctx.xlate(StationCodes.STATION_MSGS, MessageBundle.compose(
@@ -85,20 +80,9 @@ public class PassDetailsView extends SteelWindow
         super.wasAdded();
         _contents.setBackground(BComponent.DEFAULT, new ImageBackground(ImageBackground.CENTER_XY,
                     _ctx.loadImage("ui/station/pass_details_" + _ticket.getTownId() + ".jpg")));
-        _shown = true;
-    }
-
-    @Override // documentation inherited
-    protected void wasRemoved ()
-    {
-        super.wasRemoved();
-        if (!_station && _ctx.getBangClient().isShowingTownView()) {
-            _ctx.getBangClient().checkShowIntro(false);
-        }
     }
 
     protected BangContext _ctx;
     protected FreeTicket _ticket;
     protected boolean _station;
-    protected static boolean _shown = false;
 }

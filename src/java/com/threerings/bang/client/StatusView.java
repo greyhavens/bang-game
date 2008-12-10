@@ -21,8 +21,8 @@ import com.samskivert.util.Predicate;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.avatar.client.PickLookView;
 import com.threerings.bang.avatar.client.CreateAvatarView;
+import com.threerings.bang.avatar.client.PickLookView;
 import com.threerings.bang.ranch.client.UnitPalette;
 
 import com.threerings.bang.data.Article;
@@ -181,8 +181,7 @@ public class StatusView extends BWindow
 
         } else if (cmd.equals("avatar")) {
             _ctx.getBangClient().clearPopup(this, true);
-            _ctx.getBangClient().displayPopup(
-                new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
+            CreateAvatarView.show(_ctx);
         }
     }
 

@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import com.jme.input.KeyInput;
@@ -409,6 +410,42 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Adds a notification to be displayed next time the player is in town.
+     */
+    public void queueTownNotificaton (Runnable notifier)
+    {
+        _pendingNots.add(notifier);
+    }
+
+    /**
+     * Displays any pending notifications to the player. This is called automatically on entering
+     * the town view and again as popups are cleared and generally needn't be called manually.
+     */
+    public boolean checkNotifications ()
+    {
+        PlayerObject user = _ctx.getUserObject();
+
+        // if there are any pending server notifications, show the first one
+        for (Notification notification : user.notifications) {
+            if (!notification.responded) {
+                return displayNotification(notification);
+            }
+        }
+
+        // if we have pending notifications, run the next one on the list
+        if (!_pendingNots.isEmpty()) {
+            _pendingNots.remove(0).run();
+            return true;
+        }
+
+        // if the main view is the town view, activate it because we're done fooling around
+        if (isShowingTownView()) {
+            ((TownView)_mview).setActive(true);
+        }
+        return false;
+    }
+
+    /**
      * Called when the create avatar view is dismissed. Potentially continues the new user
      * configuration process.
      *
@@ -436,71 +473,6 @@ public class BangClient extends BasicClient
             return;
         }
         resetTownView();
-    }
-
-    /**
-     * Potentially shows the next phase of the client introduction or tutorial or displays pending
-     * notifications. Basically anything that should be popped up once a player is in the town view
-     * and ready to go is shown.  This is called after first logging on and then at the completion
-     * of each phase of the intro and tutorial.
-     */
-    public boolean checkShowIntro (boolean skipWhereTo)
-    {
-        PlayerObject user = _ctx.getUserObject();
-
-        // see if we're an anonymous user that wants to sign up
-        if (E_SIGN_UP.equals(_whichPopup)) {
-            _whichPopup = null;
-            showCreateAccount(false);
-            return true;
-        }
-
-        // if this player does not have a name, and just finished the tutorials, show them the
-        // create avatar view
-        if (!user.hasCharacter() && E_CREATE_HANDLE.equals(_whichPopup)) {
-            displayPopup(new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
-            return true;
-        }
-
-        // if requested, recommend a lower detail level
-        if (_suggestLowerDetail && suggestLowerDetail()) {
-            return true;
-        }
-
-        // if there are any pending notifications, show the first one
-        for (Notification notification : user.notifications) {
-            if (!notification.responded) {
-                return displayNotification(notification);
-            }
-        }
-
-        // if they've got a free ticket, potentially show it
-        if (maybeShowPassDetails()) {
-            return true;
-        }
-
-        // if there's a free town open, potentially show it
-        if (maybeShowFreeTownDetails()) {
-            return true;
-        }
-
-        if (!skipWhereTo && BangPrefs.shouldShowTutIntro(user)) {
-            displayPopup(new TutorialView(_ctx), true, TutorialView.WIDTH_HINT);
-            return true;
-        }
-
-        // show them the Where To view if they haven't turned it off
-        if (!skipWhereTo && BangPrefs.shouldShowWhereTo(user)) {
-            displayPopup(new WhereToView(_ctx, false), true, WhereToView.WIDTH_HINT);
-            return true;
-        }
-
-        // if the main view is the town view, activate it because we're done fooling around
-        if (isShowingTownView()) {
-            ((TownView)_mview).setActive(true);
-        }
-
-        return false;
     }
 
     /**
@@ -536,7 +508,6 @@ public class BangClient extends BasicClient
      */
     public void resetTownView ()
     {
-        _showingAccount = false;
         if (isShowingTownView()) {
             ((TownView)_mview).resetViewpoint();
         } else {
@@ -563,8 +534,7 @@ public class BangClient extends BasicClient
         }
 
         // don't allow FKEY or STATUS popups if we have other popups showing
-        if ((type == MainView.Type.FKEY || type == MainView.Type.STATUS) &&
-            hasPopups()) {
+        if ((type == MainView.Type.FKEY || type == MainView.Type.STATUS) && hasPopups()) {
             return false;
         }
 
@@ -662,6 +632,10 @@ public class BangClient extends BasicClient
                     if (popup.isAdded()) {
                         _ctx.getRootNode().removeWindow(popup);
                     }
+                    // if we're in town, see if we have additional notifications to show
+                    if (isShowingTownView()) {
+                        checkNotifications();
+                    }
                 }
             });
         } else {
@@ -677,36 +651,6 @@ public class BangClient extends BasicClient
     public PardnerChatView getPardnerChatView ()
     {
         return _pcview;
-    }
-
-    /**
-     * See if we should display the Free Ticket window.
-     */
-    public boolean maybeShowPassDetails ()
-    {
-        FreeTicket ticket = null;
-        PlayerObject user = _ctx.getUserObject();
-        if (!PassDetailsView.wasShown() && (ticket = user.getFreeTicket()) != null &&
-                !ticket.isActivated() && BangPrefs.shouldShowPassDetail(user, ticket.getTownId())) {
-            displayPopup(new PassDetailsView(_ctx, ticket, false), true);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * See if we should display the Free Town window.
-     */
-    public boolean maybeShowFreeTownDetails ()
-    {
-        TrainTicket ticket = null;
-        PlayerObject user = _ctx.getUserObject();
-        if (!FreePassView.wasShown() && (ticket = user.getFreeTownTicket()) != null &&
-                !user.townId.equals(ticket.getTownId())) {
-            displayPopup(new FreePassView(_ctx, ticket), true);
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -988,7 +932,37 @@ public class BangClient extends BasicClient
             return;
         }
 
-        // show the town view to start, this will call checkShowIntro() once the town view has
+        // if they've got a free ticket, potentially queue up a notification for it
+        final FreeTicket fticket = user.getFreeTicket();
+        if (fticket != null && !fticket.isActivated() &&
+            BangPrefs.shouldShowPassDetail(user, fticket.getTownId())) {
+            queueTownNotificaton(new Runnable() {
+                public void run () {
+                    displayPopup(new PassDetailsView(_ctx, fticket, false), true);
+                }
+            });
+        }
+
+        // if there's a free town open, potentially show it
+        final TrainTicket tticket = user.getFreeTownTicket();
+        if (tticket != null && !user.townId.equals(tticket.getTownId())) {
+            queueTownNotificaton(new Runnable() {
+                public void run () {
+                    displayPopup(new FreePassView(_ctx, tticket), true);
+                }
+            });
+        }
+
+        // queue up the tutorial view if they haven't turned it off
+        if (BangPrefs.shouldShowTutIntro(user)) {
+            queueTownNotificaton(new Runnable() {
+                public void run () {
+                    displayPopup(new TutorialView(_ctx), true, TutorialView.WIDTH_HINT);
+                }
+            });
+        }
+
+        // show the town view to start, it will call checkNotifications() once the town view has
         // "presented" the first town
         showTownView();
     }
@@ -1048,25 +1022,36 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Called to have popup occur after the client has logged on.
+     * Queues up a popup that suggests a lower level of graphical detail to the user. The popup
+     * will be displayed next time the user enters town.
      */
-    public void showPopupAfterLogon (String whichPopup)
+    public void queueSuggestLowerDetail ()
     {
-        _whichPopup = whichPopup;
-    }
-
-    /**
-     * Pops up a dialog suggesting a lower level of graphical detail to the user, or saves the
-     * suggestion until it can be displayed.
-     */
-    public boolean suggestLowerDetail ()
-    {
-        if (canDisplayPopup(MainView.Type.DETAIL_SUGGESTION)) {
-            return displayLowerDetailSuggestion();
-        } else {
-            _suggestLowerDetail = true;
+        if (!BangPrefs.shouldSuggestDetail() || BangPrefs.isMediumDetail()) {
+            return; // already suggsted, or at lowest/user configured detail level
         }
-        return false;
+
+        queueTownNotificaton(new Runnable() {
+            public void run () {
+                final BangPrefs.DetailLevel current = BangPrefs.getDetailLevel();
+                final BangPrefs.DetailLevel lower = BangPrefs.isHighDetail() ?
+                    BangPrefs.DetailLevel.MEDIUM : BangPrefs.DetailLevel.LOW;
+                OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
+                    public void resultPosted (int button, Object result) {
+                        if (button == 0) { // switch
+                            BangPrefs.updateDetailLevel(lower);
+                        } else if (button == 2) { // disable suggestions
+                            BangPrefs.setSuggestDetail(false);
+                        }
+                    }
+                };
+                String text = MessageBundle.compose(
+                    "m.detail_suggest", "m.detail_" + StringUtil.toUSLowerCase(current.toString()),
+                    "m.detail_" + StringUtil.toUSLowerCase(lower.toString()));
+                OptionDialog.showConfirmDialog(_ctx, "options", text, new String[] {
+                        "m.detail_yes", "m.detail_no", "m.detail_dontask" }, rr);
+            }
+        });
     }
 
     /**
@@ -1078,10 +1063,11 @@ public class BangClient extends BasicClient
             return true;
         }
         PlayerObject user = _ctx.getUserObject();
-        if (!user.tokens.isAnonymous() || _showingAccount) {
+        if (!user.tokens.isAnonymous() ||
+            Iterables.filter(_popups, CreateAccountView.class).iterator().hasNext()) {
             return true;
         }
-        showCreateAccount(true);
+        CreateAccountView.show(_ctx, true);
         return false;
     }
 
@@ -1177,10 +1163,8 @@ public class BangClient extends BasicClient
             log.info("Auto-rejecting notification", "who", source, "notification", notification);
             _psvc.respondToNotification(
                 _client, notification.getKey(), notification.getRejectIndex(), rl);
-            // flag this notification as answered and loop back to checkShowIntro in case there are
-            // more
             notification.responded = true;
-            return checkShowIntro(false);
+            return false;
         }
 
         // append the mute button if it comes from a person
@@ -1199,40 +1183,9 @@ public class BangClient extends BasicClient
                     button = notification.getRejectIndex();
                 }
                 _psvc.respondToNotification(_client, notification.getKey(), button, rl);
-                // flag this notification as answered and loop back to checkShowIntro in case there
-                // are more
                 notification.responded = true;
-                checkShowIntro(false);
             }
         });
-        return true;
-    }
-
-    protected boolean displayLowerDetailSuggestion ()
-    {
-        _suggestLowerDetail = false;
-        if (!BangPrefs.isMediumDetail()) {
-            return false; // already at lowest detail level
-        }
-
-        final BangPrefs.DetailLevel current = BangPrefs.getDetailLevel(),
-            lower = BangPrefs.isHighDetail() ?
-            BangPrefs.DetailLevel.MEDIUM : BangPrefs.DetailLevel.LOW;
-        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
-            public void resultPosted (int button, Object result) {
-                if (button == 0) { // switch
-                    BangPrefs.updateDetailLevel(lower);
-                } else if (button == 2) { // disable suggestions
-                    BangPrefs.setSuggestDetail(false);
-                }
-                checkShowIntro(false);
-            }
-        };
-        String text = MessageBundle.compose(
-            "m.detail_suggest", "m.detail_" + StringUtil.toUSLowerCase(current.toString()),
-            "m.detail_" + StringUtil.toUSLowerCase(lower.toString()));
-        OptionDialog.showConfirmDialog(_ctx, "options", text, new String[] {
-            "m.detail_yes", "m.detail_no", "m.detail_dontask" }, rr);
         return true;
     }
 
@@ -1306,17 +1259,6 @@ public class BangClient extends BasicClient
 
         // clean up the UI bits
         BangUI.shutdown();
-    }
-
-    /**
-     * Convenience method to popup the create account window.
-     */
-    protected void showCreateAccount (boolean onExit)
-    {
-        CreateAccountView cav = new CreateAccountView(_ctx, onExit);
-        cav.setLayer(BangCodes.NEVER_CLEAR_LAYER);
-        displayPopup(cav, true, 800);
-        _showingAccount = true;
     }
 
     /**
@@ -1530,9 +1472,9 @@ public class BangClient extends BasicClient
             } else {
                 if (E_CREATE_HANDLE.equals(reason)) {
                     _headingTo = placeId;
-                    displayPopup(new CreateAvatarView(_ctx), true, CreateAvatarView.WIDTH_HINT);
+                    CreateAvatarView.show(_ctx);
                 } else if (E_SIGN_UP.equals(reason)) {
-                    showCreateAccount(false);
+                    CreateAccountView.show(_ctx, false);
                 } else if (E_UNDER_13.equals(reason)) {
                     _headingTo = placeId;
                     displayPopup(new CoppaView(_ctx), true, 800);
@@ -1580,9 +1522,8 @@ public class BangClient extends BasicClient
     protected SystemChatView _scview;
     protected StatusView _status;
 
+    protected List<Runnable> _pendingNots = Lists.newArrayList();
     protected FKeyPopups _functionPopup;
-
-    protected boolean _suggestLowerDetail;
 
     protected String _playingMusic;
     protected FileStream _mstream;
@@ -1591,9 +1532,7 @@ public class BangClient extends BasicClient
     protected String _priorLocationIdent;
     protected int _priorLocationOid;
     protected String _logOffMsg;
-    protected String _whichPopup;
     protected int _headingTo = -1;
-    protected boolean _showingAccount;
 
     /** We need to trigger static initialization of the StatType class before we download our
      * PlayerObject from the server which will be full of stats. */
