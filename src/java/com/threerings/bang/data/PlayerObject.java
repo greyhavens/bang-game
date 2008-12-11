@@ -194,14 +194,6 @@ public class PlayerObject extends BodyObject
     }
 
     /**
-     * Returns true if this player needs their free bigshot unit.
-     */
-    public boolean needsFreeBigShot ()
-    {
-        return hasCharacter() && !hasBigShot();
-    }
-
-    /**
      * Returns the player's rating for the specified scenario. Do NOT call this on the client.
      * This method will never return null.
      */
@@ -247,19 +239,6 @@ public class PlayerObject extends BodyObject
         String pstr = poses[pose.ordinal()];
         return (pstr != null && looks.containsKey(pstr)) ?
             looks.get(pstr) : looks.get("");
-    }
-
-    /**
-     * Returns true if this player has at least one {@link BigShotItem} in their inventory.
-     */
-    public boolean hasBigShot ()
-    {
-        for (Item item : inventory) {
-            if (item instanceof BigShotItem) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
