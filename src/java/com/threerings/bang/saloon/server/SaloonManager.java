@@ -21,11 +21,13 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
@@ -115,6 +117,11 @@ public class SaloonManager extends MatchHostManager
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
+
+        // creating back parlors requires the onetime pass
+        if (DeploymentConfig.usesOneTime() && !user.holdsOneTime()) {
+            throw new InvocationException(BangCodes.E_LACK_ONETIME);
+        }
 
         // recruiting gangs are named after the gang
         Handle creator;

@@ -280,6 +280,15 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns true if this player has purchased the one-time access pass.
+     */
+    public boolean holdsOneTime ()
+    {
+        // we coopt the frontier town gold pass as the one-time pass
+        return holdsGoldPass(BangCodes.FRONTIER_TOWN);
+    }
+
+    /**
      * Returns true if this player has access to this town.
      */
     public boolean hasAccess (String townId)
