@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <!-- declare the libraries needed to build this webapp -->
 <project name="library-dependencies">
-  <filelist dir="${libs.dir}" id="office.libs">
+  <filelist dir="${libs.dir}" id="bangoffice.libs">
     <file name="commons-collections.jar"/>
+    <file name="google-collect.jar"/>
     <file name="junit4.jar"/>
     <file name="mysql-connector-java.jar"/>
     <file name="servlet-api.jar"/>
