@@ -209,8 +209,8 @@ public class TownView extends BWindow
     {
         _bview.moveToViewpoint("main", 1f);
 
-        // wait until we've finished animating the camera and then check to see if we
-        // should display a tutorial or intro
+        // wait until we've finished animating the camera and then check to see if we should
+        // display a tutorial or intro
         _bctx.getCameraHandler().addCameraObserver(new CameraPath.Observer() {
             public boolean pathCompleted (CameraPath path) {
                 finishedIntroPan();
@@ -579,6 +579,8 @@ public class TownView extends BWindow
                     return false; // removes our observer
                 }
             });
+            // become unactive to make our interface elements go away
+            setActive(false);
         }
 
         protected boolean moveToViewpoint (String view, float duration)
