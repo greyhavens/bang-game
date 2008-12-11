@@ -41,11 +41,11 @@ import static com.threerings.bang.Log.log;
 public class CreateAccountView extends SteelWindow
     implements ActionListener, BangClient.NonClearablePopup
 {
-    public static void show (BangContext ctx, boolean onExit)
+    public static void show (BangContext ctx, String customMsg, boolean onExit)
     {
-        CreateAccountView cav = new CreateAccountView(ctx, onExit);
+        CreateAccountView cav = new CreateAccountView(ctx, customMsg, onExit);
         cav.setLayer(BangCodes.NEVER_CLEAR_LAYER);
-        ctx.getBangClient().displayPopup(cav, true, 800);
+        ctx.getBangClient().displayPopup(cav, true, 600);
     }
 
     // documentation inherited from interface ActionListener
@@ -64,7 +64,7 @@ public class CreateAccountView extends SteelWindow
         }
     }
 
-    protected CreateAccountView (BangContext ctx, boolean onExit)
+    protected CreateAccountView (BangContext ctx, String customMsg, boolean onExit)
     {
         super(ctx, ctx.xlate(BangCodes.BANG_MSGS, "m.account_title"));
         setModal(true);
@@ -75,7 +75,11 @@ public class CreateAccountView extends SteelWindow
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(15));
         _contents.setStyleClass("padded");
 
-        _contents.add(new BLabel(_msgs.get("m.account_info"), "dialog_text"));
+        // we may have been provided with m.account_info_loctype for which we may have a custom
+        // message explaining why an account is needed for that location
+        String infoMsg = customMsg != null && _msgs.exists(customMsg) ? customMsg : "m.account_info";
+        _contents.add(new BLabel(_msgs.get(infoMsg), "dialog_text_left"));
+
         BContainer grid = new BContainer(new TableLayout(2, 5, 5));
         grid.add(new BLabel(_msgs.get("m.username"), "right_label"));
         grid.add(_username = new BTextField(12));

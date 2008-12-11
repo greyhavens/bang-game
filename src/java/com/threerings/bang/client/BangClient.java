@@ -30,6 +30,7 @@ import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.EventListener;
 
 import com.samskivert.servlet.user.Password;
+import com.samskivert.text.MessageUtil;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Config;
 import com.samskivert.util.Interval;
@@ -1067,7 +1068,7 @@ public class BangClient extends BasicClient
             Iterables.filter(_popups, CreateAccountView.class).iterator().hasNext()) {
             return true;
         }
-        CreateAccountView.show(_ctx, true);
+        CreateAccountView.show(_ctx, null, true);
         return false;
     }
 
@@ -1473,8 +1474,10 @@ public class BangClient extends BasicClient
                 if (E_CREATE_HANDLE.equals(reason)) {
                     _headingTo = placeId;
                     CreateAvatarView.show(_ctx);
-                } else if (E_SIGN_UP.equals(reason)) {
-                    CreateAccountView.show(_ctx, false);
+                } else if (reason.startsWith(E_SIGN_UP)) {
+                    String[] bits = MessageUtil.decompose(reason);
+                    String customMsg = (bits.length > 1) ? "m.account_info_" + bits[1] : null;
+                    CreateAccountView.show(_ctx, customMsg, false);
                 } else if (E_UNDER_13.equals(reason)) {
                     _headingTo = placeId;
                     displayPopup(new CoppaView(_ctx), true, 800);

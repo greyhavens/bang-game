@@ -37,7 +37,7 @@ public abstract class ShopManager extends PlaceManager
         if (requireHandle() && !user.hasCharacter()) {
             msg = BangCodes.E_CREATE_HANDLE;
         } else if (!allowAnonymous() && user.tokens.isAnonymous()) {
-            msg = BangCodes.E_SIGN_UP;
+            msg = MessageBundle.compose(BangCodes.E_SIGN_UP, getIdent());
         } else if (!allowUnder13() && !user.tokens.isOver13()) {
             msg = BangCodes.E_UNDER_13;
         }

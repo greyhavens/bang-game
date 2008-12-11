@@ -276,7 +276,7 @@ public class LogonView extends BWindow
         } else if ("anon_account".equals(event.getAction())) {
             _ctx.getBangClient().queueTownNotificaton(new Runnable() {
                 public void run () {
-                    CreateAccountView.show(_ctx, false);
+                    CreateAccountView.show(_ctx, null, false);
                 }
             });
             logon(BangCodes.FRONTIER_TOWN, BangPrefs.config.getValue("anonymous", ""), null);
