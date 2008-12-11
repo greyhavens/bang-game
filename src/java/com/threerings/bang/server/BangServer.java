@@ -379,6 +379,9 @@ public class BangServer extends CrowdServer
         confreg = new DatabaseConfigRegistry(perCtx, invoker, ServerConfig.nodename);
         AdminProvider.init(invmgr, confreg);
 
+        // initialize our depot repositories; running all of our schema and data migrations
+        _perCtx.initializeRepositories(true);
+
         // now initialize our runtime configuration, postponing the remaining server initialization
         // until our configuration objects are available
         RuntimeConfig.init(omgr);
