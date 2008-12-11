@@ -45,7 +45,7 @@ public class CreateAvatarView extends SteelWindow
      */
     public static void show (BangContext ctx)
     {
-        show(ctx, null);
+        show(ctx, Runnables.NOOP);
     }
 
     /**
