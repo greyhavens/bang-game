@@ -49,8 +49,8 @@ public class BarberView extends ShopView
         _avatar = new AvatarView(ctx, 2, true, false);
 
         // put our new look and change clothes interfaces in tabs
-        _newlook = new NewLookView(ctx, _status);
         _wearclothes = new WearClothingView(ctx, _status);
+        _newlook = new NewLookView(ctx, _status);
         _editchar = new EditCharacterView(ctx, _status);
 
         // start with the wear clothes view "selected"
@@ -77,8 +77,8 @@ public class BarberView extends ShopView
         super.willEnterPlace(plobj);
 
         BarberObject barbobj = (BarberObject)plobj;
-        _newlook.setBarberObject(barbobj);
         _wearclothes.setBarberObject(barbobj);
+        _newlook.setBarberObject(barbobj);
         _editchar.setBarberObject(barbobj);
     }
 
@@ -146,8 +146,8 @@ public class BarberView extends ShopView
     protected StatusLabel _status;
     protected BImage _looktab, _chartab;
 
-    protected NewLookView _newlook;
     protected WearClothingView _wearclothes;
+    protected NewLookView _newlook;
     protected EditCharacterView _editchar;
 
     protected static Rectangle CONTENT_RECT = new Rectangle(40, 65, 980, 545);
