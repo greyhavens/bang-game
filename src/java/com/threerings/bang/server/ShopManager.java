@@ -34,10 +34,10 @@ public abstract class ShopManager extends PlaceManager
         }
 
         String msg = null;
-        if (requireHandle() && !user.hasCharacter()) {
-            msg = BangCodes.E_CREATE_HANDLE;
-        } else if (!allowAnonymous() && user.tokens.isAnonymous()) {
+        if (!allowAnonymous() && user.tokens.isAnonymous()) {
             msg = MessageBundle.compose(BangCodes.E_SIGN_UP, getIdent());
+        } else if (requireHandle() && !user.hasCharacter()) {
+            msg = BangCodes.E_CREATE_HANDLE;
         } else if (!allowUnder13() && !user.tokens.isOver13()) {
             msg = BangCodes.E_UNDER_13;
         }
