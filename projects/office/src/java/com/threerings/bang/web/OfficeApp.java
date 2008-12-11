@@ -85,6 +85,9 @@ public class OfficeApp extends Application
             _playrepo = new PlayerStatRepository(_conprov);
             _statrepo = new BangStatRepository(_perCtx);
 
+            // initialize our repositories, run any migrations, etc.
+            _perCtx.initializeRepositories(true);
+
 	    log.info("Sheriff's Office initialized.");
 
 	} catch (Throwable t) {
