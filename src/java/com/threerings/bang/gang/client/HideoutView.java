@@ -29,9 +29,9 @@ import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.util.SafeSubscriber;
 
+import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
-import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.HackyTabs;
@@ -39,6 +39,7 @@ import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.saloon.client.TableGameView;
 import com.threerings.bang.saloon.client.TopScoreView;
@@ -316,11 +317,15 @@ public class HideoutView extends ShopView
     {
         BPopupMenu menu = new BPopupMenu(getWindow(), false);
         menu.addMenuItem(new BMenuItem(_msgs.get("m.edit_buckle"), "edit_buckle"));
-        menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_outfits"), "purchase_outfits"));
+        if (DeploymentConfig.usesCoins()) {
+            menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_outfits"), "purchase_outfits"));
+        }
         menu.addMenuItem(new BMenuItem(_msgs.get("m.inventory"), "inventory"));
         menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_items"), "purchase_items"));
         menu.addMenuItem(new BMenuItem(_msgs.get("m.member_broadcast"), "member_broadcast"));
-        menu.addMenuItem(new BMenuItem(_msgs.get("m.exchange_scrip"), "exchange_scrip"));
+        if (DeploymentConfig.usesCoins()) {
+            menu.addMenuItem(new BMenuItem(_msgs.get("m.exchange_scrip"), "exchange_scrip"));
+        }
         menu.addListener(this);
 
         menu.popup(_options.getAbsoluteX(), _options.getAbsoluteY() + _options.getHeight(), true);
