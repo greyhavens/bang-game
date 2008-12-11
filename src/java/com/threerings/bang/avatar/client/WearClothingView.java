@@ -50,7 +50,7 @@ public class WearClothingView extends BContainer
         }
         final BImage blankbg = ctx.loadImage("ui/barber/tabs_back.png");
         final BImage tabbg = ctx.loadImage("ui/barber/side_change_clothes.png");
-        add(new HackyTabs(ctx, true, "ui/barber/tab_", tabs, 54, 30) {
+        HackyTabs htabs = new HackyTabs(ctx, true, "ui/barber/tab_", tabs, 54, 30) {
             protected void wasAdded () {
                 super.wasAdded();
                 blankbg.reference();
@@ -71,7 +71,9 @@ public class WearClothingView extends BContainer
             protected void tabSelected (int index) {
                 setSlot(index);
             }
-        }, new Rectangle(10, 35, 140, 470));
+        };
+        add(htabs, new Rectangle(10, 35, 140, 470));
+        htabs.selectTab(1); // start with clothing as newbies have clothing
 
         // if we're an admin show a button that copies our avatar fingerprint to the clipboard
         if (ctx.getUserObject().tokens.isAdmin()) {
