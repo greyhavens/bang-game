@@ -954,15 +954,6 @@ public class BangClient extends BasicClient
             });
         }
 
-        // queue up the tutorial view if they haven't turned it off
-        if (BangPrefs.shouldShowTutIntro(user)) {
-            queueTownNotificaton(new Runnable() {
-                public void run () {
-                    displayPopup(new TutorialView(_ctx), true, TutorialView.WIDTH_HINT);
-                }
-            });
-        }
-
         // show the town view to start, it will call checkNotifications() once the town view has
         // "presented" the first town
         showTownView();

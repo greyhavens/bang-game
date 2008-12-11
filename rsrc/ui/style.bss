@@ -1138,6 +1138,13 @@ town_menubar {
   padding: 0 16 5 40;
 }
 
+town_tip {
+  background: solid #FFFFFF;
+  border: 1 solid #000000;
+  color: #000000;
+  padding: 10 10 10 10;
+}
+
 //
 // General chat styles
 

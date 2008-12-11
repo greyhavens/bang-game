@@ -19,12 +19,12 @@ import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
  */
 public class TutorialCodes
 {
-    /** A prefix for tutorials that are not tutorials but rather two player
-     * practice games versus an AI. */
+    /** A prefix for tutorials that are not tutorials but rather two player practice games versus
+     * an AI. */
     public static final String PRACTICE_PREFIX = "practice_";
 
-    /** Enumerates the identifiers for our tutorials and the order in which
-     * they should be displayed and completed. */
+    /** Enumerates the identifiers for our tutorials and the order in which they should be
+     * displayed and completed. */
     public static final String[][] TUTORIALS = {
         { // frontier town tutorials
             "controls",
@@ -49,8 +49,8 @@ public class TutorialCodes
         }
     };
 
-    /** Enumerates the identifiers for our new tutorials and the order in which
-     * they should be displayed and completed. */
+    /** Enumerates the identifiers for our new tutorials and the order in which they should be
+     * displayed and completed. */
     public static final String[][] NEW_TUTORIALS = {
         { // frontier town tutorials
             "new_controls",
@@ -127,9 +127,8 @@ public class TutorialCodes
                     "Frost Maw", "indian_post/stormcaller", null, null));
     }
 
-    /** An event message sent to the server to let the tutorial scenario know
-     * that we've processed a particular action. The index of the action will
-     * be passed along with the event. */
+    /** An event message sent to the server to let the tutorial scenario know that we've processed
+     * a particular action. The index of the action will be passed along with the event. */
     public static final String ACTION_PROCESSED = "actionProcessed";
 
     /** A user interface action monitored by the tutorial system. */
@@ -163,8 +162,7 @@ public class TutorialCodes
     public static final String UNIT_ORDERED_ATTACK = "unit_ordered_attack";
 
     /** A game state action monitored by the tutorial system. */
-    public static final String UNIT_ORDERED_MOVE_ATTACK =
-        "unit_ordered_move_attack";
+    public static final String UNIT_ORDERED_MOVE_ATTACK = "unit_ordered_move_attack";
 
     /** A game state action monitored by the tutorial system. */
     public static final String UNIT_KILLED = "unit_killed";

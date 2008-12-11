@@ -115,19 +115,19 @@ public class TutorialView extends SteelWindow
         PlayerObject self = _ctx.getUserObject();
         _townIdx = BangUtil.getTownIndex(self.townId);
 
-        if (self.stats.containsValue(StatType.TUTORIALS_COMPLETED,
-                    TutorialCodes.NEW_TUTORIALS[_townIdx][0])) {
-            showTutorialList();
-        } else {
+        final String firstTutId = TutorialCodes.NEW_TUTORIALS[_townIdx][0];
+        if (!self.stats.containsValue(StatType.TUTORIALS_COMPLETED, firstTutId)) {
             showTutorialIntro();
-        }
 
-        if (BangPrefs.shouldShowTutIntro(self) &&
+        } else {
+            showTutorialList();
+            // only show the tutorial tip disabler after you've done the very first tutorial, and
             // don't allow demo accounts to disable the tutorial popup
-            !_ctx.getUserObject().tokens.isDemo()) {
-            BContainer checkbox = GroupLayout.makeHBox(GroupLayout.CENTER);
-            checkbox.add(_notuts = new BCheckBox(_msgs.get("m.no_tuts")));
-            _contents.add(checkbox, BorderLayout.SOUTH);
+            if (BangPrefs.shouldShowTutIntro(self) && !_ctx.getUserObject().tokens.isDemo()) {
+                BContainer checkbox = GroupLayout.makeHBox(GroupLayout.CENTER);
+                checkbox.add(_notuts = new BCheckBox(_msgs.get("m.no_tuts")));
+                _contents.add(checkbox, BorderLayout.SOUTH);
+            }
         }
     }
 

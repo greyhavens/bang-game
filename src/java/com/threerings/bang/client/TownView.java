@@ -55,6 +55,7 @@ import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.util.SafeSubscriber;
 
+import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TownObject;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -62,6 +63,7 @@ import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.ModifiableDSet;
+import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Viewpoint;
@@ -69,6 +71,7 @@ import com.threerings.bang.game.util.BoardFile;
 
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
@@ -99,7 +102,8 @@ public class TownView extends BWindow
         setBounds(0, 0, width, height);
 
         // load up our menu props
-        String townId = ctx.getUserObject().townId;
+        PlayerObject user = ctx.getUserObject();
+        String townId = user.townId;
         Properties props = new Properties();
         String mpath = "rsrc/menu/" + townId + "/menu.properties";
         try {
@@ -157,17 +161,34 @@ public class TownView extends BWindow
         _menu.add(button, GroupLayout.FIXED);
 
         // if we're an admin add some temporary buttons
-        if (ctx.getUserObject().tokens.isSupport()) {
+        if (user.tokens.isSupport()) {
             add(_admin = GroupLayout.makeHBox(GroupLayout.CENTER));
             _admin.add(new BButton("Tournaments", this, "tourney"));
             // allow admins to go to the sheriff's office in ITP, etc. to make bounties
-            if (!ctx.getUserObject().townId.equals(BangCodes.FRONTIER_TOWN)) {
+            if (!townId.equals(BangCodes.FRONTIER_TOWN)) {
                 ActionListener fire = new ActionListener() {
                     public void actionPerformed (ActionEvent event) {
                         fireCommand(event.getAction());
                     }
                 };
                 _admin.add(new BButton("Sheriff's Office", fire, "office"));
+            }
+        }
+
+        // show a tip balloon for tutorials unless we've done all the tutorials or turned it off
+        String[] tutIds = TutorialCodes.NEW_TUTORIALS[BangUtil.getTownIndex(townId)];
+        if (!user.stats.containsValue(StatType.TUTORIALS_COMPLETED, tutIds[tutIds.length-1]) &&
+            BangPrefs.shouldShowTutIntro(user)) {
+            add(new TipBalloon(_msgs.get("m.tutorial_tip"), 100, 75));
+        }
+
+        // if we're in frontier town, add tip balloons to the saloon and office
+        if (townId.equals(BangCodes.FRONTIER_TOWN)) {
+            if (user.stats.getSetStatSize(StatType.BOUNTIES_COMPLETED) < OFFICE_TIP) {
+                add(new TipBalloon(_msgs.get("m.office_tip"), 150, 630));
+            }
+            if (user.stats.getIntStat(StatType.GAMES_PLAYED) < SALOON_TIP) {
+                add(new TipBalloon(_msgs.get("m.saloon_tip"), 600, 500));
             }
         }
     }
@@ -254,7 +275,7 @@ public class TownView extends BWindow
 
     protected void finishedIntroPan ()
     {
-        _active = !_bctx.getBangClient().checkNotifications();
+        setActive(!_bctx.getBangClient().checkNotifications());
     }
 
     protected void fireCommand (String command)
@@ -271,7 +292,7 @@ public class TownView extends BWindow
         }
 
         // become inactive now that we're going somewhere
-        _active = false;
+        setActive(false);
     }
 
     /** A simple viewer for the town board. */
@@ -663,6 +684,32 @@ public class TownView extends BWindow
         }
     }
 
+    protected class TipBalloon extends BLabel
+    {
+        public TipBalloon (String text, int x, int y) {
+            super(text);
+            setStyleClass("town_tip");
+            setLocation(x, y);
+        }
+
+        @Override public void render (Renderer renderer) {
+            if (_active) {
+                super.render(renderer);
+            }
+        }
+
+        @Override public BComponent getHitComponent (int mx, int my) {
+            return null;
+        }
+
+        @Override protected void wasAdded () {
+            super.wasAdded();
+            // we won't get layed out normally, so we need to do that ourselves
+            Dimension psize = getPreferredSize(-1, -1);
+            setSize(psize.width, psize.height);
+        }
+    }
+
     protected BangContext _bctx;
     protected MessageBundle _msgs;
     protected boolean _active;
@@ -685,4 +732,8 @@ public class TownView extends BWindow
         Color.black, // ghost_post
         Color.black, // city_of_gold
     };
+
+    // the number of bounties and ranked games needed to cause the tip to go away
+    protected static final int OFFICE_TIP = 4;
+    protected static final int SALOON_TIP = 4;
 }
