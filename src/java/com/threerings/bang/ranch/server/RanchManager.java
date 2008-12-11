@@ -40,9 +40,9 @@ public class RanchManager extends ShopManager
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
-        if (!user.hasCharacter()) {
-            log.warning("Requested to recruit unit from guest user", "who", user.who());
-            throw new InvocationException(INTERNAL_ERROR);
+        if (user.tokens.isAnonymous()) {
+            log.warning("Requested to recruit unit from anonymous user", "who", user.who());
+            throw new InvocationException(ACCESS_DENIED);
         }
 
         UnitConfig config = UnitConfig.getConfig(type, false);

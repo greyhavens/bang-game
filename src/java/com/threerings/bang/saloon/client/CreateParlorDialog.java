@@ -16,6 +16,7 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.bui.ServiceButton;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.ParlorInfo;
@@ -26,7 +27,6 @@ import com.threerings.bang.saloon.data.SaloonObject;
  * Displays configuration parameters for creating a Back Parlor.
  */
 public class CreateParlorDialog extends BDecoratedWindow
-    implements ActionListener
 {
     public CreateParlorDialog (BangContext ctx, SaloonObject salobj)
     {
@@ -73,35 +73,24 @@ public class CreateParlorDialog extends BDecoratedWindow
         params.add(row);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        buttons.add(new BButton(_msgs.get("m.create"), this, "create"));
-        buttons.add(new BButton(_msgs.get("m.cancel"), this, "cancel"));
+        buttons.add(new ServiceButton(_ctx, _msgs.get("m.create"),
+                                      SaloonCodes.SALOON_MSGS, "m.create_parlor_failed") {
+            protected boolean callService () {
+                ParlorInfo.Type type = (ParlorInfo.Type)_type.getSelectedValue();
+                String passwd = type == ParlorInfo.Type.PASSWORD ? _password.getText() : null;
+                _salobj.service.createParlor(
+                    _ctx.getClient(), type, passwd, _matched.isSelected(), createResultListener());
+                return true;
+            }
+            protected boolean onSuccess (Object result) {
+                // move immediately to our new parlor
+                _ctx.getLocationDirector().moveTo((Integer)result);
+                return false;
+            }
+        });
+        buttons.add(new BButton(_msgs.get("m.cancel")).
+                    addListener(_ctx.getBangClient().makePopupClearer(this, true)));
         add(buttons, GroupLayout.FIXED);
-    }
-
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        String action = event.getAction();
-        if ("create".equals(action)) {
-            ParlorInfo.Type type = (ParlorInfo.Type)_type.getSelectedValue();
-            String passwd = type == ParlorInfo.Type.PASSWORD ? _password.getText() : null;
-            _salobj.service.createParlor(
-                _ctx.getClient(), type, passwd, _matched.isSelected(), new SaloonService.ResultListener() {
-                public void requestProcessed (Object result) {
-                    // move immediately to our new parlor
-                    _ctx.getLocationDirector().moveTo((Integer)result);
-                }
-                public void requestFailed (String cause) {
-                    _ctx.getChatDirector().displayFeedback(
-                        SaloonCodes.SALOON_MSGS,
-                        MessageBundle.compose("m.create_parlor_failed", cause));
-                }
-            });
-            _ctx.getBangClient().clearPopup(this, true);
-
-        } else if ("cancel".equals(action)) {
-            _ctx.getBangClient().clearPopup(this, true);
-        }
     }
 
     protected BangContext _ctx;

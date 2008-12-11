@@ -21,6 +21,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.NeedPremiumView;
 import com.threerings.bang.client.bui.EnablingValidator;
+import com.threerings.bang.client.bui.ServiceButton;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
@@ -67,10 +68,22 @@ public class RecruitDialog extends BDecoratedWindow
         cost.setMoney(config.scripCost, config.getCoinCost(_ctx.getUserObject()), false);
         row.add(cost, GroupLayout.FIXED);
         row.add(new Spacer(1, 1));
-        row.add(new BButton(_msgs.get("m.cancel"), this, "cancel"),
-                GroupLayout.FIXED);
-        row.add(_recruit = new BButton(_msgs.get("m.recruit"), this, "recruit"),
-                GroupLayout.FIXED);
+        row.add(new BButton(_msgs.get("m.cancel")).
+                addListener(_ctx.getBangClient().makePopupClearer(this, true)), GroupLayout.FIXED);
+        _recruit = new ServiceButton(_ctx, _msgs.get("m.recruit"), RanchCodes.RANCH_MSGS, _status) {
+            protected boolean callService () {
+                _ranchobj.service.recruitBigShot(_ctx.getClient(), _config.type,
+                                                 new Name(_name.getText()), createResultListener());
+                return true;
+            }
+            protected boolean onSuccess (Object result) {
+                BigShotItem unit = (BigShotItem)result;
+                _view.unitRecruited(unit.getItemId());
+                _ctx.getBangClient().clearPopup(RecruitDialog.this, true);
+                return false;
+            }
+        };
+        row.add(_recruit, GroupLayout.FIXED);
         _recruit.setEnabled(false);
         cont.add(row, GroupLayout.FIXED);
 
@@ -98,22 +111,6 @@ public class RecruitDialog extends BDecoratedWindow
 
         } else if ("cancel".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
-
-        } else if ("recruit".equals(event.getAction())) {
-            RanchService.ResultListener rl = new RanchService.ResultListener() {
-                public void requestProcessed (Object result) {
-                    BigShotItem unit = (BigShotItem)result;
-                    _view.unitRecruited(unit.getItemId());
-                    _ctx.getBangClient().clearPopup(RecruitDialog.this, true);
-                }
-                public void requestFailed (String cause) {
-                    _status.setStatus(_msgs.xlate(cause), true);
-                    // potentially show our need coins or need onetime dialog
-                    NeedPremiumView.maybeShowNeedPremium(_ctx, cause);
-                }
-            };
-            _ranchobj.service.recruitBigShot(
-                _ctx.getClient(), _config.type, new Name(_name.getText()), rl);
         }
     }
 

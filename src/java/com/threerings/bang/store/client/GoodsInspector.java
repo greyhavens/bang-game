@@ -24,6 +24,7 @@ import com.threerings.bang.client.NeedPremiumView;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.bui.ServiceButton;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
@@ -65,7 +66,27 @@ public class GoodsInspector extends BContainer
         _ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
         _ccont.add(new BLabel(_msgs.get("m.price"), "table_data"));
         _ccont.add(_cost = createCostLabel());
-        _buy = new BButton(_msgs.get("m.buy"), this, "buy");
+
+        // create our all singing, all dancing buy button
+        _buy = new ServiceButton(_ctx, _msgs.get("m.buy"), StoreCodes.STORE_MSGS, _descrip) {
+            protected boolean callService () {
+                if (_good == null || _goodsobj == null) {
+                    return false;
+                }
+                // if we haven't configured a handle (and our gender), we can't buy things yet, so
+                // let's encourage the user to set themselves up and then we can let them buy
+                if (!_ctx.getUserObject().hasCharacter()) {
+                    CreateAvatarView.show(_ctx, _reinit);
+                    return false;
+                }
+                _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, createConfirmListener());
+                return true;
+            }
+            protected boolean onSuccess (Object result) {
+                boughtGood();
+                return true;
+            }
+        };
         _buy.setStyleClass("big_button");
     }
 
@@ -140,15 +161,7 @@ public class GoodsInspector extends BContainer
         }
 
         String action = event.getAction();
-        if ("buy".equals(action)) {
-            buyGood();
-
-        } else if ("try".equals(action)) {
-            _try.setEnabled(false);
-            BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
-            _ctx.getLocationDirector().moveTo(bbd.barberOid);
-
-        } else if ("download".equals(action)) {
+        if ("download".equals(action)) {
             String song = ((SongGood)_good).getSong();
             _ctx.getBangClient().displayPopup(new SongDownloadView(_ctx, song), true,
                                               SongDownloadView.PREF_WIDTH);
@@ -165,46 +178,9 @@ public class GoodsInspector extends BContainer
         _cost.setMoney(_good.getScripCost(), _good.getCoinCost(_ctx.getUserObject()), false);
     }
 
-    protected void buyGood ()
-    {
-        // if we haven't configured a handle (and our gender), we can't buy things yet, so let's
-        // encourage the user to set themselves up and then we can let them buy
-        if (!_ctx.getUserObject().hasCharacter()) {
-            OptionDialog.showConfirmDialog(_ctx, StoreCodes.STORE_MSGS, "m.buy_needs_handle",
-                                           new OptionDialog.ResponseReceiver() {
-                public void resultPosted (int button, Object result) {
-                    if (button == OptionDialog.OK_BUTTON) {
-                        CreateAvatarView.show(_ctx, new Runnable() {
-                            public void run () {
-                                // we need to reinit our goods display when the user creates their
-                                // avatar so that we switch to the appropriate gener-specific goods
-                                _palette.reinitGoods(true);
-                            }
-                        });
-                    }
-                }
-            });
-            return;
-        }
-
-        _buy.setEnabled(false);
-        StoreService.ConfirmListener cl = new StoreService.ConfirmListener() {
-            public void requestProcessed () {
-                boughtGood();
-            }
-            public void requestFailed (String cause) {
-                _buy.setEnabled(true);
-                _descrip.setText(_msgs.xlate(cause));
-                // potentially show our need coins or need onetime dialog
-                NeedPremiumView.maybeShowNeedPremium(_ctx, cause);
-            }
-        };
-        _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
-    }
-
     protected void boughtGood ()
     {
-        // if they just bought cards, the "in your pocket" count
+        // if they just bought cards, update the "in your pocket" count
         if (_good instanceof CardTripletGood) {
             CardTripletGood ctg = (CardTripletGood)_good;
             PlayerObject pobj = _ctx.getUserObject();
@@ -218,6 +194,7 @@ public class GoodsInspector extends BContainer
             }
         }
 
+        // reinit our goods in case this was a one shot object
         _palette.reinitGoods(true);
 
         // if they bought an article, give them a quick button to go try it on
@@ -260,7 +237,13 @@ public class GoodsInspector extends BContainer
 
         case TRY:
             if (_try == null) {
-                _try = new BButton(_msgs.get("m.try"), this, "try");
+                _try = new BButton(_msgs.get("m.try"), new ActionListener() {
+                    public void actionPerformed (ActionEvent event) {
+                        _try.setEnabled(false);
+                        _ctx.getLocationDirector().moveTo(
+                            ((BangBootstrapData)_ctx.getClient().getBootstrapData()).barberOid);
+                    }
+                }, null);
                 _try.setStyleClass("big_button");
             }
             add(_try, new Point(300 + offset, 10));
@@ -343,6 +326,13 @@ public class GoodsInspector extends BContainer
             updateImage();
             _gicon.setIcon(_icon.getIcon());
             _gicon.colorIds[index] = colorsel.getSelectedColor();
+        }
+    };
+
+    /** Used to reinitialize our display when the user creates their character. */
+    protected Runnable _reinit = new Runnable() {
+        public void run () {
+            _palette.reinitGoods(true);
         }
     };
 

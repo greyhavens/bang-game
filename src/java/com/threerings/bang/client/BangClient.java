@@ -26,6 +26,8 @@ import com.google.common.collect.Lists;
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.EventListener;
 
@@ -644,6 +646,18 @@ public class BangClient extends BasicClient
                 _ctx.getRootNode().removeWindow(popup);
             }
         }
+    }
+
+    /**
+     * Creates an action listener that clears the supplied popup. Useful for cancel buttons.
+     */
+    public ActionListener makePopupClearer (final BWindow popup, final boolean animate)
+    {
+        return new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                clearPopup(popup, animate);
+            }
+        };
     }
 
     /**

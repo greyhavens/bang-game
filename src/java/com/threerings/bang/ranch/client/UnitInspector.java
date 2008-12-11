@@ -109,8 +109,6 @@ public class UnitInspector extends BContainer
         BButton btn = new BButton(_msgs.get("m.recruit"), this, "recruit");
         btn.setStyleClass("big_button");
         _recruit.add(btn);
-        // don't allow anonymous players to recruit big shots
-        btn.setEnabled(_ctx.getUserObject().hasCharacter());
 
         // we'll use this group to start practice scenarios
         _practice = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
@@ -193,10 +191,9 @@ public class UnitInspector extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         if ("recruit".equals(event.getAction())) {
-            if (_config != null && _itemId == -1 &&
-                _config.rank == UnitConfig.Rank.BIGSHOT) {
+            if (_config != null && _itemId == -1 && _config.rank == UnitConfig.Rank.BIGSHOT) {
                 _ctx.getBangClient().displayPopup(
-                    new RecruitDialog(_ctx, (RanchView)getParent(), _ranchobj, _config), true, 400);
+                    new RecruitDialog(_ctx, (RanchView)getParent(), _ranchobj, _config), true, 500);
             }
 
         } else if ("practice".equals(event.getAction())) {

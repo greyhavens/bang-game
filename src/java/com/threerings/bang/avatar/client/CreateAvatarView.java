@@ -40,11 +40,18 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 public class CreateAvatarView extends SteelWindow
     implements BangClient.NonClearablePopup
 {
+    /**
+     * Shows the create character interface.
+     */
     public static void show (BangContext ctx)
     {
         show(ctx, null);
     }
 
+    /**
+     * Shows the create character interface and calls the supplied runnable if and when the player
+     * creates their character.
+     */
     public static void show (BangContext ctx, Runnable onCreate)
     {
         CreateAvatarView view = new CreateAvatarView(ctx);
