@@ -19,6 +19,7 @@ import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
+import com.samskivert.net.MailUtil;
 import com.samskivert.util.StringUtil;
 import com.samskivert.servlet.user.InvalidUsernameException;
 import com.samskivert.servlet.user.Password;
@@ -45,7 +46,7 @@ public class CreateAccountView extends SteelWindow
     {
         CreateAccountView cav = new CreateAccountView(ctx, customMsg, onExit);
         cav.setLayer(BangCodes.NEVER_CLEAR_LAYER);
-        ctx.getBangClient().displayPopup(cav, true, 600);
+        ctx.getBangClient().displayPopup(cav, true, 650);
     }
 
     // documentation inherited from interface ActionListener
@@ -104,7 +105,7 @@ public class CreateAccountView extends SteelWindow
         for (int ii = 0; ii < 100; ii++) {
             _years.addItem(Integer.valueOf(base - ii));
         }
-        _years.selectItem(0);
+        _years.selectItem(7); // let's assume they're 14
         _years.addListener(new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 String action = event.getAction();
@@ -146,9 +147,7 @@ public class CreateAccountView extends SteelWindow
         _days.setVisible(false);
 
         _contents.add(grid);
-
         _contents.add(_status = new StatusLabel(_ctx));
-        _status.setStatus(_msgs.get("m.under_coppa"), false);
 
         _buttons.add(_cancel = new BButton(
                     _msgs.get(onExit ? "m.quit" : "m.cancel"), this, "cancel"));
@@ -158,9 +157,9 @@ public class CreateAccountView extends SteelWindow
         // Create a listener for text entry
         TextListener tlistener = new TextListener () {
             public void textChanged (TextEvent event) {
-                _textIn = !StringUtil.isBlank(_username.getText()) &&
-                        !StringUtil.isBlank(_password.getText()) &&
-                        !StringUtil.isBlank(_repassword.getText());
+                _textIn = (!StringUtil.isBlank(_username.getText()) &&
+                           !StringUtil.isBlank(_password.getText()) &&
+                           !StringUtil.isBlank(_repassword.getText()));
                 _create.setEnabled(_over13 && _textIn);
             }
         };
@@ -168,20 +167,11 @@ public class CreateAccountView extends SteelWindow
         _password.addListener(tlistener);
         _repassword.addListener(tlistener);
 
-        // Create a listener for the required age
+        // create a listener for the required age
         ActionListener alistener = new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 if (event.getAction().equals("selectionChanged")) {
-                    Calendar year = Calendar.getInstance();
-                    year.set((Integer)_years.getSelectedItem(),
-                            ((Integer)_months.getSelectedItem() - 1),
-                            (Integer)_days.getSelectedItem());
-                    Calendar now = Calendar.getInstance();
-                    now.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
-                    _over13 = year.compareTo(now) <= 0;
-                    _status.setStatus(_over13 ? "" : _msgs.get("m.under_coppa"), false);
-                    _create.setEnabled(_over13 && _textIn);
-                    _birthdate = year.getTime();
+                    updateBirthdate();
                 }
             }
         };
@@ -189,6 +179,22 @@ public class CreateAccountView extends SteelWindow
         _months.addListener(alistener);
         _days.addListener(alistener);
 
+        // set our status and enablings properly to start
+        updateBirthdate();
+    }
+
+    protected void updateBirthdate ()
+    {
+        Calendar year = Calendar.getInstance();
+        year.set((Integer)_years.getSelectedItem(),
+                 ((Integer)_months.getSelectedItem() - 1),
+                 (Integer)_days.getSelectedItem());
+        Calendar now = Calendar.getInstance();
+        now.roll(Calendar.YEAR, -BangCodes.COPPA_YEAR);
+        _over13 = year.compareTo(now) <= 0;
+        _status.setStatus(_msgs.get(_over13 ? "m.account_tip" : "m.under_coppa"), false);
+        _create.setEnabled(_over13 && _textIn);
+        _birthdate = year.getTime();
     }
 
     /**
@@ -210,9 +216,16 @@ public class CreateAccountView extends SteelWindow
             return;
         }
 
+        final String email = _email.getText().trim();
+        if (email.length() > 0 && !MailUtil.isValidAddress(email)) {
+            _status.setStatus(_msgs.get("e.invalid_email"), true);
+            return;
+        }
+
         PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
         PlayerService.ConfirmListener cl = new PlayerService.ConfirmListener() {
             public void requestProcessed () {
+                BangPrefs.config.setValue("anonymous", "");
                 BangPrefs.config.setValue("username", uname);
                 showRestart();
             }
