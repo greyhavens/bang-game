@@ -20,10 +20,13 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ShopManager;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.bank.client.BankService;
 import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankObject;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Handles the server-side operation of the Bank.
@@ -138,9 +141,12 @@ public class BankManager extends ShopManager
         throws InvocationException
     {
         PlayerObject user = super.requireShopEnabled(caller);
+        if (!DeploymentConfig.usesCoins()) {
+            log.warning("Rejecting bank operation on non-coin deployment", "who", user.who());
+            throw new InvocationException(BankCodes.E_INTERNAL_ERROR);
+        }
         if (!user.canExchange()) {
-            throw new InvocationException(MessageBundle.qualify(
-                        BankCodes.BANK_MSGS, "e.require_exchange_pass"));
+            throw new InvocationException(BankCodes.BANK_MSGS, "e.require_exchange_pass");
         }
         return user;
     }
