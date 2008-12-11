@@ -5,7 +5,7 @@
   <property name="base.dir" value="../.."/>
 
   <!-- the web application name and properties file -->
-  <property name="app.name"        value="office"/>
+  <property name="app.name"        value="bangoffice"/>
   <property name="properties.file" value="server.properties"/>
 
   <!-- import the generic webapp build file and library dependencies -->
@@ -20,5 +20,29 @@
     <antcall target="common-webapp-prepare"/>
     <!-- we also need bang-code.jar which doesn't fit into our libs.dir scheme -->
     <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>
+  </target>
+
+  <target name="devmode" depends="dist">
+    <!-- Fire up the webapp against the live sources -->
+    <propertycopy name="devmode.jetty.port" from="${app.name}.jetty.port"/>
+    <jetty tempDirectory="${deploy.dir}/jetty-temp">
+      <webApp name="${app.name}" warfile="${templates.location}" webxmlfile="etc/web.xml"
+        contextpath="/${app.name}" scanIntervalSeconds="2">
+        <classes dir="${deploy.dir}"/>
+        <classes dir="${deploy.dir}/classes"/>
+        <classes dir="etc"/>
+        <lib dir="${deploy.dir}/lib" includes="*.jar"/>
+      </webApp>
+      <connectors>
+        <ajp13SocketConnector port="${devmode.jetty.port}"/>
+	<selectChannelConnector port="8080"/>
+      </connectors>
+      <systemProperties>
+        <systemProperty name="${src.pkg.name}.devmode.enabled" value="true"/>
+        <systemProperty name="${src.pkg.name}.devmode.template_path"
+          value="${basedir}/${templates.location}"/>
+        <systemProperty name="${src.pkg.name}.devmode.siteid" value="${devmode.siteid}"/>
+      </systemProperties>
+    </jetty>
   </target>
 </project>
