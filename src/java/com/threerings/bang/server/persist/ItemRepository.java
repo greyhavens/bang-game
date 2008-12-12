@@ -100,60 +100,6 @@ public class ItemRepository extends SimpleRepository
     }
 
     /**
-     * Instantiates the appropriate item class and decodes the item from the data.
-     */
-    protected Item decodeItem (int itemId, int itemType, boolean gangOwned, int ownerId,
-            byte[] data, int gangId, Date expires)
-        throws PersistenceException, SQLException
-    {
-        String errmsg = null;
-        Exception error = null;
-
-        try {
-            Class<?> itemClass = ItemFactory.getClass(itemType);
-            if (itemClass == null) {
-                errmsg = "Unable to decode item [id=" + itemId + ", type=" + itemType + "]: " +
-                    "No class registered for item type";
-                throw new PersistenceException(errmsg);
-            }
-
-            // create the item
-            Item item = (Item)itemClass.newInstance();
-
-            // decode its contents from the serialized data
-            ByteArrayInputStream bin = new ByteArrayInputStream(data);
-            item.unpersistFrom(new ObjectInputStream(bin));
-
-            // then assign the db stored data
-            item.setItemId(itemId);
-            item.setGangOwned(gangOwned);
-            item.setOwnerId(ownerId);
-            item.setGangId(gangId);
-            item.setExpires(expires);
-            return item;
-
-        } catch (IOException ioe) {
-            error = ioe;
-            errmsg = "Unable to decode item";
-
-        } catch (ClassNotFoundException cnfe) {
-            error = cnfe;
-            errmsg = "Unable to instantiate item";
-
-        } catch (InstantiationException ie) {
-            error = ie;
-            errmsg = "Unable to instantiate item";
-
-        } catch (IllegalAccessException iae) {
-            error = iae;
-            errmsg = "Unable to instantiate item";
-        }
-
-        errmsg += " [id=" + itemId + ", type=" + itemType + "]";
-        throw new PersistenceException(errmsg, error);
-    }
-
-    /**
      * Inserts the specified item into the database. The item's owner id must be valid at the time
      * of insertion, but its item id will be assigned during the insertion process.
      *
@@ -426,8 +372,7 @@ public class ItemRepository extends SimpleRepository
      *
      * @param alt an optional alternate item to match (which must be of the same item type)
      */
-    public ArrayIntSet getItemOwners (
-        final ArrayIntSet playerIds, final Item item, final Item alt)
+    public ArrayIntSet getItemOwners (final ArrayIntSet playerIds, final Item item, final Item alt)
         throws PersistenceException
     {
         // make sure the set isn't empty
@@ -467,6 +412,60 @@ public class ItemRepository extends SimpleRepository
             }
         });
         return owners;
+    }
+
+    /**
+     * Instantiates the appropriate item class and decodes the item from the data.
+     */
+    protected Item decodeItem (int itemId, int itemType, boolean gangOwned, int ownerId,
+            byte[] data, int gangId, Date expires)
+        throws PersistenceException, SQLException
+    {
+        String errmsg = null;
+        Exception error = null;
+
+        try {
+            Class<?> itemClass = ItemFactory.getClass(itemType);
+            if (itemClass == null) {
+                errmsg = "Unable to decode item [id=" + itemId + ", type=" + itemType + "]: " +
+                    "No class registered for item type";
+                throw new PersistenceException(errmsg);
+            }
+
+            // create the item
+            Item item = (Item)itemClass.newInstance();
+
+            // decode its contents from the serialized data
+            ByteArrayInputStream bin = new ByteArrayInputStream(data);
+            item.unpersistFrom(new ObjectInputStream(bin));
+
+            // then assign the db stored data
+            item.setItemId(itemId);
+            item.setGangOwned(gangOwned);
+            item.setOwnerId(ownerId);
+            item.setGangId(gangId);
+            item.setExpires(expires);
+            return item;
+
+        } catch (IOException ioe) {
+            error = ioe;
+            errmsg = "Unable to decode item";
+
+        } catch (ClassNotFoundException cnfe) {
+            error = cnfe;
+            errmsg = "Unable to instantiate item";
+
+        } catch (InstantiationException ie) {
+            error = ie;
+            errmsg = "Unable to instantiate item";
+
+        } catch (IllegalAccessException iae) {
+            error = iae;
+            errmsg = "Unable to instantiate item";
+        }
+
+        errmsg += " [id=" + itemId + ", type=" + itemType + "]";
+        throw new PersistenceException(errmsg, error);
     }
 
     /**
