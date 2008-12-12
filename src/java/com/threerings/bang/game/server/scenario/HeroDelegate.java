@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import java.awt.Point;
 
@@ -187,8 +187,8 @@ public class HeroDelegate extends CounterDelegate
         // figure out how many bonuses to spawn based on the hero level
         int numSpawns = 1 + getLevel(piece.owner) / 3;
 
-        ArrayList<Point> drops = bangobj.board.getRandomOccupiableSpots(
-                numSpawns, piece.x, piece.y, 1, 3);
+        List<Point> drops = bangobj.board.getRandomOccupiableSpots(
+            numSpawns, piece.x, piece.y, 1, 3);
         Bonus[] bonuses = selectBonuses(bangobj, getLevel(piece.owner), drops.size());
         for (int ii = 0; ii < bonuses.length; ii++) {
             Bonus bonus = bonuses[ii];

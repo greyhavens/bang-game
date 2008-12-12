@@ -3,12 +3,13 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Iterator;
 
 import java.awt.Rectangle;
 
+import com.google.common.collect.Lists;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.StatType;
@@ -78,17 +79,14 @@ public class WendigoDelegate extends CounterDelegate
             length = playarea.width;
         }
         int idx = length / 2 - 1;
-        _wendigo = new ArrayList<Wendigo>(3);
+        _wendigo = Lists.newArrayListWithExpectedSize(3);
 
         boolean side = RandomUtil.getInt(2) == 0;
         int size = Math.min(length / 4, 3);
-        _wendigo.add(createWendigo(bangobj, idx + off, horiz, side,
-                                   playarea, false, tick));
+        _wendigo.add(createWendigo(bangobj, idx + off, horiz, side, playarea, false, tick));
         if (size > 0) {
-            _wendigo.add(createWendigo(bangobj,idx + off - size, horiz, side,
-                                       playarea, true, tick));
-            _wendigo.add(createWendigo(bangobj, idx + off + size,
-                        horiz, side, playarea, true, tick));
+            _wendigo.add(createWendigo(bangobj, idx+off-size, horiz, side, playarea, true, tick));
+            _wendigo.add(createWendigo(bangobj, idx+off+size, horiz, side, playarea, true, tick));
         }
     }
 
@@ -100,8 +98,7 @@ public class WendigoDelegate extends CounterDelegate
         for (Wendigo wendigo : _wendigo) {
             _bangmgr.addPiece(wendigo);
         }
-        WendigoEffect effect =
-            WendigoEffect.wendigoAttack(bangobj, _wendigo);
+        WendigoEffect effect = WendigoEffect.wendigoAttack(bangobj, _wendigo);
         effect.safeSpots = getSafeSpots();
         _wendigoRespawnTicks = new int[bangobj.players.length];
         Arrays.fill(_wendigoRespawnTicks, 3);
@@ -112,8 +109,8 @@ public class WendigoDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
-                              ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, List<Piece> pieces,
+                              List<Piece> updates)
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 
@@ -283,7 +280,7 @@ public class WendigoDelegate extends CounterDelegate
     }
 
     /** Our wendigo. */
-    protected ArrayList<Wendigo> _wendigo;
+    protected List<Wendigo> _wendigo;
 
     /** The tick when the wendigo will attack. */
     protected short _attackTick;
@@ -295,15 +292,13 @@ public class WendigoDelegate extends CounterDelegate
     protected int[] _wendigoRespawnTicks;
 
     /** Reference to the toggle switches. */
-    protected ArrayList<ToggleSwitch> _toggleSwitches =
-        new ArrayList<ToggleSwitch>();
+    protected List<ToggleSwitch> _toggleSwitches = Lists.newArrayList();
 
     /** Which set of safe spots are currently active. */
     protected int _activeSafeSpots = 0;
 
     /** Set of the sacred location markers. */
-    protected PointSet[] _safeSpots = new PointSet[] {
-        new PointSet(), new PointSet() };
+    protected PointSet[] _safeSpots = new PointSet[] { new PointSet(), new PointSet() };
 
     /** Number of extra points for having a talisman on a safe zone. */
     protected static final int TALISMAN_SAFE = 25;

@@ -4,9 +4,10 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.QuickSort;
 
@@ -31,7 +32,7 @@ public class HomesteadDelegate extends ScenarioDelegate
     /**
      * Returns the list of homesteads on the board.
      */
-    public ArrayList<Homestead> getHomesteads ()
+    public List<Homestead> getHomesteads ()
     {
         return _steads;
     }
@@ -53,8 +54,8 @@ public class HomesteadDelegate extends ScenarioDelegate
     }
 
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, final Piece[] starts, ArrayList<Piece> pieces,
-                              ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, final Piece[] starts, List<Piece> pieces,
+                              List<Piece> updates)
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 
@@ -213,8 +214,8 @@ public class HomesteadDelegate extends ScenarioDelegate
     }
 
     /** Used to track the locations of all homestead spots. */
-    protected ArrayList<Homestead> _steads = new ArrayList<Homestead>();
+    protected List<Homestead> _steads = Lists.newArrayList();
 
     /** Tracks the order in which players claimed homesteads. */
-    protected ArrayList<Homestead> _claims = new ArrayList<Homestead>();
+    protected List<Homestead> _claims = Lists.newArrayList();
 }

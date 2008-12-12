@@ -4,8 +4,10 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Iterator;
+
+import com.google.common.collect.Lists;
 
 import com.jme.math.FastMath;
 
@@ -40,8 +42,8 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     /**
      * Informs the delegate that the wave has started so that it can start sending in the robots.
      */
-    public void waveStarted (BangObject bangobj, int wave, int difficulty,
-                             ArrayList<TreeBed> trees, int treesGrown)
+    public void waveStarted (BangObject bangobj, int wave, int difficulty, List<TreeBed> trees,
+                             int treesGrown)
     {
         // compute our robot unit targets
         float ratio = BASE_ROBOT_RATIO + ROBOT_RATIO_INCREMENT * difficulty;
@@ -108,8 +110,8 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     }
 
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
-                              ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, List<Piece> pieces,
+                              List<Piece> updates)
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 
@@ -364,7 +366,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     protected LoggingRobotLogic _logic;
 
     /** The trees that are on the board during the current wave. */
-    protected ArrayList<TreeBed> _ctrees;
+    protected List<TreeBed> _ctrees;
 
     /** The number of living robots of each type and the target numbers. */
     protected int[] _living = new int[LoggingRobot.UNIT_TYPES.length],
@@ -375,7 +377,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     protected float[] _accum = new float[LoggingRobot.UNIT_TYPES.length];
 
     /** The spots from which robots emerge. */
-    protected ArrayList<Marker> _robotSpots = new ArrayList<Marker>();
+    protected List<Marker> _robotSpots = Lists.newArrayList();
 
     /** The base rate at which logging robots respawn (bots per tick). */
     protected static final float BASE_RESPAWN_RATE = 1 / 8f;

@@ -3,9 +3,9 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import com.samskivert.util.RandomUtil;
 
@@ -58,8 +58,8 @@ public class ClaimJumping extends Scenario
     }
 
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
-                              ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, List<Piece> pieces,
+                              List<Piece> updates)
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 

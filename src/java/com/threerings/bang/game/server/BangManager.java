@@ -2080,7 +2080,7 @@ public class BangManager extends GameManager
                     // a little bonus for practice tutorials
                     if (_bconfig.duration == BangConfig.Duration.PRACTICE) {
                         if (award.cashEarned > 0) {
-                            award.cashEarned += 5;
+                            award.cashEarned += PRACTICE_BONUS;
                         }
                     }
                 }
@@ -2090,10 +2090,10 @@ public class BangManager extends GameManager
                     award.item = Badge.checkQualifies(prec.user);
                 }
 
-                // for now, award one notoriety point for every twenty scrip (with a possibility of
-                // rounding that depends on the player's purse)
+                // award one aces based on scrip earnings (with a possibility of rounding that
+                // depends on the player's purse)
                 if (_bconfig.grantAces && prec.gangId > 0) {
-                    float faces = award.cashEarned / 20f;
+                    float faces = award.cashEarned / ACE_FACTOR;
                     float prob = (prec.user.getPurse().getPurseBonus() - 1f);
                     award.acesEarned = (RandomUtil.getFloat(1f) < prob) ?
                         Math.round(faces) : (int)faces;
@@ -3517,6 +3517,12 @@ public class BangManager extends GameManager
 
     /** If a game is shorter than this (in minutes) some stats don't count. */
     protected static final int MIN_STATS_DURATION = 2;
+
+    /** How much scrip must be earned to earn an ace. */
+    protected static final float ACE_FACTOR = 20f;
+
+    /** Bonus scrip awarded for playing practice games in the tutorials. */
+    protected static final int PRACTICE_BONUS = 5;
 
     /** Stats that we accumulate at the end of the game into the player's persistent stats. */
     protected static final StatType[] ACCUM_STATS = {

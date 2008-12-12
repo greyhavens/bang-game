@@ -6,7 +6,7 @@ package com.threerings.bang.game.data.effect;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
@@ -55,7 +55,7 @@ public class TrainEffect extends Effect
     /**
      * Constructor used when moving a train without a collision.
      */
-    public TrainEffect (ArrayList<Train> pieces, int nx, int ny)
+    public TrainEffect (List<Train> pieces, int nx, int ny)
     {
         this(pieces, nx, ny, null, null);
     }
@@ -63,8 +63,7 @@ public class TrainEffect extends Effect
     /**
      * Constructor used when moving a train and colliding with a unit.
      */
-    public TrainEffect (
-        ArrayList<Train> pieces, int nx, int ny, Piece target, Point push)
+    public TrainEffect (List<Train> pieces, int nx, int ny, Piece target, Point push)
     {
         pieceIds = new int[pieces.size()];
         for (int ii = 0; ii < pieceIds.length; ii++) {

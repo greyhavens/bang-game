@@ -5,9 +5,9 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.samskivert.util.Tuple;
 
@@ -72,8 +72,8 @@ public class HeroBuilding extends Scenario
         super.roundWillStart(bangobj, starts, purchases);
 
         for (int ii = 0; ii < _startSpots.length; ii++) {
-            ArrayList<Point> heals = bangobj.board.getRandomOccupiableSpots(
-                    _bangmgr.getTeamSize(ii), _startSpots[ii].x, _startSpots[ii].y, 2, 5);
+            List<Point> heals = bangobj.board.getRandomOccupiableSpots(
+                _bangmgr.getTeamSize(ii), _startSpots[ii].x, _startSpots[ii].y, 2, 5);
             for (Point heal : heals) {
                 Bonus bonus = dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
                 if (bonus != null) {
@@ -201,8 +201,7 @@ public class HeroBuilding extends Scenario
             _bonuses = (_bonuses + 1) % bangobj.getPlayerCount();
             Unit hero = _herodel.getHero(bangobj, _bonuses);
             Point spot = (hero == null) ? getStartSpot(_bonuses) : new Point(hero.x, hero.y);
-            ArrayList<Point> heals = bangobj.board.getRandomOccupiableSpots(
-                    1, spot.x, spot.y, 2, 5);
+            List<Point> heals = bangobj.board.getRandomOccupiableSpots(1, spot.x, spot.y, 2, 5);
             for (Point heal : heals) {
                 Bonus bonus = dropBonus(bangobj, HealHeroEffect.HEAL_HERO, heal.x, heal.y);
                 if (bonus != null) {

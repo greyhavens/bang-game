@@ -3,25 +3,25 @@
 
 package com.threerings.bang.game.data.effect;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import java.awt.Rectangle;
 
+import com.google.common.collect.Lists;
 import com.samskivert.util.IntIntMap;
+
+import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.WendigoHandler;
 
 import com.threerings.bang.game.data.BangObject;
-
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Wendigo;
 
 import com.threerings.bang.game.util.PointSet;
-
-import com.threerings.io.SimpleStreamableObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -97,8 +97,7 @@ public class WendigoEffect extends Effect
         }
     }
 
-    public static WendigoEffect wendigoAttack (
-        BangObject bangobj, ArrayList<Wendigo> wendigo)
+    public static WendigoEffect wendigoAttack (BangObject bangobj, List<Wendigo> wendigo)
     {
         WendigoEffect effect = new WendigoEffect();
         effect.moves = new Movement[wendigo.size()];
@@ -232,7 +231,7 @@ public class WendigoEffect extends Effect
     protected void createCollisions (
         BangObject bangobj, IntIntMap dammap, Piece w)
     {
-        ArrayList<Collision> colList = new ArrayList<Collision>();
+        List<Collision> colList = Lists.newArrayList();
         boolean horiz = (w.orientation == EAST ||
                 w.orientation == WEST);
         int step = (horiz ? w.x : w.y);

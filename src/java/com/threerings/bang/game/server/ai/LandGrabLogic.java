@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.server.ai;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import java.awt.Point;
 
@@ -149,7 +149,7 @@ public class LandGrabLogic extends AILogic
     protected LandGrab _scenario;
 
     /** Used to track the locations of all homestead spots. */
-    protected ArrayList<Homestead> _steads;
+    protected List<Homestead> _steads;
 
     /** Ranks units by properties that should make them good at gathering totems: speed and attack
      * power. */

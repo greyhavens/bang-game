@@ -4,17 +4,16 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
-
 import com.threerings.parlor.game.data.GameAI;
-
 import com.threerings.stats.data.StatSet;
 
 import com.threerings.bang.data.PlayerObject;
@@ -68,8 +67,8 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
-                              ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, List<Piece> pieces,
+                              List<Piece> updates)
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 
@@ -108,7 +107,7 @@ public class CattleRustling extends Scenario
       PLACER_LOOP:
         while (placed < cattle) {
             for (Marker cspot : _cattleSpots) {
-                ArrayList<Point> spots = bangobj.board.getOccupiableSpots(20, cspot.x, cspot.y, 3);
+                List<Point> spots = bangobj.board.getOccupiableSpots(20, cspot.x, cspot.y, 3);
                 Point spot = null;
                 // we don't want to start cows on any tracks
                 for (Point pt : spots) {
@@ -238,7 +237,7 @@ public class CattleRustling extends Scenario
         protected int[] _counts;
     }
 
-    protected ArrayList<Marker> _cattleSpots = new ArrayList<Marker>();
+    protected List<Marker> _cattleSpots = Lists.newArrayList();
 
     protected static final int MAX_OWNER_DISTANCE = 5;
     protected static final int CATTLE_PER_PLAYER = 3;

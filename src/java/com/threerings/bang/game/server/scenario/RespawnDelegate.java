@@ -4,11 +4,12 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.PriorityQueue;
 
+import com.google.common.collect.Lists;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
@@ -143,7 +144,7 @@ public class RespawnDelegate extends ScenarioDelegate
 
         // the Revolutionary will cause all allied units to respawn on the next tick
         if (unit instanceof Revolutionary) {
-            ArrayList<Unit> saved = new ArrayList<Unit>();
+            List<Unit> saved = Lists.newArrayList();
             for (Iterator<Unit> iter = _respawns.iterator(); iter.hasNext(); ) {
                 Unit u = iter.next();
                 if (u.owner == unit.owner) {

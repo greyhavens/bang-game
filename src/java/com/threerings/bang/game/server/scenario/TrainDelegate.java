@@ -4,8 +4,9 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
@@ -34,7 +35,7 @@ public class TrainDelegate extends ScenarioDelegate
         throws InvocationException
     {
         // divide the tracks into connected groups
-        ArrayList<TrackGroup> tgroups = new ArrayList<TrackGroup>();
+        List<TrackGroup> tgroups = Lists.newArrayList();
         for (Track track : bangobj.getTracks().values()) {
             if (track.type != Track.TERMINAL || track.visited != 0) {
                 continue;
@@ -91,8 +92,7 @@ public class TrainDelegate extends ScenarioDelegate
             fwd, // fwd
             (fwd + 1) % PieceCodes.DIRECTIONS.length, // left
             (fwd + 3) % PieceCodes.DIRECTIONS.length }; // right
-        ArrayList<Point> passable = new ArrayList<Point>(),
-            trackless = new ArrayList<Point>();
+        List<Point> passable = Lists.newArrayList(), trackless = Lists.newArrayList();
         for (int i = 0; i < dirs.length; i++) {
             int x = unit.x + PieceCodes.DX[dirs[i]];
             int y = unit.y + PieceCodes.DY[dirs[i]];
@@ -108,7 +108,7 @@ public class TrainDelegate extends ScenarioDelegate
             return null;
         }
 
-        ArrayList<Point> pts = (trackless.isEmpty() ? passable : trackless);
+        List<Point> pts = (trackless.isEmpty() ? passable : trackless);
         return (pts.size() == 2) ? RandomUtil.pickRandom(pts) :
             pts.get(0);
     }
@@ -121,7 +121,7 @@ public class TrainDelegate extends ScenarioDelegate
      * @param group all pieces of track encountered will be marked with this group id
      */
     protected static int getMaxTrainLength (
-        BangObject bangobj, Track track, ArrayList<Track> terminals, int group, int step)
+        BangObject bangobj, Track track, List<Track> terminals, int group, int step)
     {
         if (track.visited == 0) { // first time encountered
             track.group = group;
@@ -152,7 +152,7 @@ public class TrainDelegate extends ScenarioDelegate
         public TrackGroup (BangObject bangobj, int idx, Track terminal)
         {
             _idx = idx;
-            ArrayList<Track> terminals = new ArrayList<Track>();
+            List<Track> terminals = Lists.newArrayList();
             _maxTrainLength = getMaxTrainLength(bangobj, terminal, terminals, idx, 1);
             _terminals = terminals.toArray(new Track[terminals.size()]);
         }
@@ -333,7 +333,7 @@ public class TrainDelegate extends ScenarioDelegate
         protected int _maxTrainLength;
 
         /** The currently active trains in this group. */
-        protected ArrayList<Train> _trains = new ArrayList<Train>();
+        protected List<Train> _trains = Lists.newArrayList();
 
         /** The number of trains remaining to create in this group. */
         protected int _uncreated;

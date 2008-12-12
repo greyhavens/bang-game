@@ -3,7 +3,9 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -193,7 +195,7 @@ public class TotemBaseDelegate extends CounterDelegate
     }
 
     /** A list of active totem bases. */
-    protected ArrayList<TotemBase> _bases = new ArrayList<TotemBase>();
+    protected List<TotemBase> _bases = Lists.newArrayList();
 
     /** Stores the old points values. */
     protected int[] _points;

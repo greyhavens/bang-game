@@ -3,9 +3,10 @@
 
 package com.threerings.bang.game.server.scenario;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.samskivert.util.Tuple;
 
 import com.threerings.bang.game.data.BangObject;
@@ -89,10 +90,10 @@ public class CattleDelegate extends ScenarioDelegate
     {
         // add the cows connected to the spooker to a list in order of
         // increasing distance using a breadth-first search
-        ArrayList<Piece> fringe = new ArrayList<Piece>();
+        List<Piece> fringe = Lists.newArrayList();
         fringe.add(spooker);
         while (!fringe.isEmpty()) {
-            ArrayList<Piece> nfringe = new ArrayList<Piece>();
+            List<Piece> nfringe = Lists.newArrayList();
             for (Piece piece : fringe) {
                 for (Iterator<Cow> it = _cows.iterator(); it.hasNext(); ) {
                     Cow cow = it.next();
@@ -118,7 +119,6 @@ public class CattleDelegate extends ScenarioDelegate
     }
 
     protected PointSet _moves = new PointSet(), _clocs = new PointSet();
-    protected ArrayList<Cow> _cows = new ArrayList<Cow>();
-    protected ArrayList<Tuple<Cow, Piece>> _spooked =
-        new ArrayList<Tuple<Cow, Piece>>();
+    protected List<Cow> _cows = Lists.newArrayList();
+    protected List<Tuple<Cow, Piece>> _spooked = Lists.newArrayList();
 }

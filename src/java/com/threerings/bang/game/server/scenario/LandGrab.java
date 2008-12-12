@@ -4,7 +4,7 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
+import java.util.List;
 
 import com.threerings.parlor.game.data.GameAI;
 
@@ -33,7 +33,7 @@ public class LandGrab extends Scenario
     /**
      * Returns the list of homesteads on the board.
      */
-    public ArrayList<Homestead> getHomesteads ()
+    public List<Homestead> getHomesteads ()
     {
         return _homedel.getHomesteads();
     }

@@ -4,7 +4,9 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -25,7 +27,7 @@ public abstract class CounterDelegate extends ScenarioDelegate
         Piece[] pieces = bangobj.getPieceArray();
 
         // find all the counters on this board
-        ArrayList<Counter> counters = new ArrayList<Counter>();
+        List<Counter> counters = Lists.newArrayList();
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Counter) {
                 counters.add((Counter)pieces[ii]);
@@ -90,5 +92,5 @@ public abstract class CounterDelegate extends ScenarioDelegate
     protected abstract void checkAdjustedCounter (BangObject bangobj, Unit unit);
 
     /** A list of the active counters. */
-    protected ArrayList<Counter> _counters = new ArrayList<Counter>();
+    protected List<Counter> _counters = Lists.newArrayList();
 }

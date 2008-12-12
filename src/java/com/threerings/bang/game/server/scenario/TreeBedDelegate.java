@@ -4,11 +4,12 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.samskivert.util.QuickSort;
 
 import com.threerings.bang.game.data.BangObject;
@@ -28,8 +29,8 @@ import static com.threerings.bang.Log.log;
 public class TreeBedDelegate extends ScenarioDelegate
 {
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
-                              ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, List<Piece> pieces,
+                              List<Piece> updates)
     {
         // collect and remove all the tree beds
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
@@ -53,7 +54,7 @@ public class TreeBedDelegate extends ScenarioDelegate
     /**
      * Returns the set of trees in use for this wave.
      */
-    public ArrayList<TreeBed> getWaveTrees ()
+    public List<TreeBed> getWaveTrees ()
     {
         return _ctrees;
     }
@@ -141,10 +142,10 @@ public class TreeBedDelegate extends ScenarioDelegate
     }
 
     /** The tree beds on the board to begin with. */
-    protected ArrayList<TreeBed> _trees = new ArrayList<TreeBed>();
+    protected List<TreeBed> _trees = Lists.newArrayList();
 
     /** The trees that are currently on the board. */
-    protected ArrayList<TreeBed> _ctrees = new ArrayList<TreeBed>();
+    protected List<TreeBed> _ctrees = Lists.newArrayList();
 
     /** The maximum number of trees on the board. */
     protected static final int MAX_TREES = 6;

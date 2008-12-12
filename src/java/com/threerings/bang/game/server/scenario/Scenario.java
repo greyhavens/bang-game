@@ -4,8 +4,10 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
@@ -65,18 +67,17 @@ public abstract class Scenario
     }
 
     /**
-     * Allows a scenario to filter out custom marker pieces and scenario
-     * specific props and adjust prop states prior to the start of the
-     * round.
+     * Allows a scenario to filter out custom marker pieces and scenario specific props and adjust
+     * prop states prior to the start of the round.
      *
      * @param bangobj the game object.
      * @param starts an array of start markers for all the players.
      * @param pieces the remaining pieces on the board.
-     * @param updates a list to populate with any pieces that were updated
-     * during the filter process
+     * @param updates a list to populate with any pieces that were updated during the filter
+     * process
      */
-    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
-                              ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, List<Piece> pieces,
+                              List<Piece> updates)
     {
         // extract the bonus spawn markers from the pieces array
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
@@ -99,8 +100,8 @@ public abstract class Scenario
     }
 
     /**
-     * Creates and returns an instance of {@link AILogic} to handle the
-     * behavior of the described AI player.
+     * Creates and returns an instance of {@link AILogic} to handle the behavior of the described
+     * AI player.
      */
     public AILogic createAILogic (GameAI ai)
     {
@@ -125,8 +126,8 @@ public abstract class Scenario
             // fast ticks for auto-play test games
             return 1000L * bangobj.getTotalUnitCount() / 4;
         }
-        // start out with a base tick of two seconds and scale it down as
-        // the game progresses; cap it at ten minutes
+        // start out with a base tick of two seconds and scale it down as the game progresses; cap
+        // it at ten minutes
         long delta = System.currentTimeMillis() - _startStamp;
         delta = Math.min(delta, TIME_SCALE_CAP);
 
@@ -144,9 +145,8 @@ public abstract class Scenario
     /**
      * Called when a round is about to start.
      *
-     * @throws InvocationException containing a translatable string
-     * indicating why the scenario is booched, which will be displayed to
-     * the players and the game will be cancelled.
+     * @throws InvocationException containing a translatable string indicating why the scenario is
+     * booched, which will be displayed to the players and the game will be cancelled.
      */
     public void roundWillStart (BangObject bangobj, Piece[] starts, PieceSet purchases)
         throws InvocationException
@@ -168,11 +168,10 @@ public abstract class Scenario
     }
 
     /**
-     * Called at the start of every game tick to allow the scenario to affect
-     * the game state and determine whether or not the game should be ended.
-     * If the scenario wishes to end the game early, it should set {@link
-     * BangObject#lastTick} to the tick on which the game should end (if it is
-     * set to the current tick the game will be ended when this call returns).
+     * Called at the start of every game tick to allow the scenario to affect the game state and
+     * determine whether or not the game should be ended.  If the scenario wishes to end the game
+     * early, it should set {@link BangObject#lastTick} to the tick on which the game should end
+     * (if it is set to the current tick the game will be ended when this call returns).
      *
      * @return true if any advance orders will need to be re-validated
      */
@@ -192,8 +191,7 @@ public abstract class Scenario
     }
 
     /**
-     * Called at the end of every tick by the game manager to potentially add a
-     * bonus to the board.
+     * Called at the end of every tick by the game manager to potentially add a bonus to the board.
      *
      * @return true if a bonus was added, false if not.
      */
@@ -212,8 +210,8 @@ public abstract class Scenario
             }
         }
 
-        // have a 1 in 4 chance of adding a bonus for each live player for
-        // which there is not already a bonus on the board excepting one
+        // have a 1 in 4 chance of adding a bonus for each live player for which there is not
+        // already a bonus on the board excepting one
         int bprob = bangobj.gdata.livePlayers - bonuses - 1;
         int rando = RandomUtil.getInt(40);
         if (bprob < 0 || rando > bprob*10) {
@@ -222,7 +220,7 @@ public abstract class Scenario
         }
 
         // enumerate the set of live pieces
-        ArrayList<Unit> live = new ArrayList<Unit>();
+        List<Unit> live = Lists.newArrayList();
         for (Piece piece : pieces) {
             if (piece.owner >= 0 && piece.isAlive() && piece instanceof Unit) {
                 live.add((Unit)piece);
@@ -234,8 +232,8 @@ public abstract class Scenario
             return false;
         }
 
-        // weight each of these pieces by the difference between the owning
-        // player's score and the highest player's score
+        // weight each of these pieces by the difference between the owning player's score and the
+        // highest player's score
         int max = IntListUtil.getMaxValue(bangobj.points), candidates = 0;
         int[] weights = new int[live.size()];
         for (int ii = 0; ii < weights.length; ii++) {
@@ -247,8 +245,7 @@ public abstract class Scenario
 
         // now select a unit at (weighted) random
         Unit benefactor = (candidates > 0) ?
-            live.get(RandomUtil.getWeightedIndex(weights)) :
-            RandomUtil.pickRandom(live);
+            live.get(RandomUtil.getWeightedIndex(weights)) : RandomUtil.pickRandom(live);
 //         log.info("Placing bonus near " + benefactor);
 
         // compute this piece's valid moves
@@ -267,15 +264,15 @@ public abstract class Scenario
             return false;
         }
 
-        // select a spot randomly from this piece's set of valid moves onto
-        // which to place the bonus and call the standard algorithm
+        // select a spot randomly from this piece's set of valid moves onto which to place the
+        // bonus and call the standard algorithm
         int spidx = RandomUtil.getInt(moves.size());
         int x = moves.getX(spidx), y = moves.getY(spidx);
         PointSet spots = new PointSet();
         spots.add(x, y);
 
-        // determine who can reach the selected spot and use that information
-        // to select and place a bonus there
+        // determine who can reach the selected spot and use that information to select and place a
+        // bonus there
         ArrayIntSet[] reachers = computeReachers(bangobj, pieces, spots);
 //         log.info("Placing bonus at +" + x + "+" + y +// "", "reachers", reachers[0]);
         placeBonus(bangobj, Bonus.selectBonus(bangobj, reachers[0]), x, y);
@@ -283,8 +280,8 @@ public abstract class Scenario
     }
 
     /**
-     * Called when a piece makes a move in the game. The scenario can deploy
-     * effects (via {@link BangManager#deployEffect}) as a result of the move.
+     * Called when a piece makes a move in the game. The scenario can deploy effects (via {@link
+     * BangManager#deployEffect}) as a result of the move.
      */
     public void pieceMoved (BangObject bangobj, Piece piece)
     {
@@ -295,8 +292,8 @@ public abstract class Scenario
     }
 
     /**
-     * Called when a piece was killed. The scenario can choose to respawn the
-     * piece later, and do whatever else is appropriate.
+     * Called when a piece was killed. The scenario can choose to respawn the piece later, and do
+     * whatever else is appropriate.
      */
     public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter, int sidx)
     {
@@ -329,8 +326,8 @@ public abstract class Scenario
     }
 
     /**
-     * Called when a round has ended, giving the scenario a chance to award any
-     * final cash and increment associated statistics.
+     * Called when a round has ended, giving the scenario a chance to award any final cash and
+     * increment associated statistics.
      */
     public void roundDidEnd (BangObject bangobj)
     {
@@ -341,8 +338,8 @@ public abstract class Scenario
     }
 
     /**
-     * Modifies the damage done by the first player to the second for purposes
-     * of modifying statistics and awarding bonus points.
+     * Modifies the damage done by the first player to the second for purposes of modifying
+     * statistics and awarding bonus points.
      */
     public int modifyDamageDone (int pidx, int tidx, int ddone)
     {
@@ -350,8 +347,8 @@ public abstract class Scenario
     }
 
     /**
-     * Returns true if this scenario type should pay out earnings to the
-     * specified player. False if not.
+     * Returns true if this scenario type should pay out earnings to the specified player. False if
+     * not.
      */
     public boolean shouldPayEarnings (PlayerObject user)
     {
@@ -361,13 +358,11 @@ public abstract class Scenario
     /**
      * Computes the per-round earnings for the given player.
      */
-    public int computeEarnings (
-        BangObject bangobj, int pidx, int ridx,
-        BangManager.PlayerRecord[] precords, BangManager.RankRecord[] ranks,
-        BangManager.RoundRecord[] rounds)
+    public int computeEarnings (BangObject bangobj, int pidx, int ridx,
+                                BangManager.PlayerRecord[] precords, BangManager.RankRecord[] ranks,
+                                BangManager.RoundRecord[] rounds)
     {
-        // scale their earnings by the number of players they defeated in
-        // each round
+        // scale their earnings by the number of players they defeated in each round
         int defeated = 0, aisDefeated = 0;
         boolean team = bangobj.isTeamGame();
         for (int ii = ranks.length-1; ii >= 0; ii--) {
@@ -397,20 +392,18 @@ public abstract class Scenario
             }
         }
 
-        log.debug("Noting earnings p:" + bangobj.players[pidx] +
-                    " r:" + ridx + " (" + precords[pidx].finishedTick[ridx] +
-                    " * " + BASE_EARNINGS[defeated] + " / " +
-                    rounds[ridx].lastTick + ").");
+        log.debug("Noting earnings p:" + bangobj.players[pidx] + " r:" + ridx +
+                  " (" + precords[pidx].finishedTick[ridx] + " * " +
+                  BASE_EARNINGS[defeated] + " / " + rounds[ridx].lastTick + ").");
 
-        // scale the player's earnings based on the percentage of the round
-        // they completed
+        // scale the player's earnings based on the percentage of the round they completed
         return (precords[pidx].finishedTick[ridx] * BASE_EARNINGS[defeated] /
-            (rounds[ridx].duration - 1));
+                (rounds[ridx].duration - 1));
     }
 
     /**
-     * Gives the scenario an opportunity to record statistics for the supplied
-     * player at the end of the game.
+     * Gives the scenario an opportunity to record statistics for the supplied player at the end of
+     * the game.
      */
     public void recordStats (
         StatSet[] stats, int gameTime, int pidx, PlayerObject user)
@@ -419,9 +412,9 @@ public abstract class Scenario
     }
 
     /**
-     * Registers a delegate for this scenario. This should be called by derived
-     * classes <em>before</em> {@link #init} is called. Generally this means
-     * they should register their delegates in their constructor.
+     * Registers a delegate for this scenario. This should be called by derived classes
+     * <em>before</em> {@link #init} is called. Generally this means they should register their
+     * delegates in their constructor.
      */
     protected void registerDelegate (ScenarioDelegate delegate)
     {
@@ -437,11 +430,10 @@ public abstract class Scenario
     }
 
     /**
-     * Locates a place for the specified bonus, based on the current unit
-     * location, ranking and other metadata of the various players.
+     * Locates a place for the specified bonus, based on the current unit location, ranking and
+     * other metadata of the various players.
      *
-     * @return true if the bonus was placed, false if a spot could not be
-     * located.
+     * @return true if the bonus was placed, false if a spot could not be located.
      */
     protected boolean placeBonus (BangObject bangobj, Piece[] pieces,
                                   Bonus bonus, PointSet spots)
@@ -459,15 +451,15 @@ public abstract class Scenario
 
             } else if (reachers[ii].size() == 1) {
 //                 log.info("Spot " + ii + " is a one man spot.");
-                // if only one player can reach it, give it a probability
-                // inversely proportional to that player's power
+                // if only one player can reach it, give it a probability inversely proportional to
+                // that player's power
                 int pidx = reachers[ii].get(0);
                 float ifactor = 1f - bangobj.pdata[pidx].powerFactor;
                 weights[ii] = Math.round(10 * Math.max(0, ifactor)) + 1;
 
             } else {
-                // if multiple players can reach it, give it a nudge if
-                // they are of about equal power
+                // if multiple players can reach it, give it a nudge if they are of about equal
+                // power
                 float avgpow = bangobj.getAveragePower(reachers[ii]);
                 boolean outlier = false;
                 for (int pp = 0; pp < reachers[ii].size(); pp++) {
@@ -491,8 +483,8 @@ public abstract class Scenario
         // now select a spot based on our weightings
         int spidx = RandomUtil.getWeightedIndex(weights);
         Point spot = new Point(spots.getX(spidx), spots.getY(spidx));
-        log.debug("Selecting from " + StringUtil.toString(weights) + ": " +
-                 spidx + " -> " + spot.x + "/" + spot.y + ".");
+        log.debug("Selecting from " + StringUtil.toString(weights) + ": " + spidx + " -> " +
+                  spot.x + "/" + spot.y + ".");
 
         // locate the nearest spot to that which can be occupied by our piece
         Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
@@ -501,8 +493,7 @@ public abstract class Scenario
             return false;
         }
 
-        // if no specific bonus was requested, pick one randomly based on who
-        // can reach it
+        // if no specific bonus was requested, pick one randomly based on who can reach it
         if (bonus == null) {
             bonus = Bonus.selectBonus(bangobj, reachers[spidx]);
         }
@@ -542,9 +533,9 @@ public abstract class Scenario
     }
 
     /**
-     * Computes the set of all pieces that are ready to be moved and can reach
-     * the specified set of positions on the board. If no pieces can reach a
-     * spot, no set will be created, the array element will be null.
+     * Computes the set of all pieces that are ready to be moved and can reach the specified set of
+     * positions on the board. If no pieces can reach a spot, no set will be created, the array
+     * element will be null.
      */
     protected ArrayIntSet[] computeReachers (
         BangObject bangobj, Piece[] pieces, PointSet spots)
@@ -586,9 +577,8 @@ public abstract class Scenario
     }
 
     /**
-     * Returns the base duration of the scenario in ticks assuming 1.75 seconds
-     * per tick. This will be scaled by the expected average number of units
-     * per player to obtain a real duration.
+     * Returns the base duration of the scenario in ticks assuming 1.75 seconds per tick. This will
+     * be scaled by the expected average number of units per player to obtain a real duration.
      */
     protected short getBaseDuration ()
     {
@@ -604,14 +594,12 @@ public abstract class Scenario
     }
 
     /**
-     * Helper function useful when initializing scenarios. Determines the
-     * player whose start marker is closest to the specified piece and is
-     * therefore the <em>owner</em> of that piece.
+     * Helper function useful when initializing scenarios. Determines the player whose start marker
+     * is closest to the specified piece and is therefore the <em>owner</em> of that piece.
      *
-     * @param exclude a set of player indices whose start markers should be
-     * excluded from the search
-     * @return -1 if no start markers exist at all or the player index of the
-     * closest marker.
+     * @param exclude a set of player indices whose start markers should be excluded from the
+     * search
+     * @return -1 if no start markers exist at all or the player index of the closest marker.
      */
     protected int getOwner (Piece target, ArrayIntSet exclude)
     {
@@ -639,8 +627,7 @@ public abstract class Scenario
     protected ScenarioInfo _info;
 
     /** Delegates that handle certain aspects of our scenario. */
-    protected ArrayList<ScenarioDelegate> _delegates =
-        new ArrayList<ScenarioDelegate>();
+    protected List<ScenarioDelegate> _delegates = Lists.newArrayList();
 
     /** Used to track the locations where players are started. */
     protected Point[] _startSpots;
@@ -657,14 +644,12 @@ public abstract class Scenario
     /** We stop reducing the tick time after ten minutes. */
     protected static final long TIME_SCALE_CAP = 10 * 60 * 1000L;
 
-    /** The base number of ticks that we allow per round (scaled by the
-     * anticipated average number of units per-player). */
+    /** The base number of ticks that we allow per round (scaled by the anticipated average number
+     * of units per-player). */
     protected static final short BASE_SCENARIO_TICKS = 300;
 
-    /** A set of times (in seconds prior to the end of the round) at which
-     * we warn the players. */
-    protected static final long[] TIME_WARNINGS = {
-        60*1000L, 30*1000L, 10*1000L };
+    /** A set of times (in seconds prior to the end of the round) at which we warn the players. */
+    protected static final long[] TIME_WARNINGS = { 60*1000L, 30*1000L, 10*1000L };
 
     /** Defines the base earnings (per-round) for each rank. */
     protected static final int[] BASE_EARNINGS = { 50, 70, 85, 105 };
