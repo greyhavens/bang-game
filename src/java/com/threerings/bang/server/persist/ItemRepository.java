@@ -38,24 +38,22 @@ import com.threerings.bang.server.ItemFactory;
 import static com.threerings.bang.Log.log;
 
 /**
- * Responsible for the persistent storage of items as well as for
- * transferring items from one player to another.
+ * Responsible for the persistent storage of items as well as for transferring items from one
+ * player to another.
  */
 @Singleton
 public class ItemRepository extends SimpleRepository
 {
     /**
-     * The database identifier used when establishing a database
-     * connection. This value being <code>itemdb</code>.
+     * The database identifier used when establishing a database connection. This value being
+     * <code>itemdb</code>.
      */
     public static final String ITEM_DB_IDENT = "itemdb";
 
     /**
-     * Constructs a new item repository with the specified connection
-     * provider.
+     * Constructs a new item repository with the specified connection provider.
      *
-     * @param conprov the connection provider via which we will obtain our
-     * database connection.
+     * @param conprov the connection provider via which we will obtain our database connection.
      */
     @Inject public ItemRepository (ConnectionProvider conprov)
         throws PersistenceException
@@ -102,8 +100,7 @@ public class ItemRepository extends SimpleRepository
     }
 
     /**
-     * Instantiates the appropriate item class and decodes the item from
-     * the data.
+     * Instantiates the appropriate item class and decodes the item from the data.
      */
     protected Item decodeItem (int itemId, int itemType, boolean gangOwned, int ownerId,
             byte[] data, int gangId, Date expires)
@@ -115,8 +112,7 @@ public class ItemRepository extends SimpleRepository
         try {
             Class<?> itemClass = ItemFactory.getClass(itemType);
             if (itemClass == null) {
-                errmsg = "Unable to decode item " +
-                    "[itemId=" + itemId + ", itemType=" + itemType + "]: " +
+                errmsg = "Unable to decode item [id=" + itemId + ", type=" + itemType + "]: " +
                     "No class registered for item type";
                 throw new PersistenceException(errmsg);
             }
@@ -153,14 +149,13 @@ public class ItemRepository extends SimpleRepository
             errmsg = "Unable to instantiate item";
         }
 
-        errmsg += " [itemId=" + itemId + ", itemType=" + itemType + "]";
+        errmsg += " [id=" + itemId + ", type=" + itemType + "]";
         throw new PersistenceException(errmsg, error);
     }
 
     /**
-     * Inserts the specified item into the database. The item's owner id
-     * must be valid at the time of insertion, but its item id will be
-     * assigned during the insertion process.
+     * Inserts the specified item into the database. The item's owner id must be valid at the time
+     * of insertion, but its item id will be assigned during the insertion process.
      *
      * @return true if the item was successfully inserted, false if the user already owns an
      * equivalent item and the item does not allow duplicates
@@ -224,8 +219,8 @@ public class ItemRepository extends SimpleRepository
     }
 
     /**
-     * Inserts copies of the given prototype item into the inventories of the identified
-     * users and stores the created items in the provided list.
+     * Inserts copies of the given prototype item into the inventories of the identified users and
+     * stores the created items in the provided list.
      */
     public void insertItems (final Item prototype, final ArrayIntSet userIds, final List<Item> items)
         throws PersistenceException
@@ -276,8 +271,8 @@ public class ItemRepository extends SimpleRepository
     }
 
     /**
-     * Transfers the specified item to the specified player. The database
-     * will be updated as well as the item's <code>ownerId</code> field.
+     * Transfers the specified item to the specified player. The database will be updated as well
+     * as the item's <code>ownerId</code> field.
      */
     public void transferItem (Item item, int newOwnerId)
         throws PersistenceException
@@ -344,9 +339,7 @@ public class ItemRepository extends SimpleRepository
                         log.warning("Requested to delete non-persisted item", "item", item,
                                     "why", why);
                     } else {
-                        BangServer.itemLog(
-                            "item_deleted id:" + item.getItemId() +
-                            " why:" + why);
+                        BangServer.itemLog("item_deleted id:" + item.getItemId() + " why:" + why);
                     }
                     return null;
 
@@ -383,8 +376,7 @@ public class ItemRepository extends SimpleRepository
                     }
 
                     // record the deletions
-                    BangServer.itemLog(
-                        "items_deleted ids:" + itemIds + " why:" + why);
+                    BangServer.itemLog("items_deleted ids:" + itemIds + " why:" + why);
                     return null;
 
                 } finally {
@@ -429,8 +421,8 @@ public class ItemRepository extends SimpleRepository
     }
 
     /**
-     * Given a set of player ids and a prototype item, determines which of the players own
-     * an identical item.
+     * Given a set of player ids and a prototype item, determines which of the players own an
+     * identical item.
      *
      * @param alt an optional alternate item to match (which must be of the same item type)
      */
@@ -525,14 +517,5 @@ public class ItemRepository extends SimpleRepository
             "PRIMARY KEY (ITEM_ID)",
             "KEY (OWNER_ID)",
         }, "");
-
-        // TEMP: add the gang-owned column
-        JDBCUtil.addColumn(conn, "ITEMS", "GANG_OWNED", "BOOLEAN NOT NULL", "ITEM_ID");
-        // END TEMP
-
-        // TEMP: add expiry and gang id columns
-        JDBCUtil.addColumn(conn, "ITEMS", "EXPIRES", "DATE", "OWNER_ID");
-        JDBCUtil.addColumn(conn, "ITEMS", "GANG_ID", "INTEGER NOT NULL", "EXPIRES");
-        // END TEMP
     }
 }
