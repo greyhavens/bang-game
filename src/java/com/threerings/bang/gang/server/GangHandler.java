@@ -72,6 +72,7 @@ import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;
@@ -83,17 +84,18 @@ import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.WeightClassUpgrade;
 import com.threerings.bang.server.BangCoinExchangeManager;
-import com.threerings.bang.server.BangInvoker;
-import com.threerings.bang.server.BangPeerManager;
-import com.threerings.bang.server.BangPeerManager.RemotePlayerObserver;
 import com.threerings.bang.server.BangCoinManager;
+import com.threerings.bang.server.BangInvoker;
+import com.threerings.bang.server.BangPeerManager.RemotePlayerObserver;
+import com.threerings.bang.server.BangPeerManager;
+import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.PlayerLocator;
 import com.threerings.bang.server.PlayerManager;
-import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PeerFinancialAction;
 import com.threerings.bang.server.persist.ProxyFinancialAction;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.admin.data.ServerConfigObject;
 import com.threerings.bang.admin.server.RuntimeConfig;
@@ -113,7 +115,6 @@ import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
-import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.RentalGood;
@@ -130,9 +131,9 @@ import static com.threerings.bang.Log.*;
  * Manages a single gang from resolution to destruction.
  */
 public class GangHandler
-    implements DroppedLockObserver, PlayerLocator.PlayerObserver, RemotePlayerObserver,
+    implements GangCodes, DroppedLockObserver, PlayerLocator.PlayerObserver, RemotePlayerObserver,
                MessageListener, AttributeChangeListener, SetListener<DSet.Entry>,
-               ObjectDeathListener, SpeakHandler.SpeakerValidator, GangPeerProvider, GangCodes
+               ObjectDeathListener, SpeakHandler.SpeakerValidator, GangPeerProvider
 {
     /** The amount of time in hours required between leader commands for each leader level. */
     public static final int[] LEADER_LEVEL_WAITS = {
@@ -1280,20 +1281,26 @@ public class GangHandler
             }
         }
         final int commandOrder = highestOrder + 1;
+        final String historyEntry = (handle == null) ?
+            MessageBundle.tcompose("m.auto_promotion_entry", target) :
+            MessageBundle.compose((entry.rank < rank) ? "m.promotion_entry" : "m.demotion_entry",
+                                  MessageBundle.taint(handle), MessageBundle.taint(target),
+                                  MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[rank]));;
 
         // post to the database
         _invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent () throws PersistenceException {
+            public void invokePersistent () throws Exception {
+                // if we're not making the target a member, make sure they have onetime status
+                if (rank != GangCodes.MEMBER_RANK && DeploymentConfig.usesOneTime()) {
+                    if (_itemrepo.holdsGoldPass(entry.playerId)) {
+                        throw new InvocationException(GANG_MSGS, E_MEMBER_LACKS_ONETIME);
+                    }
+                }
                 _gangrepo.updateRank(entry.playerId, rank, commandOrder);
-                _gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
-                    MessageBundle.tcompose("m.auto_promotion_entry", target) :
-                    MessageBundle.compose(
-                        (entry.rank < rank) ? "m.promotion_entry" : "m.demotion_entry",
-                        MessageBundle.taint(handle),
-                        MessageBundle.taint(target),
-                        MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[rank])));
+                _gangrepo.insertHistoryEntry(_gangId, historyEntry);
                 _gangmgr.incLeaderLevel(_gangobj, handle);
             }
+
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(target);
                 member.rank = rank;
@@ -1852,8 +1859,8 @@ public class GangHandler
             int remain = (int)Math.ceil(
                     (entry.lastLeaderCommand - cal.getTimeInMillis())/(double)ONE_HOUR);
             if (remain > 0) {
-                throw new InvocationException(MessageBundle.qualify(
-                    HideoutCodes.HIDEOUT_MSGS, MessageBundle.tcompose(NEW_LEADER_WAIT, remain)));
+                throw new InvocationException(
+                    GANG_MSGS, MessageBundle.tcompose(E_NEW_LEADER_WAIT, remain));
             }
         }
         return entry;

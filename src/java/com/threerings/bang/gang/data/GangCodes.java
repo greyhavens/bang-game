@@ -38,7 +38,10 @@ public interface GangCodes extends InvocationCodes
     public static final String GANG_MSGS = "gang";
 
     /** Error message when a new leader cannot perform a command. */
-    public static final String NEW_LEADER_WAIT = "e.new_leader_wait";
+    public static final String E_NEW_LEADER_WAIT = "e.new_leader_wait";
+
+    /** Error message when a new leader cannot perform a command. */
+    public static final String E_MEMBER_LACKS_ONETIME = "e.member_lacks_onetime";
 
     /** Gang rank constant. */
     public static final byte MEMBER_RANK = 0;
@@ -56,8 +59,7 @@ public interface GangCodes extends InvocationCodes
     public static final int TITLES_COUNT = 53;
 
     /** Gang rank string translations. */
-    public static final String[] XLATE_RANKS = {
-        "m.member", "m.recruiter", "m.leader" };
+    public static final String[] XLATE_RANKS = { "m.member", "m.recruiter", "m.leader" };
 
     /** The cost of forming a gang in scrip. */
     public static final int FORM_GANG_SCRIP_COST = 2500;

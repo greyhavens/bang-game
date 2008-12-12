@@ -23,15 +23,18 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Star;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.BoardManager;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.BoardRecord;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
@@ -73,6 +76,13 @@ public class OfficeManager extends ShopManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // if we're a onetime deployment, disallow anything other than the easy bounties for
+        // non-onetime-holders
+        if (DeploymentConfig.usesOneTime() && !player.holdsOneTime() &&
+            (config.difficulty != Star.Difficulty.EASY || config.type != BountyConfig.Type.TOWN)) {
+            throw new InvocationException(BangCodes.E_LACK_ONETIME);
+        }
+            
         // make sure they haven't hacked their client
         if (!config.isAvailable(player)) {
             log.warning("Player requested to start unavailable bounty", "who", player.who(),

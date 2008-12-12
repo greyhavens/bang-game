@@ -64,6 +64,7 @@ import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.bounty.data.OfficeConfig;
 import com.threerings.bang.bounty.server.OfficeManager;
+import com.threerings.bang.bounty.server.persist.BountyRepository;
 import com.threerings.bang.chat.server.BangChatProvider;
 import com.threerings.bang.gang.data.HideoutConfig;
 import com.threerings.bang.gang.server.GangManager;
@@ -473,6 +474,10 @@ public class BangServer extends CrowdServer
     @Inject protected GangManager _gangmgr;
     @Inject protected PlayerManager _playmgr;
     @Inject protected BangPeerManager _peermgr;
+
+    // need to inject this guy here as he's otherwise not referenced until the office manager is
+    // created which is too late in our initialization for safe repository creation
+    @Inject protected BountyRepository _bountyrepo;
 
     // reference needed to bring these managers into existence
     @Inject protected AccountActionManager _actionmgr;

@@ -27,17 +27,17 @@ import com.threerings.bang.data.WeightClassUpgrade;
 import static com.threerings.bang.Log.log;
 
 /**
- * The item factory is responsible for assigning item codes to item
- * classes and instantiating said classes when requested.
+ * The item factory is responsible for assigning item codes to item classes and instantiating said
+ * classes when requested.
  */
 public class ItemFactory
 {
     /**
-     * Returns the type code that is assigned to this derived class of
-     * {@link Item}. -1 is returned if the specified class has not been
-     * registered with the item factory. A log message is also generated.
+     * Returns the type code that is assigned to this derived class of {@link Item}. -1 is returned
+     * if the specified class has not been registered with the item factory. A log message is also
+     * generated.
      */
-    public static int getType (Class<?> itemClass)
+    public static int getType (Class<? extends Item> itemClass)
     {
         // make sure the item classes are registered
         if (_classToType == null) {
@@ -55,9 +55,8 @@ public class ItemFactory
     }
 
     /**
-     * Returns the derived class of {@link Item} that is registered for
-     * the specified type code. null is returned of no item class is
-     * registered for the specified type.
+     * Returns the derived class of {@link Item} that is registered for the specified type
+     * code. null is returned of no item class is registered for the specified type.
      */
     public static Class<?> getClass (int type)
     {
@@ -71,8 +70,8 @@ public class ItemFactory
     }
 
     /**
-     * Registers the item class with the item factory. This should be
-     * called below in the canonical list of item registrations.
+     * Registers the item class with the item factory. This should be called below in the canonical
+     * list of item registrations.
      */
     protected static void registerItemClass (Class<?> typeClass)
     {
@@ -83,12 +82,10 @@ public class ItemFactory
     }
 
     /**
-     * New item types must be inserted here to register a type code for
-     * the item class.
+     * New item types must be inserted here to register a type code for the item class.
      *
-     * <p><em>NOTE:</em> old item classes must not be removed directly,
-     * but must be replaced with a line that increments the type code to
-     * preserve the assigned values of the surrounding types.
+     * <p><em>NOTE:</em> old item classes must not be removed directly, but must be replaced with a
+     * line that increments the type code to preserve the assigned values of the surrounding types.
      */
     protected static void registerItemClasses ()
     {

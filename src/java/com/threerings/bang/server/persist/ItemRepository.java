@@ -31,6 +31,7 @@ import com.threerings.io.ObjectInputStream;
 
 import com.threerings.io.ObjectOutputStream;
 
+import com.threerings.bang.data.GoldPass;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ItemFactory;
@@ -208,6 +209,32 @@ public class ItemRepository extends SimpleRepository
                                            " type:" + item.getClass().getName());
                     }
                     return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+    }
+
+    /**
+     * Returns true if the specified player owns any gold pass item, false if not. This can be used
+     * on one-time payment systems to determine if the player has access to one-time functionality
+     * even when they are offline.
+     */
+    public boolean holdsGoldPass (final int playerId)
+        throws PersistenceException
+    {
+        return execute(new Operation<Boolean>() {
+            public Boolean invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                PreparedStatement stmt = conn.prepareStatement(
+                    "select count(*) from ITEMS where OWNER_ID = ? and ITEM_TYPE = ?");
+                try {
+                    stmt.setInt(1, playerId);
+                    stmt.setInt(2, ItemFactory.getType(GoldPass.class));
+                    return stmt.executeQuery().next();
 
                 } finally {
                     JDBCUtil.close(stmt);
@@ -491,12 +518,11 @@ public class ItemRepository extends SimpleRepository
         throws PersistenceException
     {
         // determine it's assigned item type
-        Class<?> itemClass = item.getClass();
+        Class<? extends Item> itemClass = item.getClass();
         int itemType = ItemFactory.getType(itemClass);
         if (itemType == -1) {
-            String errmsg = "Can't insert item of unknown type " +
-                "[item=" + item + ", itemClass=" + itemClass + "]";
-            throw new PersistenceException(errmsg);
+            throw new PersistenceException(
+                "Can't insert item of unknown type [item=" + item + ", class=" + itemClass + "]");
         }
         return itemType;
     }
