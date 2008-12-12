@@ -13,6 +13,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -28,10 +31,13 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.BangCoinManager;
+import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.server.persist.PlayerRepository;
 
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
@@ -47,6 +53,7 @@ import static com.threerings.bang.Log.*;
 /**
  * Persistifies gang information.
  */
+@Singleton
 public class GangRepository extends JORARepository
 {
     /**
@@ -60,7 +67,7 @@ public class GangRepository extends JORARepository
      *
      * @param conprov the connection provider via which we will obtain our database connection.
      */
-    public GangRepository (ConnectionProvider conprov)
+    @Inject public GangRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, GANG_DB_IDENT);
@@ -163,14 +170,13 @@ public class GangRepository extends JORARepository
         }
 
         // load the gang inventory
-        grec.inventory = BangServer.itemrepo.loadItems(gangId, true);
+        grec.inventory = _itemrepo.loadItems(gangId, true);
 
         // load the members
         grec.members = loadGangMembers(gangId);
 
         // load the coin count
-        grec.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
-            grec.getCoinAccount());
+        grec.coins = _coinmgr.getCoinRepository().getCoinCount(grec.getCoinAccount());
 
         // load the outfit
         ArrayList<GangOutfitRecord> recs = loadAll(_otable, "where GANG_ID = " + gangId);
@@ -182,8 +188,7 @@ public class GangRepository extends JORARepository
 
         // load the senior leader's avatar
         GangMemberEntry leader = GangUtil.getSeniorLeader(grec.members);
-        grec.avatar = (leader == null) ?
-            null : BangServer.lookrepo.loadSnapshot(leader.playerId);
+        grec.avatar = (leader == null) ? null : _lookrepo.loadSnapshot(leader.playerId);
 
         return grec;
     }
@@ -201,8 +206,7 @@ public class GangRepository extends JORARepository
             // load members, avatar; skip inventory, coins, outfit
             grec.members = loadGangMembers(grec.gangId);
             GangMemberEntry leader = GangUtil.getSeniorLeader(grec.members);
-            grec.avatar = (leader == null) ?
-                null : BangServer.lookrepo.loadSnapshot(leader.playerId);
+            grec.avatar = (leader == null) ? null : _lookrepo.loadSnapshot(leader.playerId);
         }
         return grec;
     }
@@ -581,7 +585,7 @@ public class GangRepository extends JORARepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId
-                    int playerId = BangServer.playrepo.getPlayerId(stmt, handle);
+                    int playerId = _playrepo.getPlayerId(stmt, handle);
                     if (playerId == -1) {
                         return MessageBundle.tcompose("e.no_such_player", handle);
                     }
@@ -917,6 +921,11 @@ public class GangRepository extends JORARepository
     protected Table<GangHistoryRecord> _htable;
     protected Table<GangOutfitRecord> _otable;
     protected FieldMask _gangIdMask, _normalizedMask, _playerIdMask, _buckleMask;
+
+    @Inject protected BangCoinManager _coinmgr;
+    @Inject protected PlayerRepository _playrepo;
+    @Inject protected ItemRepository _itemrepo;
+    @Inject protected LookRepository _lookrepo;
 
     /** The cutoff after which a gang is considered inactive and is no longer
      * considered when calculating top scores. */

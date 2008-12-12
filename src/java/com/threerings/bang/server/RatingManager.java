@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import com.samskivert.io.PersistenceException;
-import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 
@@ -30,6 +30,7 @@ import static com.threerings.bang.Log.*;
 /**
  * Manages rating bits.
  */
+@Singleton
 public class RatingManager
     implements ShutdownManager.Shutdowner
 {
@@ -41,11 +42,9 @@ public class RatingManager
     /**
      * Prepares the rating manager for operation.
      */
-    public void init (ConnectionProvider conprov)
+    public void init ()
         throws PersistenceException
     {
-        _ratingrepo = new RatingRepository(conprov);
-
         // load up our scoring percentile trackers
         _trackers = new HashMap<TrackerKey, Percentiler>();
         _ratingrepo.loadScoreTrackers(_trackers);
@@ -274,7 +273,7 @@ public class RatingManager
     }
 
     /** Provides access to the rating database. */
-    protected RatingRepository _ratingrepo;
+    @Inject protected RatingRepository _ratingrepo;
 
     /** Score percentile trackers. */
     protected HashMap<TrackerKey, Percentiler> _trackers;

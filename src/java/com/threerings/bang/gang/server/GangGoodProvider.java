@@ -3,6 +3,8 @@
 
 package com.threerings.bang.gang.server;
 
+import com.google.inject.Inject;
+
 import com.samskivert.io.PersistenceException;
 
 import com.threerings.util.MessageBundle;
@@ -10,7 +12,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.presents.client.InvocationService;
 
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangObject;
@@ -60,13 +61,13 @@ public abstract class GangGoodProvider extends GangFinancialAction
         throws PersistenceException
     {
         // insert a history entry
-        _entryId = BangServer.gangrepo.insertHistoryEntry(_gang.gangId,
+        _entryId = _gangrepo.insertHistoryEntry(_gang.gangId,
             MessageBundle.compose(
                 getHistoryLogKey(),
                 MessageBundle.taint(_handle),
                 _good.getName(),
                 GangUtil.getMoneyDesc(_scripCost, _coinCost, _aceCost)));
-        GangHandler.incLeaderLevel(_gang, _handle);
+        _gangmgr.incLeaderLevel(_gang, _handle);
         return null;
     }
 
@@ -75,7 +76,7 @@ public abstract class GangGoodProvider extends GangFinancialAction
         throws PersistenceException
     {
         if (_entryId > 0) {
-            BangServer.gangrepo.deleteHistoryEntry(_entryId);
+            _gangrepo.deleteHistoryEntry(_entryId);
         }
     }
 
@@ -109,4 +110,7 @@ public abstract class GangGoodProvider extends GangFinancialAction
     protected InvocationService.ConfirmListener _listener;
 
     protected int _entryId;
+
+    // dependencies
+    @Inject protected GangManager _gangmgr;
 }

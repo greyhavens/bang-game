@@ -20,9 +20,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
-import com.threerings.bang.client.NeedPremiumView;
 import com.threerings.bang.client.bui.IconPalette;
-import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.ServiceButton;
 import com.threerings.bang.data.BangBootstrapData;

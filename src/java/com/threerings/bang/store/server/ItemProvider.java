@@ -3,13 +3,14 @@
 
 package com.threerings.bang.store.server;
 
+import com.google.inject.Inject;
 import com.samskivert.io.PersistenceException;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
 
-import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.store.data.Good;
 
 /**
@@ -33,14 +34,14 @@ public class ItemProvider extends Provider
     {
         // we check here as well as on the dobj thread because another server may have
         // created the item
-        return (BangServer.itemrepo.insertItem(_item) ? null : "m.already_owned");
+        return (_itemrepo.insertItem(_item) ? null : "m.already_owned");
     }
 
     @Override // documentation inherited
     protected void rollbackPersistentAction ()
         throws PersistenceException
     {
-        BangServer.itemrepo.deleteItem(_item, "item_provider_rollback");
+        _itemrepo.deleteItem(_item, "item_provider_rollback");
     }
 
     @Override // documentation inherited
@@ -59,4 +60,7 @@ public class ItemProvider extends Provider
 
     /** The item that will be delivered. */
     protected Item _item;
+
+    // depends
+    @Inject protected ItemRepository _itemrepo;
 }

@@ -6,32 +6,37 @@ package com.threerings.bang.server;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 
 import com.threerings.util.Name;
 
+import com.threerings.presents.annotation.AuthInvoker;
 import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.user.AccountAction;
 import com.threerings.user.AccountActionRepository;
 
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.server.persist.PlayerRepository;
 
 import static com.threerings.bang.Log.log;
 
 /**
  * Handles account actions that are relevant to Bang! Howdy.
  */
+@Singleton
 public class AccountActionManager
 {
     /**
      * Creates the action manager and prepares it for operation.
      */
-    public AccountActionManager (PresentsDObjectMgr omgr, AccountActionRepository actionrepo)
+    @Inject public AccountActionManager (PresentsDObjectMgr omgr, AccountActionRepository actionrepo)
         throws PersistenceException
     {
         _repo = actionrepo;
@@ -61,7 +66,7 @@ public class AccountActionManager
         }
         _processingActions = true;
 
-        BangServer.authInvoker.postUnit(new Invoker.Unit("getAccountActions") {
+        _authInvoker.postUnit(new Invoker.Unit("getAccountActions") {
             public boolean invoke () {
                 try {
                     _actions = _repo.getActions(ServerConfig.nodename, MAX_ACTIONS);
@@ -100,7 +105,7 @@ public class AccountActionManager
 
         // update the actions that were successfully processed.
         String uname = "updateActions:" + actions.size();
-        BangServer.authInvoker.postUnit(new Invoker.Unit(uname) {
+        _authInvoker.postUnit(new Invoker.Unit(uname) {
             public boolean invoke () {
                 try {
                     _repo.updateActions(actions, ServerConfig.nodename);
@@ -148,7 +153,7 @@ public class AccountActionManager
         // if this player is online, update their coin count
         PlayerObject player = BangServer.locator.lookupByAccountName(new Name(accountName));
         if (player != null) {
-            BangServer.coinmgr.updateCoinCount(player);
+            _coinmgr.updateCoinCount(player);
         }
     }
 
@@ -168,7 +173,7 @@ public class AccountActionManager
         BangServer.invoker.postUnit(new Invoker.Unit("logInitialCoinPurchase") {
             public boolean invoke () {
                 try {
-                    _user = BangServer.playrepo.loadPlayer(accountName);
+                    _user = _playrepo.loadPlayer(accountName);
                     return _user != null;
                 } catch (PersistenceException pe) {
                     log.warning("Failed to load user!", "cause", pe);
@@ -192,7 +197,7 @@ public class AccountActionManager
         BangServer.invoker.postUnit(new Invoker.Unit("disableAccount") {
             public boolean invoke () {
                 try {
-                    BangServer.playrepo.disablePlayer(accountName, disabledName);
+                    _playrepo.disablePlayer(accountName, disabledName);
                 } catch (PersistenceException pe) {
                     log.warning("Error disabling account", "oname", accountName,
                                 "dname", disabledName, "cause", pe);
@@ -207,6 +212,11 @@ public class AccountActionManager
 
     /** True if we're currently processing actions and should not start more. */
     protected boolean _processingActions = false;
+
+    // dependencies
+    @Inject protected @AuthInvoker Invoker _authInvoker;
+    @Inject protected BangCoinManager _coinmgr;
+    @Inject protected PlayerRepository _playrepo;
 
     /** Interval with which we check for new accounting actions. */
     protected static final int NEW_ACCOUNT_ACTION_INTERVAL = 30 * 1000;

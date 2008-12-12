@@ -3,8 +3,11 @@
 
 package com.threerings.bang.saloon.server;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 
 import com.samskivert.util.Interval;
 
@@ -21,6 +24,7 @@ import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.server.BangManager;
 
+import com.threerings.bang.admin.server.BangAdminManager;
 import com.threerings.bang.admin.server.RuntimeConfig;
 
 import com.threerings.bang.saloon.data.Criterion;
@@ -82,7 +86,7 @@ public abstract class MatchHostManager extends ShopManager
         Match match = createMatch(user, criterion);
         match.setObject(BangServer.omgr.registerObject(new MatchObject()));
         _matches.put(match.matchobj.getOid(), match);
-        BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
+        _adminmgr.statobj.setPendingMatches(_matches.size());
         listener.requestProcessed(match.matchobj.getOid());
         checkReadiness(match);
     }
@@ -270,10 +274,12 @@ public abstract class MatchHostManager extends ShopManager
     protected void clearMatchServices (Match match)
     {
         BangServer.omgr.destroyObject(match.matchobj.getOid());
-        BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
+        _adminmgr.statobj.setPendingMatches(_matches.size());
     }
 
-    protected static HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
+    protected static Map<Integer,Match> _matches = Maps.newHashMap();
+
+    @Inject protected BangAdminManager _adminmgr;
 
     /** The delay between reporting that we're going to start a match and the
      * time that we actually start it. */

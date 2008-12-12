@@ -3,6 +3,8 @@
 
 package com.threerings.bang.station.server;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.samskivert.io.PersistenceException;
 
 import com.threerings.util.MessageBundle;
@@ -20,9 +22,12 @@ import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TrainTicket;
+import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.FinancialAction;
+import com.threerings.bang.server.persist.ItemRepository;
+import com.threerings.bang.server.persist.PlayerRepository;
 
 import com.threerings.bang.station.client.StationService;
 import com.threerings.bang.station.data.StationCodes;
@@ -33,6 +38,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Implements the server-side of the Train Station services.
  */
+@Singleton
 public class StationManager extends ShopManager
     implements StationCodes, StationProvider
 {
@@ -67,7 +73,7 @@ public class StationManager extends ShopManager
 
         // deliver the ticket to the player; all the heavy lifting is handled by the financial
         // action
-        new BuyTicketAction(user, ticket, listener).start();
+        _invoker.post(new BuyTicketAction(user, ticket, listener));
     }
 
     // documentation inherited from interface StationProvider
@@ -93,9 +99,9 @@ public class StationManager extends ShopManager
 
         if (ticket.isExpired(System.currentTimeMillis())) {
             // remove the expired ticket
-            BangServer.invoker.postUnit(new PersistingUnit("activateTicket", listener) {
+            _invoker.postUnit(new PersistingUnit("activateTicket", listener) {
                 public void invokePersistent() throws PersistenceException {
-                    BangServer.itemrepo.deleteItem(finalTicket, "Free Ticket Expired");
+                    _itemrepo.deleteItem(finalTicket, "Free Ticket Expired");
                 }
 
                 public void handleSuccess() {
@@ -116,14 +122,14 @@ public class StationManager extends ShopManager
         }
 
         // go activate the ticket
-        BangServer.invoker.postUnit(new PersistingUnit("activateTicket", listener) {
+        _invoker.postUnit(new PersistingUnit("activateTicket", listener) {
             public void invokePersistent() throws PersistenceException {
                 // update the ticket record
                 finalTicket.activate(System.currentTimeMillis());
-                BangServer.itemrepo.updateItem(finalTicket);
+                _itemrepo.updateItem(finalTicket);
 
                 // update the player record
-                BangServer.playrepo.activateNextTown(user.playerId, finalTicket.getExpire());
+                _playrepo.activateNextTown(user.playerId, finalTicket.getExpire());
             }
 
             public void handleSuccess() {
@@ -185,16 +191,15 @@ public class StationManager extends ShopManager
         }
 
         protected String persistentAction () throws PersistenceException {
-            BangServer.playrepo.grantTownAccess(
-                _user.playerId, _ticket.getTownId());
-            BangServer.itemrepo.insertItem(_ticket);
+            _playrepo.grantTownAccess(_user.playerId, _ticket.getTownId());
+            _itemrepo.insertItem(_ticket);
             return null;
         }
         protected void rollbackPersistentAction () throws PersistenceException {
             String oldTownId = BangCodes.TOWN_IDS[_ticket.getTownIndex()-1];
-            BangServer.playrepo.grantTownAccess(_user.playerId, oldTownId);
+            _playrepo.grantTownAccess(_user.playerId, oldTownId);
             if (_ticket.getItemId() > 0) {
-                BangServer.itemrepo.deleteItem(_ticket, "ticket_rollback");
+                _itemrepo.deleteItem(_ticket, "ticket_rollback");
             }
         }
 
@@ -216,7 +221,14 @@ public class StationManager extends ShopManager
 
         protected TrainTicket _ticket;
         protected StationService.ConfirmListener _listener;
+
+        @Inject protected ItemRepository _itemrepo;
     }
 
     protected StationObject _stobj;
+
+    // dependencies
+    @Inject protected BangInvoker _invoker;
+    @Inject protected PlayerRepository _playrepo;
+    @Inject protected ItemRepository _itemrepo;
 }

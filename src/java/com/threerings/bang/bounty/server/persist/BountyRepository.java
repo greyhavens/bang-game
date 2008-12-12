@@ -6,20 +6,24 @@ package com.threerings.bang.bounty.server.persist;
 import java.util.Collection;
 import java.util.Set;
 
-import com.samskivert.io.PersistenceException;
-import com.samskivert.jdbc.ConnectionProvider;
-import com.samskivert.depot.PersistentRecord;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.depot.DepotRepository;
+import com.samskivert.depot.PersistenceContext;
+import com.samskivert.depot.PersistentRecord;
 import com.samskivert.depot.clause.Where;
+import com.samskivert.io.PersistenceException;
 
 /**
  * Tracks recent bounty completers.
  */
+@Singleton
 public class BountyRepository extends DepotRepository
 {
-    public BountyRepository (ConnectionProvider conprov)
+    @Inject public BountyRepository (PersistenceContext ctx)
     {
-        super(conprov);
+        super(ctx);
     }
 
     /**

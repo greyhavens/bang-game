@@ -6,6 +6,7 @@ package com.threerings.bang.store.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.inject.Inject;
 import com.samskivert.io.PersistenceException;
 
 import com.threerings.presents.server.InvocationException;
@@ -14,7 +15,7 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.game.data.card.Card;
-import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.persist.ItemRepository;
 
 import com.threerings.bang.store.data.CardPackGood;
 import com.threerings.bang.store.data.Good;
@@ -69,9 +70,9 @@ public class CardPackProvider extends Provider
         // insert or update the various items
         for (CardItem item : _items.values()) {
             if (item.getItemId() == 0) {
-                BangServer.itemrepo.insertItem(item);
+                _itemrepo.insertItem(item);
             } else {
-                BangServer.itemrepo.updateItem(item);
+                _itemrepo.updateItem(item);
             }
         }
         return null;
@@ -84,7 +85,7 @@ public class CardPackProvider extends Provider
         // restore the original items; removing them from the items map in the
         // process
         for (CardItem item : _originals) {
-            BangServer.itemrepo.updateItem(item);
+            _itemrepo.updateItem(item);
             _items.remove(item.getType());
         }
 
@@ -92,7 +93,7 @@ public class CardPackProvider extends Provider
         // those which have an item id associated with them
         for (CardItem item : _items.values()) {
             if (item.getItemId() != 0) {
-                BangServer.itemrepo.deleteItem(
+                _itemrepo.deleteItem(
                     item, "cardpack_provider_rollback");
             }
         }
@@ -127,4 +128,7 @@ public class CardPackProvider extends Provider
     /** Inventory items that were be updated as a result of this purchase in
      * their pre-updated form. */
     protected ArrayList<CardItem> _originals = new ArrayList<CardItem>();
+
+    // dependencies
+    @Inject protected ItemRepository _itemrepo;
 }

@@ -11,6 +11,8 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.dobj.Subscriber;
 
+import com.threerings.admin.server.ConfigRegistry;
+
 import com.threerings.bang.admin.data.ServerConfigObject;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangSession;
@@ -29,7 +31,7 @@ public class RuntimeConfig
     /**
      * Creates and registers the runtime configuration objects.
      */
-    public static void init (RootDObjectManager omgr)
+    public static void init (RootDObjectManager omgr, ConfigRegistry confreg)
     {
         Field[] fields = RuntimeConfig.class.getDeclaredFields();
         for (int ii = 0; ii < fields.length; ii++) {
@@ -48,7 +50,7 @@ public class RuntimeConfig
                 object.setAccessController(ADMIN_CONTROLLER);
 
                 // register the object with the config object registry
-                BangServer.confreg.registerObject(key, key, object);
+                confreg.registerObject(key, key, object);
 
                 // and set our static field
                 field.set(null, object);

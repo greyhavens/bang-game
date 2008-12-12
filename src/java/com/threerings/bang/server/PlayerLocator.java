@@ -25,6 +25,8 @@ import com.threerings.crowd.server.BodyLocator;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 
+import com.threerings.bang.admin.server.BangAdminManager;
+
 /**
  * Customizes the {@link BodyLocator} and provides a means to lookup a member by id.
  */
@@ -118,7 +120,7 @@ public class PlayerLocator extends BodyLocator
         _playerIds.put(player.playerId, player);
 
         // update our players online count in the status object
-        BangServer.adminmgr.statobj.updatePlayersOnline(_clmgr.getClientCount());
+        _adminmgr.statobj.updatePlayersOnline(_clmgr.getClientCount());
 
         // notify our player observers
         _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
@@ -156,7 +158,7 @@ public class PlayerLocator extends BodyLocator
         _playerIds.remove(player.playerId);
 
         // update our players online count in the status object
-        BangServer.adminmgr.statobj.updatePlayersOnline(_clmgr.getClientCount());
+        _adminmgr.statobj.updatePlayersOnline(_clmgr.getClientCount());
 
         // notify our player observers
         _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
@@ -181,4 +183,5 @@ public class PlayerLocator extends BodyLocator
 
     @Inject protected PresentsDObjectMgr _omgr;
     @Inject protected ClientManager _clmgr;
+    @Inject protected BangAdminManager _adminmgr;
 }

@@ -9,17 +9,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.samskivert.io.PersistenceException;
-import com.samskivert.util.HashIntMap;
-import com.samskivert.util.StringUtil;
-import com.samskivert.util.RandomUtil;
+import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.servlet.JDBCTableSiteIdentifier;
 import com.samskivert.servlet.user.InvalidUsernameException;
 import com.samskivert.servlet.user.Password;
 import com.samskivert.servlet.user.UserExistsException;
 import com.samskivert.servlet.user.Username;
+import com.samskivert.util.HashIntMap;
+import com.samskivert.util.RandomUtil;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
@@ -50,6 +52,7 @@ import com.threerings.bang.server.BangClientResolver;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -67,11 +70,10 @@ public class OOOAuthenticator extends BangAuthenticator
     {
         try {
             // we get our user manager configuration from the ocean config
-            _usermgr = new OOOUserManager(ServerConfig.config.getSubProperties("oooauth"),
-                                          BangServer.conprov);
+            _usermgr = new OOOUserManager(ServerConfig.config.getSubProperties("oooauth"), _conprov);
             _authrep = (OOOUserRepository)_usermgr.getRepository();
-            _siteident = new JDBCTableSiteIdentifier(BangServer.conprov);
-            _rewardrep = new RewardRepository(BangServer.conprov);
+            _siteident = new JDBCTableSiteIdentifier(_conprov);
+            _rewardrep = new RewardRepository(_conprov);
 
         } catch (PersistenceException pe) {
             log.warning("Failed to initialize OOO authenticator.", pe);
@@ -243,7 +245,7 @@ public class OOOAuthenticator extends BangAuthenticator
         // handle tainted idents; we load up the player record for this account; if this player
         // makes it through the gauntlet, we'll stash this away in a place that the client resolver
         // can get it so that we can avoid loading the record twice during authentication
-        PlayerRecord prec = BangServer.playrepo.loadPlayer(username);
+        PlayerRecord prec = _playrepo.loadPlayer(username);
         String password = creds.getPassword();
 
         if (user == null && prec == null &&
@@ -265,7 +267,7 @@ public class OOOAuthenticator extends BangAuthenticator
             do {
                 username = StringUtil.md5hex(Integer.toString(
                             RandomUtil.getInt(Integer.MAX_VALUE)));
-                prec = BangServer.playrepo.loadPlayer(username);
+                prec = _playrepo.loadPlayer(username);
                 attempts++;
             } while (prec != null && attempts < MAX_LOOP);
 
@@ -290,7 +292,7 @@ public class OOOAuthenticator extends BangAuthenticator
         // see if they're a coin buyer
         if (!anonymous && prec != null && !prec.isSet(PlayerRecord.IS_COIN_BUYER)) {
             if (user.hasBoughtCoins() || user.isSupportPlus()) {
-                BangServer.playrepo.markAsCoinBuyer(prec.playerId);
+                _playrepo.markAsCoinBuyer(prec.playerId);
                 prec.flags = prec.flags | PlayerRecord.IS_COIN_BUYER;
             }
         }
@@ -483,6 +485,10 @@ public class OOOAuthenticator extends BangAuthenticator
     protected OOOUserRepository _authrep;
     protected RewardRepository _rewardrep;
     protected HashIntMap<RewardInfo> _rewards = new HashIntMap<RewardInfo>();
+
+    // dependencies
+    @Inject protected ConnectionProvider _conprov;
+    @Inject protected PlayerRepository _playrepo;
 
     /** We only allow two accounts with the same machine ident to redeem a reward. */
     protected static final int MAX_RELATED_REDEEMERS = 2;

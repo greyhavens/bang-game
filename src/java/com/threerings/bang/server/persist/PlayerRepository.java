@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -35,6 +38,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Manages persistent information stored on a per-player basis.
  */
+@Singleton
 public class PlayerRepository extends JORARepository
 {
     /** The database identifier used when establishing a database connection. This value being
@@ -46,7 +50,7 @@ public class PlayerRepository extends JORARepository
      *
      * @param conprov the connection provider via which we will obtain our database connection.
      */
-    public PlayerRepository (ConnectionProvider conprov)
+    @Inject public PlayerRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, PLAYER_DB_IDENT);

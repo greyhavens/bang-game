@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
@@ -29,9 +30,11 @@ import com.threerings.stats.data.StatSet;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.server.persist.GangInviteRecord;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
+import com.threerings.bang.gang.server.persist.GangRepository;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.saloon.data.TopRankedList;
 import com.threerings.bang.saloon.data.TopRankObject;
@@ -51,9 +54,13 @@ import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangUtil;
 
+import com.threerings.bang.server.persist.BangStatRepository;
 import com.threerings.bang.server.persist.FolkRecord;
+import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PardnerRecord;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.server.persist.PlayerRepository;
+import com.threerings.bang.server.persist.RatingRepository;
 
 import static com.threerings.bang.Log.log;
 
@@ -109,7 +116,7 @@ public class BangClientResolver extends CrowdClientResolver
 
         // if we have nothing in the stash, we need to load them from the db
         if (player == null) {
-            player = BangServer.playrepo.loadPlayer(username);
+            player = _playrepo.loadPlayer(username);
         }
 
         // if they're not in the db, it's their first time, how nice
@@ -117,7 +124,7 @@ public class BangClientResolver extends CrowdClientResolver
             BangSession client = (BangSession)BangServer.clmgr.getClient(buser.username);
             boolean anonymous = ((BangCredentials)client.getCredentials()).anonymous;
             player = new PlayerRecord(username, anonymous);
-            BangServer.playrepo.insertPlayer(player);
+            _playrepo.insertPlayer(player);
             if (!anonymous) {
                 BangServer.author.setAccountIsActive(username, true);
                 synchronized (_astash) {
@@ -141,17 +148,17 @@ public class BangClientResolver extends CrowdClientResolver
         buser.tokens.setToken(BangTokenRing.OVER_13, player.isOver13);
         buser.tokens.setToken(BangTokenRing.DEMO, player.isSet(PlayerRecord.IS_DEMO_ACCOUNT));
         buser.scrip = player.scrip;
-        buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(player.accountName);
+        buser.coins = _coinmgr.getCoinRepository().getCoinCount(player.accountName);
 
         // load up this player's gang information
-        _grecord = BangServer.gangrepo.loadMember(player.playerId);
+        _grecord = _gangrepo.loadMember(player.playerId);
         if (_grecord == null) {
-            _ginvites = BangServer.gangrepo.getInviteRecords(player.playerId);
+            _ginvites = _gangrepo.getInviteRecords(player.playerId);
         }
         int gangId = (_grecord == null ? 0 : _grecord.gangId);
 
         // load up this player's items
-        List<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
+        List<Item> items = _itemrepo.loadItems(buser.playerId);
         long now = System.currentTimeMillis();
         // check for expired items
         ArrayIntSet removals = new ArrayIntSet();
@@ -161,14 +168,14 @@ public class BangClientResolver extends CrowdClientResolver
             if (item.isExpired(now) || (gid != 0 && gid != gangId)) {
                 removals.add(item.getItemId());
                 iter.remove();
-                BangServer.itemrepo.deleteItem(item, "Item expired");
+                _itemrepo.deleteItem(item, "Item expired");
             }
         }
 
         // if they have no bigshots, give them the starter bigshot (first one's free kid)
         if (!Iterables.filter(items, BigShotItem.class).iterator().hasNext()) {
             BigShotItem bsitem = new BigShotItem(buser.playerId, FREE_BIGSHOT_TYPE);
-            BangServer.itemrepo.insertItem(bsitem);
+            _itemrepo.insertItem(bsitem);
             items.add(bsitem);
         }
 
@@ -176,7 +183,7 @@ public class BangClientResolver extends CrowdClientResolver
         buser.inventory = new DSet<Item>(items.iterator());
 
         // load up this player's persistent stats
-        List<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);
+        List<Stat> stats = _statrepo.loadStats(buser.playerId);
         buser.stats = new StatSet(stats.iterator());
         buser.stats.setContainer(buser);
 
@@ -188,7 +195,7 @@ public class BangClientResolver extends CrowdClientResolver
                     townAccess = BangCodes.TOWN_IDS[ii];
                 }
             }
-            BangServer.playrepo.grantTownAccess(buser.playerId, townAccess);
+            _playrepo.grantTownAccess(buser.playerId, townAccess);
         }
 
         // if they have an expired free ticket, remove it
@@ -201,7 +208,7 @@ public class BangClientResolver extends CrowdClientResolver
             FreeTicket ticket = (FreeTicket)item;
             if (ticket.isExpired(System.currentTimeMillis()) ||
                     buser.holdsTicket(ticket.getTownId())) {
-                BangServer.itemrepo.deleteItem(item, "Free Ticket Expired");
+                _itemrepo.deleteItem(item, "Free Ticket Expired");
                 buser.removeFromInventory(item.getKey());
             }
         }
@@ -213,7 +220,7 @@ public class BangClientResolver extends CrowdClientResolver
             FreeTicket ticket = FreeTicket.checkQualifies(
                     buser, BangUtil.getTownIndex(BangCodes.INDIAN_POST));
             if (ticket != null) {
-                BangServer.itemrepo.insertItem(ticket);
+                _itemrepo.insertItem(ticket);
                 buser.addToInventory(ticket);
             }
         }
@@ -229,17 +236,17 @@ public class BangClientResolver extends CrowdClientResolver
 
         // load up this player's ratings
         buser.ratings = new HashMap<Date, HashMap<String, Rating>>();
-        buser.ratings.put(null, BangServer.ratingrepo.loadRatings(buser.playerId, null));
+        buser.ratings.put(null, _ratingrepo.loadRatings(buser.playerId, null));
         for (int ii = 0; ii < PlayerManager.SHOW_WEEKS; ii++) {
             Date week = Rating.getWeek(ii);
-            buser.ratings.put(week, BangServer.ratingrepo.loadRatings(buser.playerId, week));
+            buser.ratings.put(week, _ratingrepo.loadRatings(buser.playerId, week));
         }
 
         // load up this player's avatar looks and modify any looks that have now expired articles
-        List<Look> looks = BangServer.lookrepo.loadLooks(player.playerId);
+        List<Look> looks = _lookrepo.loadLooks(player.playerId);
         List<Look> modified = AvatarLogic.stripLooks(removals, buser.inventory, looks);
         for (Look look : modified) {
-            BangServer.lookrepo.updateLook(buser.playerId, look);
+            _lookrepo.updateLook(buser.playerId, look);
         }
         buser.looks = new DSet<Look>(looks);
 
@@ -257,7 +264,7 @@ public class BangClientResolver extends CrowdClientResolver
             BangServer.playmgr.sendWarningMessage(buser, player.banExpires != null, player.warning);
             // clear out stale temp ban information
             if (player.banExpires != null) {
-                BangServer.playrepo.clearTempBan(player.playerId);
+                _playrepo.clearTempBan(player.playerId);
             }
         }
 
@@ -265,7 +272,7 @@ public class BangClientResolver extends CrowdClientResolver
         _precords = BangServer.playmgr.getPardnerRepository().getPardnerRecords(player.playerId);
 
         // load this player's friends and foes
-        List<FolkRecord> folks = BangServer.playrepo.loadOpinions(buser.playerId);
+        List<FolkRecord> folks = _playrepo.loadOpinions(buser.playerId);
         ArrayIntSet friends = new ArrayIntSet(), foes = new ArrayIntSet();
         for (FolkRecord folk : folks) {
             (folk.opinion == FolkRecord.FRIEND ? friends : foes).add(folk.targetId);
@@ -369,16 +376,16 @@ public class BangClientResolver extends CrowdClientResolver
                 public boolean invoke () {
                     try {
                         if (!removed.isEmpty()) {
-                            BangServer.itemrepo.deleteItems(removed, "Gang items expired");
+                            _itemrepo.deleteItems(removed, "Gang items expired");
                         }
                         for (Item item : updated) {
-                            BangServer.itemrepo.updateItem(item);
+                            _itemrepo.updateItem(item);
                         }
                         for (Look look : modified) {
-                            BangServer.lookrepo.updateLook(buser.playerId, look);
+                            _lookrepo.updateLook(buser.playerId, look);
                         }
                         for (Item item : added) {
-                            BangServer.itemrepo.insertItem(item);
+                            _itemrepo.insertItem(item);
                         }
                     } catch (PersistenceException pe) {
                         log.warning("Failed to update player gang items.", "user", buser.who(), pe);
@@ -423,6 +430,15 @@ public class BangClientResolver extends CrowdClientResolver
 
     /** Activated rewards that were redeemed for this player during authentication. */
     protected List<String> _rewards;
+
+    // dependencies
+    @Inject protected BangCoinManager _coinmgr;
+    @Inject protected PlayerRepository _playrepo;
+    @Inject protected GangRepository _gangrepo;
+    @Inject protected ItemRepository _itemrepo;
+    @Inject protected BangStatRepository _statrepo;
+    @Inject protected RatingRepository _ratingrepo;
+    @Inject protected LookRepository _lookrepo;
 
     /** Used to temporarily store player records during resolution. */
     protected static Map<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();

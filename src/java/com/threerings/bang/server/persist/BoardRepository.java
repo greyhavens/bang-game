@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.jdbc.ConnectionProvider;
@@ -24,6 +27,7 @@ import static com.threerings.bang.Log.*;
 /**
  * Handles the loading and management of our persistent board data.
  */
+@Singleton
 public class BoardRepository extends JORARepository
 {
     /** Type definition! */
@@ -42,7 +46,7 @@ public class BoardRepository extends JORARepository
      * @param conprov the connection provider via which we will obtain our
      * database connection.
      */
-    public BoardRepository (ConnectionProvider conprov)
+    @Inject public BoardRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, BOARD_DB_IDENT);

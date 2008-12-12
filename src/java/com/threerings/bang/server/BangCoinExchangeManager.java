@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Interval;
@@ -28,6 +31,7 @@ import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.server.GangPeerProvider;
 
@@ -36,6 +40,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Customizes the standard coin exchange for Bang! Howdy.
  */
+@Singleton
 public class BangCoinExchangeManager extends CoinExchangeManager
 {
     /** Entities that will publish the coin exchange offers should implement this interface and
@@ -71,7 +76,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     /**
      * Creates the coin exchange manager and its associated repository.
      */
-    public BangCoinExchangeManager (ConnectionProvider conprov)
+    @Inject public BangCoinExchangeManager (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, ServerConfig.nodename);
@@ -83,7 +88,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     public void init ()
         throws PersistenceException
     {
-        init(BangServer.coinmgr, BangServer.invoker, BangCoinManager.coinlog,
+        init(_coinmgr, BangServer.invoker, BangCoinManager.coinlog,
              BangCodes.COINEX_OFFERS_SHOWN);
 
         // schedule an interval to clean out old offers periodically
@@ -184,7 +189,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         }
         PlayerObject player = BangServer.locator.lookupByAccountName(new Name(accountName));
         if (player != null) {
-            BangServer.coinmgr.updateCoinCount(player);
+            _coinmgr.updateCoinCount(player);
         }
     }
 
@@ -203,7 +208,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
-                    BangServer.playrepo.grantScrip(info.accountName, currency);
+                    _playrepo.grantScrip(info.accountName, currency);
                     return true;
                 } catch (PersistenceException pe) {
                     log.warning("Failed to grant scrip to player", "offer", info,
@@ -244,7 +249,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         _invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
-                    BangServer.playrepo.spendScrip(player.playerId, cost);
+                    _playrepo.spendScrip(player.playerId, cost);
                 } catch (PersistenceException pe) {
                     _error = pe;
                 }
@@ -314,7 +319,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         _invoker.postUnit(new Invoker.Unit("tradeCompleted") {
             public boolean invoke () {
                 try {
-                    _user = BangServer.playrepo.loadPlayer(buyer);
+                    _user = _playrepo.loadPlayer(buyer);
                     return _user != null;
                 } catch (PersistenceException pe) {
                     log.warning("Failed to load user!", "cause", pe);
@@ -395,4 +400,8 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             return o1.price - o2.price;
         }
     };
+
+    // dependencies
+    @Inject protected BangCoinManager _coinmgr;
+    @Inject protected PlayerRepository _playrepo;
 }

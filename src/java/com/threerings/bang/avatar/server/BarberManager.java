@@ -3,6 +3,9 @@
 
 package com.threerings.bang.avatar.server;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
@@ -22,9 +25,12 @@ import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.FinancialAction;
+import com.threerings.bang.server.persist.ItemRepository;
+import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.avatar.client.AvatarService;
@@ -34,6 +40,7 @@ import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
+import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.avatar.util.ColorConstraints;
 
@@ -42,6 +49,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Provides Barber-related services.
  */
+@Singleton
 public class BarberManager extends ShopManager
     implements BarberCodes, BarberProvider, AvatarProvider
 {
@@ -90,10 +98,10 @@ public class BarberManager extends ShopManager
         // otherwise we have to go to the database (TODO: cache these?)
         final int fpid = playerId;
         final ResultListener<AvatarInfo> flist = listener;
-        BangServer.invoker.postUnit(new Invoker.Unit("loadSnapshot") {
+        _invoker.postUnit(new Invoker.Unit("loadSnapshot") {
             public boolean invoke () {
                 try {
-                    _snap = BangServer.lookrepo.loadSnapshot(fpid);
+                    _snap = _lookrepo.loadSnapshot(fpid);
                 } catch (PersistenceException pe) {
                     _error = pe;
                 }
@@ -128,7 +136,7 @@ public class BarberManager extends ShopManager
 
         // create the look from the specified configuration
         int[] cost = new int[2];
-        Look look = BangServer.alogic.createLook(user, config, cost);
+        Look look = _alogic.createLook(user, config, cost);
         if (look == null) {
             // an error will already have been logged
             throw new InvocationException(INTERNAL_ERROR);
@@ -151,7 +159,7 @@ public class BarberManager extends ShopManager
 
         // the buy look action takes care of the rest (including checking that
         // they have sufficient funds)
-        new BuyLookAction(user, look, cost[0], cost[1], cl).start();
+        _invoker.post(new BuyLookAction(user, look, cost[0], cost[1], cl));
     }
 
     // from interface BarberProvider
@@ -216,7 +224,7 @@ public class BarberManager extends ShopManager
         validateHandle(user, handle);
 
         // do the deed
-        new ChangeHandleAction(user, handle, cl).start();
+        _invoker.post(new ChangeHandleAction(user, handle, cl));
     }
 
     // from interface AvatarProvider
@@ -241,7 +249,7 @@ public class BarberManager extends ShopManager
 
         // create their default look based on the supplied configuration
         int[] cost = new int[2];
-        final Look look = BangServer.alogic.createLook(user, config, cost);
+        final Look look = _alogic.createLook(user, config, cost);
         if (look == null) {
             // an error will already have been logged
             throw new InvocationException(INTERNAL_ERROR);
@@ -251,7 +259,7 @@ public class BarberManager extends ShopManager
         int czp = AvatarLogic.decodePrimary(zations);
         int czs = AvatarLogic.decodeSecondary(zations);
         int czt = AvatarLogic.decodeTertiary(zations);
-        ColorPository cpos = BangServer.alogic.getColorPository();
+        ColorPository cpos = _alogic.getColorPository();
         if (!ColorConstraints.isValidColor(cpos, "clothes_p", czp, user) ||
             !ColorConstraints.isValidColor(cpos, "clothes_s", czs, user) ||
             !ColorConstraints.isValidColor(cpos, "clothes_t", czt, user)) {
@@ -263,7 +271,7 @@ public class BarberManager extends ShopManager
         // create their default clothing article, we'll fill in its item id after we've inserted
         // the article into the database
         look.articles = new int[AvatarLogic.SLOTS.length];
-        final Article article = BangServer.alogic.createDefaultClothing(user, isMale, zations);
+        final Article article = _alogic.createDefaultClothing(user, isMale, zations);
 
         // the client should prevent selection of non-starter components, but we check on the
         // server because we can't trust those bastards
@@ -278,18 +286,17 @@ public class BarberManager extends ShopManager
         }
 
         // do the deed!
-        BangServer.invoker.postUnit(new Invoker.Unit("createAvatar") {
+        _invoker.postUnit(new Invoker.Unit("createAvatar") {
             public boolean invoke () {
                 try {
                     // first configure their chosen handle
-                    if (!BangServer.playrepo.configurePlayer(
-                            user.playerId, handle, user.isMale)) {
+                    if (!_playrepo.configurePlayer(user.playerId, handle, user.isMale)) {
                         _error = AvatarCodes.ERR_DUP_HANDLE;
                         return true;
                     }
 
                     // insert their default clothing article into the database
-                    BangServer.itemrepo.insertItem(article);
+                    _itemrepo.insertItem(article);
 
                     // and fill its assigned item id into their default look
                     for (int ii = 0; ii < look.articles.length; ii++) {
@@ -300,7 +307,7 @@ public class BarberManager extends ShopManager
                     }
 
                     // finally insert their default look into the database
-                    BangServer.lookrepo.insertLook(user.playerId, look);
+                    _lookrepo.insertLook(user.playerId, look);
 
                 } catch (PersistenceException pe) {
                     log.warning("Error creating avatar", "for", user.who(), "look", look, pe);
@@ -350,10 +357,10 @@ public class BarberManager extends ShopManager
         final PlayerObject user, final Look look, final AvatarService.ConfirmListener cl)
     {
         final AvatarInfo avatar = look.getAvatar(user);
-        BangServer.invoker.postUnit(new Invoker.Unit("continueCreatingAvatar") {
+        _invoker.postUnit(new Invoker.Unit("continueCreatingAvatar") {
             public boolean invoke () {
                 try {
-                    BangServer.lookrepo.updateSnapshot(user.playerId, avatar.print);
+                    _lookrepo.updateSnapshot(user.playerId, avatar.print);
                 } catch (PersistenceException pe) {
                     log.warning("Error updating snapshot", "for", user.who(), "look", look, pe);
                     _error = INTERNAL_ERROR;
@@ -411,20 +418,19 @@ public class BarberManager extends ShopManager
     /** Used to purchase a new avatar look. */
     protected static final class BuyLookAction extends FinancialAction
     {
-        public BuyLookAction (
-            PlayerObject user, Look look, int scripCost, int coinCost,
-            BarberService.ConfirmListener listener)
-        {
+        public BuyLookAction (PlayerObject user, Look look, int scripCost, int coinCost,
+                              BarberService.ConfirmListener listener) {
             super(user, scripCost, coinCost);
             _look = look;
             _listener = listener;
         }
-        public void start () throws InvocationException {
-            super.start();
-            // add the look immediately to prevent rapid fire purchase requests
-            // from overwriting one another; we will remove the look later if
-            // we fail
+
+        @Override public boolean checkStart () throws InvocationException {
+            boolean start = super.checkStart();
+            // add the look immediately to prevent rapid fire purchase requests from overwriting
+            // one another; we will remove the look later if we fail
             _user.addToLooks(_look);
+            return start;
         }
 
         protected int getCoinType () {
@@ -435,11 +441,11 @@ public class BarberManager extends ShopManager
         }
 
         protected String persistentAction () throws PersistenceException {
-            BangServer.lookrepo.insertLook(_user.playerId, _look);
+            _lookrepo.insertLook(_user.playerId, _look);
             return null;
         }
         protected void rollbackPersistentAction () throws PersistenceException {
-            BangServer.lookrepo.deleteLook(_user.playerId, _look.name);
+            _lookrepo.deleteLook(_user.playerId, _look.name);
         }
 
         protected void actionCompleted () {
@@ -461,6 +467,8 @@ public class BarberManager extends ShopManager
 
         protected Look _look;
         protected BarberService.ConfirmListener _listener;
+
+        @Inject protected LookRepository _lookrepo;
     }
 
     /** Used to purchase a handle change. */
@@ -485,13 +493,11 @@ public class BarberManager extends ShopManager
         }
 
         protected String persistentAction () throws PersistenceException {
-            return BangServer.playrepo.configurePlayer(
-                _user.playerId, _handle, _user.isMale) ?
+            return _playrepo.configurePlayer(_user.playerId, _handle, _user.isMale) ?
                 null : MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, AvatarCodes.ERR_DUP_HANDLE);
         }
         protected void rollbackPersistentAction () throws PersistenceException {
-            BangServer.playrepo.configurePlayer(
-                _user.playerId, _ohandle, _user.isMale);
+            _playrepo.configurePlayer(_user.playerId, _ohandle, _user.isMale);
         }
 
         protected void actionCompleted () {
@@ -517,4 +523,11 @@ public class BarberManager extends ShopManager
     }
 
     protected BarberObject _bobj;
+
+    // dependencies
+    @Inject protected BangInvoker _invoker;
+    @Inject protected AvatarLogic _alogic;
+    @Inject protected PlayerRepository _playrepo;
+    @Inject protected ItemRepository _itemrepo;
+    @Inject protected LookRepository _lookrepo;
 }

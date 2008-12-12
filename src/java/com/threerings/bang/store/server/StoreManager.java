@@ -6,6 +6,8 @@ package com.threerings.bang.store.server;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.samskivert.util.Interval;
 
 import com.threerings.presents.data.ClientObject;
@@ -15,7 +17,9 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.ShopManager;
@@ -29,6 +33,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Handles the server-side operation of the General Store.
  */
+@Singleton
 public class StoreManager extends ShopManager
     implements StoreProvider
 {
@@ -59,7 +64,7 @@ public class StoreManager extends ShopManager
             throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
         }
         provider.setListener(cl);
-        provider.start();
+        _invoker.post(provider);
     }
 
     @Override // from ShopManager
@@ -80,7 +85,7 @@ public class StoreManager extends ShopManager
         super.didInit();
 
         // create our goods catalog
-        _goods = new GoodsCatalog(BangServer.alogic);
+        _goods = new GoodsCatalog(_alogic);
     }
 
     @Override // from PlaceManager
@@ -135,6 +140,10 @@ public class StoreManager extends ShopManager
     protected StoreObject _stobj;
     protected GoodsCatalog _goods;
     protected ArrayList<Good> _pending = new ArrayList<Good>();
+
+    // dependencies
+    @Inject protected BangInvoker _invoker;
+    @Inject protected AvatarLogic _alogic;
 
     protected static final long UPDATE_GOODS_INTERVAL = 15 * 60 * 1000L;
 }

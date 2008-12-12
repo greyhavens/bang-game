@@ -7,9 +7,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 
-import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryListenerUnit;
 import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.jdbc.TransitionRepository;
@@ -21,15 +24,13 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.SoftCache;
 
 import com.threerings.io.Streamable;
-
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
-
-import com.threerings.presents.peer.server.PeerManager;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
@@ -41,12 +42,16 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
+import com.threerings.bang.server.BangInvoker;
+import com.threerings.bang.server.BangPeerManager;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.FinancialAction;
+import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.game.data.BangObject;
 
@@ -68,23 +73,22 @@ import static com.threerings.bang.Log.*;
 /**
  * Handles gang-related functionality.
  */
+@Singleton
 public class GangManager
     implements GangProvider, GangCodes
 {
     /**
      * Initializes the gang manager and registers its invocation service.
      */
-    public void init (ConnectionProvider conprov)
+    public void init ()
         throws PersistenceException
     {
-        _gangrepo = new GangRepository(conprov);
-
         // register ourselves as the provider of the (bootstrap) GangService
         BangServer.invmgr.registerDispatcher(new GangDispatcher(this), GLOBAL_GROUP);
 
         // listen for gang info cache updates
-        if (BangServer.peermgr != null) {
-            BangServer.peermgr.addStaleCacheObserver(GANG_INFO_CACHE,
+        if (_peermgr.isRunning()) {
+            _peermgr.addStaleCacheObserver(GANG_INFO_CACHE,
                 new PeerManager.StaleCacheObserver() {
                     public void changedCacheData (Streamable data) {
                         _infoCache.remove((Handle)data);
@@ -93,8 +97,8 @@ public class GangManager
         }
 
         // listen for gang notoriety updates
-        if (BangServer.peermgr != null) {
-            BangServer.peermgr.addStaleCacheObserver(GANG_NOTORIETY_CACHE,
+        if (_peermgr.isRunning()) {
+            _peermgr.addStaleCacheObserver(GANG_NOTORIETY_CACHE,
                 new PeerManager.StaleCacheObserver() {
                     public void changedCacheData (Streamable data) {
                         syncNotoriety();
@@ -147,7 +151,7 @@ public class GangManager
     {
         GangHandler gang = _gangs.get(gangId);
         if (gang == null) {
-            _gangs.put(gangId, gang = new GangHandler(gangId));
+            _gangs.put(gangId, gang = GangHandler.newGangHandler(_injector, gangId));
         }
         return gang;
     }
@@ -244,8 +248,33 @@ public class GangManager
     public void clearCachedGangInfo (Handle name)
     {
         _infoCache.remove(name);
-        if (BangServer.peermgr != null) {
-            BangServer.peermgr.broadcastStaleCacheData(GANG_INFO_CACHE, name);
+        if (_peermgr.isRunning()) {
+            _peermgr.broadcastStaleCacheData(GANG_INFO_CACHE, name);
+        }
+    }
+
+    /**
+     * Convenience function for persisting an increment of a gang member's leader level.  Must be
+     * called on the invoker thread.
+     */
+    public void incLeaderLevel (GangObject gangobj, Handle handle)
+        throws PersistenceException
+    {
+        if (handle != null) {
+            GangMemberEntry leader = gangobj.members.get(handle);
+            if (leader != null && leader.leaderLevel < GangHandler.LEADER_LEVEL_WAITS.length - 1) {
+                // if they've waited twice as long as necessary, they get a double bump in level
+                long doubleTime = leader.lastLeaderCommand +
+                    2 * GangHandler.LEADER_LEVEL_WAITS[leader.leaderLevel] * GangHandler.ONE_HOUR;
+                if (leader.leaderLevel > 0 && doubleTime < System.currentTimeMillis()) {
+                    leader.leaderLevel =
+                        Math.min(GangHandler.LEADER_LEVEL_WAITS.length-1, leader.leaderLevel+2);
+                } else {
+                    leader.leaderLevel++;
+                }
+                leader.lastLeaderCommand = System.currentTimeMillis();
+                _gangrepo.updateLeaderLevel(leader.playerId, leader.leaderLevel);
+            }
         }
     }
 
@@ -283,7 +312,7 @@ public class GangManager
         }
 
         // otherwise, we must hit the database
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        _invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
                 throws PersistenceException {
                 _grec = _gangrepo.loadGang(name);
@@ -377,7 +406,7 @@ public class GangManager
      */
     public void loadGangs (final ResultListener<List<GangEntry>> listener)
     {
-        BangServer.invoker.postUnit(new RepositoryListenerUnit<List<GangEntry>>(listener) {
+        _invoker.postUnit(new RepositoryListenerUnit<List<GangEntry>>(listener) {
             public List<GangEntry> invokePersistResult ()
                 throws PersistenceException {
                 return _gangrepo.loadGangs();
@@ -401,10 +430,10 @@ public class GangManager
         final AvatarInfo avatar = (look == null) ? null : look.getAvatar(user);
 
         // create the buckle bits in the omgr thread
-        final BucklePart[] parts = BangServer.alogic.createDefaultBuckle();
+        final BucklePart[] parts = _alogic.createDefaultBuckle();
 
         // start up the action
-        new FinancialAction(user, FORM_GANG_SCRIP_COST, FORM_GANG_COIN_COST) {
+        _invoker.post(new FinancialAction(user, FORM_GANG_SCRIP_COST, FORM_GANG_COIN_COST) {
             protected int getCoinType () {
                 return CoinTransaction.GANG_CREATION;
             }
@@ -435,7 +464,7 @@ public class GangManager
                 for (int ii = 0; ii < parts.length; ii++) {
                     BucklePart part = parts[ii];
                     part.setOwnerId(_grec.gangId);
-                    BangServer.itemrepo.insertItem(part);
+                    _itemrepo.insertItem(part);
                     _grec.inventory.add(part);
                     bids[ii] = part.getItemId();
                 }
@@ -450,7 +479,7 @@ public class GangManager
                 _gangrepo.deleteGang(_grec.gangId);
                 _gangrepo.deleteMember(user.playerId);
                 for (Item item : _grec.inventory) {
-                    BangServer.itemrepo.deleteItem(item, "rollback");
+                    _itemrepo.deleteItem(item, "rollback");
                 }
             }
 
@@ -459,7 +488,8 @@ public class GangManager
                          "gangId", _grec.gangId);
                 BangServer.hideoutmgr.activateGang(name);
                 if (user.isActive()) {
-                    _gangs.put(_grec.gangId, new GangHandler(_grec, user, listener));
+                    _gangs.put(_grec.gangId, GangHandler.newGangHandler(
+                        _injector, _grec, user, listener));
                 }
                 BangServer.generalLog("joined_gang " + user.playerId + " g:" + _grec.gangId);
                 super.actionCompleted();
@@ -477,7 +507,7 @@ public class GangManager
 
             protected GangRecord _grec = new GangRecord(name);
             protected GangMemberRecord _mrec;
-        }.start();
+        });
     }
 
     /**
@@ -489,8 +519,8 @@ public class GangManager
         PlayerObject user = BangServer.locator.lookupPlayer(invitee);
         if (user != null) {
             sendGangInviteLocal(user, inviter, gangId, name, message);
-        } else if (BangServer.peermgr != null) {
-            BangServer.peermgr.forwardGangInvite(invitee, inviter, gangId, name, message);
+        } else if (_peermgr.isRunning()) {
+            _peermgr.forwardGangInvite(invitee, inviter, gangId, name, message);
         }
     }
 
@@ -515,15 +545,15 @@ public class GangManager
      */
     public void erodeNotoriety ()
     {
-        BangServer.invoker.postUnit(new RepositoryUnit("erodeNotoriety") {
+        _invoker.postUnit(new RepositoryUnit("erodeNotoriety") {
             public void invokePersist ()
                 throws PersistenceException {
-                BangServer.gangrepo.erodeNotoriety();
+                _gangrepo.erodeNotoriety();
             }
             public void handleSuccess () {
                 syncNotoriety();
-                if (BangServer.peermgr != null) {
-                    BangServer.peermgr.broadcastStaleCacheData(GANG_NOTORIETY_CACHE, null);
+                if (_peermgr.isRunning()) {
+                    _peermgr.broadcastStaleCacheData(GANG_NOTORIETY_CACHE, null);
                 }
             }
             public void handleFailure (Exception cause) {
@@ -537,10 +567,10 @@ public class GangManager
      */
     public void syncNotoriety ()
     {
-        BangServer.invoker.postUnit(new RepositoryUnit("syncNotoriety") {
+        _invoker.postUnit(new RepositoryUnit("syncNotoriety") {
             public void invokePersist ()
                 throws PersistenceException {
-                _notMap = BangServer.gangrepo.loadGangsNotoriety(_gangs.keys());
+                _notMap = _gangrepo.loadGangsNotoriety(_gangs.keys());
             }
             public void handleSuccess () {
                 for (IntIntMap.IntIntEntry entry : _notMap.entrySet()) {
@@ -626,9 +656,6 @@ public class GangManager
         return info;
     }
 
-    /** The persistent store for gang data. */
-    protected GangRepository _gangrepo;
-
     /** Maps gang ids to currently loaded gang objects. */
     protected HashIntMap<GangHandler> _gangs = new HashIntMap<GangHandler>();
 
@@ -637,6 +664,14 @@ public class GangManager
 
     /** A light-weight cache of soft {@link GangInfo} references. */
     protected SoftCache<Handle, GangInfo> _infoCache = new SoftCache<Handle, GangInfo>();
+
+    // dependencies
+    @Inject protected Injector _injector;
+    @Inject protected BangInvoker _invoker;
+    @Inject protected AvatarLogic _alogic;
+    @Inject protected BangPeerManager _peermgr;
+    @Inject protected GangRepository _gangrepo;
+    @Inject protected ItemRepository _itemrepo;
 
     /** The name of our gang info cache. */
     protected static final String GANG_INFO_CACHE = "gangInfoCache";

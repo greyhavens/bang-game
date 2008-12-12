@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
@@ -37,6 +40,7 @@ import com.threerings.bang.server.ServerConfig;
 /**
  * Responsible for the persistent storage of per-player ratings.
  */
+@Singleton
 public class RatingRepository extends SimpleRepository
 {
     /** Keeps track of the rating levels for each rank for a given rating type. */
@@ -102,7 +106,7 @@ public class RatingRepository extends SimpleRepository
      * @param conprov the connection provider via which we will obtain our
      * database connection.
      */
-    public RatingRepository (ConnectionProvider conprov)
+    @Inject public RatingRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, RATING_DB_IDENT);

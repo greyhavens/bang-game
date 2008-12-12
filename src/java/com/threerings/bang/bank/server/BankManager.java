@@ -3,6 +3,9 @@
 
 package com.threerings.bang.bank.server;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.ResultAdapter;
@@ -12,8 +15,6 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.coin.server.CoinExOffer;
-
-import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.PlayerObject;
@@ -31,6 +32,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Handles the server-side operation of the Bank.
  */
+@Singleton
 public class BankManager extends ShopManager
     implements BankProvider, BankCodes, BangCoinExchangeManager.OfferPublisher
 {
@@ -39,7 +41,7 @@ public class BankManager extends ShopManager
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
-        CoinExOfferInfo[][] offers = BangServer.coinexmgr.getPlayerOffers(user);
+        CoinExOfferInfo[][] offers = _coinexmgr.getPlayerOffers(user);
         ol.gotOffers(offers[0], offers[1]);
     }
 
@@ -55,8 +57,7 @@ public class BankManager extends ShopManager
         offer.buy = buying;
         offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
         offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
-        BangServer.coinexmgr.postOffer(
-            caller, offer, immediate, new ResultAdapter<CoinExOfferInfo>(listener));
+        _coinexmgr.postOffer(caller, offer, immediate, new ResultAdapter<CoinExOfferInfo>(listener));
     }
 
     // documentation inherited from interface BankProvider
@@ -64,7 +65,7 @@ public class BankManager extends ShopManager
         throws InvocationException
     {
         PlayerObject player = requireShopEnabled(caller);
-        if (BangServer.coinexmgr.cancelOffer(player.username.toString(), offerId)) {
+        if (_coinexmgr.cancelOffer(player.username.toString(), offerId)) {
             cl.requestProcessed();
         } else {
             cl.requestFailed(NO_SUCH_OFFER);
@@ -133,7 +134,7 @@ public class BankManager extends ShopManager
         _bankobj.setService(BangServer.invmgr.registerDispatcher(new BankDispatcher(this)));
 
         // register with the coin exchange manager
-        BangServer.coinexmgr.registerPublisher(this);
+        _coinexmgr.registerPublisher(this);
     }
 
     @Override // from ShopManager
@@ -152,4 +153,7 @@ public class BankManager extends ShopManager
     }
 
     protected BankObject _bankobj;
+
+    // dependencies
+    @Inject BangCoinExchangeManager _coinexmgr;
 }

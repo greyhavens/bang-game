@@ -7,10 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.jme.util.export.binary.BinaryImporter;
 import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.Invoker;
 
+import com.threerings.resource.ResourceManager;
 import com.threerings.util.Name;
 
 import com.threerings.presents.data.ClientObject;
@@ -24,6 +28,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.BoardManager;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.BoardRecord;
@@ -39,6 +44,7 @@ import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
 import com.threerings.bang.bounty.data.OfficeObject;
 import com.threerings.bang.bounty.data.RecentCompleters;
+import com.threerings.bang.bounty.server.persist.BountyRepository;
 import com.threerings.bang.bounty.server.persist.RecentCompletersRecord;
 
 import static com.threerings.bang.Log.log;
@@ -46,6 +52,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Handles the server side of the Sheriff's Office.
  */
+@Singleton
 public class OfficeManager extends ShopManager
     implements OfficeCodes, OfficeProvider
 {
@@ -99,7 +106,7 @@ public class OfficeManager extends ShopManager
                 try {
                     String path = config.getGamePath(gameId);
                     _gconfig = (BangConfig)BinaryImporter.getInstance().load(
-                        BangServer.rsrcmgr.getResource(path));
+                        _rsrcmgr.getResource(path));
                 } catch (Exception e) {
                     log.warning("Failed to load bounty game", "key", key, e);
                 }
@@ -153,7 +160,7 @@ public class OfficeManager extends ShopManager
         BangServer.invoker.postUnit(new Invoker.Unit("updateRecentCompleters") {
             public boolean invoke () {
                 try {
-                    BangServer.bountyrepo.storeCompleters(record);
+                    _bountyrepo.storeCompleters(record);
                 } catch (Exception e) {
                     log.warning("Failed to store recent completers " + record + ".", e);
                 }
@@ -245,7 +252,7 @@ public class OfficeManager extends ShopManager
         // publish all known boards as board info records
         ArrayList<BoardInfo> infos = new ArrayList<BoardInfo>();
         for (int pp = 2; pp <= GameCodes.MAX_PLAYERS; pp++) {
-            for (BoardRecord brec : BangServer.boardmgr.getBoards(pp)) {
+            for (BoardRecord brec : _boardmgr.getBoards(pp)) {
                 BoardInfo info = new BoardInfo();
                 info.name = brec.name;
                 info.players = brec.players;
@@ -259,7 +266,7 @@ public class OfficeManager extends ShopManager
         BangServer.invoker.postUnit(new RepositoryUnit("loadRecentCompleters") {
             public void invokePersist () throws Exception {
                 for (RecentCompletersRecord record :
-                         BangServer.bountyrepo.loadCompleters(ServerConfig.townId)) {
+                         _bountyrepo.loadCompleters(ServerConfig.townId)) {
                     _comps.add(record.toRecentCompleters());
                 }
             }
@@ -278,4 +285,9 @@ public class OfficeManager extends ShopManager
 
     /** A cache of all loaded bounty configurations. */
     protected HashMap<String,BangConfig> _configs = new HashMap<String,BangConfig>();
+
+    // dependencies
+    @Inject protected ResourceManager _rsrcmgr;
+    @Inject protected BoardManager _boardmgr;
+    @Inject protected BountyRepository _bountyrepo;
 }

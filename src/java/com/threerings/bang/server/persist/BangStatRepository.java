@@ -9,6 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.depot.PersistenceContext;
 import com.samskivert.depot.Stats;
 import com.samskivert.depot.impl.Query;
@@ -23,6 +26,7 @@ import com.threerings.bang.data.StatType;
 /**
  * Extends the standard StatRepository with some Bang-specific bits.
  */
+@Singleton
 public class BangStatRepository extends StatRepository
 {
     /** Used by {@link #processStats}. */
@@ -40,7 +44,7 @@ public class BangStatRepository extends StatRepository
     /**
      * Constructs a new statistics repository with the specified persistence context.
      */
-    public BangStatRepository (PersistenceContext ctx)
+    @Inject public BangStatRepository (PersistenceContext ctx)
     {
         super(ctx);
     }

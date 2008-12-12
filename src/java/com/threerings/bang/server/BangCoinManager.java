@@ -8,6 +8,9 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.AuditLogger;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.threerings.coin.server.CoinManager;
 import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.user.AccountActionRepository;
@@ -19,6 +22,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Customizes the (microcurrency) coin manager for Bang! Howdy.
  */
+@Singleton
 public class BangCoinManager extends CoinManager
 {
     /** An audit log for coin related information. */
@@ -27,7 +31,7 @@ public class BangCoinManager extends CoinManager
     /**
      * Creates the coin manager and its associated repository.
      */
-    public BangCoinManager (ConnectionProvider conprov, AccountActionRepository actionrepo)
+    @Inject public BangCoinManager (ConnectionProvider conprov, AccountActionRepository actionrepo)
         throws PersistenceException
     {
         // the bang coin tables are on the bang databases, so we can use the game invoker

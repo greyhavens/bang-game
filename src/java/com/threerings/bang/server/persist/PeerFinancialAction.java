@@ -3,21 +3,23 @@
 
 package com.threerings.bang.server.persist;
 
+import com.google.inject.Inject;
 import com.samskivert.io.PersistenceException;
 
 import com.threerings.presents.client.InvocationService;
 
-import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.persist.PlayerRepository;
 
 /**
  * Handles a financial action undertaken on behalf of another peer node.
  */
 public abstract class PeerFinancialAction extends FinancialAction
 {
-    @Override // documentation inherited
-    public void start ()
+    @Override // from FinancialAction
+    public boolean checkStart ()
     {
-        BangServer.invoker.postUnit(this);
+        // we don't call lockAndDeduct(), that was called on the originating peer
+        return true;
     }
 
     @Override // documentation inherited
@@ -50,7 +52,7 @@ public abstract class PeerFinancialAction extends FinancialAction
     protected void spendCash ()
         throws PersistenceException
     {
-        BangServer.playrepo.spendScrip(_playerId, _scripCost);
+        _playrepo.spendScrip(_playerId, _scripCost);
     }
 
     /**
@@ -59,7 +61,7 @@ public abstract class PeerFinancialAction extends FinancialAction
     protected void grantCash ()
         throws PersistenceException
     {
-        BangServer.playrepo.grantScrip(_playerId, _scripCost);
+        _playrepo.grantScrip(_playerId, _scripCost);
     }
 
     @Override // documentation inherited
@@ -92,4 +94,7 @@ public abstract class PeerFinancialAction extends FinancialAction
     protected String _coinAccount;
     protected int _playerId;
     protected InvocationService.ConfirmListener _listener;
+
+    // dependencies
+    @Inject protected PlayerRepository _playrepo;
 }

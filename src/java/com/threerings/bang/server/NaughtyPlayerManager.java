@@ -6,8 +6,9 @@ package com.threerings.bang.server;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Throttle;
 
-import com.threerings.bang.game.data.BangConfig;
+import com.google.inject.Singleton;
 
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.data.PlayerObject;
 
 import static com.threerings.bang.Log.log;
@@ -16,6 +17,7 @@ import static com.threerings.bang.Log.log;
  * Players behave naughtily in a variety of ways and we encapsulate all the code that attempts to
  * deal with those players into this manager.
  */
+@Singleton
 public class NaughtyPlayerManager
 {
     /**

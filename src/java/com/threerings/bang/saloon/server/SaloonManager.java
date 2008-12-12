@@ -4,9 +4,13 @@
 package com.threerings.bang.saloon.server;
 
 import java.sql.Date;
-import java.util.Calendar;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayUtil;
@@ -27,6 +31,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
@@ -44,6 +49,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Implements the server side of the Saloon.
  */
+@Singleton
 public class SaloonManager extends MatchHostManager
     implements SaloonProvider
 {
@@ -57,14 +63,14 @@ public class SaloonManager extends MatchHostManager
      * none.
      * @param count the number of entries desired in each list.
      */
-    public static void refreshTopRanked (final TopRankObject rankobj, final String[] scenarios,
+    public void refreshTopRanked (final TopRankObject rankobj, final String[] scenarios,
                                          final String join, final String where, final int count)
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 String[] scens = ArrayUtil.append(scenarios, ScenarioInfo.OVERALL_IDENT);
                 try {
-                    _lists = BangServer.ratingrepo.loadTopRanked(scens, join, where, count, null);
+                    _lists = _ratingrepo.loadTopRanked(scens, join, where, count, null);
 
                     // we don't start showing this week's top ranked until a couple days
                     // have passed
@@ -72,12 +78,12 @@ public class SaloonManager extends MatchHostManager
                     cal.add(Calendar.DAY_OF_YEAR, -2);
                     Date thisWeek = Rating.thisWeek();
                     if (thisWeek.before(cal.getTime())) {
-                        _lists.addAll(BangServer.ratingrepo.loadTopRanked(
+                        _lists.addAll(_ratingrepo.loadTopRanked(
                                 scens, join, where, count, thisWeek));
                     } else {
                         _clearThisWeek = true;
                     }
-                    _lists.addAll(BangServer.ratingrepo.loadTopRanked(
+                    _lists.addAll(_ratingrepo.loadTopRanked(
                             scens, join, where, count, Rating.getWeek(1)));
                     return true;
 
@@ -295,7 +301,10 @@ public class SaloonManager extends MatchHostManager
 
     protected SaloonObject _salobj;
     protected Interval _rankval;
-    protected HashMap<Handle,ParlorManager> _parlors = new HashMap<Handle,ParlorManager>();
+    protected Map<Handle,ParlorManager> _parlors = Maps.newHashMap();
+
+    // dependencies
+    @Inject protected RatingRepository _ratingrepo;
 
     /** The frequency with which we update the top-ranked player lists. */
     protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;

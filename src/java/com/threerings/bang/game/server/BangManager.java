@@ -17,6 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
@@ -50,6 +53,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.admin.data.StatusObject;
+import com.threerings.bang.admin.server.BangAdminManager;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.bounty.data.BountyConfig;
@@ -68,8 +72,13 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.BoardManager;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.persist.BangStatRepository;
 import com.threerings.bang.server.persist.BoardRecord;
+import com.threerings.bang.server.persist.ItemRepository;
+import com.threerings.bang.server.persist.PlayerRepository;
+import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.NameFactory;
 
@@ -864,7 +873,7 @@ public class BangManager extends GameManager
                 humans--;
             }
         }
-        BangServer.adminmgr.statobj.addToGames(
+        _adminmgr.statobj.addToGames(
             new StatusObject.GameInfo(_bangobj.getOid(), _bconfig.type, _bconfig.rated,
                                       _bconfig.grantAces, humans));
 
@@ -883,7 +892,7 @@ public class BangManager extends GameManager
                 prevIds.add(user.lastBoardId);
             }
         }
-        BoardRecord[] boards = BangServer.boardmgr.selectBoards(
+        BoardRecord[] boards = _boardmgr.selectBoards(
             Math.max(_bconfig.players.length, 2), _bconfig.rounds, prevIds);
 
         // set up our round records
@@ -916,7 +925,7 @@ public class BangManager extends GameManager
     {
         super.didShutdown();
         _invmgr.clearDispatcher(_bangobj.service);
-        BangServer.adminmgr.statobj.removeFromGames(_bangobj.getOid());
+        _adminmgr.statobj.removeFromGames(_bangobj.getOid());
         _bangobj.removeListener(BangServer.playmgr.receivedChatListener);
         log.info("Manager shutdown", "where", where());
     }
@@ -1101,7 +1110,7 @@ public class BangManager extends GameManager
             return;
         }
 
-        BangServer.boardmgr.loadBoardData(round.board, new ResultListener<BoardRecord>() {
+        _boardmgr.loadBoardData(round.board, new ResultListener<BoardRecord>() {
             public void requestCompleted (BoardRecord record) {
                 try {
                     round.bdata = record.getBoardData();
@@ -1127,12 +1136,12 @@ public class BangManager extends GameManager
         switch (_bconfig.type) {
         case TUTORIAL:
             _bangobj.setScenario(new TutorialInfo());
-            _scenario = new Tutorial();
+            _scenario = _injector.getInstance(Tutorial.class);
             break;
 
         case PRACTICE:
             _bangobj.setScenario(new PracticeInfo(ServerConfig.townId));
-            _scenario = new Practice();
+            _scenario = _injector.getInstance(Practice.class);
             break;
 
         default:
@@ -1140,7 +1149,9 @@ public class BangManager extends GameManager
             _bangobj.setScenario(info);
             String sclass = info.getScenarioClass();
             try {
-                _scenario = (Scenario)Class.forName(sclass).newInstance();
+                @SuppressWarnings("unchecked") Class<Scenario> sclazz =
+                    (Class<Scenario>)Class.forName(sclass);
+                _scenario = _injector.getInstance(sclazz);
             } catch (Exception e) {
                 log.warning("Failed to instantiate scenario class: " + sclass, e);
                 cancelGame();
@@ -2690,7 +2701,7 @@ public class BangManager extends GameManager
                     public boolean invoke () {
                         Stat stat = StatType.CONSEC_WINS.newStat();
                         stat.setModified(true);
-                        BangServer.statrepo.writeModified(user.playerId, new Stat[] { stat });
+                        _statrepo.writeModified(user.playerId, new Stat[] { stat });
                         return false;
                     }
                 });
@@ -2929,7 +2940,7 @@ public class BangManager extends GameManager
                     // grant them their cash
                     if (award.cashEarned > 0) {
                         try {
-                            BangServer.playrepo.grantScrip(prec.playerId, award.cashEarned);
+                            _playrepo.grantScrip(prec.playerId, award.cashEarned);
                         } catch (PersistenceException pe) {
                             log.warning("Failed to award scrip", "who", prec.playerId,
                                         "scrip", award.cashEarned, pe);
@@ -2940,9 +2951,9 @@ public class BangManager extends GameManager
                     if (award.item != null) {
                         try {
                             if (award.item.getItemId() == 0) {
-                                BangServer.itemrepo.insertItem(award.item);
+                                _itemrepo.insertItem(award.item);
                             } else {
-                                BangServer.itemrepo.updateItem(award.item);
+                                _itemrepo.updateItem(award.item);
                             }
                         } catch (PersistenceException pe) {
                             log.warning("Failed to store item " + award.item, pe);
@@ -2952,7 +2963,7 @@ public class BangManager extends GameManager
                     // grant them their ticket
                     if (_tickets[pidx] != null) {
                         try {
-                            BangServer.itemrepo.insertItem(_tickets[pidx]);
+                            _itemrepo.insertItem(_tickets[pidx]);
                         } catch (PersistenceException pe) {
                             log.warning("Failed to store ticket " + _tickets[pidx], pe);
                         }
@@ -2965,7 +2976,7 @@ public class BangManager extends GameManager
                         }
                         ArrayList<Rating> ratings = new ArrayList<Rating>(weekRatings.values());
                         try {
-                            BangServer.ratingrepo.updateRatings(prec.playerId, ratings);
+                            _ratingrepo.updateRatings(prec.playerId, ratings);
                         } catch (PersistenceException pe) {
                             log.warning("Failed to persist ratings", "pid", prec.playerId,
                                         "ratings", StringUtil.toString(ratings), pe);
@@ -3024,7 +3035,7 @@ public class BangManager extends GameManager
             public boolean invoke () {
                 for (StartingCard scard : updates) {
                     try {
-                        BangServer.itemrepo.updateItem(scard.item);
+                        _itemrepo.updateItem(scard.item);
                     } catch (PersistenceException pe) {
                         log.warning("Failed to update played card", "item", scard.item, pe);
                     }
@@ -3033,7 +3044,7 @@ public class BangManager extends GameManager
                     try {
                         // the item may have never been saved to the database
                         if (scard.item.getItemId() != 0) {
-                            BangServer.itemrepo.deleteItem(scard.item, "played_last_card");
+                            _itemrepo.deleteItem(scard.item, "played_last_card");
                         }
                     } catch (PersistenceException pe) {
                         log.warning("Failed to delete played card", "item", scard.item, pe);
@@ -3491,6 +3502,15 @@ public class BangManager extends GameManager
 
     /** Tracks advance orders. */
     protected ArrayList<AdvanceOrder> _orders = new ArrayList<AdvanceOrder>();
+
+    // dependencies
+    @Inject protected Injector _injector;
+    @Inject protected BangAdminManager _adminmgr;
+    @Inject protected BoardManager _boardmgr;
+    @Inject protected PlayerRepository _playrepo;
+    @Inject protected ItemRepository _itemrepo;
+    @Inject protected BangStatRepository _statrepo;
+    @Inject protected RatingRepository _ratingrepo;
 
     /** If a game is shorter than this (in seconds) we won't rate it. */
     protected static final int MIN_RATED_DURATION = 180;

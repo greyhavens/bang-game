@@ -14,8 +14,8 @@ import com.threerings.bang.data.PlayerObject;
 public abstract class ProxyFinancialAction extends FinancialAction
     implements InvocationService.ConfirmListener
 {
-    @Override // documentation inherited
-    public void start ()
+    @Override // from FinancialAction
+    public boolean checkStart ()
         throws InvocationException
     {
         lockAndDeduct();
@@ -24,6 +24,8 @@ public abstract class ProxyFinancialAction extends FinancialAction
         } catch (InvocationException e) {
             requestFailed(e.getMessage());
         }
+        // don't post to the invoker, we have forwarded our request to another sever
+        return false;
     }
 
     // documentation inherited from interface InvocationService.ConfirmListener

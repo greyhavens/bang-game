@@ -11,6 +11,9 @@ import java.sql.Statement;
 
 import java.util.TreeMap;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
@@ -20,12 +23,13 @@ import com.samskivert.jdbc.JDBCUtil;
  * Extends the {@link PlayerRepository} and provides methods for obtaining statistics that are only
  * needed by the Sheriff's Office webapp.
  */
+@Singleton
 public class PlayerStatRepository extends PlayerRepository
 {
     /**
      * Creates the repository, runs any migrations and prepares for operation.
      */
-    public PlayerStatRepository (ConnectionProvider conprov)
+    @Inject public PlayerStatRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov);

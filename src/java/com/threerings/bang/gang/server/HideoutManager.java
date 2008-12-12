@@ -6,6 +6,9 @@ package com.threerings.bang.gang.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.util.Interval;
@@ -29,11 +32,13 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangCoinExchangeManager;
+import com.threerings.bang.server.BangPeerManager;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.server.BarberManager;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.server.MatchHostManager;
@@ -51,12 +56,14 @@ import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.RentalGood;
 import com.threerings.bang.gang.data.TopRankedGangList;
+import com.threerings.bang.gang.server.persist.GangRepository;
 
 import static com.threerings.bang.Log.log;
 
 /**
  * Provides hideout-related services.
  */
+@Singleton
 public class HideoutManager extends MatchHostManager
     implements GangCodes, HideoutCodes, HideoutProvider, BangCoinExchangeManager.OfferPublisher
 {
@@ -67,8 +74,8 @@ public class HideoutManager extends MatchHostManager
     public void activateGang (Handle name)
     {
         activateGangLocal(name);
-        if (BangServer.peermgr != null) {
-            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setActivatedGang(name);
+        if (_peermgr.isRunning()) {
+            ((BangNodeObject)_peermgr.getNodeObject()).setActivatedGang(name);
         }
     }
 
@@ -79,8 +86,8 @@ public class HideoutManager extends MatchHostManager
     public void removeGang (Handle name)
     {
         removeGangLocal(name);
-        if (BangServer.peermgr != null) {
-            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setRemovedGang(name);
+        if (_peermgr.isRunning()) {
+            ((BangNodeObject)_peermgr.getNodeObject()).setRemovedGang(name);
         }
     }
 
@@ -552,8 +559,8 @@ public class HideoutManager extends MatchHostManager
         super.didInit();
 
         // create our goods catalog
-        _goods = new GangGoodsCatalog(BangServer.alogic);
-        _rentalGoods = new RentalGoodsCatalog(BangServer.alogic);
+        _goods = new GangGoodsCatalog(_alogic);
+        _rentalGoods = new RentalGoodsCatalog(_alogic);
     }
 
     @Override // from PlaceManager
@@ -568,7 +575,7 @@ public class HideoutManager extends MatchHostManager
         _hobj.setRentalGoods(new DSet<Good>(_rentalGoods.getGoods()));
 
         // register with the coin exchange manager
-        BangServer.coinexmgr.registerPublisher(this);
+        _coinexmgr.registerPublisher(this);
 
         // load up the gangs for the directory
         BangServer.gangmgr.loadGangs(new ResultListener<List<GangEntry>>() {
@@ -678,7 +685,7 @@ public class HideoutManager extends MatchHostManager
                 try {
                     _lists = new ArrayList<TopRankedGangList>();
                     for (byte ii = 0; ii < WEIGHT_CLASSES.length; ii++) {
-                        TopRankedGangList list = BangServer.gangrepo.loadTopRankedByNotoriety(
+                        TopRankedGangList list = _gangrepo.loadTopRankedByNotoriety(
                             ii, TOP_RANKED_LIST_SIZE);
                         if (list != null) {
                             _lists.add(list);
@@ -730,6 +737,12 @@ public class HideoutManager extends MatchHostManager
     protected RentalGoodsCatalog _rentalGoods;
     protected HideoutObject _hobj;
     protected Interval _rankval;
+
+    // dependencies
+    @Inject protected AvatarLogic _alogic;
+    @Inject protected BangCoinExchangeManager _coinexmgr;
+    @Inject protected BangPeerManager _peermgr;
+    @Inject protected GangRepository _gangrepo;
 
     /** The frequency with which we update the top-ranked gang lists and purge inactive gangs. */
     protected static final long RANK_PURGE_INTERVAL = 60 * 60 * 1000L;

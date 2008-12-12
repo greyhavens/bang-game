@@ -15,6 +15,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.ByteArrayOutInputStream;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
@@ -38,6 +41,7 @@ import static com.threerings.bang.Log.log;
  * Responsible for the persistent storage of items as well as for
  * transferring items from one player to another.
  */
+@Singleton
 public class ItemRepository extends SimpleRepository
 {
     /**
@@ -53,7 +57,7 @@ public class ItemRepository extends SimpleRepository
      * @param conprov the connection provider via which we will obtain our
      * database connection.
      */
-    public ItemRepository (ConnectionProvider conprov)
+    @Inject public ItemRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, ITEM_DB_IDENT);

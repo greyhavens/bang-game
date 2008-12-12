@@ -3,6 +3,7 @@
 
 package com.threerings.bang.store.server;
 
+import com.google.inject.Inject;
 import com.samskivert.io.PersistenceException;
 
 import com.threerings.presents.server.InvocationException;
@@ -10,7 +11,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.CardItem;
-import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.persist.ItemRepository;
 
 import com.threerings.bang.store.data.CardPackGood;
 import com.threerings.bang.store.data.CardTripletGood;
@@ -55,9 +56,9 @@ public class CardTripletProvider extends Provider
     {
         // insert or update the card item
         if (_item.getItemId() == 0) {
-            BangServer.itemrepo.insertItem(_item);
+            _itemrepo.insertItem(_item);
         } else {
-            BangServer.itemrepo.updateItem(_item);
+            _itemrepo.updateItem(_item);
         }
         return null;
     }
@@ -68,12 +69,12 @@ public class CardTripletProvider extends Provider
     {
         // restore the original item
         if (_original != null) {
-            BangServer.itemrepo.updateItem(_original);
+            _itemrepo.updateItem(_original);
         }
 
         // delete the original item if it was stored
         if (_item.getItemId() != 0) {
-            BangServer.itemrepo.deleteItem(_item, "cardtrip_provider_rollback");
+            _itemrepo.deleteItem(_item, "cardtrip_provider_rollback");
         }
     }
 
@@ -105,4 +106,7 @@ public class CardTripletProvider extends Provider
     /** The inventory item that was be updated as a result of this purchase in
      * its pre-updated form. */
     protected CardItem _original;
+
+    // dependencies
+    @Inject protected ItemRepository _itemrepo;
 }

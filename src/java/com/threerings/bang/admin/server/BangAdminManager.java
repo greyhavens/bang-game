@@ -3,17 +3,22 @@
 
 package com.threerings.bang.admin.server;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.util.Interval;
+import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.RootDObjectManager;
+import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.RebootManager;
 import com.threerings.presents.server.ShutdownManager;
+import com.threerings.presents.server.net.ConnectionManager;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.admin.data.StatusObject;
 
@@ -22,25 +27,29 @@ import static com.threerings.bang.Log.log;
 /**
  * Handles administrative bits for a Bang! server.
  */
+@Singleton
 public class BangAdminManager
     implements BangAdminProvider
 {
     /** Contains server status information published to admins. */
     public StatusObject statobj;
 
-    /**
-     * Prepares the admin manager for operation.
-     */
-    public void init (ShutdownManager shutmgr, RootDObjectManager omgr)
+    @Inject public BangAdminManager (ShutdownManager shutmgr, RootDObjectManager omgr,
+                                     InvocationManager invmgr)
     {
-        _shutmgr = shutmgr;
         _rebmgr = new BangRebootManager(shutmgr, omgr);
 
         // create and configure our status object
-        statobj = BangServer.omgr.registerObject(new StatusObject());
+        statobj = omgr.registerObject(new StatusObject());
         statobj.serverStartTime = System.currentTimeMillis();
-        statobj.setService(BangServer.invmgr.registerDispatcher(new BangAdminDispatcher(this)));
+        statobj.setService(invmgr.registerDispatcher(new BangAdminDispatcher(this)));
+    }
 
+    /**
+     * Prepares the admin manager for operation.
+     */
+    public void init ()
+    {
         // start up our connection manager stat monitor
         _conmgrStatsUpdater.schedule(5000L, true);
 
@@ -89,7 +98,7 @@ public class BangAdminManager
         }
 
         protected void broadcast (String message) {
-            BangServer.chatprov.broadcast(null, BangCodes.BANG_MSGS, message, true, false);
+            _chatprov.broadcast(null, BangCodes.BANG_MSGS, message, true, false);
         }
 
         protected int getDayFrequency () {
@@ -117,10 +126,13 @@ public class BangAdminManager
      * Interval dispatch thread. */
     protected Interval _conmgrStatsUpdater = new Interval() {
         public void expired () {
-            statobj.setConnStats(BangServer.conmgr.getStats());
+            statobj.setConnStats(_conmgr.getStats());
         }
     };
 
-    protected ShutdownManager _shutmgr;
-    protected BangRebootManager _rebmgr;
+    protected final BangRebootManager _rebmgr;
+
+    @Inject protected ShutdownManager _shutmgr;
+    @Inject protected ConnectionManager _conmgr;
+    @Inject protected ChatProvider _chatprov;
 }

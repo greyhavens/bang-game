@@ -17,15 +17,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import com.samskivert.io.PersistenceException;
-import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryUnit;
-import com.samskivert.util.ArrayUtil;
-import com.samskivert.util.Interval;
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.Interator;
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.Interator;
+import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
@@ -34,7 +35,9 @@ import com.samskivert.util.Tuple;
 import org.apache.commons.io.IOUtils;
 
 import com.threerings.io.Streamable;
+import com.threerings.resource.ResourceManager;
 
+import com.threerings.presents.annotation.AuthInvoker;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
@@ -54,7 +57,6 @@ import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.parlor.server.ParlorSender;
 
 import com.threerings.underwire.server.persist.EventRecord;
-import com.threerings.underwire.server.persist.UnderwireRepository;
 import com.threerings.underwire.web.data.Event;
 
 import com.threerings.util.MessageBundle;
@@ -95,7 +97,13 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.Warning;
 
+import com.threerings.bang.server.BangCoinExchangeManager;
+import com.threerings.bang.server.BangCoinManager;
+import com.threerings.bang.server.BangPeerManager;
+import com.threerings.bang.server.persist.BangStatRepository;
+import com.threerings.bang.server.persist.BangUnderwireRepository;
 import com.threerings.bang.server.persist.FolkRecord;
+import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PardnerRecord;
 import com.threerings.bang.server.persist.PardnerRepository;
 import com.threerings.bang.server.persist.PlayerRecord;
@@ -105,12 +113,14 @@ import com.threerings.bang.server.persist.PosterRepository;
 import com.threerings.bang.server.persist.RatingRepository;
 
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
+import com.threerings.bang.gang.server.persist.GangRepository;
 
 import static com.threerings.bang.Log.log;
 
 /**
  * Handles general player business, implements {@link PlayerProvider}.
  */
+@Singleton
 public class PlayerManager
     implements PlayerProvider, BangCodes
 {
@@ -143,17 +153,9 @@ public class PlayerManager
     /**
      * Initializes the player manager, and registers its invocation service.
      */
-    public void init (ConnectionProvider conprov)
+    public void init ()
         throws PersistenceException
     {
-        // we're the repository kings!
-        _pardrepo = new PardnerRepository(conprov);
-        _postrepo = new PosterRepository(conprov);
-        _playrepo = new PlayerRepository(conprov);
-        _raterepo = new RatingRepository(conprov);
-        _lookrepo = new LookRepository(conprov);
-        _underepo = new UnderwireRepository(conprov);
-
         // register ourselves as the provider of the (bootstrap) PlayerService
         BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), GLOBAL_GROUP);
 
@@ -173,16 +175,16 @@ public class PlayerManager
                 entry.gameOid = 0;
             }
         };
-        if (BangServer.peermgr != null) {
-            BangServer.peermgr.addPlayerObserver(_pardwatcher);
-            BangServer.peermgr.addStaleCacheObserver(POSTER_CACHE,
+        if (_peermgr.isRunning()) {
+            _peermgr.addPlayerObserver(_pardwatcher);
+            _peermgr.addStaleCacheObserver(POSTER_CACHE,
                 new PeerManager.StaleCacheObserver() {
                     public void changedCacheData (Streamable data) {
                         _posterCache.remove(data);
                     }
                 });
             // make sure we boot a local client if they login to a remote server
-            BangServer.peermgr.addPlayerObserver(new BangPeerManager.RemotePlayerObserver() {
+            _peermgr.addPlayerObserver(new BangPeerManager.RemotePlayerObserver() {
                 public void remotePlayerLoggedOn (int townIndex, BangClientInfo info) {
                     PresentsSession pclient = BangServer.clmgr.getClient(info.username);
                     if (pclient != null) {
@@ -313,7 +315,7 @@ public class PlayerManager
                 if (data[1].equalsIgnoreCase("coins")) {
                     int coins = Integer.parseInt(data[2]);
                     log.info("Granting coin reward", "account", player.username, "coins", coins);
-                    BangServer.coinmgr.grantRewardCoins(player, coins);
+                    _coinmgr.grantRewardCoins(player, coins);
 
                 }  else if (data[1].equalsIgnoreCase("billing") &&
                         data[2].equalsIgnoreCase("goldpass")) {
@@ -499,7 +501,7 @@ public class PlayerManager
         } else {
             // otherwise load up the tutorial configuration and use that to
             // configure the tutorial game
-            TutorialConfig tconfig = TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutId);
+            TutorialConfig tconfig = TutorialUtil.loadTutorial(_rsrcmgr, tutId);
             if ("error".equals(tconfig.board)) {
                 throw new InvocationException(INTERNAL_ERROR);
             }
@@ -724,8 +726,8 @@ public class PlayerManager
     public void clearPosterInfoCache (Handle handle)
     {
         _posterCache.remove(handle);
-        if (BangServer.peermgr != null) {
-            BangServer.peermgr.broadcastStaleCacheData(POSTER_CACHE, handle);
+        if (_peermgr.isRunning()) {
+            _peermgr.broadcastStaleCacheData(POSTER_CACHE, handle);
         }
     }
 
@@ -892,7 +894,7 @@ public class PlayerManager
         BangServer.invoker.postUnit(new PersistingUnit("destroyItem", listener) {
             public void invokePersistent ()
                 throws PersistenceException {
-                BangServer.itemrepo.deleteItem(item, "trashed");
+                _itemrepo.deleteItem(item, "trashed");
             }
             public void handleSuccess () {
                 listener.requestProcessed();
@@ -941,7 +943,7 @@ public class PlayerManager
         // prevent multiple requests from coming in
         _creatingAccounts.add(user.playerId);
 
-        BangServer.authInvoker.postUnit(new Invoker.Unit("createAccount") {
+        _authInvoker.postUnit(new Invoker.Unit("createAccount") {
             public boolean invoke () {
                 try {
                     _errmsg = BangServer.author.createAccount(
@@ -1009,9 +1011,9 @@ public class PlayerManager
         PlayerObject user = BangServer.locator.lookupPlayer(ownerId);
         if (user != null) {
             deliverItemLocal(user, item, source);
-        } else if (BangServer.peermgr != null) {
+        } else if (_peermgr.isRunning()) {
             // try our peers
-            BangServer.peermgr.forwardItem(item, source);
+            _peermgr.forwardItem(item, source);
         }
     }
 
@@ -1033,8 +1035,8 @@ public class PlayerManager
         PlayerObject user = BangServer.locator.lookupPlayer(invitee);
         if (user != null) {
             sendPardnerInviteLocal(user, inviter, message, new Date());
-        } else if (BangServer.peermgr != null) {
-            BangServer.peermgr.forwardPardnerInvite(invitee, inviter, message);
+        } else if (_peermgr.isRunning()) {
+            _peermgr.forwardPardnerInvite(invitee, inviter, message);
         }
     }
 
@@ -1062,8 +1064,8 @@ public class PlayerManager
         PlayerObject user = BangServer.locator.lookupPlayer(inviter);
         if (user != null) {
             respondToPardnerInviteLocal(user, invitee, accept, full);
-        } else if (BangServer.peermgr != null) {
-            BangServer.peermgr.forwardPardnerInviteResponse(inviter, invitee, accept, full);
+        } else if (_peermgr.isRunning()) {
+            _peermgr.forwardPardnerInviteResponse(inviter, invitee, accept, full);
         }
     }
 
@@ -1091,8 +1093,8 @@ public class PlayerManager
         PlayerObject user = BangServer.locator.lookupPlayer(removee);
         if (user != null) {
             removePardnerLocal(user, remover);
-        } else if (BangServer.peermgr != null) {
-            BangServer.peermgr.forwardPardnerRemoval(removee, remover);
+        } else if (_peermgr.isRunning()) {
+            _peermgr.forwardPardnerRemoval(removee, remover);
         }
     }
 
@@ -1273,8 +1275,8 @@ public class PlayerManager
 
         // check whether the player is online on another server
         Tuple<BangClientInfo,Integer> remote = null;
-        if (BangServer.peermgr != null) {
-            remote = BangServer.peermgr.locateRemotePlayer(handle);
+        if (_peermgr.isRunning()) {
+            remote = _peermgr.locateRemotePlayer(handle);
         }
         if (remote != null) {
             PardnerEntry entry = new PardnerEntry(handle);
@@ -1481,16 +1483,16 @@ public class PlayerManager
                 _playrepo.clearOpinions(user.playerId);
                 _postrepo.deletePoster(user.playerId);
                 _lookrepo.deleteAllLooks(user.playerId);
-                BangServer.statrepo.deleteStats(user.playerId);
-                BangServer.ratingrepo.deleteRatings(user.playerId);
-                BangServer.itemrepo.deleteItems(user.playerId, "purging player");
+                _statrepo.deleteStats(user.playerId);
+                _ratingrepo.deleteRatings(user.playerId);
+                _itemrepo.deleteItems(user.playerId, "purging player");
 
                 // find out if they're in a gang, and remove them from it, or remove any
                 // pending gang invitations
                 // TODO: make this play nice with gangs not currently loaded
-                GangMemberRecord gmr = BangServer.gangrepo.loadMember(user.playerId);
+                GangMemberRecord gmr = _gangrepo.loadMember(user.playerId);
                 if (gmr == null) {
-                    BangServer.gangrepo.deletePendingInvites(user.playerId);
+                    _gangrepo.deletePendingInvites(user.playerId);
                 } else {
                     try {
                         BangServer.gangmgr.requireGangPeerProvider(gmr.gangId).removeFromGang(
@@ -1507,7 +1509,7 @@ public class PlayerManager
                 _playrepo.deletePlayer(user);
             }
             public void handleSuccess () {
-                BangServer.coinexmgr.userWasDeleted(user.handle);
+                _coinexmgr.userWasDeleted(user.handle);
                 listener.requestProcessed();
             }
             public String getFailureMessage () {
@@ -1550,7 +1552,7 @@ public class PlayerManager
         // stick the new item in the database and in their inventory
         BangServer.invoker.postUnit(new RepositoryUnit("giveGoldPass") {
             public void invokePersist () throws Exception {
-                BangServer.itemrepo.insertItem(pass);
+                _itemrepo.insertItem(pass);
             }
             public void handleSuccess () {
                 user.addToInventory(pass);
@@ -1579,24 +1581,6 @@ public class PlayerManager
         }
     };
 
-    /** Provides access to the pardner database. */
-    protected PardnerRepository _pardrepo;
-
-    /** Provides access to the poster database. */
-    protected PosterRepository _postrepo;
-
-    /** Provides access to the look database. */
-    protected LookRepository _lookrepo;
-
-    /** Provides access to the rating database. */
-    protected RatingRepository _raterepo;
-
-    /** Provides access to the player database. */
-    protected PlayerRepository _playrepo;
-
-    /** Used to file complaint reports. */
-    protected UnderwireRepository _underepo;
-
     /** Maps the names of users to updaters responsible for keeping their {@link PardnerEntry}s
      * up-to-date. */
     protected HashMap<Handle, PardnerEntryUpdater> _updaters =
@@ -1614,6 +1598,23 @@ public class PlayerManager
 
     /** Keeps track of pending create account requests. */
     protected ArrayIntSet _creatingAccounts = new ArrayIntSet();
+
+    // dependencies
+    @Inject protected @AuthInvoker Invoker _authInvoker;
+    @Inject protected ResourceManager _rsrcmgr;
+    @Inject protected BangCoinManager _coinmgr;
+    @Inject protected BangCoinExchangeManager _coinexmgr;
+    @Inject protected BangPeerManager _peermgr;
+    @Inject protected PardnerRepository _pardrepo;
+    @Inject protected PosterRepository _postrepo;
+    @Inject protected LookRepository _lookrepo;
+    @Inject protected RatingRepository _raterepo;
+    @Inject protected PlayerRepository _playrepo;
+    @Inject protected GangRepository _gangrepo;
+    @Inject protected BangUnderwireRepository _underepo;
+    @Inject protected ItemRepository _itemrepo;
+    @Inject protected BangStatRepository _statrepo;
+    @Inject protected RatingRepository _ratingrepo;
 
     /** The name of our poster cache. */
     protected static final String POSTER_CACHE = "posterCache";

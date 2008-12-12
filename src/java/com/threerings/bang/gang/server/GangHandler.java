@@ -8,8 +8,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import com.samskivert.io.PersistenceException;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
+import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.jdbc.WriteOnlyUnit;
 
@@ -36,23 +38,28 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.ObjectDeathListener;
-import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
+import com.threerings.presents.dobj.ObjectDeathListener;
+import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.peer.data.NodeObject.Lock;
 import com.threerings.presents.peer.server.PeerManager.DroppedLockObserver;
 import com.threerings.presents.peer.util.PeerUtil;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
+import com.threerings.presents.server.PresentsDObjectMgr;
 import com.threerings.presents.util.PersistingUnit;
 import com.threerings.presents.util.ResultAdapter;
 
+import com.threerings.crowd.server.BodyManager;
 import com.threerings.crowd.server.PlaceManager;
+import com.threerings.crowd.server.PlaceRegistry;
 
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.UserMessage;
+import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.chat.server.SpeakHandler;
 import com.threerings.crowd.chat.server.SpeakProvider;
@@ -75,10 +82,16 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.WeightClassUpgrade;
+import com.threerings.bang.server.BangCoinExchangeManager;
+import com.threerings.bang.server.BangInvoker;
+import com.threerings.bang.server.BangPeerManager;
 import com.threerings.bang.server.BangPeerManager.RemotePlayerObserver;
+import com.threerings.bang.server.BangCoinManager;
 import com.threerings.bang.server.PlayerLocator;
+import com.threerings.bang.server.PlayerManager;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PeerFinancialAction;
 import com.threerings.bang.server.persist.ProxyFinancialAction;
 
@@ -86,6 +99,7 @@ import com.threerings.bang.admin.data.ServerConfigObject;
 import com.threerings.bang.admin.server.RuntimeConfig;
 
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
@@ -107,6 +121,7 @@ import com.threerings.bang.gang.data.WeightClassUpgradeGood;
 import com.threerings.bang.gang.server.persist.GangFinancialAction;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
 import com.threerings.bang.gang.server.persist.GangRecord;
+import com.threerings.bang.gang.server.persist.GangRepository;
 import com.threerings.bang.gang.util.GangUtil;
 
 import static com.threerings.bang.Log.*;
@@ -125,98 +140,25 @@ public class GangHandler
     };
 
     /**
-     * Convenience function for persisting an increment of a gang member's leader level.  Must be
-     * called on the invoker thread.
-     */
-    public static void incLeaderLevel (GangObject gangobj, Handle handle)
-        throws PersistenceException
-    {
-        if (handle != null) {
-            GangMemberEntry leader = gangobj.members.get(handle);
-            if (leader != null && leader.leaderLevel < LEADER_LEVEL_WAITS.length - 1) {
-                // if they've waited twice as long as necessary, they get a double bump in level
-                long doubleTime = leader.lastLeaderCommand +
-                    2 * LEADER_LEVEL_WAITS[leader.leaderLevel] * ONE_HOUR;
-                if (leader.leaderLevel > 0 && doubleTime < System.currentTimeMillis()) {
-                    leader.leaderLevel =
-                        Math.min(LEADER_LEVEL_WAITS.length-1, leader.leaderLevel+2);
-                } else {
-                    leader.leaderLevel++;
-                }
-                leader.lastLeaderCommand = System.currentTimeMillis();
-                BangServer.gangrepo.updateLeaderLevel(leader.playerId, leader.leaderLevel);
-            }
-        }
-    }
-
-    /**
      * Creates the handler and starts the process of resolving the specified gang.
      */
-    public GangHandler (int gangId)
+    public static GangHandler newGangHandler (Injector injector, int gangId)
     {
-        _gangId = gangId;
-
-        // if not running in peer mode, we can skip to the database stage
-        if (BangServer.peermgr == null) {
-            loadFromDatabase();
-            return;
-        }
-
-        // otherwise, we must acquire the peer lock, or find out who has it
-        BangServer.peermgr.acquireLock(new Lock("gang", _gangId),
-            new ResultListener<String>() {
-                public void requestCompleted (String result) {
-                    if (result.equals(ServerConfig.nodename)) {
-                        loadFromDatabase();
-                    } else {
-                        subscribeToPeer(result);
-                    }
-                }
-                public void requestFailed (Exception cause) {
-                    initFailed(cause);
-                }
-            });
+        GangHandler handler = injector.getInstance(GangHandler.class);
+        handler.init(gangId);
+        return handler;
     }
 
     /**
      * Creates a handler for a newly created gang.
      */
-    public GangHandler (
-        final GangRecord grec, final PlayerObject creator,
-        final InvocationService.ConfirmListener listener)
+    public static GangHandler newGangHandler (
+        Injector injector, GangRecord grec, PlayerObject creator,
+        InvocationService.ConfirmListener listener)
     {
-        _gangId = grec.gangId;
-
-        // add a listener to initialize the player and report success
-        getGangObject(new ResultListener<GangObject>() {
-            public void requestCompleted (GangObject result) {
-                listener.requestProcessed();
-            }
-            public void requestFailed (Exception cause) {
-                listener.requestFailed(INTERNAL_ERROR);
-            }
-        });
-
-        // initialize immediately if not running in peer mode
-        if (BangServer.peermgr == null) {
-            createGangObject(grec);
-            return;
-        }
-
-        // otherwise, acquire the lock before continuing
-        BangServer.peermgr.acquireLock(new Lock("gang", _gangId),
-            new ResultListener<String>() {
-                public void requestCompleted (String result) {
-                    if (result.equals(ServerConfig.nodename)) {
-                        createGangObject(grec);
-                    } else {
-                        subscribeToPeer(result);
-                    }
-                }
-                public void requestFailed (Exception cause) {
-                    initFailed(cause);
-                }
-            });
+        GangHandler handler = injector.getInstance(GangHandler.class);
+        handler.init(grec, creator, listener);
+        return handler;
     }
 
     /**
@@ -265,9 +207,9 @@ public class GangHandler
     public void getHistoryEntries (final int offset, final int count, final String filter,
                                    final InvocationService.ResultListener listener)
     {
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        _invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                _entries = BangServer.gangrepo.loadHistoryEntries(_gangId, offset, count, filter);
+                _entries = _gangrepo.loadHistoryEntries(_gangId, offset, count, filter);
             }
             public void handleSuccess () {
                 listener.requestProcessed(_entries.toArray(new HistoryEntry[_entries.size()]));
@@ -284,7 +226,7 @@ public class GangHandler
                               final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
-        new ProxyFinancialAction(user, scrip, coins) { {
+        _invoker.post(new ProxyFinancialAction(user, scrip, coins) { {
                 // because we're transferring rather than spending, we need to reserve even
                 // for admins
                 _scripCost = scrip;
@@ -300,7 +242,7 @@ public class GangHandler
             protected void actionFailed (String cause) {
                 listener.requestFailed(cause);
             }
-        }.start();
+        });
     }
 
     /**
@@ -320,8 +262,7 @@ public class GangHandler
         offer.buy = true;
         offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
         offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
-        BangServer.coinexmgr.postOffer(
-            _gangobj, offer, true, new ResultAdapter<CoinExOfferInfo>(listener));
+        _coinexmgr.postOffer(_gangobj, offer, true, new ResultAdapter<CoinExOfferInfo>(listener));
     }
 
     /**
@@ -359,7 +300,7 @@ public class GangHandler
         // if we lose the lock, we have to shut down immediately and re-resolve
         if (lock.type.equals("gang") && ((Integer)lock.id) == _gangId) {
             shutdown();
-            BangServer.gangmgr.resolveGang(_gangId);
+            _gangmgr.resolveGang(_gangId);
         }
     }
 
@@ -401,8 +342,8 @@ public class GangHandler
         if (oldEntry != null) {
             GangMemberEntry newEntry = (GangMemberEntry)oldEntry.clone();
             newEntry.handle = newHandle;
-            BangServer.omgr.postEvent(new EntryReplacedEvent<GangMemberEntry>(
-                _gangobj, GangObject.MEMBERS, oldHandle, newEntry));
+            _omgr.postEvent(new EntryReplacedEvent<GangMemberEntry>(
+                                _gangobj, GangObject.MEMBERS, oldHandle, newEntry));
         }
     }
 
@@ -420,9 +361,9 @@ public class GangHandler
         UserMessage umsg = (UserMessage)msg;
         for (GangMemberEntry member : _gangobj.members) {
             if (member.townIdx == ServerConfig.townIndex && !member.isInHideout()) {
-                PlayerObject user = BangServer.locator.lookupPlayer(member.playerId);
+                PlayerObject user = _locator.lookupPlayer(member.playerId);
                 if (user != null) {
-                    BangServer.chatprov.deliverTell(user, umsg);
+                    _chatprov.deliverTell(user, umsg);
                 } else {
                     log.warning("Member mistakenly marked as online", "member", member);
                 }
@@ -474,7 +415,7 @@ public class GangHandler
 
         // set the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
-        PlayerObject user = BangServer.locator.lookupPlayer(entry.playerId);
+        PlayerObject user = _locator.lookupPlayer(entry.playerId);
         if (user != null) {
             initPlayer(user, entry);
         }
@@ -522,7 +463,7 @@ public class GangHandler
         }
 
         // if they're in a place, update their occupant info
-        BangServer.bodymgr.updateOccupantInfo(
+        _bodymgr.updateOccupantInfo(
             user, new BangOccupantInfo.Updater<BangOccupantInfo>() {
             public boolean update (BangOccupantInfo info) {
                 info.gangId = _gangId;
@@ -531,7 +472,7 @@ public class GangHandler
         });
 
         // if they're in the Hideout, update their avatar
-        PlaceManager plmgr = BangServer.plreg.getPlaceManager(user.getPlaceOid());
+        PlaceManager plmgr = _plreg.getPlaceManager(user.getPlaceOid());
         if (plmgr instanceof HideoutManager) {
             getPeerProvider().memberEnteredHideout(
                 null, user.handle, BangOccupantInfo.getAvatar(user));
@@ -563,7 +504,7 @@ public class GangHandler
         // clear the user's gang fields, reimburse part of his donation (if he's getting kicked
         // out), and purge his looks if he's online
         Handle handle = (Handle)event.getKey();
-        PlayerObject user = BangServer.locator.lookupPlayer(handle);
+        PlayerObject user = _locator.lookupPlayer(handle);
         if (user == null) {
             return;
         }
@@ -601,8 +542,7 @@ public class GangHandler
         }
 
         // if they're in a place, update their occupant info
-        BangServer.bodymgr.updateOccupantInfo(
-            user, new BangOccupantInfo.Updater<BangOccupantInfo>() {
+        _bodymgr.updateOccupantInfo(user, new BangOccupantInfo.Updater<BangOccupantInfo>() {
             public boolean update (BangOccupantInfo info) {
                 info.gangId = 0;
                 return true;
@@ -627,7 +567,7 @@ public class GangHandler
 
         // update the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
-        PlayerObject user = BangServer.locator.lookupPlayer(entry.playerId);
+        PlayerObject user = _locator.lookupPlayer(entry.playerId);
         if (user == null) {
             return;
         }
@@ -671,16 +611,15 @@ public class GangHandler
         }
 
         // refresh the gang's last played time on all servers
-        BangServer.hideoutmgr.activateGang(_gangobj.name);
+        _hideoutmgr.activateGang(_gangobj.name);
 
         // update the database
         final GangMemberEntry entry = member;
-        BangServer.invoker.postUnit(new RepositoryUnit("grantAces") {
-            public void invokePersist ()
-                throws PersistenceException {
+        _invoker.postUnit(new RepositoryUnit("grantAces") {
+            public void invokePersist () throws PersistenceException {
                 // notoriety points are simply accumulated aces
-                BangServer.gangrepo.grantAces(_gangId, aces);
-                BangServer.gangrepo.addNotoriety(_gangId, entry.playerId, aces);
+                _gangrepo.grantAces(_gangId, aces);
+                _gangrepo.addNotoriety(_gangId, entry.playerId, aces);
             }
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(handle);
@@ -764,9 +703,9 @@ public class GangHandler
                     _gangobj.removeFromInventory(key);
                     itemIds.add(key.intValue());
                 }
-                BangServer.invoker.postUnit(new WriteOnlyUnit("expireItems") {
+                _invoker.postUnit(new WriteOnlyUnit("expireItems") {
                     public void invokePersist () throws PersistenceException {
-                        BangServer.itemrepo.deleteItems(itemIds, "Gang item expired");
+                        _itemrepo.deleteItems(itemIds, "Gang item expired");
                     }
                 });
             }
@@ -825,14 +764,12 @@ public class GangHandler
         }
 
         // store the invitation in the database
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent ()
-                throws PersistenceException {
-                _error = BangServer.gangrepo.insertInvite(
-                    entry.playerId, _gangId, target, message);
+        _invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent () throws PersistenceException {
+                _error = _gangrepo.insertInvite(entry.playerId, _gangId, target, message);
                 if (_error == null) {
-                    BangServer.gangrepo.insertHistoryEntry(_gangId,
-                        MessageBundle.tcompose("m.invited_entry", handle, target));
+                    _gangrepo.insertHistoryEntry(
+                        _gangId, MessageBundle.tcompose("m.invited_entry", handle, target));
                 }
             }
             public void handleSuccess () {
@@ -840,7 +777,7 @@ public class GangHandler
                     listener.requestFailed(_error);
                     return;
                 }
-                BangServer.gangmgr.sendGangInvite(target, handle, _gangId, _gangobj.name, message);
+                _gangmgr.sendGangInvite(target, handle, _gangId, _gangobj.name, message);
                 listener.requestProcessed();
             }
             protected String _error;
@@ -858,14 +795,14 @@ public class GangHandler
 
         // update the database
         final int maxMembers = WEIGHT_CLASSES[_gangobj.getWeightClass()].maxMembers;
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        _invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                _error = BangServer.gangrepo.deleteInvite(_gangId, maxMembers, playerId, accept);
+                _error = _gangrepo.deleteInvite(_gangId, maxMembers, playerId, accept);
                 if (_error == null && accept) {
                     _mrec = new GangMemberRecord(playerId, _gangId, MEMBER_RANK);
-                    BangServer.gangrepo.insertMember(_mrec);
+                    _gangrepo.insertMember(_mrec);
                     String hmsg = MessageBundle.tcompose("m.joined_entry", handle);
-                    BangServer.gangrepo.insertHistoryEntry(_gangId, hmsg);
+                    _gangrepo.insertHistoryEntry(_gangId, hmsg);
                 }
             }
             public void handleSuccess () {
@@ -915,11 +852,10 @@ public class GangHandler
         verifyIsLeader(handle);
 
         // post to the database
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent ()
-                throws PersistenceException {
-                BangServer.gangrepo.updateStatement(_gangId, statement, url);
-                incLeaderLevel(_gangobj, handle);
+        _invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent () throws PersistenceException {
+                _gangrepo.updateStatement(_gangId, statement, url);
+                _gangmgr.incLeaderLevel(_gangobj, handle);
             }
             public void handleSuccess () {
                 GangMemberEntry leader = _gangobj.members.get(handle);
@@ -1006,16 +942,16 @@ public class GangHandler
         }
 
         // post the updates to the database
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        _invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
                 throws PersistenceException {
                 for (BucklePart part : parts) {
                     if (part != null) {
-                        BangServer.itemrepo.updateItem(part);
+                        _itemrepo.updateItem(part);
                     }
                 }
-                BangServer.gangrepo.updateBuckle(_gangId, partIds, buckle.print);
-                incLeaderLevel(_gangobj, handle);
+                _gangrepo.updateBuckle(_gangId, partIds, buckle.print);
+                _gangmgr.incLeaderLevel(_gangobj, handle);
             }
             public void handleSuccess () {
                 GangMemberEntry leader = _gangobj.members.get(handle);
@@ -1049,12 +985,12 @@ public class GangHandler
         final GangMemberEntry entry = verifyInGang(handle);
 
         // start the action
-        new PeerFinancialAction(coinAccount, entry.playerId, scrip, coins, listener) {
+        _invoker.post(new PeerFinancialAction(coinAccount, entry.playerId, scrip, coins, listener) {
             protected String persistentAction () {
                 try {
-                    BangServer.gangrepo.grantScrip(_gangId, scrip);
-                    BangServer.gangrepo.recordDonation(entry.playerId, scrip, coins);
-                    _entryId = BangServer.gangrepo.insertHistoryEntry(_gangId,
+                    _gangrepo.grantScrip(_gangId, scrip);
+                    _gangrepo.recordDonation(entry.playerId, scrip, coins);
+                    _entryId = _gangrepo.insertHistoryEntry(_gangId,
                         MessageBundle.compose(
                             "m.donation_entry",
                             MessageBundle.taint(handle),
@@ -1064,18 +1000,16 @@ public class GangHandler
                     return INTERNAL_ERROR;
                 }
             }
-            protected boolean spendCoins (int reservationId)
-                throws PersistenceException {
-                return BangServer.coinmgr.getCoinRepository().transferCoins(
+            protected boolean spendCoins (int reservationId) throws PersistenceException {
+                return _coinmgr.getCoinRepository().transferCoins(
                     reservationId, _gangobj.getCoinAccount(), CoinTransaction.GANG_DONATION,
                     "m.gang_donation", "m.gang_donation");
             }
-            protected void rollbackPersistentAction ()
-                throws PersistenceException {
-                BangServer.gangrepo.spendScrip(_gangId, scrip);
-                BangServer.gangrepo.retractDonation(entry.playerId, scrip, coins);
+            protected void rollbackPersistentAction () throws PersistenceException {
+                _gangrepo.spendScrip(_gangId, scrip);
+                _gangrepo.retractDonation(entry.playerId, scrip, coins);
                 if (_entryId > 0) {
-                    BangServer.gangrepo.deleteHistoryEntry(_entryId);
+                    _gangrepo.deleteHistoryEntry(_entryId);
                 }
             }
 
@@ -1107,7 +1041,7 @@ public class GangHandler
             }
 
             protected int _entryId;
-        }.start();
+        });
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1122,10 +1056,10 @@ public class GangHandler
         _gangobj.setScrip(_gangobj.scrip - scrip);
 
         // persist this expenditure to the database
-        BangServer.invoker.postUnit(new Invoker.Unit() {
+        _invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
-                    BangServer.gangrepo.spendScrip(_gangId, scrip);
+                    _gangrepo.spendScrip(_gangId, scrip);
                 } catch (PersistenceException pe) {
                     _error = pe;
                 }
@@ -1158,10 +1092,10 @@ public class GangHandler
         }
 
         // persist this expenditure to the database
-        BangServer.invoker.postUnit(new Invoker.Unit() {
+        _invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
-                    BangServer.gangrepo.grantScrip(_gangId, scrip);
+                    _gangrepo.grantScrip(_gangId, scrip);
                     return true;
                 } catch (PersistenceException pe) {
                     log.warning("Failed to grant scrip to gang", "id", _gangId, "amount", scrip, pe);
@@ -1186,9 +1120,9 @@ public class GangHandler
                         "ie", ie);
         }
 
-        BangServer.invoker.postUnit(new RepositoryUnit("updateCoins") {
+        _invoker.postUnit(new RepositoryUnit("updateCoins") {
             public void invokePersist () throws Exception {
-                _coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
+                _coins = _coinmgr.getCoinRepository().getCoinCount(
                     _gangobj.getCoinAccount());
             }
             public void handleSuccess () {
@@ -1221,7 +1155,7 @@ public class GangHandler
         if (handle == null) {
             refund[0] = refund[1] = 0;
         }
-        new GangFinancialAction(_gangobj, false, refund[0], refund[1], 0) {
+        _invoker.post(new GangFinancialAction(_gangobj, false, refund[0], refund[1], 0) {
             protected int getCoinType () {
                 return CoinTransaction.GANG_MEMBER_REIMBURSEMENT;
             }
@@ -1232,16 +1166,16 @@ public class GangHandler
             protected String persistentAction ()
                 throws PersistenceException {
                 if (_coinCost > 0) {
-                    _playerAccount = BangServer.playrepo.getAccountName(entry.playerId);
+                    _playerAccount = _playrepo.getAccountName(entry.playerId);
                 }
                 if (_deleting) {
-                    BangServer.gangrepo.deleteGang(_gangId);
+                    _gangrepo.deleteGang(_gangId);
                 } else {
                     deleteFromGang(entry.playerId);
-                    _entryId = BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
+                    _entryId = _gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
                         MessageBundle.tcompose("m.left_entry", entry.handle) :
                         MessageBundle.tcompose("m.expelled_entry", handle, entry.handle));
-                    incLeaderLevel(_gangobj, handle);
+                    _gangmgr.incLeaderLevel(_gangobj, handle);
                 }
                 return null;
             }
@@ -1249,19 +1183,19 @@ public class GangHandler
                 throws PersistenceException {
                 super.spendCash();
                 if (_scripCost > 0) {
-                    BangServer.playrepo.grantScrip(entry.playerId, _scripCost);
+                    _playrepo.grantScrip(entry.playerId, _scripCost);
                 }
             }
             protected void grantCash ()
                 throws PersistenceException {
                 super.grantCash();
                 if (_scripCost > 0) {
-                    BangServer.playrepo.spendScrip(entry.playerId, _scripCost);
+                    _playrepo.spendScrip(entry.playerId, _scripCost);
                 }
             }
             protected boolean spendCoins (int reservationId)
                 throws PersistenceException {
-                return BangServer.coinmgr.getCoinRepository().transferCoins(
+                return _coinmgr.getCoinRepository().transferCoins(
                     reservationId, _playerAccount, CoinTransaction.GANG_MEMBER_REIMBURSEMENT,
                     "m.gang_member_reimbursement", "m.gang_member_reimbursement");
             }
@@ -1274,13 +1208,13 @@ public class GangHandler
                     log.warning("Gang cannot be resurrected for rollback",
                                 "gang", GangHandler.this, "leaver", target);
                 } else {
-                    BangServer.gangrepo.insertMember(new GangMemberRecord(
+                    _gangrepo.insertMember(new GangMemberRecord(
                         entry.playerId, _gangId, entry.rank, entry.commandOrder, entry.leaderLevel,
                         entry.lastLeaderCommand, entry.joined, entry.notoriety, entry.scripDonated,
                         entry.coinsDonated, entry.title));
                 }
                 if (_entryId > 0) {
-                    BangServer.gangrepo.deleteHistoryEntry(_entryId);
+                    _gangrepo.deleteHistoryEntry(_entryId);
                 }
             }
 
@@ -1288,7 +1222,7 @@ public class GangHandler
                 _gangobj.removeFromMembers(entry.handle);
                 if (_deleting) {
                     // remove from Hideout directory and shut down immediately
-                    BangServer.hideoutmgr.removeGang(_gangobj.name);
+                    _hideoutmgr.removeGang(_gangobj.name);
                     shutdown();
                 } else {
                     maybeScheduleUnload();
@@ -1302,7 +1236,7 @@ public class GangHandler
                 buf.append(" g:").append(_gangobj.gangId).append(" s:").append(_scripCost);
                 buf.append(" c:").append(_coinCost);
                 BangServer.itemLog(buf.toString());
-                BangServer.playmgr.clearPosterInfoCache(entry.handle);
+                _playmgr.clearPosterInfoCache(entry.handle);
             }
             protected void actionFailed (String cause) {
                 _deleting = false;
@@ -1315,7 +1249,7 @@ public class GangHandler
 
             protected String _playerAccount;
             protected int _entryId;
-        }.start();
+        });
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1348,18 +1282,17 @@ public class GangHandler
         final int commandOrder = highestOrder + 1;
 
         // post to the database
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent ()
-                throws PersistenceException {
-                BangServer.gangrepo.updateRank(entry.playerId, rank, commandOrder);
-                BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
+        _invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent () throws PersistenceException {
+                _gangrepo.updateRank(entry.playerId, rank, commandOrder);
+                _gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
                     MessageBundle.tcompose("m.auto_promotion_entry", target) :
                     MessageBundle.compose(
                         (entry.rank < rank) ? "m.promotion_entry" : "m.demotion_entry",
                         MessageBundle.taint(handle),
                         MessageBundle.taint(target),
                         MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[rank])));
-                incLeaderLevel(_gangobj, handle);
+                _gangmgr.incLeaderLevel(_gangobj, handle);
             }
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(target);
@@ -1373,7 +1306,7 @@ public class GangHandler
                     _gangobj.updateMembers(leader);
                 }
                 listener.requestProcessed();
-                BangServer.playmgr.clearPosterInfoCache(entry.handle);
+                _playmgr.clearPosterInfoCache(entry.handle);
             }
         });
     }
@@ -1397,16 +1330,16 @@ public class GangHandler
         }
 
         // post to the database
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        _invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
                 throws PersistenceException {
-                BangServer.gangrepo.updateTitle(entry.playerId, title);
-                BangServer.gangrepo.insertHistoryEntry(_gangId,
+                _gangrepo.updateTitle(entry.playerId, title);
+                _gangrepo.insertHistoryEntry(_gangId,
                     MessageBundle.compose("m.title_entry",
                         MessageBundle.taint(handle),
                         MessageBundle.taint(target),
                         MessageBundle.qualify(GANG_MSGS, "m.title." + title)));
-                incLeaderLevel(_gangobj, handle);
+                _gangmgr.incLeaderLevel(_gangobj, handle);
             }
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(target);
@@ -1415,7 +1348,7 @@ public class GangHandler
                 GangMemberEntry leader = _gangobj.members.get(handle);
                 _gangobj.updateMembers(leader);
                 listener.requestProcessed();
-                BangServer.playmgr.clearPosterInfoCache(entry.handle);
+                _playmgr.clearPosterInfoCache(entry.handle);
             }
         });
     }
@@ -1435,7 +1368,7 @@ public class GangHandler
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        listener.requestProcessed(BangServer.hideoutmgr.upgradeCost(
+        listener.requestProcessed(_hideoutmgr.upgradeCost(
                 _gangobj, ((WeightClassUpgradeGood)good).getWeightClass()));
     }
 
@@ -1457,14 +1390,14 @@ public class GangHandler
         final Article[] articles = new Article[outfit.length];
         for (int ii = 0; ii < outfit.length; ii++) {
             OutfitArticle oart = outfit[ii];
-            catarts[ii] = BangServer.alogic.getArticleCatalog().getArticle(oart.article);
+            catarts[ii] = _alogic.getArticleCatalog().getArticle(oart.article);
             if (catarts[ii] == null || catarts[ii].qualifier != null ||
                     catarts[ii].start != null || catarts[ii].stop != null) {
                 log.warning("Invalid article requested for outfit", "who", handle,
                             "article", oart.article);
                 throw new InvocationException(INTERNAL_ERROR);
             }
-            articles[ii] = BangServer.alogic.createArticle(-1, catarts[ii], oart.zations);
+            articles[ii] = _alogic.createArticle(-1, catarts[ii], oart.zations);
             if (articles[ii] == null) {
                 // an error will have already been logged
                 throw new InvocationException(INTERNAL_ERROR);
@@ -1472,23 +1405,23 @@ public class GangHandler
             articles[ii].setGangId(_gangId);
         }
 
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        _invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
                 // save the outfit as the gang's current
-                BangServer.gangrepo.updateOutfit(_gangId, outfit);
+                _gangrepo.updateOutfit(_gangId, outfit);
 
                 // find out who needs the articles and how much it will cost (we check against the
                 // non-gang version of the article, too, because there's no point in granting a
                 // limited article to someone who has an unlimited one)
                 ArrayIntSet maleIds = new ArrayIntSet(), femaleIds = new ArrayIntSet();
-                BangServer.gangrepo.loadMemberIds(_gangId, maleIds, femaleIds);
+                _gangrepo.loadMemberIds(_gangId, maleIds, femaleIds);
                 for (int ii = 0; ii < articles.length; ii++) {
                     Article article = articles[ii],
                         alternate = (Article)article.clone();
                     alternate.setGangId(0);
                     ArrayIntSet memberIds = (article.getArticleName().indexOf("female") == -1) ?
                         maleIds : femaleIds;
-                    ArrayIntSet ownerIds = BangServer.itemrepo.getItemOwners(
+                    ArrayIntSet ownerIds = _itemrepo.getItemOwners(
                         memberIds, article, alternate);
                     int count = memberIds.size() - ownerIds.size();
                     _cost[0] += (catarts[ii].scrip * count);
@@ -1535,10 +1468,10 @@ public class GangHandler
         verifyIsLeader(handle);
 
         // create and start up the provider
-        GangGoodProvider provider = BangServer.hideoutmgr.getRentalGoodProvider(
+        GangGoodProvider provider = _hideoutmgr.getRentalGoodProvider(
             this, handle, admin, type, args);
         provider.setListener(listener);
-        provider.start();
+        _invoker.post(provider);
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1564,14 +1497,14 @@ public class GangHandler
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        RentalGood good = BangServer.hideoutmgr.getRentalGood(item);
+        RentalGood good = _hideoutmgr.getRentalGood(item);
         if (good == null) {
             throw new InvocationException(INTERNAL_ERROR);
         }
 
         ItemRenewal renewal = new ItemRenewal(_gangobj, handle, item, good);
         renewal.setListener(listener);
-        renewal.start();
+        _invoker.post(renewal);
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1587,10 +1520,10 @@ public class GangHandler
         verifyIsLeader(handle);
 
         // create and start up the provider
-        GangGoodProvider provider = BangServer.hideoutmgr.getGoodProvider(
+        GangGoodProvider provider = _hideoutmgr.getGoodProvider(
             this, handle, admin, type, args);
         provider.setListener(listener);
-        provider.start();
+        _invoker.post(provider);
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1623,13 +1556,13 @@ public class GangHandler
         }
 
         // log the completed trade in the gang history
-        BangServer.invoker.postUnit(new Invoker.Unit() {
+        _invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
-                    BangServer.gangrepo.insertHistoryEntry(_gangId,
+                    _gangrepo.insertHistoryEntry(_gangId,
                         MessageBundle.tcompose(
                             "m.exchange_purchase_entry", member, "" + vol, "" + price*vol));
-                    incLeaderLevel(_gangobj, new Handle(member));
+                    _gangmgr.incLeaderLevel(_gangobj, new Handle(member));
                 } catch (PersistenceException pe) {
                     _error = pe;
                 }
@@ -1649,6 +1582,67 @@ public class GangHandler
         });
     }
 
+    protected void init (int gangId)
+    {
+        _gangId = gangId;
+
+        // if not running in peer mode, we can skip to the database stage
+        if (_peermgr == null) {
+            loadFromDatabase();
+            return;
+        }
+
+        // otherwise, we must acquire the peer lock, or find out who has it
+        _peermgr.acquireLock(new Lock("gang", _gangId), new ResultListener<String>() {
+            public void requestCompleted (String result) {
+                if (result.equals(ServerConfig.nodename)) {
+                    loadFromDatabase();
+                } else {
+                    subscribeToPeer(result);
+                }
+            }
+            public void requestFailed (Exception cause) {
+                initFailed(cause);
+            }
+        });
+    }
+
+    protected void init (final GangRecord grec, final PlayerObject creator,
+                         final InvocationService.ConfirmListener listener)
+    {
+        _gangId = grec.gangId;
+
+        // add a listener to initialize the player and report success
+        getGangObject(new ResultListener<GangObject>() {
+            public void requestCompleted (GangObject result) {
+                listener.requestProcessed();
+            }
+            public void requestFailed (Exception cause) {
+                listener.requestFailed(INTERNAL_ERROR);
+            }
+        });
+
+        // initialize immediately if not running in peer mode
+        if (_peermgr == null) {
+            createGangObject(grec);
+            return;
+        }
+
+        // otherwise, acquire the lock before continuing
+        _peermgr.acquireLock(new Lock("gang", _gangId), new ResultListener<String>() {
+            public void requestCompleted (String result) {
+                if (result.equals(ServerConfig.nodename)) {
+                    createGangObject(grec);
+                } else {
+                    subscribeToPeer(result);
+                }
+            }
+            public void requestFailed (Exception cause) {
+                initFailed(cause);
+            }
+        });
+    }
+
     /**
      * Distributes rented items to online members.
      */
@@ -1657,7 +1651,7 @@ public class GangHandler
         final ArrayIntSet userIds = new ArrayIntSet();
         final Item citem = (Item)item.clone();
         for (GangMemberEntry member : _gangobj.members) {
-            PlayerObject user = BangServer.locator.lookupPlayer(member.playerId);
+            PlayerObject user = _locator.lookupPlayer(member.playerId);
             if (user != null && item.canBeOwned(user) && !user.holdsEquivalentItem(citem)) {
                 userIds.add(user.playerId);
             }
@@ -1667,13 +1661,13 @@ public class GangHandler
         }
         citem.setGangId(_gangobj.gangId);
         citem.setGangOwned(false);
-        BangServer.invoker.postUnit(new RepositoryUnit("distributeRental") {
+        _invoker.postUnit(new RepositoryUnit("distributeRental") {
             public void invokePersist () throws PersistenceException {
-                BangServer.itemrepo.insertItems(citem, userIds, _items);
+                _itemrepo.insertItems(citem, userIds, _items);
             }
             public void handleSuccess () {
                 for (Item item : _items) {
-                    PlayerObject user = BangServer.locator.lookupPlayer(item.getOwnerId());
+                    PlayerObject user = _locator.lookupPlayer(item.getOwnerId());
                     if (user != null) {
                         user.addToInventory(item);
                     }
@@ -1705,10 +1699,10 @@ public class GangHandler
             return;
         }
 
-        BangServer.invoker.postUnit(new RepositoryUnit("deliverGangItems") {
+        _invoker.postUnit(new RepositoryUnit("deliverGangItems") {
             public void invokePersist () throws PersistenceException {
                 for (Item item : added) {
-                    BangServer.itemrepo.insertItem(item);
+                    _itemrepo.insertItem(item);
                 }
             }
             public void handleSuccess () {
@@ -1738,7 +1732,7 @@ public class GangHandler
         final InvocationService.ResultListener listener)
         throws InvocationException
     {
-        new GangFinancialAction(_gangobj, admin, scripCost, coinCost, 0) {
+        _invoker.post(new GangFinancialAction(_gangobj, admin, scripCost, coinCost, 0) {
             protected int getCoinType () {
                 return CoinTransaction.GANG_OUTFIT_PURCHASE;
             }
@@ -1754,10 +1748,10 @@ public class GangHandler
                         continue;
                     }
                     memberIds.addAll(userIds[ii]);
-                    BangServer.itemrepo.insertItems(articles[ii], userIds[ii], _items);
+                    _itemrepo.insertItems(articles[ii], userIds[ii], _items);
                 }
                 _memberCount = memberIds.size();
-                _entryId = BangServer.gangrepo.insertHistoryEntry(_gangId,
+                _entryId = _gangrepo.insertHistoryEntry(_gangId,
                         MessageBundle.compose(
                             "m.outfit_entry",
                             MessageBundle.taint(handle),
@@ -1773,10 +1767,10 @@ public class GangHandler
                     for (Item item : _items) {
                         itemIds.add(item.getItemId());
                     }
-                    BangServer.itemrepo.deleteItems(itemIds, "rollback");
+                    _itemrepo.deleteItems(itemIds, "rollback");
                 }
                 if (_entryId > 0) {
-                    BangServer.gangrepo.deleteHistoryEntry(_entryId);
+                    _gangrepo.deleteHistoryEntry(_entryId);
                 }
             }
 
@@ -1784,7 +1778,7 @@ public class GangHandler
                 String source = MessageBundle.qualify(GANG_MSGS,
                     MessageBundle.tcompose("m.gang_title", _gangobj.name));
                 for (Item item : _items) {
-                    BangServer.playmgr.deliverItem(item, source);
+                    _playmgr.deliverItem(item, source);
                 }
                 listener.requestProcessed(new int[] { _memberCount, _items.size() });
                 super.actionCompleted();
@@ -1800,7 +1794,7 @@ public class GangHandler
             protected List<Item> _items = new ArrayList<Item>();
             protected int _memberCount;
             protected int _entryId;
-        }.start();
+        });
     }
 
     /**
@@ -1887,9 +1881,9 @@ public class GangHandler
      */
     protected void loadFromDatabase ()
     {
-        BangServer.invoker.postUnit(new RepositoryUnit("loadGang") {
+        _invoker.postUnit(new RepositoryUnit("loadGang") {
             public void invokePersist () throws PersistenceException {
-                _grec = BangServer.gangrepo.loadGang(_gangId, true);
+                _grec = _gangrepo.loadGang(_gangId, true);
                 if (_grec == null) {
                     return;
                 }
@@ -1911,7 +1905,7 @@ public class GangHandler
                     }
                 }
                 if (!removals.isEmpty()) {
-                    BangServer.itemrepo.deleteItems(removals, "Gang item expired");
+                    _itemrepo.deleteItems(removals, "Gang item expired");
                 }
             }
             public void handleSuccess () {
@@ -1984,21 +1978,21 @@ public class GangHandler
             }
         }
         if (parts[0] == null || parts[1] == null) {
-            BucklePart[] dparts = BangServer.alogic.createDefaultBuckle();
+            BucklePart[] dparts = _alogic.createDefaultBuckle();
             for (int ii = 0; ii < 2; ii++) {
                 if (parts[ii] != null) {
                     continue;
                 }
                 parts[ii] = dparts[ii];
                 parts[ii].setOwnerId(record.gangId);
-                BangServer.itemrepo.insertItem(parts[ii]);
+                _itemrepo.insertItem(parts[ii]);
                 record.inventory.add(parts[ii]);
                 buckle[ii] = parts[ii].getItemId();
             }
         }
 
         BuckleInfo info = GangUtil.getBuckleInfo(parts);
-        BangServer.gangrepo.updateBuckle(record.gangId, buckle, info.print);
+        _gangrepo.updateBuckle(record.gangId, buckle, info.print);
         record.setBuckle(buckle, info.print);
     }
 
@@ -2014,7 +2008,7 @@ public class GangHandler
         }
         log.info("Correcting weight class", "gang", this, "weightClass", weightClass,
                  "inventory", record.inventory);
-        BangServer.gangrepo.updateWeightClass(record.gangId, weightClass);
+        _gangrepo.updateWeightClass(record.gangId, weightClass);
         record.weightClass = weightClass;
     }
 
@@ -2068,18 +2062,18 @@ public class GangHandler
         for (GangMemberEntry entry : _gangobj.members) {
             initTownIndex(entry);
         }
-        BangServer.locator.addPlayerObserver(this);
-        if (BangServer.peermgr != null) {
-            BangServer.peermgr.addPlayerObserver(this);
-            BangServer.peermgr.addDroppedLockObserver(this);
+        _locator.addPlayerObserver(this);
+        if (_peermgr.isRunning()) {
+            _peermgr.addPlayerObserver(this);
+            _peermgr.addDroppedLockObserver(this);
         }
 
         // register the service for peers
         _gangobj.gangPeerService =
-            BangServer.invmgr.registerDispatcher(new GangPeerDispatcher(this));
+            _invmgr.registerDispatcher(new GangPeerDispatcher(this));
 
         // register the speak service for local users
-        _gangobj.speakService = BangServer.invmgr.registerDispatcher(
+        _gangobj.speakService = _invmgr.registerDispatcher(
             new SpeakDispatcher(new SpeakHandler(_gangobj, this)));
 
         // create our table game manager for this town
@@ -2087,13 +2081,13 @@ public class GangHandler
         _gangobj.tableOid = _tmgr.getTableGameObject().getOid();
 
         // register and announce
-        BangServer.omgr.registerObject(_gangobj);
+        _omgr.registerObject(_gangobj);
         log.info("Initialized gang object " + this + ".");
 
         // start the interval to calculate top-ranked members
-        _rankval = new Interval(BangServer.omgr) {
+        _rankval = new Interval(_omgr) {
             public void expired () {
-                SaloonManager.refreshTopRanked(
+                _saloonmgr.refreshTopRanked(
                     _gangobj, ScenarioInfo.getScenarioIds(),
                     "GANG_MEMBERS", "RATINGS.PLAYER_ID = GANG_MEMBERS.PLAYER_ID and " +
                     "GANG_MEMBERS.GANG_ID = " + _gangId, TOP_RANKED_LIST_SIZE);
@@ -2102,7 +2096,7 @@ public class GangHandler
         _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
 
         // and the one to update activity states
-        _actival = new Interval(BangServer.omgr) {
+        _actival = new Interval(_omgr) {
             public void expired () {
                 updateActivity();
             }
@@ -2110,7 +2104,7 @@ public class GangHandler
         _actival.schedule(1000L, ACTIVITY_INTERVAL);
 
         // create the interval to unload the gang
-        _unloadval = new Interval(BangServer.omgr) {
+        _unloadval = new Interval(_omgr) {
             public void expired () {
                 unload();
             }
@@ -2247,7 +2241,7 @@ public class GangHandler
     {
         _unloadval.cancel();
         if (_releasing != null) {
-            BangServer.peermgr.reacquireLock(_releasing);
+            _peermgr.reacquireLock(_releasing);
         }
     }
 
@@ -2257,13 +2251,13 @@ public class GangHandler
     protected void unload ()
     {
         // if there are no peers, shut down immediately
-        if (BangServer.peermgr == null) {
+        if (_peermgr == null) {
             shutdown();
             return;
         }
 
         // otherwise, attempt to drop the lock
-        BangServer.peermgr.releaseLock(_releasing = new Lock("gang", _gangId),
+        _peermgr.releaseLock(_releasing = new Lock("gang", _gangId),
             new ResultListener<String>() {
                 public void requestCompleted (String result) {
                     _releasing = null;
@@ -2287,14 +2281,14 @@ public class GangHandler
     protected void subscribeToPeer (String nodeName)
     {
         _nodeName = nodeName;
-        _client = BangServer.peermgr.getPeerClient(nodeName);
+        _client = _peermgr.getPeerClient(nodeName);
         if (_client == null) {
             log.warning("Not connected to peer that holds gang lock?!", "node", nodeName,
                         "gangId", _gangId);
             initFailed(new InvocationException(INTERNAL_ERROR));
             return;
         }
-        BangServer.peermgr.subscribeToGang(nodeName, _gangId,
+        _peermgr.subscribeToGang(nodeName, _gangId,
             new ResultListener<GangObject>() {
                 public void requestCompleted (GangObject result) {
                     setGangObject(result);
@@ -2314,7 +2308,7 @@ public class GangHandler
 
         // rewrite the speak service with a provider of our own that forwards speech to
         // the controlling node
-        _gangobj.speakService = BangServer.invmgr.registerDispatcher(
+        _gangobj.speakService = _invmgr.registerDispatcher(
             new SpeakDispatcher(new SpeakProvider() {
             public void speak (ClientObject caller, String message, byte mode) {
                 _gangobj.gangPeerService.sendSpeak(
@@ -2349,14 +2343,14 @@ public class GangHandler
         GangMemberEntry[] members = _gangobj.members.toArray(
             new GangMemberEntry[_gangobj.members.size()]);
         for (GangMemberEntry member : members) {
-            PlayerObject user = BangServer.locator.lookupPlayer(member.playerId);
+            PlayerObject user = _locator.lookupPlayer(member.playerId);
             if (user != null) {
                 initPlayer(user, member);
             }
         }
         _gangobj.addListener(this);
-        _gangobj.addListener(BangServer.playmgr.receivedChatListener);
-        BangServer.gangmgr.mapGang(_gangobj.name, this);
+        _gangobj.addListener(_playmgr.receivedChatListener);
+        _gangmgr.mapGang(_gangobj.name, this);
         _listeners.requestCompleted(_gangobj);
         _listeners = null;
     }
@@ -2368,7 +2362,7 @@ public class GangHandler
     {
         log.warning("Failed to initialize gang", "handler", this, "error", cause);
         _listeners.requestFailed(cause);
-        BangServer.gangmgr.unmapGang(_gangId, null);
+        _gangmgr.unmapGang(_gangId, null);
     }
 
     /**
@@ -2378,19 +2372,19 @@ public class GangHandler
     {
         _client.removeClientObserver(_unsubber);
         _gangobj.removeListener(this);
-        _gangobj.removeListener(BangServer.playmgr.receivedChatListener);
-        BangServer.invmgr.clearDispatcher(_gangobj.speakService);
-        BangServer.peermgr.unproxyRemoteObject(_nodeName, _gangobj.remoteOid);
+        _gangobj.removeListener(_playmgr.receivedChatListener);
+        _invmgr.clearDispatcher(_gangobj.speakService);
+        _peermgr.unproxyRemoteObject(_nodeName, _gangobj.remoteOid);
 
         log.info("Unsubscribed from gang " + this + ".");
-        BangServer.gangmgr.unmapGang(_gangId, _gangobj.name);
+        _gangmgr.unmapGang(_gangId, _gangobj.name);
 
         // if there are members still online, we will have to re-resolve; hopefully
         // this will happen so quickly that no one will notice
         for (GangMemberEntry member : _gangobj.members) {
-            if (BangServer.locator.lookupPlayer(member.playerId) != null) {
+            if (_locator.lookupPlayer(member.playerId) != null) {
                 log.warning("Proxied gang vanished while members still online", "gang", this);
-                BangServer.gangmgr.resolveGang(_gangId);
+                _gangmgr.resolveGang(_gangId);
                 return;
             }
         }
@@ -2405,10 +2399,10 @@ public class GangHandler
         _actival.cancel();
         _unloadval.cancel();
 
-        BangServer.locator.removePlayerObserver(this);
-        if (BangServer.peermgr != null) {
-            BangServer.peermgr.removePlayerObserver(this);
-            BangServer.peermgr.removeDroppedLockObserver(this);
+        _locator.removePlayerObserver(this);
+        if (_peermgr.isRunning()) {
+            _peermgr.removePlayerObserver(this);
+            _peermgr.removeDroppedLockObserver(this);
         }
 
         if (_tmgr != null) {
@@ -2416,12 +2410,12 @@ public class GangHandler
             _tmgr = null;
         }
 
-        BangServer.invmgr.clearDispatcher(_gangobj.gangPeerService);
-        BangServer.invmgr.clearDispatcher(_gangobj.speakService);
+        _invmgr.clearDispatcher(_gangobj.gangPeerService);
+        _invmgr.clearDispatcher(_gangobj.speakService);
         _gangobj.destroy();
 
         log.info("Gang shutdown " + this + ".");
-        BangServer.gangmgr.unmapGang(_gangId, _gangobj.name);
+        _gangmgr.unmapGang(_gangId, _gangobj.name);
     }
 
     /**
@@ -2434,7 +2428,7 @@ public class GangHandler
         final GangMemberEntry leader = _gangobj.getSeniorLeader();
         PlayerObject user = (leader == null) ? null :
             ((player != null && player.playerId == leader.playerId) ?
-                player : BangServer.locator.lookupPlayer(leader.playerId));
+                player : _locator.lookupPlayer(leader.playerId));
         if (user != null) {
             if (_avupdater == null || _avatarId != user.playerId) {
                 if (_avupdater != null) {
@@ -2450,14 +2444,13 @@ public class GangHandler
             _avupdater = null;
         }
         if (_client != null || leader == null || _avatarId == leader.playerId ||
-            (BangServer.peermgr != null &&
-                BangServer.peermgr.locateRemotePlayer(leader.handle) != null)) {
+            (_peermgr.isRunning() && _peermgr.locateRemotePlayer(leader.handle) != null)) {
             return;
         }
         _avatarId = leader.playerId;
-        BangServer.invoker.postUnit(new RepositoryUnit("updateAvatar") {
+        _invoker.postUnit(new RepositoryUnit("updateAvatar") {
             public void invokePersist () throws PersistenceException {
-                _avatar = BangServer.lookrepo.loadSnapshot(leader.playerId);
+                _avatar = _lookrepo.loadSnapshot(leader.playerId);
             }
             public void handleSuccess () {
                 _gangobj.setAvatar(_avatar);
@@ -2477,7 +2470,7 @@ public class GangHandler
     {
         // the master server will broadcast the update to its peers
         if (_client == null) {
-            BangServer.gangmgr.clearCachedGangInfo(_gangobj.name);
+            _gangmgr.clearCachedGangInfo(_gangobj.name);
         }
     }
 
@@ -2489,7 +2482,7 @@ public class GangHandler
         InvocationService.ConfirmListener listener)
     {
         // TODO: notify the inviter if he's on another server
-        PlayerObject invobj = BangServer.locator.lookupPlayer(inviter);
+        PlayerObject invobj = _locator.lookupPlayer(inviter);
         if (invobj != null) {
             SpeakUtil.sendInfo(invobj, GANG_MSGS,
                 MessageBundle.tcompose(
@@ -2512,18 +2505,18 @@ public class GangHandler
     }
 
     /**
-     * Sets the town index for the supplied member entry based on where the member is
-     * logged in (if anywhere).
+     * Sets the town index for the supplied member entry based on where the member is logged in (if
+     * anywhere).
      */
     protected void initTownIndex (GangMemberEntry entry)
     {
-        PlayerObject user = BangServer.locator.lookupPlayer(entry.playerId);
+        PlayerObject user = _locator.lookupPlayer(entry.playerId);
         if (user != null) {
             entry.townIdx = (byte)ServerConfig.townIndex;
             return;
         }
-        Tuple<BangClientInfo, Integer> result = (BangServer.peermgr == null) ?
-            null : BangServer.peermgr.locateRemotePlayer(entry.handle);
+        Tuple<BangClientInfo, Integer> result = (_peermgr == null) ?
+            null : _peermgr.locateRemotePlayer(entry.handle);
         entry.townIdx = (result == null) ? -1 : result.right.byteValue();
     }
 
@@ -2534,17 +2527,17 @@ public class GangHandler
         throws PersistenceException
     {
         // delete the member record itself
-        BangServer.gangrepo.deleteMember(playerId);
+        _gangrepo.deleteMember(playerId);
 
         ArrayIntSet removals = new ArrayIntSet();
-        List<Look> modified = stripLooks(BangServer.itemrepo.loadItems(playerId),
-                                         BangServer.lookrepo.loadLooks(playerId), removals);
+        List<Look> modified = stripLooks(_itemrepo.loadItems(playerId),
+                                         _lookrepo.loadLooks(playerId), removals);
 
         for (Look look : modified) {
-            BangServer.lookrepo.updateLook(playerId, look);
+            _lookrepo.updateLook(playerId, look);
         }
         if (!removals.isEmpty()) {
-            BangServer.itemrepo.deleteItems(removals, "Booted from gang");
+            _itemrepo.deleteItems(removals, "Booted from gang");
         }
     }
 
@@ -2617,6 +2610,26 @@ public class GangHandler
 
     /** Stores the player ids of users in the process of leaving the gang voluntarily. */
     protected ArrayIntSet _leaverIds = new ArrayIntSet();
+
+    // dependencies
+    @Inject protected PresentsDObjectMgr _omgr;
+    @Inject protected ChatProvider _chatprov;
+    @Inject protected InvocationManager _invmgr;
+    @Inject protected BodyManager _bodymgr;
+    @Inject protected PlaceRegistry _plreg;
+    @Inject protected BangInvoker _invoker;
+    @Inject protected AvatarLogic _alogic;
+    @Inject protected PlayerLocator _locator;
+    @Inject protected PlayerManager _playmgr;
+    @Inject protected SaloonManager _saloonmgr;
+    @Inject protected BangCoinManager _coinmgr;
+    @Inject protected BangCoinExchangeManager _coinexmgr;
+    @Inject protected BangPeerManager _peermgr;
+    @Inject protected HideoutManager _hideoutmgr;
+    @Inject protected GangManager _gangmgr;
+    @Inject protected GangRepository _gangrepo;
+    @Inject protected ItemRepository _itemrepo;
+    @Inject protected LookRepository _lookrepo;
 
     /** The frequency with which we update the top-ranked member lists. */
     protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;

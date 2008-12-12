@@ -5,14 +5,20 @@ package com.threerings.bang.server;
 
 import java.util.List;
 
+import com.google.inject.Inject;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObjectUtil;
 
-import com.threerings.crowd.server.CrowdSession;
+import com.threerings.presents.annotation.AuthInvoker;
 import com.threerings.presents.net.BootstrapData;
+import com.threerings.crowd.server.CrowdSession;
 import com.threerings.stats.data.Stat;
 
+import com.threerings.bang.admin.server.BangAdminManager;
+import com.threerings.bang.server.persist.BangStatRepository;
+import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.server.persist.LookRepository;
 
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCredentials;
@@ -49,7 +55,7 @@ public class BangSession extends CrowdSession
         // fill in the oids of important places
         BangBootstrapData bbd = (BangBootstrapData)data;
         if (((PlayerObject)_clobj).tokens.isSupport()) {
-            bbd.statusOid = BangServer.adminmgr.statobj.getOid();
+            bbd.statusOid = _adminmgr.statobj.getOid();
         }
         bbd.townOid = BangServer.townobj.getOid();
         bbd.saloonOid = BangServer.saloonmgr.getPlaceObject().getOid();
@@ -103,7 +109,7 @@ public class BangSession extends CrowdSession
         _startPoses = user.poses.clone();
 
         // check to see if this player has any rewards and redeem them if so
-        BangServer.authInvoker.postUnit(new Invoker.Unit("redeemRewards:" + _username) {
+        _authInvoker.postUnit(new Invoker.Unit("redeemRewards:" + _username) {
             public boolean invoke () {
                 _rewards = BangServer.author.redeemRewards(_username.toString(), creds.ident);
                 return (_rewards.size() > 0);
@@ -167,13 +173,13 @@ public class BangSession extends CrowdSession
             // write out any modified stats
             Stat[] stats = new Stat[user.stats.size()];
             user.stats.toArray(stats);
-            BangServer.statrepo.writeModified(user.playerId, stats);
+            _statrepo.writeModified(user.playerId, stats);
 
             // write out any modified looks
             boolean updatedWanted = false;
             for (Look look : user.looks) {
                 if (look.modified) {
-                    BangServer.lookrepo.updateLook(user.playerId, look);
+                    _lookrepo.updateLook(user.playerId, look);
                     // if this their "wanted poster" look; generate snapshot
                     if (user.getLook(Look.Pose.WANTED_POSTER) == look) {
                         updatedWanted = true;
@@ -186,7 +192,7 @@ public class BangSession extends CrowdSession
             for (int ii = 0; ii < changed.length; ii++) {
                 changed[ii] = !ObjectUtil.equals(_startPoses[ii], user.poses[ii]);
             }
-            BangServer.playrepo.noteSessionEnded(
+            _playrepo.noteSessionEnded(
                 user.playerId, user.poses, changed, Math.round(_connectTime / 60f));
 
             // if our wanted poster look changed, generate a new snapshot
@@ -194,7 +200,7 @@ public class BangSession extends CrowdSession
                 Look look = user.getLook(Look.Pose.WANTED_POSTER);
                 int[] print;
                 if (look != null && (print = look.getAvatar(user).print) != null) {
-                    BangServer.lookrepo.updateSnapshot(user.playerId, print);
+                    _lookrepo.updateSnapshot(user.playerId, print);
                 }
             }
 
@@ -204,4 +210,11 @@ public class BangSession extends CrowdSession
     }
 
     protected String[] _startPoses;
+
+    // dependencies
+    @Inject protected @AuthInvoker Invoker _authInvoker;
+    @Inject protected BangAdminManager _adminmgr;
+    @Inject protected PlayerRepository _playrepo;
+    @Inject protected BangStatRepository _statrepo;
+    @Inject protected LookRepository _lookrepo;
 }

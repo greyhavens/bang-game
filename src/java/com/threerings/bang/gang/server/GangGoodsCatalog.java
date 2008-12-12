@@ -4,8 +4,9 @@
 package com.threerings.bang.gang.server;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
+import com.google.common.collect.Maps;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 
@@ -186,19 +187,19 @@ public class GangGoodsCatalog
             String result = super.persistentAction();
             if (result == null) {
                 if (!_oldWeightUpgrades.isEmpty()) {
-                    BangServer.itemrepo.deleteItems(_oldWeightUpgrades, "replaced upgrade");
+                    _itemrepo.deleteItems(_oldWeightUpgrades, "replaced upgrade");
                 }
                 if (_pct > 0 && _pct < 1) {
-                    BangServer.gangrepo.reduceNotoriety(_gang.gangId, _pct);
+                    _gangrepo.reduceNotoriety(_gang.gangId, _pct);
                 }
-                BangServer.gangrepo.updateWeightClass(_gang.gangId,
-                        ((WeightClassUpgrade)_item).getWeightClass());
+                _gangrepo.updateWeightClass(
+                    _gang.gangId, ((WeightClassUpgrade)_item).getWeightClass());
             }
             return result;
         }
         protected void rollbackPersistentAction () throws PersistenceException {
             super.rollbackPersistentAction();
-            BangServer.gangrepo.updateWeightClass(_gang.gangId, _oldWeightClass);
+            _gangrepo.updateWeightClass(_gang.gangId, _oldWeightClass);
         }
         protected void actionCompleted ()
         {
@@ -227,7 +228,7 @@ public class GangGoodsCatalog
     protected ArrayList<GangGood> _goods = new ArrayList<GangGood>();
 
     /** Contains mappings from {@link GangGood} to {@link ProviderFactory} for all salable goods. */
-    protected HashMap<GangGood, ProviderFactory> _providers = new HashMap<GangGood, ProviderFactory>();
+    protected Map<GangGood, ProviderFactory> _providers = Maps.newHashMap();
 
     /** The cost in coins/aces for each of the buckle upgrades. */
     protected static final int[][] BUCKLE_UPGRADE_COSTS = {

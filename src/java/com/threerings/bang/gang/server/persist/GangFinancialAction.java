@@ -3,6 +3,8 @@
 
 package com.threerings.bang.gang.server.persist;
 
+import com.google.inject.Inject;
+
 import com.samskivert.io.PersistenceException;
 
 import com.threerings.bang.data.BangCodes;
@@ -11,6 +13,7 @@ import com.threerings.bang.server.persist.FinancialAction;
 import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.gang.data.GangObject;
+import com.threerings.bang.gang.server.persist.GangRepository;
 
 /**
  * A financial action that uses gang funds instead of player funds.
@@ -87,10 +90,10 @@ public abstract class GangFinancialAction extends FinancialAction
         throws PersistenceException
     {
         if (_scripCost > 0) {
-            BangServer.gangrepo.spendScrip(_gang.gangId, _scripCost);
+            _gangrepo.spendScrip(_gang.gangId, _scripCost);
         }
         if (_aceCost > 0) {
-            BangServer.gangrepo.spendAces(_gang.gangId, _aceCost);
+            _gangrepo.spendAces(_gang.gangId, _aceCost);
         }
     }
 
@@ -99,10 +102,10 @@ public abstract class GangFinancialAction extends FinancialAction
         throws PersistenceException
     {
         if (_scripCost > 0) {
-            BangServer.gangrepo.grantScrip(_gang.gangId, _scripCost);
+            _gangrepo.grantScrip(_gang.gangId, _scripCost);
         }
         if (_aceCost > 0) {
-            BangServer.gangrepo.grantAces(_gang.gangId, _aceCost);
+            _gangrepo.grantAces(_gang.gangId, _aceCost);
         }
     }
 
@@ -133,4 +136,7 @@ public abstract class GangFinancialAction extends FinancialAction
 
     protected GangObject _gang;
     protected int _aceCost;
+
+    // dependencies
+    @Inject protected GangRepository _gangrepo;
 }

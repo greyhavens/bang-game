@@ -16,7 +16,6 @@ import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.TutorialView;
 import com.threerings.bang.client.bui.SteelWindow;

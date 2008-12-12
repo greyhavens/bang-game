@@ -5,9 +5,13 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 
+import com.google.inject.Inject;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.server.InvocationException;
+
+import com.threerings.resource.ResourceManager;
 
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.BonusConfig;
@@ -15,7 +19,6 @@ import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
-import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangConfig;
@@ -56,7 +59,7 @@ public class Tutorial extends Scenario
     {
         // load up the tutorial configuraton
         BangConfig bconfig = (BangConfig)bangmgr.getConfig();
-        _config = TutorialUtil.loadTutorial(BangServer.rsrcmgr, bconfig.getScenario(0));
+        _config = TutorialUtil.loadTutorial(_rsrcmgr, bconfig.getScenario(0));
 
         // make sure the player does not hose themself
         if (_config.respawn) {
@@ -374,4 +377,7 @@ public class Tutorial extends Scenario
 
     // used for the Hero Building tutorial
     protected HeroDelegate _herodel;
+
+    // dependencies
+    @Inject protected ResourceManager _rsrcmgr;
 }

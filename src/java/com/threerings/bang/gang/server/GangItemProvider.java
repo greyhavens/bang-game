@@ -3,12 +3,13 @@
 
 package com.threerings.bang.gang.server;
 
+import com.google.inject.Inject;
 import com.samskivert.io.PersistenceException;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
-import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.persist.ItemRepository;
 
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangObject;
@@ -35,7 +36,7 @@ public class GangItemProvider extends GangGoodProvider
     {
         // we check here as well as on the dobj thread because another server may have
         // created the item
-        if (BangServer.itemrepo.insertItem(_item)) {
+        if (_itemrepo.insertItem(_item)) {
             return super.persistentAction();
         } else {
             return "m.already_owned";
@@ -46,7 +47,7 @@ public class GangItemProvider extends GangGoodProvider
     protected void rollbackPersistentAction ()
         throws PersistenceException
     {
-        BangServer.itemrepo.deleteItem(_item, "item_provider_rollback");
+        _itemrepo.deleteItem(_item, "item_provider_rollback");
         super.rollbackPersistentAction();
     }
 
@@ -66,4 +67,7 @@ public class GangItemProvider extends GangGoodProvider
 
     /** The item that will be delivered. */
     protected Item _item;
+
+    // dependencies
+    @Inject protected ItemRepository _itemrepo;
 }

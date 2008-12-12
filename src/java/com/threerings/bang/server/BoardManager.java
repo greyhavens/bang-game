@@ -9,8 +9,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
-import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
@@ -30,15 +32,15 @@ import static com.threerings.bang.Log.log;
 /**
  * Manages the boards available to the Bang server.
  */
+@Singleton
 public class BoardManager
 {
     /**
      * Prepares the board manager for operation.
      */
-    public void init (ConnectionProvider conprov)
+    public void init ()
         throws PersistenceException
     {
-        _brepo = new BoardRepository(conprov);
         _byname = new BoardMap[GameCodes.MAX_PLAYERS-1];
         for (int ii = 0; ii < _byname.length; ii++) {
             _byname[ii] = new BoardMap();
@@ -215,7 +217,7 @@ public class BoardManager
     }
 
     /** Provides access to the board database. */
-    protected BoardRepository _brepo;
+    @Inject protected BoardRepository _brepo;
 
     /** A mapping from scenario name to a list of boards playable with that scenario (which are
      * broken out by player count). */

@@ -13,6 +13,9 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
@@ -27,6 +30,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Stores a set of "looks" (avatar fingerprints) for players.
  */
+@Singleton
 public class LookRepository extends SimpleRepository
 {
     /**
@@ -41,7 +45,7 @@ public class LookRepository extends SimpleRepository
      * @param conprov the connection provider via which we will obtain our
      * database connection.
      */
-    public LookRepository (ConnectionProvider conprov)
+    @Inject public LookRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, LOOK_DB_IDENT);

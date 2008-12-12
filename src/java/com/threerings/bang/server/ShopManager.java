@@ -5,6 +5,8 @@ package com.threerings.bang.server;
 
 import java.lang.reflect.Field;
 
+import com.google.inject.Inject;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.data.ClientObject;
@@ -14,6 +16,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.admin.server.BangAdminManager;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -64,21 +67,21 @@ public abstract class ShopManager extends PlaceManager
     protected void didStartup ()
     {
         super.didStartup();
-        BangServer.adminmgr.statobj.updatePlaceInfo(getIdent(), 0);
+        _adminmgr.statobj.updatePlaceInfo(getIdent(), 0);
     }
 
     @Override // from PlaceManager
     protected void bodyEntered (int bodyOid)
     {
         super.bodyEntered(bodyOid);
-        BangServer.adminmgr.statobj.updatePlaceInfo(getIdent(), _plobj.occupants.size());
+        _adminmgr.statobj.updatePlaceInfo(getIdent(), _plobj.occupants.size());
     }
 
     @Override // from PlaceManager
     protected void bodyLeft (int bodyOid)
     {
         super.bodyLeft(bodyOid);
-        BangServer.adminmgr.statobj.updatePlaceInfo(getIdent(), _plobj.occupants.size());
+        _adminmgr.statobj.updatePlaceInfo(getIdent(), _plobj.occupants.size());
     }
 
     /**
@@ -160,4 +163,6 @@ public abstract class ShopManager extends PlaceManager
      * Returns the string identifier for this shop type: eg. bank, barber, etc.
      */
     protected abstract String getIdent ();
+
+    @Inject protected BangAdminManager _adminmgr;
 }

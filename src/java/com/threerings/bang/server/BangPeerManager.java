@@ -6,6 +6,7 @@ package com.threerings.bang.server;
 import java.util.Date;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
@@ -40,6 +41,7 @@ import com.threerings.bang.data.PlayerObject;
  * Extends the standard peer services and handles some Bang specific business
  * like pardner presence reporting.
  */
+@Singleton
 public class BangPeerManager extends CrowdPeerManager
     implements BangPeerProvider
 {
@@ -71,6 +73,14 @@ public class BangPeerManager extends CrowdPeerManager
     @Inject public BangPeerManager (ShutdownManager shutmgr)
     {
         super(shutmgr);
+    }
+
+    /**
+     * Returns true if we're running in a peer configuration, false otherwise.
+     */
+    public boolean isRunning ()
+    {
+        return (_nodeName != null);
     }
 
     /**

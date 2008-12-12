@@ -10,6 +10,9 @@ import java.sql.Statement;
 
 import java.util.ArrayList;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -22,13 +25,13 @@ import com.threerings.util.Name;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.server.BangServer;
 
 import static com.threerings.bang.Log.*;
 
 /**
  * Persistifies pardner relationships.
  */
+@Singleton
 public class PardnerRepository extends SimpleRepository
 {
     /**
@@ -42,7 +45,7 @@ public class PardnerRepository extends SimpleRepository
      *
      * @param conprov the connection provider via which we will obtain our database connection.
      */
-    public PardnerRepository (ConnectionProvider conprov)
+    @Inject public PardnerRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, PARDNER_DB_IDENT);
@@ -101,7 +104,7 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = BangServer.playrepo.getPlayerId(stmt, handle2);
+                    int playerId2 = _playrepo.getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
                         return MessageBundle.tcompose("e.no_such_player", handle2);
                     }
@@ -149,7 +152,7 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = BangServer.playrepo.getPlayerId(stmt, handle2);
+                    int playerId2 = _playrepo.getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
                         log.warning("Failed to update pardners. Pardner no longer exists.",
                                     "pid", playerId1, "pardner", handle2);
@@ -196,7 +199,7 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = BangServer.playrepo.getPlayerId(stmt, handle2);
+                    int playerId2 = _playrepo.getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
                         log.warning("Failed to delete pardners. Pardner no longer exists.",
                                     "pid", playerId1, "pardner", handle2);
@@ -269,6 +272,9 @@ public class PardnerRepository extends SimpleRepository
             "INDEX (PLAYER_ID2)",
         }, "");
     }
+
+    // dependencies
+    @Inject protected PlayerRepository _playrepo;
 
     /** Used by {@link #getPardnerRecords}. */
     protected static final String PARD_SELECT =

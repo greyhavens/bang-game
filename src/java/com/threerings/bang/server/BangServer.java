@@ -22,21 +22,24 @@ import com.samskivert.util.Invoker;
 import com.threerings.admin.server.AdminProvider;
 import com.threerings.admin.server.ConfigRegistry;
 import com.threerings.admin.server.DatabaseConfigRegistry;
-import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.bundle.BundledComponentRepository;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.Name;
 
+import com.threerings.presents.annotation.AuthInvoker;
+import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.server.Authenticator;
-import com.threerings.presents.server.SessionFactory;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.ClientResolver;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.server.PresentsSession;
+import com.threerings.presents.server.PresentsAuthInvoker;
 import com.threerings.presents.server.PresentsDObjectMgr;
+import com.threerings.presents.server.PresentsInvoker;
+import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.server.ReportManager;
+import com.threerings.presents.server.SessionFactory;
 import com.threerings.presents.server.net.ConnectionManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
@@ -53,7 +56,6 @@ import com.threerings.user.AccountActionRepository;
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberConfig;
 import com.threerings.bang.avatar.server.BarberManager;
-import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.admin.server.BangAdminManager;
@@ -62,12 +64,10 @@ import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.bounty.data.OfficeConfig;
 import com.threerings.bang.bounty.server.OfficeManager;
-import com.threerings.bang.bounty.server.persist.BountyRepository;
 import com.threerings.bang.chat.server.BangChatProvider;
 import com.threerings.bang.gang.data.HideoutConfig;
 import com.threerings.bang.gang.server.GangManager;
 import com.threerings.bang.gang.server.HideoutManager;
-import com.threerings.bang.gang.server.persist.GangRepository;
 import com.threerings.bang.ranch.data.RanchConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.saloon.data.SaloonConfig;
@@ -80,10 +80,6 @@ import com.threerings.bang.tourney.server.BangTourniesManager;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.TownObject;
-import com.threerings.bang.server.persist.BangStatRepository;
-import com.threerings.bang.server.persist.ItemRepository;
-import com.threerings.bang.server.persist.PlayerRepository;
-import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
@@ -100,12 +96,34 @@ public class BangServer extends CrowdServer
             super.configure();
             ConnectionProvider conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
             bind(ConnectionProvider.class).toInstance(conprov);
-            bind(PersistenceContext.class).toInstance(
-                new PersistenceContext("bangdb", conprov, null));
+            // depot dependencies (we will initialize this persistence context later when the
+            // server is ready to do database operations; not initializing it now ensures that no
+            // one sneaks any database manipulations into the dependency resolution phase)
+            bind(PersistenceContext.class).toInstance(new PersistenceContext());
             bind(ReportManager.class).to(BangReportManager.class);
             bind(ChatProvider.class).to(BangChatProvider.class);
             bind(Authenticator.class).to(ServerConfig.getAuthenticator());
             bind(BodyLocator.class).to(PlayerLocator.class);
+            // bang dependencies
+            ResourceManager rsrcmgr = new ResourceManager("rsrc");
+            AccountActionRepository aarepo;
+            AvatarLogic alogic;
+            try {
+                aarepo = new AccountActionRepository(conprov);
+                alogic = new AvatarLogic(rsrcmgr, new BundledComponentRepository(
+                    rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            bind(ResourceManager.class).toInstance(rsrcmgr);
+            bind(AccountActionRepository.class).toInstance(aarepo);
+            bind(AvatarLogic.class).toInstance(alogic);
+        }
+        @Override protected void bindInvokers() {
+            // replace the presents invoker with a custom version
+            bind(Invoker.class).annotatedWith(MainInvoker.class).to(BangInvoker.class);
+            bind(PresentsInvoker.class).to(BangInvoker.class);
+            bind(Invoker.class).annotatedWith(AuthInvoker.class).to(PresentsAuthInvoker.class);
         }
     }
 
@@ -118,31 +136,8 @@ public class BangServer extends CrowdServer
     /** Used to coordinate transitions to persistent data. */
     public static TransitionRepository transitrepo;
 
-    /** A resource manager with which we can load resources in the same manner that the client does
-     * (for resources that are used on both the server and client). */
-    public static ResourceManager rsrcmgr;
-
-    /** Maintains a registry of runtime configuration information. */
-    public static ConfigRegistry confreg;
-
-    /** Provides information on our character components. */
-    public static ComponentRepository comprepo;
-
-    /** Handles the heavy lifting relating to avatar looks and articles. */
-    public static AvatarLogic alogic;
-
-    /** Any database actions that involve the authentication database <em>must</em> be run on this
-     * invoker to avoid blocking normal game database actions. */
-    public static Invoker authInvoker;
-
     /** A reference to the authenticator in use by the server. */
     public static BangAuthenticator author;
-
-    /** Communicates with the other servers in our cluster. */
-    public static BangPeerManager peermgr;
-
-    /** Handles the processing of account actions. */
-    public static AccountActionManager actionmgr;
 
     /** Manages Crowd body stuff. */
     public static BodyManager bodymgr;
@@ -158,37 +153,6 @@ public class BangServer extends CrowdServer
 
     /** Manages rating bits. */
     public static RatingManager ratingmgr;
-
-    /** Manages the persistent repository of player data. */
-    public static PlayerRepository playrepo;
-
-    /** Manages the persistent repository of gang data. */
-    public static GangRepository gangrepo;
-
-    /** Manages the persistent repository of items. */
-    public static ItemRepository itemrepo;
-
-    /** Manages the persistent repository of stats. */
-    public static BangStatRepository statrepo;
-
-    /** Manages the persistent repository of ratings. */
-    public static RatingRepository ratingrepo;
-
-    /** Manages the persistent repository of avatar looks. */
-    public static LookRepository lookrepo;
-
-    /** Tracks bounty related persistent statistics. */
-    public static BountyRepository bountyrepo;
-
-    /** Provides micropayment services. (This will need to be turned into a
-     * pluggable interface to support third party micropayment systems.) */
-    public static BangCoinManager coinmgr;
-
-    /** Manages the market for exchange between scrips and coins. */
-    public static BangCoinExchangeManager coinexmgr;
-
-    /** Manages administrative services. */
-    public static BangAdminManager adminmgr;
 
     /** Keeps an eye on the Ranch, a good man to have around. */
     public static RanchManager ranchmgr;
@@ -213,9 +177,6 @@ public class BangServer extends CrowdServer
 
     /** Manages the Sheriff's Office and Bounties. */
     public static OfficeManager officemgr;
-
-    /** Manages our selection of game boards. */
-    public static BoardManager boardmgr = new BoardManager();
 
     /** Manages tracking and discouraging of misbehaving players. */
     public static NaughtyPlayerManager npmgr = new NaughtyPlayerManager();
@@ -303,10 +264,6 @@ public class BangServer extends CrowdServer
         // create our transition manager prior to doing anything else
         transitrepo = new TransitionRepository(conprov);
 
-        // TEMP: the authenticator is going to access the player repository, so it needs to be
-        // created here
-        playrepo = new PlayerRepository(conprov);
-
         // set up some legacy static references
         invoker = _invoker;
         conmgr = _conmgr;
@@ -321,11 +278,6 @@ public class BangServer extends CrowdServer
 
         // do the base server initialization
         super.init(injector);
-
-        // create and start up our auth invoker
-        authInvoker = new Invoker("auth_invoker", omgr);
-        authInvoker.setDaemon(true);
-        authInvoker.start();
 
         // set up our authenticator
         author = (BangAuthenticator)_author;
@@ -342,49 +294,25 @@ public class BangServer extends CrowdServer
         });
 
         // create our resource manager and other resource bits
-        rsrcmgr = new ResourceManager("rsrc");
-        rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
-
-        // create our avatar related bits
-        comprepo = new BundledComponentRepository(rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET);
-        alogic = new AvatarLogic(rsrcmgr, comprepo);
-
-        // create our repositories
-        itemrepo = new ItemRepository(conprov);
-        gangrepo = new GangRepository(conprov);
-        statrepo = new BangStatRepository(perCtx);
-        ratingrepo = new RatingRepository(conprov);
-        lookrepo = new LookRepository(conprov);
-        bountyrepo = new BountyRepository(conprov);
-        AccountActionRepository actionrepo = new AccountActionRepository(conprov);
+        _rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
 
         // create our various supporting managers
-        playmgr = new PlayerManager();
-        gangmgr = new GangManager();
+        playmgr = _playmgr;
+        gangmgr = _gangmgr;
         tournmgr = injector.getInstance(BangTourniesManager.class);
         ratingmgr = injector.getInstance(RatingManager.class);
-        coinmgr = new BangCoinManager(conprov, actionrepo);
-        coinexmgr = new BangCoinExchangeManager(conprov);
-        actionmgr = new AccountActionManager(omgr, actionrepo);
-        adminmgr = new BangAdminManager();
-
-        // if we have a shared secret, assume we're running in a cluster
-        String node = System.getProperty("node");
-        if (node != null && ServerConfig.sharedSecret != null) {
-            log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
-            peermgr = injector.getInstance(BangPeerManager.class);
-        }
 
         // create and set up our configuration registry and admin service
-        confreg = new DatabaseConfigRegistry(perCtx, invoker, ServerConfig.nodename);
+        ConfigRegistry confreg = new DatabaseConfigRegistry(perCtx, invoker, ServerConfig.nodename);
         AdminProvider.init(invmgr, confreg);
 
         // initialize our depot repositories; running all of our schema and data migrations
+        _perCtx.init("bangdb", _conprov, null);
         _perCtx.initializeRepositories(true);
 
         // now initialize our runtime configuration, postponing the remaining server initialization
         // until our configuration objects are available
-        RuntimeConfig.init(omgr);
+        RuntimeConfig.init(omgr, confreg);
         omgr.postRunnable(new PresentsDObjectMgr.LongRunnable () {
             public void run () {
                 try {
@@ -415,16 +343,20 @@ public class BangServer extends CrowdServer
         throws Exception
     {
         // initialize our managers
-        boardmgr.init(conprov);
-        playmgr.init(conprov);
-        gangmgr.init(conprov);
+        _boardmgr.init();
+        _playmgr.init();
+        _gangmgr.init();
         tournmgr.init(injector);
-        ratingmgr.init(conprov);
-        coinexmgr.init();
-        adminmgr.init(_shutmgr, omgr);
-        if (peermgr != null) {
-            peermgr.init(injector, ServerConfig.nodename, ServerConfig.sharedSecret,
-                         ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
+        ratingmgr.init();
+        _coinexmgr.init();
+        _adminmgr.init();
+
+        // if we have a shared secret, assume we're running in a cluster
+        String node = System.getProperty("node");
+        if (node != null && ServerConfig.sharedSecret != null) {
+            log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
+            _peermgr.init(injector, ServerConfig.nodename, ServerConfig.sharedSecret,
+                          ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
         }
 
         // create our managers
@@ -512,7 +444,7 @@ public class BangServer extends CrowdServer
                 }
             }
             if (players == 0) {
-                adminmgr.scheduleReboot(0, "codeUpdateAutoRestart");
+                _adminmgr.scheduleReboot(0, "codeUpdateAutoRestart");
             }
         }
     }
@@ -530,9 +462,20 @@ public class BangServer extends CrowdServer
     @Inject protected ConnectionProvider _conprov;
     @Inject protected PersistenceContext _perCtx;
     @Inject protected Authenticator _author;
-    @Inject protected PlayerLocator _locator;
     @Inject protected ParlorManager _parmgr;
     @Inject protected BodyManager _bodymgr;
+    @Inject protected ResourceManager _rsrcmgr;
+
+    @Inject protected PlayerLocator _locator;
+    @Inject protected BangAdminManager _adminmgr;
+    @Inject protected BangCoinExchangeManager _coinexmgr;
+    @Inject protected BoardManager _boardmgr;
+    @Inject protected GangManager _gangmgr;
+    @Inject protected PlayerManager _playmgr;
+    @Inject protected BangPeerManager _peermgr;
+
+    // reference needed to bring these managers into existence
+    @Inject protected AccountActionManager _actionmgr;
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server");

@@ -3,38 +3,43 @@
 
 package com.threerings.bang.server.persist;
 
-import java.util.HashMap;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;
 
+import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.server.BangCoinManager;
+import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
 
 /**
- * Provides a robust framework for doing something in exchange for a player's money.
+ * Provides a robust framework for doing something in exchange for a player's money. Financial
+ * actions must be posted via {@link BangInvoker#post}.
  */
 public abstract class FinancialAction extends Invoker.Unit
 {
     /**
-     * Starts this financial action. If the method returns, the money will be tied up in the action
-     * and immediately removed from the user object, and the action will be posted to the supplied
-     * invoker. If the player has insufficient funds, an invocation exception to that effect will
-     * be thrown.
+     * Starts this financial action. <em>Don't call this method, call {@link BangInvoker#post} and
+     * it will take care of everything.</em>
      */
-    public void start ()
+    public boolean checkStart ()
         throws InvocationException
     {
         lockAndDeduct();
-        BangServer.invoker.postUnit(this);
+        return true;
     }
 
     @Override // documentation inherited
@@ -42,8 +47,7 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         try {
             if (_coinCost > 0) {
-                _coinres = BangServer.coinmgr.getCoinRepository().reserveCoins(
-                    getCoinAccount(), _coinCost);
+                _coinres = _coinmgr.getCoinRepository().reserveCoins(getCoinAccount(), _coinCost);
                 if (_coinres == -1) {
                     log.warning("Failed to reserve coins " + this + ".");
                     fail(BangCodes.E_INSUFFICIENT_COINS);
@@ -202,8 +206,7 @@ public abstract class FinancialAction extends Invoker.Unit
         if (_coinres != -1) {
             // return the coin reservation
             try {
-                if (!BangServer.coinmgr.getCoinRepository().
-                    returnReservation(_coinres)) {
+                if (!_coinmgr.getCoinRepository().returnReservation(_coinres)) {
                     log.warning("Failed to return coins " + this + ".");
                 }
             } catch (PersistenceException pe) {
@@ -230,6 +233,7 @@ public abstract class FinancialAction extends Invoker.Unit
 
     /**
      * Locks (or attempts to lock) the coin account and deducts the required funds from the dobj.
+     * This is called by the bang invoker before it queues this action for execution.
      */
     protected void lockAndDeduct ()
         throws InvocationException
@@ -322,7 +326,7 @@ public abstract class FinancialAction extends Invoker.Unit
     protected void spendCash ()
         throws PersistenceException
     {
-        BangServer.playrepo.spendScrip(_user.playerId, _scripCost);
+        _playrepo.spendScrip(_user.playerId, _scripCost);
     }
 
     /**
@@ -331,17 +335,16 @@ public abstract class FinancialAction extends Invoker.Unit
     protected void grantCash ()
         throws PersistenceException
     {
-        BangServer.playrepo.grantScrip(_user.playerId, _scripCost);
+        _playrepo.grantScrip(_user.playerId, _scripCost);
     }
 
     /**
      * Updates the database to spend the actor's coins.
      */
-    protected boolean spendCoins (int reservationId)
+    protected boolean spendCoins (int resId)
         throws PersistenceException
     {
-        return BangServer.coinmgr.getCoinRepository().spendCoins(
-            reservationId, getCoinType(), getCoinDescrip());
+        return _coinmgr.getCoinRepository().spendCoins(resId, getCoinType(), getCoinDescrip());
     }
 
     /**
@@ -371,5 +374,9 @@ public abstract class FinancialAction extends Invoker.Unit
     protected String _failmsg;
     protected int _coinres = -1;
 
-    protected static HashMap<String,String> _accountLock = new HashMap<String,String>();
+    @Inject protected @MainInvoker Invoker _invoker;
+    @Inject protected BangCoinManager _coinmgr;
+    @Inject protected PlayerRepository _playrepo;
+
+    protected static Map<String,String> _accountLock = Maps.newHashMap();
 }

@@ -3,6 +3,9 @@
 
 package com.threerings.bang.ranch.server;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ListUtil;
 import com.threerings.util.MessageBundle;
@@ -18,9 +21,11 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.FinancialAction;
+import com.threerings.bang.server.persist.ItemRepository;
 
 import com.threerings.bang.ranch.client.RanchService;
 import com.threerings.bang.ranch.data.RanchCodes;
@@ -31,6 +36,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Provides ranch-related services.
  */
+@Singleton
 public class RanchManager extends ShopManager
     implements RanchCodes, RanchProvider
 {
@@ -69,7 +75,7 @@ public class RanchManager extends ShopManager
         // handled by the financiial action
         BigShotItem unit = new BigShotItem(user.playerId, config.type);
         unit.setGivenName(name);
-        new RecruitBigShotAction(user, config, unit, listener).start();
+        _invoker.post(new RecruitBigShotAction(user, config, unit, listener));
     }
 
     @Override // from ShopManager
@@ -122,11 +128,11 @@ public class RanchManager extends ShopManager
         }
 
         protected String persistentAction () throws PersistenceException {
-            BangServer.itemrepo.insertItem(_unit);
+            _itemrepo.insertItem(_unit);
             return null;
         }
         protected void rollbackPersistentAction () throws PersistenceException {
-            BangServer.itemrepo.deleteItem(_unit, "recruit_rollback");
+            _itemrepo.deleteItem(_unit, "recruit_rollback");
         }
 
         protected void actionCompleted () {
@@ -147,7 +153,12 @@ public class RanchManager extends ShopManager
 
         protected BigShotItem _unit;
         protected RanchService.ResultListener _listener;
+
+        @Inject protected ItemRepository _itemrepo;
     }
 
     protected RanchObject _robj;
+
+    // dependencies
+    @Inject protected BangInvoker _invoker;
 }

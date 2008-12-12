@@ -1,4 +1,13 @@
+//
+// $Id$
+
 package com.threerings.bang.server.persist;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.ConnectionProvider;
@@ -7,12 +16,10 @@ import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.jora.Table;
 import com.samskivert.io.PersistenceException;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 /**
  * Manages persistent per-player poster information.
  */
+@Singleton
 public class PosterRepository extends JORARepository
 {
     /** The database identifier used when establishing a database
@@ -26,7 +33,7 @@ public class PosterRepository extends JORARepository
      * @param conprov the connection provider via which we will obtain our
      * database connection.
      */
-    public PosterRepository (ConnectionProvider conprov)
+    @Inject public PosterRepository (ConnectionProvider conprov)
         throws PersistenceException
     {
         super(conprov, PosterRepository.POSTER_DB_IDENT);
