@@ -23,11 +23,11 @@ import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.ServiceButton;
-import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Shop;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.ColorSelector;
@@ -238,8 +238,7 @@ public class GoodsInspector extends BContainer
                 _try = new BButton(_msgs.get("m.try"), new ActionListener() {
                     public void actionPerformed (ActionEvent event) {
                         _try.setEnabled(false);
-                        _ctx.getLocationDirector().moveTo(
-                            ((BangBootstrapData)_ctx.getClient().getBootstrapData()).barberOid);
+                        _ctx.getBangClient().goTo(Shop.BARBER);
                     }
                 }, null);
                 _try.setStyleClass("big_button");
@@ -309,8 +308,7 @@ public class GoodsInspector extends BContainer
         {
             _ctx.getBangClient().clearPopup(this, true);
             if ("to_bank".equals(event.getAction())) {
-                BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
-                _ctx.getLocationDirector().moveTo(bbd.bankOid);
+                _ctx.getBangClient().goTo(Shop.BANK);
             }
         }
     }

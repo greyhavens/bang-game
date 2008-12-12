@@ -26,8 +26,8 @@ import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
-import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Shop;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -231,8 +231,7 @@ public class BankView extends ShopView
         {
             _ctx.getBangClient().clearPopup(this, true);
             if ("to_store".equals(event.getAction())) {
-                BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
-                _ctx.getLocationDirector().moveTo(bbd.storeOid);
+                _ctx.getBangClient().goTo(Shop.STORE);
             }
         }
     }

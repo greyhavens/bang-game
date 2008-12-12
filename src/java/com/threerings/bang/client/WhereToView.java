@@ -20,9 +20,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.game.data.TutorialCodes;
 
 import com.threerings.bang.client.bui.SteelWindow;
-import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Shop;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
@@ -106,11 +106,10 @@ public class WhereToView extends SteelWindow
         String action = event.getAction();
         _ctx.getBangClient().clearPopup(this, true);
         if (action.startsWith("to_")) {
-            BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
             if (action.equals("to_office")) {
-                _ctx.getLocationDirector().moveTo(bbd.officeOid);
+                _ctx.getBangClient().goTo(Shop.OFFICE);
             } else if (action.equals("to_saloon")) {
-                _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+                _ctx.getBangClient().goTo(Shop.SALOON);
             } else if (action.equals("to_town")) {
                 _ctx.getBangClient().showTownView();
             }

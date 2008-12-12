@@ -21,9 +21,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.SteelWindow;
-import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Shop;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
@@ -92,8 +92,7 @@ public class BountyGameOverView extends SteelWindow
 
         } else if (action.equals("to_office")) {
             _bctx.getBangClient().clearPopup(this, true);
-            BangBootstrapData bbd = (BangBootstrapData)_bctx.getClient().getBootstrapData();
-            _bctx.getLocationDirector().moveTo(bbd.officeOid);
+            _bctx.getBangClient().goTo(Shop.OFFICE);
 
         } else if (action.equals("stats")) {
             displayDetails(false);

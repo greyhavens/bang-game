@@ -55,6 +55,7 @@ import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.util.SafeSubscriber;
 
+import com.threerings.bang.data.Shop;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TownObject;
 import com.threerings.bang.game.client.BoardView;
@@ -280,15 +281,16 @@ public class TownView extends BWindow
 
     protected void fireCommand (String command)
     {
-        BangBootstrapData bbd = (BangBootstrapData)_bctx.getClient().getBootstrapData();
-        int placeOid;
         if ("logoff".equals(command)) {
             _bctx.getApp().stop();
-        } else if ((placeOid = bbd.getPlaceOid(command)) != -1) {
-            _bctx.getLocationDirector().moveTo(placeOid);
+
         } else {
-            log.warning("Got unknown town view command " + command + ".");
-            return;
+            try {
+                _bctx.getBangClient().goTo(Enum.valueOf(Shop.class, command.toUpperCase()));
+            } catch (Exception e) {
+                log.warning("Got unknown town view command " + command + ": " + e);
+                return;
+            }
         }
 
         // become inactive now that we're going somewhere

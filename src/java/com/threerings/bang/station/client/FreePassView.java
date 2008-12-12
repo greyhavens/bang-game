@@ -17,10 +17,10 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.SteelWindow;
-import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.Shop;
 import com.threerings.bang.data.TrainTicket;
-import com.threerings.bang.util.BangContext;
 import com.threerings.bang.station.data.StationCodes;
+import com.threerings.bang.util.BangContext;
 
 /**
  * Display information about free town days.
@@ -56,8 +56,7 @@ public class FreePassView extends SteelWindow
         _ctx.getBangClient().clearPopup(this, true);
 
         if (action.equals("use_now")) {
-            BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
-            _ctx.getLocationDirector().moveTo(bbd.stationOid);
+            _ctx.getBangClient().goTo(Shop.STATION);
             return;
         }
 

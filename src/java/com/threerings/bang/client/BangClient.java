@@ -102,6 +102,7 @@ import com.threerings.bang.data.GuestHandle;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Shop;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangContext;
@@ -410,6 +411,15 @@ public class BangClient extends BasicClient
     public int getPriorLocationOid ()
     {
         return _priorLocationOid;
+    }
+
+    /**
+     * Convenience method for going to a particular shop.
+     */
+    public void goTo (Shop shop)
+    {
+        BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
+        _ctx.getLocationDirector().moveTo(bbd.getPlaceOid(shop));
     }
 
     /**
@@ -930,20 +940,23 @@ public class BangClient extends BasicClient
         // check for a marker file indicating that we should go straight to the train station when
         // we first start up which we do to smooth out the process of first downloading a new
         // town's media
-        String where = null;
+        Shop where = null;
         File mfile = new File(localDataDir("go_station.dat"));
         if (mfile.exists()) {
             mfile.delete();
-            where = "station";
+            where = Shop.STATION;
         } else {
             // check for a "go" parameter used by developers to go right to a shop
-            where = System.getProperty("go");
+            try {
+                where = Enum.valueOf(Shop.class, System.getProperty("go").toUpperCase());
+            } catch (Exception e) {
+                log.warning("Invalid 'go' parameter " + e);
+            }
         }
 
         // go somewhere if we were asked to do so
-        int shopOid = bbd.getPlaceOid(where);
-        if (shopOid != -1) {
-            _ctx.getLocationDirector().moveTo(shopOid);
+        if (where != null) {
+            goTo(where);
             return;
         }
 
@@ -1472,8 +1485,7 @@ public class BangClient extends BasicClient
             if (placeId == _priorLocationOid && "m.no_such_place".equals(reason)) {
                 // if we fail to move to our prior location since it no longer exists, it was
                 // likely a back parlor which got destroyed, so just head back to the saloon
-                _ctx.getLocationDirector().moveTo(
-                    ((BangBootstrapData)_ctx.getClient().getBootstrapData()).saloonOid);
+                goTo(Shop.SALOON);
 
             } else {
                 if (E_CREATE_HANDLE.equals(reason)) {

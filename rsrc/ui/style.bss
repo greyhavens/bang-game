@@ -2791,11 +2791,14 @@ gang_info_leader_view {
 //
 // Sheriff's Office styles
 
+bounty_list_tipbox {
+  padding: 5 5 0 138;
+  size: 1 49; // only height is used
+}
+
 bounty_list_tip {
   parent: "label";
   font: "Helvetica" plain 15;
-  padding: 5 0 0 137;
-  size: 1 49; // only height is used
   text-align: center;
 }
 

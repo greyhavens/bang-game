@@ -44,29 +44,20 @@ public class BangBootstrapData extends BootstrapData
     public int tourniesOid;
 
     /**
-     * Returns the place oid for the shop with the specified string identifier or -1 if the
-     * identifier is unknown.
+     * Returns the place oid for the specified shop.
      */
-    public int getPlaceOid (String name)
+    public int getPlaceOid (Shop shop)
     {
-        if ("saloon".equals(name)) {
-            return saloonOid;
-        } else if ("store".equals(name)) {
-            return storeOid;
-        } else if ("bank".equals(name)) {
-            return bankOid;
-        } else if ("ranch".equals(name)) {
-            return ranchOid;
-        } else if ("barber".equals(name)) {
-            return barberOid;
-        } else if ("station".equals(name)) {
-            return stationOid;
-        } else if ("hideout".equals(name)) {
-            return hideoutOid;
-        } else if ("office".equals(name)) {
-            return officeOid;
-        } else {
-            return -1;
+        switch (shop) {
+        case BANK: return bankOid;
+        case BARBER: return barberOid;
+        case HIDEOUT: return hideoutOid;
+        case OFFICE: return officeOid;
+        case RANCH: return ranchOid;
+        case SALOON: return saloonOid;
+        case STATION: return stationOid;
+        case STORE: return storeOid;
+        default: throw new IllegalArgumentException("ZOUNDS! I know not this " + shop + ".");
         }
     }
 }
