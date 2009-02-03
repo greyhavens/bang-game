@@ -13,9 +13,17 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Star;
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
+import com.threerings.bang.util.PaymentType;
+
+import com.threerings.bang.store.data.StarGood;
 
 /**
  * Notifies the player that they need the onetime purchase to access some content.
@@ -60,8 +68,13 @@ public class NeedPremiumView extends BDecoratedWindow
         _ctx = ctx;
         MessageBundle msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
         String type = DeploymentConfig.getPaymentType().toString().toLowerCase();
-
         setTitle(msgs.get("m.n" + type + "_title"));
+
+        // onetime purchase gets a little box of fancy stuff
+        if (DeploymentConfig.getPaymentType() == PaymentType.ONETIME) {
+            add(createOnetimePalette());
+        }
+
         add(new BLabel(msgs.get("m.n" + type + "_info")));
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -71,7 +84,35 @@ public class NeedPremiumView extends BDecoratedWindow
         add(bcont, GroupLayout.FIXED);
     }
 
+    protected IconPalette createOnetimePalette ()
+    {
+        IconPalette bits = new IconPalette(null, 3, 1, PaletteIcon.ICON_SIZE, 0);
+        bits.setShowNavigation(false);
+        bits.setPaintBorder(true);
+        bits.setPaintBackground(true);
+
+        // a steam gunman
+        PaletteIcon icon = new PaletteIcon();
+        icon.setText("New Units!");
+        icon.setIcon(BangUI.getUnitIcon(UnitConfig.getConfig("frontier_town/steamgunman", true)));
+        bits.addIcon(icon);
+
+        // a deputy badge
+        icon = new PaletteIcon();
+        icon.setText("All the Bounties!");
+        icon.setIcon(new StarGood(1, Star.Difficulty.EXTREME).createIcon(_ctx, null));
+        bits.addIcon(icon);
+
+        // a trickster raven
+        icon = new PaletteIcon();
+        icon.setText("More Big Shots!");
+        icon.setIcon(BangUI.getUnitIcon(UnitConfig.getConfig("indian_post/tricksterraven", true)));
+        bits.addIcon(icon);
+
+        return bits;
+    }
+
     protected BangContext _ctx;
 
-    protected static final int WIDTH_HINT = 450;
+    protected static final int WIDTH_HINT = 550;
 }
