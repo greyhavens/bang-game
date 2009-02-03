@@ -30,6 +30,7 @@ import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.WeightClassUpgrade;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.avatar.client.BuckleView;
 
@@ -246,12 +247,17 @@ public class GangInfoView extends BContainer
             _scrip.setPreferredWidth(50);
             _scrip.setDocument(new IntegerDocument(true));
             _scrip.addListener(this);
-            acont.add(new BLabel(_msgs.get("m.and")));
-            acont.add(new BLabel(BangUI.coinIcon));
-            acont.add(_coins = new BTextField(4));
+
+            // if we are on a coin deployment, allow coin donations as well
+            _coins = new BTextField(4);
             _coins.setPreferredWidth(50);
             _coins.setDocument(new IntegerDocument(true));
             _coins.addListener(this);
+            if (DeploymentConfig.usesCoins()) {
+                acont.add(new BLabel(_msgs.get("m.and")));
+                acont.add(new BLabel(BangUI.coinIcon));
+                acont.add(_coins);
+            }
 
             _buttons[0].setEnabled(false);
         }
@@ -260,9 +266,8 @@ public class GangInfoView extends BContainer
         public void textChanged (TextEvent event)
         {
             try {
-                _buttons[0].setEnabled(
-                    parseInt(_scrip.getText()) > 0 ||
-                    parseInt(_coins.getText()) > 0);
+                _buttons[0].setEnabled(parseInt(_scrip.getText()) > 0 ||
+                                       parseInt(_coins.getText()) > 0);
             } catch (NumberFormatException e) {
                 _buttons[0].setEnabled(false);
             }
