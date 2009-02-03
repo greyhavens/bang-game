@@ -156,18 +156,3 @@ if ($host =~ /^bang\d+/) {
         unlink("/tmp/bangstats.tmp");
     }
 }
-
-# if we're on bang1, report music purchases over the last five days
-if ($host eq "bang1.luna.threerings.net") {
-    my $query = "select DATE(TIME) as SUMDATE, -SUM(COINS) from COIN_HISTORY " .
-        "where TIME >= DATE_SUB(CURDATE(), INTERVAL 5 DAY) and TYPE = 109 group by SUMDATE;";
-    my $cmd = "$root/bin/mysql bang -e '$query'";
-    if ($dry_run) {
-        print("$cmd\n");
-    } else {
-        system_warn("$cmd > /tmp/songstats.tmp");
-        send_mail($stats_email, $stats_email . ",nick\@somatone.com,kane\@somatone.com",
-                  "$host: Bang song downloads", "/tmp/songstats.tmp");
-    }
-    unlink("/tmp/songstats.tmp");
-}
