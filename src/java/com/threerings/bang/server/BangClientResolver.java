@@ -53,6 +53,7 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.server.persist.BangStatRepository;
 import com.threerings.bang.server.persist.FolkRecord;
@@ -214,11 +215,11 @@ public class BangClientResolver extends CrowdClientResolver
         }
 
         // give out a free ticket if a player qualified but never successfully made it to ITP
-        if (noFreeTicket && player.nextTown == null &&
-                buser.stats.containsValue(StatType.FREE_TICKETS, BangCodes.INDIAN_POST) &&
-                !buser.stats.containsValue(StatType.ACTIVATED_TICKETS, BangCodes.INDIAN_POST)) {
+        if (DeploymentConfig.usesCoins() && noFreeTicket && player.nextTown == null &&
+            buser.stats.containsValue(StatType.FREE_TICKETS, BangCodes.INDIAN_POST) &&
+            !buser.stats.containsValue(StatType.ACTIVATED_TICKETS, BangCodes.INDIAN_POST)) {
             FreeTicket ticket = FreeTicket.checkQualifies(
-                    buser, BangUtil.getTownIndex(BangCodes.INDIAN_POST));
+                buser, BangUtil.getTownIndex(BangCodes.INDIAN_POST));
             if (ticket != null) {
                 _itemrepo.insertItem(ticket);
                 buser.addToInventory(ticket);

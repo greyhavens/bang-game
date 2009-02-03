@@ -29,7 +29,7 @@ public class FreeTicket extends Item
             user.stats.containsValue(StatType.FREE_TICKETS, BangCodes.TOWN_IDS[townIdx]) ||
             // check if they've already bought the ticket
             user.holdsTicket(BangCodes.TOWN_IDS[townIdx]) ||
-            // make sure they have purchased the pervious town ticket
+            // make sure they have purchased the previous town ticket
             (townIdx > 1 && !user.holdsTicket(BangCodes.TOWN_IDS[townIdx - 1]))) {
             return null;
         }
