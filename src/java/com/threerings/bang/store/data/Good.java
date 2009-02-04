@@ -18,6 +18,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 /**
  * Represents a particular good that can be purchased from the general store.
@@ -136,7 +137,8 @@ public abstract class Good extends SimpleStreamableObject
      */
     public int getCoinCost (PlayerObject user)
     {
-        return (isGoldPassFree() && user.holdsGoldPass(_townId)) ? 0 :  _coinCost;
+        return (isGoldPassFree() && DeploymentConfig.usesCoins() && user.holdsGoldPass(_townId)) ?
+            0 :  _coinCost;
     }
 
     /**
