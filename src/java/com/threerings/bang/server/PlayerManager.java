@@ -304,7 +304,7 @@ public class PlayerManager
     }
 
     /**
-     * Called from {@link BangClientResolver#finishResolution} to redeem any rewards for which this
+     * Called from {@link BangSession#sessionWillStart} to redeem any rewards for which this
      * player is eligible.
      */
     public void redeemRewards (PlayerObject player, List<String> rewards)
