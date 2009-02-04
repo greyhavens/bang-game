@@ -5,6 +5,8 @@ package com.threerings.bang.data;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.util.DeploymentConfig;
+
 /**
  * Reduces the gold cost of many items in a town to 0.
  */
@@ -33,21 +35,24 @@ public class GoldPass extends Item
     @Override // documentation inherited
     public String getName()
     {
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS,
-                MessageBundle.compose("m.gold_pass", "m." + _townId));
+        String msg = DeploymentConfig.usesCoins() ?
+            MessageBundle.compose("m.gold_pass", "m." + _townId) : "m.onetime_pass";
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 
     @Override // documentation inherited
     public String getTooltip (PlayerObject user)
     {
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS,
-                MessageBundle.compose("m.gold_pass_tip", "m." + _townId));
+        String msg = DeploymentConfig.usesCoins() ?
+            MessageBundle.compose("m.gold_pass_tip", "m." + _townId) : "m.onetime_pass_tip";
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "goods/gold/" + _townId + ".png";
+        return DeploymentConfig.usesCoins() ? ("goods/gold/" + _townId + ".png") :
+            "goods/onetime.png";
     }
 
     @Override // documentation inherited
