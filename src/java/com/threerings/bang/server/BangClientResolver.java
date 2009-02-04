@@ -429,9 +429,6 @@ public class BangClientResolver extends CrowdClientResolver
     /** A temporary list of this player's gang invitations (or null). */
     protected List<GangInviteRecord> _ginvites;
 
-    /** Activated rewards that were redeemed for this player during authentication. */
-    protected List<String> _rewards;
-
     // dependencies
     @Inject protected BangCoinManager _coinmgr;
     @Inject protected PlayerRepository _playrepo;
