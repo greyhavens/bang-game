@@ -44,7 +44,7 @@ public class ExchangePassGood extends Good
     }
 
     @Override // documentation inherited
-    public boolean isGoldPassFree ()
+    public boolean honorsGoldPass ()
     {
         return true;
     }

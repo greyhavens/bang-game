@@ -137,14 +137,15 @@ public abstract class Good extends SimpleStreamableObject
      */
     public int getCoinCost (PlayerObject user)
     {
-        return (isGoldPassFree() && DeploymentConfig.usesCoins() && user.holdsGoldPass(_townId)) ?
+        return (honorsGoldPass() && DeploymentConfig.usesCoins() && user.holdsGoldPass(_townId)) ?
             0 :  _coinCost;
     }
 
     /**
-     * Returns true if this item is free due to a Gold Pass.
+     * Returns true if this item honors the Gold Pass (eliminates its gold cost when the user has
+     * the necessary pass).
      */
-    public boolean isGoldPassFree ()
+    public boolean honorsGoldPass ()
     {
         return false;
     }

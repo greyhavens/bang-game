@@ -48,7 +48,7 @@ public class TicketGood extends Good
     }
 
     @Override // documentation inherited
-    public boolean isGoldPassFree ()
+    public boolean honorsGoldPass ()
     {
         return true;
     }

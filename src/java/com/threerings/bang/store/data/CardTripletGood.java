@@ -56,7 +56,7 @@ public class CardTripletGood extends Good
     }
 
     @Override // from Good
-    public boolean isGoldPassFree ()
+    public boolean honorsGoldPass ()
     {
         return true;
     }
