@@ -34,12 +34,16 @@ public abstract class GangFinancialAction extends FinancialAction
         if (_gang.scrip < _scripCost) {
             return BangCodes.E_INSUFFICIENT_SCRIP;
         }
-        if (_gang.coins < _coinCost) {
-            switch (DeploymentConfig.getPaymentType()) {
-            default:
-            case COINS: return BangCodes.E_INSUFFICIENT_COINS;
-            case ONETIME: return BangCodes.E_LACK_ONETIME;
+        switch (DeploymentConfig.getPaymentType()) {
+        default:
+        case COINS:
+            if (_gang.coins < _coinCost) {
+                return BangCodes.E_INSUFFICIENT_COINS;
             }
+            break;
+        case ONETIME:
+            // it's not possible for a gang to be a wrangler
+            return BangCodes.E_LACK_ONETIME;
         }
         if (_gang.aces < _aceCost) {
             return BangCodes.E_INSUFFICIENT_ACES;

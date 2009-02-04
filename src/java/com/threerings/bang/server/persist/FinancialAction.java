@@ -274,12 +274,18 @@ public abstract class FinancialAction extends Invoker.Unit
         if (_user.scrip < _scripCost) {
             return BangCodes.E_INSUFFICIENT_SCRIP;
         }
-        if (_user.coins < _coinCost) {
-            switch (DeploymentConfig.getPaymentType()) {
-            default:
-            case COINS: return BangCodes.E_INSUFFICIENT_COINS;
-            case ONETIME: return BangCodes.E_LACK_ONETIME;
+        switch (DeploymentConfig.getPaymentType()) {
+        default:
+        case COINS:
+            if (_user.coins < _coinCost) {
+                return BangCodes.E_INSUFFICIENT_COINS;
             }
+            break;
+        case ONETIME:
+            if (_coinCost > 0 && !_user.holdsOneTime()) {
+                return BangCodes.E_LACK_ONETIME;
+            }
+            break;
         }
         return null;
     }
