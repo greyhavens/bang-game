@@ -70,7 +70,8 @@ public class OOOAuthenticator extends BangAuthenticator
     {
         try {
             // we get our user manager configuration from the ocean config
-            _usermgr = new OOOUserManager(ServerConfig.config.getSubProperties("oooauth"), _conprov);
+            _usermgr = new OOOUserManager(
+                ServerConfig.config.getSubProperties("oooauth"), _conprov);
             _authrep = (OOOUserRepository)_usermgr.getRepository();
             _siteident = new JDBCTableSiteIdentifier(_conprov);
             _rewardrep = new RewardRepository(_conprov);

@@ -36,7 +36,8 @@ public class AccountActionManager
     /**
      * Creates the action manager and prepares it for operation.
      */
-    @Inject public AccountActionManager (PresentsDObjectMgr omgr, AccountActionRepository actionrepo)
+    @Inject public AccountActionManager (PresentsDObjectMgr omgr,
+                                         AccountActionRepository actionrepo)
         throws PersistenceException
     {
         _repo = actionrepo;
