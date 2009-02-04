@@ -196,8 +196,9 @@ public class HideoutManager extends MatchHostManager
                           final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they're not already in a gang
         final PlayerObject user = requireShopEnabled(caller);
+
+        // make sure they're not already in a gang
         if (user.gangId > 0) {
             log.warning("Player tried to form a gang when already in one", "who", user.who(),
                         "gangId", user.gangId);
