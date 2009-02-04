@@ -12,6 +12,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 /**
  * Displays the quantity of money a player has on hand.
@@ -27,6 +28,10 @@ public class WalletLabel extends MoneyLabel
                            "wallet_name"), BorderLayout.NORTH);
         }
         _user = ctx.getUserObject();
+
+        if (DeploymentConfig.usesOneTime()) {
+            _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.onetime_wallet_tip"));
+        }
     }
 
     // documentation inherited from interface AttributeChangeListener
@@ -56,8 +61,19 @@ public class WalletLabel extends MoneyLabel
 
     protected void updateValues (boolean animate)
     {
+        int coins;
+        switch (DeploymentConfig.getPaymentType()) {
+        case COINS:
+            coins = _user.coins;
+            break;
+        case ONETIME:
+            coins = _user.holdsOneTime() ? 1 : 0;
+            break;
+        default:
+            throw new RuntimeException("Unknown payment type!");
+        }
         // TODO: animate and bling!
-        setMoney(_user.scrip, _user.coins, animate);
+        setMoney(_user.scrip, coins, animate);
     }
 
     protected PlayerObject _user;
