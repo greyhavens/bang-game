@@ -7,9 +7,12 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.AuditLogger;
+import com.samskivert.util.Invoker;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import com.threerings.presents.annotation.MainInvoker;
 
 import com.threerings.coin.server.CoinManager;
 import com.threerings.coin.server.persist.CoinTransaction;
@@ -31,11 +34,12 @@ public class BangCoinManager extends CoinManager
     /**
      * Creates the coin manager and its associated repository.
      */
-    @Inject public BangCoinManager (ConnectionProvider conprov, AccountActionRepository actionrepo)
+    @Inject public BangCoinManager (ConnectionProvider conprov, AccountActionRepository actionrepo,
+                                    @MainInvoker Invoker invoker)
         throws PersistenceException
     {
         // the bang coin tables are on the bang databases, so we can use the game invoker
-        super(conprov, ServerConfig.nodename, coinlog, actionrepo, BangServer.invoker);
+        super(conprov, ServerConfig.nodename, coinlog, actionrepo, invoker);
     }
 
     /**
