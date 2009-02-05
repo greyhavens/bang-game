@@ -116,18 +116,16 @@ public class GoodsCatalog
             }
         }
 
-        if (DeploymentConfig.usesCoins()) {
-            // register our music (if we support micropayments)
-            registerGood(new SongGood(BangCodes.FRONTIER_TOWN, BangCodes.FRONTIER_TOWN), pf);
-            registerGood(new SongGood(ClaimJumpingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
-            registerGood(new SongGood(CattleRustlingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
-            registerGood(new SongGood(GoldRushInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
+        // register our music
+        registerGood(new SongGood(BangCodes.FRONTIER_TOWN, BangCodes.FRONTIER_TOWN), pf);
+        registerGood(new SongGood(ClaimJumpingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
+        registerGood(new SongGood(CattleRustlingInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
+        registerGood(new SongGood(GoldRushInfo.IDENT, BangCodes.FRONTIER_TOWN), pf);
 
-            registerGood(new SongGood(BangCodes.INDIAN_POST, BangCodes.INDIAN_POST), pf);
-            registerGood(new SongGood(TotemBuildingInfo.IDENT, BangCodes.INDIAN_POST), pf);
-            registerGood(new SongGood(WendigoAttackInfo.IDENT, BangCodes.INDIAN_POST), pf);
-            registerGood(new SongGood(ForestGuardiansInfo.IDENT, BangCodes.INDIAN_POST), pf);
-        }
+        registerGood(new SongGood(BangCodes.INDIAN_POST, BangCodes.INDIAN_POST), pf);
+        registerGood(new SongGood(TotemBuildingInfo.IDENT, BangCodes.INDIAN_POST), pf);
+        registerGood(new SongGood(WendigoAttackInfo.IDENT, BangCodes.INDIAN_POST), pf);
+        registerGood(new SongGood(ForestGuardiansInfo.IDENT, BangCodes.INDIAN_POST), pf);
     }
 
     /**
