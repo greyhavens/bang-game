@@ -57,7 +57,9 @@ public abstract class GangFinancialAction extends FinancialAction
         _gang.startTransaction();
         try {
             _gang.setScrip(_gang.scrip - _scripCost);
-            _gang.setCoins(_gang.coins - _coinCost);
+            if (DeploymentConfig.usesCoins()) {
+                _gang.setCoins(_gang.coins - _coinCost);
+            }
             _gang.setAces(_gang.aces - _aceCost);
         } finally {
             _gang.commitTransaction();
@@ -70,7 +72,9 @@ public abstract class GangFinancialAction extends FinancialAction
         _gang.startTransaction();
         try {
             _gang.setScrip(_gang.scrip + _scripCost);
-            _gang.setCoins(_gang.coins + _coinCost);
+            if (DeploymentConfig.usesCoins()) {
+                _gang.setCoins(_gang.coins + _coinCost);
+            }
             _gang.setAces(_gang.aces + _aceCost);
         } finally {
             _gang.commitTransaction();

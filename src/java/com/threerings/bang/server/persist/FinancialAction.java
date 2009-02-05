@@ -46,7 +46,7 @@ public abstract class FinancialAction extends Invoker.Unit
     public boolean invoke ()
     {
         try {
-            if (_coinCost > 0) {
+            if (DeploymentConfig.usesCoins() && _coinCost > 0) {
                 _coinres = _coinmgr.getCoinRepository().reserveCoins(getCoinAccount(), _coinCost);
                 if (_coinres == -1) {
                     log.warning("Failed to reserve coins " + this + ".");
@@ -69,7 +69,7 @@ public abstract class FinancialAction extends Invoker.Unit
             }
             _actionTaken = true;
 
-            if (_coinCost > 0) {
+            if (DeploymentConfig.usesCoins() && _coinCost > 0) {
                 // finally "spend" our reserved coins
                 if (!spendCoins(_coinres)) {
                     log.warning("Failed to spend coin reservation " + this, "resid", _coinres);
@@ -298,7 +298,9 @@ public abstract class FinancialAction extends Invoker.Unit
         _user.startTransaction();
         try {
             _user.setScrip(_user.scrip - _scripCost);
-            _user.setCoins(_user.coins - _coinCost);
+            if (DeploymentConfig.usesCoins()) {
+                _user.setCoins(_user.coins - _coinCost);
+            }
         } finally {
             _user.commitTransaction();
         }
@@ -312,7 +314,9 @@ public abstract class FinancialAction extends Invoker.Unit
         _user.startTransaction();
         try {
             _user.setScrip(_user.scrip + _scripCost);
-            _user.setCoins(_user.coins + _coinCost);
+            if (DeploymentConfig.usesCoins()) {
+                _user.setCoins(_user.coins + _coinCost);
+            }
         } finally {
             _user.commitTransaction();
         }
