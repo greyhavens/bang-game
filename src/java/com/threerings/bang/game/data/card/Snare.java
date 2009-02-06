@@ -42,7 +42,7 @@ public class Snare extends AddPieceCard
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 60;
+        return 20;
     }
 
     @Override // documentation inherited

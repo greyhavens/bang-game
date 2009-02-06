@@ -14,7 +14,7 @@ import com.threerings.bang.data.Purse;
 public class PurseGood extends Good
 {
     /** The scrip cost of purses indexed by town. */
-    public static final int[] SCRIP_COST = { 1000, 2500, 5000, 7500, 15000 };
+    public static final int[] SCRIP_COST = { 1500, 3000, 5000, 7500, 15000 };
 
     /** The coin cost of purses indexed by town. */
     public static final int[] COIN_COST = { 1, 2, 4, 5, 8 };

@@ -61,6 +61,6 @@ public class TumbleweedWind extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 60;
+        return 20;
     }
 }

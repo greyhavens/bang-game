@@ -37,7 +37,7 @@ public class GiddyUp extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 120;
+        return 40;
     }
 
     @Override // documentation inherited

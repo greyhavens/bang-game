@@ -48,7 +48,7 @@ public class Rain extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 120;
+        return 40;
     }
 
     @Override // documenataion inherited

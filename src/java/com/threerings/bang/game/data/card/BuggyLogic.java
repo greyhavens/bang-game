@@ -46,7 +46,7 @@ public class BuggyLogic extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 90;
+        return 20;
     }
 
     @Override // documenataion inherited

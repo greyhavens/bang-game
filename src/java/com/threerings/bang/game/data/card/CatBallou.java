@@ -43,7 +43,7 @@ public class CatBallou extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 60;
+        return 20;
     }
 
     @Override // documentation inherited

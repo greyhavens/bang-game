@@ -37,7 +37,7 @@ public class Firestarter extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 120;
+        return 30;
     }
 
     @Override // documentation inherited

@@ -23,13 +23,13 @@ public interface AvatarCodes
     public static final String AVATAR_RSRC_SET = "avatars";
 
     /** The base scrip cost for a new look. */
-    public static final int BASE_LOOK_SCRIP_COST = 1000;
+    public static final int BASE_LOOK_SCRIP_COST = 800;
 
     /** The base coin cost for a new look. */
-    public static final int BASE_LOOK_COIN_COST = 2;
+    public static final int BASE_LOOK_COIN_COST = 1;
 
     /** The maximum cost of an aspect offered when creating a first look. */
-    public static final int MAX_STARTER_COST = 250;
+    public static final int MAX_STARTER_COST = 100;
 
     /** An error message used by {@link AvatarService#createAvatar}. */
     public static final String ERR_RESERVED_HANDLE = "m.reserved_handle";

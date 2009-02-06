@@ -41,7 +41,7 @@ public class Missile extends AreaCard
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 120;
+        return 40;
     }
 
     @Override // documentation inherited

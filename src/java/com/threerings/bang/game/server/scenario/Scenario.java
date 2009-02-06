@@ -652,5 +652,5 @@ public abstract class Scenario
     protected static final long[] TIME_WARNINGS = { 60*1000L, 30*1000L, 10*1000L };
 
     /** Defines the base earnings (per-round) for each rank. */
-    protected static final int[] BASE_EARNINGS = { 50, 70, 85, 105 };
+    protected static final int[] BASE_EARNINGS = { 100, 140, 170, 210 };
 }

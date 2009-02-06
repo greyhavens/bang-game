@@ -41,7 +41,7 @@ public class Repair extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 90;
+        return 30;
     }
 
     @Override // documentation inherited

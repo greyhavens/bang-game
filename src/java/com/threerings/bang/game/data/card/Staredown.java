@@ -62,6 +62,6 @@ public class Staredown extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 50;
+        return 15;
     }
 }

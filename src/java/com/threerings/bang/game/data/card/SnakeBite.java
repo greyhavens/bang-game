@@ -52,7 +52,7 @@ public class SnakeBite extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 90;
+        return 30;
     }
 
     @Override // documenataion inherited
