@@ -67,17 +67,17 @@
     <component cclass="male/clothing_front" name="skinny_prospector_beans"/>
   </article>
 
-   <article name="male_prospector_pick" townId="frontier_town" slot="clothing" scrip="1125" coins="0">
+   <article name="male_prospector_pick" townId="frontier_town" slot="clothing" scrip="1125" coins="1">
     <component cclass="male/clothing_back" name="a_skinny_prospector"/>
     <component cclass="male/clothing_front" name="skinny_prospector_pick"/>
   </article>
 
- <article name="male_overalls_pitchfork" townId="frontier_town" slot="clothing" scrip="1000" coins="0" colors="clothes_p,clothes_t">
+ <article name="male_overalls_pitchfork" townId="frontier_town" slot="clothing" scrip="1000" coins="1" colors="clothes_p,clothes_t">
     <component cclass="male/clothing_back" name="overalls"/>
     <component cclass="male/clothing_front" name="overalls_pitchfork"/>
   </article>
 
- <article name="male_overalls_wheat" townId="frontier_town" slot="clothing" scrip="800" coins="0">
+ <article name="male_overalls_wheat" townId="frontier_town" slot="clothing" scrip="800" coins="1">
     <component cclass="male/clothing_back" name="overalls_wheat"/>
     <component cclass="male/clothing_front" name="overalls_wheat"/>
   </article>
@@ -258,37 +258,37 @@
     <component cclass="male/hat" name="widebrim"/>
   </article>
 
-  <article name="male_widebrim_buckle" townId="frontier_town" slot="hat" scrip="325" coins="0" colors="clothes_p,clothes_t">
+  <article name="male_widebrim_buckle" townId="frontier_town" slot="hat" scrip="350" coins="1" colors="clothes_p,clothes_t">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="buckle_widebrim"/>
   </article>
 
-  <article name="male_widebrim_disks" townId="frontier_town" slot="hat" scrip="500" coins="0" colors="clothes_p,clothes_s">
+  <article name="male_widebrim_disks" townId="frontier_town" slot="hat" scrip="500" coins="1" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="disks_widebrim"/>
   </article>
 
-  <article name="male_widebrim_ringlets" townId="frontier_town" slot="hat" scrip="700" coins="0">
+  <article name="male_widebrim_ringlets" townId="frontier_town" slot="hat" scrip="700" coins="1">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="ringlets_widebrim"/>
   </article>
 
-  <article name="male_widebrim_thick" townId="frontier_town" slot="hat" scrip="250" coins="0" colors="clothes_p,clothes_t">
+  <article name="male_widebrim_thick" townId="frontier_town" slot="hat" scrip="275" coins="1" colors="clothes_p,clothes_t">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="thick_widebrim"/>
   </article>
 
-  <article name="male_widebrim_thin" townId="frontier_town" slot="hat" scrip="225" coins="0" colors="clothes_p,clothes_s">
+  <article name="male_widebrim_thin" townId="frontier_town" slot="hat" scrip="250" coins="1" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="thin_widebrim"/>
   </article>
 
-  <article name="male_ten_gallon" townId="frontier_town" slot="hat" scrip="275" coins="0" colors="clothes_p">
+  <article name="male_ten_gallon" townId="frontier_town" slot="hat" scrip="225" coins="0" colors="clothes_p">
     <component cclass="male/hat" name="ten_gallon"/>
     <component cclass="male/hat_back" name="ten_gallon"/>
   </article>
 
-  <article name="male_ten_gallon_thick" townId="frontier_town" slot="hat" scrip="350" coins="0" colors="clothes_p,clothes_s">
+  <article name="male_ten_gallon_thick" townId="frontier_town" slot="hat" scrip="325" coins="1" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="ten_gallon"/>
     <component cclass="male/hat_band" name="thick_ten_gallon"/>
     <component cclass="male/hat_back" name="ten_gallon"/>
@@ -299,19 +299,19 @@
     <component cclass="male/hat_back" name="sombrero"/>
   </article>
 
-  <article name="male_sombrero_simple" townId="frontier_town" slot="hat" scrip="700" coins="0" colors="clothes_p,clothes_s">
+  <article name="male_sombrero_simple" townId="frontier_town" slot="hat" scrip="700" coins="1" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="sombrero"/>
     <component cclass="male/hat_band" name="simple_sombrero"/>
     <component cclass="male/hat_back" name="sombrero"/>
   </article>
 
-  <article name="male_sombrero_border" townId="frontier_town" slot="hat" scrip="650" coins="0" colors="clothes_p,clothes_s">
+  <article name="male_sombrero_border" townId="frontier_town" slot="hat" scrip="650" coins="1" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="sombrero"/>
     <component cclass="male/hat_band" name="border_sombrero"/>
     <component cclass="male/hat_back" name="sombrero"/>
   </article>
 
-  <article name="male_sombrero_border_band" townId="frontier_town" slot="hat" scrip="800" coins="0">
+  <article name="male_sombrero_border_band" townId="frontier_town" slot="hat" scrip="800" coins="1">
     <component cclass="male/hat" name="sombrero"/>
     <component cclass="male/hat_band" name="border_band_sombrero"/>
     <component cclass="male/hat_back" name="sombrero"/>
@@ -360,7 +360,7 @@
     <component cclass="male/hat_back" name="feather_one"/>
   </article>
 
-  <article name="male_feather_two" townId="indian_post" slot="hat" scrip="787" coins="0" colors="clothes_p,clothes_s">
+  <article name="male_feather_two" townId="indian_post" slot="hat" scrip="787" coins="1" colors="clothes_p,clothes_s">
     <component cclass="male/hat_back" name="feather_two"/>
   </article>
 
@@ -391,7 +391,7 @@
     <component cclass="male/hat_back" name="buffalo"/>
   </article>
 
-  <article name="male_buffalo_medallion" townId="indian_post" slot="hat" scrip="950" coins="0">
+  <article name="male_buffalo_medallion" townId="indian_post" slot="hat" scrip="950" coins="1">
     <component cclass="male/hat" name="buffalo"/>
     <component cclass="male/hat_back" name="buffalo"/>
     <component cclass="male/hat_band" name="medallion_buffalo"/>
@@ -408,7 +408,7 @@
     <component cclass="male/hat" name="trickster_raven"/>
   </article>
 
-  <article name="male_topper" townId="indian_post" slot="hat" scrip="1050" coins="0" colors="clothes_p,clothes_s,clothes_t">
+  <article name="male_topper" townId="indian_post" slot="hat" scrip="1050" coins="1" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="native_topper"/>
     <component cclass="male/hat_back" name="native_topper"/>
   </article>
@@ -547,7 +547,7 @@
     <component cclass="female/clothing_front" name="flirt_peasant_dress"/>
   </article>
 
-  <article name="female_peasant_dress_pistol" townId="frontier_town" slot="clothing" scrip="1100" coins="0">
+  <article name="female_peasant_dress_pistol" townId="frontier_town" slot="clothing" scrip="1100" coins="1">
     <component cclass="female/clothing_back" name="peasant_dress"/>
     <component cclass="female/clothing_front" name="pistol_peasant_dress"/>
   </article>
@@ -575,7 +575,7 @@
     <component cclass="female/clothing_back" name="frontier_dress"/>
   </article>
 
-  <article name="female_frontier_dress_book" townId="frontier_town" slot="clothing" scrip="900" coins="0">
+  <article name="female_frontier_dress_book" townId="frontier_town" slot="clothing" scrip="900" coins="1">
     <component cclass="female/clothing_back" name="frontier_dress_holding"/>
     <component cclass="female/clothing_front" name="book_frontier_dress"/>
   </article>
@@ -743,13 +743,13 @@
     <component cclass="female/hat_back" name="longbrim"/>
   </article>
 
-  <article name="female_longbrim_thick" townId="frontier_town" slot="hat" scrip="500" coins="0" colors="clothes_p,clothes_s">
+  <article name="female_longbrim_thick" townId="frontier_town" slot="hat" scrip="500" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="longbrim"/>
     <component cclass="female/hat_back" name="longbrim"/>
     <component cclass="female/hat_band" name="thick_longbrim"/>
   </article>
 
-  <article name="female_longbrim_disks" townId="frontier_town" slot="hat" scrip="550" coins="0" colors="clothes_p,clothes_s">
+  <article name="female_longbrim_disks" townId="frontier_town" slot="hat" scrip="550" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="longbrim"/>
     <component cclass="female/hat_back" name="longbrim"/>
     <component cclass="female/hat_band" name="disks_longbrim"/>
@@ -759,7 +759,7 @@
     <component cclass="female/hat" name="bowler"/>
   </article>
 
-  <article name="female_bowler_thick" townId="frontier_town" slot="hat" scrip="350" coins="0" colors="clothes_p,clothes_s">
+  <article name="female_bowler_thick" townId="frontier_town" slot="hat" scrip="350" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="bowler"/>
     <component cclass="female/hat_band" name="thick_bowler"/>
   </article>
@@ -773,12 +773,12 @@
     <component cclass="female/hat" name="railbrim"/>
   </article>
 
-  <article name="female_railbrim_thick" townId="frontier_town" slot="hat" scrip="300" coins="0" colors="clothes_p,clothes_s">
+  <article name="female_railbrim_thick" townId="frontier_town" slot="hat" scrip="300" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="railbrim"/>
     <component cclass="female/hat_band" name="thick_railbrim"/>
   </article>
 
-  <article name="female_railbrim_disks" townId="frontier_town" slot="hat" scrip="525" coins="0" colors="clothes_p,clothes_s">
+  <article name="female_railbrim_disks" townId="frontier_town" slot="hat" scrip="525" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="railbrim"/>
     <component cclass="female/hat_band" name="disks_railbrim"/>
   </article>
@@ -811,18 +811,18 @@
     <component cclass="female/hat_back" name="bonnet"/>
   </article>
 
-  <article name="female_sombrero" townId="frontier_town" slot="hat" scrip="525" coins="0" colors="clothes_p">
+  <article name="female_sombrero" townId="frontier_town" slot="hat" scrip="525" coins="1" colors="clothes_p">
     <component cclass="female/hat" name="sombrero"/>
     <component cclass="female/hat_back" name="sombrero"/>
   </article>
 
-  <article name="female_sombrero_trim" townId="frontier_town" slot="hat" scrip="650" coins="0" colors="clothes_p,clothes_s">
+  <article name="female_sombrero_trim" townId="frontier_town" slot="hat" scrip="650" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="sombrero"/>
     <component cclass="female/hat_back" name="sombrero"/>
     <component cclass="female/hat_band" name="border_sombrero"/>
   </article>
 
-  <article name="female_sombrero_thin" townId="frontier_town" slot="hat" scrip="700" coins="0">
+  <article name="female_sombrero_thin" townId="frontier_town" slot="hat" scrip="700" coins="1">
     <component cclass="female/hat" name="sombrero"/>
     <component cclass="female/hat_back" name="sombrero"/>
     <component cclass="female/hat_band" name="border_band_sombrero"/>
@@ -858,11 +858,11 @@
     <component cclass="female/hat_back" name="bukwas"/>
   </article>
 
-  <article name="female_feather_one" townId="indian_post" slot="hat" scrip="700" coins="0" colors="clothes_p">
+  <article name="female_feather_one" townId="indian_post" slot="hat" scrip="700" coins="1" colors="clothes_p">
     <component cclass="female/hat_back" name="feather_one"/>
   </article>
 
-  <article name="female_feather_two" townId="indian_post" slot="hat" scrip="787" coins="0" colors="clothes_p,clothes_s">
+  <article name="female_feather_two" townId="indian_post" slot="hat" scrip="787" coins="1" colors="clothes_p,clothes_s">
     <component cclass="female/hat_back" name="feather_two"/>
   </article>
 
@@ -902,12 +902,12 @@
     <component cclass="female/hat" name="trickster_raven"/>
   </article>
 
-  <article name="female_topper" townId="indian_post" slot="hat" scrip="875" coins="0" colors="clothes_p,clothes_s,clothes_t">
+  <article name="female_topper" townId="indian_post" slot="hat" scrip="875" coins="1" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="topper"/>
     <component cclass="female/hat_back" name="topper"/>
   </article>
 
-  <article name="female_feather_coronet" townId="indian_post" slot="hat" scrip="787" coins="0" colors="clothes_p,clothes_s,clothes_t">
+  <article name="female_feather_coronet" townId="indian_post" slot="hat" scrip="787" coins="1" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat_back" name="feather_coronet"/>
   </article>
 
