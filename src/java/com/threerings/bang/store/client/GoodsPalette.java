@@ -78,7 +78,7 @@ public class GoodsPalette extends IconPalette
 
         // now sort and display them
         Good[] goods = filtered.toArray(new Good[filtered.size()]);
-        Arrays.sort(goods);
+        Arrays.sort(goods, Good.BY_SCRIP_COST);
         for (int ii = 0; ii < goods.length; ii++) {
             GoodsIcon icon = oicons.get(goods[ii]);
             if (icon == null) {

@@ -3,8 +3,12 @@
 
 package com.threerings.bang.store.data;
 
+import java.util.Comparator;
+
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
+
+import com.samskivert.util.Comparators;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.io.SimpleStreamableObject;
@@ -26,6 +30,15 @@ import com.threerings.bang.util.DeploymentConfig;
 public abstract class Good extends SimpleStreamableObject
     implements DSet.Entry, Comparable<Good>
 {
+    /** Sorts goods by their scrip cost. */
+    public static final Comparator<Good> BY_SCRIP_COST = new Comparator<Good>() {
+        public int compare (Good g1, Good g2) {
+            return Comparators.combine(Comparators.compare(g2._priority, g1._priority),
+                                       Comparators.compare(g1.getScripCost(), g2.getScripCost()),
+                                       g1.getType().compareTo(g2.getType()));
+        }
+    };
+
     /** A constructor only used during serialization. */
     public Good ()
     {
@@ -137,8 +150,7 @@ public abstract class Good extends SimpleStreamableObject
      */
     public int getCoinCost (PlayerObject user)
     {
-        return (honorsGoldPass() && DeploymentConfig.usesCoins() && user.holdsGoldPass(_townId)) ?
-            0 :  _coinCost;
+        return (honorsGoldPass() && user.holdsGoldPass(_townId)) ? 0 :  _coinCost;
     }
 
     /**
