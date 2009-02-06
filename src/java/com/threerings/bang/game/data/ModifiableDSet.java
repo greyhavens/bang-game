@@ -8,8 +8,8 @@ import java.util.Iterator;
 import com.threerings.presents.dobj.DSet;
 
 /**
- * A {@link DSet} that permits local modifications in order to allow effects
- * to enact changes to distributed objects on both client and server.
+ * A {@link DSet} that permits local modifications in order to allow effects to enact changes to
+ * distributed objects on both client and server.
  */
 public class ModifiableDSet<T extends DSet.Entry> extends DSet<T>
 {
@@ -58,5 +58,11 @@ public class ModifiableDSet<T extends DSet.Entry> extends DSet<T>
     public T updateDirect (T entry)
     {
         return update(entry);
+    }
+
+    // from DSet
+    @SuppressWarnings("unchecked") @Override public ModifiableDSet<T> typedClone ()
+    {
+        return (ModifiableDSet<T>)super.typedClone();
     }
 }
