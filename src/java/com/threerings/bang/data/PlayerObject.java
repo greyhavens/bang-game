@@ -22,6 +22,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.DeploymentConfig;
 
 /**
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
@@ -276,7 +277,7 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsGoldPass (String townId)
     {
-        return holdsEquivalentItem(new GoldPass(-1, townId));
+        return DeploymentConfig.usesCoins() && holdsEquivalentItem(new GoldPass(-1, townId));
     }
 
     /**
@@ -284,8 +285,9 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsOneTime ()
     {
-        // we coopt the frontier town gold pass as the one-time pass
-        return holdsGoldPass(BangCodes.FRONTIER_TOWN);
+        return DeploymentConfig.usesOneTime() &&
+            // we coopt the frontier town gold pass as the one-time pass
+            holdsEquivalentItem(new GoldPass(-1, BangCodes.FRONTIER_TOWN));
     }
 
     /**
