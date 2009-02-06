@@ -43,6 +43,7 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.WeightClassUpgrade;
 
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.avatar.client.BuckleView;
 
@@ -125,7 +126,7 @@ public class GangInventory extends BDecoratedWindow
         ((GroupLayout)_icont.getLayoutManager()).setGap(10);
         _palette.setInspector(this);
 
-        if (_ctx.getUserObject().gangRank == LEADER_RANK) {
+        if (DeploymentConfig.usesCoins() && _ctx.getUserObject().gangRank == LEADER_RANK) {
             BContainer bcont = GroupLayout.makeVBox(GroupLayout.CENTER);
             bcont.setStyleClass("outfit_controls");
             ((GroupLayout)bcont.getLayoutManager()).setPolicy(GroupLayout.STRETCH);
