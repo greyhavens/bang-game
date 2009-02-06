@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -66,8 +66,13 @@ import com.threerings.util.StreamableHashMap;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.server.persist.LookRepository;
+import com.threerings.bang.gang.server.persist.GangMemberRecord;
+import com.threerings.bang.gang.server.persist.GangRepository;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.server.Match;
+import com.threerings.bang.store.data.CardPackGood;
+import com.threerings.bang.store.server.GoodsCatalog;
+import com.threerings.bang.store.server.Provider;
 
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
@@ -84,6 +89,7 @@ import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.EntryReplacedEvent;
 import com.threerings.bang.data.GoldPass;
 import com.threerings.bang.data.Handle;
@@ -94,8 +100,11 @@ import com.threerings.bang.data.PardnerInvite;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.data.Rating;
+import com.threerings.bang.data.Star;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.Warning;
+import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangCoinManager;
@@ -111,9 +120,6 @@ import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.PosterRecord;
 import com.threerings.bang.server.persist.PosterRepository;
 import com.threerings.bang.server.persist.RatingRepository;
-
-import com.threerings.bang.gang.server.persist.GangMemberRecord;
-import com.threerings.bang.gang.server.persist.GangRepository;
 
 import static com.threerings.bang.Log.log;
 
@@ -618,7 +624,7 @@ public class PlayerManager
                         0, buildRankings(posterPlayer.ratings.get(null))));
             for (int ii = 0; ii < SHOW_WEEKS; ii++) {
                 java.sql.Date week = Rating.getWeek(ii);
-                HashMap<String, Rating> map = posterPlayer.ratings.get(week);
+                Map<String, Rating> map = posterPlayer.ratings.get(week);
                 if (map != null && !map.isEmpty()) {
                     info.rankGroups.add(new PosterInfo.RankGroup(
                                 week.getTime(), buildRankings(map)));
@@ -661,7 +667,7 @@ public class PlayerManager
                                 0, buildRankings(_raterepo.loadRatings(_player.playerId, null))));
                     for (int ii = 0; ii < SHOW_WEEKS; ii++) {
                         java.sql.Date week = Rating.getWeek(ii);
-                        HashMap<String, Rating> map = _raterepo.loadRatings(_player.playerId, week);
+                        Map<String, Rating> map = _raterepo.loadRatings(_player.playerId, week);
                         if (map != null && !map.isEmpty()) {
                             info.rankGroups.add(new PosterInfo.RankGroup(
                                         week.getTime(), buildRankings(map)));
@@ -972,8 +978,8 @@ public class PlayerManager
     }
 
     // documentation inherited from PlayerProvider
-    public void bootPlayer (
-            ClientObject client, Handle handle, PlayerService.ConfirmListener listener)
+    public void bootPlayer (ClientObject client, Handle handle,
+                            PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)client;
@@ -1243,7 +1249,7 @@ public class PlayerManager
      * Converts a players {@link Rating}s records into ranking levels for inclusion in their poster
      * info.
      */
-    protected StreamableHashMap<String, Integer> buildRankings (HashMap<String, Rating> ratings)
+    protected StreamableHashMap<String, Integer> buildRankings (Map<String, Rating> ratings)
     {
         StreamableHashMap<String, Integer> map = new StreamableHashMap<String,Integer>();
         for (Rating rating : ratings.values()) {
@@ -1545,24 +1551,67 @@ public class PlayerManager
     /**
      * Helper function that gives a player a gold pass.
      */
-    protected void giveGoldPass (final PlayerObject user, String townId)
+    protected void giveGoldPass (final PlayerObject user, final String townId)
     {
-        final GoldPass pass = new GoldPass(user.playerId, townId);
+        final List<Item> items = Lists.newArrayList();
+        items.add(new GoldPass(user.playerId, townId));
+
+        // if we're a onetime deployment, the gold pass (which is the onetime pass) is accompanied
+        // by a bunch of bonus crap
+        if (DeploymentConfig.usesOneTime()) {
+            // two free bigshots
+            items.add(new BigShotItem(user.playerId, "frontier_town/codger"));
+            items.add(new BigShotItem(user.playerId, "indian_post/tricksterraven"));
+            // two free copper stars
+            items.add(new Star(user.playerId, BangUtil.getTownIndex(BangCodes.FRONTIER_TOWN),
+                               Star.Difficulty.MEDIUM));
+            items.add(new Star(user.playerId, BangUtil.getTownIndex(BangCodes.INDIAN_POST),
+                               Star.Difficulty.MEDIUM));
+        }
 
         // stick the new item in the database and in their inventory
         BangServer.invoker.postUnit(new RepositoryUnit("giveGoldPass") {
             public void invokePersist () throws Exception {
-                _itemrepo.insertItem(pass);
+                // grand them their gold pass and bonus items
+                for (Item item : items) {
+                    _itemrepo.insertItem(item);
+                }
+                // grant them their bonus scrip
+                _playrepo.grantScrip(user.playerId, GOLD_PASS_SCRIP_BONUS);
             }
             public void handleSuccess () {
-                user.addToInventory(pass);
-                BangServer.itemLog("gold_pass " + user.playerId + " t:" + pass.getTownId());
+                for (Item item : items) {
+                    user.addToInventory(item);
+                }
+                user.setScrip(user.scrip + GOLD_PASS_SCRIP_BONUS);
+                BangServer.itemLog("gold_pass " + user.playerId + " t:" + townId);
             }
             public void handleFailure (Exception err) {
-                log.warning("Failed to add gold pass to repository", "who", user.who(),
-                            "item", pass, err);
+                log.warning("Failed to grant gold pass and bonuses", "who", user.who(),
+                            "items", items, err);
             }
         });
+
+        // we also grant onetimers a 52 pack of cards which must be done more complexly
+        if (DeploymentConfig.usesOneTime()) {
+            InvocationService.ConfirmListener cl = new InvocationService.ConfirmListener() {
+                public void requestProcessed () {
+                    // noop!
+                }
+                public void requestFailed (String cause) {
+                    log.warning("Failed to grant gold pass cards", "who", user.who(),
+                                "cause", cause);
+                }
+            };
+            try {
+                CardPackGood pack = new CardPackGood(52, BangCodes.FRONTIER_TOWN, 0, 0);
+                Provider provider = _goods.getProvider(user, pack, null);
+                provider.setListener(cl);
+                _invoker.post(provider);
+            } catch (InvocationException ie) {
+                cl.requestFailed(ie.getMessage());
+            }
+        }
     }
 
     public static SpeakObject.ListenerOp _messageCounter = new SpeakObject.ListenerOp() {
@@ -1583,15 +1632,13 @@ public class PlayerManager
 
     /** Maps the names of users to updaters responsible for keeping their {@link PardnerEntry}s
      * up-to-date. */
-    protected HashMap<Handle, PardnerEntryUpdater> _updaters =
-        new HashMap<Handle, PardnerEntryUpdater>();
+    protected Map<Handle, PardnerEntryUpdater> _updaters = Maps.newHashMap();
 
     /** Keeps our {@link PardnerEntry}s up to date for remote players. */
     protected RemotePlayerWatcher<PardnerEntry> _pardwatcher;
 
     /** A light-weight cache of soft {@link PosterInfo} references. */
-    protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
-        new HashMap<Handle, SoftReference<PosterInfo>>();
+    protected Map<Handle, SoftReference<PosterInfo>> _posterCache = Maps.newHashMap();
 
     /** Keeps a record when players have played late night games. */
     protected IntIntMap _lateNighters = new IntIntMap();
@@ -1601,7 +1648,9 @@ public class PlayerManager
 
     // dependencies
     @Inject protected @AuthInvoker Invoker _authInvoker;
+    @Inject protected BangInvoker _invoker;
     @Inject protected ResourceManager _rsrcmgr;
+    @Inject protected GoodsCatalog _goods;
     @Inject protected BangCoinManager _coinmgr;
     @Inject protected BangCoinExchangeManager _coinexmgr;
     @Inject protected BangPeerManager _peermgr;
@@ -1639,4 +1688,7 @@ public class PlayerManager
 
     /** The number of back weeks to show on the wanted poster. */
     protected static final int SHOW_WEEKS = 4;
+
+    /** Bonus scrip granted to gold (and onetime) pass buyers. */
+    protected static final int GOLD_PASS_SCRIP_BONUS = 5000;
 }
