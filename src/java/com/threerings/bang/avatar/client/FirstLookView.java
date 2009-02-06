@@ -52,10 +52,8 @@ public class FirstLookView extends BContainer
         _status = status;
 
         // create our default clothing articles
-        _defarts[0] = ctx.getAvatarLogic().createDefaultClothing(
-            ctx.getUserObject(), true);
-        _defarts[1] = ctx.getAvatarLogic().createDefaultClothing(
-            ctx.getUserObject(), false);
+        _defarts[0] = ctx.getAvatarLogic().createDefaultClothing(ctx.getUserObject(), true);
+        _defarts[1] = ctx.getAvatarLogic().createDefaultClothing(ctx.getUserObject(), false);
 
         // create our user interface
         add(_avatar = new AvatarView(ctx, 2, true, false), BorderLayout.WEST);

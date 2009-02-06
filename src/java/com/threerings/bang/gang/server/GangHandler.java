@@ -1405,8 +1405,7 @@ public class GangHandler
                 throw new InvocationException(INTERNAL_ERROR);
             }
             articles[ii] = _alogic.createArticle(-1, catarts[ii], oart.zations);
-            if (articles[ii] == null) {
-                // an error will have already been logged
+            if (articles[ii] == null) { // an error will have already been logged
                 throw new InvocationException(INTERNAL_ERROR);
             }
             articles[ii].setGangId(_gangId);
