@@ -12,6 +12,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -74,6 +75,14 @@ public class Look extends SimpleStreamableObject
      */
     public AvatarInfo getAvatar (PlayerObject player)
     {
+        return getAvatar(player.who(), player.inventory);
+    }
+
+    /**
+     * Combines the aspect and article information into a full avatar fingerprint.
+     */
+    public AvatarInfo getAvatar (String who, DSet<Item> inventory)
+    {
         ArrayIntSet compids = new ArrayIntSet();
 
         // add the various aspects (don't add the global colorizations)
@@ -87,9 +96,9 @@ public class Look extends SimpleStreamableObject
             if (articles[ii] == 0) {
                 continue;
             }
-            Object item = player.inventory.get(articles[ii]);
+            Object item = inventory.get(articles[ii]);
             if (!(item instanceof Article)) {
-                log.warning("Invalid article referenced in look", "who", player.who(),
+                log.warning("Invalid article referenced in look", "who", who,
                             "look", this, "idx", ii, "item", item);
                 continue;
             }

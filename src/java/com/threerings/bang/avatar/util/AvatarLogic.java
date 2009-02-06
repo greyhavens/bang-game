@@ -660,8 +660,11 @@ public class AvatarLogic
             return null;
         }
         String type = article.townId + "/" + article.name;
-        return new Article(
-                playerId, article.slot, type, getComponentIds(article, zations), article.stop);
+        int[] compIds = getComponentIds(article, zations);
+        if (compIds == null) {
+            return null; // an error will have been logged
+        }
+        return new Article(playerId, article.slot, type, compIds, article.stop);
     }
 
     /**
@@ -680,8 +683,7 @@ public class AvatarLogic
      * Creates the default clothing article for the specified gender, with the specified
      * colorizations (which should have come from {@link #composeZation}.
      */
-    public Article createDefaultClothing (
-        PlayerObject user, boolean forMale, int zations)
+    public Article createDefaultClothing (PlayerObject user, boolean forMale, int zations)
     {
         // look up the starter article
         String prefix = forMale ? "male" : "female";
@@ -730,7 +732,11 @@ public class AvatarLogic
      */
     public BucklePart createBucklePart (int gangId, BucklePartCatalog.Part part, int zations)
     {
-        return new BucklePart(gangId, part.pclass.name, part.name, getComponentIds(part, zations));
+        int[] compIds = getComponentIds(part, zations);
+        if (compIds == null) {
+            return null; // an error will have been logged
+        }
+        return new BucklePart(gangId, part.pclass.name, part.name, compIds);
     }
 
     /**
@@ -809,6 +815,7 @@ public class AvatarLogic
             } catch (NoSuchComponentException nsce) {
                 log.warning("Article references unknown component", "article", article.name,
                             "cclass", comp.cclass, "name", comp.name);
+                return null; // abandon ship!
             }
         }
         return componentIds;
@@ -828,6 +835,7 @@ public class AvatarLogic
         } catch (NoSuchComponentException nsce) {
             log.warning("Buckle part does not correspond to component", "part", part.name,
                         "cclass", cclass);
+            return null; // abandon ship!
         }
         return componentIds;
     }

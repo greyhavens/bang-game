@@ -390,8 +390,11 @@ public class OutfitDialog extends BDecoratedWindow
         ArticleCatalog artcat = alogic.getArticleCatalog();
         for (OutfitArticle oart : _oarts.values()) {
             if (isMaleArticle(oart.article) == male) {
-                avatar = ArrayUtil.concatenate(
-                    avatar, alogic.getComponentIds(artcat.getArticle(oart.article), oart.zations));
+                int[] compIds = alogic.getComponentIds(
+                    artcat.getArticle(oart.article), oart.zations);
+                if (compIds != null) {
+                    avatar = ArrayUtil.concatenate(avatar, compIds);
+                }
             }
         }
         (male ? _mavatar : _favatar).setAvatar(new AvatarInfo(avatar));

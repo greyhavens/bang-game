@@ -3,6 +3,8 @@
 
 package com.threerings.bang.avatar.server;
 
+import java.util.Collections;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -17,13 +19,16 @@ import com.threerings.util.MessageBundle;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangServer;
@@ -272,6 +277,9 @@ public class BarberManager extends ShopManager
         // the article into the database
         look.articles = new int[AvatarLogic.SLOTS.length];
         final Article article = _alogic.createDefaultClothing(user, isMale, zations);
+        if (article == null) {
+            throw new InvocationException(INTERNAL_ERROR); // an error will have been logged
+        }
 
         // the client should prevent selection of non-starter components, but we check on the
         // server because we can't trust those bastards
@@ -285,53 +293,42 @@ public class BarberManager extends ShopManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // compute an avatar snapshot from their starter look
+        final AvatarInfo avatar = look.getAvatar(
+            user.who(), DSet.newDSet(Collections.<Item>singleton(article)));
+
         // do the deed!
-        _invoker.postUnit(new Invoker.Unit("createAvatar") {
-            public boolean invoke () {
-                try {
-                    // first configure their chosen handle
-                    if (!_playrepo.configurePlayer(user.playerId, handle, user.isMale)) {
-                        _error = AvatarCodes.ERR_DUP_HANDLE;
-                        return true;
-                    }
-
-                    // insert their default clothing article into the database
-                    _itemrepo.insertItem(article);
-
-                    // and fill its assigned item id into their default look
-                    for (int ii = 0; ii < look.articles.length; ii++) {
-                        if (AvatarLogic.SLOTS[ii].name.equals(
-                                article.getSlot())) {
-                            look.articles[ii] = article.getItemId();
-                        }
-                    }
-
-                    // finally insert their default look into the database
-                    _lookrepo.insertLook(user.playerId, look);
-
-                } catch (PersistenceException pe) {
-                    log.warning("Error creating avatar", "for", user.who(), "look", look, pe);
-                    _error = INTERNAL_ERROR;
+        _invoker.postUnit(new PersistingUnit("createAvatar", cl) {
+            public void invokePersistent () throws Exception {
+                // first configure their chosen handle
+                if (!_playrepo.configurePlayer(user.playerId, handle, user.isMale)) {
+                    throw new InvocationException(AvatarCodes.ERR_DUP_HANDLE);
                 }
-                return true;
+
+                // insert their default clothing article into the database
+                _itemrepo.insertItem(article);
+
+                // and fill its assigned item id into their default look
+                for (int ii = 0; ii < look.articles.length; ii++) {
+                    if (AvatarLogic.SLOTS[ii].name.equals(article.getSlot())) {
+                        look.articles[ii] = article.getItemId();
+                    }
+                }
+
+                // insert their default look into the database and update their snapshot
+                _lookrepo.insertLook(user.playerId, look);
+                _lookrepo.updateSnapshot(user.playerId, avatar.print);
             }
 
-            public void handleResult () {
-                if (_error != null) {
-                    cl.requestFailed(_error);
-                } else {
-                    user.addToLooks(look);
-                    Handle ohandle = user.handle;
-                    user.setHandle(handle);
-                    user.addToInventory(article);
-                    // register the player with their handle as we were unable
-                    // to do so when they logged on
-                    BangServer.locator.updatePlayer(user, ohandle);
-                    continueCreatingAvatar(user, look, cl);
-                }
+            public void handleSuccess () {
+                user.addToLooks(look);
+                Handle ohandle = user.handle;
+                user.setHandle(handle);
+                user.addToInventory(article);
+                // register the player with their handle as we didn't do so when they logged on
+                BangServer.locator.updatePlayer(user, ohandle);
+                super.handleSuccess(); // tell our confirm listener we're all done
             }
-
-            protected String _error;
         });
     }
 
@@ -339,43 +336,12 @@ public class BarberManager extends ShopManager
     public void selectLook (ClientObject caller, Look.Pose pose, String name)
     {
         PlayerObject user = (PlayerObject)caller;
-
-        // sanity check
-        Look look = user.looks.get(name);
+        Look look = user.looks.get(name); // sanity check
         if (look == null) {
             log.warning("Player requested to select unknown look", "who", user.who(), "look", name);
             return;
         }
-
         user.setPosesAt(name, pose.ordinal());
-    }
-
-    /**
-     * Inserts the player's first snapshot.
-     */
-    protected void continueCreatingAvatar (
-        final PlayerObject user, final Look look, final AvatarService.ConfirmListener cl)
-    {
-        final AvatarInfo avatar = look.getAvatar(user);
-        _invoker.postUnit(new Invoker.Unit("continueCreatingAvatar") {
-            public boolean invoke () {
-                try {
-                    _lookrepo.updateSnapshot(user.playerId, avatar.print);
-                } catch (PersistenceException pe) {
-                    log.warning("Error updating snapshot", "for", user.who(), "look", look, pe);
-                    _error = INTERNAL_ERROR;
-                }
-                return true;
-            }
-            public void handleResult () {
-                if (_error != null) {
-                    cl.requestFailed(_error);
-                } else {
-                    cl.requestProcessed();
-                }
-            }
-            protected String _error;
-        });
     }
 
     @Override // from ShopManager
