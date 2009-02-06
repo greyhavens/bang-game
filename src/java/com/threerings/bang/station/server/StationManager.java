@@ -71,8 +71,7 @@ public class StationManager extends ShopManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // deliver the ticket to the player; all the heavy lifting is handled by the financial
-        // action
+        // deliver the ticket to the player; heavy lifting is handled by the financial action
         _invoker.post(new BuyTicketAction(user, ticket, listener));
     }
 

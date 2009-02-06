@@ -9,8 +9,7 @@ import com.threerings.bang.station.data.StationCodes;
 import com.threerings.bang.util.DeploymentConfig;
 
 /**
- * Represents a train ticket purchased by the player giving them access to a
- * particular town.
+ * Represents a train ticket purchased by the player giving them access to a particular town.
  */
 public class TrainTicket extends Item
 {
@@ -55,19 +54,15 @@ public class TrainTicket extends Item
      */
     public int getCoinCost (PlayerObject user)
     {
-        if (DeploymentConfig.usesOneTime() ||
-            user.holdsGoldPass(BangCodes.TOWN_IDS[Math.max(0, getTownIndex()-1)])) {
-            return 0;
-        } else {
-            return StationCodes.TICKET_COINS[getTownIndex()];
-        }
+        int ptidx = Math.max(0, getTownIndex()-1);
+        return (DeploymentConfig.usesOneTime() || user.holdsGoldPass(BangCodes.TOWN_IDS[ptidx])) ?
+            0 : StationCodes.TICKET_COINS[getTownIndex()];
     }
 
     @Override // documentation inherited
     public String getName ()
     {
-        String msg = MessageBundle.qualify(
-            BangCodes.BANG_MSGS, "m." + getTownId());
+        String msg = MessageBundle.qualify(BangCodes.BANG_MSGS, "m." + getTownId());
         msg = MessageBundle.compose(
             getItemId() == 0 ? "m.temporary_ticket" : "m.train_ticket", msg);
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
@@ -76,10 +71,9 @@ public class TrainTicket extends Item
     @Override // documentation inherited
     public String getTooltip (PlayerObject user)
     {
-        String msg = MessageBundle.qualify(
-            BangCodes.BANG_MSGS, "m." + getTownId());
+        String msg = MessageBundle.qualify(BangCodes.BANG_MSGS, "m." + getTownId());
         msg = MessageBundle.compose(
-                (getItemId() == 0 ? "m.temporary_" : "m.") + "train_ticket_tip", msg);
+            (getItemId() == 0 ? "m.temporary_" : "m.") + "train_ticket_tip", msg);
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 
@@ -92,8 +86,7 @@ public class TrainTicket extends Item
     @Override // documentation inherited
     public boolean isEquivalent (Item other)
     {
-        return super.isEquivalent(other) &&
-            ((TrainTicket)other)._townIndex == _townIndex;
+        return super.isEquivalent(other) && ((TrainTicket)other)._townIndex == _townIndex;
     }
 
     protected int _townIndex;

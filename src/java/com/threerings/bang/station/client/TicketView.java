@@ -20,6 +20,7 @@ import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.FreeTicket;
+import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.station.data.StationCodes;
@@ -92,10 +93,8 @@ public class TicketView extends BContainer
                     BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
                     row.add(new BLabel(msgs.get("l.price"), "price_label"));
                     MoneyLabel cost = new MoneyLabel(ctx, true);
-                    int prevTownIdx = Math.max(0, ticketTownIdx - 1);
-                    int coinCost =
-                        ctx.getUserObject().holdsGoldPass(BangCodes.TOWN_IDS[prevTownIdx]) ?
-                            0 : StationCodes.TICKET_COINS[ticketTownIdx];
+                    int coinCost = new TrainTicket(-1, ticketTownIdx).
+                        getCoinCost(ctx.getUserObject());
                     cost.setMoney(StationCodes.TICKET_SCRIP[ticketTownIdx], coinCost, false);
                     row.add(cost);
                     add(row, new Rectangle(0, 80, 160, 23));
@@ -127,11 +126,10 @@ public class TicketView extends BContainer
             _buy.setEnabled(false);
 
             // fire off a request to buy the ticket
-            _stobj.service.buyTicket(
-                _ctx.getClient(), new StationService.ConfirmListener() {
+            _stobj.service.buyTicket(_ctx.getClient(), new StationService.ConfirmListener() {
                 public void requestProcessed () {
-                    _status.setStatus(StationCodes.STATION_MSGS,
-                                      getTownMessage("m.bought_ticket"), true);
+                    _status.setStatus(
+                        StationCodes.STATION_MSGS, getTownMessage("m.bought_ticket"), true);
                 }
                 public void requestFailed (String reason) {
                     _status.setStatus(StationCodes.STATION_MSGS, reason, true);
