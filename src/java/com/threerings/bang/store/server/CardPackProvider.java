@@ -21,8 +21,7 @@ import com.threerings.bang.store.data.CardPackGood;
 import com.threerings.bang.store.data.Good;
 
 /**
- * Creates and delivers cards to a player when they buy a pack of cards in
- * the General Store.
+ * Creates and delivers cards to a player when they buy a pack of cards in the General Store.
  */
 public class CardPackProvider extends Provider
 {
@@ -37,9 +36,8 @@ public class CardPackProvider extends Provider
             _cards[ii] = Card.selectRandomCard(good.getTownId(), null, -1);
         }
 
-        // now determine which of those cards are already held by the player
-        // and which require the creation of new CardItem inventory items and
-        // add the cards to the appropriate items
+        // now determine which of those cards are already held by the player and which require the
+        // creation of new CardItem inventory items and add the cards to the appropriate items
         HashMap<String,CardItem> have = new HashMap<String,CardItem>();
         for (Item item : user.inventory) {
             if (item instanceof CardItem) {
@@ -82,15 +80,14 @@ public class CardPackProvider extends Provider
     protected void rollbackPersistentAction ()
         throws PersistenceException
     {
-        // restore the original items; removing them from the items map in the
-        // process
+        // restore the original items; removing them from the items map in the process
         for (CardItem item : _originals) {
             _itemrepo.updateItem(item);
             _items.remove(item.getType());
         }
 
-        // now the items remaining in the mapping are all newly created; delete
-        // those which have an item id associated with them
+        // now the items remaining in the mapping are all newly created; delete those which have an
+        // item id associated with them
         for (CardItem item : _items.values()) {
             if (item.getItemId() != 0) {
                 _itemrepo.deleteItem(
@@ -111,9 +108,9 @@ public class CardPackProvider extends Provider
             }
         }
 
-        // send a custom message to their user object detailing the cards
-        // they just received so that they can be nicely displayed
-        _user.postMessage(CardPackGood.PURCHASED_CARDS, new Object[] { _cards});
+        // send a custom message to their user object detailing the cards they just received so
+        // that they can be nicely displayed
+        _user.postMessage(CardPackGood.PURCHASED_CARDS, new Object[] { _cards });
 
         super.actionCompleted();
     }
@@ -121,12 +118,10 @@ public class CardPackProvider extends Provider
     /** The cards that will be delivered. */
     protected String[] _cards;
 
-    /** Inventory items that will be added or updated as a result of this
-     * purchase. */
+    /** Inventory items that will be added or updated as a result of this purchase. */
     protected HashMap<String,CardItem> _items = new HashMap<String,CardItem>();
 
-    /** Inventory items that were be updated as a result of this purchase in
-     * their pre-updated form. */
+    /** Inventory items updated as a result of this purchase in their pre-updated form. */
     protected ArrayList<CardItem> _originals = new ArrayList<CardItem>();
 
     // dependencies
