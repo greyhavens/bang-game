@@ -467,7 +467,7 @@
   </target>
 
   <!-- builds the avatar component bundles -->
-  <target name="avatars" depends="catalogs">
+  <target name="avatars" depends="config,catalogs">
     <taskdef name="metabundle" classpathref="tool.classpath"
              classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
     <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
