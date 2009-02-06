@@ -35,6 +35,10 @@ public class AspectCatalog
             aspects.put(comp.name, comp);
         }
 
+        @Override public String toString () {
+            return name;
+        }
+
         /** Increase this value when object's serialized state is impacted by a
          * class change (modification of fields, inheritance). */
         private static final long serialVersionUID = 1;
@@ -54,6 +58,10 @@ public class AspectCatalog
 
         /** The coin cost associated with this aspect. */
         public int coins;
+
+        @Override public String toString () {
+            return name;
+        }
 
         /** Increase this value when object's serialized state is impacted by a
          * class change (modification of fields, inheritance). */
