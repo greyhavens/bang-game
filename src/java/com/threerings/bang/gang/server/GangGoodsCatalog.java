@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 
@@ -34,6 +37,7 @@ import static com.threerings.bang.Log.log;
  * Enumerates the various goods that can be purchased from the gang store and associates them
  * with providers that are used to actually create and deliver the goods when purchased.
  */
+@Singleton
 public class GangGoodsCatalog
     implements GangCodes
 {
@@ -41,7 +45,7 @@ public class GangGoodsCatalog
      * Creates a gang goods catalog, loading up the various bits necessary to create buckle
      * parts and such.
      */
-    public GangGoodsCatalog (AvatarLogic alogic)
+    @Inject public GangGoodsCatalog (AvatarLogic alogic)
     {
         _alogic = alogic;
 

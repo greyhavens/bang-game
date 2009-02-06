@@ -6,6 +6,9 @@ package com.threerings.bang.store.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 
@@ -44,13 +47,14 @@ import static com.threerings.bang.Log.log;
  * Enumerates the various goods that can be purchased from the General Shop and associates them
  * with providers that are used to actually create and deliver the goods when purchased.
  */
+@Singleton
 public class GoodsCatalog
 {
     /**
      * Creates a goods catalog, loading up the various bits necessary to create articles of
      * clothing and accessories for avatars.
      */
-    public GoodsCatalog (AvatarLogic alogic)
+    @Inject public GoodsCatalog (AvatarLogic alogic)
     {
         _alogic = alogic;
 

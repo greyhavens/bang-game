@@ -17,7 +17,6 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangServer;
@@ -80,15 +79,6 @@ public class StoreManager extends ShopManager
     }
 
     @Override // from PlaceManager
-    protected void didInit ()
-    {
-        super.didInit();
-
-        // create our goods catalog
-        _goods = new GoodsCatalog(_alogic);
-    }
-
-    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();
@@ -138,12 +128,11 @@ public class StoreManager extends ShopManager
     }
 
     protected StoreObject _stobj;
-    protected GoodsCatalog _goods;
     protected ArrayList<Good> _pending = new ArrayList<Good>();
 
     // dependencies
     @Inject protected BangInvoker _invoker;
-    @Inject protected AvatarLogic _alogic;
+    @Inject protected GoodsCatalog _goods;
 
     protected static final long UPDATE_GOODS_INTERVAL = 15 * 60 * 1000L;
 }

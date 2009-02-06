@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.data.InvocationCodes;
 
@@ -34,6 +37,7 @@ import static com.threerings.bang.Log.log;
  * Enumerates the various goods that can be rented by a gang for its members and associates them
  * with providers that are used to actually create and deliver the goods when purchased.
  */
+@Singleton
 public class RentalGoodsCatalog
 {
     public static class RentalItemProvider extends GangItemProvider {
@@ -55,7 +59,7 @@ public class RentalGoodsCatalog
      * Creates a rental good catalog, loading up the various bits necessary to create articles of
      * clothing and accessories for players.
      */
-    public RentalGoodsCatalog (AvatarLogic alogic)
+    @Inject public RentalGoodsCatalog (AvatarLogic alogic)
     {
         _alogic = alogic;
 

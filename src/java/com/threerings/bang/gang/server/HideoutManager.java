@@ -38,7 +38,6 @@ import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.server.BarberManager;
-import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.server.MatchHostManager;
@@ -555,16 +554,6 @@ public class HideoutManager extends MatchHostManager
     }
 
     @Override // from PlaceManager
-    protected void didInit ()
-    {
-        super.didInit();
-
-        // create our goods catalog
-        _goods = new GangGoodsCatalog(_alogic);
-        _rentalGoods = new RentalGoodsCatalog(_alogic);
-    }
-
-    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();
@@ -734,13 +723,12 @@ public class HideoutManager extends MatchHostManager
         }
     }
 
-    protected GangGoodsCatalog _goods;
-    protected RentalGoodsCatalog _rentalGoods;
     protected HideoutObject _hobj;
     protected Interval _rankval;
 
     // dependencies
-    @Inject protected AvatarLogic _alogic;
+    @Inject protected GangGoodsCatalog _goods;
+    @Inject protected RentalGoodsCatalog _rentalGoods;
     @Inject protected BangCoinExchangeManager _coinexmgr;
     @Inject protected BangPeerManager _peermgr;
     @Inject protected GangRepository _gangrepo;
