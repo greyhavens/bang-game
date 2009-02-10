@@ -104,7 +104,6 @@ import com.threerings.bang.data.Star;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.Warning;
 import com.threerings.bang.util.BangUtil;
-import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangCoinManager;
@@ -324,7 +323,7 @@ public class PlayerManager
                     _coinmgr.grantRewardCoins(player, coins);
 
                 }  else if (data[1].equalsIgnoreCase("billing") &&
-                        data[2].equalsIgnoreCase("goldpass")) {
+                            data[2].equalsIgnoreCase("goldpass")) {
                     String townId = null;
                     for (String id : BangCodes.TOWN_IDS) {
                         if (id.equals(data[3])) {
@@ -338,7 +337,12 @@ public class PlayerManager
 
                     log.info("Granting Gold Pass reward", "account", player.username,
                              "townId", townId);
-                    giveGoldPass(player, townId);
+                    giveGoldPass(player, townId, false);
+
+                }  else if (data[1].equalsIgnoreCase("billing") &&
+                            data[2].equalsIgnoreCase("wrangler")) {
+                    log.info("Granting Wrangler Pass reward", "account", player.username);
+                    giveGoldPass(player, BangCodes.FRONTIER_TOWN, true);
                 }
 
             } catch (Exception e) {
@@ -1551,14 +1555,13 @@ public class PlayerManager
     /**
      * Helper function that gives a player a gold pass.
      */
-    protected void giveGoldPass (final PlayerObject user, final String townId)
+    protected void giveGoldPass (final PlayerObject user, final String townId, boolean addBonuses)
     {
         final List<Item> items = Lists.newArrayList();
         items.add(new GoldPass(user.playerId, townId));
 
-        // if we're a onetime deployment, the gold pass (which is the onetime pass) is accompanied
-        // by a bunch of bonus crap
-        if (DeploymentConfig.usesOneTime()) {
+        // if specified, we give a bunch of bonus items to the pass recipient
+        if (addBonuses) {
             // two free bigshots
             items.add(new BigShotItem(user.playerId, "frontier_town/codger"));
             items.add(new BigShotItem(user.playerId, "indian_post/tricksterraven"));
@@ -1592,8 +1595,8 @@ public class PlayerManager
             }
         });
 
-        // we also grant onetimers a 52 pack of cards which must be done more complexly
-        if (DeploymentConfig.usesOneTime()) {
+        // bonuses also include a 52 pack of cards which must be done more complexly
+        if (addBonuses) {
             InvocationService.ConfirmListener cl = new InvocationService.ConfirmListener() {
                 public void requestProcessed () {
                     // noop!
