@@ -26,10 +26,13 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.bang.client.NeedPremiumView;
 import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.SaloonCodes;
@@ -91,7 +94,11 @@ public class ParlorList extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         if ("create".equals(event.getAction())) {
-            _ctx.getBangClient().displayPopup(new CreateParlorDialog(_ctx, _salobj), true);
+            if (DeploymentConfig.usesOneTime() && !_ctx.getUserObject().holdsOneTime()) {
+                NeedPremiumView.maybeShowNeedPremium(_ctx, BangCodes.E_LACK_ONETIME);
+            } else {
+                _ctx.getBangClient().displayPopup(new CreateParlorDialog(_ctx, _salobj), true);
+            }
 
         } else if ("enter".equals(event.getAction())) {
             final BButton btn = (BButton)event.getSource();
