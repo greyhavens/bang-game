@@ -191,7 +191,7 @@ public class TutorialConfig
     public String card;
 
     /** The scrip reward at the completion of the tutorial. */
-    public int scrip = 65;
+    public int scrip = 130;
 
     /** Returns an array containing the actions for this tutorial. */
     public Action getAction (int index)
