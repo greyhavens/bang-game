@@ -111,6 +111,7 @@ public class BangServer extends CrowdServer
             AvatarLogic alogic;
             try {
                 aarepo = new AccountActionRepository(conprov);
+                rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
                 alogic = new AvatarLogic(rsrcmgr, new BundledComponentRepository(
                     rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET));
             } catch (Exception e) {
@@ -293,9 +294,6 @@ public class BangServer extends CrowdServer
                 return BangClientResolver.class;
             }
         });
-
-        // create our resource manager and other resource bits
-        _rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
 
         // create our various supporting managers
         playmgr = _playmgr;
