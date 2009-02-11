@@ -213,6 +213,7 @@ public abstract class MatchHostManager extends ShopManager
         case NOT_READY:
             // if the match is queued to be started and is no longer ready, cancel its starter
             match.setStarting(false);
+            break;
         }
     }
 
