@@ -13,6 +13,13 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <filter>
+    <filter-name>gwtfilter</filter-name>
+    <filter-class>
+      com.threerings.underwire.web.server.GWTEncodingFilter
+    </filter-class>
+  </filter>
+
   <servlet-mapping>
     <servlet-name>underdata</servlet-name>
     <url-pattern>/data</url-pattern>
