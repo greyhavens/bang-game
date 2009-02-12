@@ -13,6 +13,11 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <servlet-mapping>
+    <servlet-name>underdata</servlet-name>
+    <url-pattern>/data</url-pattern>
+  </servlet-mapping>
+
   <filter>
     <filter-name>gwtfilter</filter-name>
     <filter-class>
@@ -20,10 +25,10 @@
     </filter-class>
   </filter>
 
-  <servlet-mapping>
-    <servlet-name>underdata</servlet-name>
+  <filter-mapping>
+    <filter-name>gwtfilter</filter-name>
     <url-pattern>/data</url-pattern>
-  </servlet-mapping>
+  </filter-mapping>
 
   <welcome-file-list>
     <welcome-file>index.xhtml</welcome-file>
