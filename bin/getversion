@@ -15,7 +15,7 @@ my $root_url = shift or die $usage;
 # enumerate the Proguard .map files and find the most recent one for which we
 # have a published client
 my $code_ver;
-foreach $pmap (reverse sort glob("$root/etc/proguard/??????????.map")) {
+foreach $pmap (reverse sort glob("$root/etc/proguard/??????????????.map")) {
     my ($version) = ($pmap =~ m/(\d+).map/);
     my $code_url = "$root_url/$client_ident/$version/getdown.txt";
     # print "Checking '$pmap' ($code_url)...\n";
