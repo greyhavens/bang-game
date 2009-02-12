@@ -30,6 +30,7 @@ import com.threerings.presents.annotation.AuthInvoker;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.net.AuthRequest;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.ClientResolver;
@@ -101,6 +102,7 @@ public class BangServer extends CrowdServer
             // server is ready to do database operations; not initializing it now ensures that no
             // one sneaks any database manipulations into the dependency resolution phase)
             bind(PersistenceContext.class).toInstance(new PersistenceContext());
+            bind(PeerManager.class).to(BangPeerManager.class);
             bind(ReportManager.class).to(BangReportManager.class);
             bind(ChatProvider.class).to(BangChatProvider.class);
             bind(Authenticator.class).to(ServerConfig.getAuthenticator());
