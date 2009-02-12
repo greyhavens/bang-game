@@ -351,8 +351,7 @@ public class ForestGuardians extends Scenario
         _bangmgr.deployEffect(-1, new RobotWaveEffect(++_wave, _difficulty));
 
         // notify the logging robot delegate
-        _logrobdel.waveStarted(
-            bangobj, _wave, _difficulty, _treedel.getWaveTrees(), _treesGrown);
+        _logrobdel.waveStarted(bangobj, _wave, _difficulty, _treedel.getWaveTrees(), _treesGrown);
     }
 
     /**

@@ -366,7 +366,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     protected LoggingRobotLogic _logic;
 
     /** The trees that are on the board during the current wave. */
-    protected List<TreeBed> _ctrees;
+    protected List<TreeBed> _ctrees = Lists.newArrayList();
 
     /** The number of living robots of each type and the target numbers. */
     protected int[] _living = new int[LoggingRobot.UNIT_TYPES.length],
