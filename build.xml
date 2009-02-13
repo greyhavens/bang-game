@@ -1054,8 +1054,6 @@
       <fileset dir="${deploy.dir}">
         <include name="*.jar"/>
         <include name="*.properties"/>
-        <!-- We skip build.properties so that we can include it in its own package. -->
-        <exclude name="build.properties"/>
         <!-- We skip build_settings.properties since it's only needed at build time. -->
         <exclude name="build_settings.properties"/>
       </fileset>
