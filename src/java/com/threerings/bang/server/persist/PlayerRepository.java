@@ -452,8 +452,7 @@ public class PlayerRepository extends JORARepository
     {
         if (amount <= 0) {
             throw new PersistenceException(
-                "Illegal scrip " + type + " [where=" + where +
-                ", amount=" + amount + "]");
+                "Illegal scrip " + type + " [where=" + where + ", amount=" + amount + "]");
         }
 
         String action = type.equals("grant") ? "+" : "-";
