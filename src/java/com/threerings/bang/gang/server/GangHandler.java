@@ -1164,8 +1164,7 @@ public class GangHandler
                 return "m.gang_member_reimbursement";
             }
 
-            protected String persistentAction ()
-                throws PersistenceException {
+            protected String persistentAction () throws PersistenceException {
                 if (_coinCost > 0) {
                     _playerAccount = _playrepo.getAccountName(entry.playerId);
                 }
@@ -1180,28 +1179,24 @@ public class GangHandler
                 }
                 return null;
             }
-            protected void spendCash ()
-                throws PersistenceException {
+            protected void spendCash () throws PersistenceException {
                 super.spendCash();
                 if (_scripCost > 0) {
                     _playrepo.grantScrip(entry.playerId, _scripCost);
                 }
             }
-            protected void grantCash ()
-                throws PersistenceException {
+            protected void grantCash () throws PersistenceException {
                 super.grantCash();
                 if (_scripCost > 0) {
                     _playrepo.spendScrip(entry.playerId, _scripCost);
                 }
             }
-            protected boolean spendCoins (int reservationId)
-                throws PersistenceException {
+            protected boolean spendCoins (int reservationId) throws PersistenceException {
                 return _coinmgr.getCoinRepository().transferCoins(
                     reservationId, _playerAccount, CoinTransaction.GANG_MEMBER_REIMBURSEMENT,
                     "m.gang_member_reimbursement", "m.gang_member_reimbursement");
             }
-            protected void rollbackPersistentAction ()
-                throws PersistenceException {
+            protected void rollbackPersistentAction () throws PersistenceException {
                 if (_deleting) {
                     // this should never happen, because the only thing that can cause this is if
                     // we fail to transfer the coins, and we won't be transferring any coins to the
