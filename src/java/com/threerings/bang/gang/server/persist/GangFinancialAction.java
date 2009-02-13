@@ -42,8 +42,10 @@ public abstract class GangFinancialAction extends FinancialAction
             }
             break;
         case ONETIME:
-            // it's not possible for a gang to be a wrangler
-            return BangCodes.E_LACK_ONETIME;
+            // no gang financial actions should involve coins on a onetime deployment
+            if (_coinCost > 0) {
+                return BangCodes.E_LACK_ONETIME;
+            }
         }
         if (_gang.aces < _aceCost) {
             return BangCodes.E_INSUFFICIENT_ACES;
