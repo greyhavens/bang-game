@@ -854,6 +854,35 @@ public class BangManager extends GameManager
     }
 
     @Override // documentation inherited
+    protected void didInit ()
+    {
+        super.didInit();
+
+        // set up our intervals (now _omgr is non-null)
+        _ticker = new Interval(_omgr) {
+            public void expired () {
+                // cope if we've been ended and destroyed since we were queued up for execution
+                if (!_bangobj.isActive() || _bangobj.state != BangObject.IN_PLAY) {
+                    return;
+                }
+
+                // reset the extra tick time and update the game's tick counter
+                int nextTick = (_bangobj.tick + 1) % Short.MAX_VALUE;
+                _extraTickTime = 0L;
+                _bangobj.tick((short)nextTick);
+
+                // queue up the next tick
+                long tickTime = Math.round(_scenario.getTickTime(_bconfig, _bangobj) *
+                                           _bconfig.speed.getAdjustment());
+                tickTime += _extraTickTime;
+                _ticker.schedule(tickTime);
+                _nextTickTime = System.currentTimeMillis() + tickTime;
+            }
+        };
+        _preGameTimer = new PreGameTimer();
+    }
+
+    @Override // documentation inherited
     protected void didStartup ()
     {
         super.didStartup();
@@ -1145,7 +1174,8 @@ public class BangManager extends GameManager
             break;
 
         default:
-            ScenarioInfo info = ScenarioInfo.getScenarioInfo(_bconfig.getScenario(_bangobj.roundId));
+            ScenarioInfo info =
+                ScenarioInfo.getScenarioInfo(_bconfig.getScenario(_bangobj.roundId));
             _bangobj.setScenario(info);
             String sclass = info.getScenarioClass();
             try {
@@ -3249,26 +3279,7 @@ public class BangManager extends GameManager
     }
 
     /** Triggers our board tick once every N seconds. */
-    protected Interval _ticker = new Interval(_omgr) {
-        public void expired () {
-            // cope if the game has been ended and destroyed since we were queued up for execution
-            if (!_bangobj.isActive() || _bangobj.state != BangObject.IN_PLAY) {
-                return;
-            }
-
-            // reset the extra tick time and update the game's tick counter
-            int nextTick = (_bangobj.tick + 1) % Short.MAX_VALUE;
-            _extraTickTime = 0L;
-            _bangobj.tick((short)nextTick);
-
-            // queue up the next tick
-            long tickTime = Math.round(_scenario.getTickTime(_bconfig, _bangobj) *
-                                             _bconfig.speed.getAdjustment());
-            tickTime += _extraTickTime;
-            _ticker.schedule(tickTime);
-            _nextTickTime = System.currentTimeMillis() + tickTime;
-        }
-    };
+    protected Interval _ticker;
 
     /** Handles post-processing when effects are applied. */
     protected Effect.Observer _effector = new Effect.Observer() {
@@ -3456,7 +3467,7 @@ public class BangManager extends GameManager
     protected PointSet _moves = new PointSet(), _attacks = new PointSet();
 
     /** Used to resign players if they do not make a selection during the pre-game phase. */
-    protected PreGameTimer _preGameTimer = new PreGameTimer();
+    protected PreGameTimer _preGameTimer;
 
     /** Used to track the locations where players can start. */
     protected Piece[] _starts;
