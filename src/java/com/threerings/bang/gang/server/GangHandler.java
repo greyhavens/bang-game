@@ -1287,7 +1287,7 @@ public class GangHandler
             public void invokePersistent () throws Exception {
                 // if we're not making the target a member, make sure they have onetime status
                 if (rank != GangCodes.MEMBER_RANK && DeploymentConfig.usesOneTime()) {
-                    if (_itemrepo.holdsGoldPass(entry.playerId)) {
+                    if (!_itemrepo.holdsGoldPass(entry.playerId)) {
                         throw new InvocationException(GANG_MSGS, E_MEMBER_LACKS_ONETIME);
                     }
                 }
