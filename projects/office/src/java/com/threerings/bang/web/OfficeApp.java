@@ -27,6 +27,7 @@ import com.threerings.user.OOOUserManager;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BangStatRepository;
+import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerStatRepository;
 
 import static com.threerings.bang.Log.log;
@@ -60,6 +61,14 @@ public class OfficeApp extends Application
         return _statrepo;
     }
 
+    /**
+     * Returns a reference to the item repository.
+     */
+    public ItemRepository getItemRepository ()
+    {
+        return _itemrepo;
+    }
+
     @Override // from Application
     public void shutdown ()
     {
@@ -84,6 +93,7 @@ public class OfficeApp extends Application
             // create our repositories
             _playrepo = new PlayerStatRepository(_conprov);
             _statrepo = new BangStatRepository(_perCtx);
+            _itemrepo = new ItemRepository(_conprov);
 
             // initialize our repositories, run any migrations, etc.
             _perCtx.initializeRepositories(true);
@@ -141,6 +151,7 @@ public class OfficeApp extends Application
 
     protected PlayerStatRepository _playrepo;
     protected BangStatRepository _statrepo;
+    protected ItemRepository _itemrepo;
 
     /** Pay no attention to the man behind the curtain frobbing static initializers. */
     protected static final StatType INIT_STATS = StatType.UNUSED;

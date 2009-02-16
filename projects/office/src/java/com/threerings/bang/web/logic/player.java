@@ -71,6 +71,9 @@ public class player extends AdminLogic
                 }
             });
             ctx.put("stats", stats);
+
+            // load up and display their inventory
+            ctx.put("items", app.getItemRepository().loadItems(player.playerId));
         }
     }
 }
