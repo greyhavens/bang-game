@@ -42,10 +42,9 @@ public abstract class GangFinancialAction extends FinancialAction
             }
             break;
         case ONETIME:
-            // no gang financial actions should involve coins on a onetime deployment
-            if (_coinCost > 0) {
-                return BangCodes.E_LACK_ONETIME;
-            }
+            // we ignore coin costs on gang financial actions as the buyer is always a leader who
+            // holds a onetime pass
+            break;
         }
         if (_gang.aces < _aceCost) {
             return BangCodes.E_INSUFFICIENT_ACES;
