@@ -24,8 +24,8 @@ import com.threerings.bang.gang.util.GangUtil;
 public abstract class GangGoodProvider extends GangFinancialAction
 {
     /**
-     * Creates and initializes the goods provider with the receiving gang
-     * and the good to be created and delivered.
+     * Creates and initializes the goods provider with the receiving gang and the good to be
+     * created and delivered.
      */
     protected GangGoodProvider (
         GangObject gang, Handle handle, boolean admin, GangGood good, Object[] args)
@@ -61,12 +61,10 @@ public abstract class GangGoodProvider extends GangFinancialAction
         throws PersistenceException
     {
         // insert a history entry
-        _entryId = _gangrepo.insertHistoryEntry(_gang.gangId,
-            MessageBundle.compose(
-                getHistoryLogKey(),
-                MessageBundle.taint(_handle),
-                _good.getName(),
-                GangUtil.getMoneyDesc(_scripCost, _coinCost, _aceCost)));
+        final String msg = MessageBundle.compose(
+            getHistoryLogKey(), MessageBundle.taint(_handle), _good.getName(),
+            GangUtil.getMoneyDesc(_scripCost, _coinCost, _aceCost));
+        _entryId = _gangrepo.insertHistoryEntry(_gang.gangId, msg);
         _gangmgr.incLeaderLevel(_gang, _handle);
         return null;
     }

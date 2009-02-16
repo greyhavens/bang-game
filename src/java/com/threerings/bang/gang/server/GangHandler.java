@@ -1521,8 +1521,7 @@ public class GangHandler
         verifyIsLeader(handle);
 
         // create and start up the provider
-        GangGoodProvider provider = _hideoutmgr.getGoodProvider(
-            this, handle, admin, type, args);
+        GangGoodProvider provider = _hideoutmgr.getGoodProvider(this, handle, admin, type, args);
         provider.setListener(listener);
         _invoker.post(provider);
     }

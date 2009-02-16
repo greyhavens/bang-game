@@ -149,8 +149,7 @@ public class HideoutManager extends MatchHostManager
     }
 
     /**
-     * Attempts to create a {@link GangGoodProvider} to rent a good for the specified
-     * gang.
+     * Attempts to create a {@link GangGoodProvider} to rent a good for the specified gang.
      */
     public GangGoodProvider getRentalGoodProvider (
         GangHandler gang, Handle handle, boolean admin, String type, Object[] args)
