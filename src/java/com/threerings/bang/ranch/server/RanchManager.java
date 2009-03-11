@@ -56,6 +56,14 @@ public class RanchManager extends ShopManager
             log.warning("Requested to recruit bogus unit", "who", user.who(), "type", type);
             throw new InvocationException(INTERNAL_ERROR);
         }
+        if (config.rank != UnitConfig.Rank.BIGSHOT) {
+            log.warning("Requested to recruit non-bigshot", "who", user.who(), "type", type);
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        if (config.scripCost <= 0) {
+            log.warning("Requested to recruit bogus bigshot", "who", user.who(), "type", type);
+            throw new InvocationException(INTERNAL_ERROR);
+        }
 
         // make sure this big shot is available for sale in this town
         if (!ListUtil.contains(UnitConfig.getTownUnits(user.townId), config)) {
