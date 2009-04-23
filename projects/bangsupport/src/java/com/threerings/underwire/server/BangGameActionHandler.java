@@ -15,8 +15,7 @@ import com.threerings.bang.server.persist.PlayerRepository;
  */
 public class BangGameActionHandler extends GameActionHandler
 {
-    @Override // from GameInfoProvider
-    public void init (ConnectionProvider conprov)
+    public BangGameActionHandler (ConnectionProvider conprov)
     {
         try {
             _playrepo = new PlayerRepository(conprov);

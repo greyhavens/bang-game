@@ -4,8 +4,8 @@
 package com.threerings.underwire.server;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
@@ -21,8 +21,7 @@ import com.threerings.underwire.web.data.Account;
  */
 public class BangGameInfoProvider extends GameInfoProvider
 {
-    @Override // from GameInfoProvider
-    public void init (ConnectionProvider conprov)
+    public BangGameInfoProvider (ConnectionProvider conprov)
     {
         try {
             _playrepo = new PlayerRepository(conprov);
@@ -32,7 +31,7 @@ public class BangGameInfoProvider extends GameInfoProvider
     }
 
     @Override // from GameInfoProvider
-    public HashMap<String,String> resolveGameNames (HashSet<String> names)
+    public Map<String,String> resolveGameNames (Set<String> names)
     {
         try {
             return _playrepo.resolveHandles(names);
