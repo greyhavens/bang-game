@@ -3,6 +3,8 @@
 
 package com.threerings.bang.server;
 
+import com.google.inject.Inject;
+
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Tuple;
 
@@ -36,11 +38,6 @@ public class BangPeerNode extends PeerNode
 
     /** A mapping from playerId to client info record for all players online on this peer. */
     public HashIntMap<BangClientInfo> players = new HashIntMap<BangClientInfo>();
-
-    public BangPeerNode (BangPeerManager peermgr)
-    {
-        _bpmgr = peermgr;
-    }
 
     @Override // from PeerNode
     public void objectAvailable (NodeObject object)
@@ -101,5 +98,5 @@ public class BangPeerNode extends PeerNode
         }
     };
 
-    protected BangPeerManager _bpmgr;
+    @Inject protected BangPeerManager _bpmgr;
 }
