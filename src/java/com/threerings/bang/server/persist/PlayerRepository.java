@@ -12,8 +12,9 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -82,7 +83,7 @@ public class PlayerRepository extends JORARepository
      * Looks up the handles for all of the supplied accounts. This is used by our glue code in the
      * Underwire support system.
      */
-    public HashMap<String,String> resolveHandles (HashSet<String> accounts)
+    public Map<String,String> resolveHandles (Set<String> accounts)
         throws PersistenceException
     {
         final StringBuilder query = new StringBuilder(
@@ -96,7 +97,7 @@ public class PlayerRepository extends JORARepository
         }
         query.append(")");
 
-        final HashMap<String,String> mapping = new HashMap<String,String>();
+        final Map<String,String> mapping = new HashMap<String,String>();
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException {
