@@ -32,16 +32,11 @@ public class BangUnderwireServlet extends UnderwireServlet
             return new UnderContext(new JDBCTableSiteIdentifier(_conprov),
                                     new BangGameInfoProvider(_conprov),
                                     new BangGameActionHandler(_conprov),
+                                    new OOOUserLogic(_conprov, _config.getSubProperties("oooauth")),
                                     new UnderwireRepository(_conprov));
         } catch (PersistenceException pe) {
             throw new RuntimeException(pe);
         }
-    }
-
-    @Override // from UnderwireServlet
-    protected UserLogic createUserLogic (UnderContext ctx)
-    {
-        return new OOOUserLogic(ctx, _conprov, _config.getSubProperties("oooauth"));
     }
 
     /** Contains our configuration. */
