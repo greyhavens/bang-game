@@ -4,13 +4,16 @@
 package com.threerings.bang.server;
 
 import java.util.Date;
+import java.util.Map;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.Tuple;
+import com.threerings.util.Name;
 import com.threerings.util.StreamableTuple;
 
 import com.threerings.presents.client.InvocationService;
@@ -374,11 +377,20 @@ public class BangPeerManager extends CrowdPeerManager
         });
     }
 
+    @Override // from CrowdPeerManager
+    protected Name authFromViz (Name vizname)
+    {
+        return _authFromViz.get(vizname);
+    }
+
     /**
      * Called when a player logs onto one of our peer servers.
      */
     protected void remotePlayerLoggedOn (final int townIndex, final BangClientInfo info)
     {
+        // maintain a mapping from vizname to authname
+        _authFromViz.put(info.visibleName, info.username);
+
         // notify our remote player observers
         _remobs.apply(new ObserverList.ObserverOp<RemotePlayerObserver>() {
             public boolean apply (RemotePlayerObserver observer) {
@@ -393,6 +405,9 @@ public class BangPeerManager extends CrowdPeerManager
      */
     protected void remotePlayerLoggedOff (final int townIndex, final BangClientInfo info)
     {
+        // clear our mapping from vizname to authname
+        _authFromViz.remove(info.visibleName);
+
         // notify our remote player observers
         _remobs.apply(new ObserverList.ObserverOp<RemotePlayerObserver>() {
             public boolean apply (RemotePlayerObserver observer) {
@@ -449,5 +464,6 @@ public class BangPeerManager extends CrowdPeerManager
             });
     }
 
+    protected Map<Name, Name> _authFromViz = Maps.newHashMap();
     protected ObserverList<RemotePlayerObserver> _remobs = ObserverList.newFastUnsafe();
 }
