@@ -55,6 +55,7 @@
 # Dependencies for the editor's server side stuff
 -injars ../dist/lib/narya-distrib-0.0-SNAPSHOT.jar(
   **/presents/server/PresentsServer*.class,
+  **/presents/server/PresentsDObjectMgr$LongRunnable.class,
   **/presents/server/SessionFactory.class,
   **/presents/server/ClientResolutionListener.class,
   **/presents/server/InvocationProvider.class,
