@@ -20,26 +20,10 @@ import com.threerings.bang.bounty.data.RecentCompleters;
 public class RecentCompletersRecord extends PersistentRecord
 {
     // AUTO-GENERATED: FIELDS START
-    /** The column identifier for the {@link #bountyId} field. */
-    public static final String BOUNTY_ID = "bountyId";
-
-    /** The qualified column identifier for the {@link #bountyId} field. */
-    public static final ColumnExp BOUNTY_ID_C =
-        new ColumnExp(RecentCompletersRecord.class, BOUNTY_ID);
-
-    /** The column identifier for the {@link #townId} field. */
-    public static final String TOWN_ID = "townId";
-
-    /** The qualified column identifier for the {@link #townId} field. */
-    public static final ColumnExp TOWN_ID_C =
-        new ColumnExp(RecentCompletersRecord.class, TOWN_ID);
-
-    /** The column identifier for the {@link #handles} field. */
-    public static final String HANDLES = "handles";
-
-    /** The qualified column identifier for the {@link #handles} field. */
-    public static final ColumnExp HANDLES_C =
-        new ColumnExp(RecentCompletersRecord.class, HANDLES);
+    public static final Class<RecentCompletersRecord> _R = RecentCompletersRecord.class;
+    public static final ColumnExp BOUNTY_ID = colexp(_R, "bountyId");
+    public static final ColumnExp TOWN_ID = colexp(_R, "townId");
+    public static final ColumnExp HANDLES = colexp(_R, "handles");
     // AUTO-GENERATED: FIELDS END
 
     /** Increment this value if you modify the definition of this persistent object in a way that
@@ -89,7 +73,7 @@ public class RecentCompletersRecord extends PersistentRecord
     {
         return new Key<RecentCompletersRecord>(
                 RecentCompletersRecord.class,
-                new String[] { BOUNTY_ID },
+                new ColumnExp[] { BOUNTY_ID },
                 new Comparable[] { bountyId });
     }
     // AUTO-GENERATED: METHODS END

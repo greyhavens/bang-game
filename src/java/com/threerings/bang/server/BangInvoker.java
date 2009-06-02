@@ -7,11 +7,12 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
+import com.samskivert.util.Lifecycle;
+
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsDObjectMgr;
 import com.threerings.presents.server.PresentsInvoker;
 import com.threerings.presents.server.ReportManager;
-import com.threerings.presents.server.ShutdownManager;
 
 import com.threerings.bang.server.persist.FinancialAction;
 
@@ -21,10 +22,10 @@ import com.threerings.bang.server.persist.FinancialAction;
 @Singleton
 public class BangInvoker extends PresentsInvoker
 {
-    @Inject public BangInvoker (PresentsDObjectMgr omgr, ShutdownManager shutmgr,
+    @Inject public BangInvoker (PresentsDObjectMgr omgr, Lifecycle cycle,
                                 ReportManager repmgr)
     {
-        super(omgr, shutmgr, repmgr);
+        super(omgr, cycle, repmgr);
     }
 
     /**

@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.Tuple;
@@ -25,7 +26,6 @@ import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsSession;
-import com.threerings.presents.server.ShutdownManager;
 
 import com.threerings.crowd.peer.server.CrowdPeerManager;
 
@@ -73,9 +73,9 @@ public class BangPeerManager extends CrowdPeerManager
     /**
      * Creates an uninitialized peer manager.
      */
-    @Inject public BangPeerManager (ShutdownManager shutmgr)
+    @Inject public BangPeerManager (Lifecycle cycle)
     {
-        super(shutmgr);
+        super(cycle);
     }
 
     /**

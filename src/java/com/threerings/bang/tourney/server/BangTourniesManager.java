@@ -8,13 +8,13 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.samskivert.io.PersistenceException;
+import com.samskivert.util.Lifecycle;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.server.ShutdownManager;
 
 import com.threerings.parlor.tourney.server.TourneyManager;
 import com.threerings.parlor.tourney.server.TourniesManager;
@@ -34,20 +34,10 @@ public class BangTourniesManager extends TourniesManager
 {
     public static final String TOURNEY_DB_IDENT = "tourneydb";
 
-    @Inject public BangTourniesManager (InvocationManager invmgr, ShutdownManager shutmgr)
+    @Inject public BangTourniesManager (InvocationManager invmgr, Lifecycle cycle)
     {
-        super(shutmgr);
+        super(cycle);
         invmgr.registerDispatcher(new TourniesDispatcher(this), GLOBAL_GROUP);
-    }
-
-    @Override // from TourniesManager
-    public void init (Injector injector)
-        throws PersistenceException
-    {
-        super.init(injector);
-
-        // create the distributed object that holds the active tournies
-        _tobj = _omgr.registerObject(new TourniesObject());
     }
 
     // documentation inherited
@@ -69,6 +59,15 @@ public class BangTourniesManager extends TourniesManager
     public TourniesObject getTourniesObject ()
     {
         return _tobj;
+    }
+
+    @Override // from TourniesManager
+    public void init ()
+    {
+        super.init();
+
+        // create the distributed object that holds the active tournies
+        _tobj = _omgr.registerObject(new TourniesObject());
     }
 
     @Override // from TourniesManager

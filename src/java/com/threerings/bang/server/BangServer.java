@@ -280,8 +280,56 @@ public class BangServer extends CrowdServer
         chatprov = _chatprov;
         locman = _locman;
 
+        // create and set up our configuration registry and admin service
+        ConfigRegistry confreg = new DatabaseConfigRegistry(perCtx, invoker, ServerConfig.nodename);
+        AdminProvider.init(invmgr, confreg);
+
+        // initialize our depot repositories; running all of our schema and data migrations
+        _perCtx.init("bangdb", _conprov, null);
+        _perCtx.initializeRepositories(true);
+
+        // create our various supporting managers
+        playmgr = _playmgr;
+        gangmgr = _gangmgr;
+        tournmgr = injector.getInstance(BangTourniesManager.class);
+        ratingmgr = injector.getInstance(RatingManager.class);
+
+        // now initialize our runtime configuration
+        RuntimeConfig.init(omgr, confreg);
+
         // do the base server initialization
         super.init(injector);
+
+        // initialize our managers
+        _boardmgr.init();
+        _playmgr.init();
+        _gangmgr.init();
+        tournmgr.init();
+        ratingmgr.init();
+        _coinexmgr.init();
+        _adminmgr.init();
+
+        // create the town object and initialize the locator which will keep it up-to-date
+        townobj = omgr.registerObject(new TownObject());
+        _locator.init();
+
+        // create our managers
+        saloonmgr = (SaloonManager)plreg.createPlace(new SaloonConfig());
+        storemgr = (StoreManager)plreg.createPlace(new StoreConfig());
+        bankmgr = (BankManager)plreg.createPlace(new BankConfig());
+        ranchmgr = (RanchManager)plreg.createPlace(new RanchConfig());
+        barbermgr = (BarberManager)plreg.createPlace(new BarberConfig());
+        stationmgr = (StationManager)plreg.createPlace(new StationConfig());
+        hideoutmgr = (HideoutManager)plreg.createPlace(new HideoutConfig());
+        officemgr = (OfficeManager)plreg.createPlace(new OfficeConfig());
+
+        // if we have a shared secret, assume we're running in a cluster
+        String node = System.getProperty("node");
+        if (node != null && ServerConfig.sharedSecret != null) {
+            log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
+            _peermgr.init(injector, ServerConfig.nodename, ServerConfig.sharedSecret,
+                          ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
+        }
 
         // set up our authenticator
         author = (BangAuthenticator)_author;
@@ -297,34 +345,6 @@ public class BangServer extends CrowdServer
             }
         });
 
-        // create our various supporting managers
-        playmgr = _playmgr;
-        gangmgr = _gangmgr;
-        tournmgr = injector.getInstance(BangTourniesManager.class);
-        ratingmgr = injector.getInstance(RatingManager.class);
-
-        // create and set up our configuration registry and admin service
-        ConfigRegistry confreg = new DatabaseConfigRegistry(perCtx, invoker, ServerConfig.nodename);
-        AdminProvider.init(invmgr, confreg);
-
-        // initialize our depot repositories; running all of our schema and data migrations
-        _perCtx.init("bangdb", _conprov, null);
-        _perCtx.initializeRepositories(true);
-
-        // now initialize our runtime configuration, postponing the remaining server initialization
-        // until our configuration objects are available
-        RuntimeConfig.init(omgr, confreg);
-        omgr.postRunnable(new PresentsDObjectMgr.LongRunnable () {
-            public void run () {
-                try {
-                    finishInit(injector);
-                } catch (Exception e) {
-                    log.warning("Server initialization failed.", e);
-                    System.exit(255);
-                }
-            }
-        });
-
         // start up an interval that checks to see if our code has changed and auto-restarts the
         // server as soon as possible when it has
         if (ServerConfig.config.getValue("auto_restart", false)) {
@@ -335,44 +355,6 @@ public class BangServer extends CrowdServer
                 }
             }.schedule(AUTO_RESTART_CHECK_INTERVAL, true);
         }
-    }
-
-    /**
-     * This is called once our runtime configuration is available.
-     */
-    protected void finishInit (Injector injector)
-        throws Exception
-    {
-        // initialize our managers
-        _boardmgr.init();
-        _playmgr.init();
-        _gangmgr.init();
-        tournmgr.init(injector);
-        ratingmgr.init();
-        _coinexmgr.init();
-        _adminmgr.init();
-
-        // if we have a shared secret, assume we're running in a cluster
-        String node = System.getProperty("node");
-        if (node != null && ServerConfig.sharedSecret != null) {
-            log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
-            _peermgr.init(injector, ServerConfig.nodename, ServerConfig.sharedSecret,
-                          ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
-        }
-
-        // create our managers
-        saloonmgr = (SaloonManager)plreg.createPlace(new SaloonConfig());
-        storemgr = (StoreManager)plreg.createPlace(new StoreConfig());
-        bankmgr = (BankManager)plreg.createPlace(new BankConfig());
-        ranchmgr = (RanchManager)plreg.createPlace(new RanchConfig());
-        barbermgr = (BarberManager)plreg.createPlace(new BarberConfig());
-        stationmgr = (StationManager)plreg.createPlace(new StationConfig());
-        hideoutmgr = (HideoutManager)plreg.createPlace(new HideoutConfig());
-        officemgr = (OfficeManager)plreg.createPlace(new OfficeConfig());
-
-        // create the town object and initialize the locator which will keep it up-to-date
-        townobj = omgr.registerObject(new TownObject());
-        _locator.init();
 
         log.info("Bang server v" + DeploymentConfig.getVersion() + " initialized.");
     }
