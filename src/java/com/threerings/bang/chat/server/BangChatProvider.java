@@ -6,8 +6,13 @@ package com.threerings.bang.chat.server;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import com.threerings.util.Name;
+
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.crowd.chat.client.ChatService;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.data.BodyObject;
@@ -31,6 +36,17 @@ public class BangChatProvider extends ChatProvider
     }
 
     @Override // documentation inherited
+    public void tell (ClientObject caller, Name target, String message,
+                      ChatService.TellListener listener)
+        throws InvocationException
+    {
+        // make sure the message passes the whitelist
+        if (_chatmgr.validateChat(caller, message)) {
+            super.tell(caller, target, message, listener);
+        }
+    }
+
+    @Override // documentation inherited
     public void deliverTell (BodyObject target, UserMessage message)
     {
         PlayerObject user = (PlayerObject)target;
@@ -51,4 +67,6 @@ public class BangChatProvider extends ChatProvider
         AvatarInfo avatar = player.getLook(Look.Pose.DEFAULT).getAvatar(player);
         return new PlayerMessage(player.handle, avatar, message);
     }
+
+    @Inject protected BangChatManager _chatmgr;
 }

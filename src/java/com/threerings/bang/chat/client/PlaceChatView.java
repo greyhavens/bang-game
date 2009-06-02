@@ -20,6 +20,8 @@ import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Extends the {@link TabbedChatView} and adds a tab for speaking on the
  * current PlaceObject chat channel.
@@ -121,18 +123,13 @@ public class PlaceChatView extends TabbedChatView
     // documentation inherited from interface ChatDisplay
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
-        //log.info("displayMessage", "msg", msg);
+        log.info("displayMessage", "msg", msg);
         if (alreadyDisplayed) {
             return false;
         }
         boolean isPlaceChatViewType = PLACE_CHAT_VIEW_TYPE.equals(msg.localtype);
 
-        // if it's not place chat, pass it to our parent
-        if (!isPlaceChatViewType && !msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE)) {
-            return super.displayMessage(msg, alreadyDisplayed);
-        }
-
-        if (msg instanceof UserMessage) {
+        if (msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE) && msg instanceof UserMessage) {
             UserMessage umsg = (UserMessage)msg;
             if (umsg.mode == ChatCodes.BROADCAST_MODE || umsg instanceof TellFeedbackMessage) {
                 return false; // we don't handle broadcast messages or tell feedback
@@ -152,7 +149,8 @@ public class PlaceChatView extends TabbedChatView
             }
         }
 
-        return false;
+        // otherwise let our parent decide how to display it
+        return super.displayMessage(msg, alreadyDisplayed);
     }
 
     // documentation inherited from interface ActionListener

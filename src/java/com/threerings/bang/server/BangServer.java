@@ -9,6 +9,7 @@ import java.util.Iterator;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
@@ -19,7 +20,6 @@ import com.samskivert.util.AuditLogger;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 
-import com.threerings.admin.server.AdminProvider;
 import com.threerings.admin.server.ConfigRegistry;
 import com.threerings.admin.server.DatabaseConfigRegistry;
 import com.threerings.cast.bundle.BundledComponentRepository;
@@ -66,6 +66,7 @@ import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.bounty.data.OfficeConfig;
 import com.threerings.bang.bounty.server.OfficeManager;
 import com.threerings.bang.bounty.server.persist.BountyRepository;
+import com.threerings.bang.chat.server.BangChatManager;
 import com.threerings.bang.chat.server.BangChatProvider;
 import com.threerings.bang.gang.data.HideoutConfig;
 import com.threerings.bang.gang.server.GangManager;
@@ -107,6 +108,7 @@ public class BangServer extends CrowdServer
             bind(ChatProvider.class).to(BangChatProvider.class);
             bind(Authenticator.class).to(ServerConfig.getAuthenticator());
             bind(BodyLocator.class).to(PlayerLocator.class);
+            bind(ConfigRegistry.class).to(BangConfigRegistry.class);
             // bang dependencies
             ResourceManager rsrcmgr = new ResourceManager("rsrc");
             AccountActionRepository aarepo;
@@ -142,9 +144,6 @@ public class BangServer extends CrowdServer
 
     /** A reference to the authenticator in use by the server. */
     public static BangAuthenticator author;
-
-    /** Manages Crowd body stuff. */
-    public static BodyManager bodymgr;
 
     /** Manages global player related bits. */
     public static PlayerManager playmgr;
@@ -198,7 +197,6 @@ public class BangServer extends CrowdServer
     // legacy static Crowd services; try not to use these
     public static PlayerLocator locator;
     public static PlaceRegistry plreg;
-    public static ChatProvider chatprov;
     public static LocationManager locman;
 
     /**
@@ -276,13 +274,10 @@ public class BangServer extends CrowdServer
         invmgr = _invmgr;
         locator = _locator;
         plreg = _plreg;
-        bodymgr = _bodymgr;
-        chatprov = _chatprov;
         locman = _locman;
 
         // create and set up our configuration registry and admin service
         ConfigRegistry confreg = new DatabaseConfigRegistry(perCtx, invoker, ServerConfig.nodename);
-        AdminProvider.init(invmgr, confreg);
 
         // initialize our depot repositories; running all of our schema and data migrations
         _perCtx.init("bangdb", _conprov, null);
@@ -440,6 +435,15 @@ public class BangServer extends CrowdServer
         }
     }
 
+    @Singleton
+    protected static class BangConfigRegistry extends DatabaseConfigRegistry
+    {
+        @Inject public BangConfigRegistry (PersistenceContext perCtx,
+                                           @MainInvoker Invoker invoker) {
+            super(perCtx, invoker, ServerConfig.nodename);
+        }
+    }
+
     protected long _codeModified;
 
     @Inject protected ConnectionProvider _conprov;
@@ -456,6 +460,7 @@ public class BangServer extends CrowdServer
     @Inject protected GangManager _gangmgr;
     @Inject protected PlayerManager _playmgr;
     @Inject protected BangPeerManager _peermgr;
+    @Inject protected BangChatManager _chatmgr;
 
     // need to inject this guy here as he's otherwise not referenced until the office manager is
     // created which is too late in our initialization for safe repository creation

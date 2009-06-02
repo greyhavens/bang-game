@@ -19,6 +19,8 @@ import com.threerings.presents.server.PresentsServer;
 import com.threerings.presents.server.RebootManager;
 import com.threerings.presents.server.net.ConnectionManager;
 
+import com.threerings.admin.server.AdminManager;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 
@@ -30,7 +32,7 @@ import static com.threerings.bang.Log.log;
  * Handles administrative bits for a Bang! server.
  */
 @Singleton
-public class BangAdminManager
+public class BangAdminManager extends AdminManager
     implements BangAdminProvider
 {
     /** Contains server status information published to admins. */
@@ -38,6 +40,8 @@ public class BangAdminManager
 
     @Inject public BangAdminManager (RootDObjectManager omgr, InvocationManager invmgr)
     {
+        super(invmgr);
+
         // create and configure our status object
         statobj = omgr.registerObject(new StatusObject());
         statobj.serverStartTime = System.currentTimeMillis();

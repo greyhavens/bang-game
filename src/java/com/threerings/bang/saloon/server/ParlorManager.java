@@ -3,6 +3,8 @@
 
 package com.threerings.bang.saloon.server;
 
+import com.google.inject.Inject;
+
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Throttle;
 
@@ -15,8 +17,10 @@ import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
+import com.threerings.crowd.chat.server.SpeakHandler;
 import com.threerings.crowd.chat.server.SpeakUtil;
 
+import com.threerings.bang.chat.server.BangChatManager;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.StatType;
@@ -123,7 +127,7 @@ public class ParlorManager extends PlaceManager
         }
     }
 
-    // documentation inherited from interface ParlorProvider
+    // from interface ParlorProvider
     public void updateParlorConfig (ClientObject caller, ParlorInfo info, boolean onlyCreatorStart)
     {
         PlayerObject user = (PlayerObject)caller;
@@ -144,7 +148,7 @@ public class ParlorManager extends PlaceManager
         }
     }
 
-    // documentation inherited from interface ParlorProvider
+    // from interface ParlorProvider
     public void updateParlorPassword (ClientObject caller, String password)
     {
         PlayerObject user = (PlayerObject)caller;
@@ -153,7 +157,7 @@ public class ParlorManager extends PlaceManager
         }
     }
 
-    // documentation inherited from interface ParlorProvider
+    // from interface ParlorProvider
     public void findSaloonMatch (ClientObject caller, Criterion criterion,
             ParlorService.ResultListener listener)
         throws InvocationException
@@ -167,7 +171,7 @@ public class ParlorManager extends PlaceManager
         _salmgr.leaveMatch(caller, matchOid);
     }
 
-    // documentation inherited from interface ParlorProvider
+    // from interface ParlorProvider
     public void bootPlayer (ClientObject caller, int bodyOid)
     {
         PlayerObject user = (PlayerObject)caller;
@@ -209,20 +213,20 @@ public class ParlorManager extends PlaceManager
         }
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new ParlorObject();
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected long idleUnloadPeriod ()
     {
         // one minute idle period
         return 1 * 60 * 1000L;
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();
@@ -232,7 +236,7 @@ public class ParlorManager extends PlaceManager
         _parobj.addListener(BangServer.playmgr.receivedChatListener);
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didShutdown ()
     {
         super.didShutdown();
@@ -256,7 +260,7 @@ public class ParlorManager extends PlaceManager
         }
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void bodyEntered (int bodyOid)
     {
         super.bodyEntered(bodyOid);
@@ -265,7 +269,7 @@ public class ParlorManager extends PlaceManager
         publishOccupants();
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void bodyLeft (int bodyOid)
     {
         super.bodyLeft(bodyOid);
@@ -281,7 +285,7 @@ public class ParlorManager extends PlaceManager
         publishOccupants();
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void bodyUpdated (OccupantInfo info)
     {
         super.bodyUpdated(info);
@@ -295,6 +299,25 @@ public class ParlorManager extends PlaceManager
 
             _salmgr.clearPlayer(info.bodyOid);
         }
+    }
+
+    @Override // from PlaceManager
+    protected SpeakHandler createSpeakHandler (PlaceObject plobj)
+    {
+        return new SpeakHandler(plobj, this) {
+            @Override public void speak (ClientObject caller, String message, byte mode) {
+                if (_chatmgr.validateChat(caller, message)) {
+                    super.speak(caller, message, mode);
+                }
+            }
+        };
+    }
+
+    @Override // from PlaceManager
+    protected boolean shouldDeclareEmpty (OccupantInfo leaver)
+    {
+        return super.shouldDeclareEmpty(leaver) && !_parobj.info.server &&
+            _activeGames.size() == 0;
     }
 
     protected void publishOccupants ()
@@ -315,13 +338,6 @@ public class ParlorManager extends PlaceManager
         }
     }
 
-    @Override // documentation inherited
-    protected boolean shouldDeclareEmpty (OccupantInfo leaver)
-    {
-        return super.shouldDeclareEmpty(leaver) && !_parobj.info.server &&
-            _activeGames.size() == 0;
-    }
-
     protected ObjectDeathListener _gameOverListener = new ObjectDeathListener() {
         public void objectDestroyed (ObjectDestroyedEvent event) {
             _activeGames.remove(event.getTargetOid());
@@ -336,4 +352,6 @@ public class ParlorManager extends PlaceManager
     protected Throttle _throttle = new Throttle(1, 10);
     protected ArrayIntSet _activeGames = new ArrayIntSet();
     protected ArrayIntSet _bootSet = new ArrayIntSet();
+
+    @Inject protected BangChatManager _chatmgr;
 }
