@@ -82,18 +82,19 @@ public class BangChatDirector extends ChatDirector
         });
     }
 
-    @Override // documentation inherited
-    public void addChatDisplay (ChatDisplay display)
+    @Override // from ChatDirector
+    public boolean addChatDisplay (ChatDisplay display)
     {
         // keep system displays at the end of the list as a catch all
         _displays.add(_displays.size() - _systems.size(), display);
+        return true;
     }
 
-    @Override // documentation inherited
-    public void removeChatDisplay (ChatDisplay display)
+    @Override // from ChatDirector
+    public boolean removeChatDisplay (ChatDisplay display)
     {
-        super.removeChatDisplay(display);
         _systems.remove(display);
+        return super.removeChatDisplay(display);
     }
 
     /**
