@@ -202,7 +202,7 @@
       <dependency groupId="com.threerings.vilya" artifactId="vilya-stats" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="getdown" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings" artifactId="threerings-gwt" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings" artifactId="gwt-utils" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.underwire" artifactId="underwire" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.underwire" artifactId="underwire-gwt"
                   version="0.0-SNAPSHOT"/>
