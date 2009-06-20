@@ -902,9 +902,8 @@ public class BangClient extends BasicClient
         // get a reference to the player service
         _psvc = _client.requireService(PlayerService.class);
 
-        // create the mute director here because the mute list is specific to
-        // the account
-        final String mkey = client.getCredentials().getUsername() + ".muted";
+        // create the mute director here because the mute list is specific to the account
+        final String mkey = ((BangCredentials)client.getCredentials()).getUsername() + ".muted";
         _mutedir = new MuteDirector(
             _ctx, createHandles(BangPrefs.config.getValue(mkey, new String[0])));
         _mutedir.setChatDirector(_chatdir);

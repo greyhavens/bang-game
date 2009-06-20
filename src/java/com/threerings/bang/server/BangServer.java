@@ -331,7 +331,7 @@ public class BangServer extends CrowdServer
         author.init();
 
         // configure the client manager to use the appropriate client class
-        clmgr.setSessionFactory(new SessionFactory() {
+        clmgr.setDefaultSessionFactory(new SessionFactory() {
             public Class<? extends PresentsSession> getSessionClass (AuthRequest areq) {
                 return BangSession.class;
             }

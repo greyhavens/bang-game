@@ -72,7 +72,7 @@ public class OOOAuthenticator extends BangAuthenticator
             // we get our user manager configuration from the ocean config
             _usermgr = new OOOUserManager(
                 ServerConfig.config.getSubProperties("oooauth"), _conprov);
-            _authrep = (OOOUserRepository)_usermgr.getRepository();
+            _authrep = _usermgr.getRepository();
             _siteident = new JDBCTableSiteIdentifier(_conprov);
             _rewardrep = new RewardRepository(_conprov);
 
@@ -391,13 +391,13 @@ public class OOOAuthenticator extends BangAuthenticator
         }
         rsp.authdata = new BangTokenRing(tokens);
 
-        // replace the username in their credentials with the canonical name in their user record
-        // as that username will later be stuffed into their user object
+        // configure their auth username with the canonical name in their user record as that
+        // username will later be stuffed into their user object
         if (!anonymous) {
-            creds.setUsername(new Name(user.username));
+            conn.setAuthName(new Name(user.username));
             creds.affiliate = String.valueOf(user.siteId);
         } else {
-            creds.setUsername(new Name(username));
+            conn.setAuthName(new Name(username));
             creds.affiliate = String.valueOf(getSiteId(creds.affiliate));
         }
 
