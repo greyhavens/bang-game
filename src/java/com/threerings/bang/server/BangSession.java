@@ -96,7 +96,7 @@ public class BangSession extends CrowdSession
                 }
             }
         } else {
-            log.warning("Missing or bogus authdata", "who", _username, "adata", _authdata);
+            log.warning("Missing or bogus authdata", "who", _authname, "adata", _authdata);
         }
 
         // configure the player in the town for this server
@@ -109,9 +109,9 @@ public class BangSession extends CrowdSession
         _startPoses = user.poses.clone();
 
         // check to see if this player has any rewards and redeem them if so
-        _authInvoker.postUnit(new Invoker.Unit("redeemRewards:" + _username) {
+        _authInvoker.postUnit(new Invoker.Unit("redeemRewards:" + _authname) {
             public boolean invoke () {
-                _rewards = BangServer.author.redeemRewards(_username.toString(), creds.ident);
+                _rewards = BangServer.author.redeemRewards(_authname.toString(), creds.ident);
                 return (_rewards.size() > 0);
             }
             public void handleResult () {
