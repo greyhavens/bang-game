@@ -6,6 +6,7 @@ package com.threerings.bang.chat.client;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
@@ -29,7 +30,6 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.gang.data.HideoutObject;
-import java.util.HashMap;
 
 /**
  * Handles custom chat bits for Bang.
@@ -179,7 +179,7 @@ public class BangChatDirector extends ChatDirector
             args = msg.substring(sidx+1).trim();
         }
 
-        HashMap<String,CommandHandler> possibleCommands = getCommandHandlers(command);
+        Map<String,CommandHandler> possibleCommands = getCommandHandlers(command);
         if (args != null && possibleCommands.size() == 1) {
             CommandHandler cmd = possibleCommands.values().iterator().next();
             if (cmd instanceof SpeakHandler || cmd instanceof EmoteHandler ||
