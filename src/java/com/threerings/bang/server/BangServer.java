@@ -322,7 +322,7 @@ public class BangServer extends CrowdServer
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
             log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
-            _peermgr.init(injector, ServerConfig.nodename, ServerConfig.sharedSecret,
+            _peermgr.init(ServerConfig.nodename, ServerConfig.sharedSecret,
                           ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
         }
 
