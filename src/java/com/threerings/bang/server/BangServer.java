@@ -304,6 +304,9 @@ public class BangServer extends CrowdServer
         _coinexmgr.init();
         _adminmgr.init();
 
+        // start up our periodic server status reporting
+        _repmgr.activatePeriodicReport();
+
         // create the town object and initialize the locator which will keep it up-to-date
         townobj = omgr.registerObject(new TownObject());
         _locator.init();
@@ -461,6 +464,7 @@ public class BangServer extends CrowdServer
     @Inject protected PlayerManager _playmgr;
     @Inject protected BangPeerManager _peermgr;
     @Inject protected BangChatManager _chatmgr;
+    @Inject protected BangReportManager _repmgr;
 
     // need to inject this guy here as he's otherwise not referenced until the office manager is
     // created which is too late in our initialization for safe repository creation
