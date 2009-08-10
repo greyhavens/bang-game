@@ -209,8 +209,8 @@ public abstract class FinancialAction extends Invoker.Unit
                 if (!_coinmgr.getCoinRepository().returnReservation(_coinres)) {
                     log.warning("Failed to return coins " + this + ".");
                 }
-            } catch (PersistenceException pe) {
-                log.warning("Failed to return coins " + this, pe);
+            } catch (Exception e) {
+                log.warning("Failed to return coins " + this, e);
             }
         }
 
