@@ -90,9 +90,9 @@ $i18n.xlate("player.no_player_record")
 <table cellpadding="10">
 <tr><th colspan="4">$i18n.xlate("player.items_header")</th></tr>
 #foreach ($item in $items)
-#if ($vidx % 4 == 0)<tr>#end
+#if ($vidx % 2 == 0)<tr>#end
 <td style="border: 1px solid">$item.getName()</td>
-#if ($vidx % 4 == 3)</tr>#end
+#if ($vidx % 2 == 1)</tr>#end
 #end
 #if ($items.size() % 2 != 1)</tr>#end
 </table>
