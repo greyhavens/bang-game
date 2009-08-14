@@ -46,6 +46,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsSession;
 
+import com.threerings.crowd.chat.server.SpeakHandler;
 import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
@@ -55,6 +56,7 @@ import com.threerings.parlor.game.server.GameManager;
 import com.threerings.bang.admin.data.StatusObject;
 import com.threerings.bang.admin.server.BangAdminManager;
 import com.threerings.bang.admin.server.RuntimeConfig;
+import com.threerings.bang.chat.server.BangChatManager;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.bounty.data.BountyConfig;
 
@@ -1481,6 +1483,18 @@ public class BangManager extends GameManager
         return super.isValidSpeaker(speakObj, speaker, mode) &&
             (_bangobj.state != BangObject.IN_PLAY ||
              _bangobj.getPlayerIndex(((BodyObject)speaker).getVisibleName()) != -1);
+    }
+
+    @Override // from PlaceManager
+    protected SpeakHandler createSpeakHandler (PlaceObject plobj)
+    {
+        return new SpeakHandler(plobj, this) {
+            @Override public void speak (ClientObject caller, String message, byte mode) {
+                if (_chatmgr.validateChat(caller, message)) {
+                    super.speak(caller, message, mode);
+                }
+            }
+        };
     }
 
     /**
@@ -3515,12 +3529,13 @@ public class BangManager extends GameManager
     protected ArrayList<AdvanceOrder> _orders = new ArrayList<AdvanceOrder>();
 
     // dependencies
-    @Inject protected Injector _injector;
     @Inject protected BangAdminManager _adminmgr;
-    @Inject protected BoardManager _boardmgr;
-    @Inject protected PlayerRepository _playrepo;
-    @Inject protected ItemRepository _itemrepo;
+    @Inject protected BangChatManager _chatmgr;
     @Inject protected BangStatRepository _statrepo;
+    @Inject protected BoardManager _boardmgr;
+    @Inject protected Injector _injector;
+    @Inject protected ItemRepository _itemrepo;
+    @Inject protected PlayerRepository _playrepo;
     @Inject protected RatingRepository _ratingrepo;
 
     /** If a game is shorter than this (in seconds) we won't rate it. */
