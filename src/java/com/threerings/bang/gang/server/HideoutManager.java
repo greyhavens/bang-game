@@ -24,8 +24,8 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.Badge;
-import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.BangNodeObject;
+import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.Handle;
@@ -38,6 +38,7 @@ import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.server.BarberManager;
+import com.threerings.bang.chat.server.BangChatManager;
 
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.server.MatchHostManager;
@@ -102,6 +103,8 @@ public class HideoutManager extends MatchHostManager
         } else {
             entry.lastPlayed = System.currentTimeMillis();
         }
+        // add this gang's name words to the chat whitelist
+        _chatmgr.addWhitelistWords(name.toString());
     }
 
     /**
@@ -726,11 +729,12 @@ public class HideoutManager extends MatchHostManager
     protected Interval _rankval;
 
     // dependencies
-    @Inject protected GangGoodsCatalog _goods;
-    @Inject protected RentalGoodsCatalog _rentalGoods;
+    @Inject protected BangChatManager _chatmgr;
     @Inject protected BangCoinExchangeManager _coinexmgr;
     @Inject protected BangPeerManager _peermgr;
+    @Inject protected GangGoodsCatalog _goods;
     @Inject protected GangRepository _gangrepo;
+    @Inject protected RentalGoodsCatalog _rentalGoods;
 
     /** The frequency with which we update the top-ranked gang lists and purge inactive gangs. */
     protected static final long RANK_PURGE_INTERVAL = 60 * 60 * 1000L;

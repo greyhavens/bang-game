@@ -9,11 +9,15 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Lifecycle;
 import com.samskivert.util.StringUtil;
 
@@ -23,7 +27,12 @@ import com.threerings.crowd.chat.server.SpeakUtil;
 
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.gang.server.persist.GangRepository;
+import com.threerings.bang.server.PlayerLocator;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.persist.PlayerRepository;
 
 import static com.threerings.bang.Log.log;
 
@@ -34,9 +43,25 @@ import static com.threerings.bang.Log.log;
 public class BangChatManager
     implements Lifecycle.InitComponent
 {
-    @Inject public BangChatManager (Lifecycle cycle)
+    @Inject public BangChatManager (Lifecycle cycle, PlayerLocator locator)
     {
         cycle.addComponent(this);
+
+        locator.addPlayerObserver(new PlayerLocator.PlayerObserver() {
+            public void playerLoggedOn (PlayerObject user) {
+                if (user.hasCharacter()) {
+                    addWhitelistWords(user.handle.toString());
+                }
+            }
+            public void playerLoggedOff (PlayerObject user) {
+                // noop!
+            }
+            public void playerChangedHandle (PlayerObject user, Handle oldHandle) {
+                if (user.hasCharacter()) {
+                    addWhitelistWords(user.handle.toString());
+                }
+            }
+        });
     }
 
     // from Lifecycle.InitComponent
@@ -62,11 +87,42 @@ public class BangChatManager
 
         // if we don't have a minimum number of words, our dictionary loading failed, so don't
         // enable the whitelist
-        if (_whitelist.size() > MIN_WHITELIST_SIZE) {
-            log.info("Chat system using whitelist", "size", _whitelist.size());
-        } else {
+        if (_whitelist.size() < MIN_WHITELIST_SIZE) {
+            log.info("Unable to sufficient whitelist data. Disabling chat whitelist.");
             _whitelist.clear();
+            return;
         }
+
+        // load in the names of every player and gang in the database and add those to the whitelist
+        try {
+            addWhitelistWords(_playrepo.loadNameWords());
+            addWhitelistWords(_gangrepo.loadNameWords());
+        } catch (PersistenceException pe) {
+            log.warning("Failed to load name words for whitelist.", pe);
+        }
+
+        log.info("Chat system using whitelist", "size", _whitelist.size());
+    }
+
+    /**
+     * Adds words from the specified name to the chat whitelist.
+     */
+    public void addWhitelistWords (String name)
+    {
+        Set<String> words = Sets.newHashSet();
+        for (String word : name.split("\\s")) {
+            words.add(word);
+        }
+        addWhitelistWords(words);
+    }
+
+    /**
+     * Adds words to the chat whitelist.
+     */
+    public void addWhitelistWords (Set<String> words)
+    {
+        Iterables.addAll(_whitelist, Iterables.transform(
+                             Iterables.filter(words, VALID_NAME), DOWNCASE));
     }
 
     /**
@@ -115,6 +171,24 @@ public class BangChatManager
 
     /** Our whitelist chat dictionary. */
     protected Set<String> _whitelist = Sets.newTreeSet();
+
+    // dependencies
+    @Inject protected PlayerRepository _playrepo;
+    @Inject protected GangRepository _gangrepo;
+
+    /** A predicate used to filter out short name words from the whitelist. */
+    protected static final Predicate<String> VALID_NAME = new Predicate<String>() {
+        public boolean apply (String name) {
+            return name.length() > 2;
+        }
+    };
+
+    /** A predicate used to filter out short name words from the whitelist. */
+    protected static final Function<String, String> DOWNCASE = new Function<String, String>() {
+        public String apply (String name) {
+            return name.toLowerCase();
+        }
+    };
 
     protected static final int MIN_WHITELIST_SIZE = 50000;
 }

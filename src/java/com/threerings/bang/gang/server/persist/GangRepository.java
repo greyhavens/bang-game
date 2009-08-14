@@ -4,15 +4,17 @@
 package com.threerings.bang.gang.server.persist;
 
 import java.sql.Connection;
-import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -739,6 +741,34 @@ public class GangRepository extends JORARepository
         }
         list.names = names.toArray(new Handle[names.size()]);
         return list;
+    }
+
+    /**
+     * Loads the words that make up all game names in the entire database. This is used by the chat
+     * whitelist services.
+     */
+    public Set<String> loadNameWords ()
+        throws PersistenceException
+    {
+        final Set<String> names = Sets.newHashSet();
+        execute(new Operation<Void>() {
+            public Void invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery("select NAME from GANGS");
+                    while (rs.next()) {
+                        for (String word : rs.getString(1).split("\\s")) {
+                            names.add(word);
+                        }
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+        return names;
     }
 
     /**

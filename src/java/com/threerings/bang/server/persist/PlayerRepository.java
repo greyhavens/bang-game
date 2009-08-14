@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -77,6 +78,34 @@ public class PlayerRepository extends JORARepository
         throws PersistenceException
     {
         return load(_ptable, "where NORMALIZED = " + JDBCUtil.escape(handle.getNormal()));
+    }
+
+    /**
+     * Loads the words that make up all player names in the entire database. This is used by the
+     * chat whitelist services.
+     */
+    public Set<String> loadNameWords ()
+        throws PersistenceException
+    {
+        final Set<String> names = Sets.newHashSet();
+        execute(new Operation<Void>() {
+            public Void invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery("select HANDLE from PLAYERS");
+                    while (rs.next()) {
+                        for (String word : rs.getString(1).split("\\s")) {
+                            names.add(word);
+                        }
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+        return names;
     }
 
     /**
