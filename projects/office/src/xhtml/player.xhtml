@@ -87,14 +87,15 @@ $i18n.xlate("player.no_player_record")
 #end
 
 #if ($items)
+#set ($cols = 2)
 <table cellpadding="10">
-<tr><th colspan="2">$i18n.xlate("player.items_header")</th></tr>
+<tr><th colspan="$cols">$i18n.xlate("player.items_header")</th></tr>
 #foreach ($item in $items)
-#if ($vidx % 2 == 0)<tr>#end
+#if ($vidx % $cols == 0)<tr>#end
 <td style="border: 1px solid">$item.getName()</td>
-#if ($vidx % 2 == 1)</tr>#end
+#if ($vidx % $cols == $cols-1)</tr>#end
 #end
-#if ($items.size() % 2 != 1)</tr>#end
+#if ($items.size() % $cols != $cols-1)</tr>#end
 </table>
 #end
 
