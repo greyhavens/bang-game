@@ -82,49 +82,6 @@ public class GangRepository extends JORARepository
         _buckleMask.setModified("bucklePrint");
     }
 
-    // TEMP
-    public void initCommandOrders ()
-        throws PersistenceException
-    {
-        // get a list of all the gangs by id
-        final ArrayIntSet gangIds = new ArrayIntSet();
-        execute(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                Statement stmt = conn.createStatement();
-                try {
-                    ResultSet rs = stmt.executeQuery("select GANG_ID from GANGS");
-                    while (rs.next()) {
-                        gangIds.add(rs.getInt(1));
-                    }
-                    return null;
-
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-            }
-        });
-
-        // update each one
-        int gcount = 0, lcount = 0;
-        for (Integer gangId : gangIds) {
-            update("set @commandOrder = -1");
-            int count = update("update GANG_MEMBERS set COMMAND_ORDER = " +
-                "(@commandOrder := @commandOrder + 1) where GANG_ID = " + gangId + " and RANK = " +
-                GangCodes.LEADER_RANK + " order by JOINED");
-            if (count > 0) {
-                gcount++;
-                lcount += count;
-            }
-        }
-        if (gcount > 0) {
-            log.info("Initialized command order fields for " + lcount + " leaders of " + gcount +
-                " gangs.");
-        }
-    }
-    // END TEMP
-
     /**
      * Loads directory entries for all active gangs.
      */

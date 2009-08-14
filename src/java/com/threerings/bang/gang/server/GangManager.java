@@ -106,15 +106,6 @@ public class GangManager
                 });
         }
 
-        // TEMP: init command orders based on join dates
-        BangServer.transitrepo.transition(GangRepository.class, "init_command_orders",
-            new TransitionRepository.Transition() {
-                public void run () throws PersistenceException {
-                    _gangrepo.initCommandOrders();
-                }
-            });
-        // END TEMP
-
         // if we're in Frontier Town, start our errosion interval to run at 2am every day
         if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
             Calendar cal = Calendar.getInstance();
