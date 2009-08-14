@@ -8,7 +8,7 @@
   <servlet>
     <servlet-name>underdata</servlet-name>
     <servlet-class>
-      com.threerings.underwire.web.server.StandaloneUnderwireServlet
+      com.threerings.underwire.web.server.BangUnderwireServlet
     </servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
