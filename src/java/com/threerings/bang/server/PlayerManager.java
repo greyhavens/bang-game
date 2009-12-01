@@ -810,8 +810,8 @@ public class PlayerManager
         // format and provide the complainer's chat history
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss:SSS");
         StringBuilder chatHistory = new StringBuilder();
-        for (ChatMessage msg : SpeakUtil.getChatHistory(user.handle)) {
-            UserMessage umsg = (UserMessage)msg;
+        for (SpeakUtil.ChatHistoryEntry histEntry : SpeakUtil.getChatHistory(user.handle)) {
+            UserMessage umsg = (UserMessage)histEntry.message;
             chatHistory.append(df.format(new Date(umsg.timestamp))).append(' ');
             chatHistory.append(StringUtil.pad(ChatCodes.XLATE_MODES[umsg.mode], 10)).append(' ');
             chatHistory.append(umsg.speaker).append(": ").append(umsg.message).append('\n');
