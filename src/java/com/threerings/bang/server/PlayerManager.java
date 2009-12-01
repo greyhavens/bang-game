@@ -1171,7 +1171,7 @@ public class PlayerManager
      */
     public void setLateNight (PlayerObject user)
     {
-        if (_lateNighters.contains(user.playerId)) {
+        if (_lateNighters.containsKey(user.playerId)) {
             return;
         }
         user.stats.incrementStat(StatType.LATE_NIGHTS, 1);

@@ -1800,7 +1800,7 @@ public class TerrainNode extends Node
 
             } else {
                 for (int ii = 1; ii < layers.length; ii++) {
-                    if (!codes.contains(layers[ii])) {
+                    if (!codes.containsKey(layers[ii])) {
                         layers[ii] = 0;
                         rect = bounds;
                     }
@@ -1825,7 +1825,7 @@ public class TerrainNode extends Node
 
             // prune any unused alpha buffers from the map
             for (Interator it = alphaBuffers.keys(); it.hasNext(); ) {
-                if (!codes.contains(it.nextInt()+1)) {
+                if (!codes.containsKey(it.nextInt()+1)) {
                     it.remove();
                 }
             }
