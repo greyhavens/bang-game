@@ -101,7 +101,7 @@ public class BasicClient
         _ctx = ctx;
 
         // create and start invoker
-        _invoker = new Invoker("invoker", rqueue);
+        _invoker = new Invoker("invoker", new RunQueue.AsExecutor(rqueue));
         _invoker.start();
 
         // initialize some static services

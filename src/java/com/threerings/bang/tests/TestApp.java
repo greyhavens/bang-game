@@ -11,6 +11,7 @@ import com.samskivert.util.Config;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.RunQueue;
 
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
@@ -90,7 +91,7 @@ public abstract class TestApp extends JmeApp
         _keymgr.init(_ctx);
 
         // create and start invoker
-        _invoker = new Invoker("invoker", this);
+        _invoker = new Invoker("invoker", new RunQueue.AsExecutor(this));
         _invoker.start();
 
         ResourceManager.InitObserver obs = new ResourceManager.InitObserver() {
