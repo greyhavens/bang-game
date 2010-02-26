@@ -672,7 +672,7 @@ public class PlayerObject extends BodyObject
     public void setInventory (DSet<Item> value)
     {
         requestAttributeChange(INVENTORY, value, this.inventory);
-        DSet<Item> clone = (value == null) ? null : value.typedClone();
+        DSet<Item> clone = (value == null) ? null : value.clone();
         this.inventory = clone;
     }
 
@@ -847,7 +847,7 @@ public class PlayerObject extends BodyObject
     public void setLooks (DSet<Look> value)
     {
         requestAttributeChange(LOOKS, value, this.looks);
-        DSet<Look> clone = (value == null) ? null : value.typedClone();
+        DSet<Look> clone = (value == null) ? null : value.clone();
         this.looks = clone;
     }
 
@@ -894,7 +894,7 @@ public class PlayerObject extends BodyObject
     public void setPardners (DSet<PardnerEntry> value)
     {
         requestAttributeChange(PARDNERS, value, this.pardners);
-        DSet<PardnerEntry> clone = (value == null) ? null : value.typedClone();
+        DSet<PardnerEntry> clone = (value == null) ? null : value.clone();
         this.pardners = clone;
     }
 
@@ -941,7 +941,7 @@ public class PlayerObject extends BodyObject
     public void setNotifications (DSet<Notification> value)
     {
         requestAttributeChange(NOTIFICATIONS, value, this.notifications);
-        DSet<Notification> clone = (value == null) ? null : value.typedClone();
+        DSet<Notification> clone = (value == null) ? null : value.clone();
         this.notifications = clone;
     }
 

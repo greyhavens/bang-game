@@ -837,7 +837,7 @@ public class BangObject extends GameObject
     public void tick (short tick)
     {
         if (GameCodes.SYNC_DEBUG && pieces != null) {
-            ModifiableDSet<Piece> clone = pieces.typedClone();
+            ModifiableDSet<Piece> clone = pieces.clone();
             setDebugPieces(clone);
         }
         setTick(tick);
@@ -1325,7 +1325,7 @@ public class BangObject extends GameObject
     public void setPieces (ModifiableDSet<Piece> value)
     {
         requestAttributeChange(PIECES, value, this.pieces);
-        ModifiableDSet<Piece> clone = (value == null) ? null : value.typedClone();
+        ModifiableDSet<Piece> clone = (value == null) ? null : value.clone();
         this.pieces = clone;
     }
 
@@ -1372,7 +1372,7 @@ public class BangObject extends GameObject
     public void setDebugPieces (ModifiableDSet<Piece> value)
     {
         requestAttributeChange(DEBUG_PIECES, value, this.debugPieces);
-        ModifiableDSet<Piece> clone = (value == null) ? null : value.typedClone();
+        ModifiableDSet<Piece> clone = (value == null) ? null : value.clone();
         this.debugPieces = clone;
     }
 
@@ -1419,7 +1419,7 @@ public class BangObject extends GameObject
     public void setCards (ModifiableDSet<Card> value)
     {
         requestAttributeChange(CARDS, value, this.cards);
-        ModifiableDSet<Card> clone = (value == null) ? null : value.typedClone();
+        ModifiableDSet<Card> clone = (value == null) ? null : value.clone();
         this.cards = clone;
     }
 

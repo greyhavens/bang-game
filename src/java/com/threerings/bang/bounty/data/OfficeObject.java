@@ -76,7 +76,7 @@ public class OfficeObject extends PlaceObject
     public void setBoards (DSet<BoardInfo> value)
     {
         requestAttributeChange(BOARDS, value, this.boards);
-        DSet<BoardInfo> clone = (value == null) ? null : value.typedClone();
+        DSet<BoardInfo> clone = (value == null) ? null : value.clone();
         this.boards = clone;
     }
 
@@ -123,7 +123,7 @@ public class OfficeObject extends PlaceObject
     public void setCompleters (DSet<RecentCompleters> value)
     {
         requestAttributeChange(COMPLETERS, value, this.completers);
-        DSet<RecentCompleters> clone = (value == null) ? null : value.typedClone();
+        DSet<RecentCompleters> clone = (value == null) ? null : value.clone();
         this.completers = clone;
     }
 

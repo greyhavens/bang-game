@@ -170,7 +170,7 @@ public class HideoutObject extends PlaceObject
     public void setGangs (DSet<GangEntry> value)
     {
         requestAttributeChange(GANGS, value, this.gangs);
-        DSet<GangEntry> clone = (value == null) ? null : value.typedClone();
+        DSet<GangEntry> clone = (value == null) ? null : value.clone();
         this.gangs = clone;
     }
 
@@ -217,7 +217,7 @@ public class HideoutObject extends PlaceObject
     public void setTopRanked (DSet<TopRankedGangList> value)
     {
         requestAttributeChange(TOP_RANKED, value, this.topRanked);
-        DSet<TopRankedGangList> clone = (value == null) ? null : value.typedClone();
+        DSet<TopRankedGangList> clone = (value == null) ? null : value.clone();
         this.topRanked = clone;
     }
 
@@ -264,7 +264,7 @@ public class HideoutObject extends PlaceObject
     public void setGoods (DSet<Good> value)
     {
         requestAttributeChange(GOODS, value, this.goods);
-        DSet<Good> clone = (value == null) ? null : value.typedClone();
+        DSet<Good> clone = (value == null) ? null : value.clone();
         this.goods = clone;
     }
 
@@ -344,7 +344,7 @@ public class HideoutObject extends PlaceObject
     public void setRentalGoods (DSet<Good> value)
     {
         requestAttributeChange(RENTAL_GOODS, value, this.rentalGoods);
-        DSet<Good> clone = (value == null) ? null : value.typedClone();
+        DSet<Good> clone = (value == null) ? null : value.clone();
         this.rentalGoods = clone;
     }
     // AUTO-GENERATED: METHODS END

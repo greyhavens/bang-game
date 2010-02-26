@@ -63,7 +63,7 @@ public class TourniesObject extends DObject
     public void setTournies (DSet<TourneyListingEntry> value)
     {
         requestAttributeChange(TOURNIES, value, this.tournies);
-        DSet<TourneyListingEntry> clone = (value == null) ? null : value.typedClone();
+        DSet<TourneyListingEntry> clone = (value == null) ? null : value.clone();
         this.tournies = clone;
     }
     // AUTO-GENERATED: METHODS END

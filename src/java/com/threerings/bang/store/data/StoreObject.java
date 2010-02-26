@@ -102,7 +102,7 @@ public class StoreObject extends PlaceObject
     public void setGoods (DSet<Good> value)
     {
         requestAttributeChange(GOODS, value, this.goods);
-        DSet<Good> clone = (value == null) ? null : value.typedClone();
+        DSet<Good> clone = (value == null) ? null : value.clone();
         this.goods = clone;
     }
     // AUTO-GENERATED: METHODS END

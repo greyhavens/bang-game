@@ -279,7 +279,7 @@ public class StatusObject extends DObject
     public void setPlaces (DSet<StatusObject.PlaceInfo> value)
     {
         requestAttributeChange(PLACES, value, this.places);
-        DSet<StatusObject.PlaceInfo> clone = (value == null) ? null : value.typedClone();
+        DSet<StatusObject.PlaceInfo> clone = (value == null) ? null : value.clone();
         this.places = clone;
     }
 
@@ -342,7 +342,7 @@ public class StatusObject extends DObject
     public void setGames (DSet<StatusObject.GameInfo> value)
     {
         requestAttributeChange(GAMES, value, this.games);
-        DSet<StatusObject.GameInfo> clone = (value == null) ? null : value.typedClone();
+        DSet<StatusObject.GameInfo> clone = (value == null) ? null : value.clone();
         this.games = clone;
     }
     // AUTO-GENERATED: METHODS END

@@ -569,7 +569,7 @@ public class GangObject extends DObject
     public void setInventory (DSet<Item> value)
     {
         requestAttributeChange(INVENTORY, value, this.inventory);
-        DSet<Item> clone = (value == null) ? null : value.typedClone();
+        DSet<Item> clone = (value == null) ? null : value.clone();
         this.inventory = clone;
     }
 
@@ -616,7 +616,7 @@ public class GangObject extends DObject
     public void setMembers (DSet<GangMemberEntry> value)
     {
         requestAttributeChange(MEMBERS, value, this.members);
-        DSet<GangMemberEntry> clone = (value == null) ? null : value.typedClone();
+        DSet<GangMemberEntry> clone = (value == null) ? null : value.clone();
         this.members = clone;
     }
 
@@ -663,7 +663,7 @@ public class GangObject extends DObject
     public void setTopRanked (DSet<TopRankedList> value)
     {
         requestAttributeChange(TOP_RANKED, value, this.topRanked);
-        DSet<TopRankedList> clone = (value == null) ? null : value.typedClone();
+        DSet<TopRankedList> clone = (value == null) ? null : value.clone();
         this.topRanked = clone;
     }
 

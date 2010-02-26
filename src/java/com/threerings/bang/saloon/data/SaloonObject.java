@@ -99,7 +99,7 @@ public class SaloonObject extends PlaceObject
     public void setParlors (DSet<ParlorInfo> value)
     {
         requestAttributeChange(PARLORS, value, this.parlors);
-        DSet<ParlorInfo> clone = (value == null) ? null : value.typedClone();
+        DSet<ParlorInfo> clone = (value == null) ? null : value.clone();
         this.parlors = clone;
     }
 
@@ -146,7 +146,7 @@ public class SaloonObject extends PlaceObject
     public void setTopRanked (DSet<TopRankedList> value)
     {
         requestAttributeChange(TOP_RANKED, value, this.topRanked);
-        DSet<TopRankedList> clone = (value == null) ? null : value.typedClone();
+        DSet<TopRankedList> clone = (value == null) ? null : value.clone();
         this.topRanked = clone;
     }
     // AUTO-GENERATED: METHODS END

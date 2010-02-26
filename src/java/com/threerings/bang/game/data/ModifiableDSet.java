@@ -60,9 +60,9 @@ public class ModifiableDSet<T extends DSet.Entry> extends DSet<T>
         return update(entry);
     }
 
-    // from DSet
-    @SuppressWarnings("unchecked") @Override public ModifiableDSet<T> typedClone ()
+    @Override
+    public ModifiableDSet<T> clone ()
     {
-        return (ModifiableDSet<T>)super.typedClone();
+        return (ModifiableDSet<T>)super.clone();
     }
 }
