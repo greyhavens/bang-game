@@ -27,6 +27,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.TextEvent;
 
+import com.samskivert.util.FormatterUtil;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.RecentList;
@@ -105,7 +106,7 @@ public class BangApp extends JmeApp
                 return output;
             }
         };
-        OneLineLogFormatter.configureDefaultHandler(formatter);
+        FormatterUtil.configureDefaultHandler(formatter);
         RepeatRecordFilter.configureDefaultHandler(100);
 
         // if we've redirected our log output, note where to
