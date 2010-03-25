@@ -37,7 +37,7 @@
     <file name="${extlibs.dir}/ehcache.jar"/>
     <file name="${extlibs.dir}/google-collect.jar"/>
     <file name="${extlibs.dir}/guice.jar"/>
-    <file name="${extlibs.dir}/gwt-user.jar"/>
+    <file name="${extlibs.dir}/gwt-user-1.7.jar"/>
     <file name="${extlibs.dir}/jarbundler-1.2.jar"/>
     <file name="${extlibs.dir}/javassist.jar"/>
     <file name="${extlibs.dir}/junit4.jar"/>
