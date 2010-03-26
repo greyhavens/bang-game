@@ -22,7 +22,7 @@
 -injars ../dist/lib/guice.jar(
   !META-INF/*,!com/google/inject/ProviderMethodsTest*,
   !com/google/inject/InterceptorStackCallback*,!com/google/inject/tools/**)
--injars ../dist/lib/gwt-user.jar(**/user/client/rpc/IsSerializable.class)
+-injars ../dist/lib/gwt-user-1.7.jar(**/user/client/rpc/IsSerializable.class)
 
 # OOO shared libraries
 -injars ../dist/lib/samskivert-0.0-SNAPSHOT.jar(
