@@ -18,7 +18,7 @@
 -injars ../dist/lib/jorbis-0.0.12.jar(!META-INF/*)
 -injars ../dist/lib/jogg-0.0.5.jar(!META-INF/*)
 -injars ../dist/lib/jl1.0.jar(!META-INF/*)
--injars ../dist/lib/google-collect.jar(!META-INF/*)
+-injars ../dist/lib/guava.jar(!META-INF/*)
 -injars ../dist/lib/guice.jar(
   !META-INF/*,!com/google/inject/ProviderMethodsTest*,
   !com/google/inject/InterceptorStackCallback*,!com/google/inject/tools/**)
