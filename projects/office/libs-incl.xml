@@ -3,7 +3,7 @@
 <project name="library-dependencies">
   <filelist dir="${libs.dir}" id="bangoffice.libs">
     <file name="commons-collections.jar"/>
-    <file name="google-collect.jar"/>
+    <file name="guava.jar"/>
     <file name="junit4.jar"/>
     <file name="mysql-connector-java.jar"/>
     <file name="servlet-api.jar"/>
