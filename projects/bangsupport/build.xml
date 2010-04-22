@@ -17,7 +17,7 @@
   <!-- special bits used by GWT -->
   <path id="gwt.classpath">
     <fileset dir="${base.dir}/extlibs/java">
-      <include name="gwt-dev-linux.jar"/>
+      <include name="gwt-dev.jar"/>
       <include name="gwt-widgets.jar"/>
     </fileset>
     <fileset dir="${deploy.dir}/lib" includes="*.jar"/>
@@ -29,24 +29,6 @@
     <antcall target="common-webapp-prepare"/>
     <!-- we also need bang-code.jar which doesn't fit into our libs.dir scheme -->
     <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>
-  </target>
-
-  <!-- runs the GWT debugging shell -->
-  <property name="module"  value="bang_user"/>
-  <target name="gshell">
-    <available property="gwtdir.present" file="${gwt.dir}/gwt-dev-linux.jar"/>
-    <fail message="You must pass -Dgwt.dir=path_to_gwt_install" unless="gwtdir.present"/>
-    <java fork="true" classname="com.google.gwt.dev.GWTShell">
-      <classpath>
-        <pathelement path="${gwt.dir}/gwt-dev-linux.jar"/>
-        <path refid="gwt.classpath"/>
-        <!-- for StandaloneUnderwireServlet -->
-        <pathelement path="${deploy.dir}/classes"/>
-        <!-- for server.properties -->
-        <pathelement path="../../etc"/>
-      </classpath>
-      <arg value="${module}/index.html"/>
-    </java>
   </target>
 
   <!-- runs the GWT compiler -->

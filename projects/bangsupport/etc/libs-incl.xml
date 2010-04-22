@@ -3,7 +3,7 @@
 <project name="library-dependencies">
   <filelist dir="${libs.dir}" id="bangsupport.libs">
     <file name="guava.jar"/>
-    <file name="gwt-user-1.7.jar"/>
+    <file name="gwt-user.jar"/>
     <file name="junit4.jar"/>
     <file name="mail.jar"/>
     <file name="mysql-connector-java.jar"/>
