@@ -16,7 +16,7 @@ import com.threerings.presents.annotation.MainInvoker;
 
 import com.threerings.coin.server.CoinManager;
 import com.threerings.coin.server.persist.CoinTransaction;
-import com.threerings.user.AccountActionRepository;
+import com.threerings.user.depot.AccountActionRepository;
 
 import com.threerings.bang.data.PlayerObject;
 

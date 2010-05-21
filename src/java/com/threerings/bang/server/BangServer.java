@@ -52,7 +52,7 @@ import com.threerings.crowd.server.PlaceRegistry;
 
 import com.threerings.parlor.server.ParlorManager;
 
-import com.threerings.user.AccountActionRepository;
+import com.threerings.user.depot.AccountActionRepository;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberConfig;
@@ -111,10 +111,9 @@ public class BangServer extends CrowdServer
             bind(ConfigRegistry.class).to(BangConfigRegistry.class);
             // bang dependencies
             ResourceManager rsrcmgr = new ResourceManager("rsrc");
-            AccountActionRepository aarepo;
+            AccountActionRepository aarepo = new AccountActionRepository(conprov);
             AvatarLogic alogic;
             try {
-                aarepo = new AccountActionRepository(conprov);
                 rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
                 alogic = new AvatarLogic(rsrcmgr, new BundledComponentRepository(
                     rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET));

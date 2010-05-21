@@ -19,7 +19,7 @@ import com.threerings.presents.annotation.AuthInvoker;
 import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.user.AccountAction;
-import com.threerings.user.AccountActionRepository;
+import com.threerings.user.depot.AccountActionRepository;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.persist.PlayerRecord;
@@ -69,11 +69,7 @@ public class AccountActionManager
 
         _authInvoker.postUnit(new Invoker.Unit("getAccountActions") {
             public boolean invoke () {
-                try {
-                    _actions = _repo.getActions(ServerConfig.nodename, MAX_ACTIONS);
-                } catch (PersistenceException pe) {
-                    log.warning("Failed to get list of new account actions!", pe);
-                }
+                _actions = _repo.getActions(ServerConfig.nodename, MAX_ACTIONS);
                 return true;
             }
 
@@ -108,11 +104,7 @@ public class AccountActionManager
         String uname = "updateActions:" + actions.size();
         _authInvoker.postUnit(new Invoker.Unit(uname) {
             public boolean invoke () {
-                try {
-                    _repo.updateActions(actions, ServerConfig.nodename);
-                } catch (PersistenceException pe) {
-                    log.warning("Failed to mark processed actions!", "cause", pe);
-                }
+                _repo.updateActions(actions, ServerConfig.nodename);
                 return true;
             }
 
