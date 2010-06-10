@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -112,7 +114,7 @@ public class PlayerRepository extends JORARepository
      * Looks up the handles for all of the supplied accounts. This is used by our glue code in the
      * Underwire support system.
      */
-    public Map<String,String> resolveHandles (Set<String> accounts)
+    public Map<String,List<String>> resolveHandles (Set<String> accounts)
         throws PersistenceException
     {
         final StringBuilder query = new StringBuilder(
@@ -126,7 +128,7 @@ public class PlayerRepository extends JORARepository
         }
         query.append(")");
 
-        final Map<String,String> mapping = new HashMap<String,String>();
+        final Map<String,List<String>> mapping = Maps.newHashMap();
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException {
@@ -134,7 +136,7 @@ public class PlayerRepository extends JORARepository
                 try {
                     ResultSet rs = stmt.executeQuery(query.toString());
                     while (rs.next()) {
-                        mapping.put(rs.getString(1), rs.getString(2));
+                        mapping.put(rs.getString(1), Lists.newArrayList(rs.getString(2)));
                     }
                 } finally {
                     JDBCUtil.close(stmt);

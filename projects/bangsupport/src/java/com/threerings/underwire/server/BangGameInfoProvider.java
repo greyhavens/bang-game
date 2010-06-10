@@ -4,6 +4,7 @@
 package com.threerings.underwire.server;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class BangGameInfoProvider extends GameInfoProvider
     }
 
     @Override // from GameInfoProvider
-    public Map<String,String> resolveGameNames (Set<String> names)
+    public Map<String,List<String>> resolveGameNames (Set<String> names)
     {
         try {
             return _playrepo.resolveHandles(names);
