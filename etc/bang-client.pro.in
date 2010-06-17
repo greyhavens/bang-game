@@ -133,6 +133,11 @@
     *;
 }
 
+# this also doesnshould be included because it implements Serializable
+-keep public class com.google.inject.spi.Message {
+    *;
+}
+
 -keep public class com.threerings.bang.client.BangApp {
     public static void main (java.lang.String[]);
 }
