@@ -716,8 +716,10 @@
           overwrite="true" encoding="UTF-8">
       <filterset>
         <filter token="version" value="${clientVersion}"/>
-        <filter token="apply_mapping" value="-applymapping"/>
-        <filter token="apply_file" value="proguard/${latestVersion}.map"/>
+        <filter token="apply_mapping" value="#"/>
+        <filter token="apply_file" value="#"/>
+        <!-- <filter token="apply_mapping" value="-applymapping"/>
+        <filter token="apply_file" value="proguard/${latestVersion}.map"/> -->
       </filterset>
     </copy>
 
