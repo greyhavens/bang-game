@@ -70,7 +70,7 @@ public class ExplosionViz extends ParticleEffectViz
         // create a few streamers from the explosion
         if (BangPrefs.isHighDetail()) {
             _streamers = new Streamer[NUM_STREAMERS_AVG +
-                RandomUtil.getInt(+NUM_STREAMERS_DEV, -NUM_STREAMERS_DEV)];
+                RandomUtil.getInRange(-NUM_STREAMERS_DEV, 1+NUM_STREAMERS_DEV)];
             for (int i = 0; i < _streamers.length; i++) {
                 _streamers[i] = new Streamer();
             }
@@ -123,7 +123,7 @@ public class ExplosionViz extends ParticleEffectViz
         /** The age of this streamer in seconds. */
         protected float _age;
     }
-    
+
     /** The explosion particle effect used by this visualization. */
     protected String _particleEffect = "frontier_town/explosion";
 

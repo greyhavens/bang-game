@@ -1428,7 +1428,7 @@ public class GangHandler
                     _cost[0] += (catarts[ii].scrip * count);
                     _cost[1] += (catarts[ii].coins * count);
                     if (buy && count > 0) {
-                        _receiverIds[ii] = (ArrayIntSet)memberIds.clone();
+                        _receiverIds[ii] = memberIds.clone();
                         _receiverIds[ii].removeAll(ownerIds);
                     }
                 }

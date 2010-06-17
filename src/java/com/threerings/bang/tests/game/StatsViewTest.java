@@ -82,7 +82,7 @@ public class StatsViewTest extends TestApp
             bangobj.stats[ii].setStat(StatType.CATTLE_RUSTLED, RandomUtil.getInt(5) * ii);
             bangobj.stats[ii].setStat(StatType.NUGGETS_CLAIMED, RandomUtil.getInt(10));
             bangobj.stats[ii].setStat(StatType.DAMAGE_DEALT, RandomUtil.getInt(500));
-            bangobj.stats[ii].setStat(StatType.POINTS_EARNED, RandomUtil.getInt(2500, 1000));
+            bangobj.stats[ii].setStat(StatType.POINTS_EARNED, RandomUtil.getInRange(1000, 2500));
             bangobj.stats[ii].setStat(StatType.DAMAGE_DEALT, RandomUtil.getInt(500));
             bangobj.stats[ii].setStat(StatType.UNITS_KILLED, RandomUtil.getInt(15));
             bangobj.stats[ii].setStat(StatType.UNITS_LOST, RandomUtil.getInt(15));

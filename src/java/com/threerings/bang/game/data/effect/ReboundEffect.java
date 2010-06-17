@@ -24,7 +24,7 @@ public class ReboundEffect extends TrapEffect
 {
     /** Fired off when the spring is activated. */
     public static final String ACTIVATED_SPRING = "frontier_town/spring";
-    
+
     /** The x and y coordinates to which the target was sent. */
     public short x, y;
 
@@ -32,8 +32,8 @@ public class ReboundEffect extends TrapEffect
     public Rectangle[] getBounds (BangObject bangobj)
     {
         Piece piece = bangobj.pieces.get(pieceId);
-        return new Rectangle [] { 
-            new Rectangle(piece.x, piece.y, 1, 1), new Rectangle(x, y, 1, 1) 
+        return new Rectangle [] {
+            new Rectangle(piece.x, piece.y, 1, 1), new Rectangle(x, y, 1, 1)
         };
     }
 
@@ -46,11 +46,11 @@ public class ReboundEffect extends TrapEffect
             log.warning("Missing target for rebound effect", "id", pieceId);
             return;
         }
-        
+
         // choose a random distance within the limits; it doesn't matter that
         // it will be biased towards the edges
-        int dist = RandomUtil.getInt(MAX_REBOUND_DISTANCE + 1,
-            MIN_REBOUND_DISTANCE - 1);
+        int dist = RandomUtil.getInRange(MIN_REBOUND_DISTANCE - 1,
+            MAX_REBOUND_DISTANCE);
         Point pt = null;
         while (pt == null && dist > 0) {
             pt = bangobj.board.getOccupiableSpot(target.x, target.y, dist,
@@ -74,7 +74,7 @@ public class ReboundEffect extends TrapEffect
         // logging robots are built to stand being dropped from the sky
         return (piece instanceof LoggingRobot) ? 0 : REBOUND_DAMAGE;
     }
-    
+
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
@@ -88,10 +88,10 @@ public class ReboundEffect extends TrapEffect
         Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
             log.warning("Missing target for rebound effect", "id", pieceId);
-            return false;            
+            return false;
         }
         moveAndReport(bangobj, target, x, y, obs);
-        
+
         // if on the server proceed immediately
         if (bangobj.getManager().isManager(bangobj)) {
             return super.trapPiece(bangobj, obs, causer);
@@ -108,15 +108,15 @@ public class ReboundEffect extends TrapEffect
     {
         super.trapPiece(bangobj, obs, _causer);
     }
-    
+
     protected transient int _causer;
-    
+
     /** The minimum distance away to send sprung pieces. */
     protected static final int MIN_REBOUND_DISTANCE = 5;
-    
+
     /** The maximum distance away. */
     protected static final int MAX_REBOUND_DISTANCE = 10;
-    
+
     /** The amount of damage caused on landing. */
     protected static final int REBOUND_DAMAGE = 20;
 }

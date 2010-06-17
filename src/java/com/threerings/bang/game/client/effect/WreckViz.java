@@ -85,7 +85,7 @@ public class WreckViz extends ParticleEffectViz
         // create a few pieces of wreckage to be thrown from the wreck
         if (BangPrefs.isHighDetail()) {
             _wreckage = new Wreckage[NUM_WRECKAGE_AVG +
-                RandomUtil.getInt(+NUM_WRECKAGE_DEV, -NUM_WRECKAGE_DEV)];
+                RandomUtil.getInRange(-NUM_WRECKAGE_DEV, 1+NUM_WRECKAGE_DEV)];
             for (int i = 0; i < _wreckage.length; i++) {
                 _wreckage[i] = new Wreckage();
             }

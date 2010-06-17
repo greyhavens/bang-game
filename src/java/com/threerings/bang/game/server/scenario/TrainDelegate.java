@@ -172,7 +172,7 @@ public class TrainDelegate extends ScenarioDelegate
             }
 
             // advance the train by a random number of tiles
-            int tiles = RandomUtil.getInt(MAX_TRAIN_TILES+1, MIN_TRAIN_TILES-1);
+            int tiles = RandomUtil.getInRange(MIN_TRAIN_TILES-1, MAX_TRAIN_TILES);
             for (int ii = 0; ii < tiles && !_trains.isEmpty(); ii++) {
                 advanceTrain(bangobj);
             }
@@ -201,7 +201,7 @@ public class TrainDelegate extends ScenarioDelegate
             _trains.add((Train)bangobj.pieces.get(train.pieceId));
 
             // choose a random length
-            _uncreated = RandomUtil.getInt(_maxTrainLength, MIN_TRAIN_LENGTH-2);
+            _uncreated = RandomUtil.getInRange(MIN_TRAIN_LENGTH-2, _maxTrainLength + 1);
         }
 
         /**

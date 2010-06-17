@@ -2,4 +2,9 @@
   <public path="public/bang_common"/>
   <stylesheet src="support.css"/>
   <servlet path="/data" class="com.threerings.underwire.web.server.StandaloneUnderwireServlet"/>
+
+  <!-- Work-around for GWT 2.0 compiler bug;
+       see http://code.google.com/p/google-web-toolkit/issues/detail?id=4438 -->
+  <extend-configuration-property name="rpc.blacklist"
+                                 value="com.google.gwt.user.client.ui.*Collection"/>
 </module>

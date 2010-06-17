@@ -63,8 +63,7 @@ public class WendigoAttack extends Scenario
             }
         });
 
-        _nextWendigo = (short)RandomUtil.getInt(
-            MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
+        _nextWendigo = (short)RandomUtil.getInRange(MIN_WENDIGO_TICKS, MAX_WENDIGO_TICKS + 1);
     }
 
     @Override // documentation inherited
@@ -97,7 +96,7 @@ public class WendigoAttack extends Scenario
         super.roundWillStart(bangobj, starts, purchases);
 
         for (int ii = 0, nn = _talismanSpots.size(); ii < nn; ii++) {
-            dropBonus(bangobj, TalismanEffect.TALISMAN_BONUS, 
+            dropBonus(bangobj, TalismanEffect.TALISMAN_BONUS,
                 _talismanSpots.getX(ii), _talismanSpots.getY(ii));
         }
     }
@@ -113,8 +112,8 @@ public class WendigoAttack extends Scenario
                 _wendel.deployWendigo(bangobj, tick);
                 if (_nextWendigo + MAX_WENDIGO_TICKS + MIN_WENDIGO_TICKS +
                     WENDIGO_WAIT * 2 < bangobj.duration) {
-                    _nextWendigo += (short)RandomUtil.getInt(
-                        MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
+                    _nextWendigo += (short)RandomUtil.getInRange(
+                            MIN_WENDIGO_TICKS, MAX_WENDIGO_TICKS + 1);
                 } else {
                     _nextWendigo = (short)(bangobj.duration - WENDIGO_WAIT - 1);
                 }

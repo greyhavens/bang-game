@@ -408,7 +408,7 @@ public class EditorBoardView extends BoardView
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                _board.addHeightfieldValue(x, y, RandomUtil.getInt(+2, -2));
+                _board.addHeightfieldValue(x, y, RandomUtil.getInRange(-2, +3));
             }
         }
 

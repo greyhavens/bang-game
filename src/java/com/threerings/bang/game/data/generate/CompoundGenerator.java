@@ -47,10 +47,8 @@ public class CompoundGenerator extends EnvironmentGenerator
             BigPiece bldg = bldgs[ii];
 
             // position it randomly
-            int tx = RandomUtil.getInt(width-bldg.getBounds().width, 0) +
-                BangBoard.BORDER_SIZE;
-            int ty = RandomUtil.getInt(height-bldg.getBounds().height, 0) +
-                BangBoard.BORDER_SIZE;
+            int tx = RandomUtil.getInt(width-bldg.getBounds().width) + BangBoard.BORDER_SIZE;
+            int ty = RandomUtil.getInt(height-bldg.getBounds().height) + BangBoard.BORDER_SIZE;
             bldg.position(tx, ty);
 
             // rotate it randomly
