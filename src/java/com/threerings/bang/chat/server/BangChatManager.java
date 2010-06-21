@@ -87,7 +87,7 @@ public class BangChatManager
 
         // if we don't have a minimum number of words, our dictionary loading failed, so don't
         // enable the whitelist
-        if (_whitelist.size() < MIN_WHITELIST_SIZE) {
+        if (!whitelistEnabled()) {
             log.info("Unable to sufficient whitelist data. Disabling chat whitelist.");
             _whitelist.clear();
             return;
@@ -109,11 +109,13 @@ public class BangChatManager
      */
     public void addWhitelistWords (String name)
     {
-        Set<String> words = Sets.newHashSet();
-        for (String word : name.split("\\s")) {
-            words.add(word);
+        if (whitelistEnabled()) {
+            Set<String> words = Sets.newHashSet();
+            for (String word : name.split("\\s")) {
+                words.add(word);
+            }
+            addWhitelistWords(words);
         }
-        addWhitelistWords(words);
     }
 
     /**
@@ -121,8 +123,18 @@ public class BangChatManager
      */
     public void addWhitelistWords (Set<String> words)
     {
-        Iterables.addAll(_whitelist, Iterables.transform(
-                             Iterables.filter(words, VALID_NAME), DOWNCASE));
+        if (whitelistEnabled()) {
+            Iterables.addAll(_whitelist, Iterables.transform(
+                                 Iterables.filter(words, VALID_NAME), DOWNCASE));
+        }
+    }
+
+    /**
+     * Returns true if we have any words in the whitelist.
+     */
+    public boolean whitelistEnabled ()
+    {
+        return _whitelist.size() > MIN_WHITELIST_SIZE;
     }
 
     /**
