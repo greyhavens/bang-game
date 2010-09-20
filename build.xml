@@ -36,6 +36,7 @@
     <file name="${extlibs.dir}/commons-logging.jar"/>
     <file name="${extlibs.dir}/ehcache.jar"/>
     <file name="${extlibs.dir}/guava.jar"/>
+    <file name="${extlibs.dir}/getdown.jar"/>
     <file name="${extlibs.dir}/guice.jar"/>
     <file name="${extlibs.dir}/gwt-user.jar"/>
     <file name="${extlibs.dir}/jarbundler-1.2.jar"/>
@@ -200,7 +201,6 @@
       <dependency groupId="com.threerings.nenya" artifactId="nenya-cast" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.vilya" artifactId="vilya-parlor" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.vilya" artifactId="vilya-stats" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings" artifactId="getdown" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings" artifactId="gwt-utils" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.underwire" artifactId="underwire" version="0.0-SNAPSHOT"/>
@@ -580,14 +580,7 @@
       <fileset dir="${deploy.dir}/lib" includes="commons-digester.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="commons-logging.jar"/>
     </copy>
-    <artifact:dependencies filesetId="getdown-pro.fileset">
-      <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.threerings" artifactId="getdown-pro" version="0.0-SNAPSHOT"/>
-    </artifact:dependencies>
-    <copy todir="${client_dir}/code">
-      <fileset refid="getdown-pro.fileset"/>
-      <mergemapper to="getdown-pro-new.jar"/>
-    </copy>
+    <copy tofile="${client_dir}/code/getdown-pro-new.jar" file="${extlibs.dir}/getdown-pro.jar"/>
     <delete file="${deploy.dir}/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
       <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
@@ -603,7 +596,7 @@
     <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask">
       <classpath>
         <pathelement path="${deploy.dir}/lib/commons-codec.jar"/>
-        <pathelement path="${deploy.dir}/lib/getdown-0.0-SNAPSHOT.jar"/>
+        <pathelement path="${deploy.dir}/lib/getdown.jar"/>
         <pathelement path="${deploy.dir}/lib/samskivert-0.0-SNAPSHOT.jar"/>
       </classpath>
     </taskdef>
@@ -818,14 +811,7 @@
     <property file="${cert_dir}/certificate.properties"/>
 
     <!-- copy the applet jar file into place and sign it -->
-    <artifact:dependencies filesetId="getdown-retro-pro.fileset">
-      <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.threerings" artifactId="getdown-retro-pro" version="0.0-SNAPSHOT"/>
-    </artifact:dependencies>
-    <copy todir="${applet.base}/client">
-      <fileset refid="getdown-retro-pro.fileset"/>
-      <mergemapper to="getdown-retro-pro.jar"/>
-    </copy>
+    <copy todir="${applet.base}/client" file="${extlibs.dir}/getdown-retro-pro.jar"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
       <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
     </signjar>

@@ -29,7 +29,7 @@
   com/samskivert/Log.class,**/io/**,**/net/**,**/swing/**,**/text/**,**/util/**,**/xml/**,
   **/servlet/user/Password.class,**/servlet/user/UserUtil.class,**/servlet/user/Username.class,
   **/servlet/user/InvalidUsernameException.class)
--injars ../dist/lib/getdown-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/narya-base-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/narya-distrib-0.0-SNAPSHOT.jar(
   !META-INF/*,!**/server/**,!**/tools/**)
