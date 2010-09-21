@@ -77,7 +77,7 @@
   </target>
 
   <!-- runs our webapp in jetty -->
-  <target name="devmode" depends="compile">
+  <target name="devmode" depends="-init-jetty-ant,compile">
     <jetty tempDirectory="${deploy.dir}/jetty-temp">
       <webApp name="${app.name}" warfile="${basedir}/${deploy.dir}/${app.name}"
               contextpath="/bangsupport" scanIntervalSeconds="2">
