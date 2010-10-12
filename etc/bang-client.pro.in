@@ -32,7 +32,7 @@
 -injars ../dist/lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/narya-base-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/narya-distrib-0.0-SNAPSHOT.jar(
-  !META-INF/*,!**/server/**,!**/tools/**)
+  !META-INF/*,!**/server/**,!**/tools/**,!**/admin/web/**)
 -injars ../dist/lib/nenya-rsrc-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-media-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-cast-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
