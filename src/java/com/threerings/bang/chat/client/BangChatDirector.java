@@ -38,11 +38,11 @@ public class BangChatDirector extends ChatDirector
 {
     public BangChatDirector (BangContext ctx)
     {
-        super(ctx, ctx.getMessageManager(), BangCodes.CHAT_MSGS);
+        super(ctx, BangCodes.CHAT_MSGS);
         _ctx = ctx;
 
         // add mute command handlers
-        MessageBundle msg = _msgmgr.getBundle(_bundle);
+        MessageBundle msg = _ctx.getMessageManager().getBundle(_bundle);
         registerCommandHandler(msg, "mute", new CommandHandler() {
             public String handleCommand (
                 SpeakService speaksvc, String command, String args,
