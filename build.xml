@@ -194,6 +194,7 @@
       <dependency groupId="com.samskivert" artifactId="samskivert" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.narya" artifactId="narya-base" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.narya" artifactId="narya-distrib" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.narya" artifactId="narya-tools" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.nenya" artifactId="nenya-rsrc" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.nenya" artifactId="nenya-media" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.nenya" artifactId="nenya-jme" version="0.0-SNAPSHOT"/>
@@ -233,8 +234,6 @@
 
   <!-- generates additional methods for distributed object classes -->
   <target name="gendobj" depends="prepare">
-    <taskdef name="dobj" classpathref="tool.classpath"
-             classname="com.threerings.presents.tools.GenDObjectTask"/>
     <!-- make sure the dobject class files are all compiled -->
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
@@ -242,16 +241,15 @@
       <include name="**/*Object.java"/>
     </javac>
     <!-- now generate the associated files -->
-    <dobj classpathref="classpath">
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tool.classpath"/>
+    <gendobj classpathref="classpath">
       <fileset dir="${src.dir}" includes="**/*Object.java"/>
-    </dobj>
+    </gendobj>
   </target>
 
   <!-- generates marshaller and dispatcher classes for all invocation -->
   <!-- service declarations -->
   <target name="genservice" depends="prepare">
-    <taskdef name="service" classpathref="tool.classpath"
-             classname="com.threerings.presents.tools.GenServiceTask"/>
     <!-- make sure the service class files are all compiled -->
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
@@ -259,16 +257,15 @@
       <include name="**/*Service.java"/>
     </javac>
     <!-- now generate the associated files -->
-    <service header="lib/SOURCE_HEADER" classpathref="classpath">
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tool.classpath"/>
+    <genservice header="lib/SOURCE_HEADER" classpathref="classpath">
       <fileset dir="${src.dir}" includes="**/*Service.java"/>
-    </service>
+    </genservice>
   </target>
 
   <!-- generates sender and decoder classes for all invocation -->
   <!-- receiver declarations -->
   <target name="genreceiver" depends="prepare">
-    <taskdef name="receiver" classpathref="tool.classpath"
-             classname="com.threerings.presents.tools.GenReceiverTask"/>
     <!-- make sure the receiver class files are all compiled -->
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
@@ -277,9 +274,10 @@
       <exclude name="**/InvocationReceiver.java"/>
     </javac>
     <!-- now generate the associated files -->
-    <receiver header="lib/SOURCE_HEADER" classpathref="classpath">
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tool.classpath"/>
+    <genreceiver header="lib/SOURCE_HEADER" classpathref="classpath">
       <fileset dir="${src.dir}" includes="**/*Receiver.java" excludes="**/InvocationReceiver.java"/>
-    </receiver>
+    </genreceiver>
   </target>
 
   <!-- encodes our sounds to ogg and enumerates them into a master list -->
