@@ -9,7 +9,7 @@
     <file name="mysql-connector-java.jar"/>
     <file name="servlet-api.jar"/>
     <file name="depot-0.0-SNAPSHOT.jar"/>
-    <file name="narya-base-0.0-SNAPSHOT.jar"/>
+    <file name="narya-0.0-SNAPSHOT.jar"/>
     <file name="samskivert-0.0-SNAPSHOT.jar"/>
     <file name="samskivert-gwt-0.0-SNAPSHOT.jar"/>
     <file name="threerings-0.0-SNAPSHOT.jar"/>

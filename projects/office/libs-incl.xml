@@ -9,8 +9,7 @@
     <file name="servlet-api.jar"/>
     <file name="velocity-1.5-dev.jar"/>
     <file name="depot-0.0-SNAPSHOT.jar"/>
-    <file name="narya-base-0.0-SNAPSHOT.jar"/>
-    <file name="narya-distrib-0.0-SNAPSHOT.jar"/>
+    <file name="narya-0.0-SNAPSHOT.jar"/>
     <file name="nenya-cast-0.0-SNAPSHOT.jar"/>
     <file name="samskivert-0.0-SNAPSHOT.jar"/>
     <file name="threerings-0.0-SNAPSHOT.jar"/>

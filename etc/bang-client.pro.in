@@ -30,8 +30,7 @@
   **/servlet/user/Password.class,**/servlet/user/UserUtil.class,**/servlet/user/Username.class,
   **/servlet/user/InvalidUsernameException.class)
 -injars ../dist/lib/getdown.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/narya-base-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/narya-distrib-0.0-SNAPSHOT.jar(
+-injars ../dist/lib/narya-0.0-SNAPSHOT.jar(
   !META-INF/*,!**/server/**,!**/tools/**,!**/admin/web/**)
 -injars ../dist/lib/nenya-rsrc-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-media-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
@@ -53,7 +52,7 @@
 -injars ../dist/bang-code.jar(!META-INF/*,!**/tools/**,!**/tests/**,!**/server/**)
 
 # Dependencies for the editor's server side stuff
--injars ../dist/lib/narya-distrib-0.0-SNAPSHOT.jar(
+-injars ../dist/lib/narya-0.0-SNAPSHOT.jar(
   **/presents/server/PresentsServer*.class,
   **/presents/server/PresentsDObjectMgr$LongRunnable.class,
   **/presents/server/SessionFactory.class,

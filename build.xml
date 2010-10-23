@@ -192,9 +192,7 @@
       <dependency groupId="com.jme" artifactId="jme-terrain" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.samskivert" artifactId="jme-bui" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.samskivert" artifactId="samskivert" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.narya" artifactId="narya-base" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.narya" artifactId="narya-distrib" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.narya" artifactId="narya-tools" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings.narya" artifactId="narya" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.nenya" artifactId="nenya-rsrc" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.nenya" artifactId="nenya-media" version="0.0-SNAPSHOT"/>
       <dependency groupId="com.threerings.nenya" artifactId="nenya-openal" version="0.0-SNAPSHOT"/>
