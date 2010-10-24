@@ -35,8 +35,6 @@
 -injars ../dist/lib/nenya-rsrc-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-media-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-cast-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/nenya-jme-0.0-SNAPSHOT.jar(
-  !META-INF/*,!**/jme/tools/*Task.class,**/jme/tools/**,!**/tools/**)
 -injars ../dist/lib/nenya-openal-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/vilya-parlor-0.0-SNAPSHOT.jar(
   !META-INF/*,!**/server/**,!**/tools/**,!**/ezgame/**)
@@ -49,7 +47,8 @@
   **/hemiptera/util/SendReportUtil.class)
 
 # The main Bang! code
--injars ../dist/bang-code.jar(!META-INF/*,!**/tools/**,!**/tests/**,!**/server/**)
+-injars ../dist/bang-code.jar(
+  !META-INF/*,!**/tools/**,!**/tests/**,!**/server/**,!**/jme/tools/*Task.class,**/jme/tools/**)
 
 # Dependencies for the editor's server side stuff
 -injars ../dist/lib/narya-0.0-SNAPSHOT.jar(
