@@ -48,7 +48,7 @@ public class BangChatDirector extends ChatDirector
                 SpeakService speaksvc, String command, String args,
                 String[] history) {
                 if (StringUtil.isBlank(args)) {
-                    return "m.usage_mute";
+                    return getUsage(command);
                 }
                 Handle name = new Handle(args);
                 if (_ctx.getMuteDirector().isMuted(name)) {
@@ -63,7 +63,7 @@ public class BangChatDirector extends ChatDirector
                 SpeakService speaksvc, String command, String args,
                 String[] history) {
                 if (StringUtil.isBlank(args)) {
-                    return "m.usage_unmute";
+                    return getUsage(command);
                 }
                 Handle name = new Handle(args);
                 if (!_ctx.getMuteDirector().isMuted(name)) {
