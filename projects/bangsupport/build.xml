@@ -12,6 +12,7 @@
   <!-- import the generic webapp build file and library dependencies -->
   <property name="dist.depends" value="gcompile"/>
   <property name="distclean.depends" value="clean-gwtcache"/>
+  <filelist id="bangsupport.libs" dir="etc" files="ignoreme.txt"/>
   <import file="${base.dir}/build/etc/webapp-build.xml"/>
 
   <!-- prepares the application directories -->
@@ -20,7 +21,7 @@
     <!-- we also need bang-code.jar which doesn't fit into our libs.dir scheme -->
     <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>
 
-    <!-- we get some dependencies from Maven -->
+    <!-- we get all other dependencies from Maven -->
     <artifact:dependencies filesetId="ooo.maven.fileset">
       <remoteRepository refid="ooo.maven.depends.repo"/>
       <dependency groupId="com.threerings" artifactId="underwire" version="1.0-SNAPSHOT"/>
