@@ -3,7 +3,6 @@
 <project name="library-dependencies">
   <filelist dir="${libs.dir}" id="bangsupport.libs">
     <file name="guava.jar"/>
-    <file name="gwt-user.jar"/>
     <file name="junit4.jar"/>
     <file name="mail.jar"/>
     <file name="mysql-connector-java.jar"/>
@@ -13,7 +12,6 @@
     <file name="samskivert-0.0-SNAPSHOT.jar"/>
     <file name="samskivert-gwt-0.0-SNAPSHOT.jar"/>
     <file name="threerings-0.0-SNAPSHOT.jar"/>
-    <file name="gwt-utils-0.0-SNAPSHOT.jar"/>
     <file name="underwire-0.0-SNAPSHOT.jar"/>
     <file name="underwire-gwt-0.0-SNAPSHOT.jar"/>
   </filelist>

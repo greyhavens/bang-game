@@ -1,5 +1,6 @@
 <!-- build configuration -->
-<project name="Bang Support web application" default="compile" basedir=".">
+<project name="Bang Support web application" default="compile" basedir="."
+         xmlns:artifact="urn:maven-artifact-ant">
 
   <!-- the base directory from which we get our bundles and jar files -->
   <property name="base.dir" value="../.."/>
@@ -14,25 +15,38 @@
   <import file="${base.dir}/build/etc/webapp-build.xml"/>
   <import file="etc/libs-incl.xml"/>
 
-  <!-- special bits used by GWT -->
-  <path id="gwt.classpath">
-    <fileset dir="${base.dir}/extlibs/java">
-      <include name="gwt-dev.jar"/>
-      <include name="gwt-widgets.jar"/>
-    </fileset>
-    <fileset dir="${deploy.dir}/lib" includes="*.jar"/>
-    <pathelement location="src/gwt"/>
-  </path>
-
   <!-- prepares the application directories -->
   <target name="prepare">
     <antcall target="common-webapp-prepare"/>
     <!-- we also need bang-code.jar which doesn't fit into our libs.dir scheme -->
     <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>
+
+    <!-- we get some dependencies from Maven -->
+    <artifact:dependencies filesetId="ooo.maven.fileset">
+      <remoteRepository refid="ooo.maven.depends.repo"/>
+      <dependency groupId="com.threerings" artifactId="gwt-utils" version="1.2-SNAPSHOT"/>
+    </artifact:dependencies>
+    <copy todir="${deploy.dir}/lib">
+      <fileset refid="ooo.maven.fileset"/>
+      <mapper type="flatten"/>
+    </copy>
+
+    <!-- set up the GWT classpath -->
+    <artifact:dependencies pathId="ext.gwt-build.classpath">
+      <dependency groupId="com.google.gwt" artifactId="gwt-dev" version="2.1.0"/>
+    </artifact:dependencies>
+    <path id="gwt.classpath">
+      <path refid="ext.gwt-build.classpath"/>
+      <fileset dir="${base.dir}/extlibs/java">
+        <include name="gwt-widgets.jar"/>
+      </fileset>
+      <fileset dir="${deploy.dir}/lib" includes="*.jar"/>
+      <pathelement location="src/gwt"/>
+    </path>
   </target>
 
   <!-- runs the GWT compiler -->
-  <target name="gcompile">
+  <target name="gcompile" depends="prepare">
     <for list="bang_user,bang_admin" param="module">
       <sequential>
         <java fork="true" failonerror="false" resultproperty="gwt.result"
