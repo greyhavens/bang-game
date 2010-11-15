@@ -13,7 +13,6 @@
   <property name="dist.depends" value="gcompile"/>
   <property name="distclean.depends" value="clean-gwtcache"/>
   <import file="${base.dir}/build/etc/webapp-build.xml"/>
-  <import file="etc/libs-incl.xml"/>
 
   <!-- prepares the application directories -->
   <target name="prepare">
@@ -24,10 +23,14 @@
     <!-- we get some dependencies from Maven -->
     <artifact:dependencies filesetId="ooo.maven.fileset">
       <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.threerings" artifactId="gwt-utils" version="1.2-SNAPSHOT"/>
+      <dependency groupId="com.threerings" artifactId="underwire" version="1.0-SNAPSHOT"/>
+    </artifact:dependencies>
+    <artifact:dependencies filesetId="ext.maven.fileset">
+      <dependency groupId="mysql" artifactId="mysql-connector-java" version="5.1.6"/>
     </artifact:dependencies>
     <copy todir="${deploy.dir}/lib">
       <fileset refid="ooo.maven.fileset"/>
+      <fileset refid="ext.maven.fileset"/>
       <mapper type="flatten"/>
     </copy>
 
@@ -37,9 +40,6 @@
     </artifact:dependencies>
     <path id="gwt.classpath">
       <path refid="ext.gwt-build.classpath"/>
-      <fileset dir="${base.dir}/extlibs/java">
-        <include name="gwt-widgets.jar"/>
-      </fileset>
       <fileset dir="${deploy.dir}/lib" includes="*.jar"/>
       <pathelement location="src/gwt"/>
     </path>
