@@ -17,7 +17,7 @@ import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsServer;
 import com.threerings.presents.server.RebootManager;
-import com.threerings.presents.server.net.ConnectionManager;
+import com.threerings.presents.server.net.PresentsConnectionManager;
 
 import com.threerings.admin.server.AdminManager;
 
@@ -144,6 +144,6 @@ public class BangAdminManager extends AdminManager
     };
 
     @Inject protected Lifecycle _lifecycle;
-    @Inject protected ConnectionManager _conmgr;
+    @Inject protected PresentsConnectionManager _conmgr;
     @Inject protected BangRebootManager _rebmgr;
 }

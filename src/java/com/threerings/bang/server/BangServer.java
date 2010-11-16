@@ -41,7 +41,7 @@ import com.threerings.presents.server.PresentsInvoker;
 import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.server.ReportManager;
 import com.threerings.presents.server.SessionFactory;
-import com.threerings.presents.server.net.ConnectionManager;
+import com.threerings.presents.server.net.PresentsConnectionManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.server.BodyLocator;
@@ -188,7 +188,7 @@ public class BangServer extends CrowdServer
 
     // legacy static Presents services; try not to use these
     public static Invoker invoker;
-    public static ConnectionManager conmgr;
+    public static PresentsConnectionManager conmgr;
     public static ClientManager clmgr;
     public static PresentsDObjectMgr omgr;
     public static InvocationManager invmgr;
