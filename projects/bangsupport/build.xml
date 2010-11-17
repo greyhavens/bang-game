@@ -24,7 +24,7 @@
     <!-- we get all other dependencies from Maven -->
     <artifact:dependencies filesetId="ooo.maven.fileset">
       <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.threerings" artifactId="underwire" version="1.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings" artifactId="underwire" version="1.0"/>
     </artifact:dependencies>
     <artifact:dependencies filesetId="ext.maven.fileset">
       <dependency groupId="mysql" artifactId="mysql-connector-java" version="5.1.6"/>
@@ -38,7 +38,7 @@
     <!-- set up the GWT classpath -->
     <artifact:dependencies pathId="ooo.gwt.classpath">
       <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.threerings" artifactId="underwire-gwt" version="1.0-SNAPSHOT"/>
+      <dependency groupId="com.threerings" artifactId="underwire-gwt" version="1.0"/>
     </artifact:dependencies>
     <artifact:dependencies pathId="ext.gwt.classpath">
       <dependency groupId="com.google.gwt" artifactId="gwt-dev" version="2.1.0"/>
