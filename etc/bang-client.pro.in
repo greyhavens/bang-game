@@ -30,7 +30,7 @@
   **/servlet/user/InvalidUsernameException.class)
 -injars ../dist/lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/narya-0.0-SNAPSHOT.jar(
-  !META-INF/*,!**/server/**,!**/tools/**,!**/admin/web/**)
+  !META-INF/*,!**/server/**,!**/tools/**,!**/admin/web/**,!**/nio/**)
 -injars ../dist/lib/nenya-rsrc-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-media-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/nenya-cast-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
