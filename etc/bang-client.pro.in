@@ -3,84 +3,32 @@
 #
 # Proguard configuration file for Bang! production client
 
-# Third party libraries
--injars ../dist/lib/commons-io.jar(!META-INF/*)
--injars ../dist/lib/commons-collections.jar(!META-INF/*)
--injars ../dist/lib/jme-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-effects-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-model-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-terrain-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-awt-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-sound-0.0-SNAPSHOT.jar(!META-INF/*,!**/fmod/**)
--injars ../dist/lib/jme-gamestates-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-scene-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-bui-0.0-SNAPSHOT.jar(!META-INF/*,!**/tests/**)
--injars ../dist/lib/jorbis-0.0.12.jar(!META-INF/*)
--injars ../dist/lib/jogg-0.0.5.jar(!META-INF/*)
--injars ../dist/lib/jl1.0.jar(!META-INF/*)
--injars ../dist/lib/guava.jar(!META-INF/*)
--injars ../dist/lib/guice.jar(
-  !META-INF/*,!com/google/inject/ProviderMethodsTest*,
-  !com/google/inject/InterceptorStackCallback*,!com/google/inject/tools/**)
-
-# OOO shared libraries
--injars ../dist/lib/samskivert-0.0-SNAPSHOT.jar(
-  com/samskivert/Log.class,**/io/**,**/net/**,**/swing/**,**/text/**,**/util/**,**/xml/**,
-  **/servlet/user/Password.class,**/servlet/user/UserUtil.class,**/servlet/user/Username.class,
-  **/servlet/user/InvalidUsernameException.class)
--injars ../dist/lib/getdown.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/narya-0.0-SNAPSHOT.jar(
-  !META-INF/*,!**/server/**,!**/tools/**,!**/admin/web/**,!**/nio/**)
--injars ../dist/lib/nenya-rsrc-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/nenya-media-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/nenya-cast-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/nenya-openal-0.0-SNAPSHOT.jar(!META-INF/*,!**/tools/**)
--injars ../dist/lib/vilya-parlor-0.0-SNAPSHOT.jar(
-  !META-INF/*,!**/server/**,!**/tools/**,!**/ezgame/**)
--injars ../dist/lib/vilya-stats-0.0-SNAPSHOT.jar(
-  !META-INF/*,!**/server/**,!**/tools/**)
--injars ../dist/lib/threerings-0.0-SNAPSHOT.jar(
-  **/coin/data/**,**/IdentUtil*.class,**/TrackingUtil.class,**/Log.class)
--injars ../dist/lib/hemiptera-0.0-SNAPSHOT.jar(
-  **/hemiptera/data/Report.class,
-  **/hemiptera/util/SendReportUtil.class)
-
-# The main Bang! code
--injars ../dist/bang-code.jar(
-  !META-INF/*,!**/tools/**,!**/tests/**,!**/server/**,!**/jme/tools/*Task.class,**/jme/tools/**)
-
-# Dependencies for the editor's server side stuff
--injars ../dist/lib/narya-0.0-SNAPSHOT.jar(
-  **/presents/server/PresentsServer*.class,
-  **/presents/server/PresentsDObjectMgr$LongRunnable.class,
-  **/presents/server/SessionFactory.class,
-  **/presents/server/ClientResolutionListener.class,
-  **/presents/server/InvocationProvider.class,
-  **/crowd/chat/server/SpeakHandler*.class,
-  **/crowd/chat/server/SpeakProvider.class,
-  **/crowd/server/PlaceManager*.class,
-  **/crowd/server/CrowdServer*.class)
--injars ../dist/lib/vilya-parlor-0.0-SNAPSHOT.jar(
-  **/parlor/server/PlayManager*.class,
-  **/parlor/game/server/GameManager*.class)
-
 -libraryjars <java.home>/lib/rt.jar
--libraryjars ../dist/lib/lwjgl.jar
--libraryjars ../dist/lib/lwjgl_util.jar
--libraryjars ../dist/lib/commons-beanutils.jar
--libraryjars ../dist/lib/commons-digester.jar
--libraryjars ../dist/lib/commons-logging.jar
 
 # -dontoptimize
 # -dontobfuscate
 
--dontskipnonpubliclibraryclasses
--outjars ../dist/bang-pcode.jar
+# -skipnonpubliclibraryclasses
 -printseeds ../dist/proguard.seeds
 @apply_mapping@ @apply_file@
--printmapping proguard/@version@.map
+-printmapping ../etc/proguard/@version@.map
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
+
+-dontwarn ca.beq.util.win32.registry.**
+-dontwarn com.google.inject.**
+-dontwarn com.jmex.font2d.**
+-dontwarn com.samskivert.depot.**
+-dontwarn com.samskivert.jdbc.**
+-dontwarn com.threerings.**.persist.**
+-dontwarn com.threerings.getdown.tools.Patcher
+-dontwarn com.threerings.presents.peer.**
+-dontwarn javax.annotation.**
+-dontwarn javax.mail.**
+-dontwarn net.java.games.input.**
+-dontwarn org.aopalliance.intercept.MethodInterceptor
+-dontwarn org.apache.log4j.**
+-dontwarn org.lwjgl.util.applet.LWJGLInstaller
 
 -keepnames class * implements java.io.Serializable
 -keepclassmembers class * implements java.io.Serializable {

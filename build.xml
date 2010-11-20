@@ -21,61 +21,6 @@
   <!-- the location that build artifiacts can be stored on the build server -->
   <property name="build.data"     value="${ooo.build.data}/bang_client"/>
 
-  <!-- declare the libraries needed by the Bang runtime -->
-  <filelist dir="." id="dist.libs">
-    <file name="${extlibs.dir}/ant.jar"/>
-    <file name="${extlibs.dir}/aopalliance.jar"/>
-    <file name="${extlibs.dir}/backport-util-concurrent-3.1-jdk1.6.jar"/> <!-- for ehcache -->
-    <file name="${extlibs.dir}/commons-beanutils.jar"/>
-    <file name="${extlibs.dir}/commons-codec.jar"/>
-    <file name="${extlibs.dir}/commons-collections.jar"/>
-    <file name="${extlibs.dir}/commons-digester.jar"/>
-    <file name="${extlibs.dir}/commons-httpclient.jar"/>
-    <file name="${extlibs.dir}/commons-io.jar"/>
-    <file name="${extlibs.dir}/commons-lang.jar"/>
-    <file name="${extlibs.dir}/commons-logging.jar"/>
-    <file name="${extlibs.dir}/ehcache.jar"/>
-    <file name="${extlibs.dir}/guava.jar"/>
-    <file name="${extlibs.dir}/getdown.jar"/>
-    <file name="${extlibs.dir}/guice.jar"/>
-    <file name="${extlibs.dir}/jarbundler-1.2.jar"/>
-    <file name="${extlibs.dir}/javassist.jar"/>
-    <file name="${extlibs.dir}/junit4.jar"/>
-    <file name="${extlibs.dir}/mail.jar"/>
-    <file name="${extlibs.dir}/mysql-connector-java.jar"/>
-    <file name="${extlibs.dir}/proguard.jar"/>
-    <file name="${extlibs.dir}/s3lib.jar"/>
-    <file name="${extlibs.dir}/s3upload.jar"/>
-    <file name="${extlibs.dir}/servlet-api.jar"/>
-    <file name="${extlibs.dir}/velocity-1.5-dev.jar"/>
-    <file name="lib/lwjgl.jar"/>
-    <file name="lib/lwjgl_util.jar"/>
-    <file name="lib/jorbis-0.0.12.jar"/>
-    <file name="lib/jogg-0.0.5.jar"/>
-    <file name="lib/jl1.0.jar"/>
-    <file name="lib/en-us.wordlist.jar"/>
-  </filelist>
-
-  <!-- declare our classpath -->
-  <path id="classpath">
-    <pathelement location="${deploy.dir}/classes"/>
-    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-  </path>
-
-  <!-- declare a classpath for non-bang tasks -->
-  <path id="tool.classpath">
-    <pathelement location="${deploy.dir}"/>
-    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-  </path>
-
-  <!-- declare a classpath for bang tasks -->
-  <path id="btool.classpath">
-    <pathelement location="${deploy.dir}"/>
-    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-    <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
-    <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
-  </path>
-
   <!-- Gets our various properties files and sticks them in dist -->
   <target name="config">
     <mkdir dir="${deploy.dir}"/>
@@ -104,7 +49,13 @@
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/rsrc"/>
 
-    <!-- Copy all the libs we depend on. -->
+    <!-- Copy some libs we depend on. -->
+    <filelist dir="." id="dist.libs">
+      <file name="lib/lwjgl.jar"/>
+      <file name="lib/lwjgl_util.jar"/>
+      <file name="lib/jl1.0.jar"/>
+      <file name="lib/en-us.wordlist.jar"/>
+    </filelist>
     <copyfilelist dest="${deploy.dir}/lib">
       <filelist refid="dist.libs"/>
     </copyfilelist>
@@ -175,38 +126,72 @@
 
     <copy file="rsrc/config/resource/manager.properties"
           tofile="${deploy.dir}/rsrc/config/resource/manager.properties"/>
-  </target>
 
-  <!-- fetches our library dependencies -->
-  <target name="mavendeps" depends="prepare">
-    <artifact:dependencies filesetId="dependency.fileset">
+    <!-- copy our runtime dependencies from Maven -->
+    <artifact:dependencies filesetId="ooo.dependency.fileset">
       <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.jme" artifactId="jme" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.jme" artifactId="jme-awt" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.jme" artifactId="jme-effects" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.jme" artifactId="jme-gamestates" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.jme" artifactId="jme-model" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.jme" artifactId="jme-scene" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.jme" artifactId="jme-sound" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.jme" artifactId="jme-terrain" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.samskivert" artifactId="jme-bui" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.samskivert" artifactId="samskivert" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.narya" artifactId="narya" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.nenya" artifactId="nenya-rsrc" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.nenya" artifactId="nenya-media" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.nenya" artifactId="nenya-openal" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.nenya" artifactId="nenya-cast" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.vilya" artifactId="vilya-parlor" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.vilya" artifactId="vilya-stats" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings" artifactId="threerings" version="0.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings" artifactId="underwire" version="1.0-SNAPSHOT"/>
-      <dependency groupId="com.threerings.hemiptera.${ooo.maven.distribution}"
-                  artifactId="hemiptera" version="0.0-SNAPSHOT"/>
+      <dependency groupId="com.jme" artifactId="jme" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-awt" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-effects" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-gamestates" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-model" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-scene" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-sound" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-terrain" version="1.0"/>
+      <dependency groupId="com.samskivert" artifactId="jme-bui" version="1.0"/>
+      <dependency groupId="com.samskivert" artifactId="samskivert" version="1.1"/>
+      <dependency groupId="com.threerings" artifactId="narya" version="1.2"/>
+      <dependency groupId="com.threerings" artifactId="nenya" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="vilya" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="threerings" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="underwire" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="hemiptera" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="getdown" version="1.1"/>
+    </artifact:dependencies>
+    <artifact:dependencies filesetId="ext.dependency.fileset">
+      <dependency groupId="commons-io" artifactId="commons-io" version="1.4"/>
+      <dependency groupId="net.sf.ehcache" artifactId="ehcache" version="1.6.0"/>
+      <dependency groupId="mysql" artifactId="mysql-connector-java" version="5.1.6"/>
+      <dependency groupId="commons-digester" artifactId="commons-digester" version="2.0"/>
     </artifact:dependencies>
     <copy todir="${deploy.dir}/lib">
-      <fileset refid="dependency.fileset"/>
+      <fileset refid="ooo.dependency.fileset"/>
+      <fileset refid="ext.dependency.fileset"/>
       <mapper type="flatten"/>
     </copy>
+
+    <!-- set up a classpath for the non-runtime dependencies -->
+    <artifact:dependencies pathId="maven.classpath">
+      <dependency groupId="org.apache.ant" artifactId="ant" version="1.7.1"/>
+      <dependency groupId="junit" artifactId="junit" version="4.8.1"/>
+    </artifact:dependencies>
+    <artifact:dependencies filesetId="ooo.maven.fileset">
+      <remoteRepository id="ooo.maven.ext" url="http://ooo-maven.googlecode.com/hg/repository"/>
+      <dependency groupId="com.jcraft" artifactId="jorbis" version="0.0.15"/>
+    </artifact:dependencies>
+
+    <!-- declare our classpath -->
+    <path id="classpath">
+      <pathelement location="${deploy.dir}/classes"/>
+      <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+      <path refid="maven.classpath"/>
+    </path>
+
+    <!-- declare a classpath for non-bang tasks -->
+    <path id="tool.classpath">
+      <pathelement location="${deploy.dir}"/>
+      <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+      <path refid="maven.classpath"/>
+    </path>
+
+    <!-- declare a classpath for bang tasks -->
+    <path id="btool.classpath">
+      <pathelement location="${deploy.dir}"/>
+      <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+      <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
+      <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
+      <path refid="maven.classpath"/>
+    </path>
   </target>
 
   <!-- generates fields for persistent record classes -->
@@ -507,7 +492,6 @@
 
     <ant dir="projects/installers" target="clean" inheritAll="false"/>
     <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
-    <delete file="etc/bang-client.pro"/>
 
     <!-- revert the generated build artifacts in case the build broke before we could -->
     <!-- commit them, but only for builds that were expecting to auto commit the files.  -->
@@ -537,10 +521,66 @@
   <target name="javadoc" depends="prepare,common-javadoc"/>
 
   <!-- helper target for client and devclient -->
-  <target name="baseclient">
+  <target name="baseclient" depends="prepare">
     <!-- generate the all-in-wonder jar file -->
-    <taskdef resource="proguard/ant/task.properties" classpath="${deploy.dir}/lib/proguard.jar"/>
-    <proguard configuration="etc/bang-client.pro"/>
+    <artifact:dependencies pathId="proguard.classpath">
+      <dependency groupId="net.sf.proguard" artifactId="proguard" version="4.4"/>
+    </artifact:dependencies>
+    <taskdef resource="proguard/ant/task.properties" classpathref="proguard.classpath"/>
+    <proguard configuration="${deploy.dir}/bang-client.pro">
+      <!-- Third party libraries -->
+      <injar path="${deploy.dir}/lib/jl1.0.jar" filter="!META-INF/*"/>
+      <injar path="${commons-io:commons-io:jar}" filter="!META-INF/*"/>
+      <injar path="${commons-codec:commons-codec:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jcraft:jorbis:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jcraft:jogg:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-effects:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-model:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-terrain:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-awt:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-sound:jar}" filter="!META-INF/*,!**/fmod/**"/>
+      <injar path="${com.jme:jme-gamestates:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-scene:jar}" filter="!META-INF/*"/>
+      <injar path="${com.samskivert:jme-bui:jar}" filter="!META-INF/*,!**/tests/**"/>
+      <injar path="${com.google.guava:guava:jar}" filter="!META-INF/*"/>
+      <injar path="${com.google.inject:guice:jar}" filter="!META-INF/*,
+        !com/google/inject/ProviderMethodsTest*,
+        !com/google/inject/InterceptorStackCallback*,!com/google/inject/tools/**"/>
+
+      <!-- OOO shared libraries -->
+      <injar path="${com.samskivert:samskivert:jar}" filter="com/samskivert/Log.class,
+        **/io/**,**/net/**,**/swing/**,**/text/**,**/samskivert/util/**,**/xml/**,
+        **/servlet/user/Password.class,**/servlet/user/UserUtil.class,
+        **/servlet/user/User.class,**/servlet/user/Username.class,
+        **/servlet/user/InvalidUsernameException.class"/>
+      <injar path="${com.threerings:getdown:jar}" filter="!META-INF/*,!**/tools/**"/>
+      <injar path="${com.threerings:narya:jar}" filter="!META-INF/*,!**/admin/server/**,
+        !**/web/**,!**/persist/**,!**/tools/**,!**/EHCachePeerCoordinator*"/>
+      <injar path="${com.threerings:nenya:jar}" filter="!META-INF/*,!**/tools/**"/>
+      <injar path="${com.threerings:vilya:jar}" filter="!META-INF/*,
+        !**/persist/**,!**/tools/**,!**/ezgame/**,!**/micasa/**"/>
+      <injar path="${com.threerings:threerings:jar}" filter="**/Log.class,
+        **/coin/data/**,**/IdentUtil*.class,**/TrackingUtil.class,**/NameUtil.class"/>
+      <injar path="${com.threerings:hemiptera:jar}" filter="**/hemiptera/Log.class,
+        **/hemiptera/data/Report.class,**/hemiptera/data/Constant.class,
+        **/hemiptera/data/LogMessage.class,!**/LegacyReportImport.class,**/hemiptera/util/**"/>
+      <!-- The main Bang! code -->
+      <injar path="${deploy.dir}/bang-code.jar" filter="!META-INF/*,
+        !**/tools/**,!**/tests/**,!**/server/**,"/>
+      <injar path="${deploy.dir}/bang-code.jar" filter="!**/jme/tools/*Task.class,
+        **/jme/tools/**"/>
+
+      <libraryjar name="${deploy.dir}/lib/lwjgl.jar"/>
+      <libraryjar name="${deploy.dir}/lib/lwjgl_util.jar"/>
+
+      <!-- these are just for the model viewer, sigh -->
+      <libraryjar name="${commons-digester:commons-digester:jar}"/>
+      <libraryjar name="${commons-beanutils:commons-beanutils:jar}"/>
+      <libraryjar name="${commons-logging:commons-logging:jar}"/>
+
+      <outjar name="${deploy.dir}/bang-pcode.jar"/>
+    </proguard>
 
     <!-- create our directories if necessary -->
     <mkdir dir="${client_dir}/code"/>
@@ -567,11 +607,17 @@
       <fileset dir="dist" includes="bang-config.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="lwjgl.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="lwjgl_util.jar"/>
-      <fileset dir="${deploy.dir}/lib" includes="commons-beanutils.jar"/>
-      <fileset dir="${deploy.dir}/lib" includes="commons-digester.jar"/>
-      <fileset dir="${deploy.dir}/lib" includes="commons-logging.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="commons-beanutils*.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="commons-digester*.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="commons-logging*.jar"/>
     </copy>
-    <copy tofile="${client_dir}/code/getdown-pro-new.jar" file="${extlibs.dir}/getdown-pro.jar"/>
+    <artifact:dependencies filesetId="getdown-pro.fileset">
+      <remoteRepository refid="ooo.maven.depends.repo"/>
+      <dependency groupId="com.threerings" artifactId="getdown-pro" version="1.1"/>
+    </artifact:dependencies>
+    <copy tofile="${client_dir}/code/getdown-pro-new.jar">
+      <fileset refid="getdown-pro.fileset"/>
+    </copy>
     <delete file="${deploy.dir}/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
       <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
@@ -584,13 +630,8 @@
     </copy>
 
     <!-- generate the getdown digest file -->
-    <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask">
-      <classpath>
-        <pathelement path="${deploy.dir}/lib/commons-codec.jar"/>
-        <pathelement path="${deploy.dir}/lib/getdown.jar"/>
-        <pathelement path="${deploy.dir}/lib/samskivert-0.0-SNAPSHOT.jar"/>
-      </classpath>
-    </taskdef>
+    <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask"
+             classpathref="tool.classpath"/>
     <property file="${cert_dir}/certificate.properties"/>
     <digest appdir="${client_dir}" keystore="${sign.keystore}" alias="${sign.alias}"
             storepass="${sign.storepass}"/>
@@ -609,7 +650,7 @@
       <entry key="config_version" value="${clientVersion}"/>
     </propertyfile>
     <echo message="Generating Proguard config file for devclient..."/>
-    <copy file="etc/bang-client.pro.in" tofile="etc/bang-client.pro"
+    <copy file="etc/bang-client.pro.in" tofile="${deploy.dir}/bang-client.pro"
           overwrite="true" encoding="UTF-8">
       <filterset>
         <filter token="version" value="${clientVersion}"/>
@@ -696,7 +737,7 @@
     </fail>
     <echo message="Previous version used for renaming: ${latestVersion}"/>
     <echo message="Generating Proguard config file for ${clientVersion}..."/>
-    <copy file="etc/bang-client.pro.in" tofile="etc/bang-client.pro"
+    <copy file="etc/bang-client.pro.in" tofile="${deploy.dir}/bang-client.pro"
           overwrite="true" encoding="UTF-8">
       <filterset>
         <filter token="version" value="${clientVersion}"/>
@@ -785,8 +826,12 @@
           <fileset dir="${deploy.dir}/client/pages" includes="bang/client/${clientVersion}/**"/>
         </copy>
         <echo>Uploading the client to S3</echo>
+        <artifact:dependencies pathId="s3upload.classpath">
+          <remoteRepository refid="ooo.maven.depends.repo"/>
+          <dependency groupId="com.threerings.s3upload" artifactId="s3upload" version="1.0"/>
+        </artifact:dependencies>
         <taskdef name="s3upload" classname="com.threerings.ant.S3Upload"
-                 classpathref="tool.classpath"/>
+                 classpathref="s3upload.classpath"/>
         <s3upload awsAuthId="${client_s3id}" awsAuthKey="${client_s3key}"
                   awsBucket="${client_s3bucket}" accessPolicy="public_read">
             <fileset dir="${s3upload}" includes="bang/**"/>
@@ -802,7 +847,13 @@
     <property file="${cert_dir}/certificate.properties"/>
 
     <!-- copy the applet jar file into place and sign it -->
-    <copy todir="${applet.base}/client" file="${extlibs.dir}/getdown-retro-pro.jar"/>
+    <artifact:dependencies filesetId="getdown-pro.fileset">
+      <remoteRepository refid="ooo.maven.depends.repo"/>
+      <dependency groupId="com.threerings" artifactId="getdown-pro" version="1.1"/>
+    </artifact:dependencies>
+    <copy tofile="${applet.base}/client/getdown-retro-pro.jar">
+      <fileset refid="getdown-pro.fileset"/>
+    </copy>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
       <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
     </signjar>
@@ -825,7 +876,7 @@
   <target name="bits" depends="colorpos,tutorials"/>
 
   <!-- builds the distribution jar files -->
-  <target name="dist" depends="prepare,compile">
+  <target name="dist" depends="compile">
     <!-- create the main jar file with all the code and fiddly bits -->
     <jar file="${deploy.dir}/bang-code.jar" basedir="${deploy.dir}/classes" includes="com/**"/>
   </target>
@@ -916,7 +967,7 @@
   </target>
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="prepare,mavendeps,dist,distwebapps,mdist">
+  <target name="distall" depends="dist,distwebapps,mdist">
     <!-- copy native narya libraries into ${deploy.dir}/lib -->
     <copy todir="${deploy.dir}/lib">
       <fileset dir="lib/native" includes="**/*.so"/>
@@ -1042,12 +1093,6 @@
 
     <!-- TODO -->
     <!-- <antcall target="prepare-crontab"/> -->
-
-    <!-- remove a few conflicting buildtime libraries from the runtime set -->
-    <delete file="${approot.server}/${deploy.dir}/lib/ant.jar"/>
-    <delete file="${approot.server}/${deploy.dir}/lib/proguard.jar"/>
-    <delete file="${approot.server}/${deploy.dir}/lib/s3lib.jar"/>
-    <delete file="${approot.server}/${deploy.dir}/lib/s3upload.jar"/>
 
     <!-- copy various bang media needed by the server -->
     <copy todir="${approot.server}/${deploy.dir}/rsrc">
