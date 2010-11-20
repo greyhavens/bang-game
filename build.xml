@@ -412,7 +412,7 @@
   </target>
 
   <!-- helper task for 'avatars' -->
-  <target name="avatar_comps">
+  <target name="avatar_comps" depends="prepare">
     <taskdef name="cbundle" classpathref="classpath"
       classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
     <mkdir dir="${deploy.dir}/rsrc/avatars/${comp.bundle}"/>
@@ -607,8 +607,14 @@
       <fileset dir="dist" includes="bang-config.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="lwjgl.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="lwjgl_util.jar"/>
+    </copy>
+    <copy tofile="${client_dir}/code/commons-beanutils.jar">
       <fileset dir="${deploy.dir}/lib" includes="commons-beanutils*.jar"/>
+    </copy>
+    <copy tofile="${client_dir}/code/commons-digester.jar">
       <fileset dir="${deploy.dir}/lib" includes="commons-digester*.jar"/>
+    </copy>
+    <copy tofile="${client_dir}/code/commons-logging.jar">
       <fileset dir="${deploy.dir}/lib" includes="commons-logging*.jar"/>
     </copy>
     <artifact:dependencies filesetId="getdown-pro.fileset">
