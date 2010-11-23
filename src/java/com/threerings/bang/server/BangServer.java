@@ -93,7 +93,7 @@ import static com.threerings.bang.Log.log;
 public class BangServer extends CrowdServer
 {
     /** Configures dependencies needed by the Bang server. */
-    public static class Module extends CrowdServer.Module
+    public static class BangModule extends CrowdModule
     {
         @Override protected void configure () {
             super.configure();
@@ -232,7 +232,7 @@ public class BangServer extends CrowdServer
             Invoker.setDefaultLongThreshold(3000L);
         }
 
-        Injector injector = Guice.createInjector(new Module());
+        Injector injector = Guice.createInjector(new BangModule());
         BangServer server = injector.getInstance(BangServer.class);
         try {
             server.init(injector);
