@@ -39,7 +39,7 @@ public class EditorApp extends JmeCanvasApp
         appArgs = args;
 
         // create our editor server which we're going to run in the same JVM with the client
-        Injector injector = Guice.createInjector(new EditorServer.EditorModule());
+        Injector injector = Guice.createInjector(new EditorServer.Module());
         EditorServer server = injector.getInstance(EditorServer.class);
         try {
             server.init(injector);
