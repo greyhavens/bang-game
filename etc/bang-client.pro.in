@@ -8,7 +8,7 @@
 # -dontoptimize
 # -dontobfuscate
 
-# -skipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclasses
 -printseeds ../dist/proguard.seeds
 @apply_mapping@ @apply_file@
 -printmapping ../etc/proguard/@version@.map
