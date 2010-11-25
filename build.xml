@@ -42,8 +42,70 @@
     <property file="${deploy.dir}/build_settings.properties"/>
   </target>
 
+  <target name="-declare-maven">
+    <!-- declare our runtime dependencies -->
+    <artifact:dependencies filesetId="ooo.runtime.fileset">
+      <remoteRepository refid="ooo.maven.depends.repo"/>
+      <dependency groupId="com.jme" artifactId="jme" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-awt" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-effects" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-gamestates" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-model" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-scene" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-sound" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-terrain" version="1.0"/>
+      <dependency groupId="com.samskivert" artifactId="jme-bui" version="1.0"/>
+      <dependency groupId="com.samskivert" artifactId="samskivert" version="1.1"/>
+      <dependency groupId="com.threerings" artifactId="narya" version="1.2"/>
+      <dependency groupId="com.threerings" artifactId="nenya" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="vilya" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="threerings" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="underwire" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="hemiptera" version="1.0"/>
+      <dependency groupId="com.threerings" artifactId="getdown" version="1.1"/>
+    </artifact:dependencies>
+    <artifact:dependencies filesetId="ext.runtime.fileset">
+      <dependency groupId="commons-io" artifactId="commons-io" version="1.4"/>
+      <dependency groupId="net.sf.ehcache" artifactId="ehcache" version="1.6.0"/>
+      <dependency groupId="mysql" artifactId="mysql-connector-java" version="5.1.6"/>
+      <dependency groupId="commons-digester" artifactId="commons-digester" version="2.0"/>
+    </artifact:dependencies>
+
+    <!-- set up a classpath for the non-runtime dependencies -->
+    <artifact:dependencies pathId="ext.build.classpath">
+      <dependency groupId="org.apache.ant" artifactId="ant" version="1.7.1"/>
+      <dependency groupId="junit" artifactId="junit" version="4.8.1"/>
+    </artifact:dependencies>
+
+    <!-- declare dependencies needed by the client Proguard build -->
+    <artifact:dependencies filesetId="ooo.client.fileset">
+      <remoteRepository id="ooo.maven.ext" url="http://ooo-maven.googlecode.com/hg/repository"/>
+      <dependency groupId="com.jcraft" artifactId="jorbis" version="0.0.15"/>
+    </artifact:dependencies>
+  </target>
+
+  <target name="showdeps" depends="-declare-maven"
+          description="Displays the versions of dependencies obtained from Maven.">
+    <pathconvert property="ooo.runtime.deps" pathsep="${line.separator}"
+                 refid="ooo.runtime.fileset"/>
+    <pathconvert property="ext.runtime.deps" pathsep="${line.separator}"
+                 refid="ext.runtime.fileset"/>
+    <echo>Runtime depends:</echo>
+    <exec executable="sort" inputstring="${ooo.runtime.deps}${line.separator}${ext.runtime.deps}"/>
+
+    <pathconvert property="ext.build.deps" pathsep="${line.separator}"
+                 refid="ext.build.classpath"/>
+    <echo>${line.separator}Build-only depends:</echo>
+    <exec executable="sort" inputstring="${ext.build.deps}"/>
+
+    <pathconvert property="ooo.client.deps" pathsep="${line.separator}"
+                 refid="ooo.client.fileset"/>
+    <echo>${line.separator}Additional client depends:</echo>
+    <exec executable="sort" inputstring="${ooo.client.deps}"/>
+  </target>
+
   <!-- prepares the application directories -->
-  <target name="prepare" depends="config,lists">
+  <target name="prepare" depends="-declare-maven,config,lists">
     <mkdir dir="${deploy.dir}/tmp"/>
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
@@ -128,60 +190,24 @@
           tofile="${deploy.dir}/rsrc/config/resource/manager.properties"/>
 
     <!-- copy our runtime dependencies from Maven -->
-    <artifact:dependencies filesetId="ooo.dependency.fileset">
-      <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.jme" artifactId="jme" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-awt" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-effects" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-gamestates" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-model" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-scene" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-sound" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-terrain" version="1.0"/>
-      <dependency groupId="com.samskivert" artifactId="jme-bui" version="1.0"/>
-      <dependency groupId="com.samskivert" artifactId="samskivert" version="1.1"/>
-      <dependency groupId="com.threerings" artifactId="narya" version="1.2"/>
-      <dependency groupId="com.threerings" artifactId="nenya" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="vilya" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="threerings" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="underwire" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="hemiptera" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="getdown" version="1.1"/>
-    </artifact:dependencies>
-    <artifact:dependencies filesetId="ext.dependency.fileset">
-      <dependency groupId="commons-io" artifactId="commons-io" version="1.4"/>
-      <dependency groupId="net.sf.ehcache" artifactId="ehcache" version="1.6.0"/>
-      <dependency groupId="mysql" artifactId="mysql-connector-java" version="5.1.6"/>
-      <dependency groupId="commons-digester" artifactId="commons-digester" version="2.0"/>
-    </artifact:dependencies>
     <copy todir="${deploy.dir}/lib">
-      <fileset refid="ooo.dependency.fileset"/>
-      <fileset refid="ext.dependency.fileset"/>
+      <fileset refid="ooo.runtime.fileset"/>
+      <fileset refid="ext.runtime.fileset"/>
       <mapper type="flatten"/>
     </copy>
-
-    <!-- set up a classpath for the non-runtime dependencies -->
-    <artifact:dependencies pathId="maven.classpath">
-      <dependency groupId="org.apache.ant" artifactId="ant" version="1.7.1"/>
-      <dependency groupId="junit" artifactId="junit" version="4.8.1"/>
-    </artifact:dependencies>
-    <artifact:dependencies filesetId="ooo.maven.fileset">
-      <remoteRepository id="ooo.maven.ext" url="http://ooo-maven.googlecode.com/hg/repository"/>
-      <dependency groupId="com.jcraft" artifactId="jorbis" version="0.0.15"/>
-    </artifact:dependencies>
 
     <!-- declare our classpath -->
     <path id="classpath">
       <pathelement location="${deploy.dir}/classes"/>
       <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-      <path refid="maven.classpath"/>
+      <path refid="ext.build.classpath"/>
     </path>
 
     <!-- declare a classpath for non-bang tasks -->
     <path id="tool.classpath">
       <pathelement location="${deploy.dir}"/>
       <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-      <path refid="maven.classpath"/>
+      <path refid="ext.build.classpath"/>
     </path>
 
     <!-- declare a classpath for bang tasks -->
@@ -190,7 +216,7 @@
       <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
       <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
       <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
-      <path refid="maven.classpath"/>
+      <path refid="ext.build.classpath"/>
     </path>
   </target>
 
