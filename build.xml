@@ -5,7 +5,6 @@
   <property name="src.dir"        value="src/java"/>
   <property name="deploy.dir"     value="dist"/>
   <property name="app.name"       value="bang"/>
-  <property name="extlibs.dir"    value="extlibs/java"/>
   <property name="javadoc.title"  value="Bang! Howdy API"/>
   <property name="build.optimize" value="on"/>
 
@@ -819,7 +818,6 @@
     </copy>
 
     <!-- create the getdown diff files -->
-    <copy todir="${deploy.dir}/lib" file="${extlibs.dir}/javaws.jar"/>
     <for param="dir">
       <path>
         <dirset dir="${build.data}" includes="*"/>
