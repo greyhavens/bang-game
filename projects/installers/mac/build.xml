@@ -1,5 +1,6 @@
 <!-- project build configuration -->
-<project name="Bang Mac Installer" default="devclient" basedir=".">
+<project name="installers-mac" default="devclient" basedir="."
+         xmlns:artifact="urn:maven-artifact-ant">
 
   <!-- load up our configuration information -->
   <property name="deploy.dir" value="dist"/>
@@ -36,8 +37,12 @@
 
     <!-- be sure the app base directory is empty -->
     <delete dir="${deploy.dir}/${app.name}"/>
-    <taskdef name="jarbundler" classpathref="classpath"
-      classname="com.loomcom.ant.tasks.jarbundler.JarBundler"/>
+    <artifact:dependencies pathId="jarbundler.classpath">
+      <remoteRepository id="ooo-maven" url="http://ooo-maven.googlecode.com/hg/repository"/>
+      <dependency groupId="net.sourceforge.jarbundler" artifactId="jarbundler" version="2.1.0"/>
+    </artifact:dependencies>
+    <taskdef name="jarbundler" classpathref="jarbundler.classpath"
+             classname="net.sourceforge.jarbundler.JarBundler"/>
 
     <jarbundler dir="${deploy.dir}" name="${app_base.name}" 
       mainclass="com.threerings.getdown.launcher.Getdown" 
