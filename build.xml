@@ -82,6 +82,12 @@
       <remoteRepository id="ooo.maven.ext" url="http://ooo-maven.googlecode.com/hg/repository"/>
       <dependency groupId="com.jcraft" artifactId="jorbis" version="0.0.15"/>
     </artifact:dependencies>
+
+    <!-- declare a fileset for getdown which we need for various client bits -->
+    <artifact:dependencies filesetId="getdown-pro.fileset">
+      <remoteRepository refid="ooo.maven.depends.repo"/>
+      <dependency groupId="com.threerings" artifactId="getdown-pro" version="1.1"/>
+    </artifact:dependencies>
   </target>
 
   <target name="showdeps" depends="-declare-maven"
@@ -100,8 +106,10 @@
 
     <pathconvert property="ooo.client.deps" pathsep="${line.separator}"
                  refid="ooo.client.fileset"/>
+    <pathconvert property="getdown.deps" pathsep="${line.separator}"
+                 refid="getdown-pro.fileset"/>
     <echo>${line.separator}Additional client depends:</echo>
-    <exec executable="sort" inputstring="${ooo.client.deps}"/>
+    <exec executable="sort" inputstring="${ooo.client.deps}${line.separator}${getdown.deps}"/>
   </target>
 
   <!-- prepares the application directories -->
@@ -194,6 +202,10 @@
       <fileset refid="ooo.runtime.fileset"/>
       <fileset refid="ext.runtime.fileset"/>
       <mapper type="flatten"/>
+    </copy>
+    <mkdir dir="${deploy.dir}/getdown"/>
+    <copy tofile="${deploy.dir}/getdown/getdown-pro.jar">
+      <fileset refid="getdown-pro.fileset"/>
     </copy>
 
     <!-- declare our classpath -->
@@ -643,13 +655,8 @@
     <copy tofile="${client_dir}/code/commons-logging.jar">
       <fileset dir="${deploy.dir}/lib" includes="commons-logging*.jar"/>
     </copy>
-    <artifact:dependencies filesetId="getdown-pro.fileset">
-      <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.threerings" artifactId="getdown-pro" version="1.1"/>
-    </artifact:dependencies>
-    <copy tofile="${client_dir}/code/getdown-pro-new.jar">
-      <fileset refid="getdown-pro.fileset"/>
-    </copy>
+    <copy file="${deploy.dir}/getdown/getdown-pro.jar"
+          tofile="${client_dir}/code/getdown-pro-new.jar"/>
     <delete file="${deploy.dir}/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
       <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
@@ -879,13 +886,8 @@
     <property file="${cert_dir}/certificate.properties"/>
 
     <!-- copy the applet jar file into place and sign it -->
-    <artifact:dependencies filesetId="getdown-pro.fileset">
-      <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.threerings" artifactId="getdown-pro" version="1.1"/>
-    </artifact:dependencies>
-    <copy tofile="${applet.base}/client/getdown-retro-pro.jar">
-      <fileset refid="getdown-pro.fileset"/>
-    </copy>
+    <copy file="${deploy.dir}/getdown/getdown-pro.jar"
+          tofile="${applet.base}/client/getdown-retro-pro.jar"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
       <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
     </signjar>
@@ -1015,7 +1017,7 @@
   <target name="distcleanall" depends="distcleanwebapps,distclean"/>
 
   <!-- proguards up the client, applet, installers and some other ephemera -->
-  <target name="buildclient">
+  <target name="buildclient" depends="prepare">
     <antcallback target="${client_build_target}" return="clientVersion,pkgVersion"/>
     <ant dir="projects/installers" target="${client_build_target}"/>
     <antcall target="applet"/>

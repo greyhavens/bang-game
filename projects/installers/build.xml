@@ -1,5 +1,5 @@
 <!-- project build configuration -->
-<project name="Bang Installers" default="client" basedir=".">
+<project name="installers" default="client" basedir="." xmlns:artifact="urn:maven-artifact-ant">
 
   <!-- load up our configuration information -->
   <property name="base.dir" value="${basedir}/../.."/>
@@ -18,7 +18,8 @@
   </taskdef>
 
   <target name="prepare">
-    <copy todir="data" file="${base.dir}/extlibs/java/getdown-pro.jar"/>
+    <copy file="${base.dir}/${deploy.dir}/getdown/getdown-pro.jar"
+          tofile="data/getdown-pro.jar"/>
     <mkdir dir="${deploy.dir}"/>
   </target>
 
