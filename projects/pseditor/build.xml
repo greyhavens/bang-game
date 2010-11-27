@@ -1,45 +1,32 @@
 <!-- build configuration -->
-<project name="pseditor" default="compile" basedir=".">
-
-  <!-- define some basic project parameters -->
-  <property name="app.name" value="pseditor"/>
-
-  <!-- things you probably don't want to change -->
+<project name="pseditor" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <property name="base.dir"     value="${basedir}/../.."/>
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
-  <property name="dist.jar"     value="${app.name}.jar"/>
-  <property name="install.dir"  value="${base.dir}/${deploy.dir}/pseditor/pages/${app.name}"/>
+  <property name="dist.jar"     value="${ant.project.name}.jar"/>
+  <property name="install.dir"
+            value="${base.dir}/${deploy.dir}/pseditor/pages/${ant.project.name}"/>
 
   <!-- read in our build settings -->
   <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
 
-  <!-- import some targets to enumerate library dependencies -->
-  <property name="libs.dir" value="${base.dir}/${deploy.dir}/lib"/>
-  <import file="libs-incl.xml"/>
-
   <!-- helpful build targets -->
   <import file="${base.dir}/build/etc/build-support.xml"/>
-
-  <!-- declare our classpath -->
-  <path id="classpath">
-    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-    <pathelement location="${deploy.dir}/classes"/>
-  </path>
 
   <!-- prepares the application directories -->
   <target name="prepare">
     <mkdir dir="${deploy.dir}"/>
-    <mkdir dir="${deploy.dir}/classes"/>
-    <copy todir="${deploy.dir}/classes">
-      <fileset dir="${src.dir}" includes="**/*.properties"/>
-    </copy>
-    <copy todir="${deploy.dir}/classes">
-      <fileset dir="rsrc" includes="**/*"/>
-    </copy>
-    <copyfilelist dest="${deploy.dir}/lib">
-      <filelist refid="${app.name}.libs"/>
-    </copyfilelist>
+
+    <artifact:dependencies pathId="compile.classpath">
+      <remoteRepository refid="ooo.maven.depends.repo"/>
+      <dependency groupId="com.jme" artifactId="jme" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-awt" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-effects" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-gamestates" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-model" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-scene" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme-sound" version="1.0"/>
+    </artifact:dependencies>
   </target>
 
   <!-- cleans out the installed application -->
@@ -49,18 +36,35 @@
 
   <!-- build the java class files -->
   <target name="compile" depends="prepare">
+    <mkdir dir="${deploy.dir}/classes"/>
+    <copy todir="${deploy.dir}/classes"><fileset dir="rsrc" includes="**/*"/></copy>
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
-           debug="on" optimize="off" deprecation="on">
-      <classpath refid="classpath"/>
-      <compilerarg value="-Xlint:unchecked"/>
+           debug="on" optimize="off" deprecation="on" includeAntRuntime="false">
+      <classpath refid="compile.classpath"/>
+      <compilerarg value="-Xlint:all"/>
+      <compilerarg value="-Xlint:-serial"/>
     </javac>
   </target>
 
   <!-- builds the standalone viewer jar -->
   <target name="proguard" depends="dist">
-    <!-- generate the all-in-wonder jar file -->
-    <taskdef resource="proguard/ant/task.properties" classpath="${deploy.dir}/lib/proguard.jar"/>
-    <proguard configuration="etc/pseditor.pro"/>
+    <artifact:dependencies pathId="proguard.classpath">
+      <dependency groupId="net.sf.proguard" artifactId="proguard" version="4.4"/>
+    </artifact:dependencies>
+    <taskdef resource="proguard/ant/task.properties" classpathref="proguard.classpath"/>
+    <proguard configuration="etc/pseditor.pro">
+      <injar path="${com.jme:jme:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-awt:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-effects:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-gamestates:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-model:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-scene:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-sound:jar}" filter="!META-INF/*,!**/fmod/**"/>
+      <injar path="${deploy.dir}/pseditor.jar" filter="!META-INF/*"/>
+      <libraryjar name="${base.dir}/${deploy.dir}/lib/lwjgl.jar"/>
+      <libraryjar name="${base.dir}/${deploy.dir}/lib/lwjgl_util.jar"/>
+      <outjar name="${deploy.dir}/pseditor-pro.jar"/>
+    </proguard>
     <copy todir="${install.dir}">
       <fileset dir="dist" includes="pseditor-pro.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="lwjgl.jar"/>
@@ -68,13 +72,13 @@
 
     <!-- create the platform jar files -->
     <jar file="${install.dir}/lwjgl-windows.jar">
-      <fileset dir="${base.dir}/extlibs/java/lwjgl/i686-Windows" includes="*.dll"/>
+      <fileset dir="${base.dir}/lib/i686-Windows" includes="*.dll"/>
     </jar>
     <jar file="${install.dir}/lwjgl-linux.jar">
-      <fileset dir="${base.dir}/extlibs/java/lwjgl/i686-Linux" includes="*.so"/>
+      <fileset dir="${base.dir}/lib/i686-Linux" includes="*.so"/>
     </jar>
     <jar file="${install.dir}/lwjgl-macos.jar">
-      <fileset dir="${base.dir}/extlibs/java/lwjgl/Universal-MacOS" includes="*.jnilib,*.dylib"/>
+      <fileset dir="${base.dir}/lib/Universal-MacOS" includes="*.jnilib,*.dylib"/>
     </jar>
 
     <!-- create the JNLP file -->

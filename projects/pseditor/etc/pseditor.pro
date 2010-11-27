@@ -3,19 +3,15 @@
 #
 # Proguard configuration file for Game Gardens client
 
--injars ../dist/lib/jme-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-effects-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-awt-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-gamestates-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/lib/jme-scene-0.0-SNAPSHOT.jar(!META-INF/*)
--injars ../dist/pseditor.jar(!META-INF/*)
-
--libraryjars ../dist/lib/lwjgl.jar
--libraryjars <java.home>/lib/rt.jar
-
 -dontobfuscate
 
--outjars ../dist/pseditor-pro.jar
+-libraryjars <java.home>/lib/rt.jar
+
+-dontwarn com.jme.system.lwjgl.LWJGLSystemProvider
+-dontwarn com.jmex.font2d.**
+-dontwarn com.jmex.sound.openAL.objects.util.*
+-dontwarn com.jmex.terrain.*
+-dontwarn net.java.games.input.**
 
 -keep public class * implements com.jme.util.export.Savable {
     *;
