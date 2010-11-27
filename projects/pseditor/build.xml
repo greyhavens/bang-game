@@ -3,9 +3,8 @@
   <property name="base.dir"     value="${basedir}/../.."/>
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
-  <property name="dist.jar"     value="${ant.project.name}.jar"/>
   <property name="install.dir"
-            value="${base.dir}/${deploy.dir}/pseditor/pages/${ant.project.name}"/>
+            value="${base.dir}/${deploy.dir}/${ant.project.name}/pages/${ant.project.name}"/>
 
   <!-- read in our build settings -->
   <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
@@ -60,14 +59,14 @@
       <injar path="${com.jme:jme-model:jar}" filter="!META-INF/*"/>
       <injar path="${com.jme:jme-scene:jar}" filter="!META-INF/*"/>
       <injar path="${com.jme:jme-sound:jar}" filter="!META-INF/*,!**/fmod/**"/>
-      <injar path="${deploy.dir}/pseditor.jar" filter="!META-INF/*"/>
+      <injar path="${deploy.dir}/${ant.project.name}.jar" filter="!META-INF/*"/>
       <libraryjar name="${base.dir}/${deploy.dir}/lib/lwjgl.jar"/>
       <libraryjar name="${base.dir}/${deploy.dir}/lib/lwjgl_util.jar"/>
-      <outjar name="${deploy.dir}/pseditor-pro.jar"/>
+      <outjar name="${deploy.dir}/${ant.project.name}-pro.jar"/>
     </proguard>
     <copy todir="${install.dir}">
-      <fileset dir="dist" includes="pseditor-pro.jar"/>
-      <fileset dir="${deploy.dir}/lib" includes="lwjgl.jar"/>
+      <fileset dir="${deploy.dir}" includes="${ant.project.name}-pro.jar"/>
+      <fileset dir="${base.dir}/${deploy.dir}/lib" includes="lwjgl.jar"/>
     </copy>
 
     <!-- create the platform jar files -->
@@ -102,7 +101,7 @@
 
   <!-- builds the main jar file -->
   <target name="dist" depends="prepare,compile">
-    <jar file="${deploy.dir}/${dist.jar}" basedir="${deploy.dir}/classes"/>
+    <jar file="${deploy.dir}/${ant.project.name}.jar" basedir="${deploy.dir}/classes"/>
   </target>
 
 </project>
