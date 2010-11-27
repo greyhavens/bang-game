@@ -72,13 +72,13 @@
 
     <!-- create the platform jar files -->
     <jar file="${install.dir}/lwjgl-windows.jar">
-      <fileset dir="${base.dir}/lib/i686-Windows" includes="*.dll"/>
+      <fileset dir="${base.dir}/lib/native/i686-Windows" includes="*.dll"/>
     </jar>
     <jar file="${install.dir}/lwjgl-linux.jar">
-      <fileset dir="${base.dir}/lib/i686-Linux" includes="*.so"/>
+      <fileset dir="${base.dir}/lib/native/i686-Linux" includes="*.so"/>
     </jar>
     <jar file="${install.dir}/lwjgl-macos.jar">
-      <fileset dir="${base.dir}/lib/Universal-MacOS" includes="*.jnilib,*.dylib"/>
+      <fileset dir="${base.dir}/lib/native/Universal-MacOS" includes="*.jnilib,*.dylib"/>
     </jar>
 
     <!-- create the JNLP file -->
