@@ -571,14 +571,14 @@
       <injar path="${commons-codec:commons-codec:jar}" filter="!META-INF/*"/>
       <injar path="${com.jcraft:jorbis:jar}" filter="!META-INF/*"/>
       <injar path="${com.jcraft:jogg:jar}" filter="!META-INF/*"/>
-      <injar path="${com.jme:jme:jar}" filter="!META-INF/*"/>
-      <injar path="${com.jme:jme-effects:jar}" filter="!META-INF/*"/>
-      <injar path="${com.jme:jme-model:jar}" filter="!META-INF/*"/>
-      <injar path="${com.jme:jme-terrain:jar}" filter="!META-INF/*"/>
       <injar path="${com.jme:jme-awt:jar}" filter="!META-INF/*"/>
-      <injar path="${com.jme:jme-sound:jar}" filter="!META-INF/*,!**/fmod/**"/>
+      <injar path="${com.jme:jme-effects:jar}" filter="!META-INF/*"/>
       <injar path="${com.jme:jme-gamestates:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-model:jar}" filter="!META-INF/*"/>
       <injar path="${com.jme:jme-scene:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-sound:jar}" filter="!META-INF/*,!**/fmod/**"/>
+      <injar path="${com.jme:jme-terrain:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme:jar}" filter="!META-INF/*"/>
       <injar path="${com.samskivert:jme-bui:jar}" filter="!META-INF/*,!**/tests/**"/>
       <injar path="${com.google.guava:guava:jar}" filter="!META-INF/*"/>
       <injar path="${com.google.inject:guice:jar}" filter="!META-INF/*,
