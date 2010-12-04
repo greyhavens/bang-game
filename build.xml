@@ -524,15 +524,13 @@
   </target>
 
   <!-- fully cleans out all build results -->
-  <target name="distclean" depends="clean">
+  <target name="distclean" depends="config,clean">
     <delete dir="${deploy.dir}"/>
     <ant dir="projects/installers" target="clean" inheritAll="false"/>
     <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
-  </target>
 
-  <!-- reverts generated build artifacts in case the build broke before we could -->
-  <!-- commit them, but only for builds that were expecting to auto commit the files  -->
-  <target name="revert-mods" depends="config">
+    <!-- revert generated build artifacts in case the build broke before we could -->
+    <!-- commit them, but only for builds that were expecting to auto commit the files  -->
     <if><istrue value="${should_commit_build_artifacts}"/><then>
       <exec executable="svn">
         <arg value="revert"/>
@@ -1518,10 +1516,6 @@
   </target>
 
   <!-- targets for the auto-build system -->
-  <target name="bamboo" depends="distcleanall,revert-mods,checkclean,package,aptupdate">
-    <antcall target="distcleanall"/>
-  </target>
-  <target name="bamboo-docs" depends="distcleanall,checkclean,package-docs,aptupdate">
-    <antcall target="distcleanall"/>
-  </target>
+  <target name="bamboo" depends="checkclean,package,aptupdate,distcleanall"/>
+  <target name="bamboo-docs" depends="checkclean,package-docs,aptupdate,distcleanall"/>
 </project>
