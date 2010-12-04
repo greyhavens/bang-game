@@ -1516,6 +1516,6 @@
   </target>
 
   <!-- targets for the auto-build system -->
-  <target name="bamboo" depends="checkclean,package,aptupdate,distcleanall"/>
-  <target name="bamboo-docs" depends="checkclean,package-docs,aptupdate,distcleanall"/>
+  <target name="bamboo" depends="package,aptupdate,distcleanall,checkclean"/>
+  <target name="bamboo-docs" depends="package-docs,aptupdate,distcleanall,checkclean"/>
 </project>
