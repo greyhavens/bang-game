@@ -10,13 +10,6 @@
   <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
   <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
 
-  <!-- we want some tasks from ant-contrib -->
-  <taskdef resource="net/sf/antcontrib/antlib.xml">
-    <classpath>
-      <pathelement location="${base.dir}/build/lib/java/ant-contrib.jar"/>
-    </classpath>
-  </taskdef>
-
   <target name="prepare">
     <copy file="${base.dir}/${deploy.dir}/getdown/getdown-pro.jar"
           tofile="data/getdown-pro.jar"/>
