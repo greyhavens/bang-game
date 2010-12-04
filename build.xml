@@ -1420,8 +1420,8 @@
     <mkdir dir="${approot.client}"/>
 
     <!-- make sure our versions are properly set -->
-    <assert name="clientVersion" message="clientVersion must be set?!"/>
-    <assert name="pkgVersion" message="pkgVersion must be set?!"/>
+    <fail unless="clientVersion" message="clientVersion must be set?!"/>
+    <fail unless="pkgVersion" message="pkgVersion must be set?!"/>
 
     <!-- copy a whole heap of client stuff into the package -->
     <copy todir="${approot.client}">
