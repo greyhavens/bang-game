@@ -466,10 +466,11 @@
     <!-- if desired, commit any changes to compmap.txt -->
     <if><istrue value="${should_commit_build_artifacts}"/><then>
       <property name="comp.map" value="${basedir}/rsrc/avatars/compmap.txt"/>
-      <svn javahl="false">
-        <status path="${comp.map}" textStatusProperty="compStatus"/>
-      </svn>
-      <if><equals arg1="${compStatus}" arg2="modified"/><then>
+      <exec executable="svn" outputproperty="compStatus">
+        <arg value="status"/>
+        <arg value="${comp.map}"/>
+      </exec>
+      <if><not><equals arg1="${compStatus}" arg2=""/></not><then>
         <exec executable="svn" failonerror="true">
           <arg value="commit"/>
           <arg value="-m"/>
@@ -532,15 +533,12 @@
     <!-- revert the generated build artifacts in case the build broke before we could -->
     <!-- commit them, but only for builds that were expecting to auto commit the files.  -->
     <if><istrue value="${should_commit_build_artifacts}"/><then>
-      <svn javahl="false">
-        <revert><fileset dir="rsrc" includes="**/model.properties"/></revert>
-      </svn>
-      <!--<svn javahl="false">
-        <revert file="${comp.map}"/>
-        <revert file="${tile.map}"/>
-      </svn>-->
+      <exec executable="svn">
+        <arg value="revert"/>
+        <arg value="-R"/>
+        <arg value="rsrc"/>
+      </exec>
     </then></if>
-
   </target>
 
   <!-- build the java class files -->
