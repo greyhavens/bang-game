@@ -10,10 +10,10 @@
   <property file="${base.dir}/${deploy.dir}/build_settings.properties"/>
 
   <!-- helpful build targets -->
-  <import file="${base.dir}/build/etc/build-support.xml"/>
+  <import file="${base.dir}/package/etc/build-support.xml"/>
 
   <!-- prepares the application directories -->
-  <target name="prepare">
+  <target name="prepare" depends="-init-ooo-maven">
     <mkdir dir="${deploy.dir}"/>
 
     <artifact:dependencies pathId="compile.classpath">
