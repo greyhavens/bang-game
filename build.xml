@@ -1285,8 +1285,8 @@
     <!-- copy our support GWT pages into bangsupport pages directory -->
     <mkdir dir="${approot.support}/pages/support"/>
     <copy todir="${approot.support}/pages/support">
-      <fileset dir="projects/bangsupport/dist/www/bang_user" includes="**"/>
-      <fileset dir="projects/bangsupport/dist/www/bang_admin" includes="**"/>
+      <fileset dir="webapps/bangsupport/dist/www/bang_user" includes="**"/>
+      <fileset dir="webapps/bangsupport/dist/www/bang_admin" includes="**"/>
     </copy>
 
     <!-- build the actual Debian packages -->
