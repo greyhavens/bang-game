@@ -12,11 +12,10 @@
   <!-- import the generic webapp build file and library dependencies -->
   <property name="dist.depends" value="gcompile"/>
   <property name="distclean.depends" value="clean-gwtcache"/>
-  <filelist id="bangsupport.libs" dir="etc" files="ignoreme.txt"/>
-  <import file="${base.dir}/build/etc/webapp-build.xml"/>
+  <import file="${base.dir}/package/etc/webapp-build.xml"/>
 
   <!-- prepares the application directories -->
-  <target name="prepare">
+  <target name="prepare" depends="-init-ooo-maven">
     <antcall target="common-webapp-prepare"/>
     <!-- we also need bang-code.jar which doesn't fit into our libs.dir scheme -->
     <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>

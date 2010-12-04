@@ -5,7 +5,6 @@
   <property name="src.dir"        value="src/java"/>
   <property name="deploy.dir"     value="dist"/>
   <property name="app.name"       value="bang"/>
-  <property name="javadoc.title"  value="Bang! Howdy API"/>
   <property name="build.optimize" value="on"/>
 
   <!-- define various packaging properties -->
@@ -15,13 +14,13 @@
 
   <!-- define our subprojects and include the standard build system -->
   <property name="webapps" value="office,bangsupport"/>
-  <import file="build/etc/build-support.xml"/>
+  <import file="package/etc/build-support.xml"/>
 
   <!-- the location that build artifiacts can be stored on the build server -->
   <property name="build.data"     value="${ooo.build.data}/bang_client"/>
 
   <!-- Gets our various properties files and sticks them in dist -->
-  <target name="config">
+  <target name="config" depends="-init-gather">
     <mkdir dir="${deploy.dir}"/>
 
     <!-- Grab the deployment et al properties from the configuration location. -->
@@ -41,7 +40,7 @@
     <property file="${deploy.dir}/build_settings.properties"/>
   </target>
 
-  <target name="-declare-maven">
+  <target name="-declare-maven" depends="-init-ooo">
     <!-- declare our runtime dependencies -->
     <artifact:dependencies filesetId="ooo.runtime.fileset">
       <remoteRepository refid="ooo.maven.depends.repo"/>
@@ -112,7 +111,7 @@
   </target>
 
   <!-- prepares the application directories -->
-  <target name="prepare" depends="-declare-maven,config,lists">
+  <target name="prepare" depends="-declare-maven,-init-copy,config,lists">
     <mkdir dir="${deploy.dir}/tmp"/>
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
@@ -555,6 +554,7 @@
   </target>
 
   <!-- build the javadoc documentation -->
+  <property name="javadoc.title"  value="Bang! Howdy API"/>
   <target name="javadoc" depends="prepare,common-javadoc"/>
 
   <!-- helper target for client and devclient -->
@@ -1518,4 +1518,11 @@
     </dpkg>
   </target>
 
+  <!-- targets for the auto-build system -->
+  <target name="bamboo" depends="distcleanall,checkclean,package,aptupdate">
+    <antcall target="distcleanall"/>
+  </target>
+  <target name="bamboo-docs" depends="distcleanall,checkclean,package-docs,aptupdate">
+    <antcall target="distcleanall"/>
+  </target>
 </project>
