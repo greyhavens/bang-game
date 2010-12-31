@@ -16,8 +16,7 @@
   <property name="templates.location" value="src/xhtml"/>
 
   <!-- prepares the application directories -->
-  <target name="prepare" depends="-init-ooo-maven">
-    <antcall target="common-webapp-prepare"/>
+  <target name="prepare" depends="-init-ooo-maven,common-webapp-prepare">
     <!-- we need bang-code.jar which doesn't fit into our libs.dir scheme -->
     <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>
 
