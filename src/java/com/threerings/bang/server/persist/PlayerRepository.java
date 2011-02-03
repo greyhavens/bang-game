@@ -95,7 +95,8 @@ public class PlayerRepository extends JORARepository
                 throws SQLException, PersistenceException {
                 Statement stmt = conn.createStatement();
                 try {
-                    ResultSet rs = stmt.executeQuery("select HANDLE from PLAYERS");
+                    ResultSet rs = stmt.executeQuery(
+                        "select HANDLE from PLAYERS where HANDLE != NULL");
                     while (rs.next()) {
                         for (String word : rs.getString(1).split("\\s")) {
                             names.add(word);
