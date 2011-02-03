@@ -1,7 +1,7 @@
 #
 # $Id$
 #
-# Proguard configuration file for Game Gardens client
+# Proguard configuration file for particle system editor
 
 -dontobfuscate
 
