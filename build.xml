@@ -42,41 +42,17 @@
 
   <target name="-declare-maven" depends="-init-ooo">
     <!-- declare our runtime dependencies -->
-    <artifact:dependencies filesetId="ooo.runtime.fileset">
-      <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.jme" artifactId="jme" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-awt" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-effects" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-gamestates" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-model" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-scene" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-sound" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-terrain" version="1.0"/>
-      <dependency groupId="com.samskivert" artifactId="jme-bui" version="1.0"/>
-      <dependency groupId="com.samskivert" artifactId="samskivert" version="1.1"/>
-      <dependency groupId="com.threerings" artifactId="narya" version="1.2"/>
-      <dependency groupId="com.threerings" artifactId="nenya" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="vilya" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="threerings" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="underwire" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="hemiptera" version="1.0"/>
-      <dependency groupId="com.threerings" artifactId="getdown" version="1.1"/>
-    </artifact:dependencies>
-    <artifact:dependencies filesetId="ext.runtime.fileset">
-      <dependency groupId="commons-io" artifactId="commons-io" version="1.4"/>
-      <dependency groupId="net.sf.ehcache" artifactId="ehcache" version="1.6.0"/>
-      <dependency groupId="mysql" artifactId="mysql-connector-java" version="5.1.6"/>
-      <dependency groupId="commons-digester" artifactId="commons-digester" version="2.0"/>
-    </artifact:dependencies>
+    <artifact:pom id="pom" file="pom.xml"/>
+    <artifact:dependencies filesetId="runtime.fileset" pomRefId="pom" useScope="compile"/>
 
     <!-- set up a classpath for the non-runtime dependencies -->
-    <artifact:dependencies pathId="ext.build.classpath">
+    <artifact:dependencies pathId="build.classpath">
       <dependency groupId="org.apache.ant" artifactId="ant" version="1.7.1"/>
       <dependency groupId="junit" artifactId="junit" version="4.8.1"/>
     </artifact:dependencies>
 
     <!-- declare dependencies needed by the client Proguard build -->
-    <artifact:dependencies filesetId="ooo.client.fileset">
+    <artifact:dependencies filesetId="client.fileset">
       <remoteRepository id="ooo.maven.ext" url="http://ooo-maven.googlecode.com/hg/repository"/>
       <dependency groupId="com.jcraft" artifactId="jorbis" version="0.0.15"/>
     </artifact:dependencies>
@@ -90,24 +66,22 @@
 
   <target name="showdeps" depends="-declare-maven"
           description="Displays the versions of dependencies obtained from Maven.">
-    <pathconvert property="ooo.runtime.deps" pathsep="${line.separator}"
-                 refid="ooo.runtime.fileset"/>
-    <pathconvert property="ext.runtime.deps" pathsep="${line.separator}"
-                 refid="ext.runtime.fileset"/>
+    <pathconvert property="runtime.deps" pathsep="${line.separator}"
+                 refid="runtime.fileset"/>
     <echo>Runtime depends:</echo>
-    <exec executable="sort" inputstring="${ooo.runtime.deps}${line.separator}${ext.runtime.deps}"/>
+    <exec executable="sort" inputstring="${runtime.deps}"/>
 
     <pathconvert property="ext.build.deps" pathsep="${line.separator}"
-                 refid="ext.build.classpath"/>
+                 refid="build.classpath"/>
     <echo>${line.separator}Build-only depends:</echo>
     <exec executable="sort" inputstring="${ext.build.deps}"/>
 
-    <pathconvert property="ooo.client.deps" pathsep="${line.separator}"
-                 refid="ooo.client.fileset"/>
+    <pathconvert property="client.deps" pathsep="${line.separator}"
+                 refid="client.fileset"/>
     <pathconvert property="getdown.deps" pathsep="${line.separator}"
                  refid="getdown-pro.fileset"/>
     <echo>${line.separator}Additional client depends:</echo>
-    <exec executable="sort" inputstring="${ooo.client.deps}${line.separator}${getdown.deps}"/>
+    <exec executable="sort" inputstring="${client.deps}${line.separator}${getdown.deps}"/>
   </target>
 
   <!-- prepares the application directories -->
@@ -197,8 +171,18 @@
 
     <!-- copy our runtime dependencies from Maven -->
     <copy todir="${deploy.dir}/lib">
-      <fileset refid="ooo.runtime.fileset"/>
-      <fileset refid="ext.runtime.fileset"/>
+      <fileset refid="runtime.fileset"/>
+      <mapper type="flatten"/>
+    </copy>
+
+<!-- TEMP -->
+    <delete file="${deploy.dir}/lib/nenya-1.0.jar"/>
+    <copy file="/home/mdb/projects/ooo/nenya/dist/nenya.jar" todir="${deploy.dir}/lib"/>
+<!-- END TEMP -->
+
+    <mkdir dir="${deploy.dir}/client"/>
+    <copy todir="${deploy.dir}/client">
+      <fileset refid="client.fileset"/>
       <mapper type="flatten"/>
     </copy>
     <mkdir dir="${deploy.dir}/getdown"/>
@@ -210,14 +194,14 @@
     <path id="classpath">
       <pathelement location="${deploy.dir}/classes"/>
       <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-      <path refid="ext.build.classpath"/>
+      <path refid="build.classpath"/>
     </path>
 
     <!-- declare a classpath for non-bang tasks -->
     <path id="tool.classpath">
       <pathelement location="${deploy.dir}"/>
       <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-      <path refid="ext.build.classpath"/>
+      <path refid="build.classpath"/>
     </path>
 
     <!-- declare a classpath for bang tasks -->
@@ -226,7 +210,7 @@
       <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
       <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
       <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
-      <path refid="ext.build.classpath"/>
+      <path refid="build.classpath"/>
     </path>
   </target>
 
@@ -447,10 +431,33 @@
               parser="com.threerings.bang.avatar.tools.xml.BucklePartCatalogParser"/>
   </target>
 
-  <!-- helper task for 'avatars' -->
-  <target name="avatar_comps" depends="prepare">
-    <taskdef name="cbundle" classpathref="classpath"
+  <!-- builds the avatar component bundles -->
+  <target name="avatars" depends="prepare,catalogs">
+    <taskdef name="metabundle" classpathref="tool.classpath"
+             classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
+    <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
+                classdef="${basedir}/rsrc/avatars/classes.xml"
+                target="${deploy.dir}/rsrc/avatars/metadata.jar"/>
+
+    <taskdef name="cbundle" classpathref="tool.classpath"
       classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
+    <for list="${towns}" param="town" trim="true"><sequential>
+      <for list="male,female" param="gender"><sequential>
+        <antcall target="-avatar-comps">
+          <param name="comp.bundle" value="@{town}/@{gender}"/>
+          <param name="comp.root" value="@{town}"/>
+        </antcall>
+      </sequential></for>
+    </sequential></for>
+
+    <antcall target="-avatar-comps">
+      <param name="comp.bundle" value="buckle"/>
+      <param name="comp.root" value=""/>
+    </antcall>
+  </target>
+
+  <!-- helper task for 'avatars' -->
+  <target name="-avatar-comps">
     <mkdir dir="${deploy.dir}/rsrc/avatars/${comp.bundle}"/>
     <cbundle actiondef="rsrc/avatars/actions.xml" mapfile="rsrc/avatars/compmap.txt"
              root="rsrc/avatars/${comp.root}"
@@ -479,29 +486,6 @@
         </exec>
       </then></if>
     </then></if>
-  </target>
-
-  <!-- builds the avatar component bundles -->
-  <target name="avatars" depends="config,catalogs">
-    <taskdef name="metabundle" classpathref="tool.classpath"
-             classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
-    <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
-                classdef="${basedir}/rsrc/avatars/classes.xml"
-                target="${deploy.dir}/rsrc/avatars/metadata.jar"/>
-
-    <for list="${towns}" param="town" trim="true"><sequential>
-      <for list="male,female" param="gender"><sequential>
-        <antcall target="avatar_comps">
-          <param name="comp.bundle" value="@{town}/@{gender}"/>
-          <param name="comp.root" value="@{town}"/>
-        </antcall>
-      </sequential></for>
-    </sequential></for>
-
-    <antcall target="avatar_comps">
-      <param name="comp.bundle" value="buckle"/>
-      <param name="comp.root" value=""/>
-    </antcall>
   </target>
 
   <!-- run the unit tests -->
@@ -659,9 +643,9 @@
       <fileset dir="rsrc" includes="config/resource/manager.properties"/>
     </copy>
     <copy todir="${client_dir}/native">
-      <fileset dir="lib/native/i686-Linux" includes="*.so"/>
-      <fileset dir="lib/native/i686-Windows" includes="*.dll"/>
-      <fileset dir="lib/native/Universal-MacOS" includes="*"/>
+      <fileset dir="lib/native/linux" includes="*.so"/>
+      <fileset dir="lib/native/windows" includes="*.dll"/>
+      <fileset dir="lib/native/macosx" includes="*"/>
     </copy>
 
     <!-- generate the getdown digest file -->
@@ -997,7 +981,7 @@
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
   <target name="distall" depends="dist,distwebapps,mdist">
-    <!-- copy native narya libraries into ${deploy.dir}/lib -->
+    <!-- copy native LWJGL libraries into ${deploy.dir}/lib -->
     <copy todir="${deploy.dir}/lib">
       <fileset dir="lib/native" includes="**/*.so"/>
       <fileset dir="lib/native" includes="**/*.jnilib"/>

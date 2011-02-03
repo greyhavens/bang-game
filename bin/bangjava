@@ -33,6 +33,10 @@ while [ ! -z "$1" ]; do
             JAVA_ARGS="-agentlib:jdwp=$JDWP_ARGS $JAVA_ARGS"
             ;;
 
+        -client)
+            CLIENT="true"
+            ;;
+
         -D*)
             JAVA_ARGS="$JAVA_ARGS $1"
             ;;
@@ -56,39 +60,26 @@ if [ -z "$NODEVLIBS" -a -d $BANG_HOME/dist/classes ]; then
     CLASSPATH=$BANG_HOME/dist/classes:$CLASSPATH
 else
     for JAR in $BANG_HOME/dist/bang-*.jar; do
-        # skip the bang-support jar, it duplicates what's in bang-code
-        if [ "$JAR" != "$BANG_HOME/dist/bang-support.jar" ]; then
-            CLASSPATH=$CLASSPATH:$JAR
-        fi
+        CLASSPATH=$CLASSPATH:$JAR
     done
 fi
+
 for JAR in $BANG_HOME/dist/lib/*.jar; do
-    # if we're using devlibs and this jar file exists in projects/*/dist; use
-    # that one instead of the one in dist/lib
-    if [ -z "$NODEVLIBS" ]; then
-        JARNAME=$(basename $JAR)
-        PROJJAR=$(echo $BANG_HOME/projects/*/dist/$JARNAME)
-        if [ -e "$PROJJAR" ]; then
-            JAR=$PROJJAR
-        fi
-    fi
     CLASSPATH=$CLASSPATH:$JAR
 done
+if [ "$CLIENT" = "true" ]; then
+    for JAR in $BANG_HOME/dist/client/*.jar; do
+        CLASSPATH=$CLASSPATH:$JAR
+    done
+fi
 export CLASSPATH
 
-OS=`uname -s`
-
-if [ "$OS" = "Darwin" ]; then
-    NATIVE_LIBS=$BANG_HOME/dist/lib/Universal-MacOS/
-    # pass -Djava.library.path to locate our shared libraries
-    JAVA_ARGS="$JAVA_ARGS -Djava.library.path=$NATIVE_LIBS"
-    
-else
-    NATIVE_LIBS=$BANG_HOME/dist/lib/`uname -m`-`uname -s `
-    # set up the LD_LIBRARY_PATH to include our shared libraries
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NATIVE_LIBS
-    export LD_LIBRARY_PATH
+OS=`uname -s | tr '[:upper:]' '[:lower:]'`
+if [ "$OS" = "darwin" ]; then
+    OS="macosx"
 fi
+# pass -Djava.library.path to locate our shared libraries
+JAVA_ARGS="$JAVA_ARGS -Djava.library.path=$BANG_HOME/dist/lib/$OS"
 
 # do the deed
 exec java $JAVA_ARGS $ARGS
