@@ -104,4 +104,15 @@
     <jar file="${deploy.dir}/${ant.project.name}.jar" basedir="${deploy.dir}/classes"/>
   </target>
 
+  <target name="pseditor" depends="prepare" description="Runs the particle system editor.">
+    <java fork="true" classname="jmetest.effects.RenParticleEditor">
+      <classpath>
+        <path refid="compile.classpath"/>
+        <pathelement location="${deploy.dir}/classes"/>
+        <pathelement location="${base.dir}/${deploy.dir}/lib/lwjgl.jar"/>
+        <pathelement location="${base.dir}/${deploy.dir}/lib/lwjgl_util.jar"/>
+      </classpath>
+      <sysproperty key="java.library.path" value="${base.dir}/lib/native/linux"/>
+    </java>
+  </target>
 </project>
