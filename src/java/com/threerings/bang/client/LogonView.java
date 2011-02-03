@@ -115,6 +115,7 @@ public class LogonView extends BWindow
             } else {
                 msg = "m.network_error";
             }
+            log.info("Unexpected logon failure", "error", cause);
 
             // change the new account button to server status
             connectionFailure = true;
