@@ -277,7 +277,8 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsGoldPass (String townId)
     {
-        return DeploymentConfig.usesCoins() && holdsEquivalentItem(new GoldPass(-1, townId));
+        return true;
+        // return DeploymentConfig.usesCoins() && holdsEquivalentItem(new GoldPass(-1, townId));
     }
 
     /**
@@ -285,9 +286,10 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsOneTime ()
     {
-        return DeploymentConfig.usesOneTime() &&
-            // we coopt the frontier town gold pass as the one-time pass
-            holdsEquivalentItem(new GoldPass(-1, BangCodes.FRONTIER_TOWN));
+        return true;
+        // return DeploymentConfig.usesOneTime() &&
+        //     // we coopt the frontier town gold pass as the one-time pass
+        //     holdsEquivalentItem(new GoldPass(-1, BangCodes.FRONTIER_TOWN));
     }
 
     /**
