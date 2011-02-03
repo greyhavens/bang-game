@@ -18,13 +18,13 @@
 
     <artifact:dependencies pathId="compile.classpath">
       <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.jme" artifactId="jme" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-awt" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-effects" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-gamestates" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-model" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-scene" version="1.0"/>
-      <dependency groupId="com.jme" artifactId="jme-sound" version="1.0"/>
+      <dependency groupId="com.jme" artifactId="jme" version="1.1"/>
+      <dependency groupId="com.jme" artifactId="jme-awt" version="1.1"/>
+      <dependency groupId="com.jme" artifactId="jme-effects" version="1.1"/>
+      <dependency groupId="com.jme" artifactId="jme-gamestates" version="1.1"/>
+      <dependency groupId="com.jme" artifactId="jme-model" version="1.1"/>
+      <dependency groupId="com.jme" artifactId="jme-scene" version="1.1"/>
+      <dependency groupId="com.jme" artifactId="jme-sound" version="1.1"/>
     </artifact:dependencies>
   </target>
 
