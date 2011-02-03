@@ -175,11 +175,6 @@
       <mapper type="flatten"/>
     </copy>
 
-<!-- TEMP -->
-    <delete file="${deploy.dir}/lib/nenya-1.0.jar"/>
-    <copy file="/home/mdb/projects/ooo/nenya/dist/nenya.jar" todir="${deploy.dir}/lib"/>
-<!-- END TEMP -->
-
     <mkdir dir="${deploy.dir}/client"/>
     <copy todir="${deploy.dir}/client">
       <fileset refid="client.fileset"/>
