@@ -166,6 +166,10 @@ public class ShaderCache
         // check the info log
         ARBShaderObjects.glGetObjectParameterARB(sstate.getProgramID(),
             ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB, ibuf);
+        if (ibuf.get(0) == 0) {
+            return null; // no error
+        }
+
         ByteBuffer bbuf = BufferUtils.createByteBuffer(ibuf.get(0));
         ARBShaderObjects.glGetInfoLogARB(sstate.getProgramID(), ibuf, bbuf);
         String log = Charset.forName("US-ASCII").decode(bbuf).toString();
