@@ -167,7 +167,7 @@ public class ShaderCache
         ARBShaderObjects.glGetObjectParameterARB(sstate.getProgramID(),
             ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB, ibuf);
         if (ibuf.get(0) == 0) {
-            return null; // no error
+            return sstate; // no error
         }
 
         ByteBuffer bbuf = BufferUtils.createByteBuffer(ibuf.get(0));
