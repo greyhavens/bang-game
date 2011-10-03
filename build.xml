@@ -1248,7 +1248,7 @@
     <!-- create webapp jetty scripts and copy in the war file -->
     <jettystartup webapp="${app.name}office" base="${ooo.prefix}/${app.name}" runas="${bang.user}"
                   outputdir="${approot.office}" port="${bangoffice.jetty.port}" context="/office"/>
-    <copy file="webapps/bangoffice/${deploy.dir}/bangoffice.war"
+    <copy file="webapps/office/${deploy.dir}/bangoffice.war"
       todir="${approot.office}/webapps/bangoffice"/>
 
     <!-- define the root of the bangsupport package -->
