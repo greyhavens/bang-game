@@ -1,13 +1,7 @@
 <!-- project build configuration -->
-<project name="Sheriff's Office web application" default="all" basedir="."
-         xmlns:artifact="urn:maven-artifact-ant">
-
-  <!-- the base directory from which we get our bundles and jar files -->
+<project name="bangoffice" default="all" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <property name="base.dir" value="../.."/>
-
-  <!-- the web application name and properties file -->
-  <property name="app.name"        value="bangoffice"/>
-  <property name="properties.file" value="server.properties"/>
+  <property name="app.name" value="bangoffice"/>
 
   <!-- import the generic webapp build file and library dependencies -->
   <import file="${base.dir}/package/etc/webapp-build.xml"/>
@@ -17,11 +11,16 @@
 
   <!-- prepares the application directories -->
   <target name="prepare" depends="-init-ooo-maven,common-webapp-prepare">
-    <!-- we need bang-code.jar which doesn't fit into our libs.dir scheme -->
+    <!-- copy our configuration into place -->
+    <copy file="${base.dir}/${deploy.dir}/server.properties" todir="${build.dir}/WEB-INF/classes"/>
+
+    <!-- we need bang-code.jar for some database bits -->
     <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>
 
     <!-- we get all other dependencies from Maven -->
-    <artifact:dependencies filesetId="ooo.maven.fileset">
+    <artifact:dependencies filesetId="maven.fileset">
+      <dependency groupId="commons-collections" artifactId="commons-collections" version="3.2.1"/>
+      <dependency groupId="mysql" artifactId="mysql-connector-java" version="5.1.6"/>
       <remoteRepository refid="ooo.maven.depends.repo"/>
       <dependency groupId="com.threerings" artifactId="vilya" version="1.0"/>
       <dependency groupId="com.threerings" artifactId="threerings" version="1.0"/>
@@ -29,13 +28,8 @@
       <dependency groupId="com.jme" artifactId="jme" version="1.0"/>
       <dependency groupId="extern" artifactId="velocity-dev" version="1.5"/>
     </artifact:dependencies>
-    <artifact:dependencies filesetId="ext.maven.fileset">
-      <dependency groupId="commons-collections" artifactId="commons-collections" version="3.2.1"/>
-      <dependency groupId="mysql" artifactId="mysql-connector-java" version="5.1.6"/>
-    </artifact:dependencies>
     <copy todir="${deploy.dir}/lib">
-      <fileset refid="ooo.maven.fileset"/>
-      <fileset refid="ext.maven.fileset"/>
+      <fileset refid="maven.fileset"/>
       <mapper type="flatten"/>
     </copy>
   </target>

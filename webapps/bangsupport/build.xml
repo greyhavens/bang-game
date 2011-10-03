@@ -1,13 +1,7 @@
 <!-- build configuration -->
-<project name="Bang Support web application" default="compile" basedir="."
-         xmlns:artifact="urn:maven-artifact-ant">
-
-  <!-- the base directory from which we get our bundles and jar files -->
+<project name="bangsupport" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <property name="base.dir" value="../.."/>
-
-  <!-- the web application name and properties file -->
-  <property name="app.name"        value="bangsupport"/>
-  <property name="properties.file" value="server.properties"/>
+  <property name="app.name" value="bangsupport"/>
 
   <!-- import the generic webapp build file and library dependencies -->
   <property name="dist.depends" value="gcompile"/>
@@ -16,7 +10,10 @@
 
   <!-- prepares the application directories -->
   <target name="prepare" depends="-init-ooo,common-webapp-prepare">
-    <!-- we also need bang-code.jar which doesn't fit into our libs.dir scheme -->
+    <!-- copy our configuration into place -->
+    <copy file="${base.dir}/${deploy.dir}/server.properties" todir="${build.dir}/WEB-INF/classes"/>
+
+    <!-- we need bang-code.jar for some database bits -->
     <copy file="${base.dir}/${deploy.dir}/bang-code.jar" todir="${deploy.dir}/lib"/>
 
     <!-- we get all other dependencies from Maven -->
