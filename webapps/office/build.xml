@@ -26,7 +26,7 @@
       <dependency groupId="com.threerings" artifactId="threerings" version="1.0"/>
       <dependency groupId="com.samskivert" artifactId="jme-bui" version="1.0"/>
       <dependency groupId="com.jme" artifactId="jme" version="1.0"/>
-      <dependency groupId="extern" artifactId="velocity-dev" version="1.5"/>
+      <dependency groupId="org.apache.velocity" artifactId="velocity-ooo" version="1.6.4"/>
     </artifact:dependencies>
     <copy todir="${deploy.dir}/lib">
       <fileset refid="maven.fileset"/>
