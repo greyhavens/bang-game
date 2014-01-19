@@ -49,8 +49,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.AWTTextFactory;
 import com.jmex.bui.text.BTextFactory;
 
-import com.jmex.sound.openAL.objects.util.OggInputStream;
-
 import com.samskivert.util.StringUtil;
 
 import com.threerings.jme.util.ImageCache;
@@ -63,11 +61,12 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.gang.client.GangPopupMenu;
 
+import com.threerings.bang.client.util.OggInputStream;
 import com.threerings.bang.client.util.TexturePool;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.SoundUtil;
 
