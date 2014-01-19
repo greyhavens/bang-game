@@ -74,12 +74,6 @@ if [ "$CLIENT" = "true" ]; then
 fi
 export CLASSPATH
 
-OS=`uname -s | tr '[:upper:]' '[:lower:]'`
-if [ "$OS" = "darwin" ]; then
-    OS="macosx"
-fi
-# pass -Djava.library.path to locate our shared libraries
-JAVA_ARGS="$JAVA_ARGS -Djava.library.path=$BANG_HOME/dist/lib/$OS"
-
 # do the deed
+echo java $JAVA_ARGS $ARGS
 exec java $JAVA_ARGS $ARGS

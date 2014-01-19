@@ -121,6 +121,16 @@ public class BangApp extends JmeApp
         configureLog("bang.log");
 
         try {
+            // unpack the LWJGL native libraries and wire them up
+            SharedLibraryExtractor extractor = new SharedLibraryExtractor();
+            File nativesDir = null;
+            try {
+                nativesDir = extractor.extractLibrary("lwjgl", null).getParentFile();
+            } catch (Throwable ex) {
+                throw new RuntimeException("Unable to extract LWJGL native libraries.", ex);
+            }
+            System.setProperty("org.lwjgl.librarypath", nativesDir.getAbsolutePath());
+
             // this is a hack, but we can't set our translated title until we've create our client
             // and message manager and whatnot; but I'll be damned if we're going to have it say
             // "Game" for even half a second

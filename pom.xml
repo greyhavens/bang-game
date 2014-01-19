@@ -50,49 +50,14 @@
       <version>1.8</version>
     </dependency>
     <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-awt</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-effects</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-gamestates</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-model</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-scene</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-sound</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-terrain</artifactId>
-      <version>1.1</version>
+      <groupId>com.threerings</groupId>
+      <artifactId>jme-gdx</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.samskivert</groupId>
       <artifactId>jme-bui</artifactId>
-      <version>1.0</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.samskivert</groupId>

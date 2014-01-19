@@ -2,7 +2,7 @@
 <project name="bang" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
 
   <!-- define various build properties -->
-  <property name="src.dir"        value="src/java"/>
+  <property name="src.dir"        value="src/main/java"/>
   <property name="deploy.dir"     value="dist"/>
   <property name="app.name"       value="bang"/>
   <property name="build.optimize" value="on"/>
