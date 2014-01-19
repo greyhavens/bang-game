@@ -214,7 +214,7 @@
     <taskdef name="grecord" classname="com.samskivert.depot.tools.GenRecordTask"
              classpathref="classpath"/>
     <!-- make sure the record class files are all compiled -->
-    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
            debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Record.java"/>
@@ -228,8 +228,8 @@
   <!-- generates additional methods for distributed object classes -->
   <target name="gendobj" depends="prepare">
     <!-- make sure the dobject class files are all compiled -->
-    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
-           debug="on" optimize="${build.optimize}" deprecation="on">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           includeAntRuntime="false" debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Object.java"/>
     </javac>
@@ -240,12 +240,11 @@
     </gendobj>
   </target>
 
-  <!-- generates marshaller and dispatcher classes for all invocation -->
-  <!-- service declarations -->
+  <!-- generates marshaller and dispatcher classes for all invocation service declarations -->
   <target name="genservice" depends="prepare">
     <!-- make sure the service class files are all compiled -->
-    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
-           debug="on" optimize="${build.optimize}" deprecation="on">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           includeAntRuntime="false" debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Service.java"/>
     </javac>
@@ -256,12 +255,11 @@
     </genservice>
   </target>
 
-  <!-- generates sender and decoder classes for all invocation -->
-  <!-- receiver declarations -->
+  <!-- generates sender and decoder classes for all invocation receiver declarations -->
   <target name="genreceiver" depends="prepare">
     <!-- make sure the receiver class files are all compiled -->
-    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
-           debug="on" optimize="${build.optimize}" deprecation="on">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           includeAntRuntime="false" debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Receiver.java"/>
       <exclude name="**/InvocationReceiver.java"/>
@@ -521,8 +519,8 @@
 
   <!-- build the java class files -->
   <target name="compile" depends="prepare">
-    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
-           debug="on" optimize="${build.optimize}" deprecation="on">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           includeAntRuntime="false" debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
