@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.threerings</groupId>
+    <artifactId>bang-project</artifactId>
+    <version>1.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>bang-assets</artifactId>
+  <packaging>jar</packaging>
+  <name>Bang Assets</name>
+
+  <dependencies>
+  </dependencies>
+
+  <build>
+    <!-- include the source files in our main jar for use by GWT -->
+    <resources>
+      <resource>
+        <directory>${basedir}/rsrc</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+        <excludes>
+          <exclude>avatars/**</exclude>
+          <exclude>boards/**</exclude>
+          <exclude>bonuses/**</exclude>
+          <exclude>bounties/**</exclude>
+          <exclude>cards/**</exclude>
+          <exclude>config/**/*.xml</exclude>
+          <exclude>effects/**</exclude>
+          <exclude>extras/**</exclude>
+          <exclude>goods/**</exclude>
+          <exclude>props/**</exclude>
+          <exclude>sounds/**</exclude>
+          <exclude>tutorials/**/*.xml</exclude>
+          <exclude>units/**</exclude>
+          <exclude>**/*.wav</exclude>
+        </excludes>
+      </resource>
+    </resources>
+
+<!--
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>gensrc</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+-->
+  </build>
+</project>

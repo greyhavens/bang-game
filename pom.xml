@@ -21,6 +21,7 @@
     <module>client</module>
     <module>server</module>
     <module>tools</module>
+    <module>assets</module>
   </modules>
 
   <build>
