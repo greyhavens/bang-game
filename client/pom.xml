@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.threerings</groupId>
+    <artifactId>bang-project</artifactId>
+    <version>1.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>bang-client</artifactId>
+  <packaging>jar</packaging>
+  <name>Bang Client</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>bang-bui</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.samskivert</groupId>
+      <artifactId>samskivert</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>narya</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>nenya</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>vilya</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>getdown</artifactId>
+      <version>1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jogg</artifactId>
+      <version>0.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jorbis</artifactId>
+      <version>0.0.15</version>
+    </dependency>
+  </dependencies>
+</project>
