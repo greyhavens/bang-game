@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.tests;
+package com.threerings.bang;
 
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;

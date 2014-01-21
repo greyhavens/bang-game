@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.tests;
+package com.threerings.bang;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
