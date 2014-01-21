@@ -471,39 +471,42 @@ public class EffectHandler extends BoardView.BoardAction
         // display the visualization
         IconViz iviz;
         switch (card.getPlacementMode()) {
-            case VS_PIECE:
-                Piece piece = _bangobj.pieces.get((Integer)target);
-                if (piece == null) {
-                    log.warning("Missing piece for card played effect", "effect", _effect,
-                                "pieceId", target);
-                    return;
-                }
-                PieceSprite sprite = _view.getPieceSprite(piece);
-                if (sprite == null) {
-                    log.warning("Missing sprite for card played effect", "effect", _effect,
-                                "piece", piece);
-                    return;
-                } else {
-                    iviz = IconViz.createCardViz(card);
-                    iviz.init(_ctx, _view, sprite, null);
-                    iviz.display();
-                }
+        case VS_PIECE:
+            Piece piece = _bangobj.pieces.get((Integer)target);
+            if (piece == null) {
+                log.warning("Missing piece for card played effect", "effect", _effect,
+                            "pieceId", target);
                 return;
-
-            case VS_AREA:
-                int[] coords = (int[])target;
+            }
+            PieceSprite sprite = _view.getPieceSprite(piece);
+            if (sprite == null) {
+                log.warning("Missing sprite for card played effect", "effect", _effect,
+                            "piece", piece);
+                return;
+            } else {
                 iviz = IconViz.createCardViz(card);
-                iviz.init(_ctx, _view, coords[0], coords[1], null);
+                iviz.init(_ctx, _view, sprite, null);
                 iviz.display();
-                return;
+            }
+            return;
 
-            case VS_PLAYER:
-                _bview.showCardPlayed(card, (Integer)target);
-                return;
+        case VS_AREA:
+            int[] coords = (int[])target;
+            iviz = IconViz.createCardViz(card);
+            iviz.init(_ctx, _view, coords[0], coords[1], null);
+            iviz.display();
+            return;
 
-            case VS_BOARD:
-                _bview.showCardPlayed(card, -1);
-                return;
+        case VS_PLAYER:
+            _bview.showCardPlayed(card, (Integer)target);
+            return;
+
+        case VS_BOARD:
+            _bview.showCardPlayed(card, -1);
+            return;
+
+        default:
+            break; // nada
         }
     }
 

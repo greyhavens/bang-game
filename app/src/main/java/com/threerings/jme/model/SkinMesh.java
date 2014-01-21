@@ -136,8 +136,6 @@ public class SkinMesh extends ModelMesh
             capsule.write(bones, "bones", null);
             capsule.write(weights, "weights", null);
         }
-
-        private static final long serialVersionUID = 1;
     }
 
     /** Represents a bone that influences the mesh. */
@@ -198,8 +196,6 @@ public class SkinMesh extends ModelMesh
             OutputCapsule capsule = ex.getCapsule(this);
             capsule.write(node, "node", null);
         }
-
-        private static final long serialVersionUID = 1;
     }
 
     /**

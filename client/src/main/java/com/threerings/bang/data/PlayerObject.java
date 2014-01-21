@@ -22,7 +22,6 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.util.BangUtil;
-import com.threerings.bang.util.DeploymentConfig;
 
 /**
  * Extends the {@link BodyObject} with custom bits needed by Bang!.

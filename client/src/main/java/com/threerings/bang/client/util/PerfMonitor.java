@@ -5,7 +5,7 @@ package com.threerings.bang.client.util;
 
 import com.samskivert.util.Interval;
 
-import com.threerings.media.timer.PerfTimer;
+import com.threerings.media.timer.NanoTimer;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.util.BangContext;
@@ -82,7 +82,7 @@ public class PerfMonitor
 
     protected static BasicContext _ctx;
     protected static boolean _reportToChat;
-    protected static PerfTimer _timer = new PerfTimer();
+    protected static NanoTimer _timer = new NanoTimer();
 
     protected static long _lastReport;
     protected static long[] _models = new long[3];

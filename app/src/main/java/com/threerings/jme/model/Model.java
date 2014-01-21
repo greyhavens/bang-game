@@ -231,8 +231,6 @@ public class Model extends ModelNode
             }
             return ntargets;
         }
-
-        private static final long serialVersionUID = 1;
     }
 
     /** A frame element that manipulates the target's transform. */

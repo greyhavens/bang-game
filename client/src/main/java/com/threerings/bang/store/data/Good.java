@@ -22,7 +22,6 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.DeploymentConfig;
 
 /**
  * Represents a particular good that can be purchased from the general store.

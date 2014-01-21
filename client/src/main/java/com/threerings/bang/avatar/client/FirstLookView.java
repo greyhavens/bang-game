@@ -137,9 +137,6 @@ public class FirstLookView extends BContainer
 
     protected void updateAvatar ()
     {
-        int scrip = AvatarCodes.BASE_LOOK_SCRIP_COST,
-            coins = AvatarCodes.BASE_LOOK_COIN_COST;
-
         // obtain the component ids of the various aspect selections and total
         // up the cost of this look while we're at it
         ArrayIntSet compids = new ArrayIntSet();
@@ -152,8 +149,6 @@ public class FirstLookView extends BContainer
             if (choice == null) {
                 continue;
             }
-            scrip += choice.aspect.scrip;
-            coins += choice.aspect.coins;
             int zations = getColorizations(aspect);
             for (int ii = 0; ii < choice.components.length; ii++) {
                 if (choice.components[ii] != null) {

@@ -138,6 +138,8 @@ public abstract class ScenarioInfo
                     continue;
                 }
                 break;
+            default:
+                break; // nada
             }
             if (!info.supportsPlayers(players)) {
                 iter.remove();

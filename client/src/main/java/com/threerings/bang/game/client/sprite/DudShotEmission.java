@@ -36,14 +36,14 @@ import com.threerings.bang.util.RenderUtil;
  */
 public class DudShotEmission extends SpriteEmission
 {
-    public static class EmissionData 
+    public static class EmissionData
         implements Savable
     {
         public int frame;
         public boolean continueForward;
         public boolean stop;
         public float pause;
-        
+
         public EmissionData ()
         {
         }
@@ -53,7 +53,7 @@ public class DudShotEmission extends SpriteEmission
         {
             return getClass();
         }
-        
+
         // documentation inherited
         public void read (JMEImporter im)
             throws IOException
@@ -157,7 +157,7 @@ public class DudShotEmission extends SpriteEmission
         }
         _size = capsule.readFloat("size", 1f);
     }
-    
+
     @Override // documentation inherited
     public void write (JMEExporter ex)
         throws IOException
@@ -170,7 +170,7 @@ public class DudShotEmission extends SpriteEmission
             new EmissionData[_animData.size()]), "animDataValues", null);
         capsule.write(_size, "size", 1f);
     }
-    
+
     @Override // documentation inherited
     public void update (float time)
     {
@@ -201,9 +201,13 @@ public class DudShotEmission extends SpriteEmission
                 }
                 _stage = DudStage.DUD_FINISH;
             }
+            break;
+
+        default:
+            break; // nada
         }
     }
-    
+
     @Override // documentation inherited
     protected void animationStarted (String name)
     {
@@ -263,7 +267,7 @@ public class DudShotEmission extends SpriteEmission
         vbuf.put(0f).put(0f).put(2f);
         vbuf.put(1f).put(0f).put(2f);
         vbuf.put(1f).put(0f).put(0f);
-        
+
         tbuf.put(1f).put(1f);
         tbuf.put(0f).put(1f);
         tbuf.put(0f).put(0f);
@@ -340,5 +344,5 @@ public class DudShotEmission extends SpriteEmission
     /** Dud stages. */
     protected static enum DudStage { DUD_START, DUD_PAUSE, DUD_FINISH };
 
-    private static final long serialVersionUID = 1; 
+    private static final long serialVersionUID = 1;
 }

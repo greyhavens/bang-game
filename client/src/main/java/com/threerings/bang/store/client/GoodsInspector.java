@@ -253,6 +253,9 @@ public class GoodsInspector extends BContainer
             }
             add(_download, new Point(300 + offset, 10));
             break;
+
+        default:
+            break; // nada
         }
     }
 

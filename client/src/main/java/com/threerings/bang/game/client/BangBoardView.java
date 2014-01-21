@@ -1365,6 +1365,9 @@ public class BangBoardView extends BoardView
                     }
                 }
                 break;
+
+            default:
+                break; // nada
             }
 
             if (target != null) {
@@ -1872,7 +1875,7 @@ public class BangBoardView extends BoardView
     protected void updatePlacingCard (int tx, int ty)
     {
         switch (_card.getPlacementMode()) {
-          case VS_AREA:
+        case VS_AREA:
             clearHighlights();
             _attackSet.clear();
             _bangobj.board.computeAttacks(0, _card.getRadius(), tx, ty, _attackSet);
@@ -1882,10 +1885,9 @@ public class BangBoardView extends BoardView
             targetTiles(_attackSet, _card.isValidLocation(_bangobj, tx, ty));
             break;
 
-          case VS_PIECE:
-          case VS_PLAYER:
-            // if we're hovering over a piece it will get set properly in
-            // hoverSpriteChanged()
+        case VS_PIECE:
+        case VS_PLAYER:
+            // if we're hovering over a piece it will get set properly in hoverSpriteChanged()
             if (_hover == null) {
                 clearHighlights();
                 _attackSet.clear();
@@ -1894,6 +1896,10 @@ public class BangBoardView extends BoardView
                     targetTiles(_attackSet, false);
                 }
             }
+            break;
+
+        default:
+            break; // nada
         }
     }
 
@@ -2135,12 +2141,14 @@ public class BangBoardView extends BoardView
         if (_pendingMarquee != MarqueeMode.NONE) {
             if (noActions()) {
                 switch (_pendingMarquee) {
-                  case GAME:
+                case GAME:
                     showPostGameMarquee();
                     break;
-                  case ROUND:
+                case ROUND:
                     showInterRoundMarquee();
                     break;
+                default:
+                    break; // nada
                 }
                 _pendingMarquee = MarqueeMode.NONE;
             }

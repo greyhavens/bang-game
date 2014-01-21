@@ -416,8 +416,7 @@ public class ModelDef
             // create and set the final weight groups
             SkinMesh.WeightGroup[] wgroups = new SkinMesh.WeightGroup[_groups.size()];
             HashMap<String, SkinMesh.Bone> bones = Maps.newHashMap();
-            int ii = 0;
-            int mweights = 0, tweights = 0;
+            int ii = 0, mweights = 0;
             for (Map.Entry<Set<String>, WeightGroupDef> entry :
                 _groups.entrySet()) {
                 SkinMesh.WeightGroup wgroup = new SkinMesh.WeightGroup();
@@ -435,7 +434,6 @@ public class ModelDef
                     wgroup.bones[jj++] = bone;
                 }
                 wgroup.weights = toArray(entry.getValue().weights);
-                tweights += wgroup.bones.length;
                 mweights = Math.max(wgroup.bones.length, mweights);
                 wgroups[ii++] = wgroup;
             }

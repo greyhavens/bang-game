@@ -20,27 +20,27 @@ public class PlayCardEffect extends Effect
 {
     /** A copy of the card played. */
     public Card card;
-    
+
     /** The target that the card was played on. */
     public Object target;
-    
+
     public PlayCardEffect ()
     {
     }
-    
+
     public PlayCardEffect (Card card, Object target)
     {
         this.card = card;
         this.target = target;
     }
-    
+
     // documentation inherited
     public int[] getAffectedPieces ()
     {
         return (card.getPlacementMode() == Card.PlacementMode.VS_PIECE) ?
             new int[] { (Integer)target } : NO_PIECES;
     }
-    
+
     @Override // documentation inherited
     public Rectangle[] getBounds (BangObject bangobj)
     {
@@ -54,7 +54,7 @@ public class PlayCardEffect extends Effect
             return null;
         }
     }
-    
+
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -70,6 +70,10 @@ public class PlayCardEffect extends Effect
             if (!card.isValidPlayer(bangobj, (Integer)target)) {
                 target = null;
             }
+            break;
+
+        default:
+            break; // nada
         }
     }
 
@@ -77,17 +81,20 @@ public class PlayCardEffect extends Effect
     public boolean isApplicable ()
     {
         switch (card.getPlacementMode()) {
-          case VS_PIECE:
-          case VS_AREA:
-          case VS_PLAYER:
+        case VS_PIECE:
+        case VS_AREA:
+        case VS_PLAYER:
             if (target == null) {
                 return false;
             }
             break;
+
+        default:
+            break; // nada
         }
         return super.isApplicable();
     }
-    
+
     // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {

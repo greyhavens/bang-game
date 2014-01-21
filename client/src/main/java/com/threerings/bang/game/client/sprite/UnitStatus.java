@@ -64,10 +64,11 @@ public class UnitStatus extends PieceStatus
         if (_pendo == null || _pendo != pendo) {
             _pendo = pendo;
 
-            Texture otex = null;
+            Texture otex;
             switch (_pendo) {
             case MOVE: otex = _movetex; break;
             case MOVE_SHOOT: otex = _shoottex; break;
+            default: otex = null; break;
             }
             if (otex == null) {
                 _info[3].setCullMode(CULL_ALWAYS);
