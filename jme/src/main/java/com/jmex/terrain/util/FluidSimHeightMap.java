@@ -44,7 +44,6 @@ import com.jme.util.LoggingSystem;
 * rubbery fluid enabling to fine tune the generated heightmap using a number
 * of parameters.
 * 
-* @author Frederik Bülthoff
 * @see <a href="http://www.gamedev.net/reference/articles/article2001.asp">Terrain Generation Using Fluid Simulation</a>
 * @version $Id$
 * 

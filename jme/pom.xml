@@ -29,5 +29,13 @@
       <artifactId>lwjgl_util</artifactId>
       <version>${lwjgl.version}</version>
     </dependency>
+
+    <!-- ant is only for tools, so we don't export it as a depend -->
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.7.1</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>

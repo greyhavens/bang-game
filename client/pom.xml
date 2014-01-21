@@ -16,7 +16,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>bang-bui</artifactId>
+      <artifactId>bang-app</artifactId>
       <version>${project.version}</version>
     </dependency>
 

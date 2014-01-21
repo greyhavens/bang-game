@@ -43,7 +43,6 @@ import com.jme.util.LoggingSystem;
  * random points in the heightmap. The terrain is then normalized and valleys
  * can be flattened.
  * 
- * @author Frederik Bülthoff
  * @see <a href="http://www.robot-frog.com/3d/hills/hill.html">Hill Algorithm</a>
  */
 public class HillHeightMap extends AbstractHeightMap {
