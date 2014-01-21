@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.threerings</groupId>
+    <artifactId>bang-project</artifactId>
+    <version>1.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>bang-jme</artifactId>
+  <packaging>jar</packaging>
+  <name>jME on GDX</name>
+
+  <properties>
+    <lwjgl.version>2.9.0</lwjgl.version>
+  </properties>
+
+  <dependencies>
+    <!-- todo, move to libGDX depends -->
+    <dependency>
+      <groupId>org.lwjgl.lwjgl</groupId>
+      <artifactId>lwjgl</artifactId>
+      <version>${lwjgl.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl.lwjgl</groupId>
+      <artifactId>lwjgl_util</artifactId>
+      <version>${lwjgl.version}</version>
+    </dependency>
+  </dependencies>
+</project>
