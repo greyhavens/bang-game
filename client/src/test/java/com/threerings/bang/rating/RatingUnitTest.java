@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.tests.rating;
+package com.threerings.bang.rating;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

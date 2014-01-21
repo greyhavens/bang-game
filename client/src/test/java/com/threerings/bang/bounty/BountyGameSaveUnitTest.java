@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.tests.bounty;
+package com.threerings.bang.bounty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

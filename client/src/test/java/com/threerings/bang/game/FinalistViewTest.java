@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.tests.game;
+package com.threerings.bang.game;
 
 import java.util.logging.Level;
 
@@ -9,7 +9,7 @@ import com.jme.util.LoggingSystem;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.layout.GroupLayout;
 
-import com.threerings.bang.tests.TestApp;
+import com.threerings.bang.TestApp;
 
 /**
  * Test harness for the finalist view.  (Is no longer functional)

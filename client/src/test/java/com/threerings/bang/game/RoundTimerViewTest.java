@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.tests.game;
+package com.threerings.bang.game;
 
 import java.util.logging.Level;
 
@@ -10,7 +10,7 @@ import com.samskivert.util.Interval;
 import com.jme.util.LoggingSystem;
 import com.jmex.bui.BWindow;
 
-import com.threerings.bang.tests.TestApp;
+import com.threerings.bang.TestApp;
 
 import com.threerings.bang.game.client.RoundTimerView;
 

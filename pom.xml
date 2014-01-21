@@ -20,6 +20,7 @@
     <module>app</module>
     <module>client</module>
     <module>server</module>
+    <module>tools</module>
   </modules>
 
   <build>

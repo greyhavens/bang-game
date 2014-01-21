@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.tests.game;
+package com.threerings.bang.game;
 
 import java.util.logging.Level;
 
@@ -21,7 +21,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.StatType;
 
-import com.threerings.bang.tests.TestApp;
+import com.threerings.bang.TestApp;
 
 import com.threerings.bang.bounty.data.BountyConfig;
 
