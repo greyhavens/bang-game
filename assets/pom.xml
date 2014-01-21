@@ -13,47 +13,135 @@
   <packaging>jar</packaging>
   <name>Bang Assets</name>
 
+  <properties>
+    <towns>frontier_town, indian_post</towns>
+  </properties>
+
   <dependencies>
   </dependencies>
 
   <build>
-    <!-- include the source files in our main jar for use by GWT -->
     <resources>
+      <!-- global static resources -->
       <resource>
-        <directory>${basedir}/rsrc</directory>
+        <directory>${basedir}</directory>
         <includes>
-          <include>**/*</include>
+          <include>rsrc/**</include>
         </includes>
         <excludes>
-          <exclude>avatars/**</exclude>
-          <exclude>boards/**</exclude>
-          <exclude>bonuses/**</exclude>
-          <exclude>bounties/**</exclude>
-          <exclude>cards/**</exclude>
-          <exclude>config/**/*.xml</exclude>
-          <exclude>effects/**</exclude>
-          <exclude>extras/**</exclude>
-          <exclude>goods/**</exclude>
-          <exclude>props/**</exclude>
-          <exclude>sounds/**</exclude>
-          <exclude>tutorials/**/*.xml</exclude>
-          <exclude>units/**</exclude>
-          <exclude>**/*.wav</exclude>
+          <exclude>rsrc/avatars/**</exclude>
+          <exclude>rsrc/boards/**</exclude>
+          <exclude>rsrc/bonuses/**</exclude>
+          <exclude>rsrc/bounties/**</exclude>
+          <exclude>rsrc/cards/**</exclude>
+          <exclude>rsrc/config/**/*.xml</exclude>
+          <exclude>rsrc/effects/**</exclude>
+          <exclude>rsrc/extras/**</exclude>
+          <exclude>rsrc/props/**</exclude>
+          <exclude>rsrc/sounds/**</exclude>
+          <exclude>rsrc/tutorials/**/*.xml</exclude>
+          <exclude>rsrc/units/**</exclude>
+          <exclude>rsrc/**/*.wav</exclude>
         </excludes>
+      </resource>
+      <!-- sounds -->
+      <resource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>rsrc/**/*.ogg</include>
+        </includes>
       </resource>
     </resources>
 
-<!--
     <plugins>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.7</version>
         <executions>
           <execution>
-            <id>gensrc</id>
-            <phase>generate-sources</phase>
+            <id>make-sounds-list</id>
+            <phase>process-resources</phase>
             <configuration>
               <target>
+                <property name="target.dir" value="${project.build.directory}/classes"/>
+                <exec executable="find" dir="${target.dir}" output="${target.dir}/rsrc/sounds.txt"
+                      failonerror="true">
+                  <arg value="rsrc"/>
+                  <arg value="-name"/>
+                  <arg value="*.ogg"/>
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>bits</id>
+            <phase>process-resources</phase>
+            <configuration>
+              <target>
+                <property name="target.dir" value="${project.build.directory}/classes"/>
+                <!-- compiles our tutorial XML definitions -->
+                <taskdef name="confcomp" classpathref="maven.plugin.classpath"
+                         classname="com.threerings.tools.CompiledConfigTask"/>
+                <confcomp dest="${target.dir}"
+                          parser="com.threerings.bang.game.tools.xml.TutorialConfigParser">
+                  <fileset dir="rsrc/tutorials" includes="**/*.xml"/>
+                </confcomp>
+                <!-- creates the serialized color repository config -->
+                <taskdef name="confcomp" classpathref="maven.plugin.classpath"
+                         classname="com.threerings.tools.CompiledConfigTask"/>
+                <confcomp dest="${target.dir}"
+                          parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
+                          configdef="rsrc/config/media/colordefs.xml"/>
+                <!-- creates the serialized article and aspect catalogs -->
+                <taskdef name="confcomp" classpathref="maven.plugin.classpath"
+                         classname="com.threerings.tools.CompiledConfigTask"/>
+                <confcomp dest="${target.dir}" configdef="rsrc/avatars/articles.xml"
+                          parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"/>
+                <confcomp dest="${target.dir}" configdef="rsrc/avatars/aspects.xml"
+                          parser="com.threerings.bang.avatar.tools.xml.AspectCatalogParser"/>
+                <confcomp dest="${target.dir}" configdef="rsrc/avatars/buckle_parts.xml"
+                          parser="com.threerings.bang.avatar.tools.xml.BucklePartCatalogParser"/>
+
+                <!-- builds the avatar component bundles -->
+                <taskdef name="metabundle" classpathref="maven.plugin.classpath"
+                         classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
+                <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
+                            classdef="${basedir}/rsrc/avatars/classes.xml"
+                            target="${target.dir}/rsrc/avatars/metadata.jar"/>
+
+                <taskdef name="cbundle" classpathref="maven.plugin.classpath"
+                         classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
+                <for list="${towns}" param="town" trim="true"><sequential>
+                  <for list="male,female" param="gender"><sequential>
+                    <mkdir dir="${target.dir}/rsrc/avatars/${comp.bundle}"/>
+                    <cbundle actiondef="rsrc/avatars/actions.xml" mapfile="rsrc/avatars/compmap.txt"
+                             root="rsrc/avatars/@{town}"
+                             target="${target.dir}/rsrc/avatars/${comp.bundle}/components.jar">
+                      <fileset dir="rsrc/avatars/@{town}/@{gender}">
+                        <include name="**/*.png"/>
+                        <exclude name="**/*_shadow.png"/>
+                        <exclude name="**/*_crop.png"/>
+                        <exclude name="components/**"/>
+                      </fileset>
+                    </cbundle>
+                  </sequential></for>
+                </sequential></for>
+
+                <mkdir dir="${target.dir}/rsrc/avatars/${comp.bundle}"/>
+                <cbundle actiondef="rsrc/avatars/actions.xml" mapfile="rsrc/avatars/compmap.txt"
+                         root="rsrc/avatars"
+                         target="${target.dir}/rsrc/avatars/${comp.bundle}/components.jar">
+                  <fileset dir="rsrc/avatars/buckle">
+                    <include name="**/*.png"/>
+                    <exclude name="**/*_shadow.png"/>
+                    <exclude name="**/*_crop.png"/>
+                    <exclude name="components/**"/>
+                  </fileset>
+                </cbundle>
               </target>
             </configuration>
             <goals>
@@ -61,8 +149,14 @@
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>bang-tools</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
--->
   </build>
 </project>
