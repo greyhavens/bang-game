@@ -72,7 +72,6 @@ import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.BucklePart;

@@ -346,7 +346,7 @@ public class BangConfig extends GameConfig
         out.writeSavableArrayList(criteria, "criteria", DEF_CRIT);
     }
 
-    @SuppressWarnings("unchecked") // from interface Savable
+    // from interface Savable
     public void read (JMEImporter im) throws IOException
     {
         InputCapsule in = im.getCapsule(this);

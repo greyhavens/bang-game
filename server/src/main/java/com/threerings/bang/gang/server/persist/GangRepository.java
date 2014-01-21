@@ -50,8 +50,6 @@ import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.TopRankedGangList;
 import com.threerings.bang.gang.util.GangUtil;
 
-import static com.threerings.bang.Log.*;
-
 /**
  * Persistifies gang information.
  */

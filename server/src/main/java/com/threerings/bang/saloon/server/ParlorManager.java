@@ -124,6 +124,9 @@ public class ParlorManager extends PlaceManager
                 throw new InvocationException(NOT_PARDNER);
             }
             break;
+
+        default:
+            break; // nada
         }
     }
 

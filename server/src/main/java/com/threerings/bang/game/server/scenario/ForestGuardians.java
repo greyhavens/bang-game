@@ -152,6 +152,8 @@ public class ForestGuardians extends Scenario
             case END_GAME:
                 bangobj.setLastTick(tick);
                 break;
+            default:
+                break; // nada
             }
         }
 
@@ -171,17 +173,17 @@ public class ForestGuardians extends Scenario
         // have the tree bed delegate compute our final score and payouts
         int treePoints = _treesGrown * TreeBed.FULLY_GROWN;
         int maxPoints = _waveMax * TreeBed.FULLY_GROWN;
-        int living = 0, total = 0;
+        // int living = 0, total = 0;
         for (TreeBed tree : _treedel.getWaveTrees()) {
             if (tree.growth == 0) {
                 continue;
             }
-            total++;
+            // total++;
             maxPoints += tree.growth;
             if (!tree.isAlive()) {
                 continue;
             }
-            living++;
+            // living++;
             treePoints += tree.growth;
             int points = scalePoints(
                 ForestGuardiansInfo.GROWTH_POINTS[tree.growth-1]);
@@ -193,13 +195,12 @@ public class ForestGuardians extends Scenario
             }
         }
 
-// TODO: do we want to report a performance for the last wave? even if they grew no trees?
-
-//         int perf = (total > 0 ? RobotWaveEffect.getPerformance(living, total) :
-//                     RobotWaveEffect.MAX_PERFORMANCE);
-//         for (StatSet stats : bangobj.stats) {
-//             stats.appendStat(StatType.WAVE_SCORES, perf);
-//         }
+        // TODO: do we want to report a performance for the last wave? even if they grew no trees?
+            // int perf = (total > 0 ? RobotWaveEffect.getPerformance(living, total) :
+            //             RobotWaveEffect.MAX_PERFORMANCE);
+            // for (StatSet stats : bangobj.stats) {
+            //     stats.appendStat(StatType.WAVE_SCORES, perf);
+            // }
 
         _payouts = new int[bangobj.players.length];
         Arrays.fill(_payouts,

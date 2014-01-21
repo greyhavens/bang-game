@@ -4,10 +4,8 @@
 package com.threerings.bang.tourney.server;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Lifecycle;
 
 import com.threerings.presents.client.InvocationService;

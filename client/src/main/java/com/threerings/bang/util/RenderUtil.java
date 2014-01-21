@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.Pbuffer;
+// import org.lwjgl.opengl.Pbuffer;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -497,14 +497,14 @@ public class RenderUtil
         // if the video card supports rendering straight to texture, use
         // JME's texture renderer; otherwise, render to the back buffer
         // (temporarily disabled)
-        int caps = Pbuffer.getCapabilities();
-        if (false && (caps & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0) {
-            return ctx.getDisplay().createTextureRenderer(width, height, true,
-                false, false, false, TextureRenderer.RENDER_TEXTURE_2D, 0);
+        // int caps = Pbuffer.getCapabilities();
+        // if ((caps & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0) {
+        //     return ctx.getDisplay().createTextureRenderer(width, height, true,
+        //         false, false, false, TextureRenderer.RENDER_TEXTURE_2D, 0);
 
-        } else {
+        // } else {
             return new BackTextureRenderer(ctx, width, height);
-        }
+        // }
     }
 
     /**

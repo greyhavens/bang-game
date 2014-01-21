@@ -15,7 +15,6 @@ import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.RepositoryListenerUnit;
 import com.samskivert.jdbc.RepositoryUnit;
-import com.samskivert.jdbc.TransitionRepository;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
