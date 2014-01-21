@@ -934,11 +934,7 @@ class Stripifier {
 		int stripId = 0;
 		boolean done = false;
 
-		int loopCtr = 0;
-
 		while (!done) {
-			loopCtr++;
-
 			//
 			// PHASE 1: Set up numSamples * numEdges experiments
 			//

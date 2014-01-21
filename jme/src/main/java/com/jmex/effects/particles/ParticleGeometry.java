@@ -245,7 +245,8 @@ public abstract class ParticleGeometry extends Geometry {
         return controller;
     }
 
-    public void addController(Controller c) {
+    @Override
+	public void addController(Controller c) {
         super.addController(c);
         if (c instanceof ParticleController) {
             this.controller = (ParticleController) c;
@@ -999,7 +1000,8 @@ public abstract class ParticleGeometry extends Geometry {
         super.updateWorldBound();
     }
 
-    public void updateWorldVectors() {
+    @Override
+	public void updateWorldVectors() {
         super.updateWorldVectors();
         if (isRotateWithScene() && !transformParticles) {
             if (emitType == ET_GEOMBATCH && getGeomBatch() != null) {
@@ -1018,7 +1020,8 @@ public abstract class ParticleGeometry extends Geometry {
         getWorldRotation().set(0, 0, 0, 1);
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(emitType, "emitType", ET_POINT);
@@ -1057,7 +1060,8 @@ public abstract class ParticleGeometry extends Geometry {
         capsule.write(velocityAligned, "velocityAligned", false);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         emitType = capsule.readInt("emitType",ET_POINT);

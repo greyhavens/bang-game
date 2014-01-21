@@ -132,6 +132,7 @@ public class ImposterNode extends Node {
 	 * @param r
 	 *            the renderer to draw to.
 	 */
+	@Override
 	public void draw(Renderer r) {
 		if (!haveDrawn || shouldDoUpdate(r.getCamera())) {
 			updateCamera(r.getCamera().getLocation());
@@ -220,6 +221,7 @@ public class ImposterNode extends Node {
 	 *            the child to attach to this node.
 	 * @return the number of children maintained by this node.
 	 */
+	@Override
 	public int attachChild(Spatial child) {
 		return quadScene.attachChild(child);
 	}
@@ -371,6 +373,7 @@ public class ImposterNode extends Node {
 	 * 
 	 * @see com.jme.scene.Spatial#updateWorldBound()
 	 */
+	@Override
 	public void updateWorldBound() {
 		worldBound = standIn.getWorldBound().clone(worldBound);
 	}
@@ -383,6 +386,7 @@ public class ImposterNode extends Node {
 	 * @param time
 	 *            the frame time.
 	 */
+	@Override
 	public void updateWorldData(float time) {
 		super.updateWorldData(time);
 		standIn.updateGeometricState(time, false);
@@ -403,7 +407,8 @@ public class ImposterNode extends Node {
         this.worldUpVector = worldUpVector;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(texture, "texture", null);
@@ -415,7 +420,8 @@ public class ImposterNode extends Node {
         capsule.write(worldUpVector, "worldUpVector", Vector3f.UNIT_Y);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         texture = (Texture)capsule.readSavable("texture", null);

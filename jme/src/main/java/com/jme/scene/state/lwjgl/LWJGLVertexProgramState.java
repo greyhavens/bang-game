@@ -71,6 +71,7 @@ public class LWJGLVertexProgramState extends VertexProgramState {
 	 * 
 	 * @see com.jme.scene.state.VertexProgramState#isSupported()
 	 */
+	@Override
 	public boolean isSupported() {
 		return GLContext.getCapabilities().GL_ARB_vertex_program;
 	}
@@ -80,7 +81,8 @@ public class LWJGLVertexProgramState extends VertexProgramState {
      * 
      * @see com.jme.scene.state.VertexProgramState#load(java.net.URL)
      */
-    public void load(java.net.URL file) {
+    @Override
+	public void load(java.net.URL file) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(16 * 1024);
             InputStream inputStream = new BufferedInputStream(file.openStream());
@@ -120,7 +122,8 @@ public class LWJGLVertexProgramState extends VertexProgramState {
      * 
      * @see com.jme.scene.state.VertexProgramState#load(java.net.URL)
      */
-    public void load(String programContents) {
+    @Override
+	public void load(String programContents) {
         try {
             byte[] bytes = programContents.getBytes();
             program = BufferUtils.createByteBuffer(bytes.length);
@@ -160,7 +163,8 @@ public class LWJGLVertexProgramState extends VertexProgramState {
 		}
 	}
 
-    public String getProgram() {
+    @Override
+	public String getProgram() {
         if (program == null) return null;
         program.rewind();
         byte[] stringContents = new byte[program.remaining()];
@@ -197,6 +201,7 @@ public class LWJGLVertexProgramState extends VertexProgramState {
 	 * 
 	 * @see com.jme.scene.state.RenderState#apply()
 	 */
+	@Override
 	public void apply() {
 		if (isSupported()) {
 			//ask for the current state record

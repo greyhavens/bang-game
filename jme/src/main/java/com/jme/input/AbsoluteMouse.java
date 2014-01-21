@@ -77,7 +77,8 @@ public class AbsoluteMouse extends Mouse {
     //position
     private int width, height;
     private InputAction xUpdateAction = new InputAction() {
-        public void performAction( InputActionEvent evt ) {
+        @Override
+		public void performAction( InputActionEvent evt ) {
             if ( isUsingDelta() ) {
                 localTranslation.x += evt.getTriggerDelta() * width * speed; //speed of the action!
             } else {
@@ -95,7 +96,8 @@ public class AbsoluteMouse extends Mouse {
         }
     };
     private InputAction yUpdateAction = new InputAction() {
-        public void performAction( InputActionEvent evt ) {
+        @Override
+		public void performAction( InputActionEvent evt ) {
             if ( isUsingDelta() ) {
                 localTranslation.y += evt.getTriggerDelta() * height * speed;  //speed of the action!
             } else {
@@ -142,7 +144,8 @@ public class AbsoluteMouse extends Mouse {
         this.height = height;
     }
 
-    public void setSpeed( float speed ) {
+    @Override
+	public void setSpeed( float speed ) {
         getXUpdateAction().setSpeed( speed );
         getYUpdateAction().setSpeed( speed );
     }
@@ -154,7 +157,8 @@ public class AbsoluteMouse extends Mouse {
      * @see #getXUpdateAction()
      * @see #getYUpdateAction()
      */
-    public void registerWithInputHandler( InputHandler inputHandler ) {
+    @Override
+	public void registerWithInputHandler( InputHandler inputHandler ) {
         if ( registeredInputHandler != null ) {
             registeredInputHandler.removeAction( getXUpdateAction() );
             registeredInputHandler.removeAction( getYUpdateAction() );

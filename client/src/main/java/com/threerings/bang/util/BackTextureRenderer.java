@@ -127,7 +127,7 @@ public class BackTextureRenderer
     }
 
     // documentation inherited from interface TextureRenderer
-    public void render (ArrayList spats, Texture... texs)
+    public void render (ArrayList<?> spats, Texture... texs)
     {
         // render to back buffer
         Renderer parentRenderer = _ctx.getRenderer();

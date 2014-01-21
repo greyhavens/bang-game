@@ -144,13 +144,11 @@ public class Disk extends TriMesh {
 	private void setIndexData(int radialless, int shellLess) {
 		// generate connectivity
         TriangleBatch batch = getBatch(0);
-		int index = 0;
 		for (int radialCount0 = radialless, radialCount1 = 0; radialCount1 < radialSamples; radialCount0 = radialCount1++) {
 			batch.getIndexBuffer().put(0);
 			batch.getIndexBuffer().put(1 + shellLess * radialCount0);
 			batch.getIndexBuffer().put(1 + shellLess * radialCount1);
-			index += 3;
-			for (int iS = 1; iS < shellLess; iS++, index += 6) {
+			for (int iS = 1; iS < shellLess; iS++) {
 				int i00 = iS + shellLess * radialCount0;
 				int i01 = iS + shellLess * radialCount1;
 				int i10 = i00 + 1;

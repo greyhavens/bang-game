@@ -71,7 +71,8 @@ public class KeyToggleRenderState extends KeyInputAction {
      * @param evt
      *            the event that executed the action.
      */
-    public void performAction(InputActionEvent evt) {
+    @Override
+	public void performAction(InputActionEvent evt) {
         state.setEnabled(!state.isEnabled());
         ownerNode.updateRenderState();
     }

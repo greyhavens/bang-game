@@ -133,11 +133,13 @@ public class SpotLight extends PointLight {
      * <code>getType</code> returns the type of this light (LT_SPOT).
      * @see com.jme.light.Light#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return LT_SPOT;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(direction, "direction", Vector3f.ZERO);
@@ -146,7 +148,8 @@ public class SpotLight extends PointLight {
        
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         direction = (Vector3f)capsule.readSavable("direction", new Vector3f());

@@ -132,7 +132,8 @@ public class ShaderAttribute implements Savable {
         this.type = type;
     }
 
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj instanceof ShaderAttribute) {
             ShaderAttribute temp = (ShaderAttribute)obj;
             if (name.equals(temp.name)) return true;
@@ -140,7 +141,8 @@ public class ShaderAttribute implements Savable {
         return false;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         
         capsule.write(name, "name", "");
@@ -175,7 +177,8 @@ public class ShaderAttribute implements Savable {
         capsule.write(size, "size", 0);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         
         name = capsule.readString("name", "");
@@ -210,7 +213,8 @@ public class ShaderAttribute implements Savable {
         size = capsule.readInt("size", 0);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends ShaderAttribute> getClassTag() {
         return this.getClass();
     }
 }

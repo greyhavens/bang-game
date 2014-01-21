@@ -139,7 +139,8 @@ public class LightManagement implements Serializable, Savable {
      */
     protected void sort( final Spatial sp ) {
         Collections.sort( lightList, new Comparator<Light>() {
-            public int compare( Light l1, Light l2 ) {
+            @Override
+			public int compare( Light l1, Light l2 ) {
                 float v1 = getValueFor( l1, sp.getWorldBound() );
                 float v2 = getValueFor( l2, sp.getWorldBound() );
                 float cmp = v1 - v2;
@@ -213,18 +214,20 @@ public class LightManagement implements Serializable, Savable {
         return newtool;
     }
 
-	@SuppressWarnings("unchecked")
+	@Override
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule cap = im.getCapsule(this);
 		lightList = cap.readSavableArrayList("lightList", new ArrayList<Light>());
 	}
 
+	@Override
 	public void write(JMEExporter ex) throws IOException {
 		OutputCapsule cap = ex.getCapsule(this);
 		cap.writeSavableArrayList(lightList, "lightList", new ArrayList<Light>());
 	}
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends LightManagement> getClassTag() {
         return this.getClass();
     }
 

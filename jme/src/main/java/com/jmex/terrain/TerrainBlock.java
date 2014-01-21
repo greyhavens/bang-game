@@ -196,7 +196,8 @@ public class TerrainBlock extends AreaClodMesh {
         }
     }
 
-    public int getType() {
+    @Override
+	public int getType() {
         return (SceneElement.GEOMETRY | SceneElement.TRIMESH | SceneElement.TERRAIN_BLOCK);
     }
 
@@ -208,7 +209,8 @@ public class TerrainBlock extends AreaClodMesh {
      *            the renderer to use for determining the LOD record.
      * @return the index of the record to use.
      */
-    public int chooseTargetRecord(Renderer r) {
+    @Override
+	public int chooseTargetRecord(Renderer r) {
         if (useClod) {
             return super.chooseTargetRecord(r);
         }
@@ -798,7 +800,8 @@ public class TerrainBlock extends AreaClodMesh {
         this.quadrant = quadrant;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(size, "size", 0);
@@ -812,7 +815,8 @@ public class TerrainBlock extends AreaClodMesh {
         capsule.write(oldHeightMap, "oldHeightMap", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         size = capsule.readInt("size", 0);

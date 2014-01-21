@@ -203,6 +203,7 @@ public class PropertiesDialog extends JDialog {
 		}
 
 		this.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				dispose();
 				System.exit(0);
@@ -245,6 +246,7 @@ public class PropertiesDialog extends JDialog {
 		//Set the button action listeners. Cancel disposes without saving,
 		//ok saves.
 		ok.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (verifyAndSaveCurrentSelection()) {
 					dispose();
@@ -254,6 +256,7 @@ public class PropertiesDialog extends JDialog {
 		});
 
 		cancel.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				System.exit(0);

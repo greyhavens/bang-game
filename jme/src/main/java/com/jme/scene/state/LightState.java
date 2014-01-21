@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -49,7 +49,7 @@ import com.jme.util.geom.BufferUtils;
  * number of maximum lights allowed. Any subclass of <code>Light</code> can be
  * added to the light state. Each light is processed and used to modify the
  * color of the scene.
- * 
+ *
  * @author Mark Powell
  * @author Joshua Slack - Light state combining and performance enhancements
  * @author Three Rings: Local viewer and separate specular
@@ -166,19 +166,20 @@ public abstract class LightState extends RenderState {
     /**
      * <code>getType</code> returns the type of render state this is.
      * (RS_LIGHT).
-     * 
+     *
      * @see com.jme.scene.state.RenderState#getType()
      */
+    @Override
     public int getType() {
         return RS_LIGHT;
     }
 
     /**
-     * 
+     *
      * <code>attach</code> places a light in the queue to be processed. If
      * there are already eight lights placed in the queue, the light is ignored
      * and false is returned. Otherwise, true is returned to indicate success.
-     * 
+     *
      * @param light
      *            the light to add to the queue.
      * @return true if the light was added successfully, false if there are
@@ -194,9 +195,9 @@ public abstract class LightState extends RenderState {
     }
 
     /**
-     * 
+     *
      * <code>detach</code> removes a light from the queue for processing.
-     * 
+     *
      * @param light
      *            the light to be removed.
      */
@@ -206,9 +207,9 @@ public abstract class LightState extends RenderState {
     }
 
     /**
-     * 
+     *
      * <code>detachAll</code> clears the queue of all lights to be processed.
-     * 
+     *
      */
     public void detachAll() {
         lightList.clear();
@@ -216,10 +217,10 @@ public abstract class LightState extends RenderState {
     }
 
     /**
-     * 
+     *
      * <code>get</code> retrieves a particular light defined by an index. If
      * there exists no light at a particular index, null is returned.
-     * 
+     *
      * @param i
      *            the index to retrieve the light from the queue.
      * @return the light at the given index, null if no light exists at this
@@ -230,10 +231,10 @@ public abstract class LightState extends RenderState {
     }
 
     /**
-     * 
+     *
      * <code>getQuantity</code> returns the number of lights currently in the
      * queue.
-     * 
+     *
      * @return the number of lights currently in the queue.
      */
     public int getQuantity() {
@@ -242,7 +243,7 @@ public abstract class LightState extends RenderState {
 
     /**
      * Sets if two sided lighting should be enabled for this LightState.
-     * 
+     *
      * @param twoSidedOn
      *            If true, two sided lighting is enabled.
      */
@@ -254,7 +255,7 @@ public abstract class LightState extends RenderState {
     /**
      * Returns the current state of two sided lighting for this LightState. By
      * default, it is off.
-     * 
+     *
      * @return True if two sided lighting is enabled.
      */
     public boolean getTwoSidedLighting() {
@@ -263,7 +264,7 @@ public abstract class LightState extends RenderState {
 
     /**
      * Sets if local viewer mode should be enabled for this LightState.
-     * 
+     *
      * @param localViewerOn
      *            If true, local viewer mode is enabled.
      */
@@ -275,7 +276,7 @@ public abstract class LightState extends RenderState {
     /**
      * Returns the current state of local viewer mode for this LightState. By
      * default, it is off.
-     * 
+     *
      * @return True if local viewer mode is enabled.
      */
     public boolean getLocalViewer() {
@@ -284,7 +285,7 @@ public abstract class LightState extends RenderState {
 
     /**
      * Sets if separate specular mode should be enabled for this LightState.
-     * 
+     *
      * @param separateSpecularOn
      *            If true, separate specular mode is enabled.
      */
@@ -296,7 +297,7 @@ public abstract class LightState extends RenderState {
     /**
      * Returns the current state of separate specular mode for this LightState.
      * By default, it is off.
-     * 
+     *
      * @return True if separate specular mode is enabled.
      */
     public boolean getSeparateSpecular() {
@@ -313,7 +314,7 @@ public abstract class LightState extends RenderState {
 
     public ColorRGBA getGlobalAmbient() {
         return new ColorRGBA(globalAmbient[0], globalAmbient[1],
-                globalAmbient[2], globalAmbient[3]);
+                             globalAmbient[2], globalAmbient[3]);
     }
 
     /**
@@ -326,7 +327,7 @@ public abstract class LightState extends RenderState {
     /**
      * <code>setLightMask</code> sets what attributes of this lightstate to
      * apply as an int comprised of bitwise or'ed values.
-     * 
+     *
      * @param lightMask
      *            The lightMask to set.
      */
@@ -346,13 +347,14 @@ public abstract class LightState extends RenderState {
 
     /**
      * Recalls the light mask from a back store or 0 if none was pushed.
-     * 
+     *
      * @see com.jme.scene.state.LightState#pushLightMask()
      */
     public void popLightMask() {
         lightMask = backLightMask;
     }
-    
+
+    @Override
     public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
@@ -365,8 +367,8 @@ public abstract class LightState extends RenderState {
         capsule.write(separateSpecularOn, "separateSpecularOn", false);
     }
 
-    @SuppressWarnings("unchecked")
-	public void read(JMEImporter e) throws IOException {
+    @Override
+    public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         lightList = capsule.readSavableArrayList("lightList",new ArrayList<Light>());
@@ -377,8 +379,9 @@ public abstract class LightState extends RenderState {
         localViewerOn = capsule.readBoolean("localViewerOn", false);
         separateSpecularOn = capsule.readBoolean("separateSpecularOn", false);
     }
-    
-    public Class getClassTag() {
+
+    @Override
+    public Class<LightState> getClassTag() {
         return LightState.class;
     }
 }

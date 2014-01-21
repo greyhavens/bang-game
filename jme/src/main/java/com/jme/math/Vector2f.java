@@ -524,7 +524,8 @@ public class Vector2f implements Externalizable, Savable {
      * 
      * @return the hash code value of this vector.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int hash = 37;
         hash += 37 * hash + Float.floatToIntBits(x);
         hash += 37 * hash + Float.floatToIntBits(y);
@@ -537,7 +538,8 @@ public class Vector2f implements Externalizable, Savable {
      * 
      * @return the new Vector2f
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         return new Vector2f(x, y);
     }
 
@@ -549,7 +551,8 @@ public class Vector2f implements Externalizable, Savable {
      *            the object to compare for equality
      * @return true if they are equal
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
         if (!(o instanceof Vector2f) || o == null) {
             return false;
         }
@@ -573,7 +576,8 @@ public class Vector2f implements Externalizable, Savable {
      * 
      * @return the string representation of this vector.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "com.jme.math.Vector2f [X=" + x + ", Y=" + y + "]";
     }
 
@@ -586,7 +590,8 @@ public class Vector2f implements Externalizable, Savable {
      * @throws ClassNotFoundException
      * @see java.io.Externalizable
      */
-    public void readExternal(ObjectInput in) throws IOException,
+    @Override
+	public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         x = in.readFloat();
         y = in.readFloat();
@@ -600,24 +605,28 @@ public class Vector2f implements Externalizable, Savable {
      * @throws IOException
      * @see java.io.Externalizable
      */
-    public void writeExternal(ObjectOutput out) throws IOException {
+    @Override
+	public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(x);
         out.writeFloat(y);
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(x, "x", 0);
         capsule.write(y, "y", 0);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         x = capsule.readFloat("x", 0);
         y = capsule.readFloat("y", 0);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Vector2f> getClassTag() {
         return this.getClass();
     }
 

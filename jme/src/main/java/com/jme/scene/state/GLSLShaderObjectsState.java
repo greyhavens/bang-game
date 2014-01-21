@@ -38,7 +38,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.jme.math.Matrix3f;
@@ -593,7 +592,8 @@ public abstract class GLSLShaderObjectsState extends RenderState {
      * @return RS_SHADER_OBJECTS
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_GLSL_SHADER_OBJECTS;
     }
 
@@ -632,7 +632,8 @@ public abstract class GLSLShaderObjectsState extends RenderState {
 
     public abstract void load(String vert, String frag);
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         Savable[] uarray = uniforms.values().toArray(new Savable[0]);
@@ -641,6 +642,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         capsule.write(aarray,"attribs", new Savable[0]);
     }
 
+	@Override
 	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
@@ -660,7 +662,8 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         }
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<GLSLShaderObjectsState> getClassTag() {
         return GLSLShaderObjectsState.class;
     }
 }

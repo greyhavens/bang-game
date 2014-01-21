@@ -72,8 +72,9 @@ public abstract class JMECanvasImplementor {
     }
 
     public void resizeCanvas(final int width, final int height) {
-        Callable<?> exe = new Callable() {
-            public Object call() {
+        Callable<?> exe = new Callable<Object>() {
+            @Override
+			public Object call() {
                 if (renderer != null)
                     renderer.reinit(width, height);
                 return null;

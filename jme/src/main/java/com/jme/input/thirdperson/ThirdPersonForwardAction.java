@@ -71,7 +71,8 @@ public class ThirdPersonForwardAction extends KeyInputAction {
      * the time between frames and 1 corresponds to 1 second.
      * @see com.jme.input.action.AbstractInputAction#performAction(float)
      */
-    public void performAction(InputActionEvent event) {
+    @Override
+	public void performAction(InputActionEvent event) {
         if (handler.getPermitter() != null
                 && !handler.getPermitter().canBeMoved())
             return;

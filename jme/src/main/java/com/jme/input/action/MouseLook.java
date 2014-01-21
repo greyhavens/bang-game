@@ -113,7 +113,8 @@ public class MouseLook extends MouseInputAction {
      * @param speed
      *            the speed of the mouse look.
      */
-    public void setSpeed(float speed) {
+    @Override
+	public void setSpeed(float speed) {
         super.setSpeed( speed );
         lookDown.setSpeed(speed);
         lookUp.setSpeed(speed);
@@ -128,7 +129,8 @@ public class MouseLook extends MouseInputAction {
      * 
      * @see com.jme.input.action.MouseInputAction#performAction(InputActionEvent)
      */
-    public void performAction(InputActionEvent evt) {
+    @Override
+	public void performAction(InputActionEvent evt) {
         float time = 0.01f * speed;
 
         if (mouse.getLocalTranslation().x > 0) {

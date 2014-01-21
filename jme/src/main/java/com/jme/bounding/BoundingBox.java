@@ -94,7 +94,8 @@ public class BoundingBox extends BoundingVolume {
         this.zExtent = z;
     }
 
-    public int getType() {
+    @Override
+	public int getType() {
         return BoundingVolume.BOUNDING_BOX;
     }
 
@@ -105,7 +106,8 @@ public class BoundingBox extends BoundingVolume {
      * @param points
      *            the points to contain.
      */
-    public void computeFromPoints(FloatBuffer points) {
+    @Override
+	public void computeFromPoints(FloatBuffer points) {
         containAABB(points);
     }
 
@@ -117,7 +119,8 @@ public class BoundingBox extends BoundingVolume {
      * @param batches
      *            the batches to contain.
      */
-    public void computeFromBatches(ArrayList batches) {
+    @Override
+	public void computeFromBatches(ArrayList<?> batches) {
         if (batches == null || batches.size() == 0) {
             return;
         }
@@ -245,7 +248,8 @@ public class BoundingBox extends BoundingVolume {
      * @param store
      *            box to store result in
      */
-    public BoundingVolume transform(Quaternion rotate, Vector3f translate,
+    @Override
+	public BoundingVolume transform(Quaternion rotate, Vector3f translate,
             Vector3f scale, BoundingVolume store) {
 
         BoundingBox box;
@@ -289,7 +293,8 @@ public class BoundingBox extends BoundingVolume {
      * @param plane
      *            the plane to check against.
      */
-    public int whichSide(Plane plane) {
+    @Override
+	public int whichSide(Plane plane) {
         float radius = FastMath.abs(xExtent * plane.normal.x)
                 + FastMath.abs(yExtent * plane.normal.y)
                 + FastMath.abs(zExtent * plane.normal.z);
@@ -313,7 +318,8 @@ public class BoundingBox extends BoundingVolume {
      *            the sphere to combine with this sphere.
      * @return the new sphere
      */
-    public BoundingVolume merge(BoundingVolume volume) {
+    @Override
+	public BoundingVolume merge(BoundingVolume volume) {
         if (volume == null) {
             return this;
         }
@@ -353,7 +359,8 @@ public class BoundingBox extends BoundingVolume {
      *            the sphere to combine with this sphere.
      * @return this
      */
-    public BoundingVolume mergeLocal(BoundingVolume volume) {
+    @Override
+	public BoundingVolume mergeLocal(BoundingVolume volume) {
         if (volume == null) {
             return this;
         }
@@ -480,7 +487,8 @@ public class BoundingBox extends BoundingVolume {
      *            a new store is created.
      * @return the new BoundingBox
      */
-    public BoundingVolume clone(BoundingVolume store) {
+    @Override
+	public BoundingVolume clone(BoundingVolume store) {
         if (store != null && store.getType() == BoundingVolume.BOUNDING_BOX) {
             BoundingBox rVal = (BoundingBox) store;
             rVal.center.set(center);
@@ -503,7 +511,8 @@ public class BoundingBox extends BoundingVolume {
      * 
      * @return the string representation of this.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "com.jme.scene.BoundingBox [Center: " + center + "  xExtent: "
                 + xExtent + "  yExtent: " + yExtent + "  zExtent: " + zExtent
                 + "]";
@@ -515,7 +524,8 @@ public class BoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersects(com.jme.bounding.BoundingVolume)
      */
-    public boolean intersects(BoundingVolume bv) {
+    @Override
+	public boolean intersects(BoundingVolume bv) {
         if (bv == null)
             return false;
        
@@ -527,7 +537,8 @@ public class BoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersectsSphere(com.jme.bounding.BoundingSphere)
      */
-    public boolean intersectsSphere(BoundingSphere bs) {
+    @Override
+	public boolean intersectsSphere(BoundingSphere bs) {
 
         if (FastMath.abs(center.x - bs.getCenter().x) < bs.getRadius()
                 + xExtent
@@ -547,7 +558,8 @@ public class BoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersectsBoundingBox(com.jme.bounding.BoundingBox)
      */
-    public boolean intersectsBoundingBox(BoundingBox bb) {
+    @Override
+	public boolean intersectsBoundingBox(BoundingBox bb) {
         if (center.x + xExtent < bb.center.x - bb.xExtent
                 || center.x - xExtent > bb.center.x + bb.xExtent)
             return false;
@@ -567,7 +579,8 @@ public class BoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersectsOrientedBoundingBox(com.jme.bounding.OrientedBoundingBox)
      */
-    public boolean intersectsOrientedBoundingBox(OrientedBoundingBox obb) {
+    @Override
+	public boolean intersectsOrientedBoundingBox(OrientedBoundingBox obb) {
         return obb.intersectsBoundingBox(this);
     }
 
@@ -577,7 +590,8 @@ public class BoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersects(com.jme.math.Ray)
      */
-    public boolean intersects(Ray ray) {
+    @Override
+	public boolean intersects(Ray ray) {
         float rhs;
 
         Vector3f diff = ray.origin.subtract(getCenter(_compVect2), _compVect1);
@@ -633,7 +647,8 @@ public class BoundingBox extends BoundingVolume {
     /**
      * @see com.jme.bounding.BoundingVolume#intersectsWhere(com.jme.math.Ray)
      */
-    public IntersectionRecord intersectsWhere(Ray ray) {
+    @Override
+	public IntersectionRecord intersectsWhere(Ray ray) {
         Vector3f diff = _compVect1.set(ray.origin).subtractLocal(center);
         // convert ray to box coordinates
         Vector3f direction = _compVect2.set(ray.direction.x, ray.direction.y,
@@ -678,7 +693,8 @@ public class BoundingBox extends BoundingVolume {
                 && FastMath.abs(center.z - point.z) < zExtent;
     }
 
-    public float distanceToEdge(Vector3f point) {
+    @Override
+	public float distanceToEdge(Vector3f point) {
         // compute coordinates of point in box coordinate system
         Vector3f closest = point.subtract(center);
 
@@ -767,7 +783,8 @@ public class BoundingBox extends BoundingVolume {
         return store;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(xExtent, "xExtent", 0);
@@ -775,7 +792,8 @@ public class BoundingBox extends BoundingVolume {
         capsule.write(zExtent, "zExtent", 0);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         xExtent = capsule.readFloat("xExtent", 0);

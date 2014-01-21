@@ -70,7 +70,8 @@ public class KeyNodeStrafeRightAction extends KeyInputAction {
      * 
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
-    public void performAction(InputActionEvent evt) {
+    @Override
+	public void performAction(InputActionEvent evt) {
         Vector3f loc = node.getLocalTranslation();
         loc = loc.addLocal(node.getLocalRotation().getRotationColumn(0, tempVa)
                 .multLocal(-speed * evt.getTime()));

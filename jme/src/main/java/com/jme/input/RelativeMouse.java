@@ -54,7 +54,8 @@ public class RelativeMouse extends Mouse {
 
     private static final long serialVersionUID = 1L;
     private InputAction updateAction = new InputAction() {
-        public void performAction( InputActionEvent evt ) {
+        @Override
+		public void performAction( InputActionEvent evt ) {
             localTranslation.x = MouseInput.get().getXDelta() * _speed;
             localTranslation.y = MouseInput.get().getYDelta() * _speed;
             worldTranslation.set(localTranslation);
@@ -75,7 +76,8 @@ public class RelativeMouse extends Mouse {
         super(name);
     }
 
-    public void registerWithInputHandler( InputHandler inputHandler ) {
+    @Override
+	public void registerWithInputHandler( InputHandler inputHandler ) {
 
         if ( registeredInputHandler != null )
         {
@@ -93,7 +95,8 @@ public class RelativeMouse extends Mouse {
      *
      * @param speed
      */
-    public void setSpeed(float speed) {
+    @Override
+	public void setSpeed(float speed) {
         _speed = speed;
     }
 }

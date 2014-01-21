@@ -100,19 +100,22 @@ public final class SimpleParticleInfluenceFactory {
             this.rotateWithScene = rotateWithScene;
         }
         
-        public void prepare(ParticleGeometry particleGeom) {
+        @Override
+		public void prepare(ParticleGeometry particleGeom) {
             vector.set(windDirection);
             if (rotateWithScene && !particleGeom.isTransformParticles()) {
                 particleGeom.getEmitterTransform().multNormal(vector);
             }
         }
         
-        public void apply(float dt, Particle p, int index) {
+        @Override
+		public void apply(float dt, Particle p, int index) {
             float tStr = (random ? FastMath.nextRandomFloat() * strength : strength);
             p.getVelocity().scaleAdd(tStr * dt, vector, p.getVelocity());
         }
         
-        public void write(JMEExporter e) throws IOException {
+        @Override
+		public void write(JMEExporter e) throws IOException {
             super.write(e);
             OutputCapsule capsule = e.getCapsule(this);
             capsule.write(strength, "strength", 1f);
@@ -121,7 +124,8 @@ public final class SimpleParticleInfluenceFactory {
             capsule.write(rotateWithScene, "rotateWithScene", true);
         }
 
-        public void read(JMEImporter e) throws IOException {
+        @Override
+		public void read(JMEImporter e) throws IOException {
             super.read(e);
             InputCapsule capsule = e.getCapsule(this);
             strength = capsule.readFloat("strength", 1f);
@@ -131,7 +135,8 @@ public final class SimpleParticleInfluenceFactory {
             rotateWithScene = capsule.readBoolean("rotateWithScene", true);
         }
 
-        public Class getClassTag() {
+        @Override
+		public Class<?> getClassTag() {
             return this.getClass();
         }
     }
@@ -165,25 +170,29 @@ public final class SimpleParticleInfluenceFactory {
             this.rotateWithScene = rotateWithScene;
         }
         
-        public void prepare(ParticleGeometry particleGeom) {
+        @Override
+		public void prepare(ParticleGeometry particleGeom) {
             vector.set(gravity);
             if (rotateWithScene && !particleGeom.isTransformParticles()) {
                 particleGeom.getEmitterTransform().multNormal(vector);
             }
         }
         
-        public void apply(float dt, Particle p, int index) {
+        @Override
+		public void apply(float dt, Particle p, int index) {
             p.getVelocity().scaleAdd(dt, vector, p.getVelocity());
         }
     
-        public void write(JMEExporter e) throws IOException {
+        @Override
+		public void write(JMEExporter e) throws IOException {
             super.write(e);
             OutputCapsule capsule = e.getCapsule(this);
             capsule.write(gravity, "gravity", Vector3f.ZERO);
             capsule.write(rotateWithScene, "rotateWithScene", true);
         }
 
-        public void read(JMEImporter e) throws IOException {
+        @Override
+		public void read(JMEImporter e) throws IOException {
             super.read(e);
             InputCapsule capsule = e.getCapsule(this);
             gravity = (Vector3f)capsule.readSavable("gravity",
@@ -191,7 +200,8 @@ public final class SimpleParticleInfluenceFactory {
             rotateWithScene = capsule.readBoolean("rotateWithScene", true);
         }
         
-        public Class getClassTag() {
+        @Override
+		public Class<?> getClassTag() {
             return this.getClass();
         }
     }
@@ -215,25 +225,29 @@ public final class SimpleParticleInfluenceFactory {
             dragCoefficient = dragCoef;
         }
         
-        public void apply(float dt, Particle p, int index) {
+        @Override
+		public void apply(float dt, Particle p, int index) {
             // viscous drag
             velocity.set(p.getVelocity());
             p.getVelocity().addLocal(velocity.multLocal(-dragCoefficient * dt * p.getInvMass()));
         }
     
-        public void write(JMEExporter e) throws IOException {
+        @Override
+		public void write(JMEExporter e) throws IOException {
             super.write(e);
             OutputCapsule capsule = e.getCapsule(this);
             capsule.write(dragCoefficient, "dragCoefficient", 1f);
         }
 
-        public void read(JMEImporter e) throws IOException {
+        @Override
+		public void read(JMEImporter e) throws IOException {
             super.read(e);
             InputCapsule capsule = e.getCapsule(this);
             dragCoefficient = capsule.readFloat("dragCoefficient", 1f);
         }
         
-        public Class getClassTag() {
+        @Override
+		public Class<?> getClassTag() {
             return this.getClass();
         }
     }
@@ -330,7 +344,8 @@ public final class SimpleParticleInfluenceFactory {
             this.transformWithScene = transformWithScene;
         }
         
-        public void prepare(ParticleGeometry particleGeom) {
+        @Override
+		public void prepare(ParticleGeometry particleGeom) {
             line.getOrigin().set(axis.getOrigin());
             line.getDirection().set(axis.getDirection());
             if (transformWithScene && !particleGeom.isTransformParticles()) {
@@ -342,7 +357,8 @@ public final class SimpleParticleInfluenceFactory {
             }
         }
         
-        public void apply(float dt, Particle p, int index) {
+        @Override
+		public void apply(float dt, Particle p, int index) {
             float dtStr = dt * strength *
                 (random ? FastMath.nextRandomFloat() : 1f);
             p.getPosition().subtract(line.getOrigin(), v1);
@@ -371,7 +387,8 @@ public final class SimpleParticleInfluenceFactory {
             p.getVelocity().scaleAdd(dtStr, v3, p.getVelocity());
         }
     
-        public void write(JMEExporter e) throws IOException {
+        @Override
+		public void write(JMEExporter e) throws IOException {
             super.write(e);
             OutputCapsule capsule = e.getCapsule(this);
             capsule.write(type, "type", VT_CYLINDER);
@@ -385,7 +402,8 @@ public final class SimpleParticleInfluenceFactory {
             capsule.write(transformWithScene, "transformWithScene", true);
         }
 
-        public void read(JMEImporter e) throws IOException {
+        @Override
+		public void read(JMEImporter e) throws IOException {
             super.read(e);
             InputCapsule capsule = e.getCapsule(this);
             type = capsule.readInt("type", VT_CYLINDER);
@@ -399,7 +417,8 @@ public final class SimpleParticleInfluenceFactory {
             transformWithScene = capsule.readBoolean("transformWithScene", true);
         }
         
-        public Class getClassTag() {
+        @Override
+		public Class<?> getClassTag() {
             return this.getClass();
         }
     }

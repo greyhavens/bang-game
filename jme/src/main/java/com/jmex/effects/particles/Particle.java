@@ -504,7 +504,8 @@ public class Particle implements Savable {
     // Savable interface methods
     ///////
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(startIndex, "startIndex", 0);
         capsule.write(position, "position", Vector3f.ZERO);
@@ -524,7 +525,8 @@ public class Particle implements Savable {
         capsule.write(type, "type", ParticleGeometry.PT_QUAD);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         startIndex = capsule.readInt("startIndex", 0);
         position = (Vector3f)capsule.readSavable("position", new Vector3f(Vector3f.ZERO));
@@ -544,7 +546,8 @@ public class Particle implements Savable {
         type = capsule.readInt("type", ParticleGeometry.PT_QUAD);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Particle> getClassTag() {
         return this.getClass();
     }
 }

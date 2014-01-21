@@ -32,10 +32,7 @@
 package com.jme.system;
 
 import java.io.*;
-import java.util.*;
 import java.util.prefs.*;
-
-import com.jme.input.controls.*;
 
 /**
  * <code>PreferencesGameSettings</code> uses the Preferences system in Java
@@ -67,151 +64,188 @@ public class PreferencesGameSettings implements GameSettings {
         this.preferences = preferences;
     }
 
-    public String getRenderer() {
+    @Override
+	public String getRenderer() {
         return preferences.get("GameRenderer", DEFAULT_RENDERER);
     }
 
-    public void setRenderer(String renderer) {
+    @Override
+	public void setRenderer(String renderer) {
         preferences.put("GameRenderer", renderer);
     }
 
-    public int getWidth() {
+    @Override
+	public int getWidth() {
         return preferences.getInt("GameWidth", DEFAULT_WIDTH);
     }
 
-    public void setWidth(int width) {
+    @Override
+	public void setWidth(int width) {
         preferences.putInt("GameWidth", width);
     }
 
-    public int getHeight() {
+    @Override
+	public int getHeight() {
         return preferences.getInt("GameHeight", DEFAULT_HEIGHT);
     }
 
-    public void setHeight(int height) {
+    @Override
+	public void setHeight(int height) {
         preferences.putInt("GameHeight", height);
     }
 
-    public int getDepth() {
+    @Override
+	public int getDepth() {
         return preferences.getInt("GameDepth", DEFAULT_DEPTH);
     }
 
-    public void setDepth(int depth) {
+    @Override
+	public void setDepth(int depth) {
         preferences.putInt("GameDepth", depth);
     }
 
-    public int getFrequency() {
+    @Override
+	public int getFrequency() {
         return preferences.getInt("GameFrequency", DEFAULT_FREQUENCY);
     }
 
-    public void setFrequency(int frequency) {
+    @Override
+	public void setFrequency(int frequency) {
         preferences.putInt("GameFrequency", frequency);
     }
     
-    public boolean isVerticalSync() {
+    @Override
+	public boolean isVerticalSync() {
         return preferences.getBoolean("GameVerticalSync", DEFAULT_VERTICAL_SYNC);
     }
     
-    public void setVerticalSync(boolean vsync) {
+    @Override
+	public void setVerticalSync(boolean vsync) {
         preferences.putBoolean("GameVerticalSync", vsync);
     }
 
-    public boolean isFullscreen() {
+    @Override
+	public boolean isFullscreen() {
         return preferences.getBoolean("GameFullscreen", DEFAULT_FULLSCREEN);
     }
 
-    public void setFullscreen(boolean fullscreen) {
+    @Override
+	public void setFullscreen(boolean fullscreen) {
         preferences.putBoolean("GameFullscreen", fullscreen);
     }
 
-    public int getDepthBits() {
+    @Override
+	public int getDepthBits() {
         return preferences.getInt("GameDepthBits", DEFAULT_DEPTH_BITS);
     }
 
-    public void setDepthBits(int depthBits) {
+    @Override
+	public void setDepthBits(int depthBits) {
         preferences.putInt("GameDepthBits", depthBits);
     }
 
-    public int getAlphaBits() {
+    @Override
+	public int getAlphaBits() {
         return preferences.getInt("GameAlphaBits", DEFAULT_ALPHA_BITS);
     }
 
-    public void setAlphaBits(int alphaBits) {
+    @Override
+	public void setAlphaBits(int alphaBits) {
         preferences.putInt("GameAlphaBits", alphaBits);
     }
 
-    public int getStencilBits() {
+    @Override
+	public int getStencilBits() {
         return preferences.getInt("GameStencilBits", DEFAULT_STENCIL_BITS);
     }
 
-    public void setStencilBits(int stencilBits) {
+    @Override
+	public void setStencilBits(int stencilBits) {
         preferences.putInt("GameStencilBits", stencilBits);
     }
 
-    public int getSamples() {
+    @Override
+	public int getSamples() {
         return preferences.getInt("GameSamples", DEFAULT_SAMPLES);
     }
 
-    public void setSamples(int samples) {
+    @Override
+	public void setSamples(int samples) {
         preferences.putInt("GameSamples", samples);
     }
 
-    public boolean isMusic() {
+    @Override
+	public boolean isMusic() {
         return preferences.getBoolean("GameMusic", DEFAULT_MUSIC);
     }
 
-    public void setMusic(boolean musicEnabled) {
+    @Override
+	public void setMusic(boolean musicEnabled) {
         preferences.putBoolean("GameMusic", musicEnabled);
     }
 
-    public boolean isSFX() {
+    @Override
+	public boolean isSFX() {
         return preferences.getBoolean("GameSFX", DEFAULT_SFX);
     }
 
-    public void setSFX(boolean sfxEnabled) {
+    @Override
+	public void setSFX(boolean sfxEnabled) {
         preferences.putBoolean("GameSFX", sfxEnabled);
     }
 
-    public int getFramerate() {
+    @Override
+	public int getFramerate() {
         return preferences.getInt("GameFramerate", DEFAULT_FRAMERATE);
     }
 
-    public void setFramerate(int framerate) {
+    @Override
+	public void setFramerate(int framerate) {
         preferences.putInt("GameFramerate", framerate);
     }
     
-    public void clear() throws Exception {
+    @Override
+	public void clear() throws Exception {
         preferences.clear();
     }
 
-    public String get(String name, String defaultValue) {
+    @Override
+	public String get(String name, String defaultValue) {
         return preferences.get(name, defaultValue);
     }
 
-    public boolean getBoolean(String name, boolean defaultValue) {
+    @Override
+	public boolean getBoolean(String name, boolean defaultValue) {
         return preferences.getBoolean(name, defaultValue);
     }
 
-    public double getDouble(String name, double defaultValue) {
+    @Override
+	public double getDouble(String name, double defaultValue) {
         return preferences.getDouble(name, defaultValue);
     }
 
-    public float getFloat(String name, float defaultValue) {
+    @Override
+	public float getFloat(String name, float defaultValue) {
         return preferences.getFloat(name, defaultValue);
     }
 
-    public int getInt(String name, int defaultValue) {
+    @Override
+	public int getInt(String name, int defaultValue) {
         return preferences.getInt(name, defaultValue);
     }
 
-    public long getLong(String name, long defaultValue) {
+    @Override
+	public long getLong(String name, long defaultValue) {
         return preferences.getLong(name, defaultValue);
     }
 
-    public byte[] getByteArray(String name, byte[] defaultValue) {
+    @Override
+	public byte[] getByteArray(String name, byte[] defaultValue) {
     	return preferences.getByteArray(name, defaultValue);
     }
     
-    public Object getObject(String name, Object defaultValue) {
+    @Override
+	public Object getObject(String name, Object defaultValue) {
     	try {
 	    	byte[] bytes = preferences.getByteArray(name, null);
 	    	if (bytes == null) return defaultValue;
@@ -224,35 +258,43 @@ public class PreferencesGameSettings implements GameSettings {
     	return null;
     }
     
-    public void set(String name, String value) {
+    @Override
+	public void set(String name, String value) {
         preferences.put(name, value);
     }
 
-    public void setBoolean(String name, boolean value) {
+    @Override
+	public void setBoolean(String name, boolean value) {
         preferences.putBoolean(name, value);
     }
 
-    public void setDouble(String name, double value) {
+    @Override
+	public void setDouble(String name, double value) {
         preferences.putDouble(name, value);
     }
 
-    public void setFloat(String name, float value) {
+    @Override
+	public void setFloat(String name, float value) {
         preferences.putFloat(name, value);
     }
 
-    public void setInt(String name, int value) {
+    @Override
+	public void setInt(String name, int value) {
         preferences.putInt(name, value);
     }
 
-    public void setLong(String name, long value) {
+    @Override
+	public void setLong(String name, long value) {
         preferences.putLong(name, value);
     }
 
-    public void setByteArray(String name, byte[] value) {
+    @Override
+	public void setByteArray(String name, byte[] value) {
     	preferences.putByteArray(name, value);
     }
     
-    public void setObject(String name, Object value) {
+    @Override
+	public void setObject(String name, Object value) {
     	try {
 	    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	    	ObjectOutputStream oos = new ObjectOutputStream(baos);

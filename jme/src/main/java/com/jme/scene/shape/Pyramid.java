@@ -231,7 +231,8 @@ public class Pyramid extends TriMesh {
         batch.setIndexBuffer(indices);
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(height, "height", 0);
@@ -239,7 +240,8 @@ public class Pyramid extends TriMesh {
         
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         height = capsule.readFloat("height", 0);

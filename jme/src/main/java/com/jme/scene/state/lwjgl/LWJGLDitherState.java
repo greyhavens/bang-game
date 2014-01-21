@@ -57,6 +57,7 @@ public class LWJGLDitherState extends DitherState {
 	 * 
 	 * @see com.jme.scene.state.DitherState#apply() ()
 	 */
+	@Override
 	public void apply() {
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()

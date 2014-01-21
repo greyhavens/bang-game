@@ -67,6 +67,7 @@ public class TrianglePickResults extends PickResults {
 	 * @see com.jme.intersection.PickResults#addPick(com.jme.math.Ray,
 	 *      com.jme.scene.Geometry)
 	 */
+	@Override
 	public void addPick(Ray ray, GeomBatch s) {
 		ArrayList<Integer> a = new ArrayList<Integer>();
 		//find the triangle that is being hit.
@@ -90,6 +91,7 @@ public class TrianglePickResults extends PickResults {
 	 * 
 	 * @see com.jme.intersection.PickResults#processPick()
 	 */
+	@Override
 	public void processPick() {
 
 	}

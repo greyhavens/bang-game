@@ -212,7 +212,8 @@ public class LWJGLFont {
      *
      * @return the string representation of this object.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         String string = super.toString();
         string += "\nColor: " + fontColor.toString();
 

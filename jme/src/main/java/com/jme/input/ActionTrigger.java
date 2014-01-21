@@ -285,7 +285,8 @@ public abstract class ActionTrigger {
             activate();
         }
 
-        public void performAction( InputActionEvent event ) {
+        @Override
+		public void performAction( InputActionEvent event ) {
             if ( name == null ||
                     KeyBindingManager.getKeyBindingManager().isValidCommand( name, allowRepeats ) ) {
                 super.performAction( event );
@@ -293,11 +294,13 @@ public abstract class ActionTrigger {
             }
         }
 
-        public void checkActivation( char character, int index, float position, float delta, boolean pressed, Object data ) {
+        @Override
+		public void checkActivation( char character, int index, float position, float delta, boolean pressed, Object data ) {
             //is a trigger that is checked each frame
         }
 
-        protected String getDeviceName() {
+        @Override
+		protected String getDeviceName() {
             return "command";
         }
     }

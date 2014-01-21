@@ -52,7 +52,8 @@ public abstract class SimplePassGame extends BaseSimpleGame {
      *            unused in this implementation
      * @see AbstractGame#update(float interpolation)
      */
-    protected final void update(float interpolation) {
+    @Override
+	protected final void update(float interpolation) {
         super.update(interpolation);
 
         /** Call simpleUpdate in any derived classes of SimpleGame. */
@@ -72,7 +73,8 @@ public abstract class SimplePassGame extends BaseSimpleGame {
      *            unused in this implementation
      * @see AbstractGame#render(float interpolation)
      */
-    protected final void render(float interpolation) {
+    @Override
+	protected final void render(float interpolation) {
         super.render(interpolation);
 
         /** Have the PassManager render. */
@@ -89,7 +91,8 @@ public abstract class SimplePassGame extends BaseSimpleGame {
      * 
      * @see BaseSimpleGame#initGame()
      */
-    protected final void initGame() {
+    @Override
+	protected final void initGame() {
         pManager = new BasicPassManager();
         
         super.initGame();

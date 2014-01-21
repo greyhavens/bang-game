@@ -83,18 +83,21 @@ public class PointLight extends Light {
      * <code>getType</code> returns the type of this light (LT_POINT).
      * @see com.jme.light.Light#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return LT_POINT;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(location, "location", Vector3f.ZERO);
        
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         location = (Vector3f)capsule.readSavable("location", new Vector3f(Vector3f.ZERO));

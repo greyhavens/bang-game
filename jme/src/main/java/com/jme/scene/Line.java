@@ -144,14 +144,16 @@ public class Line extends Geometry {
         generateIndices(batchIndex);
     }
     
-    protected void setupBatchList() {
+    @Override
+	protected void setupBatchList() {
         batchList = new ArrayList<GeomBatch>(1);
         LineBatch batch = new LineBatch();
         batch.setParentGeom(this);
         batchList.add(batch);
     }
 
-    public LineBatch getBatch(int index) {
+    @Override
+	public LineBatch getBatch(int index) {
         return (LineBatch) batchList.get(index);
     }
     
@@ -393,7 +395,8 @@ public class Line extends Geometry {
      * @param r
      *            the renderer to display
      */
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         LineBatch batch;
         if (getBatchCount() == 1) {
             batch = getBatch(0);
@@ -417,11 +420,13 @@ public class Line extends Geometry {
      * @see com.jme.scene.Spatial#hasCollision(com.jme.scene.Spatial,
      *      com.jme.intersection.CollisionResults)
      */
-    public void findCollisions(Spatial scene, CollisionResults results) {
+    @Override
+	public void findCollisions(Spatial scene, CollisionResults results) {
         ; // unsupported
     }
     
-    public boolean hasCollision(Spatial scene, boolean checkTriangles) {
+    @Override
+	public boolean hasCollision(Spatial scene, boolean checkTriangles) {
         return false;
     }
 }

@@ -46,7 +46,8 @@ public class RenderPass extends Pass {
     
     private static final long serialVersionUID = 1L;
 
-    public void doRender(Renderer r) {
+    @Override
+	public void doRender(Renderer r) {
         for (int i = 0, sSize = spatials.size(); i < sSize; i++) {
             Spatial s = spatials.get(i);
             s.onDraw(r);

@@ -70,7 +70,8 @@ public class SimplePassCanvasImpl extends JMECanvasImplementor {
         this.height = height;
     }
     
-    public void doSetup() {
+    @Override
+	public void doSetup() {
         
         DisplaySystem display = DisplaySystem.getDisplaySystem();
         renderer = new LWJGLRenderer(width, height);
@@ -136,7 +137,8 @@ public class SimplePassCanvasImpl extends JMECanvasImplementor {
         setup = true;
     }
 
-    public void doUpdate() {
+    @Override
+	public void doUpdate() {
         timer.update();
         /** Update tpf to time per frame according to the Timer. */
         tpf = timer.getTimePerFrame();
@@ -148,7 +150,8 @@ public class SimplePassCanvasImpl extends JMECanvasImplementor {
         rootNode.updateGeometricState(tpf, true);
     }
 
-    public void doRender() {
+    @Override
+	public void doRender() {
         renderer.clearBuffers();
         manager.renderPasses(renderer);
         simpleRender();

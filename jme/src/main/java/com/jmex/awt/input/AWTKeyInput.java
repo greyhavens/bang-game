@@ -56,19 +56,23 @@ public class AWTKeyInput extends KeyInput implements KeyListener {
     protected AWTKeyInput() {
     }
 
-    public boolean isKeyDown( int key ) {
+    @Override
+	public boolean isKeyDown( int key ) {
         return keyDown.get( key );
     }
 
-    public String getKeyName( int key ) {
+    @Override
+	public String getKeyName( int key ) {
         return KeyEvent.getKeyText( toAWTCode( key ) );
     }
 
-    public int getKeyIndex( String name ) {
+    @Override
+	public int getKeyIndex( String name ) {
         throw new UnsupportedOperationException( "getKeyIndex is not supported by AWTKeyInput." );
     }
 
-    public void update() {
+    @Override
+	public void update() {
         //todo: replace with linked list or synchronize this to avoid missing events
         if ( listeners != null && listeners.size() > 0 ) {
             for ( int x = 0; x < events.size(); x++ ) {
@@ -87,7 +91,8 @@ public class AWTKeyInput extends KeyInput implements KeyListener {
         events.clear();
     }
 
-    protected void destroy() {
+    @Override
+	protected void destroy() {
         ; // nothing to do
     }
 
@@ -109,11 +114,13 @@ public class AWTKeyInput extends KeyInput implements KeyListener {
     // java.awt.event.KeyListener methods
     // **********************************
 
-    public void keyTyped( KeyEvent arg0 ) {
+    @Override
+	public void keyTyped( KeyEvent arg0 ) {
         ; // ignore this one
     }
 
-    public void keyPressed( KeyEvent arg0 ) {
+    @Override
+	public void keyPressed( KeyEvent arg0 ) {
         if ( !enabled ) {
             return;
         }
@@ -122,7 +129,8 @@ public class AWTKeyInput extends KeyInput implements KeyListener {
         keyDown.set( toInputCode( arg0.getKeyCode() ), true );
     }
 
-    public void keyReleased( KeyEvent arg0 ) {
+    @Override
+	public void keyReleased( KeyEvent arg0 ) {
         if ( !enabled ) {
             return;
         }

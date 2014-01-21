@@ -112,9 +112,7 @@ public interface OutputCapsule {
     
     // ArrayLists
     
-    public void writeSavableArrayList(ArrayList array, String name, ArrayList defVal) throws IOException;
-    public void writeSavableArrayListArray(ArrayList[] array, String name, ArrayList[] defVal) throws IOException;
-    public void writeSavableArrayListArray2D(ArrayList[][] array, String name, ArrayList[][] defVal) throws IOException;
+    public void writeSavableArrayList(ArrayList<?> array, String name, ArrayList<?> defVal) throws IOException;
     
     public void writeFloatBufferArrayList(ArrayList<FloatBuffer> array, String name, ArrayList<FloatBuffer> defVal) throws IOException;
 

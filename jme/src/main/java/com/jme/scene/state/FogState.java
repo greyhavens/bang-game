@@ -174,7 +174,8 @@ public abstract class FogState extends RenderState {
      * (RS_FOG).
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_FOG;
     }
 
@@ -202,7 +203,8 @@ public abstract class FogState extends RenderState {
         return start;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(start, "start", 0);
@@ -213,7 +215,8 @@ public abstract class FogState extends RenderState {
         capsule.write(applyFunction, "applyFunction", AF_PER_VERTEX);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         start = capsule.readFloat("start", 0);
@@ -224,7 +227,8 @@ public abstract class FogState extends RenderState {
         applyFunction = capsule.readInt("applyFunction", AF_PER_VERTEX);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<FogState> getClassTag() {
         return FogState.class;
     }
 

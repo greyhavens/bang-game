@@ -112,12 +112,13 @@ public class HashIntMap<T>
         return -1;
     }
 
+    @SuppressWarnings("unchecked")
     protected void resize (int ncapacity)
     {
         Entry<T>[] oentries = _entries;
 
         _capacity = ncapacity;
-        _entries = new Entry[1 << _capacity];
+        _entries = (Entry<T>[])new Entry<?>[1 << _capacity];
         _threshold = (_entries.length * 3) / 4;
         _mask = _entries.length - 1;
 

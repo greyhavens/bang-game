@@ -30,23 +30,27 @@ class SyntheticTrigger extends ActionTrigger {
     private int count;
     private TriggerInfo[] infos = new TriggerInfo[1];
 
-    protected int getActionInvocationCount() {
+    @Override
+	protected int getActionInvocationCount() {
         return count;
     }
 
-    protected void remove() {
+    @Override
+	protected void remove() {
         super.remove();
         container.remove( this );
     }
 
-    public void performAction( InputActionEvent event ) {
+    @Override
+	public void performAction( InputActionEvent event ) {
         super.performAction( event );
         if ( !allowRepeats ) {
             count = 0;
         }
     }
 
-    protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
+    @Override
+	protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
         super.putTriggerInfo( event, invocationIndex );
         event.setTriggerIndex( container.getIndex() );
         TriggerInfo info = infos[invocationIndex];
@@ -57,11 +61,13 @@ class SyntheticTrigger extends ActionTrigger {
         event.setTriggerData( info.data );
     }
 
-    protected final String getDeviceName() {
+    @Override
+	protected final String getDeviceName() {
         return UtilInputHandlerDevice.DEVICE_UTIL;
     }
 
-    public void checkActivation( char character, int buttonIndex, float position, float delta, boolean pressed, Object data ) {
+    @Override
+	public void checkActivation( char character, int buttonIndex, float position, float delta, boolean pressed, Object data ) {
         if ( buttonIndex == container.getIndex() ) {
             TriggerInfo info;
             if ( allowRepeats ) {

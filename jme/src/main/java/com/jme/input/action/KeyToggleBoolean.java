@@ -63,7 +63,8 @@ public class KeyToggleBoolean extends KeyInputAction {
      * @param evt
      *            the event that called this action.
      */
-    public void performAction(InputActionEvent evt) {
+    @Override
+	public void performAction(InputActionEvent evt) {
         value = !value;
     }
 

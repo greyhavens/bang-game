@@ -47,11 +47,13 @@ public abstract class DitherState extends RenderState {
      * (RS_DITHER).
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_DITHER;
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<DitherState> getClassTag() {
         return DitherState.class;
     }
 }

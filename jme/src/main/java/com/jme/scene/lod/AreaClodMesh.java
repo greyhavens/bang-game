@@ -125,6 +125,7 @@ public class AreaClodMesh extends ClodMesh {
 	 * @param r The Renderer to use.
 	 * @return the target record this AreaClodMesh will use to collapse vertexes.
 	 */
+	@Override
 	public int chooseTargetRecord(Renderer r) {
 		if (getWorldBound() == null) {
 			LoggingSystem.getLogger().log(Level.WARNING,
@@ -166,6 +167,7 @@ public class AreaClodMesh extends ClodMesh {
 	 *  during draw.
 	 * @param target Ignored.
 	 */
+	@Override
 	public void setTargetRecord(int target) {
 		// ignore;
 	}
@@ -206,6 +208,7 @@ public class AreaClodMesh extends ClodMesh {
 		this.distTolerance = tolerance;
 	}
 
+	@Override
 	public void write(JMEExporter e) throws IOException {
 		super.write(e);
 		OutputCapsule capsule = e.getCapsule(this);
@@ -214,6 +217,7 @@ public class AreaClodMesh extends ClodMesh {
 		capsule.write(lastDistance, "lastDistance", 0);
 	}
 
+	@Override
 	public void read(JMEImporter e) throws IOException {
 		super.read(e);
 		InputCapsule capsule = e.getCapsule(this);

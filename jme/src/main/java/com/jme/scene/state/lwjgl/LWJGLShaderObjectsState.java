@@ -76,7 +76,8 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
      *
      * @see com.jme.scene.state.ShaderObjectsState#isSupported()
      */
-    public boolean isSupported() {
+    @Override
+	public boolean isSupported() {
         return GLContext.getCapabilities().GL_ARB_shader_objects;
     }
 
@@ -84,7 +85,8 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
      * <code>relinkProgram</code> instructs openGL to relink the associated
      * program.  This should be used after setting ShaderAttributes.
      */
-    public void relinkProgram() {
+    @Override
+	public void relinkProgram() {
         ByteBuffer nameBuf = BufferUtils.createByteBuffer(64);
         int id = 0;
         for (ShaderAttribute attrib : attribs.values()) {
@@ -192,13 +194,15 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
      * @see com.jme.scene.state.ShaderObjectsState#load(java.net.URL,
      *      java.net.URL)
      */
-    public void load(URL vert, URL frag) {
+    @Override
+	public void load(URL vert, URL frag) {
         ByteBuffer vertexByteBuffer = vert != null ? load(vert) : null;
         ByteBuffer fragmentByteBuffer = frag!= null ? load(frag) : null;
         load(vertexByteBuffer, fragmentByteBuffer);
     }
 
-    public void load(String vert, String frag) {
+    @Override
+	public void load(String vert, String frag) {
         ByteBuffer vertexByteBuffer = vert != null ? load(vert) : null;
         ByteBuffer fragmentByteBuffer = frag!= null ? load(frag) : null;
         load(vertexByteBuffer, fragmentByteBuffer);
@@ -288,7 +292,8 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
      *
      * @see com.jme.scene.state.RenderState#apply()
      */
-    public void apply() {
+    @Override
+	public void apply() {
         if (isSupported()) {
         	//ask for the current state record
             RenderContext context = DisplaySystem.getDisplaySystem()

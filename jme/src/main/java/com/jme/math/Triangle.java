@@ -197,19 +197,22 @@ public class Triangle implements Serializable, Savable {
         this.index = index;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         e.getCapsule(this).write(pointa, "pointa", Vector3f.ZERO);
         e.getCapsule(this).write(pointb, "pointb", Vector3f.ZERO);
         e.getCapsule(this).write(pointc, "pointc", Vector3f.ZERO);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         pointa = (Vector3f)e.getCapsule(this).readSavable("pointa", new Vector3f(Vector3f.ZERO));
         pointb = (Vector3f)e.getCapsule(this).readSavable("pointb", new Vector3f(Vector3f.ZERO));
         pointc = (Vector3f)e.getCapsule(this).readSavable("pointc", new Vector3f(Vector3f.ZERO));
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Triangle> getClassTag() {
         return this.getClass();
     }
 }

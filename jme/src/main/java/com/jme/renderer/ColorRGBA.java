@@ -365,7 +365,8 @@ public class ColorRGBA implements Externalizable, Savable {
      * com.jme.ColorRGBA: [R=RR.RRRR, G=GG.GGGG, B=BB.BBBB, A=AA.AAAA]
      * @return the string representation of this color.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "com.jme.renderer.ColorRGBA: [R="+r+", G="+g+", B="+b+", A="+a+"]";
     }
 
@@ -375,7 +376,8 @@ public class ColorRGBA implements Externalizable, Savable {
      * data as this one.
      * @return the color that is the same as this.
      */
-    public ColorRGBA clone() {
+    @Override
+	public ColorRGBA clone() {
         return new ColorRGBA(r,g,b,a);
     }
 
@@ -386,7 +388,8 @@ public class ColorRGBA implements Externalizable, Savable {
      * @param o the object to compare againts.
      * @return true if the colors are equal, false otherwise.
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
         if(!(o instanceof ColorRGBA) || o == null) {
             return false;
         }
@@ -409,7 +412,8 @@ public class ColorRGBA implements Externalizable, Savable {
      * the same hash code value.
      * @return the hash code value of this color.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
       int hash = 37;
       hash += 37 * hash + Float.floatToIntBits(r);
       hash += 37 * hash + Float.floatToIntBits(g);
@@ -425,7 +429,8 @@ public class ColorRGBA implements Externalizable, Savable {
      * @throws ClassNotFoundException
      * @see java.io.Externalizable
      */
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+    @Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         r=in.readFloat();
         g=in.readFloat();
         b=in.readFloat();
@@ -438,14 +443,16 @@ public class ColorRGBA implements Externalizable, Savable {
      * @throws IOException
      * @see java.io.Externalizable
      */
-    public void writeExternal(ObjectOutput out) throws IOException {
+    @Override
+	public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(r);
         out.writeFloat(g);
         out.writeFloat(b);
         out.writeFloat(a);
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(r, "r", 0);
         capsule.write(g, "g", 0);
@@ -453,7 +460,8 @@ public class ColorRGBA implements Externalizable, Savable {
         capsule.write(a, "a", 0);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         r = capsule.readFloat("r", 0);
         g = capsule.readFloat("g", 0);
@@ -461,7 +469,8 @@ public class ColorRGBA implements Externalizable, Savable {
         a = capsule.readFloat("a", 0);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends ColorRGBA> getClassTag() {
         return this.getClass();
     }
 

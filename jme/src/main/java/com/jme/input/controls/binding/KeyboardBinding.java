@@ -46,14 +46,17 @@ public class KeyboardBinding implements Binding {
         this.key = key;
     }
     
+	@Override
 	public String getName() {
 		return Keyboard.getKeyName(key);
 	}
 	
+	@Override
 	public float getValue() {
 		return KeyInput.get().isKeyDown(key) ? 1.0f : 0.0f;
 	}
 
+	@Override
 	public String toString() {
 		return getName();
 	}

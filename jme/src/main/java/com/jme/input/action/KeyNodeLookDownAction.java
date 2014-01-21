@@ -81,6 +81,7 @@ public class KeyNodeLookDownAction extends KeyInputAction {
 	 * 
 	 * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
 	 */
+	@Override
 	public void performAction(InputActionEvent evt) {
         node.getLocalRotation().getRotationColumn(0, tempV);
         tempV.normalizeLocal();

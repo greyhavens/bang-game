@@ -308,7 +308,8 @@ public class Image implements Serializable, Savable {
         return mipMapSizes;
     }
 
-    public boolean equals(Object other) {
+    @Override
+	public boolean equals(Object other) {
       if (other == this) {
         return true;
       }
@@ -373,7 +374,8 @@ public class Image implements Serializable, Savable {
         }
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(type, "type", RGBA4444);
         capsule.write(width, "width", 0);
@@ -382,7 +384,8 @@ public class Image implements Serializable, Savable {
         capsule.write(data, "data", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         type = capsule.readInt("type", RGBA4444);
         width = capsule.readInt("width", 0);
@@ -391,7 +394,8 @@ public class Image implements Serializable, Savable {
         data = capsule.readByteBuffer("data", null);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<?> getClassTag() {
         return this.getClass();
     }
 }

@@ -149,6 +149,7 @@ public class DistanceSwitchModel implements SwitchModel {
 	 *            either Float - the world scale squared value, or Vector3f -
 	 *            the difference between the switch node and a location.
 	 */
+	@Override
 	public void set(Object value) {
 		if (value instanceof Float) {
 
@@ -172,6 +173,7 @@ public class DistanceSwitchModel implements SwitchModel {
 	 * 
 	 * @return the index of the valid child.
 	 */
+	@Override
 	public int getSwitchChild() {
 		// select the switch child
 		if (numChildren > 0) {
@@ -187,7 +189,8 @@ public class DistanceSwitchModel implements SwitchModel {
 		return SwitchNode.SN_INVALID_CHILD;
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         
         capsule.write(modelMin, "modelMin", new float[0]);
@@ -199,7 +202,8 @@ public class DistanceSwitchModel implements SwitchModel {
         capsule.write(diff, "diff", Vector3f.ZERO);
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         
         modelMin = capsule.readFloatArray("modelMin", new float[0]);
@@ -211,7 +215,8 @@ public class DistanceSwitchModel implements SwitchModel {
         diff = (Vector3f)capsule.readSavable("diff", new Vector3f(Vector3f.ZERO));
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends DistanceSwitchModel> getClassTag() {
         return this.getClass();
     }
 }

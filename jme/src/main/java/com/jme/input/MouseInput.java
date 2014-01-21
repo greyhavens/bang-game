@@ -67,7 +67,7 @@ public abstract class MouseInput extends Input {
     public static MouseInput get() {
         if ( instance == null ) {
             try {
-                final Constructor constructor = getProvider().getDeclaredConstructor( (Class[])null );
+                final Constructor<?> constructor = getProvider().getDeclaredConstructor( (Class[])null );
                 constructor.setAccessible( true );
                 instance = (MouseInput) constructor.newInstance( (Object[])null );
             } catch ( Exception e ) {
@@ -83,14 +83,14 @@ public abstract class MouseInput extends Input {
      *
      * @return currently selected provider
      */
-    public static Class getProvider() {
+    public static Class<?> getProvider() {
         return provider;
     }
 
     /**
      * store the value for field provider
      */
-    private static Class provider = LWJGLMouseInput.class;
+    private static Class<?> provider = LWJGLMouseInput.class;
 
     /**
      * Change the provider used for mouse input. Default is {@link MouseInput.INPUT_LWJGL}.
@@ -124,7 +124,7 @@ public abstract class MouseInput extends Input {
      * @throws IllegalStateException if called after first call of {@link #get()}. Note that get is called when
      *                               creating the DisplaySystem.
      */
-    public static void setProvider( final Class value ) {
+    public static void setProvider( final Class<?> value ) {
         if ( instance != null ) {
             throw new IllegalStateException( "Provider may only be changed before input is created!" );
         }
@@ -217,7 +217,8 @@ public abstract class MouseInput extends Input {
     /**
      * Updates the state of the mouse (position and button states). Invokes event listeners synchronously.
      */
-    public abstract void update();
+    @Override
+	public abstract void update();
 
     //todo:
     /**

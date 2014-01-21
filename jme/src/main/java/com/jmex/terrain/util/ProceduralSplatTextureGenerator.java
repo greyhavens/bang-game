@@ -55,10 +55,10 @@ import com.jme.util.LoggingSystem;
  *  */
 public class ProceduralSplatTextureGenerator extends ProceduralTextureGenerator {
 	// collection of alpha maps
-	protected List splatMaps;
+	protected List<BufferedImage> splatMaps;
 
 	// collection of texture maps
-	protected List splatTextures;
+	protected List<BufferedImage> splatTextures;
 
 	/**
 	 * Constructor instantiates a new <code>ProceduralSplatTexture</code>
@@ -70,8 +70,8 @@ public class ProceduralSplatTextureGenerator extends ProceduralTextureGenerator 
 	public ProceduralSplatTextureGenerator(AbstractHeightMap heightMap) {
 		super(heightMap);
 
-		splatMaps = new ArrayList();
-		splatTextures = new ArrayList();
+		splatMaps = new ArrayList<BufferedImage>();
+		splatTextures = new ArrayList<BufferedImage>();
 	}
 
 	/**
@@ -109,6 +109,7 @@ public class ProceduralSplatTextureGenerator extends ProceduralTextureGenerator 
 	 * <code>ProcduralTextureGenerator</code> to provide the capability to
 	 * overlay the existing procedural texture with one or more 'splat' maps.
 	 */
+	@Override
 	public void createTexture(int textureSize) {
 		super.createTexture(textureSize);
 

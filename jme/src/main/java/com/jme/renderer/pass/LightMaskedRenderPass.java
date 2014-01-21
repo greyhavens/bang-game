@@ -58,7 +58,8 @@ public class LightMaskedRenderPass extends Pass {
     protected ArrayList<LightState> lightStates = new ArrayList<LightState>();
     protected int mask = 0;
 
-    public void doRender(Renderer r) {
+    @Override
+	public void doRender(Renderer r) {
         for (int i = 0, sSize = spatials.size(); i < sSize; i++) {
             Spatial s = spatials.get(i);
             maskLightStates(s);
@@ -83,7 +84,7 @@ public class LightMaskedRenderPass extends Pass {
         }
         if ((s.getType() & SceneElement.NODE) != 0) {
             Node n = (Node)s;
-            ArrayList children = n.getChildren();
+            ArrayList<?> children = n.getChildren();
             if (children != null) {
                 for (int i = children.size(); --i >= 0; ) {
                     Spatial child = (Spatial)children.get(i);

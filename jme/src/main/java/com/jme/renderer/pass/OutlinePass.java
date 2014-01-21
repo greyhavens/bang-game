@@ -103,6 +103,7 @@ public class OutlinePass extends RenderPass {
 
 	}
 
+	@Override
 	public void doRender(Renderer renderer) {
 		// if there's nothing to do
 		if (spatials.size() == 0)

@@ -53,18 +53,20 @@ public class SyntheticButton extends SyntheticTriggerContainer {
     /**
      * list of triggers
      */
-    private ArrayList buttonTriggers = new ArrayList();
+    private ArrayList<SyntheticTrigger> buttonTriggers = new ArrayList<SyntheticTrigger>();
 
     public SyntheticButton( String name ) {
         this.name = name;
         UtilInputHandlerDevice.get().addButton( this );
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
-    public int getIndex() {
+    @Override
+	public int getIndex() {
         return this.index;
     }
 
@@ -87,11 +89,13 @@ public class SyntheticButton extends SyntheticTriggerContainer {
         new SyntheticTrigger( this, inputHandler, action, allowRepeats, false );
     }
 
-    void add( SyntheticTrigger trigger ) {
+    @Override
+	void add( SyntheticTrigger trigger ) {
         buttonTriggers.add( trigger );
     }
 
-    void remove( SyntheticTrigger trigger ) {
+    @Override
+	void remove( SyntheticTrigger trigger ) {
         buttonTriggers.remove( trigger );
     }
 
@@ -101,7 +105,7 @@ public class SyntheticButton extends SyntheticTriggerContainer {
      */
     public void trigger( float delta, char character, float value, boolean pressed, Object data ) {
         for ( int i = buttonTriggers.size() - 1; i >= 0; i-- ) {
-            final ActionTrigger trigger = (ActionTrigger) buttonTriggers.get( i );
+            final ActionTrigger trigger = buttonTriggers.get( i );
             trigger.checkActivation( character, getIndex(), value, delta, pressed, data );
         }
     }

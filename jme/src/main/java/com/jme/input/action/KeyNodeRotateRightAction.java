@@ -100,7 +100,8 @@ public class KeyNodeRotateRightAction extends KeyInputAction {
      * 
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
-    public void performAction(InputActionEvent evt) {
+    @Override
+	public void performAction(InputActionEvent evt) {
         incr.loadIdentity();
         if (lockAxis == null) {
             node.getLocalRotation().getRotationColumn(1, tempVa);

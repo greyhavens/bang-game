@@ -71,7 +71,8 @@ public class KeyForwardAction extends KeyInputAction {
      * 
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
-    public void performAction(InputActionEvent evt) {
+    @Override
+	public void performAction(InputActionEvent evt) {
         Vector3f loc = camera.getLocation();
         if ( !camera.isParallelProjection() ) {
             loc.addLocal(camera.getDirection().mult(speed * evt.getTime(), tempVa));

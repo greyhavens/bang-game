@@ -77,7 +77,8 @@ public class KeyNodeLookUpAction extends KeyInputAction {
      * 
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
-    public void performAction(InputActionEvent evt) {
+    @Override
+	public void performAction(InputActionEvent evt) {
         node.getLocalRotation().getRotationColumn(0, tempVa);
         tempVa.normalizeLocal();
         incr.fromAngleNormalAxis(-speed * evt.getTime(), tempVa);

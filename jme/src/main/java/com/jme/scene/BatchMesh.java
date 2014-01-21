@@ -141,7 +141,8 @@ public class BatchMesh extends Geometry implements Serializable {
      * @param r
      *            the renderer to display
      */
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         GeomBatch batch;
         if (getBatchCount() == 1) {
             batch = getBatch(0);

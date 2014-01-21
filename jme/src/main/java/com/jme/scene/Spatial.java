@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -60,7 +60,7 @@ import com.jme.util.export.Savable;
  * maintains a link to a parent, it's local transforms and the world's
  * transforms. All other nodes, such as <code>Node</code> and
  * <code>Geometry</code> are subclasses of <code>Spatial</code>.
- * 
+ *
  * @author Mark Powell
  * @author Joshua Slack
  * @version $Id$
@@ -175,7 +175,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      *
      * @return This spatial's geometricalControllers.
      */
-    public ArrayList getControllers() {
+    public ArrayList<Controller> getControllers() {
         if (geometricalControllers == null) {
             geometricalControllers = new ArrayList<Controller>(1);
         }
@@ -311,7 +311,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      * @param initiator
      *            true if this node started the update process.
      */
-    public void updateGeometricState(float time, boolean initiator) {
+    @Override
+	public void updateGeometricState(float time, boolean initiator) {
         if ((lockedMode & SceneElement.LOCKED_BRANCH) != 0) return;
         updateWorldData(time);
         if ((lockedMode & SceneElement.LOCKED_BOUNDS) == 0) {
@@ -536,7 +537,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      *
      * @return the cull mode of this spatial, or if set to INHERIT, the cullmode of it's parent.
      */
-    public int getCullMode() {
+    @Override
+	public int getCullMode() {
         if (cullMode != CULL_INHERIT)
             return cullMode;
         else if (parent != null)
@@ -549,7 +551,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      *
      * @return The spatial's texture current combine mode.
      */
-    public int getTextureCombineMode() {
+    @Override
+	public int getTextureCombineMode() {
         if (textureCombineMode != TextureState.INHERIT)
             return textureCombineMode;
         else if (parent != null)
@@ -564,7 +567,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      *
      * @return The spatial's light current combine mode.
      */
-    public int getLightCombineMode() {
+    @Override
+	public int getLightCombineMode() {
         if (lightCombineMode != LightState.INHERIT)
             return lightCombineMode;
         else if (parent != null)
@@ -573,7 +577,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
             return LightState.COMBINE_FIRST;
     }
 
-    public int getRenderQueueMode() {
+    @Override
+	public int getRenderQueueMode() {
         if (renderQueueMode != Renderer.QUEUE_INHERIT)
             return renderQueueMode;
         else if (parent != null)
@@ -582,7 +587,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
             return Renderer.QUEUE_SKIP;
     }
 
-    public int getNormalsMode() {
+    @Override
+	public int getNormalsMode() {
         if (normalsMode != NM_INHERIT)
             return normalsMode;
         else if (parent != null)
@@ -599,8 +605,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      * @param states
      *            The Stack[] to push states onto.
      */
-    @SuppressWarnings("unchecked")
-    public void propagateStatesFromRoot(Stack[] states) {
+    @Override
+    public void propagateStatesFromRoot(Stack<RenderState>[] states) {
         // traverse to root to allow downward state propagation
         if (parent != null)
             parent.propagateStatesFromRoot(states);
@@ -617,7 +623,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      * tree to the root.
      *
      */
-    public void propagateBoundToRoot() {
+    @Override
+	public void propagateBoundToRoot() {
         if (parent != null) {
             parent.updateWorldBound();
             parent.propagateBoundToRoot();
@@ -638,7 +645,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
         findCollisions(scene, results);
         results.processCollisions();
     }
-    
+
     public abstract void updateModelBound();
     public abstract void setModelBound(BoundingVolume modelBound);
     /**
@@ -672,7 +679,8 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
     public void updateCollisionTree() {
     }
 
-    public void write(JMEExporter ex) throws IOException {
+    @Override
+	public void write(JMEExporter ex) throws IOException {
         super.write(ex);
         OutputCapsule capsule = ex.getCapsule(this);
 
@@ -683,7 +691,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
         capsule.writeSavableArrayList(geometricalControllers, "geometricalControllers", null);
    }
 
-    @SuppressWarnings("unchecked")
+    @Override
 	public void read(JMEImporter im) throws IOException {
         super.read(im);
         InputCapsule capsule = im.getCapsule(this);
@@ -693,7 +701,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
         localScale = (Vector3f)capsule.readSavable("localScale", Vector3f.UNIT_XYZ);
 
         geometricalControllers = capsule.readSavableArrayList("geometricalControllers", null);
-        
+
         worldRotation = new Quaternion();
         worldTranslation = new Vector3f();
         worldScale = new Vector3f(1.0f, 1.0f, 1.0f);

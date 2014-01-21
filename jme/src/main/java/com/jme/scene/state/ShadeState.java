@@ -96,23 +96,27 @@ public abstract class ShadeState extends RenderState {
      * (RS_SHADE).
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_SHADE;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(shade, "shade", SM_SMOOTH);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         shade = capsule.readInt("shade", SM_SMOOTH);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<ShadeState> getClassTag() {
         return ShadeState.class;
     }
 }

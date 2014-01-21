@@ -185,7 +185,8 @@ public class LensFlare extends Node {
      * @param r
      *            the renderer used for display.
      */
-    public void onDraw(Renderer r) {
+    @Override
+	public void onDraw(Renderer r) {
         DisplaySystem display = DisplaySystem.getDisplaySystem();
         midPoint.set(r.getWidth() >> 1, r.getHeight() >> 1);
         // Locate light src on screen x,y
@@ -211,7 +212,8 @@ public class LensFlare extends Node {
      *            the renderer to draw to.
      * @see com.jme.scene.Spatial#draw(com.jme.renderer.Renderer)
      */
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         DisplaySystem display = DisplaySystem.getDisplaySystem();
 
         // irrisor: compensate for different size renderer
@@ -342,7 +344,8 @@ public class LensFlare extends Node {
      *            Spatial
      * @return int
      */
-    public int attachChild(Spatial spat) {
+    @Override
+	public int attachChild(Spatial spat) {
         if (!(spat instanceof FlareQuad))
             throw new JmeException(
                     "Only children of type FlareQuad may be attached to LensFlare.");
@@ -380,7 +383,8 @@ public class LensFlare extends Node {
 
     // optimize memory allocation:
     private PickResults pickResults = new BoundingPickResults() {
-        public void addPick(Ray ray, GeomBatch s) {
+        @Override
+		public void addPick(Ray ray, GeomBatch s) {
             pickBoundsGeoms.add(s);
         }
     };
@@ -393,7 +397,8 @@ public class LensFlare extends Node {
 
     private ArrayList<GeomBatch> occludingTriMeshes = new ArrayList<GeomBatch>();
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(midPoint, "midPoint", new Vector2f());
@@ -405,7 +410,8 @@ public class LensFlare extends Node {
         
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         midPoint = (Vector2f)capsule.readSavable("midPoint", new Vector2f());

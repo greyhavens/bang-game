@@ -73,7 +73,8 @@ public class ThirdPersonLeftAction extends KeyInputAction {
      * 
      * @see com.jme.input.action.AbstractInputAction#performAction(float)
      */
-    public void performAction(InputActionEvent event) {
+    @Override
+	public void performAction(InputActionEvent event) {
         if (handler.getPermitter() != null
                 && !handler.getPermitter().canBeMoved())
             return;

@@ -225,14 +225,16 @@ public class TriangleBatch extends GeomBatch implements Serializable, Savable {
         return fill;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(indexBuffer, "indexBuffer", null);
         capsule.write(mode, "mode", TRIANGLES);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         indexBuffer = capsule.readIntBuffer("indexBuffer", null);
@@ -250,12 +252,14 @@ public class TriangleBatch extends GeomBatch implements Serializable, Savable {
         return false;
     }
 
-    public int getType() {
+    @Override
+	public int getType() {
         return SceneElement.GEOMBATCH | SceneElement.TRIANGLEBATCH;
     }
     
 
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         if(!isEnabled()) {
             return;
         }

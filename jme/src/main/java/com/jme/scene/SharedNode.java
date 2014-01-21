@@ -132,13 +132,15 @@ public class SharedNode extends Node {
         }
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(updatesCollisionTree, "updatesCollisionTree", false);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         updatesCollisionTree = capsule.readBoolean("updatesCollisionTree", false);

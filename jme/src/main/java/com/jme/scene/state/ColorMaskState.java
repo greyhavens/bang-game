@@ -49,7 +49,8 @@ public abstract class ColorMaskState extends RenderState {
      * 
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RenderState.RS_COLORMASK_STATE;
     }
 
@@ -125,7 +126,8 @@ public abstract class ColorMaskState extends RenderState {
         setNeedsRefresh(true);
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(blue, "blue", true);
@@ -134,7 +136,8 @@ public abstract class ColorMaskState extends RenderState {
         capsule.write(alpha, "alpha", true);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         blue = capsule.readBoolean("blue", true);
@@ -143,7 +146,8 @@ public abstract class ColorMaskState extends RenderState {
         alpha = capsule.readBoolean("alpha", true);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<ColorMaskState> getClassTag() {
         return ColorMaskState.class;
     }
 }

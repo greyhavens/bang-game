@@ -74,7 +74,8 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>destroy</code> cleans up the native mouse reference.
      * @see com.jme.input.MouseInput#destroy()
      */
-    public void destroy() {
+    @Override
+	public void destroy() {
         setCursorVisible(false);
         Mouse.destroy();
 
@@ -84,7 +85,8 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>getButtonIndex</code> returns the index of a given button name.
      * @see com.jme.input.MouseInput#getButtonIndex(java.lang.String)
      */
-    public int getButtonIndex(String buttonName) {
+    @Override
+	public int getButtonIndex(String buttonName) {
         return Mouse.getButtonIndex(buttonName);
     }
 
@@ -92,7 +94,8 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>getButtonName</code> returns the name of a given button index.
      * @see com.jme.input.MouseInput#getButtonName(int)
      */
-    public String getButtonName(int buttonIndex) {
+    @Override
+	public String getButtonName(int buttonIndex) {
         return Mouse.getButtonName(buttonIndex);
     }
 
@@ -100,7 +103,8 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>isButtonDown</code> tests if a given button is pressed or not.
      * @see com.jme.input.MouseInput#isButtonDown(int)
      */
-    public boolean isButtonDown(int buttonCode) {
+    @Override
+	public boolean isButtonDown(int buttonCode) {
         return Mouse.isButtonDown(buttonCode);
     }
 
@@ -109,21 +113,24 @@ public class LWJGLMouseInput extends MouseInput {
      * if any.
      * @see com.jme.input.MouseInput#getWheelDelta()
      */
-    public int getWheelDelta() {
+    @Override
+	public int getWheelDelta() {
         return dWheel;
     }
     /**
      * <code>getXDelta</code> retrieves the change of the x position, if any.
      * @see com.jme.input.MouseInput#getXDelta()
      */
-    public int getXDelta() {
+    @Override
+	public int getXDelta() {
         return dx;
     }
     /**
      * <code>getYDelta</code> retrieves the change of the y position, if any.
      * @see com.jme.input.MouseInput#getYDelta()
      */
-    public int getYDelta() {
+    @Override
+	public int getYDelta() {
         return dy;
     }
 
@@ -131,7 +138,8 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>getXAbsolute</code> gets the absolute x axis value.
      * @see com.jme.input.MouseInput#getXAbsolute()
      */
-    public int getXAbsolute() {
+    @Override
+	public int getXAbsolute() {
         return Mouse.getX();
     }
 
@@ -139,7 +147,8 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>getYAbsolute</code> gets the absolute y axis value.
      * @see com.jme.input.MouseInput#getYAbsolute()
      */
-    public int getYAbsolute() {
+    @Override
+	public int getYAbsolute() {
         return Mouse.getY();
     }
 
@@ -147,7 +156,8 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>updateState</code> updates the mouse state.
      * @see com.jme.input.MouseInput#update()
      */
-    public void update() {
+    @Override
+	public void update() {
         /**Actual polling is done in {@link org.lwjgl.opengl.Display#update()} */
 
         boolean grabbed = Mouse.isGrabbed();
@@ -215,7 +225,8 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>setCursorVisible</code> sets the visiblity of the hardware cursor.
      * @see com.jme.input.MouseInput#setCursorVisible(boolean)
      */
-    public void setCursorVisible(boolean v) {
+    @Override
+	public void setCursorVisible(boolean v) {
       Mouse.setGrabbed(!v);
         try {
 
@@ -234,19 +245,23 @@ public class LWJGLMouseInput extends MouseInput {
      * <code>isCursorVisible</code> Returns true if a cursor is currently bound.
      * @see com.jme.input.MouseInput#isCursorVisible()
      */
-    public boolean isCursorVisible() {
+    @Override
+	public boolean isCursorVisible() {
         return Mouse.getNativeCursor() != null;
     }
 
-    public int getWheelRotation() {
+    @Override
+	public int getWheelRotation() {
         return wheelRotation;
     }
 
-    public int getButtonCount() {
+    @Override
+	public int getButtonCount() {
         return Mouse.getButtonCount();
     }
 
-    public void setCursorPosition( int x, int y) {
+    @Override
+	public void setCursorPosition( int x, int y) {
     	Mouse.setCursorPosition( x, y);
     }
 }

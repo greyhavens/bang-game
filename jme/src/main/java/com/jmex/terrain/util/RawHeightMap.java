@@ -120,7 +120,8 @@ public class RawHeightMap extends AbstractHeightMap {
      *
      * @return true if the load is successfull, false otherwise.
      */
-    public boolean load() {
+    @Override
+	public boolean load() {
         //confirm data has been set. Redundant check...
         if (null == filename || size <= 0) {
             throw new JmeException(

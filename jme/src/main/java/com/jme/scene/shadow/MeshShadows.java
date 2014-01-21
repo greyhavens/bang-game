@@ -58,7 +58,6 @@ import com.jme.util.geom.BufferUtils;
  * @version $Id$
  */
 public class MeshShadows {
-    private static final long serialVersionUID = 1L;
 
     /** the distance to which shadow volumes will be projected */
     protected float projectionLength = 1000;

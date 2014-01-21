@@ -35,7 +35,6 @@ package com.jme.scene.shape;
 import java.nio.FloatBuffer;
 
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.util.geom.BufferUtils;

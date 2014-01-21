@@ -177,7 +177,8 @@ public abstract class BaseSimpleGame extends BaseGame {
      * @param interpolation unused in this implementation
      * @see AbstractGame#update(float interpolation)
      */
-    protected void update( float interpolation ) {
+    @Override
+	protected void update( float interpolation ) {
         /** Recalculate the framerate. */
         timer.update();
         /** Update tpf to time per frame according to the Timer. */
@@ -282,7 +283,8 @@ public abstract class BaseSimpleGame extends BaseGame {
      * @param interpolation unused in this implementation
      * @see AbstractGame#render(float interpolation)
      */
-    protected void render( float interpolation ) {
+    @Override
+	protected void render( float interpolation ) {
         Renderer r = display.getRenderer();
         /** Reset display's tracking information for number of triangles/vertexes */
         r.clearStatistics();
@@ -313,7 +315,8 @@ public abstract class BaseSimpleGame extends BaseGame {
      *
      * @see AbstractGame#initSystem()
      */
-    protected void initSystem() {
+    @Override
+	protected void initSystem() {
         LoggingSystem.getLogger().log( Level.INFO, getVersion());
         try {
             /**
@@ -430,7 +433,8 @@ public abstract class BaseSimpleGame extends BaseGame {
      *
      * @see AbstractGame#initGame()
      */
-    protected void initGame() {
+    @Override
+	protected void initGame() {
         /** Create rootNode */
         rootNode = new Node( "rootNode" );
 
@@ -519,7 +523,8 @@ public abstract class BaseSimpleGame extends BaseGame {
      *
      * @see AbstractGame#reinit()
      */
-    protected void reinit() {
+    @Override
+	protected void reinit() {
         //do nothing
     }
 
@@ -528,7 +533,8 @@ public abstract class BaseSimpleGame extends BaseGame {
      *
      * @see AbstractGame#cleanup()
      */
-    protected void cleanup() {
+    @Override
+	protected void cleanup() {
         LoggingSystem.getLogger().log( Level.INFO, "Cleaning up resources." );
 
         TextureManager.doTextureCleanup();
@@ -540,7 +546,8 @@ public abstract class BaseSimpleGame extends BaseGame {
     /**
      * Calls the quit of BaseGame to clean up the display and then closes the JVM.
      */
-    protected void quit() {
+    @Override
+	protected void quit() {
         super.quit();
         System.exit( 0 );
     }

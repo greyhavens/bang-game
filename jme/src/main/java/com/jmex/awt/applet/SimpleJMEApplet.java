@@ -156,13 +156,15 @@ public class SimpleJMEApplet extends Applet {
             add(glCanvas, BorderLayout.CENTER);
 
             glCanvas.addComponentListener(new ComponentAdapter() {
-                public void componentResized(ComponentEvent ce) {
+                @Override
+				public void componentResized(ComponentEvent ce) {
                     if (impl != null) {
                         impl.resizeCanvas(glCanvas.getWidth(), glCanvas
                                 .getHeight());
                         if (impl.getCamera() != null) {
-                            Callable<?> exe = new Callable() {
-                                public Object call() {
+                            Callable<?> exe = new Callable<Object>() {
+                                @Override
+								public Object call() {
                                     impl.getCamera().setFrustumPerspective(
                                             45.0f,
                                             (float) glCanvas.getWidth()
@@ -181,12 +183,14 @@ public class SimpleJMEApplet extends Applet {
             glCanvas.setFocusable(true);
             glCanvas.addFocusListener(new FocusListener() {
 
-                public void focusGained(FocusEvent arg0) {
+                @Override
+				public void focusGained(FocusEvent arg0) {
                     ((AWTKeyInput) KeyInput.get()).setEnabled(true);
                     ((AWTMouseInput) MouseInput.get()).setEnabled(true);
                 }
 
-                public void focusLost(FocusEvent arg0) {
+                @Override
+				public void focusLost(FocusEvent arg0) {
                     ((AWTKeyInput) KeyInput.get()).setEnabled(false);
                     ((AWTMouseInput) MouseInput.get()).setEnabled(false);
                 }
@@ -213,7 +217,8 @@ public class SimpleJMEApplet extends Applet {
             glCanvas.addMouseMotionListener((MouseMotionListener) MouseInput
                     .get());
             glCanvas.addMouseMotionListener(new MouseMotionAdapter() {
-                public void mouseMoved(java.awt.event.MouseEvent e) {
+                @Override
+				public void mouseMoved(java.awt.event.MouseEvent e) {
                     if (!glCanvas.hasFocus())
                         glCanvas.requestFocus();
                 };
@@ -225,7 +230,8 @@ public class SimpleJMEApplet extends Applet {
                     setDaemon(true);
                 }
 
-                public void run() {
+                @Override
+				public void run() {
                     while (true) {
                         if (isVisible() || status == STATUS_DESTROYING || status == STATUS_INITING)
                             glCanvas.repaint();
@@ -359,7 +365,8 @@ public class SimpleJMEApplet extends Applet {
             this.input = input;
         }
 
-        public void simpleUpdate() {
+        @Override
+		public void simpleUpdate() {
             
             input.update(tpf);
             
@@ -431,7 +438,8 @@ public class SimpleJMEApplet extends Applet {
             }
         }
 
-        public void simpleSetup() {
+        @Override
+		public void simpleSetup() {
             synchronized (INIT_LOCK) {
                 input = new FirstPersonHandler(getCamera(), 50, 1);
 
@@ -519,7 +527,8 @@ public class SimpleJMEApplet extends Applet {
             }
         }
 
-        public void simpleRender() {
+        @Override
+		public void simpleRender() {
             simpleAppletRender();
             fpsNode.draw(renderer);
         }

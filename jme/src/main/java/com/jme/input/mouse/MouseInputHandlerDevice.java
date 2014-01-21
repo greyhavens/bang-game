@@ -58,7 +58,8 @@ public class MouseInputHandlerDevice extends InputHandlerDevice {
         return mouseListener;
     }
 
-    protected void createTriggers( InputAction action, int axis, int button, boolean allowRepeats, InputHandler inputHandler ) {
+    @Override
+	protected void createTriggers( InputAction action, int axis, int button, boolean allowRepeats, InputHandler inputHandler ) {
         if ( button != InputHandler.BUTTON_NONE ) {
             int minButton = button == InputHandler.BUTTON_ALL ? 0 : button;
             int maxButton = button == InputHandler.BUTTON_ALL ? MouseInput.get().getButtonCount() - 1 : button;
@@ -100,12 +101,14 @@ public class MouseInputHandlerDevice extends InputHandlerDevice {
             getMouseListener().add( this );
         }
 
-        protected void remove() {
+        @Override
+		protected void remove() {
             super.remove();
             getMouseListener().remove( this );
         }
 
-        protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
+        @Override
+		protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
             super.putTriggerInfo( event, invocationIndex );
             event.setTriggerIndex( button );
             event.setTriggerPressed( pressed );
@@ -126,11 +129,13 @@ public class MouseInputHandlerDevice extends InputHandlerDevice {
             event.setTriggerCharacter( buttonChar );
         }
 
-        protected String getDeviceName() {
+        @Override
+		protected String getDeviceName() {
             return InputHandler.DEVICE_MOUSE;
         }
 
-        public void checkActivation( char character, int buttonIndex, float position, float delta, boolean pressed, Object data ) {
+        @Override
+		public void checkActivation( char character, int buttonIndex, float position, float delta, boolean pressed, Object data ) {
             if ( buttonIndex == this.button ) {
                 if ( allowRepeats ) {
                     if ( pressed ) {
@@ -165,7 +170,8 @@ public class MouseInputHandlerDevice extends InputHandlerDevice {
             }
         }
 
-        protected void remove() {
+        @Override
+		protected void remove() {
             super.remove();
             getMouseListener().remove( this );
         }
@@ -173,18 +179,21 @@ public class MouseInputHandlerDevice extends InputHandlerDevice {
         private float delta;
         private float position;
 
-        protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
+        @Override
+		protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
             super.putTriggerInfo( event, invocationIndex );
             event.setTriggerIndex( axis );
             event.setTriggerDelta( delta );
             event.setTriggerPosition( position );
         }
 
-        protected String getDeviceName() {
+        @Override
+		protected String getDeviceName() {
             return InputHandler.DEVICE_MOUSE;
         }
 
-        public void checkActivation( char character, int axisIndex, float position, float delta, boolean pressed, Object data ) {
+        @Override
+		public void checkActivation( char character, int axisIndex, float position, float delta, boolean pressed, Object data ) {
             if ( axisIndex == this.axis ) {
                 this.delta = delta;
                 this.position = position;

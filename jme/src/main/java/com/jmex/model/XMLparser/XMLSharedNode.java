@@ -51,17 +51,20 @@ class XMLSharedNode extends Node {
         super();
         myIdent=ident;
     }
-    public int attachChild(Spatial c){
+    @Override
+	public int attachChild(Spatial c){
         whatIReallyAm=c;
         return 0;
     }
 
-    public RenderState setRenderState(RenderState r){
+    @Override
+	public RenderState setRenderState(RenderState r){
         whatIReallyAm=r;
         return null;
     }
 
-    public void addController(Controller c){
+    @Override
+	public void addController(Controller c){
         whatIReallyAm=c;
     }
 }

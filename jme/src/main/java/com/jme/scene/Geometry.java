@@ -37,6 +37,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.batch.GeomBatch;
+import com.jme.scene.state.RenderState;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
@@ -48,18 +49,18 @@ import com.jme.util.export.Savable;
  * contains the geometric data for rendering objects. It manages all rendering
  * information such as a collection of states and the data for a model.
  * Subclasses define what the model data is.
- * 
+ *
  * @author Mark Powell
  * @author Joshua Slack
  * @version $Id$
  */
 public abstract class Geometry extends Spatial implements Serializable,
-        Savable {
-    
+                                                          Savable {
+
     private static final long serialVersionUID = 1;
-    
+
     protected ArrayList<GeomBatch> batchList;
-    
+
     /**
      * Empty Constructor to be used internally only.
      */
@@ -72,7 +73,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * Constructor instantiates a new <code>Geometry</code> object. This is
      * the default object which has an empty vertex array. All other data is
      * null.
-     * 
+     *
      * @param name
      *            the name of the scene element. This is required for
      *            identification and comparision purposes.
@@ -87,7 +88,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * Constructor creates a new <code>Geometry</code> object. During
      * instantiation the geometry is set including vertex, normal, color and
      * texture information.
-     * 
+     *
      * @param name
      *            the name of the scene element. This is required for
      *            identification and comparision purposes.
@@ -101,7 +102,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      *            the texture coordinates of the geometry (position 0.)
      */
     public Geometry(String name, FloatBuffer vertex, FloatBuffer normal,
-            FloatBuffer color, FloatBuffer texture) {
+                    FloatBuffer color, FloatBuffer texture) {
         super(name);
         setupBatchList();
         reconstruct(vertex, normal, color, texture);
@@ -116,7 +117,7 @@ public abstract class Geometry extends Spatial implements Serializable,
 
     /**
      * adds a batch to the batch list of the geometry.
-     * 
+     *
      * @param batch
      *            the batch to add.
      */
@@ -129,7 +130,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * removes the batch supplied. If the currently active batch is the one
      * supplied, the active batch is reset to the first batch in the list. If
      * the last batch is removed, then the active batch is set to null.
-     * 
+     *
      * @param batch
      *            the batch to remove from the list.
      */
@@ -142,7 +143,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * batch is the one defined by the index, the active batch is reset to the
      * first batch in the list. If the last batch is removed, then the active
      * batch is set to null.
-     * 
+     *
      * @param index
      *            the index to the batch to remove from the list.
      */
@@ -155,7 +156,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * Retrieves the batch at the supplied index. If the index is invalid, this
      * could throw an exception.
-     * 
+     *
      * @param index
      *            the index to retrieve the batch from.
      * @return the selected batch.
@@ -174,7 +175,7 @@ public abstract class Geometry extends Spatial implements Serializable,
 
     /**
      * returns the number of batches contained in this geometry.
-     * 
+     *
      * @return the number of batches in this geometry.
      */
     public int getBatchCount() {
@@ -190,7 +191,7 @@ public abstract class Geometry extends Spatial implements Serializable,
         int count = 0;
 
         for (int i = 0; i < getBatchCount(); i++) {
-            GeomBatch gb = getBatch(i); 
+            GeomBatch gb = getBatch(i);
             if (gb.isEnabled())
                 count += gb.getVertexCount();
         }
@@ -201,7 +202,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>reconstruct</code> reinitializes the geometry with new data. This
      * will reuse the geometry object.
-     * 
+     *
      * @param vertices
      *            the new vertices to use.
      * @param normals
@@ -212,12 +213,12 @@ public abstract class Geometry extends Spatial implements Serializable,
      *            the new texture coordinates to use (position 0).
      */
     public void reconstruct(FloatBuffer vertices, FloatBuffer normals,
-            FloatBuffer colors, FloatBuffer textureCoords) {
+                            FloatBuffer colors, FloatBuffer textureCoords) {
         reconstruct(vertices, normals, colors, textureCoords, 0);
     }
 
     public void reconstruct(FloatBuffer vertices, FloatBuffer normals,
-            FloatBuffer colors, FloatBuffer textureCoords, int batchIndex) {
+                            FloatBuffer colors, FloatBuffer textureCoords, int batchIndex) {
         if (vertices == null)
             getBatch(batchIndex).setVertexCount(0);
         else
@@ -244,7 +245,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     public void setVBOInfo(int batchIndex, VBOInfo info) {
         getBatch(batchIndex).setVBOInfo(info);
     }
-    
+
     public VBOInfo getVBOInfo(int batchIndex) {
         return getBatch(batchIndex).getVBOInfo();
     }
@@ -253,13 +254,13 @@ public abstract class Geometry extends Spatial implements Serializable,
      * <code>setSolidColor</code> sets the color array of this geometry to a
      * single color. For greater efficiency, try setting the the ColorBuffer to
      * null and using DefaultColor instead.
-     * 
+     *
      * @param color
      *            the color to set.
      */
     public void setSolidColor(ColorRGBA color) {
         for (int i = 0; i < getBatchCount(); i++) {
-            GeomBatch gb = getBatch(i); 
+            GeomBatch gb = getBatch(i);
             if (gb.isEnabled())
                 gb.setSolidColor(color);
         }
@@ -270,7 +271,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      */
     public void setRandomColors() {
         for (int i = 0; i < getBatchCount(); i++) {
-            GeomBatch gb = getBatch(i); 
+            GeomBatch gb = getBatch(i);
             if (gb.isEnabled())
                 gb.setRandomColors();
         }
@@ -279,7 +280,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>getVertexBuffer</code> returns the float buffer that contains
      * this geometry's vertex information.
-     * 
+     *
      * @return the float buffer that contains this geometry's vertex
      *         information.
      */
@@ -290,7 +291,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>setVertexBuffer</code> sets this geometry's vertices via a float
      * buffer consisting of groups of three floats: x,y and z.
-     * 
+     *
      * @param buff
      *            the new vertex buffer.
      */
@@ -302,7 +303,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>getNormalBuffer</code> retrieves this geometry's normal
      * information as a float buffer.
-     * 
+     *
      * @return the float buffer containing the geometry information.
      */
     public FloatBuffer getNormalBuffer(int batchIndex) {
@@ -312,7 +313,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>setNormalBuffer</code> sets this geometry's normals via a float
      * buffer consisting of groups of three floats: x,y and z.
-     * 
+     *
      * @param buff
      *            the new normal buffer.
      */
@@ -323,7 +324,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>getColorBufferfer</code> retrieves the float buffer that contains
      * this geometry's color information.
-     * 
+     *
      * @return the buffer that contains this geometry's color information.
      */
     public FloatBuffer getColorBuffer(int batchIndex) {
@@ -333,7 +334,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>setColorBuffer</code> sets this geometry's colors via a float
      * buffer consisting of groups of four floats: r,g,b and a.
-     * 
+     *
      * @param buff
      *            the new color buffer.
      */
@@ -345,7 +346,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * <code>copyTextureCoords</code> copys the texture coordinates of a given
      * texture unit to another location. If the texture unit is not valid, then
      * the coordinates are ignored.
-     * 
+     *
      * @param fromIndex
      *            the coordinates to copy.
      * @param toIndex
@@ -359,7 +360,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * <code>copyTextureCoords</code> copys the texture coordinates of a given
      * texture unit to another location. If the texture unit is not valid, then
      * the coordinates are ignored. Coords are multiplied by the given factor.
-     * 
+     *
      * @param fromIndex
      *            the coordinates to copy.
      * @param toIndex
@@ -375,19 +376,19 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>getTextureBuffers</code> retrieves this geometry's texture
      * information contained within a float buffer array.
-     * 
+     *
      * @return the float buffers that contain this geometry's texture
      *         information.
      */
     public FloatBuffer[] getTextureBuffers(int batchIndex) {
         return getBatch(batchIndex).getTextureBuffers().toArray(
-                new FloatBuffer[getBatch(batchIndex).getTextureBuffers().size()]);
+            new FloatBuffer[getBatch(batchIndex).getTextureBuffers().size()]);
     }
 
     /**
      * <code>getTextureAsFloatBuffer</code> retrieves the texture buffer of a
      * given texture unit.
-     * 
+     *
      * @param textureUnit
      *            the texture unit to check.
      * @return the texture coordinates at the given texture unit.
@@ -400,7 +401,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>setTextureBuffer</code> sets this geometry's textures (position
      * 0) via a float buffer consisting of groups of two floats: x and y.
-     * 
+     *
      * @param buff
      *            the new vertex buffer.
      */
@@ -412,14 +413,14 @@ public abstract class Geometry extends Spatial implements Serializable,
      * <code>setTextureBuffer</code> sets this geometry's textures st the
      * position given via a float buffer consisting of groups of two floats: x
      * and y.
-     * 
+     *
      * @param buff
      *            the new vertex buffer.
      */
     public void setTextureBuffer(int batchIndex, FloatBuffer buff, int position) {
         getBatch(batchIndex).setTextureBuffer(buff, position);
     }
-    
+
     /**
      *
      * <code>getNumberOfUnits</code> returns the number of texture units this
@@ -432,7 +433,8 @@ public abstract class Geometry extends Spatial implements Serializable,
         return getBatch(batchIndex).getTextureBuffers().size();
     }
 
-    public int getType() {
+    @Override
+	public int getType() {
         return SceneElement.GEOMETRY;
     }
 
@@ -449,7 +451,8 @@ public abstract class Geometry extends Spatial implements Serializable,
      * the geometry. This resets it parameters to adjust for any changes to the
      * vertex information.
      */
-    public void updateModelBound() {
+    @Override
+	public void updateModelBound() {
         for (int i = 0; i < getBatchCount(); i++) {
             GeomBatch batch =  batchList.get(i);
             if (batch != null && batch.isEnabled()) {
@@ -461,11 +464,12 @@ public abstract class Geometry extends Spatial implements Serializable,
 
     /**
      * <code>setModelBound</code> sets the bounding object for this geometry.
-     * 
+     *
      * @param modelBound
      *            the bounding object for this geometry.
      */
-    public void setModelBound(BoundingVolume modelBound) {
+    @Override
+	public void setModelBound(BoundingVolume modelBound) {
         this.worldBound = null;
         if (batchList != null)
             for (int i = 0; i < getBatchCount(); i++) {
@@ -480,11 +484,12 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>updateWorldData</code> updates all the children maintained by
      * this node.
-     * 
+     *
      * @param time
      *            the frame time.
      */
-    public void updateWorldData(float time) {
+    @Override
+	public void updateWorldData(float time) {
         super.updateWorldData(time);
 
         if (batchList != null)
@@ -495,27 +500,29 @@ public abstract class Geometry extends Spatial implements Serializable,
                 }
             }
     }
-    
+
     /**
      * <code>draw</code> prepares the geometry for rendering to the display.
      * The renderstate is set and the subclass is responsible for rendering the
      * actual data.
-     * 
+     *
      * @see com.jme.scene.Spatial#draw(com.jme.renderer.Renderer)
      * @param r
      *            the renderer that displays to the context.
      */
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
     }
 
     /**
      * <code>updateWorldBound</code> updates the bounding volume that contains
      * this geometry. The location of the geometry is based on the location of
      * all this node's parents.
-     * 
+     *
      * @see com.jme.scene.Spatial#updateWorldBound()
      */
-    public void updateWorldBound() {
+    @Override
+	public void updateWorldBound() {
         if ((lockedMode & SceneElement.LOCKED_BOUNDS) != 0) return;
 
         boolean foundFirstBound = false;
@@ -530,7 +537,7 @@ public abstract class Geometry extends Spatial implements Serializable,
                     // set world bound to first non-null child world bound
                     if (child.getWorldBound() != null) {
                         worldBound = child.getWorldBound()
-                                .clone(worldBound);
+                            .clone(worldBound);
                         foundFirstBound = true;
                     }
                 }
@@ -543,7 +550,8 @@ public abstract class Geometry extends Spatial implements Serializable,
      * <code>applyRenderState</code> determines if a particular render state
      * is set for this Geometry. If not, the default state will be used.
      */
-    protected void applyRenderState(Stack[] states) {
+    @Override
+	protected void applyRenderState(Stack<RenderState>[] states) {
         if (batchList != null)
             for (int i = 0, cSize = getBatchCount(); i < cSize; i++) {
                 GeomBatch batch = getBatch(i);
@@ -556,7 +564,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * <code>randomVertex</code> returns a random vertex from the list of
      * vertices set to this geometry. If there are no vertices set, null is
      * returned.
-     * 
+     *
      * @param fill
      *            a Vector3f to fill with the results. If null, one is created.
      *            It is more efficient to pass in a nonnull vector.
@@ -568,12 +576,13 @@ public abstract class Geometry extends Spatial implements Serializable,
         return getBatch(batchIndex).randomVertex(fill);
     }
 
-    public void findPick(Ray ray, PickResults results) {
+    @Override
+	public void findPick(Ray ray, PickResults results) {
         if (getWorldBound() != null && isCollidable) {
             if (getWorldBound().intersects(ray)) {
                 // further checking needed.
                 for (int i = 0; i < getBatchCount(); i++) {
-                    GeomBatch gb = getBatch(i); 
+                    GeomBatch gb = getBatch(i);
                     if (gb.isEnabled())
                         gb.findPick(ray, results);
                 }
@@ -584,12 +593,12 @@ public abstract class Geometry extends Spatial implements Serializable,
     /**
      * <code>setDefaultColor</code> sets the color to be used if no per vertex
      * color buffer is set.
-     * 
+     *
      * @param color
      */
     public void setDefaultColor(ColorRGBA color) {
         for (int i = 0; i < getBatchCount(); i++) {
-            GeomBatch gb = getBatch(i); 
+            GeomBatch gb = getBatch(i);
             if (gb.isEnabled())
                 gb.setDefaultColor(color);
         }
@@ -600,7 +609,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * coordinates of this Geometry (from the first batch) to world coordinates
      * based on its world settings. The results are stored in the given
      * FloatBuffer. If given FloatBuffer is null, one is created.
-     * 
+     *
      * @param store
      *            the FloatBuffer to store the results in, or null if you want
      *            one created.
@@ -615,7 +624,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * coordinates of this Geometry (from the given batch index) to world
      * coordinates based on its world settings. The results are stored in the
      * given FloatBuffer. If given FloatBuffer is null, one is created.
-     * 
+     *
      * @param store
      *            the FloatBuffer to store the results in, or null if you want
      *            one created.
@@ -660,7 +669,8 @@ public abstract class Geometry extends Spatial implements Serializable,
 	}
 
 	//  inheritted docs
-    public void lockBounds() {
+    @Override
+	public void lockBounds() {
         super.lockBounds();
 
         for (int x = 0; x < getBatchCount(); x++)
@@ -668,15 +678,17 @@ public abstract class Geometry extends Spatial implements Serializable,
     }
 
     //  inheritted docs
-    public void lockShadows() {
+    @Override
+	public void lockShadows() {
         super.lockShadows();
 
         for (int x = 0; x < getBatchCount(); x++)
             getBatch(x).lockShadows();
     }
-    
+
     //  inheritted docs
-    public void lockTransforms() {
+    @Override
+	public void lockTransforms() {
         super.lockTransforms();
 
         for (int x = 0; x < getBatchCount(); x++)
@@ -684,31 +696,35 @@ public abstract class Geometry extends Spatial implements Serializable,
     }
 
     //  inheritted docs
-    public void lockMeshes(Renderer r) {
+    @Override
+	public void lockMeshes(Renderer r) {
         super.lockMeshes(r);
 
         for (int x = 0; x < getBatchCount(); x++)
             getBatch(x).lockMeshes(r);
     }
-    
+
     //  inheritted docs
-    public void unlockBounds() {
+    @Override
+	public void unlockBounds() {
         super.unlockBounds();
 
         for (int x = 0; x < getBatchCount(); x++)
             getBatch(x).unlockBounds();
     }
-    
+
     //  inheritted docs
-    public void unlockShadows() {
+    @Override
+	public void unlockShadows() {
         super.unlockShadows();
 
         for (int x = 0; x < getBatchCount(); x++)
             getBatch(x).unlockShadows();
     }
-    
+
     //  inheritted docs
-    public void unlockTransforms() {
+    @Override
+	public void unlockTransforms() {
         super.unlockTransforms();
 
         for (int x = 0; x < getBatchCount(); x++)
@@ -716,7 +732,8 @@ public abstract class Geometry extends Spatial implements Serializable,
     }
 
     //  inheritted docs
-    public void unlockMeshes(Renderer r) {
+    @Override
+	public void unlockMeshes(Renderer r) {
         super.unlockMeshes(r);
 
         for (int x = 0; x < getBatchCount(); x++)
@@ -724,7 +741,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     }
 
     private void readObject(java.io.ObjectInputStream s) throws IOException,
-            ClassNotFoundException {
+        ClassNotFoundException {
         s.defaultReadObject();
         // go through children and set parent to this node
         for (int x = 0, cSize = getBatchCount(); x < cSize; x++) {
@@ -756,18 +773,19 @@ public abstract class Geometry extends Spatial implements Serializable,
         }
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.writeSavableArrayList(batchList, "batchList", new ArrayList<GeomBatch>(1));
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
 	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         batchList = capsule.readSavableArrayList("batchList", new ArrayList<GeomBatch>(1));
-        
+
         if (batchList != null)
             for (int x = 0, cSize = getBatchCount(); x < cSize; x++) {
                 GeomBatch batch = getBatch(x);

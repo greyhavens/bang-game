@@ -161,7 +161,7 @@ public abstract class BoundingVolume implements Serializable, Savable {
      * @param batches
      *            the batches to contain.
      */
-    public abstract void computeFromBatches(ArrayList batches);
+    public abstract void computeFromBatches(ArrayList<?> batches);
 
 	/**
 	 * <code>merge</code> combines two bounding volumes into a single bounding
@@ -314,15 +314,18 @@ public abstract class BoundingVolume implements Serializable, Savable {
     public abstract boolean contains(Vector3f point);
     
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         e.getCapsule(this).write(center, "center", Vector3f.ZERO);
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         center = (Vector3f)e.getCapsule(this).readSavable("center", Vector3f.ZERO);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<?> getClassTag() {
         return this.getClass();
     }
 }

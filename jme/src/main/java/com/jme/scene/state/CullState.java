@@ -101,6 +101,7 @@ public abstract class CullState extends RenderState {
 	 * @return RenderState.RS_CULL
 	 * @see com.jme.scene.state.RenderState#getType()
 	 */
+	@Override
 	public int getType() {
 		return RS_CULL;
 	}
@@ -126,19 +127,22 @@ public abstract class CullState extends RenderState {
 		return cullMode;
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(cullMode, "cullMode", CS_NONE);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         cullMode = capsule.readInt("cullMode", CS_NONE);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<CullState> getClassTag() {
         return CullState.class;
     }
 }

@@ -110,7 +110,8 @@ public class ShaderUniform implements Cloneable {
         this.type = type;
     }
 
-    public Object clone () {
+    @Override
+	public Object clone () {
         ShaderUniform other = null;
         try {
             other = (ShaderUniform)super.clone();
@@ -126,7 +127,8 @@ public class ShaderUniform implements Cloneable {
         return other;
     }
 
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj instanceof ShaderUniform) {
             ShaderUniform temp = (ShaderUniform)obj;
             if (name.equals(temp.name)) return true;

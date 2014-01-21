@@ -111,7 +111,8 @@ public class BillboardNode extends Node {
      *            the time between frames.
      * @see com.jme.scene.Spatial#updateWorldData(float)
      */
-    public void updateWorldData(float time) {
+    @Override
+	public void updateWorldData(float time) {
         lastTime = time;
         updateWorldBound();
     }
@@ -124,7 +125,8 @@ public class BillboardNode extends Node {
      *            the renderer used to draw.
      * @see com.jme.scene.Spatial#draw(com.jme.renderer.Renderer)
      */
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         Camera cam = r.getCamera();
         rotateBillboard(cam);
 
@@ -297,11 +299,13 @@ public class BillboardNode extends Node {
     /**
      * @deprecated Use <code>setAlignment</code> instead.  This method will be removed in jME .12
      */
-    public void setType(int type) {
+    @Deprecated
+	public void setType(int type) {
         this.alignment = type;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(orient, "orient", new Matrix3f());
@@ -310,7 +314,8 @@ public class BillboardNode extends Node {
         capsule.write(alignment, "alignment", SCREEN_ALIGNED);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         orient = (Matrix3f)capsule.readSavable("orient", new Matrix3f());

@@ -65,222 +65,243 @@ public class BinaryOutputCapsule implements OutputCapsule {
         this.cObj = bco;
     }
 
-    public void write(byte value, String name, byte defVal) throws IOException {
+    @Override
+	public void write(byte value, String name, byte defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.BYTE);
         write(value);
     }
 
-    public void write(byte[] value, String name, byte[] defVal) throws IOException {
+    @Override
+	public void write(byte[] value, String name, byte[] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.BYTE_1D);
         write(value);
     }
 
-    public void write(byte[][] value, String name, byte[][] defVal) throws IOException {
+    @Override
+	public void write(byte[][] value, String name, byte[][] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.BYTE_2D);
         write(value);
     }
 
-    public void write(int value, String name, int defVal) throws IOException {
+    @Override
+	public void write(int value, String name, int defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.INT);
         write(value);
     }
 
-    public void write(int[] value, String name, int[] defVal) throws IOException {
+    @Override
+	public void write(int[] value, String name, int[] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.INT_1D);
         write(value);
     }
 
-    public void write(int[][] value, String name, int[][] defVal) throws IOException {
+    @Override
+	public void write(int[][] value, String name, int[][] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.INT_2D);
         write(value);
     }
 
-    public void write(float value, String name, float defVal) throws IOException {
+    @Override
+	public void write(float value, String name, float defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.FLOAT);
         write(value);
     }
 
-    public void write(float[] value, String name, float[] defVal) throws IOException {
+    @Override
+	public void write(float[] value, String name, float[] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.FLOAT_1D);
         write(value);
     }
 
-    public void write(float[][] value, String name, float[][] defVal) throws IOException {
+    @Override
+	public void write(float[][] value, String name, float[][] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.FLOAT_2D);
         write(value);
     }
 
-    public void write(double value, String name, double defVal) throws IOException {
+    @Override
+	public void write(double value, String name, double defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.DOUBLE);
         write(value);
     }
 
-    public void write(double[] value, String name, double[] defVal) throws IOException {
+    @Override
+	public void write(double[] value, String name, double[] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.DOUBLE_1D);
         write(value);
     }
 
-    public void write(double[][] value, String name, double[][] defVal) throws IOException {
+    @Override
+	public void write(double[][] value, String name, double[][] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.DOUBLE_2D);
         write(value);
     }
 
-    public void write(long value, String name, long defVal) throws IOException {
+    @Override
+	public void write(long value, String name, long defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.LONG);
         write(value);
     }
 
-    public void write(long[] value, String name, long[] defVal) throws IOException {
+    @Override
+	public void write(long[] value, String name, long[] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.LONG_1D);
         write(value);
     }
 
-    public void write(long[][] value, String name, long[][] defVal) throws IOException {
+    @Override
+	public void write(long[][] value, String name, long[][] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.LONG_2D);
         write(value);
     }
 
-    public void write(short value, String name, short defVal) throws IOException {
+    @Override
+	public void write(short value, String name, short defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.SHORT);
         write(value);
     }
 
-    public void write(short[] value, String name, short[] defVal) throws IOException {
+    @Override
+	public void write(short[] value, String name, short[] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.SHORT_1D);
         write(value);
     }
 
-    public void write(short[][] value, String name, short[][] defVal) throws IOException {
+    @Override
+	public void write(short[][] value, String name, short[][] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.SHORT_2D);
         write(value);
     }
 
-    public void write(boolean value, String name, boolean defVal) throws IOException {
+    @Override
+	public void write(boolean value, String name, boolean defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.BOOLEAN);
         write(value);
     }
 
-    public void write(boolean[] value, String name, boolean[] defVal) throws IOException {
+    @Override
+	public void write(boolean[] value, String name, boolean[] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.BOOLEAN_1D);
         write(value);
     }
 
-    public void write(boolean[][] value, String name, boolean[][] defVal) throws IOException {
+    @Override
+	public void write(boolean[][] value, String name, boolean[][] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.BOOLEAN_2D);
         write(value);
     }
 
-    public void write(String value, String name, String defVal) throws IOException {
+    @Override
+	public void write(String value, String name, String defVal) throws IOException {
         if ( value == null ? defVal == null : value.equals( defVal ) ) return;
         writeAlias(name, BinaryClassField.STRING);
         write(value);
     }
 
-    public void write(String[] value, String name, String[] defVal) throws IOException {
+    @Override
+	public void write(String[] value, String name, String[] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.STRING_1D);
         write(value);
     }
 
-    public void write(String[][] value, String name, String[][] defVal) throws IOException {
+    @Override
+	public void write(String[][] value, String name, String[][] defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.STRING_2D);
         write(value);
     }
 
-    public void write(BitSet value, String name, BitSet defVal) throws IOException {
+    @Override
+	public void write(BitSet value, String name, BitSet defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.BITSET);
         write(value);
     }
 
-    public void write(Savable object, String name, Savable defVal) throws IOException {
+    @Override
+	public void write(Savable object, String name, Savable defVal) throws IOException {
         if (object == defVal) return;
         writeAlias(name, BinaryClassField.SAVABLE);
         write(object);
     }
 
-    public void write(Savable[] objects, String name, Savable[] defVal) throws IOException {
+    @Override
+	public void write(Savable[] objects, String name, Savable[] defVal) throws IOException {
         if (objects == defVal) return;
         writeAlias(name, BinaryClassField.SAVABLE_1D);
         write(objects);
     }
 
-    public void write(Savable[][] objects, String name, Savable[][] defVal) throws IOException {
+    @Override
+	public void write(Savable[][] objects, String name, Savable[][] defVal) throws IOException {
         if (objects == defVal) return;
         writeAlias(name, BinaryClassField.SAVABLE_2D);
         write(objects);
     }
 
-    public void write(FloatBuffer value, String name, FloatBuffer defVal) throws IOException {
+    @Override
+	public void write(FloatBuffer value, String name, FloatBuffer defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.FLOATBUFFER);
         write(value);
     }
 
-    public void write(IntBuffer value, String name, IntBuffer defVal) throws IOException {
+    @Override
+	public void write(IntBuffer value, String name, IntBuffer defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.INTBUFFER);
         write(value);
     }
 
-    public void write(ByteBuffer value, String name, ByteBuffer defVal) throws IOException {
+    @Override
+	public void write(ByteBuffer value, String name, ByteBuffer defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.BYTEBUFFER);
         write(value);
     }
 
-    public void write(ShortBuffer value, String name, ShortBuffer defVal) throws IOException {
+    @Override
+	public void write(ShortBuffer value, String name, ShortBuffer defVal) throws IOException {
         if (value == defVal) return;
         writeAlias(name, BinaryClassField.SHORTBUFFER);
         write(value);
     }
 
-    public void writeFloatBufferArrayList(ArrayList<FloatBuffer> array, String name, ArrayList<FloatBuffer> defVal) throws IOException {
+    @Override
+	public void writeFloatBufferArrayList(ArrayList<FloatBuffer> array, String name, ArrayList<FloatBuffer> defVal) throws IOException {
         if (array == defVal) return;
         writeAlias(name, BinaryClassField.FLOATBUFFER_ARRAYLIST);
         writeFloatBufferArrayList(array);
     }
 
-    public void writeSavableArrayList(ArrayList array, String name, ArrayList defVal) throws IOException {
+    @Override
+	public void writeSavableArrayList(ArrayList<?> array, String name, ArrayList<?> defVal) throws IOException {
         if (array == defVal) return;
         writeAlias(name, BinaryClassField.SAVABLE_ARRAYLIST);
         writeSavableArrayList(array);
     }
-
-    public void writeSavableArrayListArray(ArrayList[] array, String name, ArrayList[] defVal) throws IOException {
-        if (array == defVal) return;
-        writeAlias(name, BinaryClassField.SAVABLE_ARRAYLIST_1D);
-        writeSavableArrayListArray(array);
-    }
-
-    public void writeSavableArrayListArray2D(ArrayList[][] array, String name, ArrayList[][] defVal) throws IOException {
-        if (array == defVal) return;
-        writeAlias(name, BinaryClassField.SAVABLE_ARRAYLIST_2D);
-        writeSavableArrayListArray2D(array);
-    }
-
 
     protected void writeAlias(String name, byte fieldType) throws IOException {
         if (cObj.nameFields.get(name) == null)
@@ -605,7 +626,7 @@ public class BinaryOutputCapsule implements OutputCapsule {
 
     // ArrayList<BinarySavable>
 
-    protected void writeSavableArrayList(ArrayList array) throws IOException {
+    protected void writeSavableArrayList(ArrayList<?> array) throws IOException {
         if (array == null) {
             write(NULL_OBJECT);
             return;
@@ -616,31 +637,31 @@ public class BinaryOutputCapsule implements OutputCapsule {
         }
     }
 
-    protected void writeSavableArrayListArray(ArrayList[] array) throws IOException {
+    protected void writeSavableArrayListArray(ArrayList<?>[] array) throws IOException {
         if (array == null) {
             write(NULL_OBJECT);
             return;
         }
         write(array.length);
-        for (ArrayList bs : array) {
+        for (ArrayList<?> bs : array) {
             writeSavableArrayList(bs);
         }
     }
 
-    protected void writeSavableArrayListArray2D(ArrayList[][] array) throws IOException {
+    protected void writeSavableArrayListArray2D(ArrayList<?>[][] array) throws IOException {
         if (array == null) {
             write(NULL_OBJECT);
             return;
         }
         write(array.length);
-        for (ArrayList[] bs : array) {
+        for (ArrayList<?>[] bs : array) {
             writeSavableArrayListArray(bs);
         }
     }
 
     // ArrayList<FloatBuffer>
 
-    protected void writeFloatBufferArrayList(ArrayList array) throws IOException {
+    protected void writeFloatBufferArrayList(ArrayList<FloatBuffer> array) throws IOException {
         if (array == null) {
             write(NULL_OBJECT);
             return;

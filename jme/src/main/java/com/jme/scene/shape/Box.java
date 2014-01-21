@@ -310,6 +310,7 @@ public class Box extends TriMesh implements Savable {
 	 * 
 	 * @return the new Box
 	 */
+	@Override
 	public Object clone() {
 		Box rVal = new Box(getName() + "_clone", (Vector3f) center.clone(), xExtent,
 				yExtent, zExtent);
@@ -366,7 +367,8 @@ public class Box extends TriMesh implements Savable {
 		center.set(aCenter);
 	}
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(xExtent, "xExtent", 0);
@@ -376,7 +378,8 @@ public class Box extends TriMesh implements Savable {
 
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         xExtent = capsule.readFloat("xExtent", 0);

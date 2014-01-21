@@ -220,21 +220,24 @@ public class BinaryInputCapsule implements InputCapsule {
         }
     }
 
-    public BitSet readBitSet(String name, BitSet defVal) throws IOException {
+    @Override
+	public BitSet readBitSet(String name, BitSet defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return (BitSet) fieldData.get(field.alias);
     }
 
-    public boolean readBoolean(String name, boolean defVal) throws IOException {
+    @Override
+	public boolean readBoolean(String name, boolean defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return ((Boolean) fieldData.get(field.alias)).booleanValue();
     }
 
-    public boolean[] readBooleanArray(String name, boolean[] defVal)
+    @Override
+	public boolean[] readBooleanArray(String name, boolean[] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -242,7 +245,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (boolean[]) fieldData.get(field.alias);
     }
 
-    public boolean[][] readBooleanArray2D(String name, boolean[][] defVal)
+    @Override
+	public boolean[][] readBooleanArray2D(String name, boolean[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -250,21 +254,24 @@ public class BinaryInputCapsule implements InputCapsule {
         return (boolean[][]) fieldData.get(field.alias);
     }
 
-    public byte readByte(String name, byte defVal) throws IOException {
+    @Override
+	public byte readByte(String name, byte defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return ((Byte) fieldData.get(field.alias)).byteValue();
     }
 
-    public byte[] readByteArray(String name, byte[] defVal) throws IOException {
+    @Override
+	public byte[] readByteArray(String name, byte[] defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return (byte[]) fieldData.get(field.alias);
     }
 
-    public byte[][] readByteArray2D(String name, byte[][] defVal)
+    @Override
+	public byte[][] readByteArray2D(String name, byte[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -272,7 +279,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (byte[][]) fieldData.get(field.alias);
     }
 
-    public ByteBuffer readByteBuffer(String name, ByteBuffer defVal)
+    @Override
+	public ByteBuffer readByteBuffer(String name, ByteBuffer defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -280,14 +288,16 @@ public class BinaryInputCapsule implements InputCapsule {
         return (ByteBuffer) fieldData.get(field.alias);
     }
 
-    public double readDouble(String name, double defVal) throws IOException {
+    @Override
+	public double readDouble(String name, double defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return ((Double) fieldData.get(field.alias)).doubleValue();
     }
 
-    public double[] readDoubleArray(String name, double[] defVal)
+    @Override
+	public double[] readDoubleArray(String name, double[] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -295,7 +305,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (double[]) fieldData.get(field.alias);
     }
 
-    public double[][] readDoubleArray2D(String name, double[][] defVal)
+    @Override
+	public double[][] readDoubleArray2D(String name, double[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -303,14 +314,16 @@ public class BinaryInputCapsule implements InputCapsule {
         return (double[][]) fieldData.get(field.alias);
     }
 
-    public float readFloat(String name, float defVal) throws IOException {
+    @Override
+	public float readFloat(String name, float defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return ((Float) fieldData.get(field.alias)).floatValue();
     }
 
-    public float[] readFloatArray(String name, float[] defVal)
+    @Override
+	public float[] readFloatArray(String name, float[] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -318,7 +331,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (float[]) fieldData.get(field.alias);
     }
 
-    public float[][] readFloatArray2D(String name, float[][] defVal)
+    @Override
+	public float[][] readFloatArray2D(String name, float[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -326,7 +340,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (float[][]) fieldData.get(field.alias);
     }
 
-    public FloatBuffer readFloatBuffer(String name, FloatBuffer defVal)
+    @Override
+	public FloatBuffer readFloatBuffer(String name, FloatBuffer defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -334,29 +349,34 @@ public class BinaryInputCapsule implements InputCapsule {
         return (FloatBuffer) fieldData.get(field.alias);
     }
 
-    public ArrayList readFloatBufferArrayList(String name,
+    @Override
+	@SuppressWarnings("unchecked")
+	public ArrayList<FloatBuffer> readFloatBufferArrayList(String name,
             ArrayList<FloatBuffer> defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
-        return (ArrayList) fieldData.get(field.alias);
+        return (ArrayList<FloatBuffer>) fieldData.get(field.alias);
     }
 
-    public int readInt(String name, int defVal) throws IOException {
+    @Override
+	public int readInt(String name, int defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return ((Integer) fieldData.get(field.alias)).intValue();
     }
 
-    public int[] readIntArray(String name, int[] defVal) throws IOException {
+    @Override
+	public int[] readIntArray(String name, int[] defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return (int[]) fieldData.get(field.alias);
     }
 
-    public int[][] readIntArray2D(String name, int[][] defVal)
+    @Override
+	public int[][] readIntArray2D(String name, int[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -364,7 +384,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (int[][]) fieldData.get(field.alias);
     }
 
-    public IntBuffer readIntBuffer(String name, IntBuffer defVal)
+    @Override
+	public IntBuffer readIntBuffer(String name, IntBuffer defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -372,21 +393,24 @@ public class BinaryInputCapsule implements InputCapsule {
         return (IntBuffer) fieldData.get(field.alias);
     }
 
-    public long readLong(String name, long defVal) throws IOException {
+    @Override
+	public long readLong(String name, long defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return ((Long) fieldData.get(field.alias)).longValue();
     }
 
-    public long[] readLongArray(String name, long[] defVal) throws IOException {
+    @Override
+	public long[] readLongArray(String name, long[] defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return (long[]) fieldData.get(field.alias);
     }
 
-    public long[][] readLongArray2D(String name, long[][] defVal)
+    @Override
+	public long[][] readLongArray2D(String name, long[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -394,7 +418,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (long[][]) fieldData.get(field.alias);
     }
 
-    public Savable readSavable(String name, Savable defVal) throws IOException {
+    @Override
+	public Savable readSavable(String name, Savable defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
@@ -407,7 +432,8 @@ public class BinaryInputCapsule implements InputCapsule {
             return defVal;
     }
 
-    public Savable[] readSavableArray(String name, Savable[] defVal)
+    @Override
+	public Savable[] readSavableArray(String name, Savable[] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -434,7 +460,8 @@ public class BinaryInputCapsule implements InputCapsule {
         }
     }
 
-    public Savable[][] readSavableArray2D(String name, Savable[][] defVal)
+    @Override
+	public Savable[][] readSavableArray2D(String name, Savable[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null ||!fieldData.containsKey(field.alias))
@@ -486,7 +513,9 @@ public class BinaryInputCapsule implements InputCapsule {
         return arrayList;
     }
 
-    public ArrayList readSavableArrayList(String name, ArrayList defVal)
+    @Override
+	@SuppressWarnings("unchecked")
+	public <T extends Savable> ArrayList<T> readSavableArrayList(String name, ArrayList<T> defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -498,64 +527,19 @@ public class BinaryInputCapsule implements InputCapsule {
             value = savableArrayListFromArray(savables);
             fieldData.put(field.alias, value);
         }
-        return (ArrayList) value;
+        return (ArrayList<T>) value;
     }
 
-    public ArrayList[] readSavableArrayListArray(String name, ArrayList[] defVal)
-            throws IOException {
-        BinaryClassField field = cObj.nameFields.get(name);
-        if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
-        Object value = fieldData.get(field.alias);
-        if (value instanceof ID[][]) {
-            // read 2D Savable array and convert to ArrayList array
-            Savable[][] savables = readSavableArray2D(name, null);
-            if (savables != null) {
-                ArrayList[] arrayLists = new ArrayList[savables.length];
-                for (int i = 0; i < savables.length; i++) {
-                    arrayLists[i] = savableArrayListFromArray(savables[i]);
-                }
-                value = arrayLists;
-            } else 
-                value = defVal;
-            fieldData.put(field.alias, value);
-        }
-        return (ArrayList[]) value;
-    }
-
-    public ArrayList[][] readSavableArrayListArray2D(String name,
-            ArrayList[][] defVal) throws IOException {
-        BinaryClassField field = cObj.nameFields.get(name);
-        if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
-        Object value = fieldData.get(field.alias);
-        if (value instanceof ID[][][]) {
-            // read 3D Savable array and convert to 2D ArrayList array
-            Savable[][][] savables = readSavableArray3D(name, null);
-            if (savables != null && savables.length > 0) {
-                ArrayList[][] arrayLists = new ArrayList[savables.length][];
-                for (int i = 0; i < savables.length; i++) {
-                    arrayLists[i] = new ArrayList[savables[i].length];
-                    for (int j = 0; j < savables[i].length; j++) {
-                        arrayLists[i][j] = savableArrayListFromArray(savables[i][j]);
-                    }
-                }
-                value = arrayLists;
-            } else
-                value = defVal;
-            fieldData.put(field.alias, value);
-        }
-        return (ArrayList[][]) value;
-    }
-
-    public short readShort(String name, short defVal) throws IOException {
+    @Override
+	public short readShort(String name, short defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return ((Short) fieldData.get(field.alias)).shortValue();
     }
 
-    public short[] readShortArray(String name, short[] defVal)
+    @Override
+	public short[] readShortArray(String name, short[] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -563,7 +547,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (short[]) fieldData.get(field.alias);
     }
 
-    public short[][] readShortArray2D(String name, short[][] defVal)
+    @Override
+	public short[][] readShortArray2D(String name, short[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -571,7 +556,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (short[][]) fieldData.get(field.alias);
     }
 
-    public ShortBuffer readShortBuffer(String name, ShortBuffer defVal)
+    @Override
+	public ShortBuffer readShortBuffer(String name, ShortBuffer defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -579,14 +565,16 @@ public class BinaryInputCapsule implements InputCapsule {
         return (ShortBuffer) fieldData.get(field.alias);
     }
 
-    public String readString(String name, String defVal) throws IOException {
+    @Override
+	public String readString(String name, String defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
             return defVal;
         return (String) fieldData.get(field.alias);
     }
 
-    public String[] readStringArray(String name, String[] defVal)
+    @Override
+	public String[] readStringArray(String name, String[] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -594,7 +582,8 @@ public class BinaryInputCapsule implements InputCapsule {
         return (String[]) fieldData.get(field.alias);
     }
 
-    public String[][] readStringArray2D(String name, String[][] defVal)
+    @Override
+	public String[][] readStringArray2D(String name, String[][] defVal)
             throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
@@ -915,7 +904,7 @@ public class BinaryInputCapsule implements InputCapsule {
 
     // ArrayList<FloatBuffer>
 
-    protected ArrayList readFloatBufferArrayList(byte[] content)
+    protected ArrayList<FloatBuffer> readFloatBufferArrayList(byte[] content)
             throws IOException {
         int length = readInt(content);
         if (length == BinaryOutputCapsule.NULL_OBJECT) {

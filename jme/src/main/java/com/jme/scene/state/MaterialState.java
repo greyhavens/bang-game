@@ -276,11 +276,13 @@ public abstract class MaterialState extends RenderState {
      * 
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_MATERIAL;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(ambient, "ambient", ColorRGBA.black);
@@ -292,7 +294,8 @@ public abstract class MaterialState extends RenderState {
         capsule.write(materialFace, "materialFace", defaultMaterialFace);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         ambient = (ColorRGBA)capsule.readSavable("ambient", new ColorRGBA(ColorRGBA.black));
@@ -304,7 +307,8 @@ public abstract class MaterialState extends RenderState {
         materialFace = capsule.readInt("materialFace", defaultMaterialFace);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<MaterialState> getClassTag() {
         return MaterialState.class;
     }
 }

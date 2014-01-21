@@ -138,7 +138,7 @@ public interface TextureRenderer {
      * @param tex
      *            the Texture to render it to.
      */
-    public void render(ArrayList spats, Texture ... tex);
+    public void render(ArrayList<?> spats, Texture ... tex);
 
     /**
      * <code>setBackgroundColor</code> sets the color of window. This color

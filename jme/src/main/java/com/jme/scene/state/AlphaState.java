@@ -191,7 +191,8 @@ public abstract class AlphaState extends RenderState {
      * (RS_ALPHA).
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_ALPHA;
     }
 
@@ -339,7 +340,8 @@ public abstract class AlphaState extends RenderState {
         return reference;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(blendEnabled, "blendEnabled", false);
@@ -350,7 +352,8 @@ public abstract class AlphaState extends RenderState {
         capsule.write(reference, "reference", 0);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         blendEnabled = capsule.readBoolean("blendEnabled", false);
@@ -361,7 +364,8 @@ public abstract class AlphaState extends RenderState {
         reference = capsule.readFloat("reference", 0);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<AlphaState> getClassTag() {
         return AlphaState.class;
     }
 

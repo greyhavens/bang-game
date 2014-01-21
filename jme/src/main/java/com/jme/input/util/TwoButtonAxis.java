@@ -86,7 +86,8 @@ public class TwoButtonAxis extends SyntheticAxis {
      * action to decrease the value
      */
     private final InputAction decreaseAction = new InputAction() {
-        public void performAction(InputActionEvent evt) {
+        @Override
+		public void performAction(InputActionEvent evt) {
             if ( discreet )
             {
                 float increase = -getSpeed();
@@ -106,7 +107,8 @@ public class TwoButtonAxis extends SyntheticAxis {
      * action to increase the value
      */
     private final InputAction increaseAction = new InputAction() {
-        public void performAction(InputActionEvent evt) {
+        @Override
+		public void performAction(InputActionEvent evt) {
             if ( discreet )
             {
                 float increase = getSpeed();

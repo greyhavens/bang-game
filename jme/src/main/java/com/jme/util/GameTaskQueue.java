@@ -49,11 +49,11 @@ public class GameTaskQueue {
     public static final String RENDER = "render";
     public static final String UPDATE = "update";
     
-    private ConcurrentLinkedQueue<GameTask> queue;
+    private ConcurrentLinkedQueue<GameTask<?>> queue;
     private boolean executeAll;
     
     public GameTaskQueue() {
-        queue = new ConcurrentLinkedQueue<GameTask>();
+        queue = new ConcurrentLinkedQueue<GameTask<?>>();
         executeAll = false;
     }
     

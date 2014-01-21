@@ -67,7 +67,8 @@ public class LWJGLKeyInput extends KeyInput {
      * false otherwise.
      * @see com.jme.input.KeyInput#isKeyDown(int)
      */
-    public boolean isKeyDown(int key) {
+    @Override
+	public boolean isKeyDown(int key) {
         return Keyboard.isKeyDown(key);
     }
 
@@ -76,7 +77,8 @@ public class LWJGLKeyInput extends KeyInput {
      * code.
      * @see com.jme.input.KeyInput#getKeyName(int)
      */
-    public String getKeyName(int key) {
+    @Override
+	public String getKeyName(int key) {
         return Keyboard.getKeyName(key);
     }
 
@@ -85,7 +87,8 @@ public class LWJGLKeyInput extends KeyInput {
      * @param name the name of the key
      * @return the value of the key
      */
-    public int getKeyIndex( String name) {
+    @Override
+	public int getKeyIndex( String name) {
         return Keyboard.getKeyIndex( name);
     }
 
@@ -93,7 +96,8 @@ public class LWJGLKeyInput extends KeyInput {
      * <code>update</code> updates the keyboard buffer.
      * @see com.jme.input.KeyInput#update()
      */
-    public void update() {
+    @Override
+	public void update() {
         /**Polling is done in {@link org.lwjgl.opengl.Display#update()} */
         //Keyboard.poll();
 
@@ -121,7 +125,8 @@ public class LWJGLKeyInput extends KeyInput {
      * <code>destroy</code> cleans up the keyboard for use by other programs.
      * @see com.jme.input.KeyInput#destroy()
      */
-    public void destroy() {
+    @Override
+	public void destroy() {
         Keyboard.destroy();
     }
 }

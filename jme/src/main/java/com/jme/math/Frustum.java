@@ -225,7 +225,8 @@ public class Frustum implements Serializable, Savable {
         return pt;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(solid, "solid", false);
         capsule.write(location, "location", Vector3f.ZERO);
@@ -240,7 +241,8 @@ public class Frustum implements Serializable, Savable {
         capsule.write(bottom, "bottom", -0.5f);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         solid = capsule.readBoolean("solid", false);
         location = (Vector3f) capsule.readSavable("location", new Vector3f(
@@ -259,7 +261,8 @@ public class Frustum implements Serializable, Savable {
         bottom = capsule.readFloat("bottom", -0.5f);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Frustum> getClassTag() {
         return this.getClass();
     }
     

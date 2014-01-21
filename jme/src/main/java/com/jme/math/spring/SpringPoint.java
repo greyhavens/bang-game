@@ -107,7 +107,8 @@ public class SpringPoint implements Savable {
 		oldPos.set(x, y, z);
 	}
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(index, "index", 0);
         capsule.write(mass, "mass", 1);
@@ -116,7 +117,8 @@ public class SpringPoint implements Savable {
         
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         index = capsule.readInt("index", 0);
         mass = capsule.readFloat("mass", 1);
@@ -125,7 +127,8 @@ public class SpringPoint implements Savable {
         acceleration = (Vector3f)capsule.readSavable("acceleration", new Vector3f(Vector3f.ZERO));
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends SpringPoint> getClassTag() {
         return this.getClass();
     }
 }

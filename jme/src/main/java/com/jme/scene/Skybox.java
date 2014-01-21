@@ -116,7 +116,8 @@ public class Skybox extends Node {
         initialize();
     }
     
-    public int getType() {
+    @Override
+	public int getType() {
     	return (SceneElement.NODE | SceneElement.SKY_BOX);
     }
 
@@ -273,7 +274,8 @@ public class Skybox extends Node {
 
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(xExtent, "xExtent", 0);
@@ -282,7 +284,8 @@ public class Skybox extends Node {
         capsule.write(skyboxQuads, "skyboxQuads", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         xExtent = capsule.readFloat("xExtent", 0);

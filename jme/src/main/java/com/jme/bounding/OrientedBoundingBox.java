@@ -129,11 +129,13 @@ public class OrientedBoundingBox extends BoundingVolume {
             vectorStore[x] = new Vector3f();
     }
 
-    public int getType() {
+    @Override
+	public int getType() {
         return BoundingVolume.BOUNDING_OBB;
     }
 
-    public BoundingVolume transform(Quaternion rotate, Vector3f translate,
+    @Override
+	public BoundingVolume transform(Quaternion rotate, Vector3f translate,
             Vector3f scale, BoundingVolume store) {
         rotate.toRotationMatrix(tempMa);
         return transform(tempMa, translate, scale, store);
@@ -158,7 +160,8 @@ public class OrientedBoundingBox extends BoundingVolume {
         return toReturn;
     }
 
-    public int whichSide(Plane plane) {
+    @Override
+	public int whichSide(Plane plane) {
         float fRadius = FastMath.abs(extent.x * (plane.getNormal().dot(xAxis)))
                 + FastMath.abs(extent.y * (plane.getNormal().dot(yAxis)))
                 + FastMath.abs(extent.z * (plane.getNormal().dot(zAxis)));
@@ -171,7 +174,8 @@ public class OrientedBoundingBox extends BoundingVolume {
            return Plane.NO_SIDE;
     }
 
-    public void computeFromPoints(FloatBuffer points) {
+    @Override
+	public void computeFromPoints(FloatBuffer points) {
         containAABB(points);
         correctCorners = false;
     }
@@ -184,7 +188,8 @@ public class OrientedBoundingBox extends BoundingVolume {
      * @param batches
      *            the batches to contain.
      */
-    public void computeFromBatches(ArrayList batches) {
+    @Override
+	public void computeFromBatches(ArrayList<?> batches) {
         if (batches == null || batches.size() == 0) {
             return;
         }
@@ -252,11 +257,13 @@ public class OrientedBoundingBox extends BoundingVolume {
         correctCorners = false;
     }
 
-    public BoundingVolume merge(BoundingVolume volume) {
+    @Override
+	public BoundingVolume merge(BoundingVolume volume) {
         return new OrientedBoundingBox().mergeLocal(volume);
     }
 
-    public BoundingVolume mergeLocal(BoundingVolume volume) {
+    @Override
+	public BoundingVolume mergeLocal(BoundingVolume volume) {
         if (volume == null)
             return this;
 
@@ -491,7 +498,8 @@ public class OrientedBoundingBox extends BoundingVolume {
         return this;
     }
 
-    public BoundingVolume clone(BoundingVolume store) {
+    @Override
+	public BoundingVolume clone(BoundingVolume store) {
         OrientedBoundingBox toReturn;
         if (store instanceof OrientedBoundingBox) {
             toReturn = (OrientedBoundingBox) store;
@@ -853,7 +861,8 @@ public class OrientedBoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersects(com.jme.bounding.BoundingVolume)
      */
-    public boolean intersects(BoundingVolume bv) {
+    @Override
+	public boolean intersects(BoundingVolume bv) {
         if (bv == null)
             return false;
       
@@ -865,7 +874,8 @@ public class OrientedBoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersectsSphere(com.jme.bounding.BoundingSphere)
      */
-    public boolean intersectsSphere(BoundingSphere bs) {
+    @Override
+	public boolean intersectsSphere(BoundingSphere bs) {
         _compVect1.set(bs.getCenter()).subtractLocal(center);
         tempMa.fromAxes(xAxis, yAxis, zAxis);
 
@@ -884,7 +894,8 @@ public class OrientedBoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersectsBoundingBox(com.jme.bounding.BoundingBox)
      */
-    public boolean intersectsBoundingBox(BoundingBox bb) {
+    @Override
+	public boolean intersectsBoundingBox(BoundingBox bb) {
         // Cutoff for cosine of angles between box axes. This is used to catch
         // the cases when at least one pair of axes are parallel. If this
         // happens,
@@ -1085,7 +1096,8 @@ public class OrientedBoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersectsOBB2(com.jme.bounding.OBB2)
      */
-    public boolean intersectsOrientedBoundingBox(OrientedBoundingBox obb) {
+    @Override
+	public boolean intersectsOrientedBoundingBox(OrientedBoundingBox obb) {
         // Cutoff for cosine of angles between box axes. This is used to catch
         // the cases when at least one pair of axes are parallel. If this
         // happens,
@@ -1286,7 +1298,8 @@ public class OrientedBoundingBox extends BoundingVolume {
      * 
      * @see com.jme.bounding.BoundingVolume#intersects(com.jme.math.Ray)
      */
-    public boolean intersects(Ray ray) {
+    @Override
+	public boolean intersects(Ray ray) {
         float rhs;
         Vector3f diff = ray.origin.subtract(getCenter(_compVect2), _compVect1);
 
@@ -1341,7 +1354,8 @@ public class OrientedBoundingBox extends BoundingVolume {
     /**
      * @see com.jme.bounding.BoundingVolume#intersectsWhere(com.jme.math.Ray)
      */
-    public IntersectionRecord intersectsWhere(Ray ray) {
+    @Override
+	public IntersectionRecord intersectsWhere(Ray ray) {
         Vector3f diff = _compVect1.set(ray.origin).subtractLocal(center);
         // convert ray to box coordinates
         Vector3f direction = _compVect2.set(ray.direction.x, ray.direction.y,
@@ -1507,7 +1521,8 @@ public class OrientedBoundingBox extends BoundingVolume {
         return FastMath.sqrt(sqrDistance);
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(xAxis, "xAxis", Vector3f.UNIT_X);
@@ -1516,7 +1531,8 @@ public class OrientedBoundingBox extends BoundingVolume {
         capsule.write(extent, "extent", Vector3f.ZERO);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         xAxis.set((Vector3f) capsule.readSavable("xAxis", new Vector3f(Vector3f.UNIT_X)));

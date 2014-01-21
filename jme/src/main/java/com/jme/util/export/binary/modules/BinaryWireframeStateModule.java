@@ -40,11 +40,13 @@ import com.jme.util.export.binary.BinaryLoaderModule;
 
 public class BinaryWireframeStateModule implements BinaryLoaderModule {
 
-    public String getKey() {
+    @Override
+	public String getKey() {
         return WireframeState.class.getName();
     }
 
-    public Savable load(InputCapsule inputCapsule) {
+    @Override
+	public Savable load(InputCapsule inputCapsule) {
         return DisplaySystem.getDisplaySystem().getRenderer().createWireframeState();
     }
 

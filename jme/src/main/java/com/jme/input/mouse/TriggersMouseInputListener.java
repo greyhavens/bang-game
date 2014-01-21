@@ -62,7 +62,8 @@ class TriggersMouseInputListener implements MouseInputListener {
     private ArrayList<MouseInputHandlerDevice.MouseAxisTrigger> axisTriggers = new ArrayList<MouseInputHandlerDevice.MouseAxisTrigger>();
 
     // javadoc copied from overwritten method
-    public void onButton( int button, boolean pressed, int x, int y ) {
+    @Override
+	public void onButton( int button, boolean pressed, int x, int y ) {
         for ( int i = buttonTriggers.size() - 1; i >= 0; i-- ) {
             final ActionTrigger trigger = buttonTriggers.get( i );
             trigger.checkActivation( '\0', button, Float.NaN, Float.NaN, pressed, null );
@@ -70,7 +71,8 @@ class TriggersMouseInputListener implements MouseInputListener {
     }
 
     // javadoc copied from overwritten method
-    public void onWheel( int wheelDelta, int x, int y ) {
+    @Override
+	public void onWheel( int wheelDelta, int x, int y ) {
         float pos = clamp( MouseInput.get().getWheelRotation() / maxWheel );
         float delta = clamp( wheelDelta / maxWheel );
         for ( int i = axisTriggers.size() - 1; i >= 0; i-- ) {
@@ -80,7 +82,8 @@ class TriggersMouseInputListener implements MouseInputListener {
     }
 
     // javadoc copied from overwritten method
-    public void onMove( int xDelta, int yDelta, int newX, int newY ) {
+    @Override
+	public void onMove( int xDelta, int yDelta, int newX, int newY ) {
     	float posX = clamp( newX / (float)DisplaySystem.getDisplaySystem().getWidth() );
         float posY = clamp( newY / (float)DisplaySystem.getDisplaySystem().getHeight() );
         float deltaX = clamp( xDelta / (float)DisplaySystem.getDisplaySystem().getWidth() );

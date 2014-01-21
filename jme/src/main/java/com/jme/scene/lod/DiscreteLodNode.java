@@ -89,18 +89,21 @@ public class DiscreteLodNode extends SwitchNode implements Savable {
 
 
 
+	@Override
 	public void updateWorldData (float time) {
 		lastUpdate = time;
 
 		updateWorldBound();
 	}
 
+	@Override
 	public void draw (Renderer r) {
 		selectLevelOfDetail(r.getCamera());
 		super.draw(r);
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(modelCenter, "modelCenter", Vector3f.ZERO);
@@ -108,7 +111,8 @@ public class DiscreteLodNode extends SwitchNode implements Savable {
         capsule.write(model, "model", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         modelCenter = (Vector3f)capsule.readSavable("modelCenter", new Vector3f(Vector3f.ZERO));

@@ -82,7 +82,8 @@ public class SimpleLightNode extends Node{
      * @param time
      *            the time between frames.
      */
-    public void updateWorldData(float time) {
+    @Override
+	public void updateWorldData(float time) {
         super.updateWorldData(time);
         if(light == null) {
             return;
@@ -120,7 +121,8 @@ public class SimpleLightNode extends Node{
 
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(light, "Light", null);
@@ -128,7 +130,8 @@ public class SimpleLightNode extends Node{
        
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         light = (Light)capsule.readSavable("light", null);

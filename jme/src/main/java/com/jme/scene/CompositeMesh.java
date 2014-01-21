@@ -141,7 +141,8 @@ public class CompositeMesh extends TriMesh implements Serializable {
 		this.ranges = ranges;
 	}
     
-    public int getType() {
+    @Override
+	public int getType() {
         return (SceneElement.GEOMETRY | SceneElement.TRIMESH | SceneElement.COMPOSITE_MESH);
     }
 
@@ -171,6 +172,7 @@ public class CompositeMesh extends TriMesh implements Serializable {
 	 * @param r
 	 *            the renderer to display
 	 */
+	@Override
 	public void draw(Renderer r) {
 		if (!r.isProcessingQueue()) {
 			if (r.checkAndAdd(this))
@@ -366,6 +368,7 @@ public class CompositeMesh extends TriMesh implements Serializable {
 	 * @param storage
 	 *            The array that will hold the i's indexes.
 	 */
+	@Override
 	public void getTriangle(int i, int[] storage) {
 		int iOffset = i * 3;
 
@@ -388,6 +391,7 @@ public class CompositeMesh extends TriMesh implements Serializable {
 	 * @param i
 	 * @param vertices
 	 */
+	@Override
 	public void getTriangle(int i, Vector3f[] vertices) {
         TriangleBatch batch = getBatch(0);
 		int iOffset = i * 3;
@@ -463,6 +467,7 @@ public class CompositeMesh extends TriMesh implements Serializable {
 			}
 		}
 
+		@Override
 		public String toString() {
 			return "IndexRange kind=" + KIND_NAMES[getKind()] + " count="
 					+ getCount();
@@ -473,25 +478,29 @@ public class CompositeMesh extends TriMesh implements Serializable {
 
 		private static final long serialVersionUID = 1;
 
-        public void write(JMEExporter e) throws IOException {
+        @Override
+		public void write(JMEExporter e) throws IOException {
             OutputCapsule capsule = e.getCapsule(this);
             capsule.write(kind, "kind", 0);
             capsule.write(count, "count", 0);
         }
 
-        public void read(JMEImporter e) throws IOException {
+        @Override
+		public void read(JMEImporter e) throws IOException {
             InputCapsule capsule = e.getCapsule(this);
             kind = capsule.readInt("kind", 0);
             count = capsule.readInt("count", 0);
         }
         
-        public Class getClassTag() {
+        @Override
+		public Class<? extends IndexRange> getClassTag() {
             return this.getClass();
         }
 
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(ranges, "ranges", null);
@@ -499,7 +508,8 @@ public class CompositeMesh extends TriMesh implements Serializable {
         
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         Object[] savs = capsule.readSavableArray("ranges", null);

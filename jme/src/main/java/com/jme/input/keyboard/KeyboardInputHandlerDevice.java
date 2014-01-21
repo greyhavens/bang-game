@@ -46,7 +46,8 @@ public class KeyboardInputHandlerDevice extends InputHandlerDevice {
         super( InputHandler.DEVICE_KEYBOARD );
     }
 
-    protected void createTriggers( InputAction action, int axis, int button, boolean allowRepeats, InputHandler inputHandler ) {
+    @Override
+	protected void createTriggers( InputAction action, int axis, int button, boolean allowRepeats, InputHandler inputHandler ) {
 //        if ( button == InputHandler.BUTTON_ALL ) {
         new KeyTrigger( inputHandler, "key", action, button, allowRepeats );
 //        }
@@ -83,34 +84,40 @@ public class KeyboardInputHandlerDevice extends InputHandlerDevice {
             getKeyboardListener().add( this );
         }
 
-        protected void remove() {
+        @Override
+		protected void remove() {
             super.remove();
             getKeyboardListener().remove( this );
         }
 
-        protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
+        @Override
+		protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
             super.putTriggerInfo( event, invocationIndex );
             event.setTriggerIndex( keyCodes[invocationIndex] );
             event.setTriggerPressed( pressed[invocationIndex] );
             event.setTriggerCharacter( chars[invocationIndex] );
         }
 
-        public synchronized void performAction( InputActionEvent event ) {
+        @Override
+		public synchronized void performAction( InputActionEvent event ) {
             super.performAction( event );
             if ( !allowRepeats ) {
                 activations = 0;
             }
         }
 
-        protected int getActionInvocationCount() {
+        @Override
+		protected int getActionInvocationCount() {
             return activations;
         }
 
-        protected String getDeviceName() {
+        @Override
+		protected String getDeviceName() {
             return InputHandler.DEVICE_KEYBOARD;
         }
 
-        public synchronized void checkActivation( char character, int buttonIndex, float position, float delta, boolean pressed, Object data ) {
+        @Override
+		public synchronized void checkActivation( char character, int buttonIndex, float position, float delta, boolean pressed, Object data ) {
             if ( buttonIndex == this.keyCode || this.keyCode == InputHandler.BUTTON_ALL ) {
                 int activations = this.activations;
                 char[] chars = this.chars;

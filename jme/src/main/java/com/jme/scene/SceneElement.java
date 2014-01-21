@@ -489,14 +489,15 @@ public abstract class SceneElement implements Serializable, Savable {
      * @param parentStates
      *            The list of parent renderstates.
      */
-    @SuppressWarnings("unchecked")
-    protected void updateRenderState(Stack[] parentStates) {
+    protected void updateRenderState(Stack<RenderState>[] parentStates) {
         boolean initiator = (parentStates == null);
 
         // first we need to get all the states from parent to us.
         if (initiator) {
             // grab all states from root to here.
-            parentStates = new Stack[RenderState.RS_MAX_STATE];
+            @SuppressWarnings("unchecked") Stack<RenderState>[] temp = (Stack<RenderState>[])
+                new Stack<?>[RenderState.RS_MAX_STATE];
+            parentStates = temp;
             for (int x = 0; x < parentStates.length; x++)
                 parentStates[x] = new Stack<RenderState>();
             propagateStatesFromRoot(parentStates);
@@ -526,7 +527,7 @@ public abstract class SceneElement implements Serializable, Savable {
      * @param states
      *            An array of stacks for each state.
      */
-    protected void applyRenderState(Stack[] states) {
+    protected void applyRenderState(Stack<RenderState>[] states) {
     }
 
     /**
@@ -537,7 +538,7 @@ public abstract class SceneElement implements Serializable, Savable {
      * @param states
      *            The Stack[] to push states onto.
      */
-    public void propagateStatesFromRoot(Stack[] states) {
+    public void propagateStatesFromRoot(Stack<RenderState>[] states) {
     }
 
     /**
@@ -727,11 +728,13 @@ public abstract class SceneElement implements Serializable, Savable {
      * 
      * @return Spatial's name followed by the class of the Spatial
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return name + " (" + this.getClass().getName() + ')';
     }
 
-    public void write(JMEExporter ex) throws IOException {
+    @Override
+	public void write(JMEExporter ex) throws IOException {
         OutputCapsule capsule = ex.getCapsule(this);
         capsule.write(name, "name", null);
         capsule.write(isCollidable, "isCollidable", true);
@@ -747,7 +750,8 @@ public abstract class SceneElement implements Serializable, Savable {
         capsule.write(renderStateList, "renderStateList", null);
     }
 
-    public void read(JMEImporter im) throws IOException {
+    @Override
+	public void read(JMEImporter im) throws IOException {
         InputCapsule capsule = im.getCapsule(this);
         name = capsule.readString("name", null);
         isCollidable = capsule.readBoolean("isCollidable", true);
@@ -773,7 +777,8 @@ public abstract class SceneElement implements Serializable, Savable {
         }
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<? extends SceneElement> getClassTag() {
         return this.getClass();
     }
 }

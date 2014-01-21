@@ -126,7 +126,8 @@ public abstract class PickResults {
     
     private class DistanceComparator implements Comparator<PickData> {
 
-        public int compare(PickData o1, PickData o2) {
+        @Override
+		public int compare(PickData o1, PickData o2) {
             if (o1.getDistance() <= o2.getDistance())
                 return -1;
             

@@ -49,29 +49,35 @@ public class NanoTimer extends Timer {
         startTime = System.nanoTime();
     }
     
-    public long getTime() {
+    @Override
+	public long getTime() {
         return System.nanoTime() - startTime;
     }
 
-    public long getResolution() {
+    @Override
+	public long getResolution() {
         return TIMER_RESOLUTION;
     }
 
-    public float getFrameRate() {
+    @Override
+	public float getFrameRate() {
         return fps;
     }
 
-    public float getTimePerFrame() {
+    @Override
+	public float getTimePerFrame() {
         return tpf;
     }
 
-    public void update() {
+    @Override
+	public void update() {
         tpf = (getTime() - previousTime) * (1.0f / TIMER_RESOLUTION);
         fps = 1.0f / tpf;
         previousTime = getTime();
     }
     
-    public void reset() {
+    @Override
+	public void reset() {
         // TODO necessary to implement?
     }
 }

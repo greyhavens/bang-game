@@ -211,7 +211,7 @@ public abstract class AbstractCamera implements Camera {
     protected int width;
     protected int height;
     protected Object parent;
-    protected Class parentClass;
+    protected Class<?> parentClass;
 
     /**
      * Constructor instantiates a new <code>AbstractCamera</code> object. All
@@ -262,7 +262,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the value of the bottom frustum plane.
      */
-    public float getFrustumBottom() {
+    @Override
+	public float getFrustumBottom() {
         return frustumBottom;
     }
 
@@ -272,7 +273,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param frustumBottom the value of the bottom frustum plane.
      */
-    public void setFrustumBottom( float frustumBottom ) {
+    @Override
+	public void setFrustumBottom( float frustumBottom ) {
         this.frustumBottom = frustumBottom;
         onFrustumChange();
     }
@@ -282,7 +284,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the value of the far frustum plane.
      */
-    public float getFrustumFar() {
+    @Override
+	public float getFrustumFar() {
         return frustumFar;
     }
 
@@ -291,7 +294,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param frustumFar the value of the far frustum plane.
      */
-    public void setFrustumFar( float frustumFar ) {
+    @Override
+	public void setFrustumFar( float frustumFar ) {
         this.frustumFar = frustumFar;
         onFrustumChange();
     }
@@ -301,7 +305,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the value of the left frustum plane.
      */
-    public float getFrustumLeft() {
+    @Override
+	public float getFrustumLeft() {
         return frustumLeft;
     }
 
@@ -310,7 +315,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param frustumLeft the value of the left frustum plane.
      */
-    public void setFrustumLeft( float frustumLeft ) {
+    @Override
+	public void setFrustumLeft( float frustumLeft ) {
         this.frustumLeft = frustumLeft;
         onFrustumChange();
     }
@@ -320,7 +326,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the value of the near frustum plane.
      */
-    public float getFrustumNear() {
+    @Override
+	public float getFrustumNear() {
         return frustumNear;
     }
 
@@ -329,7 +336,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param frustumNear the value of the near frustum plane.
      */
-    public void setFrustumNear( float frustumNear ) {
+    @Override
+	public void setFrustumNear( float frustumNear ) {
         this.frustumNear = frustumNear;
         onFrustumChange();
     }
@@ -339,7 +347,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return frustumRight the value of the right frustum plane.
      */
-    public float getFrustumRight() {
+    @Override
+	public float getFrustumRight() {
         return frustumRight;
     }
 
@@ -348,7 +357,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param frustumRight the value of the right frustum plane.
      */
-    public void setFrustumRight( float frustumRight ) {
+    @Override
+	public void setFrustumRight( float frustumRight ) {
         this.frustumRight = frustumRight;
         onFrustumChange();
     }
@@ -358,7 +368,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the value of the top frustum plane.
      */
-    public float getFrustumTop() {
+    @Override
+	public float getFrustumTop() {
         return frustumTop;
     }
 
@@ -367,7 +378,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param frustumTop the value of the top frustum plane.
      */
-    public void setFrustumTop( float frustumTop ) {
+    @Override
+	public void setFrustumTop( float frustumTop ) {
         this.frustumTop = frustumTop;
         onFrustumChange();
     }
@@ -378,7 +390,8 @@ public abstract class AbstractCamera implements Camera {
      * @return the position of the camera.
      * @see Camera#getLocation()
      */
-    public Vector3f getLocation() {
+    @Override
+	public Vector3f getLocation() {
         return location;
     }
 
@@ -389,7 +402,8 @@ public abstract class AbstractCamera implements Camera {
      * @return the direction the camera is facing.
      * @see Camera#getDirection()
      */
-    public Vector3f getDirection() {
+    @Override
+	public Vector3f getDirection() {
         return direction;
     }
 
@@ -399,7 +413,8 @@ public abstract class AbstractCamera implements Camera {
      * @return the left axis of the camera.
      * @see Camera#getLeft()
      */
-    public Vector3f getLeft() {
+    @Override
+	public Vector3f getLeft() {
         return left;
     }
 
@@ -409,7 +424,8 @@ public abstract class AbstractCamera implements Camera {
      * @return the up axis of the camera.
      * @see Camera#getUp()
      */
-    public Vector3f getUp() {
+    @Override
+	public Vector3f getUp() {
         return up;
     }
 
@@ -419,7 +435,8 @@ public abstract class AbstractCamera implements Camera {
      * @param location the position of the camera.
      * @see Camera#setLocation(com.jme.math.Vector3f)
      */
-    public void setLocation( Vector3f location ) {
+    @Override
+	public void setLocation( Vector3f location ) {
         this.location = location;
         onFrameChange();
     }
@@ -433,7 +450,8 @@ public abstract class AbstractCamera implements Camera {
      * @param direction the direction this camera is facing.
      * @see Camera#setDirection(com.jme.math.Vector3f)
      */
-    public void setDirection( Vector3f direction ) {
+    @Override
+	public void setDirection( Vector3f direction ) {
         this.direction = direction;
         onFrameChange();
     }
@@ -447,7 +465,8 @@ public abstract class AbstractCamera implements Camera {
      * @param left the left axis of this camera.
      * @see Camera#setLeft(com.jme.math.Vector3f)
      */
-    public void setLeft( Vector3f left ) {
+    @Override
+	public void setLeft( Vector3f left ) {
         this.left = left;
         onFrameChange();
     }
@@ -460,7 +479,8 @@ public abstract class AbstractCamera implements Camera {
      * @param up the up axis of this camera.
      * @see Camera#setUp(com.jme.math.Vector3f)
      */
-    public void setUp( Vector3f up ) {
+    @Override
+	public void setUp( Vector3f up ) {
         this.up = up;
         onFrameChange();
     }
@@ -474,7 +494,8 @@ public abstract class AbstractCamera implements Camera {
      * @param direction the direction the camera is facing.
      * @see Camera#setAxes(com.jme.math.Vector3f,com.jme.math.Vector3f,com.jme.math.Vector3f)
      */
-    public void setAxes( Vector3f left, Vector3f up, Vector3f direction ) {
+    @Override
+	public void setAxes( Vector3f left, Vector3f up, Vector3f direction ) {
         this.left = left;
         this.up = up;
         this.direction = direction;
@@ -487,7 +508,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param axes the matrix that defines the orientation of the camera.
      */
-    public void setAxes( Quaternion axes ) {
+    @Override
+	public void setAxes( Quaternion axes ) {
         left = axes.getRotationColumn( 0, left );
         up = axes.getRotationColumn( 1, up );
         direction = axes.getRotationColumn( 2, direction );
@@ -497,7 +519,8 @@ public abstract class AbstractCamera implements Camera {
     /**
      * normalize normalizes the camera vectors.
      */
-    public void normalize() {
+    @Override
+	public void normalize() {
         left.normalizeLocal();
         up.normalizeLocal();
         direction.normalizeLocal();
@@ -515,7 +538,8 @@ public abstract class AbstractCamera implements Camera {
      * @see Camera#setFrustum(float, float, float, float,
      *      float, float)
      */
-    public void setFrustum( float near, float far, float left, float right,
+    @Override
+	public void setFrustum( float near, float far, float left, float right,
                             float top, float bottom ) {
 
         frustumNear = near;
@@ -527,7 +551,8 @@ public abstract class AbstractCamera implements Camera {
         onFrustumChange();
     }
 
-    public void setFrustumPerspective( float fovY, float aspect, float near,
+    @Override
+	public void setFrustumPerspective( float fovY, float aspect, float near,
                                        float far ) {
         float h = FastMath.tan( fovY * FastMath.DEG_TO_RAD ) * near * .5f;
         float w = h * aspect;
@@ -550,7 +575,8 @@ public abstract class AbstractCamera implements Camera {
      * @see Camera#setFrame(com.jme.math.Vector3f,
      *      com.jme.math.Vector3f, com.jme.math.Vector3f, com.jme.math.Vector3f)
      */
-    public void setFrame( Vector3f location, Vector3f left, Vector3f up,
+    @Override
+	public void setFrame( Vector3f location, Vector3f left, Vector3f up,
                           Vector3f direction ) {
 
         this.location = location;
@@ -572,7 +598,8 @@ public abstract class AbstractCamera implements Camera {
      * @param worldUpVector a normalized vector indicating the up direction of the world.
      *                      (typically {0, 1, 0} in jME.)
      */
-    public void lookAt( Vector3f pos, Vector3f worldUpVector ) {
+    @Override
+	public void lookAt( Vector3f pos, Vector3f worldUpVector ) {
         newDirection.set( pos ).subtractLocal( location ).normalizeLocal();
 
         // check to see if we haven't really updated camera -- no need to call
@@ -594,7 +621,8 @@ public abstract class AbstractCamera implements Camera {
      * @param location the point position of the camera.
      * @param axes     the orientation of the camera.
      */
-    public void setFrame( Vector3f location, Quaternion axes ) {
+    @Override
+	public void setFrame( Vector3f location, Quaternion axes ) {
         this.location = location;
         left = axes.getRotationColumn( 0, left );
         up = axes.getRotationColumn( 1, up );
@@ -609,7 +637,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @see Camera#update()
      */
-    public void update() {
+    @Override
+	public void update() {
         onFrustumChange();
         onViewPortChange();
         onFrameChange();
@@ -623,7 +652,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the current plane state int.
      */
-    public int getPlaneState() {
+    @Override
+	public int getPlaneState() {
         return planeState;
     }
 
@@ -633,7 +663,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param planeState the updated state.
      */
-    public void setPlaneState( int planeState ) {
+    @Override
+	public void setPlaneState( int planeState ) {
         this.planeState = planeState;
     }
 
@@ -642,7 +673,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the left boundary of the viewport
      */
-    public float getViewPortLeft() {
+    @Override
+	public float getViewPortLeft() {
         return viewPortLeft;
     }
 
@@ -651,7 +683,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param left the left boundary of the viewport
      */
-    public void setViewPortLeft( float left ) {
+    @Override
+	public void setViewPortLeft( float left ) {
         viewPortLeft = left;
     }
 
@@ -660,7 +693,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the right boundary of the viewport
      */
-    public float getViewPortRight() {
+    @Override
+	public float getViewPortRight() {
         return viewPortRight;
     }
 
@@ -669,7 +703,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param right the right boundary of the viewport
      */
-    public void setViewPortRight( float right ) {
+    @Override
+	public void setViewPortRight( float right ) {
         viewPortRight = right;
     }
 
@@ -678,7 +713,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the top boundary of the viewport
      */
-    public float getViewPortTop() {
+    @Override
+	public float getViewPortTop() {
         return viewPortTop;
     }
 
@@ -687,7 +723,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param top the top boundary of the viewport
      */
-    public void setViewPortTop( float top ) {
+    @Override
+	public void setViewPortTop( float top ) {
         viewPortTop = top;
     }
 
@@ -696,7 +733,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @return the bottom boundary of the viewport
      */
-    public float getViewPortBottom() {
+    @Override
+	public float getViewPortBottom() {
         return viewPortBottom;
     }
 
@@ -705,7 +743,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param bottom the bottom boundary of the viewport
      */
-    public void setViewPortBottom( float bottom ) {
+    @Override
+	public void setViewPortBottom( float bottom ) {
         viewPortBottom = bottom;
     }
 
@@ -717,7 +756,8 @@ public abstract class AbstractCamera implements Camera {
      * @param bottom the bottom boundary of the viewport
      * @param top    the top boundary of the viewport
      */
-    public void setViewPort( float left, float right, float bottom, float top ) {
+    @Override
+	public void setViewPort( float left, float right, float bottom, float top ) {
         setViewPortLeft( left );
         setViewPortRight( right );
         setViewPortBottom( bottom );
@@ -736,7 +776,8 @@ public abstract class AbstractCamera implements Camera {
      * @param bound the bound to check for culling
      * @return true if the bound should be culled, false otherwise.
      */
-    public int contains( BoundingVolume bound ) {
+    @Override
+	public int contains( BoundingVolume bound ) {
         if ( bound == null ) {
             return INSIDE_FRUSTUM;
         }
@@ -782,7 +823,8 @@ public abstract class AbstractCamera implements Camera {
      * insure to override this method call it with super and then call the
      * rendering specific code.
      */
-    public void onFrustumChange() {
+    @Override
+	public void onFrustumChange() {
         if ( !isParallelProjection() ) {
             float nearSquared = frustumNear * frustumNear;
             float leftSquared = frustumLeft * frustumLeft;
@@ -830,7 +872,8 @@ public abstract class AbstractCamera implements Camera {
      * implementing subclass should insure to override this method call it with
      * super and then call the rendering specific code.
      */
-    public void onFrameChange() {
+    @Override
+	public void onFrameChange() {
         float dirDotLocation = direction.dot( location );
 
         // left plane
@@ -894,7 +937,8 @@ public abstract class AbstractCamera implements Camera {
      * @return true if parallel projection is enable, false if in normal perspective mode
      * @see #setParallelProjection(boolean)
      */
-    public boolean isParallelProjection() {
+    @Override
+	public boolean isParallelProjection() {
         return this.parallelProjection;
     }
 
@@ -908,12 +952,14 @@ public abstract class AbstractCamera implements Camera {
      *
      * @param value true to set up this camera for parallel projection is enable, false to enter normal perspective mode
      */
-    public void setParallelProjection( final boolean value ) {
+    @Override
+	public void setParallelProjection( final boolean value ) {
         this.parallelProjection = value;
     }
 
     /* @see Camera#getWorldCoordinates */
-    public Vector3f getWorldCoordinates( Vector2f screenPos, float zPos ) {
+    @Override
+	public Vector3f getWorldCoordinates( Vector2f screenPos, float zPos ) {
         return getWorldCoordinates( screenPos, zPos, null );
     }
 
@@ -929,7 +975,8 @@ public abstract class AbstractCamera implements Camera {
     private final Matrix4f modelViewProjection = new Matrix4f();
 
     /* @see Camera#getWorldCoordinates */
-    public Vector3f getWorldCoordinates( Vector2f screenPosition,
+    @Override
+	public Vector3f getWorldCoordinates( Vector2f screenPosition,
                                          float zPos, Vector3f store ) {
         if ( store == null ) {
             store = new Vector3f();
@@ -952,7 +999,8 @@ public abstract class AbstractCamera implements Camera {
     }
 
     /* @see Camera#getScreenCoordinates */
-    public Vector3f getScreenCoordinates( Vector3f worldPos ) {
+    @Override
+	public Vector3f getScreenCoordinates( Vector3f worldPos ) {
         return getScreenCoordinates( worldPos, null );
     }
 
@@ -962,7 +1010,8 @@ public abstract class AbstractCamera implements Camera {
      *
      * @see Camera#getScreenCoordinates
      */
-    public Vector3f getScreenCoordinates( Vector3f worldPosition, Vector3f store ) {
+    @Override
+	public Vector3f getScreenCoordinates( Vector3f worldPosition, Vector3f store ) {
         if ( store == null ) {
             store = new Vector3f();
         }
@@ -997,7 +1046,8 @@ public abstract class AbstractCamera implements Camera {
      */
     public abstract int getWidth();
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(location, "location", Vector3f.ZERO);
         capsule.write(left, "left", Vector3f.UNIT_X);
@@ -1023,7 +1073,8 @@ public abstract class AbstractCamera implements Camera {
         capsule.write(parentClass.getName(), "parentClassString", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         location = (Vector3f)capsule.readSavable("location", new Vector3f(Vector3f.ZERO));
         left = (Vector3f)capsule.readSavable("left", new Vector3f(Vector3f.UNIT_X));
@@ -1060,7 +1111,8 @@ public abstract class AbstractCamera implements Camera {
         }
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<?> getClassTag() {
         return AbstractCamera.class;
     }
 }

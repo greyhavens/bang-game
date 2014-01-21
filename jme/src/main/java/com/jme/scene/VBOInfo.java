@@ -254,7 +254,8 @@ public class VBOInfo implements Serializable, Savable {
 		this.vboIndexID = id;
 	}
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(useVBOVertex, "useVBOVertex", false);
         capsule.write(useVBOTexture, "useVBOTexture", false);
@@ -263,7 +264,8 @@ public class VBOInfo implements Serializable, Savable {
         capsule.write(useVBOIndex, "useVBOIndex", false);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         useVBOVertex = capsule.readBoolean("useVBOVertex", false);
         useVBOTexture = capsule.readBoolean("useVBOTexture", false);
@@ -272,7 +274,8 @@ public class VBOInfo implements Serializable, Savable {
         useVBOIndex = capsule.readBoolean("useVBOIndex", false);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<? extends VBOInfo> getClassTag() {
         return this.getClass();
     }
 }

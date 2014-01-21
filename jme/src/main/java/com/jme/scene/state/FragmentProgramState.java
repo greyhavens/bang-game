@@ -104,7 +104,8 @@ public abstract class FragmentProgramState extends RenderState {
      * @return com.jme.scene.state.RenderState.RS_FRAGMENT_PROGRAM
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_FRAGMENT_PROGRAM;
     }
     
@@ -160,7 +161,8 @@ public abstract class FragmentProgramState extends RenderState {
         }
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(usingParameters, "usingParameters", false);
@@ -168,7 +170,8 @@ public abstract class FragmentProgramState extends RenderState {
         capsule.write(program, "program", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         usingParameters = capsule.readBoolean("usingParameters", false);
@@ -176,7 +179,8 @@ public abstract class FragmentProgramState extends RenderState {
         program = capsule.readByteBuffer("program", null);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<FragmentProgramState> getClassTag() {
         return FragmentProgramState.class;
     }
 }

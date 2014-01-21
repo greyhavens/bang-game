@@ -68,7 +68,8 @@ public abstract class WireframeState extends RenderState {
      * (RS_WIREFRAME).
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_WIREFRAME;
     }
 
@@ -132,7 +133,8 @@ public abstract class WireframeState extends RenderState {
 		return antialiased;
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(face, "face", WS_FRONT_AND_BACK);
@@ -140,7 +142,8 @@ public abstract class WireframeState extends RenderState {
         capsule.write(antialiased, "antialiased", false);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         face = capsule.readInt("face", WS_FRONT_AND_BACK);
@@ -148,7 +151,8 @@ public abstract class WireframeState extends RenderState {
         antialiased = capsule.readBoolean("antialiased", false);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<WireframeState> getClassTag() {
         return WireframeState.class;
     }
 }

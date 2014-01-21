@@ -49,7 +49,8 @@ import com.jme.system.DisplaySystem;
 public class LWJGLColorMaskState extends ColorMaskState {
     private static final long serialVersionUID = 1L;
 
-    public void apply() {
+    @Override
+	public void apply() {
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()
                 .getCurrentContext();

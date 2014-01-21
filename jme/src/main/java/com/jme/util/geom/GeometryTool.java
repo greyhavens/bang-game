@@ -25,7 +25,6 @@ public class GeometryTool {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     public static VertMap minimizeVerts(TriangleBatch batch, int options) {
         if (batch instanceof SharedBatch)
             batch = ((SharedBatch)batch).getTarget();
@@ -80,10 +79,10 @@ public class GeometryTool {
             ArrayList<Vector3f> newVects = new ArrayList<Vector3f>(good);
             ArrayList<Vector3f> newNorms = new ArrayList<Vector3f>(good);
             ArrayList<ColorRGBA> newColors = new ArrayList<ColorRGBA>(good);
-            ArrayList[] newTexs = new ArrayList[batch.getNumberOfUnits()];
-            for (int x = 0; x < newTexs.length; x++) {
+            ArrayList<ArrayList<Vector2f>> newTexs = new ArrayList<ArrayList<Vector2f>>(batch.getNumberOfUnits());
+            for (int x = 0; x < newTexs.size(); x++) {
                 if (batch.getTextureBuffer(x) != null) {
-                    newTexs[x] = new ArrayList<Vector2f>(good);
+                    newTexs.add(new ArrayList<Vector2f>(good));
                 }
             }
 
@@ -103,9 +102,9 @@ public class GeometryTool {
                         newNorms.add(norms[x].normalizeLocal());
                     if (colors != null)
                         newColors.add(colors[x]);
-                    for (int y = 0; y < newTexs.length; y++) {
+                    for (int y = 0; y < newTexs.size(); y++) {
                         if (batch.getTextureBuffer(y) != null)
-                            newTexs[y].add(tex[y][x]);
+                            newTexs.get(y).add(tex[y][x]);
                     }
                 }
             }
@@ -116,9 +115,9 @@ public class GeometryTool {
             if (colors != null)
                 batch.setColorBuffer(BufferUtils.createFloatBuffer(newColors.toArray(new ColorRGBA[0])));
             
-            for (int x = 0; x < newTexs.length; x++) {
+            for (int x = 0; x < newTexs.size(); x++) {
                 if (batch.getTextureBuffer(x) != null) {
-                    batch.setTextureBuffer(BufferUtils.createFloatBuffer((Vector2f[])newTexs[x].toArray(new Vector2f[0])), x);
+                    batch.setTextureBuffer(BufferUtils.createFloatBuffer((Vector2f[])newTexs.get(x).toArray(new Vector2f[0])), x);
                 }
             }
     

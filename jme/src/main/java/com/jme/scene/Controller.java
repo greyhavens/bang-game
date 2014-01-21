@@ -212,7 +212,8 @@ public abstract class Controller implements Serializable, Savable {
      */
     public abstract void update(float time);
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(repeatType, "repeatType", RT_CLAMP);
         capsule.write(minTime, "minTime", 0);
@@ -221,7 +222,8 @@ public abstract class Controller implements Serializable, Savable {
         capsule.write(active, "active", true);
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         repeatType = capsule.readInt("repeatType", RT_CLAMP);
         minTime = capsule.readFloat("minTime", 0);
@@ -230,7 +232,8 @@ public abstract class Controller implements Serializable, Savable {
         active = capsule.readBoolean("active", true);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Controller> getClassTag() {
         return this.getClass();
     }
 }

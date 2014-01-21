@@ -117,7 +117,8 @@ public class TriMesh extends Geometry implements Serializable {
         LoggingSystem.getLogger().log(Level.INFO, "TriMesh created.");
     }
 
-    protected void setupBatchList() {
+    @Override
+	protected void setupBatchList() {
         batchList = new ArrayList<GeomBatch>(1);
         TriangleBatch batch = new TriangleBatch();
         batch.setParentGeom(this);
@@ -246,7 +247,8 @@ public class TriMesh extends Geometry implements Serializable {
         return count;
     }
 
-    public int getType() {
+    @Override
+	public int getType() {
         return (SceneElement.GEOMETRY | SceneElement.TRIMESH);
     }
     
@@ -259,7 +261,8 @@ public class TriMesh extends Geometry implements Serializable {
      * @param r
      *            the renderer to display
      */
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         TriangleBatch batch;
         if (getBatchCount() == 1) {
             batch = getBatch(0);
@@ -281,7 +284,8 @@ public class TriMesh extends Geometry implements Serializable {
      * Clears the buffers of this TriMesh. The buffers include its indexBuffer
      * only.
      */
-    public void clearBuffers() {
+    @Override
+	public void clearBuffers() {
         super.clearBuffers();
         for (int x = 0; x < getBatchCount(); x++)
             getBatch(x).setIndexBuffer(null);
@@ -291,7 +295,8 @@ public class TriMesh extends Geometry implements Serializable {
      * This function creates a collision tree from the TriMesh's current
      * information. If the information changes, the tree needs to be updated.
      */
-    public void updateCollisionTree() {
+    @Override
+	public void updateCollisionTree() {
         updateCollisionTree(true);
     }
 
@@ -311,7 +316,8 @@ public class TriMesh extends Geometry implements Serializable {
      * determines if a collision between this trimesh and a given spatial occurs
      * if it has true is returned, otherwise false is returned.
      */
-    public boolean hasCollision(Spatial scene, boolean checkTriangles) {
+    @Override
+	public boolean hasCollision(Spatial scene, boolean checkTriangles) {
         if (this == scene || !isCollidable || !scene.isCollidable()) {
             return false;
         }
@@ -343,7 +349,8 @@ public class TriMesh extends Geometry implements Serializable {
      * the two trimesh OBBTrees are then compared to find the triangles that
      * hit.
      */
-    public void findCollisions(Spatial scene, CollisionResults results) {
+    @Override
+	public void findCollisions(Spatial scene, CollisionResults results) {
         if (this == scene || !isCollidable || !scene.isCollidable()) {
             return;
         }
@@ -473,7 +480,8 @@ public class TriMesh extends Geometry implements Serializable {
         return tris;
     }
 
-    public TriangleBatch getBatch(int index) {
+    @Override
+	public TriangleBatch getBatch(int index) {
         return (TriangleBatch) batchList.get(index);
     }
 }

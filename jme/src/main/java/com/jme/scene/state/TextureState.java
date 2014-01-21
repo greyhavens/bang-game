@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -49,7 +49,7 @@ import com.jme.util.export.OutputCapsule;
  * time is equal to the number of texture units available on the GPU. It is not
  * within the scope of this class to generate the texture, and is recommended
  * that <code>TextureManager</code> be used to create the Texture objects.
- * 
+ *
  * @see com.jme.util.TextureManager
  * @author Mark Powell
  * @author Tijl Houtbeckers - TextureID cache / Shader texture units
@@ -87,7 +87,7 @@ public abstract class TextureState extends RenderState {
     /** Do not combine texture states, just use the most recent one. */
     public static final int REPLACE = 5;
 
-    
+
     /**
      * Correction modifier makes no color corrections, and is the fastest.
      */
@@ -166,9 +166,10 @@ public abstract class TextureState extends RenderState {
 
     /**
      * <code>getType</code> returns this type of render state. (RS_TEXTURE).
-     * 
+     *
      * @see com.jme.scene.state.RenderState#getType()
      */
+    @Override
     public int getType() {
         return RS_TEXTURE;
     }
@@ -176,7 +177,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>setTexture</code> sets a single texture to the first texture
      * unit.
-     * 
+     *
      * @param texture
      *            the texture to set.
      */
@@ -194,7 +195,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>getTexture</code> gets the texture that is assigned to the first
      * texture unit.
-     * 
+     *
      * @return the texture in the first texture unit.
      */
     public Texture getTexture() {
@@ -206,7 +207,7 @@ public abstract class TextureState extends RenderState {
      * state. The texture unit that this texture uses is set, if the unit is not
      * valid, i.e. less than zero or greater than the number of texture units
      * supported by the graphics card, it is ignored.
-     * 
+     *
      * @param texture
      *            the texture to be used by the state.
      * @param textureUnit
@@ -226,7 +227,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>getTexture</code> retrieves the texture being used by the state
      * in a particular texture unit.
-     * 
+     *
      * @param textureUnit
      *            the texture unit to retrieve the texture from.
      * @return the texture being used by the state. If the texture unit is
@@ -263,11 +264,11 @@ public abstract class TextureState extends RenderState {
         return removeTexture(t);
 
     }
-    
+
     /**
      * <code>setCorrection</code> sets the image correction mode for this
      * texture. If an invalid value is passed, it is set to CM_AFFINE.
-     * 
+     *
      * @param correction
      *            the correction mode for this texture.
      */
@@ -281,7 +282,7 @@ public abstract class TextureState extends RenderState {
 
     /**
      * <code>getCorrection</code> returns the correction mode for the texture.
-     * 
+     *
      * @return the correction mode for the texture.
      */
     public int getCorrection() {
@@ -291,7 +292,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>getTotalNumberOfUnits</code> returns the total number of texture
      * units the computer's graphics card supports.
-     * 
+     *
      * @return the total number of texture units supported by the graphics card.
      */
     public static int getTotalNumberOfUnits() {
@@ -301,7 +302,7 @@ public abstract class TextureState extends RenderState {
     /**
      * Depricated in favor of the methods below. <br>
      * Will return the same as <code>getNumberOfFixedUnits()<code>.
-     * 
+     *
      * @see TextureState#getNumberOfFixedUnits()
      * @see TextureState#getNumberOfFragmentUnits()
      * @see TextureState#getNumberOfVertexUnits()
@@ -315,7 +316,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>getNumberOfFixedUnits</code> returns the number of texture units
      * the computer's graphics card supports, for use in the fixed pipeline.
-     * 
+     *
      * @return the number units.
      */
     public static int getNumberOfFixedUnits() {
@@ -325,7 +326,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>getNumberOfVertexUnits</code> returns the number of texture units
      * available to a vertex shader that this graphics card supports.
-     * 
+     *
      * @return the number of units.
      */
     public static int getNumberOfVertexUnits() {
@@ -335,7 +336,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>getNumberOfVertexUnits</code> returns the number of texture units
      * available to a fragment shader that this graphics card supports.
-     * 
+     *
      * @return the number of units.
      */
     public static int getNumberOfFragmentUnits() {
@@ -345,7 +346,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>getNumberOfTotalUnits</code> returns the number texture units the
      * computer's graphics card supports.
-     * 
+     *
      * @return the number of units.
      */
     public static int getNumberOfTotalUnits() {
@@ -354,7 +355,7 @@ public abstract class TextureState extends RenderState {
 
     /**
      * Returns the number of textures this texture manager is maintaining.
-     * 
+     *
      * @return the number of textures.
      */
     public int getNumberOfSetTextures() {
@@ -367,7 +368,7 @@ public abstract class TextureState extends RenderState {
      * textureunit currently in use. This value can be retrieved with
      * <code>getNumberOfSetTextures</code>. A higher value might result in
      * unexpected behaviour such as an exception being thrown.
-     * 
+     *
      * @param textureUnit
      *            The texture unit from which to retrieve the ID.
      * @return the textureID, or 0 if there is none.
@@ -383,7 +384,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>setTextureCoordinateOffset</code> sets the offset value used to
      * determine which coordinates to use for texturing Geometry.
-     * 
+     *
      * @param offset
      *            the offset (default 0).
      */
@@ -395,7 +396,7 @@ public abstract class TextureState extends RenderState {
     /**
      * <code>setTextureCoordinateOffset</code> gets the offset value used to
      * determine which coordinates to use for texturing Geometry.
-     * 
+     *
      * @return the offset (default 0).
      */
     public int getTextureCoordinateOffset() {
@@ -422,7 +423,7 @@ public abstract class TextureState extends RenderState {
 
     /**
      * Removes the texture of the given unit.
-     * 
+     *
      * @param unit
      *            The unit of the Texture to remove.
      */
@@ -442,7 +443,7 @@ public abstract class TextureState extends RenderState {
 
     /**
      * Returns the maximum anisotropic filter.
-     * 
+     *
      * @return The maximum anisotropic filter.
      */
     public float getMaxAnisotropic() {
@@ -451,7 +452,7 @@ public abstract class TextureState extends RenderState {
 
     /**
      * Returns if S3TC compression is available for textures.
-     * 
+     *
      * @return true if S3TC is available.
      */
     public boolean isS3TCAvailable() {
@@ -486,7 +487,7 @@ public abstract class TextureState extends RenderState {
 
     /**
      * Used with serialization. Do not call this manually.
-     * 
+     *
      * @param in
      * @throws IOException
      * @throws ClassNotFoundException
@@ -508,7 +509,7 @@ public abstract class TextureState extends RenderState {
 
     /**
      * Used with serialization. Do not call this manually.
-     * 
+     *
      * @param out
      * @throws IOException
      * @see java.io.Serializable
@@ -543,6 +544,7 @@ public abstract class TextureState extends RenderState {
         supportsNonPowerTwo = true;
     }
 
+    @Override
     public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
@@ -553,7 +555,7 @@ public abstract class TextureState extends RenderState {
 
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
     public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
@@ -564,7 +566,8 @@ public abstract class TextureState extends RenderState {
         resetFirstLast();
     }
 
-    public Class getClassTag() {
+    @Override
+    public Class<TextureState> getClassTag() {
         return TextureState.class;
     }
 

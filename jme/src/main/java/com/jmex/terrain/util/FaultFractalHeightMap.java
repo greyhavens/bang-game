@@ -136,6 +136,7 @@ public class FaultFractalHeightMap extends AbstractHeightMap {
 	 * to <code>load</code> is recommended if attributes have changed using
 	 * the set methods.
 	 */
+	@Override
 	public boolean load() {
 		//amount to raise a slice of terrain.
 		float heightVarience;

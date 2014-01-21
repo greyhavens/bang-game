@@ -100,7 +100,8 @@ public class ParticleController extends Controller {
      * @param secondsPassed
      *            float
      */
-    public void update(float secondsPassed) {
+    @Override
+	public void update(float secondsPassed) {
         if (isActive()) {
             currentTime += secondsPassed * getSpeed();
             timePassed = currentTime - prevTime;
@@ -333,7 +334,8 @@ public class ParticleController extends Controller {
             update(.1f);
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(particles, "particleMesh", null);
@@ -344,7 +346,7 @@ public class ParticleController extends Controller {
         capsule.writeSavableArrayList(influences, "influences", null);
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
     public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);

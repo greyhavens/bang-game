@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -44,7 +44,7 @@ public class SortUtil
     /**
      * Quick sorts the supplied array using the specified comparator.
      */
-    public static void qsort (Object[] a, Comparator comp)
+    public static <T> void qsort (Object[] a, Comparator<T> comp)
     {
         qsort(a, 0, a.length-1, comp);
     }
@@ -56,7 +56,7 @@ public class SortUtil
      * @param hi0 the index of the highest element to include in the sort.
      */
     @SuppressWarnings("unchecked")
-    public static void qsort (Object[] a, int lo0, int hi0, Comparator comp)
+    public static <T> void qsort (Object[] a, int lo0, int hi0, Comparator<T> comp)
     {
         // bail out if we're already done
         if (hi0 <= lo0) {
@@ -67,7 +67,7 @@ public class SortUtil
         Object t;
         if (hi0 - lo0 == 1) {
             // if they're not already sorted, swap them
-            if (comp.compare(a[hi0], a[lo0]) < 0) {
+            if (comp.compare((T)a[hi0], (T)a[lo0]) < 0) {
                 t = a[lo0]; a[lo0] = a[hi0]; a[hi0] = t;
             }
             return;
@@ -83,11 +83,11 @@ public class SortUtil
         for (;;) {
             // find the first element that is greater than or equal to
             // the partition element starting from the left Index.
-            while (comp.compare(a[++lo], mid) < 0);
+            while (comp.compare((T)a[++lo], (T)mid) < 0);
 
             // find an element that is smaller than or equal to
             // the partition element starting from the right Index.
-            while (comp.compare(mid, a[--hi]) < 0);
+            while (comp.compare((T)mid, (T)a[--hi]) < 0);
 
             // swap the two elements or bail out of the loop
             if (hi > lo) {
@@ -116,7 +116,7 @@ public class SortUtil
      * @param src contains the elements to be sorted.
      * @param dest must contain the same values as the src array.
      */
-    public static void msort (Object[] src, Object[] dest, Comparator comp)
+    public static <T> void msort (Object[] src, Object[] dest, Comparator<T> comp)
     {
         msort(src, dest, 0, src.length, 0, comp);
     }
@@ -127,30 +127,28 @@ public class SortUtil
      * @param src contains the elements to be sorted.
      * @param dest must contain the same values as the src array.
      */
-    public static void msort (Object[] src, Object[] dest, int low, int high,
-                              Comparator comp)
+    public static <T> void msort (Object[] src, Object[] dest, int low, int high, Comparator<T> comp)
     {
         msort(src, dest, low, high, 0, comp);
     }
 
     /** Implements the actual merge sort. */
     @SuppressWarnings("unchecked")
-    protected static void msort (Object[] src, Object[] dest, int low,
-                                 int high, int offset, Comparator comp)
+    protected static <T> void msort (Object[] src, Object[] dest, int low, int high, int offset,
+                                     Comparator<T> comp)
     {
-	// use an insertion sort on small arrays
-	int length = high - low;
-	if (length < INSERTION_SORT_THRESHOLD) {
-	    for (int ii = low; ii < high; ii++) {
-		for (int jj = ii;
-                     jj > low && comp.compare(dest[jj-1], dest[jj]) > 0; jj--) {
+        // use an insertion sort on small arrays
+        int length = high - low;
+        if (length < INSERTION_SORT_THRESHOLD) {
+            for (int ii = low; ii < high; ii++) {
+                for (int jj = ii; jj > low && comp.compare((T)dest[jj-1], (T)dest[jj]) > 0; jj--) {
                     Object temp = dest[jj];
                     dest[jj] = dest[jj-1];
                     dest[jj-1] = temp;
                 }
             }
-	    return;
-	}
+            return;
+        }
 
         // recursively sort each half of dest into src
         int destLow = low, destHigh = high;
@@ -162,14 +160,14 @@ public class SortUtil
 
         // if the list is already sorted, just copy from src to dest; this
         // optimization results in faster sorts for nearly ordered lists
-        if (comp.compare(src[mid-1], src[mid]) <= 0) {
+        if (comp.compare((T)src[mid-1], (T)src[mid]) <= 0) {
             System.arraycopy(src, low, dest, destLow, length);
             return;
         }
 
         // merge the sorted halves (now in src) into dest
         for (int ii = destLow, pp = low, qq = mid; ii < destHigh; ii++) {
-            if (qq >= high || pp < mid && comp.compare(src[pp], src[qq]) <= 0) {
+            if (qq >= high || pp < mid && comp.compare((T)src[pp], (T)src[qq]) <= 0) {
                 dest[ii] = src[pp++];
             } else {
                 dest[ii] = src[qq++];

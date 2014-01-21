@@ -85,18 +85,21 @@ public class DirectionalLight extends Light {
      * <code>getType</code> returns this light's type (LT_DIRECTIONAL).
      * @see com.jme.light.Light#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return LT_DIRECTIONAL;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(direction, "direction", Vector3f.ZERO);
        
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         direction = (Vector3f)capsule.readSavable("direction", new Vector3f());

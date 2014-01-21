@@ -127,19 +127,22 @@ public class Line implements Serializable, Savable {
         return result;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(origin, "origin", Vector3f.ZERO);
         capsule.write(direction, "direction", Vector3f.ZERO);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         origin = (Vector3f)capsule.readSavable("origin", new Vector3f(Vector3f.ZERO));
         direction = (Vector3f)capsule.readSavable("direction", new Vector3f(Vector3f.ZERO));
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Line> getClassTag() {
         return this.getClass();
     }
 }

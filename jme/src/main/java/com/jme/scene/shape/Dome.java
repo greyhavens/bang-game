@@ -281,12 +281,11 @@ public class Dome extends TriMesh {
         batch.setIndexBuffer(BufferUtils.createIntBuffer(3 * batch.getTriangleCount()));
 
         // generate connectivity
-        int index = 0;
         // Generate only for middle planes
         for (int plane = 1; plane < (planes - 1); plane++) {
             int bottomPlaneStart = (plane - 1) * (radialSamples + 1);
             int topPlaneStart = plane * (radialSamples + 1);
-            for (int sample = 0; sample < radialSamples; sample++, index += 6) {
+            for (int sample = 0; sample < radialSamples; sample++) {
                 if (outsideView) {
                 	batch.getIndexBuffer().put(bottomPlaneStart + sample);
                 	batch.getIndexBuffer().put(bottomPlaneStart + sample + 1);
@@ -308,7 +307,7 @@ public class Dome extends TriMesh {
 
         // pole triangles
         int bottomPlaneStart = (planes - 2) * (radialSamples + 1);
-        for (int samples = 0; samples < radialSamples; samples++, index += 3) {
+        for (int samples = 0; samples < radialSamples; samples++) {
             if (outsideView) {
             	batch.getIndexBuffer().put(bottomPlaneStart + samples);
             	batch.getIndexBuffer().put(bottomPlaneStart + samples + 1);

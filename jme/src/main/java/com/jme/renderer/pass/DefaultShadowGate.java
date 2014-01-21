@@ -35,11 +35,13 @@ import com.jme.scene.batch.TriangleBatch;
 
 public class DefaultShadowGate implements ShadowGate {
 
-    public boolean shouldDrawShadows(TriangleBatch batch) {
+    @Override
+	public boolean shouldDrawShadows(TriangleBatch batch) {
         return true;
     }
 
-    public boolean shouldUpdateShadows(TriangleBatch batch) {
+    @Override
+	public boolean shouldUpdateShadows(TriangleBatch batch) {
         return true;
     }
 

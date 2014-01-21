@@ -221,6 +221,7 @@ public class CombinerHeightMap extends AbstractHeightMap {
 	 *
 	 * @return boolean if the heightmap was successfully created.
 	 */
+	@Override
 	public boolean load() {
 		if (null != heightData) {
 			unloadHeightMap();

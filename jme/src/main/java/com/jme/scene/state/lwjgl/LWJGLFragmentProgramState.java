@@ -69,6 +69,7 @@ public final class LWJGLFragmentProgramState extends FragmentProgramState {
 	 * 
 	 * @see com.jme.scene.state.FragmentProgramState#isSupported()
 	 */
+	@Override
 	public boolean isSupported() {
 		return GLContext.getCapabilities().GL_ARB_fragment_program;
 	}
@@ -78,7 +79,8 @@ public final class LWJGLFragmentProgramState extends FragmentProgramState {
      * 
      * @see com.jme.scene.state.FragmentProgramState#load(java.net.URL)
      */
-    public void load(java.net.URL file) {
+    @Override
+	public void load(java.net.URL file) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(16 * 1024);
             InputStream inputStream = new BufferedInputStream(file.openStream());
@@ -117,7 +119,8 @@ public final class LWJGLFragmentProgramState extends FragmentProgramState {
      * 
      * @see com.jme.scene.state.FragmentProgramState#load(java.net.URL)
      */
-    public void load(String programContents) {
+    @Override
+	public void load(String programContents) {
         try {
             byte[] bytes = programContents.getBytes();
             program = BufferUtils.createByteBuffer(bytes.length);
@@ -133,7 +136,8 @@ public final class LWJGLFragmentProgramState extends FragmentProgramState {
         }
     }
 
-    public String getProgram() {
+    @Override
+	public String getProgram() {
         if (program == null) return null;
         program.rewind();
         byte[] stringContents = new byte[program.remaining()];
@@ -186,6 +190,7 @@ public final class LWJGLFragmentProgramState extends FragmentProgramState {
 		}
 	}
 
+	@Override
 	public void apply() {
 		if (isSupported()) {
 			RenderContext context = DisplaySystem.getDisplaySystem()

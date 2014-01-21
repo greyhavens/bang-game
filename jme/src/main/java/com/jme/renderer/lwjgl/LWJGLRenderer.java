@@ -140,8 +140,6 @@ public class LWJGLRenderer extends Renderer {
 
     private boolean inOrthoMode;
 
-    private Vector3f tempVa = new Vector3f();
-
     private FloatBuffer prevVerts;
 
     private FloatBuffer prevNorms;
@@ -198,7 +196,8 @@ public class LWJGLRenderer extends Renderer {
      * @param height
      *            int
      */
-    public void reinit(int width, int height) {
+    @Override
+	public void reinit(int width, int height) {
         if (width <= 0 || height <= 0) {
             LoggingSystem.getLogger().log(Level.WARNING,
                     "Invalid width " + "and/or height values.");
@@ -217,7 +216,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#setCamera(com.jme.renderer.Camera)
      */
-    public void setCamera(Camera camera) {
+    @Override
+	public void setCamera(Camera camera) {
         if (camera instanceof LWJGLCamera) {
             this.camera = (LWJGLCamera) camera;
         }
@@ -233,7 +233,8 @@ public class LWJGLRenderer extends Renderer {
      *            the height of the frame.
      * @return a default LWJGL camera.
      */
-    public Camera createCamera(int width, int height) {
+    @Override
+	public Camera createCamera(int width, int height) {
         return new LWJGLCamera(width, height, this);
     }
 
@@ -243,7 +244,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an AlphaState object.
      */
-    public AlphaState createAlphaState() {
+    @Override
+	public AlphaState createAlphaState() {
         return new LWJGLAlphaState();
     }
 
@@ -253,7 +255,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an AttributeState object.
      */
-    public AttributeState createAttributeState() {
+    @Override
+	public AttributeState createAttributeState() {
         return new LWJGLAttributeState();
     }
 
@@ -264,7 +267,8 @@ public class LWJGLRenderer extends Renderer {
      * @return a CullState object.
      * @see com.jme.renderer.Renderer#createCullState()
      */
-    public CullState createCullState() {
+    @Override
+	public CullState createCullState() {
         return new LWJGLCullState();
     }
 
@@ -274,7 +278,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an DitherState object.
      */
-    public DitherState createDitherState() {
+    @Override
+	public DitherState createDitherState() {
         return new LWJGLDitherState();
     }
 
@@ -284,7 +289,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an FogState object.
      */
-    public FogState createFogState() {
+    @Override
+	public FogState createFogState() {
         return new LWJGLFogState();
     }
 
@@ -294,7 +300,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an LightState object.
      */
-    public LightState createLightState() {
+    @Override
+	public LightState createLightState() {
         return new LWJGLLightState();
     }
 
@@ -304,7 +311,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an MaterialState object.
      */
-    public MaterialState createMaterialState() {
+    @Override
+	public MaterialState createMaterialState() {
         return new LWJGLMaterialState();
     }
 
@@ -314,7 +322,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an ShadeState object.
      */
-    public ShadeState createShadeState() {
+    @Override
+	public ShadeState createShadeState() {
         return new LWJGLShadeState();
     }
 
@@ -324,7 +333,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an TextureState object.
      */
-    public TextureState createTextureState() {
+    @Override
+	public TextureState createTextureState() {
         return new LWJGLTextureState();
     }
 
@@ -334,7 +344,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an WireframeState object.
      */
-    public WireframeState createWireframeState() {
+    @Override
+	public WireframeState createWireframeState() {
         return new LWJGLWireframeState();
     }
 
@@ -344,7 +355,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return a ZBufferState object.
      */
-    public ZBufferState createZBufferState() {
+    @Override
+	public ZBufferState createZBufferState() {
         return new LWJGLZBufferState();
     }
 
@@ -354,7 +366,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return a LWJGLVertexProgramState object.
      */
-    public VertexProgramState createVertexProgramState() {
+    @Override
+	public VertexProgramState createVertexProgramState() {
         return new LWJGLVertexProgramState();
     }
 
@@ -364,7 +377,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return a LWJGLFragmentProgramState object.
      */
-    public FragmentProgramState createFragmentProgramState() {
+    @Override
+	public FragmentProgramState createFragmentProgramState() {
         return new LWJGLFragmentProgramState();
     }
 
@@ -374,7 +388,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return an ShaderObjectsState object.
      */
-    public GLSLShaderObjectsState createGLSLShaderObjectsState() {
+    @Override
+	public GLSLShaderObjectsState createGLSLShaderObjectsState() {
         return new LWJGLShaderObjectsState();
     }
 
@@ -384,7 +399,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return a StencilState object.
      */
-    public StencilState createStencilState() {
+    @Override
+	public StencilState createStencilState() {
         return new LWJGLStencilState();
     }
 
@@ -395,7 +411,8 @@ public class LWJGLRenderer extends Renderer {
      * @return a ClipState object.
      * @see com.jme.renderer.Renderer#createClipState()
      */
-    public ClipState createClipState() {
+    @Override
+	public ClipState createClipState() {
         return new LWJGLClipState();
     }
 
@@ -405,7 +422,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return a ColorMaskState object.
      */
-    public ColorMaskState createColorMaskState() {
+    @Override
+	public ColorMaskState createColorMaskState() {
         return new LWJGLColorMaskState();
     }
 
@@ -417,7 +435,8 @@ public class LWJGLRenderer extends Renderer {
      * @param c
      *            the color to set the background color to.
      */
-    public void setBackgroundColor(ColorRGBA c) {
+    @Override
+	public void setBackgroundColor(ColorRGBA c) {
         // if color is null set background to white.
         if (c == null) {
             backgroundColor.a = 1.0f;
@@ -438,7 +457,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#clearZBuffer()
      */
-    public void clearZBuffer() {
+    @Override
+	public void clearZBuffer() {
         if (Renderer.defaultStateList[RenderState.RS_ZBUFFER] != null)
             Renderer.defaultStateList[RenderState.RS_ZBUFFER].apply();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
@@ -449,7 +469,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#clearColorBuffer()
      */
-    public void clearColorBuffer() {
+    @Override
+	public void clearColorBuffer() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
     }
     
@@ -458,7 +479,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#clearStencilBuffer()
      */
-    public void clearStencilBuffer() {
+    @Override
+	public void clearStencilBuffer() {
         // Clear the stencil buffer
         GL11.glClearStencil(0);
         GL11.glStencilMask(~0);
@@ -474,7 +496,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#clearBuffers()
      */
-    public void clearBuffers() {
+    @Override
+	public void clearBuffers() {
         clearColorBuffer();
         clearZBuffer();
     }
@@ -485,7 +508,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#clearBuffers()
      */
-    public void clearStrictBuffers() {
+    @Override
+	public void clearStrictBuffers() {
         GL11.glDisable(GL11.GL_DITHER);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(0, 0, width, height);
@@ -500,7 +524,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#displayBackBuffer()
      */
-    public void displayBackBuffer() {
+    @Override
+	public void displayBackBuffer() {
         renderQueue();
 
         Renderer.defaultStateList[RenderState.RS_COLORMASK_STATE].apply();
@@ -533,7 +558,8 @@ public class LWJGLRenderer extends Renderer {
      * left of the screen.
      *  
      */
-    public void setOrtho() {
+    @Override
+	public void setOrtho() {
         if (inOrthoMode) {
             throw new JmeException("Already in Orthographic mode.");
         }
@@ -548,7 +574,8 @@ public class LWJGLRenderer extends Renderer {
         inOrthoMode = true;
     }
 
-    public void setOrthoCenter() {
+    @Override
+	public void setOrthoCenter() {
         if (inOrthoMode) {
             throw new JmeException("Already in Orthographic mode.");
         }
@@ -571,7 +598,8 @@ public class LWJGLRenderer extends Renderer {
      * center of the screen.
      * 
      */
-    public void unsetOrtho() {
+    @Override
+	public void unsetOrtho() {
         if (!inOrthoMode) {
             throw new JmeException("Not in Orthographic mode.");
         }
@@ -593,7 +621,8 @@ public class LWJGLRenderer extends Renderer {
      *            the name of the file to save.
      * @return true if successful, false otherwise.
      */
-    public boolean takeScreenShot(String filename) {
+    @Override
+	public boolean takeScreenShot(String filename) {
         if (null == filename) {
             throw new JmeException("Screenshot filename cannot be null");
         }
@@ -641,7 +670,8 @@ public class LWJGLRenderer extends Renderer {
      * @param h -
      *            height of block
      */
-    public void grabScreenContents(IntBuffer buff, int x, int y, int w, int h) {
+    @Override
+	public void grabScreenContents(IntBuffer buff, int x, int y, int w, int h) {
         GL11
                 .glReadPixels(x, y, w, h, GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE,
                         buff);
@@ -655,7 +685,8 @@ public class LWJGLRenderer extends Renderer {
      * @param batch
      *            the lines to render.
      */
-    public void draw(LineBatch batch) {
+    @Override
+	public void draw(LineBatch batch) {
         if (statisticsOn) {
             stats.numberOfLines += batch.getVertexCount() >> 1;
             stats.numberOfVerts += batch.getVertexCount();
@@ -732,7 +763,8 @@ public class LWJGLRenderer extends Renderer {
      * @param batch
      *            the points to render.
      */
-    public void draw(PointBatch batch) {
+    @Override
+	public void draw(PointBatch batch) {
         if (statisticsOn) {
             stats.numberOfPoints += batch.getVertexCount();
             stats.numberOfVerts += batch.getVertexCount();
@@ -802,7 +834,8 @@ public class LWJGLRenderer extends Renderer {
      * @param batch
      *            the mesh to render.
      */
-    public void draw(QuadBatch batch) {
+    @Override
+	public void draw(QuadBatch batch) {
         if (statisticsOn) {
             stats.numberOfQuads += batch.getQuadCount();
             stats.numberOfVerts += batch.getVertexCount();
@@ -875,7 +908,8 @@ public class LWJGLRenderer extends Renderer {
      * @param batch
      *            the mesh to render.
      */
-    public void draw(TriangleBatch batch) {
+    @Override
+	public void draw(TriangleBatch batch) {
         if (statisticsOn) {
             stats.numberOfTris += batch.getTriangleCount();
             stats.numberOfVerts += batch.getVertexCount();
@@ -1095,7 +1129,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#draw(com.jme.scene.Spatial)
      */
-    public void draw(Spatial s) {
+    @Override
+	public void draw(Spatial s) {
         if (s != null) {
             s.onDraw(this);
         }
@@ -1107,7 +1142,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @see com.jme.renderer.Renderer#draw(com.jme.scene.Text)
      */
-    public void draw(Text t) {
+    @Override
+	public void draw(Text t) {
         if (font == null) {
             font = new LWJGLFont();
         }
@@ -1124,7 +1160,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return true if the SceneElement was added to a queue, false otherwise.
      */
-    public boolean checkAndAdd(SceneElement s) {
+    @Override
+	public boolean checkAndAdd(SceneElement s) {
         int rqMode = s.getRenderQueueMode();
         if (rqMode != Renderer.QUEUE_SKIP) {
             getQueue().addToQueue(s, rqMode);
@@ -1138,7 +1175,8 @@ public class LWJGLRenderer extends Renderer {
      * 
      * @return boolean true if VBO supported
      */
-    public boolean supportsVBO() {
+    @Override
+	public boolean supportsVBO() {
         return capabilities.OpenGL15;
     }
 
@@ -1162,7 +1200,8 @@ public class LWJGLRenderer extends Renderer {
      * <code>flush</code> tells opengl to finish all currently waiting
      * commands in the buffer.
      */
-    public void flush() {
+    @Override
+	public void flush() {
         GL11.glFlush();
     }
 
@@ -1442,7 +1481,8 @@ public class LWJGLRenderer extends Renderer {
     }
 
     // inherited documentation
-    public int createDisplayList(GeomBatch g) {
+    @Override
+	public int createDisplayList(GeomBatch g) {
         int listID = GL11.glGenLists(1);
 
         generatingDisplayList = true;
@@ -1462,24 +1502,28 @@ public class LWJGLRenderer extends Renderer {
     }
 
     // inherited documentation
-    public void releaseDisplayList(int listId) {
+    @Override
+	public void releaseDisplayList(int listId) {
         GL11.glDeleteLists(listId, 1);
     }
 
     // inherited documentation
-    public void setPolygonOffset(float factor, float offset) {
+    @Override
+	public void setPolygonOffset(float factor, float offset) {
         GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
         GL11.glPolygonOffset(factor, offset);
     }
 
     // inherited documentation
-    public void clearPolygonOffset() {
+    @Override
+	public void clearPolygonOffset() {
         GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
     }
     
     /**
      * @see Renderer#deleteVBO(Buffer)
      */
+	@Override
 	public void deleteVBO(Buffer buffer) {
 		Integer i = removeFromVBOCache(buffer);
 		if (i!=null)
@@ -1489,6 +1533,7 @@ public class LWJGLRenderer extends Renderer {
 	/**
 	 * @see Renderer#deleteVBO(int)
 	 */
+	@Override
 	public void deleteVBO(int vboid) {
 		if (vboid < 1 || !supportsVBO())
 			return;
@@ -1500,6 +1545,7 @@ public class LWJGLRenderer extends Renderer {
 	/**
 	 * @see Renderer#clearVBOCache()
 	 */
+	@Override
 	public void clearVBOCache() {
 		vboMap.clear();		
 	}
@@ -1507,6 +1553,7 @@ public class LWJGLRenderer extends Renderer {
 	/**
 	 * @see Renderer#removeFromVBOCache(Buffer)
 	 */
+	@Override
 	public Integer removeFromVBOCache(Buffer buffer) {
 		return vboMap.remove(buffer);
 		

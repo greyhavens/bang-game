@@ -312,12 +312,12 @@ public class VETMesh {
 	}
 
 	// vertex attributes
-	public TreeMap getVertexMap() {
+	public TreeMap<Integer, VertexAttribute> getVertexMap() {
 		return vertexMap;
 	}
 
 	// edge attributes
-	public TreeMap getEdgeMap() {
+	public TreeMap<Edge, EdgeAttribute> getEdgeMap() {
 		return edgeMap;
 	}
 
@@ -328,14 +328,14 @@ public class VETMesh {
 	}
 
 	// triangle attributes
-	public TreeMap getTriangleMap() {
+	public TreeMap<Triangle, TriangleAttribute> getTriangleMap() {
 		return triangleMap;
 	}
 
 	// The mesh is manifold if each edge has at most two adjacent triangles.
 	// It is possible that the mesh has multiple connected components.
 	public boolean isManifold() {
-		Iterator it = edgeMap.values().iterator();
+		Iterator<EdgeAttribute> it = edgeMap.values().iterator();
 		while (it.hasNext()) {
 			EdgeAttribute ea = (EdgeAttribute) it.next();
 			if (ea.triangleSet.size() > 2)
@@ -347,7 +347,7 @@ public class VETMesh {
 	// The mesh is closed if each edge has exactly two adjacent triangles.
 	// It is possible that the mesh has multiple connected components.
 	public boolean isClosed() {
-		Iterator it = edgeMap.values().iterator();
+		Iterator<EdgeAttribute> it = edgeMap.values().iterator();
 		while (it.hasNext()) {
 			EdgeAttribute ea = (EdgeAttribute) it.next();
 			if (ea.triangleSet.size() != 2)
@@ -379,7 +379,7 @@ public class VETMesh {
 		kVisitedMap.put(kStack.get(0), Boolean.TRUE);
 		iTSize--;
 
-		Iterator triIt;
+		Iterator<?> triIt;
 		while (!kStack.empty()) {
 			// start at the current triangle
 			Triangle kT = kStack.pop();
@@ -446,7 +446,7 @@ public class VETMesh {
 
 			// traverse the connected component of the starting triangle
 			VETMesh pkComponent = create();
-			Iterator triIt;
+			Iterator<?> triIt;
 			while (!kStack.empty()) {
 				// start at the current triangle
 				Triangle kT = kStack.pop();
@@ -499,7 +499,7 @@ public class VETMesh {
 		while (iTSize > 0) {
 			// find an unvisited triangle in the mesh
 			Stack<Triangle> kStack = new Stack<Triangle>();
-			Iterator visIt = kVisitedMap.keySet().iterator();
+			Iterator<Triangle> visIt = kVisitedMap.keySet().iterator();
 			while (visIt.hasNext()) {
 				Triangle tri = (Triangle) visIt.next();
 				if (Boolean.FALSE.equals(kVisitedMap.get(tri))) {
@@ -513,7 +513,7 @@ public class VETMesh {
 
 			// traverse the connected component of the starting triangle
 			VETMesh pkComponent = create();
-			Iterator triIt;
+			Iterator<?> triIt;
 			while (!kStack.empty()) {
 				// start at the current triangle
 				Triangle kT = kStack.pop();
@@ -545,7 +545,7 @@ public class VETMesh {
 			pkComponent = null;
 
 			rkIndex.add(new Integer(iIndex));
-			Iterator tsetIter = kTSet.iterator();
+			Iterator<Triangle> tsetIter = kTSet.iterator();
 			while (tsetIter.hasNext()) {
 				Triangle rkT = (Triangle) tsetIter.next();
 				raiConnect[iIndex++] = rkT.vert[0];
@@ -591,7 +591,7 @@ public class VETMesh {
 		kVisited.add((Triangle)triangleMap.keySet().toArray()[0]);
 
 		// traverse the connected component
-		Iterator triIt;
+		Iterator<?> triIt;
 		while (!kVisited.isEmpty()) {
 			// start at the current triangle
 			Triangle kT = (Triangle) kVisited.toArray()[0];
@@ -658,7 +658,7 @@ public class VETMesh {
 			// Find an unvisited triangle in the mesh.  Any triangle pushed onto
 			// the stack is considered to have a consistent ordering.
 			Stack<Triangle> kStack = new Stack<Triangle>();
-			Iterator visIt = kVisitedMap.keySet().iterator();
+			Iterator<Triangle> visIt = kVisitedMap.keySet().iterator();
 			while (visIt.hasNext()) {
 				Triangle tri = (Triangle) visIt.next();
 				if (Boolean.FALSE.equals(kVisitedMap.get(tri))) {
@@ -730,7 +730,7 @@ public class VETMesh {
 	public VETMesh getReversedOrderMesh() {
 		VETMesh reversed = create();
 
-		Iterator it = triangleMap.keySet().iterator();
+		Iterator<Triangle> it = triangleMap.keySet().iterator();
 		while (it.hasNext()) {
 			Triangle tri = (Triangle) it.next();
 			reversed.insertTriangle(tri.vert[0], tri.vert[2], tri.vert[1]);
@@ -816,7 +816,7 @@ public class VETMesh {
 	// edge is <v0,v1> where v0 = min(v0,v1)
 	// triangle is <v0,v1,v2> where v0 = min(v0,v1,v2)
 
-	public class Edge implements Comparable {
+	public class Edge implements Comparable<Object> {
 		int vert[] = new int[2];
 
 		public Edge(int iV0, int iV1) {
@@ -841,12 +841,14 @@ public class VETMesh {
 			return false;
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			Edge otherEdge = (Edge) obj;
 			return (vert[0] == otherEdge.vert[0])
 					&& (vert[1] == otherEdge.vert[1]);
 		}
 
+		@Override
 		public int compareTo(Object o) {
 			Edge otherEdge = (Edge) o;
 			if (lessThan(otherEdge))
@@ -858,7 +860,7 @@ public class VETMesh {
 		}
 	};
 
-	public class Triangle implements Comparable {
+	public class Triangle implements Comparable<Object> {
 		public int vert[] = new int[3];
 
 		public Triangle(int vert0, int vert1, int vert2) {
@@ -904,12 +906,14 @@ public class VETMesh {
 			return false;
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			Triangle otherTri = (Triangle) obj;
 			return (vert[0] == otherTri.vert[0])
 					&& ((vert[1] == otherTri.vert[1] && vert[2] == otherTri.vert[2]) || (vert[1] == otherTri.vert[2] && vert[2] == otherTri.vert[1]));
 		}
 
+		@Override
 		public int compareTo(Object o) {
 			Triangle otherTri = (Triangle) o;
 			if (lessThan(otherTri))

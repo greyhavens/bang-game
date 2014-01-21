@@ -66,7 +66,8 @@ public class JointMesh extends TriMesh {
         super(name);
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(jointIndex, "jointIndex", null);
@@ -74,7 +75,8 @@ public class JointMesh extends TriMesh {
         capsule.write(originalNormal, "originalNormal", null);
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         jointIndex = capsule.readIntArray("jointIndex", null);

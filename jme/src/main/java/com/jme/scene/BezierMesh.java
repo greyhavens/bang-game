@@ -259,13 +259,15 @@ public class BezierMesh extends TriMesh {
 		return (a.addLocal(b)).addLocal((c.addLocal(d)));
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(patch, "patch", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         patch = (BezierPatch)capsule.readSavable("patch", null);

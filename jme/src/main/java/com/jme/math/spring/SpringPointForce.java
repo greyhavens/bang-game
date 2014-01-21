@@ -80,17 +80,20 @@ public abstract class SpringPointForce implements Savable {
 	 */
 	public abstract void apply(float dt, SpringPoint node);
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(enabled, "enabled", true);
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         enabled = capsule.readBoolean("enabled", true);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends SpringPointForce> getClassTag() {
         return this.getClass();
     }
 }

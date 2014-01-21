@@ -50,6 +50,7 @@ public class MouseAxisBinding implements Binding {
         this.reverse = reverse;
     }
     
+	@Override
 	public String getName() {
 		if (reverse) {
             return "Mouse" + getAxisString(axis) + "(-)";
@@ -58,6 +59,7 @@ public class MouseAxisBinding implements Binding {
         }
 	}
 
+	@Override
 	public float getValue() {
         float value;
 		if (axis == AXIS_X) {
@@ -73,10 +75,11 @@ public class MouseAxisBinding implements Binding {
     private float convert(int value) {
         if ((value < 0) && (!reverse)) return 0.0f;
         if ((value > 0) && (reverse)) return 0.0f;
-        return Math.abs((float)value * 0.1f);
+        return Math.abs(value * 0.1f);
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
 		return getName();
 	}
     

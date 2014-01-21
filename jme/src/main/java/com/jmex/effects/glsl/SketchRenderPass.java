@@ -165,6 +165,7 @@ public class SketchRenderPass extends Pass {
 	protected static LightState noLights;
 	protected static MaterialState noMaterials;
 
+	@Override
 	public void doRender(Renderer r) {
 		if(spatials.size() != 1) return;
 

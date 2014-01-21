@@ -50,10 +50,12 @@ public class JoystickAxisBinding implements Binding {
         this.reverse = reverse;
     }
     
+	@Override
 	public String getName() {
         return "JS:X" + axis + (reverse ? "(-)" : "(+)");
 	}
 
+	@Override
 	public float getValue() {
 		if (joystick == null) {
 			loadJoystick();
@@ -72,6 +74,7 @@ public class JoystickAxisBinding implements Binding {
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return joystick.getName() + ":Axis" + axis + (reverse ? "(-)" : "(+)");
 	}

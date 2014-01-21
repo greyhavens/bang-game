@@ -121,7 +121,8 @@ public class LightStateController extends Controller {
      * Update is called internally. The parent (if it is visible) has all lights
      * maintained by the LightStateCreator resorted for possible changes.
      */
-    public void update(float time) {
+    @Override
+	public void update(float time) {
         if(parent == null || manager == null) {
             return;
         }
@@ -140,7 +141,8 @@ public class LightStateController extends Controller {
         this.manager = manager.makeCopy();
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule cap = e.getCapsule(this);
         cap.write(timePass, "timePass", 0);

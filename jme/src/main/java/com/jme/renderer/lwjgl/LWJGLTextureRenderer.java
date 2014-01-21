@@ -177,7 +177,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * 
      * @return if this graphics card supports pbuffers or not.
      */
-    public boolean isSupported() {
+    @Override
+	public boolean isSupported() {
         return isSupported;
     }
 
@@ -186,7 +187,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * 
      * @return the camera this renderer is using.
      */
-    public Camera getCamera() {
+    @Override
+	public Camera getCamera() {
         return camera;
     }
 
@@ -196,7 +198,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * @param camera
      *            the camera this renderer should use.
      */
-    public void setCamera(Camera camera) {
+    @Override
+	public void setCamera(Camera camera) {
 
         this.camera = (LWJGLCamera) camera;
     }
@@ -209,7 +212,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * @param c
      *            the color to set the background color to.
      */
-    public void setBackgroundColor(ColorRGBA c) {
+    @Override
+	public void setBackgroundColor(ColorRGBA c) {
 
         // if color is null set background to white.
         if (c == null) {
@@ -238,7 +242,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * @see com.jme.renderer.Renderer#getBackgroundColor()
      * @return the current clear color.
      */
-    public ColorRGBA getBackgroundColor() {
+    @Override
+	public ColorRGBA getBackgroundColor() {
         return backgroundColor;
     }
 
@@ -247,7 +252,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * TextureRenderer. Generates a valid gl texture id for this texture and
      * inits the data type for the texture.
      */
-    public void setupTexture(Texture tex) {
+    @Override
+	public void setupTexture(Texture tex) {
         setupTexture(tex, pBufferWidth, pBufferHeight);
     }
 
@@ -256,7 +262,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * TextureRenderer. Generates a valid gl texture id for this texture and
      * inits the data type for the texture.
      */
-    public void setupTexture(Texture tex, int width, int height) {
+    @Override
+	public void setupTexture(Texture tex, int width, int height) {
         if (!isSupported) {
             return;
         }
@@ -306,7 +313,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * @param tex
      *            the Texture(s) to render it to.
      */
-    public void render(Spatial spat, Texture ... tex) {
+    @Override
+	public void render(Spatial spat, Texture ... tex) {
         if (!isSupported) {
             return;
         }
@@ -354,7 +362,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
     }
 
     // inherited docs
-    public void render(ArrayList spats, Texture ... tex) {
+    @Override
+	public void render(ArrayList<?> spats, Texture ... tex) {
         if (!isSupported) {
             return;
         }
@@ -426,7 +435,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * @param height
      *            the height of the texture image
      */
-    public void copyToTexture(Texture tex, int width, int height) {
+    @Override
+	public void copyToTexture(Texture tex, int width, int height) {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureId());
 
         int source = GL11.GL_RGBA;
@@ -454,7 +464,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
      * @param height
      *            the height of the texture image
      */
-    public void copyBufferToTexture(Texture tex, int width, int height, int buffer) {
+    @Override
+	public void copyBufferToTexture(Texture tex, int width, int height, int buffer) {
         GL11.glReadBuffer(GL11.GL_BACK);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureId());
 
@@ -603,7 +614,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
         camera.setFrame(loc, left, up, dir);
     }
 
-    public void updateCamera() {
+    @Override
+	public void updateCamera() {
         if (!isSupported) {
             return;
         }
@@ -612,7 +624,8 @@ public class LWJGLTextureRenderer implements TextureRenderer {
         deactivate();
     }
 
-    public void cleanup() {
+    @Override
+	public void cleanup() {
         if (!isSupported) {
             return;
         }
@@ -630,15 +643,18 @@ public class LWJGLTextureRenderer implements TextureRenderer {
         }
     }
 
-    public int getPBufferWidth() {
+    @Override
+	public int getPBufferWidth() {
         return pBufferWidth;
     }
 
-    public int getPBufferHeight() {
+    @Override
+	public int getPBufferHeight() {
         return pBufferHeight;
     }
     
-    public void forceCopy(boolean force) {
+    @Override
+	public void forceCopy(boolean force) {
         if (force) {
             useDirectRender = false;
         } else {

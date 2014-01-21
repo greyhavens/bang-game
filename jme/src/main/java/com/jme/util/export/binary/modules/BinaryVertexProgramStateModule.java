@@ -40,11 +40,13 @@ import com.jme.util.export.binary.BinaryLoaderModule;
 
 public class BinaryVertexProgramStateModule implements BinaryLoaderModule {
 
-    public String getKey() {
+    @Override
+	public String getKey() {
         return VertexProgramState.class.getName();
     }
 
-    public Savable load(InputCapsule inputCapsule) {
+    @Override
+	public Savable load(InputCapsule inputCapsule) {
         return DisplaySystem.getDisplaySystem().getRenderer().createVertexProgramState();
     }
 

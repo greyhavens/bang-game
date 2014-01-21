@@ -59,7 +59,8 @@ public class JoystickInputHandlerDevice extends InputHandlerDevice {
         return joystickListener;
     }
 
-    protected void createTriggers( InputAction action, int axis, int button, boolean allowRepeats, InputHandler inputHandler ) {
+    @Override
+	protected void createTriggers( InputAction action, int axis, int button, boolean allowRepeats, InputHandler inputHandler ) {
 
         if ( axis != InputHandler.AXIS_NONE && axis < joystick.getAxisCount() ) {
             String[] axisNames = joystick.getAxisNames();
@@ -91,23 +92,27 @@ public class JoystickInputHandlerDevice extends InputHandlerDevice {
             getJoystickListener().add( this );
         }
 
-        protected void remove() {
+        @Override
+		protected void remove() {
             super.remove();
             getJoystickListener().remove( this );
         }
 
-        protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
+        @Override
+		protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
             super.putTriggerInfo( event, invocationIndex );
             event.setTriggerIndex( button );
             event.setTriggerCharacter( (char) ( 'A' + button ) );
             event.setTriggerPressed( pressed );
         }
 
-        protected String getDeviceName() {
+        @Override
+		protected String getDeviceName() {
             return joystick.getName();
         }
 
-        public void checkActivation( char character, int buttonIndex, float position, float delta, boolean pressed, Object data ) {
+        @Override
+		public void checkActivation( char character, int buttonIndex, float position, float delta, boolean pressed, Object data ) {
             if ( data == joystick && buttonIndex == this.button ) {
                 if ( allowRepeats ) {
                     if ( pressed ) {
@@ -140,7 +145,8 @@ public class JoystickInputHandlerDevice extends InputHandlerDevice {
             }
         }
 
-        protected void remove() {
+        @Override
+		protected void remove() {
             super.remove();
             getJoystickListener().remove( this );
         }
@@ -148,18 +154,21 @@ public class JoystickInputHandlerDevice extends InputHandlerDevice {
         private float delta;
         private float position;
 
-        protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
+        @Override
+		protected void putTriggerInfo( InputActionEvent event, int invocationIndex ) {
             super.putTriggerInfo( event, invocationIndex );
             event.setTriggerIndex( axis );
             event.setTriggerDelta( delta );
             event.setTriggerPosition( position );
         }
 
-        protected String getDeviceName() {
+        @Override
+		protected String getDeviceName() {
             return joystick.getName();
         }
 
-        public void checkActivation( char character, int axisIndex, float position, float delta, boolean pressed, Object data ) {
+        @Override
+		public void checkActivation( char character, int axisIndex, float position, float delta, boolean pressed, Object data ) {
             if ( data == joystick && axisIndex == this.axis ) {
                 this.delta = position - this.position; //delta is the position, too
                 this.position = position;

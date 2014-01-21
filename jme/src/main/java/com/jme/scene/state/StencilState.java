@@ -105,7 +105,8 @@ public abstract class StencilState extends RenderState {
      * 
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_STENCIL;
     }
 
@@ -260,7 +261,8 @@ public abstract class StencilState extends RenderState {
         return stencilOpZPass;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(stencilFunc, "stencilFunc", SF_NEVER);
@@ -272,7 +274,8 @@ public abstract class StencilState extends RenderState {
         capsule.write(stencilOpZPass, "stencilOpZPass", SO_KEEP);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         stencilFunc = capsule.readInt("stencilFunc", SF_NEVER);
@@ -284,7 +287,8 @@ public abstract class StencilState extends RenderState {
         stencilOpZPass = capsule.readInt("stencilOpZPass", SO_KEEP);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<StencilState> getClassTag() {
         return StencilState.class;
     }
 }

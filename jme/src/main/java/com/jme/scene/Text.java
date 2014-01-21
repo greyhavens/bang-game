@@ -133,7 +133,8 @@ public class Text extends Geometry {
      * @param r
      *            the renderer used to display the text.
      */
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         if (!r.isProcessingQueue()) {
             if (r.checkAndAdd(this)) return;
         }
@@ -166,11 +167,13 @@ public class Text extends Geometry {
      * @see com.jme.scene.Spatial#hasCollision(com.jme.scene.Spatial,
      *      com.jme.intersection.CollisionResults)
      */
-    public void findCollisions(Spatial scene, CollisionResults results) {
+    @Override
+	public void findCollisions(Spatial scene, CollisionResults results) {
         //Do nothing.
     }
 
-    public boolean hasCollision(Spatial scene, boolean checkTriangles) {
+    @Override
+	public boolean hasCollision(Spatial scene, boolean checkTriangles) {
         return false;
     }
 
@@ -231,7 +234,8 @@ public class Text extends Geometry {
      */
     public static final String DEFAULT_FONT = "com/jme/app/defaultfont.tga";
     
-    protected void applyRenderState(Stack[] states) {
+    @Override
+	protected void applyRenderState(Stack<RenderState>[] states) {
         for (int x = 0; x < states.length; x++) {
             if (states[x].size() > 0) {
                 this.states[x] = ((RenderState) states[x].peek()).extract(
@@ -257,14 +261,16 @@ public class Text extends Geometry {
         return defaultFontTextureState;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(text.toString(), "textString", "");
         capsule.write(textColor, "textColor", new ColorRGBA());
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         text = new StringBuffer(capsule.readString("textString", ""));

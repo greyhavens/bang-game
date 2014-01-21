@@ -712,7 +712,8 @@ public class Texture implements Serializable, Savable {
     return envMapMode;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "Texture with id: " + textureId;
   }
 
@@ -728,7 +729,8 @@ public class Texture implements Serializable, Savable {
     return anisoLevel;
   }
 
-  public boolean equals(Object other) {
+  @Override
+public boolean equals(Object other) {
     if (other == this) {
       return true;
     }
@@ -936,7 +938,8 @@ public class Texture implements Serializable, Savable {
         textureId = 0;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(imageLocation, "imageLocation", null);
         capsule.write(storeTexture, "storeTexture", false);
@@ -977,7 +980,8 @@ public class Texture implements Serializable, Savable {
         }
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         imageLocation = capsule.readString("imageLocation", null);
         storeTexture = capsule.readBoolean("storeTexture", false);
@@ -1018,7 +1022,8 @@ public class Texture implements Serializable, Savable {
         combineScaleAlpha = capsule.readFloat("combineScaleAlpha", 1);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<?> getClassTag() {
         return this.getClass();
     }
 

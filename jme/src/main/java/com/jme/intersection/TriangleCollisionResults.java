@@ -63,7 +63,8 @@ public class TriangleCollisionResults extends CollisionResults {
      * @see com.jme.intersection.CollisionResults#addCollision(com.jme.scene.Geometry,
      *      com.jme.scene.Geometry)
      */
-    public void addCollision(Geometry s, Geometry t) {
+    @Override
+	public void addCollision(Geometry s, Geometry t) {
         a.clear();
         b.clear();
         //find the triangle that is being hit.
@@ -89,7 +90,8 @@ public class TriangleCollisionResults extends CollisionResults {
      * 
      * @see com.jme.intersection.CollisionResults#processCollisions()
      */
-    public void processCollisions() {
+    @Override
+	public void processCollisions() {
 
     }
 

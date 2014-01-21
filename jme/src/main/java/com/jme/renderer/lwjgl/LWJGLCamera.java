@@ -79,14 +79,16 @@ public class LWJGLCamera extends AbstractCamera {
     /**
      * @return the width/resolution of the display.
      */
-    public int getHeight() {
+    @Override
+	public int getHeight() {
         return height;
     }
 
     /**
      * @return the height/resolution of the display.
      */
-    public int getWidth() {
+    @Override
+	public int getWidth() {
         return width;
     }
 
@@ -97,7 +99,8 @@ public class LWJGLCamera extends AbstractCamera {
      * @param width int
      * @param height int
      */
-    public void resize(int width, int height) {
+    @Override
+	public void resize(int width, int height) {
       this.width = width;
       this.height = height;
       onViewPortChange();
@@ -108,7 +111,8 @@ public class LWJGLCamera extends AbstractCamera {
      * super to set the new frustum values then sets the OpenGL frustum.
      * @see com.jme.renderer.Camera#onFrustumChange()
      */
-    public void onFrustumChange() {
+    @Override
+	public void onFrustumChange() {
         super.onFrustumChange();
 
         // set projection matrix
@@ -149,7 +153,8 @@ public class LWJGLCamera extends AbstractCamera {
      * calculates the viewport coordinates and then calls OpenGL's viewport.
      * @see com.jme.renderer.Camera#onViewPortChange()
      */
-    public void onViewPortChange() {
+    @Override
+	public void onViewPortChange() {
         // set view port
         int x = (int) (viewPortLeft * width);
         int y = (int) (viewPortBottom * height);
@@ -164,7 +169,8 @@ public class LWJGLCamera extends AbstractCamera {
      * OpenGL frame.
      * @see com.jme.renderer.Camera#onFrameChange()
      */
-    public void onFrameChange() {
+    @Override
+	public void onFrameChange() {
         super.onFrameChange();
 
         if (parentClass == LWJGLTextureRenderer.class)
@@ -199,7 +205,8 @@ public class LWJGLCamera extends AbstractCamera {
     private static final FloatBuffer tmp_FloatBuffer = BufferUtils.createFloatBuffer(16);
     private Matrix4f projection;
 
-    public Matrix4f getProjectionMatrix() {
+    @Override
+	public Matrix4f getProjectionMatrix() {
         if ( projection == null )
         {
             projection = new Matrix4f();
@@ -210,7 +217,8 @@ public class LWJGLCamera extends AbstractCamera {
 
     private Matrix4f modelView;
 
-    public Matrix4f getModelViewMatrix() {
+    @Override
+	public Matrix4f getModelViewMatrix() {
         if ( modelView == null )
         {
             modelView = new Matrix4f();

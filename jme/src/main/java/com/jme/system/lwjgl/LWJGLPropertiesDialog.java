@@ -216,7 +216,8 @@ public final class LWJGLPropertiesDialog extends JDialog {
         }
 
         addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
+            @Override
+			public void windowClosing(WindowEvent e) {
                 cancelled = true;
                 dispose();
             }
@@ -240,7 +241,8 @@ public final class LWJGLPropertiesDialog extends JDialog {
         centerPanel.setLayout(new BorderLayout());
 
         KeyListener aListener = new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
+            @Override
+			public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (verifyAndSaveCurrentSelection())
                         dispose();
@@ -270,14 +272,16 @@ public final class LWJGLPropertiesDialog extends JDialog {
         // Set the button action listeners. Cancel disposes without saving, OK
         // saves.
         ok.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 if (verifyAndSaveCurrentSelection())
                     dispose();
             }
         });
 
         cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 cancelled = true;
                 dispose();
             }
@@ -367,7 +371,8 @@ public final class LWJGLPropertiesDialog extends JDialog {
         resolutionBox.setSelectedItem(source.getWidth() + " x "
                 + source.getHeight());
         resolutionBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 updateDisplayChoices();
             }
         });
@@ -489,7 +494,8 @@ public final class LWJGLPropertiesDialog extends JDialog {
         /**
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
-        public int compare(DisplayMode a, DisplayMode b) {
+        @Override
+		public int compare(DisplayMode a, DisplayMode b) {
             // Width
             if (a.getWidth() != b.getWidth())
                 return (a.getWidth() > b.getWidth()) ? 1 : -1;

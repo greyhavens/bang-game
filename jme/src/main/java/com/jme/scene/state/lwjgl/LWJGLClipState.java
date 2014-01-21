@@ -62,7 +62,8 @@ public class LWJGLClipState extends ClipState {
      * 
      * @see com.jme.scene.state.ClipState#apply()
      */
-    public void apply() {
+    @Override
+	public void apply() {
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()
                 .getCurrentContext();

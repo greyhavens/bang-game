@@ -185,13 +185,15 @@ public class BezierPatch implements Savable {
 		return detailLevel;
 	}
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(anchors, "anchors", new Vector3f[4][4]);
         capsule.write(detailLevel, "detailLevel", 0);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         Savable[][] savs = capsule.readSavableArray2D("anchors", new Vector3f[4][4]);
         if(savs != null) {
@@ -205,7 +207,8 @@ public class BezierPatch implements Savable {
         detailLevel = capsule.readInt("detailLevel", 0);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends BezierPatch> getClassTag() {
         return this.getClass();
     }
 }

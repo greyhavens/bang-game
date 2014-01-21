@@ -96,6 +96,7 @@ public class SharedBatch extends TriangleBatch {
         }
     }
     
+	@Override
 	public int getType() {
         return SceneElement.TRIANGLEBATCH | SceneElement.GEOMBATCH | SceneElement.SHAREDBATCH;
 	}
@@ -161,6 +162,7 @@ public class SharedBatch extends TriangleBatch {
 	/**
 	 * <code>setVBOInfo</code> is not supported in SharedBatch.
 	 */
+	@Override
 	public void setVBOInfo(VBOInfo info) {
 		LoggingSystem.getLogger().log(Level.WARNING, "SharedBatch does not allow the manipulation" +
 		"of the the mesh data.");
@@ -169,7 +171,8 @@ public class SharedBatch extends TriangleBatch {
 	/**
 	 * <code>getVBOInfo</code> returns the target mesh's vbo info.
 	 */
-    public VBOInfo getVBOInfo() {
+    @Override
+	public VBOInfo getVBOInfo() {
         return target.getVBOInfo();
     }
 
@@ -180,6 +183,7 @@ public class SharedBatch extends TriangleBatch {
 	 * @param color
 	 *            the color to set.
 	 */
+	@Override
 	public void setSolidColor(ColorRGBA color) {
 		LoggingSystem.getLogger().log(Level.WARNING, "SharedBatch does not allow the manipulation" +
 		"of the the mesh data.");
@@ -188,6 +192,7 @@ public class SharedBatch extends TriangleBatch {
 	/**
 	 * <code>setRandomColors</code> is not supported by SharedBatch.
 	 */
+	@Override
 	public void setRandomColors() {
 		LoggingSystem.getLogger().log(Level.WARNING, "SharedBatch does not allow the manipulation" +
 		"of the the mesh data.");
@@ -200,6 +205,7 @@ public class SharedBatch extends TriangleBatch {
 	 * @return the float buffer that contains the target geometry's vertex
 	 *         information.
 	 */
+	@Override
 	public FloatBuffer getVertexBuffer() {
 		return target.getVertexBuffer();
 	}
@@ -210,6 +216,7 @@ public class SharedBatch extends TriangleBatch {
 	 * @param buff
 	 *            the new vertex buffer.
 	 */
+	@Override
 	public void setVertexBuffer(FloatBuffer buff) {
 		LoggingSystem.getLogger().log(Level.WARNING, "SharedBatch does not allow the manipulation" +
 		"of the the mesh data.");
@@ -221,6 +228,7 @@ public class SharedBatch extends TriangleBatch {
 	 *
 	 * @return the float buffer containing the target geometry information.
 	 */
+	@Override
 	public FloatBuffer getNormalBuffer() {
 		return target.getNormalBuffer();
 	}
@@ -231,6 +239,7 @@ public class SharedBatch extends TriangleBatch {
 	 * @param buff
 	 *            the new normal buffer.
 	 */
+	@Override
 	public void setNormalBuffer(FloatBuffer buff) {
 		LoggingSystem.getLogger().log(Level.WARNING, "SharedBatch does not allow the manipulation" +
 		"of the the mesh data.");
@@ -242,6 +251,7 @@ public class SharedBatch extends TriangleBatch {
 	 *
 	 * @return the buffer that contains the target geometry's color information.
 	 */
+	@Override
 	public FloatBuffer getColorBuffer() {
 		return target.getColorBuffer();
 	}
@@ -252,6 +262,7 @@ public class SharedBatch extends TriangleBatch {
 	 * @param buff
 	 *            the new color buffer.
 	 */
+	@Override
 	public void setColorBuffer( FloatBuffer buff) {
 		LoggingSystem.getLogger().log(Level.WARNING, "SharedBatch does not allow the manipulation" +
 		"of the the mesh data.");
@@ -264,7 +275,8 @@ public class SharedBatch extends TriangleBatch {
      * 
      * @return the indices array as an <code>IntBuffer</code>.
      */
-    public IntBuffer getIndexBuffer() {
+    @Override
+	public IntBuffer getIndexBuffer() {
         return target.getIndexBuffer();
     }
 
@@ -275,12 +287,14 @@ public class SharedBatch extends TriangleBatch {
      * @param indices
      *            the index array as an IntBuffer.
      */
-    public void setIndexBuffer( IntBuffer indices) {
+    @Override
+	public void setIndexBuffer( IntBuffer indices) {
     	LoggingSystem.getLogger().log(Level.WARNING, "SharedBatch does not allow the manipulation" +
 		"of the the mesh data.");
     }
     
-    public int getVertexCount() {
+    @Override
+	public int getVertexCount() {
         return target.getVertexCount();
     }
 
@@ -289,11 +303,13 @@ public class SharedBatch extends TriangleBatch {
      * 
      * @return The current number of triangles.
      */
-    public int getTriangleCount() {
+    @Override
+	public int getTriangleCount() {
         return target.getTriangleCount();
     }
     
-    public void getTriangle(int index, int[] storage) {
+    @Override
+	public void getTriangle(int index, int[] storage) {
         target.getTriangle(index, storage);
     }
 
@@ -319,6 +335,7 @@ public class SharedBatch extends TriangleBatch {
 	 * @return the float buffers that contain the target geometry's texture
 	 *         information.
 	 */
+	@Override
 	public ArrayList<FloatBuffer> getTextureBuffers() {
 		return target.getTextureBuffers();
 	}
@@ -332,6 +349,7 @@ public class SharedBatch extends TriangleBatch {
 	 *            the texture unit to check.
 	 * @return the texture coordinates at the given texture unit.
 	 */
+	@Override
 	public FloatBuffer getTextureBuffer(int textureUnit) {
 		return target.getTextureBuffer(textureUnit);
 	}
@@ -353,6 +371,7 @@ public class SharedBatch extends TriangleBatch {
      * @param buff
      *            the new vertex buffer.
      */
+	@Override
 	public void setTextureBuffer( FloatBuffer buff, int position) {
 		LoggingSystem.getLogger().log(Level.WARNING, "SharedBatch does not allow the manipulation" +
 		"of the the mesh data.");
@@ -373,6 +392,7 @@ public class SharedBatch extends TriangleBatch {
 	 * 
 	 * @see com.jme.scene.Spatial#updateWorldBound()
 	 */
+	@Override
 	public void updateWorldBound() {
 		if (target.getModelBound() != null) {
 			worldBound = target.getModelBound().transform(parentGeom.getWorldRotation(),
@@ -386,7 +406,8 @@ public class SharedBatch extends TriangleBatch {
      * @param modelBound
      *            the bounding object for this geometry.
      */
-    public void setModelBound(BoundingVolume modelBound) {
+    @Override
+	public void setModelBound(BoundingVolume modelBound) {
         target.bound = modelBound;
     }
 
@@ -396,6 +417,7 @@ public class SharedBatch extends TriangleBatch {
 	 * vertex information.
 	 * 
 	 */
+	@Override
 	public void updateModelBound() {
 		if (target.getModelBound() != null) {
             target.updateModelBound();
@@ -406,6 +428,7 @@ public class SharedBatch extends TriangleBatch {
 	/**
 	 * returns the model bound of the target object.
 	 */
+	@Override
 	public BoundingVolume getModelBound() {
 		return target.getModelBound();
 	}
@@ -416,6 +439,7 @@ public class SharedBatch extends TriangleBatch {
 	 * 
 	 * @see com.jme.scene.Spatial#draw(com.jme.renderer.Renderer)
 	 */
+	@Override
 	public void draw(Renderer r) {
         //if this batch is not enabled, don't bother processing it.
 		if(!isEnabled()) {
@@ -457,19 +481,22 @@ public class SharedBatch extends TriangleBatch {
 		this.updatesCollisionTree = updatesCollisionTree;
 	}
 
-    public void updateCollisionTree(boolean doSort) {
+    @Override
+	public void updateCollisionTree(boolean doSort) {
         if (updatesCollisionTree)
             target.updateCollisionTree(doSort);
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(target, "target", null);
         capsule.write(updatesCollisionTree, "updatesCollisionTree", false);
         super.write(e);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         target = (TriangleBatch)capsule.readSavable("target", null);
         updatesCollisionTree = capsule.readBoolean("updatesCollisionTree", false);
@@ -486,7 +513,8 @@ public class SharedBatch extends TriangleBatch {
         return target.hasDirtyVertices;
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
         if (target.parentGeom != null)
             return target.parentGeom.getName() + ": SharedBatch "+parentGeom.getBatchIndex(this);
         

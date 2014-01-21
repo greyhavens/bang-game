@@ -56,6 +56,7 @@ public class BoundingPickResults extends PickResults{
      * @see com.jme.intersection.PickResults#addCollision(com.jme.math.Ray,
      *      com.jme.scene.Geometry)
      */
+	@Override
 	public void addPick(Ray ray, GeomBatch s) {
 		PickData data = new PickData(ray, s, willCheckDistance());
 		addPickData(data);
@@ -67,6 +68,7 @@ public class BoundingPickResults extends PickResults{
      * 
      * @see com.jme.intersection.PickResults#processCollisions()
      */
+	@Override
 	public void processPick() {
 		
 	}

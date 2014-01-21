@@ -73,7 +73,8 @@ class LWJGLJoystick implements Joystick {
         }
     }
 
-    public void rumble( int axis, float intensity ) {
+    @Override
+	public void rumble( int axis, float intensity ) {
         if ( rumblers != null && axis < rumblers.length ) {
             Rumbler rumbler = rumblers[axis];
             if ( rumbler != null ) {
@@ -82,7 +83,8 @@ class LWJGLJoystick implements Joystick {
         }
     }
 
-    public String[] getAxisNames() {
+    @Override
+	public String[] getAxisNames() {
         Controller c = controller;
         String[] axises = new String[c.getAxisCount()];
         for ( int i = 0; i < axises.length; i++ ) {
@@ -91,11 +93,13 @@ class LWJGLJoystick implements Joystick {
         return axises;
     }
 
-    public int getAxisCount() {
+    @Override
+	public int getAxisCount() {
         return controller.getAxisCount();
     }
 
-    public float getAxisValue( int axis ) {
+    @Override
+	public float getAxisValue( int axis ) {
         Controller c = controller;
         if ( axis < c.getAxisCount() ) {
             return c.getAxisValue( axis );
@@ -104,11 +108,13 @@ class LWJGLJoystick implements Joystick {
         return 0;        
     }
 
-    public int getButtonCount() {
+    @Override
+	public int getButtonCount() {
         return controller.getButtonCount();
     }
 
-    public boolean isButtonPressed( int button ) {
+    @Override
+	public boolean isButtonPressed( int button ) {
         Controller c = controller;
         if ( button < c.getButtonCount() ) {
             return c.isButtonPressed( button );
@@ -117,11 +123,13 @@ class LWJGLJoystick implements Joystick {
         return false;        
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return controller.getName();
     }
 
-    public int findAxis(String name) {
+    @Override
+	public int findAxis(String name) {
         int i = 0;
         for (String axName : getAxisNames()){
             if (name.equalsIgnoreCase(axName)) return i;

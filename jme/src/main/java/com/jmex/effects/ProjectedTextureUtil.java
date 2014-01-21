@@ -100,7 +100,6 @@ public class ProjectedTextureUtil {
 	private static Vector3f localDir = new Vector3f();
 	private static Vector3f localLeft = new Vector3f();
 	private static Vector3f localUp = new Vector3f();
-	private static Vector3f tmpVec = new Vector3f();
 
 	private static IntBuffer matrixModeBuffer = BufferUtils.createIntBuffer( 16 );
 	private static int savedMatrixMode = 0;

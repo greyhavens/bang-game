@@ -144,21 +144,24 @@ public class Rectangle  implements Serializable, Savable {
     return result;
   }
 
-  public void write(JMEExporter e) throws IOException {
+  @Override
+public void write(JMEExporter e) throws IOException {
       OutputCapsule capsule = e.getCapsule(this);
       capsule.write(a, "a", Vector3f.ZERO);
       capsule.write(b, "b", Vector3f.ZERO);
       capsule.write(c, "c", Vector3f.ZERO);
   }
 
-  public void read(JMEImporter e) throws IOException {
+  @Override
+public void read(JMEImporter e) throws IOException {
       InputCapsule capsule = e.getCapsule(this);
       a = (Vector3f)capsule.readSavable("a", new Vector3f(Vector3f.ZERO));
       b = (Vector3f)capsule.readSavable("b", new Vector3f(Vector3f.ZERO));
       c = (Vector3f)capsule.readSavable("c", new Vector3f(Vector3f.ZERO));
   }
   
-  public Class getClassTag() {
+  @Override
+public Class<? extends Rectangle> getClassTag() {
       return this.getClass();
   }
 }

@@ -89,7 +89,8 @@ public class MidPointHeightMap extends AbstractHeightMap {
      * to <code>load</code> is recommended if attributes have changed using
      * the set methods.
      */
-    public boolean load() {
+    @Override
+	public boolean load() {
         float height;
         double heightReducer;
         float[][] tempBuffer;

@@ -268,7 +268,8 @@ public class ShadowedRenderPass extends Pass {
     *            Renderer to use for drawing.
     * @see com.jme.renderer.pass.Pass#doRender(com.jme.renderer.Renderer)
     */
-   public void doRender(Renderer r) {
+   @Override
+public void doRender(Renderer r) {
        // init states
        init();
        

@@ -49,7 +49,8 @@ public class DummyJoystickInput extends JoystickInput {
     /**
      * @return number of attached game controllers
      */
-    public int getJoystickCount() {
+    @Override
+	public int getJoystickCount() {
         return 0;
     }
 
@@ -59,7 +60,8 @@ public class DummyJoystickInput extends JoystickInput {
      * @param index index of the controller (0 <= index <= {@link #getJoystickCount()})
      * @return game controller
      */
-    public Joystick getJoystick( int index ) {
+    @Override
+	public Joystick getJoystick( int index ) {
         return null;
     }
 
@@ -74,11 +76,13 @@ public class DummyJoystickInput extends JoystickInput {
      *
      * @return what the implementation thinks is the main joystick, not null!
      */
-    public Joystick getDefaultJoystick() {
+    @Override
+	public Joystick getDefaultJoystick() {
         return dummyJoystick;
     }
 
-    protected void destroy() {
+    @Override
+	protected void destroy() {
 
     }
 
@@ -86,35 +90,43 @@ public class DummyJoystickInput extends JoystickInput {
      * Poll data for this input system part (update the values) and send events to all listeners
      * (events will not be generated if no listeners were added via addListener).
      */
-    public void update() {
+    @Override
+	public void update() {
 
     }
 
     public static class DummyJoystick implements Joystick {
-        public void rumble( int axis, float intensity ) {
+        @Override
+		public void rumble( int axis, float intensity ) {
         }
 
-        public String[] getAxisNames() {
+        @Override
+		public String[] getAxisNames() {
             return new String[0];
         }
 
-        public int getAxisCount() {
+        @Override
+		public int getAxisCount() {
             return 0;
         }
 
-        public float getAxisValue( int axis ) {
+        @Override
+		public float getAxisValue( int axis ) {
             return 0;
         }
 
-        public int getButtonCount() {
+        @Override
+		public int getButtonCount() {
             return 0;
         }
 
-        public boolean isButtonPressed( int button ) {
+        @Override
+		public boolean isButtonPressed( int button ) {
             return false;
         }
 
-        public String getName() {
+        @Override
+		public String getName() {
             return "Dummy";
         }
 
@@ -122,7 +134,8 @@ public class DummyJoystickInput extends JoystickInput {
 
         }
 
-        public int findAxis(String name) {
+        @Override
+		public int findAxis(String name) {
             return -1;
         }
     }

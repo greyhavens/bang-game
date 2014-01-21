@@ -8,6 +8,7 @@ package com.jme.util;
  * 
  * @deprecated Replaced by {@link GameTaskQueue}
  */
+@Deprecated
 public interface RenderThreadExecutable {
 
     /**

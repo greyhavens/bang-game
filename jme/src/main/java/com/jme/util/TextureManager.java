@@ -37,7 +37,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.PixelGrabber;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -51,10 +50,8 @@ import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
-import com.jme.image.BitmapHeader;
 import com.jme.image.Image;
 import com.jme.image.Texture;
-import com.jme.image.util.DDSLoader;
 import com.jme.image.util.TGALoader;
 import com.jme.renderer.Renderer;
 import com.jme.scene.state.RenderState;
@@ -65,11 +62,11 @@ import com.jme.util.export.binary.BinaryImporter;
 import com.jme.util.geom.BufferUtils;
 
 /**
- * 
+ *
  * <code>TextureManager</code> provides static methods for building a
  * <code>Texture</code> object. Typically, the information supplied is the
  * filename and the texture properties.
- * 
+ *
  * @author Mark Powell
  * @author Joshua Slack -- cache code and enhancements
  * @version $Id$
@@ -200,37 +197,37 @@ final public class TextureManager {
      */
     public static com.jme.image.Texture loadTexture(URL file, int minFilter,
                                                     int magFilter, int imageType, float anisoLevel, boolean flipped) {
-    
+
         if (null == file) {
             System.err.println("Could not load image...  URL was null.");
             return TextureState.defaultTexture;
         }
-        
+
         String fileName = file.getFile();
         if (fileName == null)
             return TextureState.defaultTexture;
-        
+
         TextureKey tkey = new TextureKey(file, minFilter, magFilter,
                 anisoLevel, flipped, imageType);
-        
+
         return loadTexture(tkey);
     }
-    
+
     public static com.jme.image.Texture loadTexture(TextureKey tkey) {
         return loadTexture(null, tkey, null);
     }
-    
+
     public static com.jme.image.Texture loadTexture(Texture texture, TextureKey tkey) {
         return loadTexture(texture, tkey, null);
     }
-    
+
     public static com.jme.image.Texture loadTexture(Texture texture, TextureKey tkey, com.jme.image.Image imageData) {
         if(tkey == null) {
             LoggingSystem.getLogger().log(Level.WARNING,
                     "TextureKey is null, cannot load");
             return TextureState.defaultTexture;
         }
-        
+
         Texture cache = findCachedTexture(tkey);
         if(cache != null) {
             //look into cache.
@@ -290,7 +287,7 @@ final public class TextureManager {
         addToCache(texture);
         return texture;
     }
-    
+
     public static void addToCache(Texture t) {
         m_tCache.put(t.getTextureKey(), t);
     }
@@ -308,7 +305,7 @@ final public class TextureManager {
                 (COMPRESS_BY_DEFAULT ? Image.GUESS_FORMAT
                         : Image.GUESS_FORMAT_NO_S3TC), flipped);
     }
-    
+
 
     public static com.jme.image.Texture loadTexture(java.awt.Image image,
                                                     int minFilter, int magFilter, float anisoLevel, int imageFormat, boolean flipped) {
@@ -320,12 +317,12 @@ final public class TextureManager {
             tkey.setFileType(""+image.hashCode());
         return loadTexture(null, tkey, imageData);
     }
-    
+
     public static com.jme.image.Image loadImage(TextureKey key) {
         if(key == null) {
             return null;
         }
-        
+
         if("savable".equalsIgnoreCase(key.fileType)) {
             Savable s;
             try {
@@ -343,15 +340,15 @@ final public class TextureManager {
         }
         return loadImage(key.m_location, key.m_flipped);
     }
-    
+
     public static com.jme.image.Image loadImage(URL file, boolean flipped) {
-        if(file == null) 
+        if(file == null)
             return TextureState.defaultTexture.getImage();
-        
+
         String fileName = file.getFile();
         if (fileName == null)
             return TextureState.defaultTexture.getImage();
-        
+
         String fileExt = fileName.substring(fileName.lastIndexOf('.'));
         InputStream is;
         try {
@@ -362,23 +359,16 @@ final public class TextureManager {
         }
         return loadImage(fileExt, is, flipped);
     }
-    
+
     public static com.jme.image.Image loadImage(String fileExt, InputStream stream, boolean flipped) {
-        
+
         com.jme.image.Image imageData = null;
         try {
             ImageLoader loader = loaders.get(fileExt.toLowerCase());
-            if (loader != null)
-            	imageData = loader.load(stream);
-            else if (".TGA".equalsIgnoreCase(fileExt)) { // TGA, direct to imageData
+            if (loader != null) {
+                imageData = loader.load(stream);
+            } else if (".TGA".equalsIgnoreCase(fileExt)) { // TGA, direct to imageData
                 imageData = TGALoader.loadImage(stream, flipped);
-            } else if (".DDS".equalsIgnoreCase(fileExt)) { // DDS, direct to
-                // imageData
-                imageData = DDSLoader.loadImage(stream, flipped);
-            } else if (".BMP".equalsIgnoreCase(fileExt)) { // BMP, awtImage to
-                // imageData
-                java.awt.Image image = loadBMPImage(stream);
-                imageData = loadImage(image, flipped);
             } else { // Anything else
                 java.awt.Image image = ImageIO.read(stream);
                 imageData = loadImage(image, flipped);
@@ -410,7 +400,7 @@ final public class TextureManager {
         if (image == null) return null;
         boolean hasAlpha = hasAlpha(image);
         BufferedImage tex = null;
-        if (flipImage || !(image instanceof BufferedImage) || (hasAlpha ? ((BufferedImage)image).getType() != BufferedImage.TYPE_4BYTE_ABGR : ((BufferedImage)image).getType() != BufferedImage.TYPE_3BYTE_BGR )) { 
+        if (flipImage || !(image instanceof BufferedImage) || (hasAlpha ? ((BufferedImage)image).getType() != BufferedImage.TYPE_4BYTE_ABGR : ((BufferedImage)image).getType() != BufferedImage.TYPE_3BYTE_BGR )) {
             // Obtain the image data.
             try {
                 tex = new BufferedImage(image.getWidth(null),
@@ -429,7 +419,7 @@ final public class TextureManager {
                 tx = AffineTransform.getScaleInstance(1, -1);
                 tx.translate(0, -image.getHeight(null));
             }
-    
+
             Graphics2D g = (Graphics2D) tex.getGraphics();
             g.drawImage(image, tx, null);
             g.dispose();
@@ -450,42 +440,6 @@ final public class TextureManager {
         textureImage.setHeight(tex.getHeight());
         textureImage.setData(scratch);
         return textureImage;
-    }
-
-    /**
-     * <code>loadBMPImage</code> because bitmap is not directly supported by
-     * Java, we must load it manually. The requires opening a stream to the file
-     * and reading in each byte. After the image data is read, it is used to
-     * create a new <code>Image</code> object. This object is returned to be
-     * used for normal use.
-     *
-     * @param fs
-     *            The bitmap file stream.
-     *
-     * @return <code>Image</code> object that contains the bitmap information.
-     */
-    private static java.awt.Image loadBMPImage(InputStream fs) {
-        try {
-            DataInputStream dis = new DataInputStream(fs);
-            BitmapHeader bh = new BitmapHeader();
-            byte[] data = new byte[dis.available()];
-            dis.readFully(data);
-            dis.close();
-            bh.read(data);
-            if (bh.bitcount == 24) {
-                return (bh.readMap24(data));
-            }
-            if (bh.bitcount == 32) {
-                return (bh.readMap32(data));
-            }
-            if (bh.bitcount == 8) {
-                return (bh.readMap8(data));
-            }
-        } catch (IOException e) {
-            LoggingSystem.getLogger().log(Level.WARNING,
-                    "Error while loading bitmap texture.");
-        }
-        return null;
     }
 
     /**
@@ -520,8 +474,8 @@ final public class TextureManager {
     }
 
     public static boolean releaseTexture(Texture texture) {
-        Collection c = m_tCache.keySet();
-        Iterator it = c.iterator();
+        Collection<TextureKey> c = m_tCache.keySet();
+        Iterator<TextureKey> it = c.iterator();
         TextureKey key;
         Texture next;
         while (it.hasNext()) {
@@ -541,32 +495,32 @@ final public class TextureManager {
     public static void clearCache() {
         m_tCache.clear();
     }
-    
-    /**
-	 * Register an ImageLoader to handle all files with a specific extention. An
-	 * ImageLoader can be registered to handle several formats without problems.
-	 * 
-	 * @param format
-	 *            The file extention for the format this ImageLoader will
-	 *            handle. Make sure to include the dot (eg. ".BMP"). This value
-	 *            is case insensitive (".Bmp" will register for ".BMP", ".bmp",
-	 *            etc.)
-	 * @param handler
-	 */
-	public static void registerHandler(String format, ImageLoader handler) {
-		loaders.put(format.toLowerCase(), handler);
-	}
 
-	public static void unregisterHandler(String format) {
-		loaders.remove(format.toLowerCase());
-	}
-    
+    /**
+     * Register an ImageLoader to handle all files with a specific extention. An
+     * ImageLoader can be registered to handle several formats without problems.
+     *
+     * @param format
+     *            The file extention for the format this ImageLoader will
+     *            handle. Make sure to include the dot (eg. ".BMP"). This value
+     *            is case insensitive (".Bmp" will register for ".BMP", ".bmp",
+     *            etc.)
+     * @param handler
+     */
+    public static void registerHandler(String format, ImageLoader handler) {
+        loaders.put(format.toLowerCase(), handler);
+    }
+
+    public static void unregisterHandler(String format) {
+        loaders.remove(format.toLowerCase());
+    }
+
     public static void registerForCleanup(TextureKey textureKey, int textureId) {
-        Texture t = m_tCache.get(textureKey); 
+        Texture t = m_tCache.get(textureKey);
         if (t != null) {
             t.setTextureId(textureId);
         }
-        
+
         cleanupStore.add(textureId);
     }
 
@@ -584,6 +538,6 @@ final public class TextureManager {
     }
 
     public static Texture findCachedTexture(TextureKey textureKey) {
-        return m_tCache.get(textureKey); 
+        return m_tCache.get(textureKey);
     }
 }

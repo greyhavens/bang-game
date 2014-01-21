@@ -190,7 +190,8 @@ public class Ring implements Serializable, Savable {
         return result;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(center, "center", Vector3f.ZERO);
         capsule.write(up, "up", Vector3f.UNIT_Z);
@@ -198,7 +199,8 @@ public class Ring implements Serializable, Savable {
         capsule.write(outerRadius, "outerRadius", 1f);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         center = (Vector3f) capsule.readSavable("center", new Vector3f(
                 Vector3f.ZERO));
@@ -208,7 +210,8 @@ public class Ring implements Serializable, Savable {
         outerRadius = capsule.readFloat("outerRadius", 1f);
     }
 
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Ring> getClassTag() {
         return this.getClass();
     }
 }

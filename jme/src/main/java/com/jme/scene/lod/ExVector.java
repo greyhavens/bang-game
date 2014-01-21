@@ -75,6 +75,7 @@ public class ExVector extends Vector<Object> {
 	 * @param obj Object to add
 	 * @return boolean if the object was added.
 	 */
+	@Override
 	public boolean add(Object obj) {
 		if (indexOf(obj) >= 0)
 			return false;

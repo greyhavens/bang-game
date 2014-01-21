@@ -82,7 +82,8 @@ final public class TextureKey implements Savable {
         this.imageType = imageType;
     }
 
-    public boolean equals(Object other) {
+    @Override
+	public boolean equals(Object other) {
         if (other == this) {
             return true;
         }
@@ -116,7 +117,8 @@ final public class TextureKey implements Savable {
     }
 
     // TODO: make this better?
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         if (code == Integer.MAX_VALUE) {
             code = 37;
             if(m_location != null) {
@@ -138,7 +140,8 @@ final public class TextureKey implements Savable {
         code = Integer.MAX_VALUE;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         if ( m_location != null ) {
             capsule.write(m_location.getProtocol(), "protocol", null);
@@ -153,7 +156,8 @@ final public class TextureKey implements Savable {
         capsule.write(fileType, "fileType", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         String protocol = capsule.readString("protocol", null);
         String host = capsule.readString("host", null);
@@ -200,7 +204,8 @@ final public class TextureKey implements Savable {
     
     public static void setOverridingLocation(final URL overridingLocation) {
         setLocationOverride(new LocationOverride() {
-            public URL getLocation(String file)
+            @Override
+			public URL getLocation(String file)
                 throws MalformedURLException {
                 if (file == null) return overridingLocation;
                 int index = file.lastIndexOf('/');
@@ -212,7 +217,8 @@ final public class TextureKey implements Savable {
         });
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends TextureKey> getClassTag() {
         return this.getClass();
     }
 

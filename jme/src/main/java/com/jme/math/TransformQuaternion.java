@@ -215,14 +215,16 @@ public class TransformQuaternion  implements Serializable, Savable {
         this.scale.set(matrixQuat.scale);
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(rot, "rot", new Quaternion());
         capsule.write(translation, "translation", Vector3f.ZERO);
         capsule.write(scale, "scale", Vector3f.UNIT_XYZ);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         
         rot = (Quaternion)capsule.readSavable("rot", new Quaternion());
@@ -230,7 +232,8 @@ public class TransformQuaternion  implements Serializable, Savable {
         scale = (Vector3f)capsule.readSavable("scale", new Vector3f(Vector3f.UNIT_XYZ));
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends TransformQuaternion> getClassTag() {
         return this.getClass();
     }
 }

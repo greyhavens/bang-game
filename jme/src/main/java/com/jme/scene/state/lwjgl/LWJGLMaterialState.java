@@ -67,6 +67,7 @@ public class LWJGLMaterialState extends MaterialState {
 	 * 
 	 * @see com.jme.scene.state.RenderState#apply()
 	 */
+	@Override
 	public void apply() {
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()

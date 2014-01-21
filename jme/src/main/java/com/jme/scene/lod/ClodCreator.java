@@ -107,6 +107,7 @@ public class ClodCreator extends VETMesh {
 
 		public float m_fMetric;
 
+		@Override
 		public boolean equals(Object obj) {
 			HeapRecord rkH = (HeapRecord) obj;
 			return m_kEdge.equals(rkH.m_kEdge);
@@ -154,7 +155,7 @@ public class ClodCreator extends VETMesh {
 			// We must have duplicates...  lets weed them out and make a new Clod.
 			IntBuffer redoneIndices = BufferUtils.createIntBuffer(triangleMap
 					.size() * 3);
-			Iterator it = triangleMap.keySet().iterator();
+			Iterator<?> it = triangleMap.keySet().iterator();
 			while (it.hasNext()) {
 				Triangle t = (Triangle) it.next();
 				redoneIndices.put(t.vert[0]);
@@ -338,6 +339,7 @@ public class ClodCreator extends VETMesh {
 		return Float.MAX_VALUE;
 	}
 
+	@Override
 	public void removeTriangle(Triangle rkT) {
 		// If the triangle is an original one, reorder the connectivity array so
 		// that the triangle occurs at the end.
@@ -421,7 +423,7 @@ public class ClodCreator extends VETMesh {
 				kModified.add(new Edge(kT.vert[2], kT.vert[0]));
 			}
 
-			Iterator it = kModified.iterator();
+			Iterator<Edge> it = kModified.iterator();
 			while (it.hasNext()) {
 				Edge pkES = (Edge) it.next();
 				pkEM = edgeMap.get(pkES);
@@ -433,7 +435,7 @@ public class ClodCreator extends VETMesh {
 		}
 
 		// save vertex reordering information
-		Iterator it = deletedVertices.iterator();
+		Iterator<Integer> it = deletedVertices.iterator();
 		int iV;
 		while (it.hasNext()) {
 			//      if(!( 0 <= m_iVCurrent && m_iVCurrent < m_akVertex.length )) throw new AssertionError();
@@ -452,7 +454,7 @@ public class ClodCreator extends VETMesh {
 	}
 
 	public void flushVertices() {
-		Iterator it = vertexMap.keySet().iterator();
+		Iterator<?> it = vertexMap.keySet().iterator();
 		while (it.hasNext()) {
 			Integer val = (Integer) it.next();
 			orderedVertices[currentVertex] = val.intValue();
@@ -464,9 +466,9 @@ public class ClodCreator extends VETMesh {
 	}
 
 	public void flushTriangles() {
-		Iterator it = triangleMap.entrySet().iterator();
+		Iterator<?> it = triangleMap.entrySet().iterator();
 		while (it.hasNext()) {
-			Entry entry = (Entry) it.next();
+			Entry<?, ?> entry = (Entry<?, ?>) it.next();
 			TriangleAttribute pkTA = (TriangleAttribute) entry.getValue();
 			int iTIndex = ((Integer) pkTA.data).intValue();
 			if (iTIndex >= 0) {
@@ -629,9 +631,9 @@ public class ClodCreator extends VETMesh {
 		heapArray = new HeapRecord[2 * heapSize];
 
 		int iHIndex = 0;
-		Iterator it = edgeMap.entrySet().iterator();
+		Iterator<?> it = edgeMap.entrySet().iterator();
 		while (it.hasNext()) {
-			Entry entry = (Entry) it.next();
+			Entry<?, ?> entry = (Entry<?, ?>) it.next();
 			Edge pkE = (Edge) entry.getKey();
 			EdgeAttribute pkEA = (EdgeAttribute) entry.getValue();
 			heapArray[iHIndex] = (HeapRecord) pkEA.data;
@@ -803,6 +805,7 @@ public class ClodCreator extends VETMesh {
 
 	// mesh insert/remove callbacks
 
+	@Override
 	public void onVertexInsert(Integer vert, boolean bCreate,
 			VertexAttribute att) {
 		// It is possible that a 'keep' vertex was removed because the triangles
@@ -812,6 +815,7 @@ public class ClodCreator extends VETMesh {
 			deletedVertices.remove(vert);
 	}
 
+	@Override
 	public void onVertexRemove(Integer vert, boolean bDestroy,
 			VertexAttribute att) {
 		// Keep track of vertices removed during the edge collapse.
@@ -819,6 +823,7 @@ public class ClodCreator extends VETMesh {
 			deletedVertices.add(vert);
 	}
 
+	@Override
 	public void onEdgeInsert(Edge rkE, boolean bCreate, EdgeAttribute att) {
 		if (bCreate) {
 			att.data = new HeapRecord();
@@ -844,6 +849,7 @@ public class ClodCreator extends VETMesh {
 		}
 	}
 
+	@Override
 	public void onEdgeRemove(Edge rkE, boolean bDestroy, EdgeAttribute att) {
 		// Remove the edge from the heap.  The metric of the edge is set to
 		// -INFINITY so that it has the minimum value of all edges.  The update
@@ -860,12 +866,14 @@ public class ClodCreator extends VETMesh {
 		}
 	}
 
+	@Override
 	public void onTriangleInsert(Triangle tri, boolean bCreate,
 			TriangleAttribute att) {
 		if (bCreate)
 			att.data = new Integer(-1);
 	}
 
+	@Override
 	public void onTriangleRemove(Triangle tri, boolean bDestroy,
 			TriangleAttribute att) {
 		if (bDestroy)

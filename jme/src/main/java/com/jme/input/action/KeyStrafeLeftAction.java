@@ -68,7 +68,8 @@ public class KeyStrafeLeftAction extends KeyInputAction {
      * 
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
-    public void performAction(InputActionEvent evt) {
+    @Override
+	public void performAction(InputActionEvent evt) {
         Vector3f loc = camera.getLocation();
         loc.addLocal(camera.getLeft().mult(speed * evt.getTime(), tempVa));
         camera.update();

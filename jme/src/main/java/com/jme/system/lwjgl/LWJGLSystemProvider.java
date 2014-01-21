@@ -48,21 +48,25 @@ public class LWJGLSystemProvider implements SystemProvider {
 
     private static Timer timer;
 
-    public String getProviderIdentifier() {
+    @Override
+	public String getProviderIdentifier() {
         return LWJGL_SYSTEM_IDENTIFIER;
     }
 
-    public DisplaySystem getDisplaySystem() {
+    @Override
+	public DisplaySystem getDisplaySystem() {
         if (displaySystem == null) displaySystem = new LWJGLDisplaySystem();
         return displaySystem;
     }
 
-    public Timer getTimer() {
+    @Override
+	public Timer getTimer() {
         if (timer == null) timer = new LWJGLTimer();
         return timer;
     }
 
-    public void installLibs() {
+    @Override
+	public void installLibs() {
         // try {
         //     LWJGLInstaller.tempInstall();
         // } catch (Exception e) {

@@ -40,11 +40,13 @@ import com.jme.util.export.binary.BinaryLoaderModule;
 
 public class BinaryClipStateModule implements BinaryLoaderModule {
 
-    public String getKey() {
+    @Override
+	public String getKey() {
         return ClipState.class.getName();
     }
 
-    public Savable load(InputCapsule inputCapsule) {
+    @Override
+	public Savable load(InputCapsule inputCapsule) {
         return DisplaySystem.getDisplaySystem().getRenderer().createClipState();
     }
 

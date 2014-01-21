@@ -156,7 +156,8 @@ public class PointBatch extends GeomBatch implements Serializable, Savable {
         }
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(pointSize, "pointSize", 1);
@@ -164,7 +165,8 @@ public class PointBatch extends GeomBatch implements Serializable, Savable {
         capsule.write(indexBuffer, "indexBuffer", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         pointSize = capsule.readFloat("pointSize", 1);
@@ -172,7 +174,8 @@ public class PointBatch extends GeomBatch implements Serializable, Savable {
         indexBuffer = capsule.readIntBuffer("indexBuffer", null);
     }
     
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         if(!isEnabled()) {
             return;
         }

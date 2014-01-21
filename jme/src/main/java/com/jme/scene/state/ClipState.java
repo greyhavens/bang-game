@@ -69,7 +69,8 @@ public abstract class ClipState extends RenderState {
      * @return RenderState.RS_CLIP
      * @see RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_CLIP;
     }
 
@@ -133,21 +134,24 @@ public abstract class ClipState extends RenderState {
         setNeedsRefresh(true);
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(enabledClipPlanes, "enabledClipPlanes", new boolean[MAX_CLIP_PLANES]);
         capsule.write(planeEquations, "planeEquations", new double[MAX_CLIP_PLANES][4]);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         enabledClipPlanes = capsule.readBooleanArray("enabledClipPlanes", new boolean[MAX_CLIP_PLANES]);
         planeEquations = capsule.readDoubleArray2D("planeEquations", new double[MAX_CLIP_PLANES][4]);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<ClipState> getClassTag() {
         return ClipState.class;
     }
 }

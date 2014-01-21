@@ -67,6 +67,7 @@ public class ShadowTriangle implements Savable {
         edge3 = new ShadowEdge(0, 0);
     }
 
+	@Override
 	public void write(JMEExporter e) throws IOException {
 		OutputCapsule cap = e.getCapsule(this);
 		cap.write(edge1, "edge1", new ShadowEdge(0, 0));
@@ -74,6 +75,7 @@ public class ShadowTriangle implements Savable {
 		cap.write(edge3, "edge3", new ShadowEdge(0, 0));
 	}
 
+	@Override
 	public void read(JMEImporter e) throws IOException {
 		InputCapsule cap = e.getCapsule(this);
 		edge1 = (ShadowEdge)cap.readSavable("edge1", new ShadowEdge(0, 0));
@@ -81,7 +83,8 @@ public class ShadowTriangle implements Savable {
 		edge3 = (ShadowEdge)cap.readSavable("edge1", new ShadowEdge(0, 0));
 	}
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends ShadowTriangle> getClassTag() {
         return this.getClass();
     }
 }

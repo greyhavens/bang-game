@@ -36,7 +36,7 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 
-class VertexData implements Comparable {
+class VertexData implements Comparable<Object> {
 
 	public int smoothGroup = -1;
 
@@ -69,6 +69,7 @@ class VertexData implements Comparable {
 		}
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("[");
@@ -87,6 +88,7 @@ class VertexData implements Comparable {
 		return sb.toString();
 	}
 
+	@Override
 	public int hashCode() {
 		int h = 0;
 		if (coord != null)
@@ -100,6 +102,7 @@ class VertexData implements Comparable {
 		return h;
 	}
 
+	@Override
 	public int compareTo(Object o) {
 		VertexData vd = (VertexData) o;
 		int d;
@@ -121,6 +124,7 @@ class VertexData implements Comparable {
 		return 0;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		VertexData vd = (VertexData) o;
 		return isEqual(coord, vd.coord) && isEqual(normal, vd.normal)

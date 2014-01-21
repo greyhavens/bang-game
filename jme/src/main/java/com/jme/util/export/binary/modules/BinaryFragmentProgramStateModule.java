@@ -40,11 +40,13 @@ import com.jme.util.export.binary.BinaryLoaderModule;
 
 public class BinaryFragmentProgramStateModule implements BinaryLoaderModule {
 
-    public String getKey() {
+    @Override
+	public String getKey() {
         return FragmentProgramState.class.getName();
     }
 
-    public Savable load(InputCapsule inputCapsule) {
+    @Override
+	public Savable load(InputCapsule inputCapsule) {
         return DisplaySystem.getDisplaySystem().getRenderer().createFragmentProgramState();
     }
 

@@ -77,7 +77,8 @@ public abstract class VariableTimestepGame extends AbstractGame {
      * Renders and updates logic as fast as possible, but keeps track of time
      * elapsed between frames.
      */
-    public final void start() {
+    @Override
+	public final void start() {
         LoggingSystem.getLogger().log(Level.INFO, "Application started.");
         try {
             getAttributes();
@@ -128,7 +129,8 @@ public abstract class VariableTimestepGame extends AbstractGame {
      * 
      * @see AbstractGame#quit()
      */
-    protected void quit() {
+    @Override
+	protected void quit() {
         if (display != null) {
             display.close();
         }
@@ -140,32 +142,38 @@ public abstract class VariableTimestepGame extends AbstractGame {
      *            the time elapsed since the last frame, in seconds
      * @see AbstractGame#update(float interpolation)
      */
-    protected abstract void update(float deltaTime);
+    @Override
+	protected abstract void update(float deltaTime);
 
     /**
      * @param interpolation
      *            unused in this implementation
      * @see AbstractGame#render(float interpolation)
      */
-    protected abstract void render(float interpolation);
+    @Override
+	protected abstract void render(float interpolation);
 
     /**
      * @see AbstractGame#initSystem()
      */
-    protected abstract void initSystem();
+    @Override
+	protected abstract void initSystem();
 
     /**
      * @see AbstractGame#initGame()
      */
-    protected abstract void initGame();
+    @Override
+	protected abstract void initGame();
 
     /**
      * @see AbstractGame#reinit()
      */
-    protected abstract void reinit();
+    @Override
+	protected abstract void reinit();
 
     /**
      * @see AbstractGame#cleanup()
      */
-    protected abstract void cleanup();
+    @Override
+	protected abstract void cleanup();
 }

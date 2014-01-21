@@ -476,7 +476,8 @@ public class OrientedBox extends TriMesh {
 		return correctCorners;
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         
         OutputCapsule capsule = e.getCapsule(this);
@@ -494,7 +495,8 @@ public class OrientedBox extends TriMesh {
         capsule.write(correctCorners, "correctCorners", false);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         

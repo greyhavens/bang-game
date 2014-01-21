@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -147,8 +147,8 @@ public class OBBTree implements Serializable, Savable {
         bounds.computeFromTris(tris, start, end);
         if (myEnd - myStart + 1 <= maxPerLeaf) {
             return;
-        } 
-            
+        }
+
         if (doSort) sortTris(start, end);
         if (this.left == null)
             this.left = new OBBTree();
@@ -160,7 +160,7 @@ public class OBBTree implements Serializable, Savable {
             this.right = new OBBTree();
         this.right.tris = this.tris;
         this.right.myParent = this.myParent;
-        this.right.createTree((start + end) / 2, end, doSort);        
+        this.right.createTree((start + end) / 2, end, doSort);
     }
 
     // Assume this is ok and param needs rotation.
@@ -183,15 +183,15 @@ public class OBBTree implements Serializable, Savable {
             if (collisionTree.intersect(left)) { return true; }
             if (collisionTree.intersect(right)) { return true; }
             return false;
-        } 
-        
+        }
+
         // This is a leaf
         if (collisionTree.left != null) { // but collision isn't
             if (this.intersect(collisionTree.left)) { return true; }
             if (this.intersect(collisionTree.right)) { return true; }
             return false;
-        } 
-        
+        }
+
         // both are leaves
         Quaternion roti = this.myParent.getWorldRotation();
         Vector3f scalei = this.myParent.getWorldScale();
@@ -218,7 +218,7 @@ public class OBBTree implements Serializable, Savable {
                         tempVd, tempVe, tempVf)) return true;
             }
         }
-        return false;                    
+        return false;
     }
 
     // Assume this is ok and param needs rotation.
@@ -249,16 +249,16 @@ public class OBBTree implements Serializable, Savable {
             boolean test = collisionTree.intersect(left, bList, aList);
             test = collisionTree.intersect(right, bList, aList) || test;
             return test;
-        } 
-        
+        }
+
         // This is a leaf
         if (collisionTree.left != null) { // but collision isn't
             boolean test = this.intersect(collisionTree.left, aList, bList);
             test = this.intersect(collisionTree.right, aList, bList)
                     || test;
             return test;
-        } 
-        
+        }
+
         // both are leaves
         Quaternion roti = this.myParent.getWorldRotation();
         Vector3f scalei = this.myParent.getWorldScale();
@@ -291,7 +291,7 @@ public class OBBTree implements Serializable, Savable {
             }
         }
         return test;
-                   
+
     }
 
     /**
@@ -335,7 +335,7 @@ public class OBBTree implements Serializable, Savable {
             }
         }
     }
-    
+
     /**
      * gets the left elements of the binary tree.
      * @return the left element of the binary tree.
@@ -343,7 +343,7 @@ public class OBBTree implements Serializable, Savable {
     public OBBTree getLeftTree() {
         return left;
     }
-    
+
     /**
      * gets the right elements of the binary tree.
      * @return the right element of the binary tree.
@@ -351,7 +351,7 @@ public class OBBTree implements Serializable, Savable {
     public OBBTree getRightTree() {
         return right;
     }
-        
+
     /**
      * gets the total number of triangles this tree is maintaining.
      * @return the total number of triangles in this tree.
@@ -359,12 +359,12 @@ public class OBBTree implements Serializable, Savable {
     public int getTriangleCount() {
         return myEnd - myStart;
     }
-    
+
     /**
      * obtains a triangle from the tree specified by the index.
      * @param index the index of the triangle to obtain.
      * @return the triangle
-     */       
+     */
     public Triangle getTriangle(int index) {
         return tris[index + myStart];
     }
@@ -447,26 +447,25 @@ public class OBBTree implements Serializable, Savable {
     /**
      * Class to sort Triangle acording to projection.
      */
-    static class TreeCompare implements Comparator {
-
-        public int compare(Object o1, Object o2) {
-            Triangle a = (Triangle) o1;
-            Triangle b = (Triangle) o2;
+    static class TreeCompare implements Comparator<Object> {
+        @Override
+		public int compare(Object oa, Object ob) {
+            Triangle a = (Triangle) oa, b = (Triangle) ob;
             if (a.getProjection() < b.getProjection()) { return -1; }
             if (a.getProjection() > b.getProjection()) { return 1; }
             return 0;
         }
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
-        
         capsule.write(tris, "tris", null);
         capsule.write(myParent, "myParent", null);
-        
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         tris = (Triangle[])capsule.readSavableArray("tris", null);
         myParent = (TriMesh)capsule.readSavable("myParent", null);
@@ -474,8 +473,9 @@ public class OBBTree implements Serializable, Savable {
             createTree(0, tris.length, true);
         }
     }
-    
-    public Class getClassTag() {
+
+    @Override
+	public Class<?> getClassTag() {
         return this.getClass();
     }
 }

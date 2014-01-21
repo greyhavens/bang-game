@@ -74,11 +74,13 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         ;
     }
 
-    protected void destroy() {
+    @Override
+	protected void destroy() {
         ; // ignore
     }
 
-    public int getButtonIndex(String buttonName) {
+    @Override
+	public int getButtonIndex(String buttonName) {
         if ("MOUSE0".equalsIgnoreCase(buttonName)) return 0;
         else if ("MOUSE1".equalsIgnoreCase(buttonName)) return 1;
         else if ("MOUSE2".equalsIgnoreCase(buttonName)) return 2;
@@ -86,11 +88,13 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         throw new IllegalArgumentException("invalid buttonName: "+buttonName);
     }
 
-    public boolean isButtonDown(int buttonCode) {
+    @Override
+	public boolean isButtonDown(int buttonCode) {
         return buttons.get(buttonCode);
     }
 
-    public String getButtonName(int buttonIndex) {
+    @Override
+	public String getButtonName(int buttonIndex) {
         switch (buttonIndex) {
         case 0:
             return "MOUSE0";
@@ -102,11 +106,13 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         throw new IllegalArgumentException("invalid buttonIndex: "+buttonIndex);
     }
 
-    public int getWheelDelta() {
+    @Override
+	public int getWheelDelta() {
         return wheelDelta;
     }
 
-    public int getXDelta() {
+    @Override
+	public int getXDelta() {
         if (deltaRelative != null) {
             if (!enabled) return 0;
             int rVal = (deltaRelative.getWidth() / 2) - absPoint.x;
@@ -116,7 +122,8 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         return deltaPoint.x;        
     }
 
-    public int getYDelta() {
+    @Override
+	public int getYDelta() {
         if (deltaRelative != null) {
             if (!enabled) return 0;
             int rVal = (deltaRelative.getHeight() / 2) - absPoint.y;
@@ -126,11 +133,13 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         return deltaPoint.y;        
     }
 
-    public int getXAbsolute() {
+    @Override
+	public int getXAbsolute() {
         return absPoint.x;
     }
 
-    public int getYAbsolute() {
+    @Override
+	public int getYAbsolute() {
         return absPoint.y;
     }
 
@@ -149,7 +158,8 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
      */
     private int lastEventY;
 
-    public void update() {
+    @Override
+	public void update() {
         int x = lastEventX;
         int y = lastEventY;
 
@@ -199,20 +209,24 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         currentDeltaPoint.setLocation(0,0);
     }
 
-    public void setCursorVisible(boolean v) {
+    @Override
+	public void setCursorVisible(boolean v) {
         ; // ignore
     }
 
-    public boolean isCursorVisible() {
+    @Override
+	public boolean isCursorVisible() {
         // always true
         return true;
     }
 
-    public int getWheelRotation() {
+    @Override
+	public int getWheelRotation() {
         return wheelRotation;
     }
 
-    public int getButtonCount() {
+    @Override
+	public int getButtonCount() {
         return 3;
     }
 
@@ -252,11 +266,13 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
     // java.awt.event.MouseListener methods
     // **********************************
 
-    public void mouseClicked(MouseEvent arg0) {
+    @Override
+	public void mouseClicked(MouseEvent arg0) {
         ; // ignore
     }
 
-    public void mousePressed(MouseEvent arg0) {
+    @Override
+	public void mousePressed(MouseEvent arg0) {
         if (!enabled) return;
         lastPoint.setLocation(arg0.getPoint());
 
@@ -275,7 +291,8 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         swingEvents.add( arg0 );
     }
 
-    public void mouseReleased(MouseEvent arg0) {
+    @Override
+	public void mouseReleased(MouseEvent arg0) {
         if (!enabled) return;
         currentDeltaPoint.setLocation(0,0);
         if (deltaRelative != null) {
@@ -297,11 +314,13 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         swingEvents.add( arg0 );
     }
 
-    public void mouseEntered(MouseEvent arg0) {
+    @Override
+	public void mouseEntered(MouseEvent arg0) {
         ; // ignore for now
     }
 
-    public void mouseExited(MouseEvent arg0) {
+    @Override
+	public void mouseExited(MouseEvent arg0) {
         ; // ignore for now
     }
 
@@ -310,7 +329,8 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
     // java.awt.event.MouseWheelListener methods
     // **********************************
 
-    public void mouseWheelMoved(MouseWheelEvent arg0) {
+    @Override
+	public void mouseWheelMoved(MouseWheelEvent arg0) {
         if (!enabled) return;
 
         final int delta = arg0.getUnitsToScroll() * WHEEL_AMP;
@@ -325,7 +345,8 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
     // java.awt.event.MouseMotionListener methods
     // **********************************
 
-    public void mouseDragged(MouseEvent arg0) {
+    @Override
+	public void mouseDragged(MouseEvent arg0) {
         if (!enabled) return;
 
         absPoint.setLocation(arg0.getPoint());
@@ -337,7 +358,8 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
         swingEvents.add( arg0 );
     }
 
-    public void mouseMoved(MouseEvent arg0) {
+    @Override
+	public void mouseMoved(MouseEvent arg0) {
         if (enabled && !dragOnly) 
             mouseDragged( arg0 );
     }

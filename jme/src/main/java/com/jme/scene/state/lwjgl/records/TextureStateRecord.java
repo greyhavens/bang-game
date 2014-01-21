@@ -32,8 +32,6 @@
 package com.jme.scene.state.lwjgl.records;
 
 import java.nio.FloatBuffer;
-import java.util.HashMap;
-
 import org.lwjgl.BufferUtils;
 
 import com.jme.math.Vector3f;

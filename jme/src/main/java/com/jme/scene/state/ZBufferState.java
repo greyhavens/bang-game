@@ -139,25 +139,29 @@ public abstract class ZBufferState extends RenderState {
      * (RS_ZBUFFER).
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_ZBUFFER;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(function, "function", CF_LESS);
         capsule.write(writable, "writable", true);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         function = capsule.readInt("function", CF_LESS);
         writable = capsule.readBoolean("writable", true);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<ZBufferState> getClassTag() {
         return ZBufferState.class;
     }
 }

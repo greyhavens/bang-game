@@ -71,7 +71,8 @@ public class LWJGLJoystickInput extends JoystickInput {
     }
 
 
-    public void update() {
+    @Override
+	public void update() {
         Controllers.poll();
         while ( Controllers.next() ) {
             if ( listeners != null && listeners.size() > 0 ) {
@@ -95,7 +96,8 @@ public class LWJGLJoystickInput extends JoystickInput {
         }
     }
 
-    public int getJoystickCount() {
+    @Override
+	public int getJoystickCount() {
         int numJoysticks = joysticks.size();
         if ( numJoysticks != Controllers.getControllerCount() )
         {
@@ -104,11 +106,13 @@ public class LWJGLJoystickInput extends JoystickInput {
         return numJoysticks;
     }
 
-    public Joystick getJoystick( int index ) {
+    @Override
+	public Joystick getJoystick( int index ) {
         return joysticks.get( index );
     }
 
-    public Joystick getDefaultJoystick() {
+    @Override
+	public Joystick getDefaultJoystick() {
         if ( getJoystickCount() > 0 )
         {
             return getJoystick( getJoystickCount()-1 );
@@ -121,7 +125,8 @@ public class LWJGLJoystickInput extends JoystickInput {
         return dummyJoystick;        
     }
 
-    protected void destroy() {
+    @Override
+	protected void destroy() {
         Controllers.destroy();
     }
 

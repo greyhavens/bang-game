@@ -86,7 +86,8 @@ public class LWJGLTimer extends Timer {
                 "Timer resolution: " + timerRez + " ticks per second" );
     }
 
-    public void reset() {
+    @Override
+	public void reset() {
         lastFPS = 0;
         lastTPF = 0;
         newTime = 0;
@@ -105,14 +106,16 @@ public class LWJGLTimer extends Timer {
     /**
      * @see com.jme.util.Timer#getTime()
      */
-    public long getTime() {
+    @Override
+	public long getTime() {
         return Sys.getTime() - startTime;
     }
 
     /**
      * @see com.jme.util.Timer#getResolution()
      */
-    public long getResolution() {
+    @Override
+	public long getResolution() {
         return timerRez;
     }
 
@@ -122,11 +125,13 @@ public class LWJGLTimer extends Timer {
      *
      * @return the current frame rate.
      */
-    public float getFrameRate() {
+    @Override
+	public float getFrameRate() {
         return lastFPS;
     }
 
-    public float getTimePerFrame() {
+    @Override
+	public float getTimePerFrame() {
         return lastTPF;
     }
 
@@ -134,7 +139,8 @@ public class LWJGLTimer extends Timer {
      * <code>update</code> recalulates the frame rate based on the previous
      * call to update. It is assumed that update is called each frame.
      */
-    public void update() {
+    @Override
+	public void update() {
         newTime = Sys.getTime();
         if ( oldTime == -1 ) {
             // For the first frame use 60 fps. This value will not be counted in further averages.
@@ -191,7 +197,8 @@ public class LWJGLTimer extends Timer {
      *
      * @return the string representation of this object.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         String string = super.toString();
         string += "\nTime: " + newTime;
         string += "\nFPS: " + getFrameRate();

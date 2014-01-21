@@ -63,7 +63,8 @@ public class ParticleMesh extends ParticleGeometry {
         initializeParticles(batch.getTriangleCount());
     }
 
-    protected void initializeParticles(int numParticles) {
+    @Override
+	protected void initializeParticles(int numParticles) {
         TriangleBatch batch = getBatch(0);
         particles = new Particle[numParticles];
         if (numParticles == 0) return;
@@ -153,7 +154,8 @@ public class ParticleMesh extends ParticleGeometry {
         }
     }
 
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         Camera camera = r.getCamera();
         for (int i = 0; i < particles.length; i++) {
             Particle particle = particles[i];
@@ -181,7 +183,8 @@ public class ParticleMesh extends ParticleGeometry {
     }
 
 
-    public void resetParticleVelocity(int i) {
+    @Override
+	public void resetParticleVelocity(int i) {
         if (particleType == ParticleGeometry.PT_GEOMBATCH && useTriangleNormalEmit) {
             particles[i].getVelocity().set(particles[i].getTriangleModel().getNormal());
             particles[i].getVelocity().multLocal(emissionDirection);
@@ -209,14 +212,16 @@ public class ParticleMesh extends ParticleGeometry {
 
     // TRIMESH TYPE METHODS
     
-    protected void setupBatchList() {
+    @Override
+	protected void setupBatchList() {
         batchList = new ArrayList<GeomBatch>(1);
         TriangleBatch batch = new TriangleBatch();
         batch.setParentGeom(this);
         batchList.add(batch);
     }
 
-    public TriangleBatch getBatch(int index) {
+    @Override
+	public TriangleBatch getBatch(int index) {
         return (TriangleBatch) batchList.get(index);
     }
 
@@ -224,7 +229,8 @@ public class ParticleMesh extends ParticleGeometry {
      * determines if a collision between this trimesh and a given spatial occurs
      * if it has true is returned, otherwise false is returned.
      */
-    public boolean hasCollision(Spatial scene, boolean checkTriangles) {
+    @Override
+	public boolean hasCollision(Spatial scene, boolean checkTriangles) {
         if (this == scene || !isCollidable || !scene.isCollidable()) {
             return false;
         }
@@ -256,7 +262,8 @@ public class ParticleMesh extends ParticleGeometry {
      * the two trimesh OBBTrees are then compared to find the triangles that
      * hit.
      */
-    public void findCollisions(Spatial scene, CollisionResults results) {
+    @Override
+	public void findCollisions(Spatial scene, CollisionResults results) {
         if (this == scene || !isCollidable || !scene.isCollidable()) {
             return;
         }
@@ -317,14 +324,16 @@ public class ParticleMesh extends ParticleGeometry {
                 toCheck.getBatch(checkBatch).getCollisionTree());        
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(useBatchTexCoords, "useBatchTexCoords", true);
         capsule.write(useTriangleNormalEmit, "useTriangleNormalEmit", true);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         useBatchTexCoords = capsule.readBoolean("useBatchTexCoords", true);

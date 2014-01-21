@@ -75,7 +75,8 @@ public class FadeInOutController extends Controller {
      * Updates the fade colors of the fade object.
      * @param timeF A time value to change the color by.
      */
-    public void update(float timeF) {
+    @Override
+	public void update(float timeF) {
         float time = timeF * fio.getSpeed();
         ColorRGBA color = fio.getFadeColor();
         if (fio.getCurrentStage() == 0) {

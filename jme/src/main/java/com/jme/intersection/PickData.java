@@ -51,7 +51,7 @@ public class PickData {
 
     private GeomBatch targetMesh;
 
-    private ArrayList targetTris;
+    private ArrayList<?> targetTris;
 
     private float distance;
     
@@ -62,7 +62,7 @@ public class PickData {
     /**
      * instantiates a new PickData object.
      */
-    public PickData(Ray ray, GeomBatch targetMesh, ArrayList targetTris, boolean checkDistance) {
+    public PickData(Ray ray, GeomBatch targetMesh, ArrayList<?> targetTris, boolean checkDistance) {
         this.ray = ray;
         this.targetMesh = targetMesh;
         this.targetTris = targetTris;
@@ -96,7 +96,7 @@ public class PickData {
     /**
      * @return Returns the target.
      */
-    public ArrayList getTargetTris() {
+    public ArrayList<?> getTargetTris() {
         return targetTris;
     }
 
@@ -104,7 +104,7 @@ public class PickData {
      * @param target
      *            The target to set.
      */
-    public void setTargetTris(ArrayList target) {
+    public void setTargetTris(ArrayList<?> target) {
         this.targetTris = target;
     }
 

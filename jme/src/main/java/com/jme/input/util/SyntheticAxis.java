@@ -53,7 +53,7 @@ public class SyntheticAxis extends SyntheticTriggerContainer {
     /**
      * list of triggers
      */
-    private ArrayList axisTriggers = new ArrayList();
+    private ArrayList<SyntheticTrigger> axisTriggers = new ArrayList<SyntheticTrigger>();
 
     public SyntheticAxis( String name ) {
         this.name = name;
@@ -63,7 +63,8 @@ public class SyntheticAxis extends SyntheticTriggerContainer {
     /**
      * @return the name of this axis
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -71,7 +72,8 @@ public class SyntheticAxis extends SyntheticTriggerContainer {
      * @return index of this axis (used when registering with InputHandler)
      * @see #getDeviceName()
      */
-    public int getIndex() {
+    @Override
+	public int getIndex() {
         return this.index;
     }
 
@@ -97,14 +99,16 @@ public class SyntheticAxis extends SyntheticTriggerContainer {
     /**
      * @param trigger what to add to list of triggers
      */
-    void add( SyntheticTrigger trigger ) {
+    @Override
+	void add( SyntheticTrigger trigger ) {
         axisTriggers.add( trigger );
     }
 
     /**
      * @param trigger what to remove from list of triggers
      */
-    void remove( SyntheticTrigger trigger ) {
+    @Override
+	void remove( SyntheticTrigger trigger ) {
         axisTriggers.remove( trigger );
     }
 
@@ -114,7 +118,7 @@ public class SyntheticAxis extends SyntheticTriggerContainer {
      */
     public void trigger( float delta, char character, float value, boolean pressed, Object data ) {
         for ( int i = axisTriggers.size() - 1; i >= 0; i-- ) {
-            final ActionTrigger trigger = (ActionTrigger) axisTriggers.get( i );
+            final ActionTrigger trigger = axisTriggers.get( i );
             trigger.checkActivation( character, getIndex(), value, delta, pressed, data );
         }
     }

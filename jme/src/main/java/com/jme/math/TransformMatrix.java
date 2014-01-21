@@ -378,7 +378,8 @@ public class TransformMatrix  implements Serializable, Savable {
      * It is simply a toString() call of the rotational matrix and the translational vector
      * @return the string representation of this object.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "com.jme.math.TransformMatrix\n[\n"+
                 rot.toString() + ":" +
                 translation.toString() + ":" +
@@ -466,21 +467,24 @@ public class TransformMatrix  implements Serializable, Savable {
 
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(rot, "rot", new Matrix3f());
         capsule.write(translation, "translation", Vector3f.ZERO);
         capsule.write(scale, "scale", Vector3f.UNIT_XYZ);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         rot = (Matrix3f)capsule.readSavable("rot", new Matrix3f());
         translation = (Vector3f)capsule.readSavable("translation", new Vector3f(Vector3f.ZERO));
         scale = (Vector3f)capsule.readSavable("scale", new Vector3f(Vector3f.UNIT_XYZ));
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends TransformMatrix> getClassTag() {
         return this.getClass();
     }
 

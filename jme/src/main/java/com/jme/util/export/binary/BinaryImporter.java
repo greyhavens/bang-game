@@ -75,7 +75,8 @@ public class BinaryImporter implements JMEImporter {
         return new BinaryImporter();
     }
 
-    public Savable load(InputStream is) throws IOException {
+    @Override
+	public Savable load(InputStream is) throws IOException {
         return load(is, null);
     }
 
@@ -156,7 +157,8 @@ public class BinaryImporter implements JMEImporter {
         return rVal;
     }
     
-    public Savable load(URL f) throws IOException {
+    @Override
+	public Savable load(URL f) throws IOException {
         return load(f, null);
     }
     
@@ -167,7 +169,8 @@ public class BinaryImporter implements JMEImporter {
         return rVal;
     }
     
-    public Savable load(File f) throws IOException {
+    @Override
+	public Savable load(File f) throws IOException {
         return load(f, null);
     }
     
@@ -185,7 +188,8 @@ public class BinaryImporter implements JMEImporter {
         return rVal;
     }
 
-    public BinaryInputCapsule getCapsule(Savable id) {
+    @Override
+	public BinaryInputCapsule getCapsule(Savable id) {
         return capsuleTable.get(id);
     }
 

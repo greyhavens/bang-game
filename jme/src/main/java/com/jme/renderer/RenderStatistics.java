@@ -47,7 +47,7 @@ public class RenderStatistics {
     public long numberOfQuads;
     
 
-    public Class getClassTag() {
+    public Class<?> getClassTag() {
         // TODO Auto-generated method stub
         return null;
     }

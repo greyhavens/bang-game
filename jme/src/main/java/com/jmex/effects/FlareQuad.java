@@ -105,14 +105,16 @@ public class FlareQuad extends Quad {
         tempPoint.z = 0;
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(positionPercent, "positionPercent", new Vector2f(1, 1));
         
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         positionPercent = (Vector2f)capsule.readSavable("positionPercent", new Vector2f(1, 1));

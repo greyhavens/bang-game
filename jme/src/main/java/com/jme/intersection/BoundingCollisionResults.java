@@ -55,7 +55,8 @@ public class BoundingCollisionResults extends CollisionResults {
      * @see com.jme.intersection.CollisionResults#addCollision(com.jme.scene.Geometry,
      *      com.jme.scene.Geometry)
      */
-    public void addCollision(Geometry s, Geometry t) {
+    @Override
+	public void addCollision(Geometry s, Geometry t) {
         CollisionData data = new CollisionData(s, t);
         addCollisionData(data);
     }
@@ -66,7 +67,8 @@ public class BoundingCollisionResults extends CollisionResults {
      * 
      * @see com.jme.intersection.CollisionResults#processCollisions()
      */
-    public void processCollisions() {
+    @Override
+	public void processCollisions() {
 
     }
 

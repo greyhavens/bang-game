@@ -201,7 +201,8 @@ public class BloomRenderPass extends Pass {
      */
     private class SpatialsRenderNode extends Node {
         private static final long serialVersionUID = 7367501683137581101L;
-        public void draw( Renderer r ) {
+        @Override
+		public void draw( Renderer r ) {
             Spatial child;
             for (int i = 0, cSize = spatials.size(); i < cSize; i++) {
                 child = spatials.get(i);
@@ -210,7 +211,8 @@ public class BloomRenderPass extends Pass {
             }
         }
 
-        public void onDraw( Renderer r ) {
+        @Override
+		public void onDraw( Renderer r ) {
             draw( r );
         }
     }
@@ -223,7 +225,8 @@ public class BloomRenderPass extends Pass {
         sinceLast += tpf;
     }
     
-    public void doRender(Renderer r) {
+    @Override
+	public void doRender(Renderer r) {
         if (!useCurrentScene && spatials.size() == 0 ) {
             return;
         }

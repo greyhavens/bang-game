@@ -1059,7 +1059,8 @@ public class Quaternion implements Externalizable, Savable {
      * @return the string representation of this object.
      * @see java.lang.Object#toString()
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "com.jme.math.Quaternion: [x=" + x + " y=" + y + " z=" + z
                 + " w=" + w + "]";
     }
@@ -1072,7 +1073,8 @@ public class Quaternion implements Externalizable, Savable {
      *            the object to compare for equality
      * @return true if they are equal, false otherwise.
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
         if (!(o instanceof Quaternion) ) {
             return false;
         }
@@ -1098,7 +1100,8 @@ public class Quaternion implements Externalizable, Savable {
      * @return the hashcode for this instance of Quaternion.
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int hash = 37;
         hash = 37 * hash + Float.floatToIntBits(x);
         hash = 37 * hash + Float.floatToIntBits(y);
@@ -1119,7 +1122,8 @@ public class Quaternion implements Externalizable, Savable {
      *             if the ObjectInput value has problems reading a float.
      * @see java.io.Externalizable
      */
-    public void readExternal(ObjectInput in) throws IOException {
+    @Override
+	public void readExternal(ObjectInput in) throws IOException {
         x = in.readFloat();
         y = in.readFloat();
         z = in.readFloat();
@@ -1137,7 +1141,8 @@ public class Quaternion implements Externalizable, Savable {
      *             if writing to the ObjectOutput fails.
      * @see java.io.Externalizable
      */
-    public void writeExternal(ObjectOutput out) throws IOException {
+    @Override
+	public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(x);
         out.writeFloat(y);
         out.writeFloat(z);
@@ -1167,7 +1172,8 @@ public class Quaternion implements Externalizable, Savable {
         fromAxes( tmpXaxis, tmpYaxis, tmpZaxis );
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule cap = e.getCapsule(this);
         cap.write(x, "x", 0);
         cap.write(y, "y", 0);
@@ -1175,7 +1181,8 @@ public class Quaternion implements Externalizable, Savable {
         cap.write(w, "w", 1);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule cap = e.getCapsule(this);
         x = cap.readFloat("x", 0);
         y = cap.readFloat("y", 0);
@@ -1183,7 +1190,8 @@ public class Quaternion implements Externalizable, Savable {
         w = cap.readFloat("w", 1);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Quaternion> getClassTag() {
         return this.getClass();
     }
 }

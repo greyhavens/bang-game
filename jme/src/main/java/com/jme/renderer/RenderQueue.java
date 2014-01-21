@@ -303,9 +303,9 @@ public class RenderQueue {
 
         private static final int DEFAULT_SIZE = 32;
 
-        private Comparator c;
+        private Comparator<SceneElement> c;
 
-        SceneElementList(Comparator c) {
+        SceneElementList(Comparator<SceneElement> c) {
             listSize = 0;
             list = new SceneElement[DEFAULT_SIZE];
             this.c = c;
@@ -356,7 +356,8 @@ public class RenderQueue {
 
     private class OpaqueComp implements Comparator<SceneElement> {
 
-        public int compare(SceneElement o1, SceneElement o2) {
+        @Override
+		public int compare(SceneElement o1, SceneElement o2) {
             if ((o1.getType() & SceneElement.GEOMBATCH & o2.getType()) != 0) {
                 return compareByStates((GeomBatch) o1, (GeomBatch) o2);
             }
@@ -412,7 +413,8 @@ public class RenderQueue {
 
     private class TransparentComp implements Comparator<SceneElement> {
 
-        public int compare(SceneElement o1, SceneElement o2) {
+        @Override
+		public int compare(SceneElement o1, SceneElement o2) {
             float d1 = distanceToCam(o1);
             float d2 = distanceToCam(o2);
             if (d1 == d2)
@@ -426,7 +428,8 @@ public class RenderQueue {
 
     private class OrthoComp implements Comparator<SceneElement> {
 
-        public int compare(SceneElement o1, SceneElement o2) {
+        @Override
+		public int compare(SceneElement o1, SceneElement o2) {
             return (o2.getZOrder() - o1.getZOrder());
         }
     }

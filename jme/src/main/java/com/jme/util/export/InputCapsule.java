@@ -111,11 +111,9 @@ public interface InputCapsule {
     
     // ArrayLists
     
-    public ArrayList readSavableArrayList(String name, ArrayList defVal) throws IOException;
-    public ArrayList[] readSavableArrayListArray(String name, ArrayList[] defVal) throws IOException;
-    public ArrayList[][] readSavableArrayListArray2D(String name, ArrayList[][] defVal) throws IOException;
+    public <T extends Savable> ArrayList<T> readSavableArrayList(String name, ArrayList<T> defVal) throws IOException;
     
-    public ArrayList readFloatBufferArrayList(String name, ArrayList<FloatBuffer> defVal) throws IOException;
+    public ArrayList<FloatBuffer> readFloatBufferArrayList(String name, ArrayList<FloatBuffer> defVal) throws IOException;
 
     // NIO BUFFERS
     // float buffer

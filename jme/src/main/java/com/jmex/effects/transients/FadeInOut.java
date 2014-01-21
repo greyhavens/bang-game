@@ -96,7 +96,7 @@ public class FadeInOut extends Transient {
         setCurrentStage(0);
         setSpeed(speed);
 
-        fadeColor = (ColorRGBA)c.clone();
+        fadeColor = c.clone();
         fadeColor.a = 0;
         
         fadeInNode = in;
@@ -178,7 +178,7 @@ public class FadeInOut extends Transient {
      * @param c The new color to set the fade quad too.
      */
     public void setFadeColor(ColorRGBA c) {
-    	fadeColor = (ColorRGBA)c.clone();
+    	fadeColor = c.clone();
     	fadeQ.setDefaultColor(fadeColor);
     }
 
@@ -202,7 +202,8 @@ public class FadeInOut extends Transient {
      * Ignoring children, this only updates all the controllers of this FadeInOut
      * @param time the time to pass to update.
      */
-    public void updateWorldData(float time) {
+    @Override
+	public void updateWorldData(float time) {
         if (getControllers().size() != 0) {
         	for (int i = 0; i < getControllers().size(); i++) {
         		(getController(i)).update(time);

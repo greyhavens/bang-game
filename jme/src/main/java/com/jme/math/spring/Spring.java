@@ -128,7 +128,8 @@ public class Spring implements Savable {
     				delta.z * node2.invMass);
 	}
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(node1, "node1", null);
         capsule.write(node2, "node2", null);
@@ -136,7 +137,8 @@ public class Spring implements Savable {
         capsule.write(tMass, "tMass", 0);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         node1 = (SpringPoint)capsule.readSavable("node1", null);
         node2 = (SpringPoint)capsule.readSavable("node2", null);
@@ -145,7 +147,8 @@ public class Spring implements Savable {
         tMass = capsule.readFloat("tMass", 0);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Spring> getClassTag() {
         return this.getClass();
     }
 }

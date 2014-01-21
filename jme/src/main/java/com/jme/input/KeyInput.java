@@ -571,7 +571,7 @@ public abstract class KeyInput extends Input {
     public static KeyInput get() {
         if ( instance == null ) {
             try {
-                final Constructor constructor = getProvider().getDeclaredConstructor( (Class[])null );
+                final Constructor<?> constructor = getProvider().getDeclaredConstructor( (Class[])null );
                 constructor.setAccessible( true );
                 instance = (KeyInput) constructor.newInstance( (Object[])null );
             } catch ( Exception e ) {
@@ -587,14 +587,14 @@ public abstract class KeyInput extends Input {
      *
      * @return currently selected provider
      */
-    public static Class getProvider() {
+    public static Class<?> getProvider() {
         return provider;
     }
 
     /**
      * store the value for field provider
      */
-    private static Class provider = LWJGLKeyInput.class;
+    private static Class<?> provider = LWJGLKeyInput.class;
 
     /**
      * Change the provider used for keyboard input. Default is {@link KeyInput.INPUT_LWJGL}.
@@ -628,7 +628,7 @@ public abstract class KeyInput extends Input {
      * @throws IllegalStateException if called after first call of {@link #get()}. Note that get is called when
      *                               creating the DisplaySystem.
      */
-    public static void setProvider( final Class value ) {
+    public static void setProvider( final Class<?> value ) {
         if ( instance != null ) {
             throw new IllegalStateException( "Provider may only be changed before input is created!" );
         }
@@ -683,7 +683,8 @@ public abstract class KeyInput extends Input {
      *
      * @see
      */
-    public abstract void update();
+    @Override
+	public abstract void update();
 
     /**
      * <code>destroy</code> frees the keyboard for use by other applications.

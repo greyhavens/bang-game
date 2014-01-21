@@ -95,14 +95,16 @@ public class LWJGLDisplaySystem extends DisplaySystem {
     /**
      * @see com.jme.system.DisplaySystem#isValidDisplayMode(int, int, int, int)
      */
-    public boolean isValidDisplayMode( int width, int height, int bpp, int freq ) {
+    @Override
+	public boolean isValidDisplayMode( int width, int height, int bpp, int freq ) {
         return getValidDisplayMode( width, height, bpp, freq ) != null;
     }
 
     /**
      * @see com.jme.system.DisplaySystem#setVSyncEnabled(boolean)
      */
-    public void setVSyncEnabled( boolean enabled ) {
+    @Override
+	public void setVSyncEnabled( boolean enabled ) {
         Display.setVSyncEnabled( enabled );
     }
 
@@ -111,7 +113,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      *
      * @param title the title.
      */
-    public void setTitle( String title ) {
+    @Override
+	public void setTitle( String title ) {
         Display.setTitle( title );
     }
 
@@ -122,7 +125,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      * @see com.jme.system.DisplaySystem#createWindow(int, int, int, int,
      *      boolean)
      */
-    public void createWindow( int w, int h, int bpp, int frq, boolean fs ) {
+    @Override
+	public void createWindow( int w, int h, int bpp, int frq, boolean fs ) {
         // confirm that the parameters are valid.
         if ( w <= 0 || h <= 0 ) {
             throw new JmeException( "Invalid resolution values: " + w + " " + h );
@@ -153,7 +157,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      *
      * @see com.jme.system.DisplaySystem#createHeadlessWindow(int, int, int)
      */
-    public void createHeadlessWindow( int w, int h, int bpp ) {
+    @Override
+	public void createHeadlessWindow( int w, int h, int bpp ) {
         // confirm that the parameters are valid.
         if ( w <= 0 || h <= 0 ) {
             throw new JmeException( "Invalid resolution values: " + w + " " + h );
@@ -182,7 +187,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      *
      * @see com.jme.system.DisplaySystem#createCanvas(int, int)
      */
-    public Canvas createCanvas( int w, int h ) {
+    @Override
+	public Canvas createCanvas( int w, int h ) {
         // confirm that the parameters are valid.
         if ( w <= 0 || h <= 0 ) {
             throw new JmeException( "Invalid resolution values: " + w + " " + h );
@@ -235,7 +241,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      * @see com.jme.system.DisplaySystem#recreateWindow(int, int, int, int,
      *      boolean)
      */
-    public void recreateWindow( int w, int h, int bpp, int frq, boolean fs ) {
+    @Override
+	public void recreateWindow( int w, int h, int bpp, int frq, boolean fs ) {
         if ( !created ) {
             createWindow( w, h, bpp, frq, fs );
             return;
@@ -266,7 +273,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      *
      * @see com.jme.system.DisplaySystem#getRenderer()
      */
-    public Renderer getRenderer() {
+    @Override
+	public Renderer getRenderer() {
         return renderer;
     }
 
@@ -277,7 +285,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      * @return true if a close request is active.
      * @see com.jme.system.DisplaySystem#isClosing()
      */
-    public boolean isClosing() {
+    @Override
+	public boolean isClosing() {
         if ( headlessDisplay == null ) {
             return Display.isCloseRequested();
         }
@@ -296,13 +305,15 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      *
      * @see com.jme.system.DisplaySystem#reset()
      */
-    public void reset() {
+    @Override
+	public void reset() {
     }
 
     /**
      * <code>close</code> destroys the LWJGL Display context.
      */
-    public void close() {
+    @Override
+	public void close() {
         Display.destroy();
     }
 
@@ -310,7 +321,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      * <code>createTextureRenderer</code> builds the renderer used to render
      * to a texture.
      */
-    public TextureRenderer createTextureRenderer( int width, int height,
+    @Override
+	public TextureRenderer createTextureRenderer( int width, int height,
                                                   boolean useRGB, boolean useRGBA, boolean useDepth,
                                                   boolean isRectangle, int target, int mipmaps ) {
         if ( !isCreated() ) {
@@ -338,7 +350,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
     /* (non-Javadoc)
     * @see com.jme.system.DisplaySystem#createTextureRenderer(int, int, boolean, boolean, boolean, boolean, int, int, int, int, int, int, int)
     */
-    public TextureRenderer createTextureRenderer( int width, int height, boolean useRGB,
+    @Override
+	public TextureRenderer createTextureRenderer( int width, int height, boolean useRGB,
                                                   boolean useRGBA, boolean useDepth, boolean isRectangle, int target, int mipmaps,
                                                   int bpp, int alpha, int depth, int stencil, int samples ) {
         if ( !isCreated() ) {
@@ -506,7 +519,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      *
      * @param r the renderer to set.
      */
-    public void setRenderer( Renderer r ) {
+    @Override
+	public void setRenderer( Renderer r ) {
         if ( r instanceof LWJGLRenderer ) {
             renderer = (LWJGLRenderer) r;
         }
@@ -519,7 +533,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
     /**
      * Update the display's gamma, brightness and contrast based on the set values.
      */
-    protected void updateDisplayBGC() {
+    @Override
+	protected void updateDisplayBGC() {
         try {
             Display.setDisplayConfiguration( gamma, brightness, contrast );
         } catch ( LWJGLException e ) {
@@ -532,7 +547,8 @@ public class LWJGLDisplaySystem extends DisplaySystem {
      * @author Tony Vera
      * @author Tijl Houtbeckers - some changes to handeling non-RGBA8888 Images.
      */
-    public void setIcon(Image[] iconImages) {
+    @Override
+	public void setIcon(Image[] iconImages) {
         ByteBuffer[] iconData = new ByteBuffer[iconImages.length];
         for (int i = 0; i < iconData.length; i++) {
             // RGBA8888 is the format that LWJGL requires, so try to convert if it's not.

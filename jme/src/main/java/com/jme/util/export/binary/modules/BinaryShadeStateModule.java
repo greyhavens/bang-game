@@ -40,11 +40,13 @@ import com.jme.util.export.binary.BinaryLoaderModule;
 
 public class BinaryShadeStateModule implements BinaryLoaderModule {
 
-    public String getKey() {
+    @Override
+	public String getKey() {
         return ShadeState.class.getName();
     }
 
-    public Savable load(InputCapsule inputCapsule) {
+    @Override
+	public Savable load(InputCapsule inputCapsule) {
         return DisplaySystem.getDisplaySystem().getRenderer().createShadeState();
     }
 

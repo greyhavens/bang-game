@@ -32,7 +32,6 @@
 
 package com.jme.scene.state.lwjgl;
 
-import java.util.Arrays;
 import java.util.Stack;
 
 import org.lwjgl.opengl.GL11;
@@ -76,6 +75,7 @@ public class LWJGLLightState extends LightState {
 	 *
 	 * @see com.jme.scene.state.RenderState#apply()
 	 */
+	@Override
 	public void apply() {
 		RenderContext context = DisplaySystem.getDisplaySystem()
 				.getCurrentContext();
@@ -194,7 +194,8 @@ public class LWJGLLightState extends LightState {
 		}
 	}
 
-	public RenderState extract(Stack stack, SceneElement spat) {
+	@Override
+	public RenderState extract(Stack<?> stack, SceneElement spat) {
 		int mode = spat.getLightCombineMode();
 		if (mode == REPLACE || (mode != OFF && stack.size() == 1)) // todo: use
 			// dummy

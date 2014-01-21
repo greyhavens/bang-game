@@ -56,6 +56,7 @@ public class LWJGLAttributeState extends AttributeState {
 	 * 
 	 * @see com.jme.scene.state.RenderState#apply() ()
 	 */
+	@Override
 	public void apply() {
 		RenderContext context = DisplaySystem.getDisplaySystem()
 				.getCurrentContext();

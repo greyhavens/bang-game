@@ -185,24 +185,28 @@ public class Plane  implements Serializable, Savable {
      * Z=ZZ.ZZZZ] - Constant: CC.CCCCC]
      * @return the string representation of this plane.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "com.jme.math.Plane [Normal: " + normal + " - Constant: "
                 + constant + "]";
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(normal, "normal", Vector3f.ZERO);
         capsule.write(constant, "constant", 0);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         normal = (Vector3f)capsule.readSavable("normal", new Vector3f(Vector3f.ZERO));
         constant = capsule.readFloat("constant", 0);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Plane> getClassTag() {
         return this.getClass();
     }
 }

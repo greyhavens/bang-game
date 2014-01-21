@@ -65,19 +65,22 @@ public class ShadowEdge implements Savable {
         this.p1 = p1;
     }
 
+	@Override
 	public void write(JMEExporter e) throws IOException {
 		e.getCapsule(this).write(p0, "p0", 0);
 		e.getCapsule(this).write(p1, "p1", 0);
 		e.getCapsule(this).write(triangle, "triangle", ShadowTriangle.INVALID_TRIANGLE);
 	}
 
+	@Override
 	public void read(JMEImporter e) throws IOException {
 		p0 = e.getCapsule(this).readInt("p0", 0);
 		p1 = e.getCapsule(this).readInt("p1", 0);
 		triangle = e.getCapsule(this).readInt("triangle", ShadowTriangle.INVALID_TRIANGLE);
 	}
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends ShadowEdge> getClassTag() {
         return this.getClass();
     }
 }

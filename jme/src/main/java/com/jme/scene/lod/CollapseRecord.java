@@ -101,7 +101,8 @@ public class CollapseRecord implements Serializable, Savable {
      */
     public int[] indices = null;
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(vertToKeep, "vertToKeep", -1);
         capsule.write(vertToThrow, "vertToThrow", -1);
@@ -111,7 +112,8 @@ public class CollapseRecord implements Serializable, Savable {
         capsule.write(indices, "indices", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         vertToKeep = capsule.readInt("vertToKeep", -1);
         vertToThrow = capsule.readInt("vertToThrow", -1);
@@ -121,7 +123,8 @@ public class CollapseRecord implements Serializable, Savable {
         indices = capsule.readIntArray("indices", null);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends CollapseRecord> getClassTag() {
         return this.getClass();
     }
 }

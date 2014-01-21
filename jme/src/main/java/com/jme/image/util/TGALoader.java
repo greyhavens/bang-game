@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -32,7 +32,6 @@
 
 package com.jme.image.util;
 
-import java.awt.image.DirectColorModel;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -51,16 +50,16 @@ import java.nio.ByteBuffer;
 public final class TGALoader {
 
   // For TGA loading
-  private static short colorMapType;
-  private static short imageType;
-  private static int cMapStart;
-  private static int cMapLength;
-  private static short cMapDepth;
-  private static int xOffset;
-  private static int yOffset;
-  private static short imageDescriptor;
-  private static DirectColorModel cm;
-  private static int[] pixels;
+  // private static short colorMapType;
+  // private static short imageType;
+  // private static int cMapStart;
+  // private static int cMapLength;
+  // private static short cMapDepth;
+  // private static int xOffset;
+  // private static int yOffset;
+  // private static short imageDescriptor;
+  // private static DirectColorModel cm;
+  // private static int[] pixels;
 
   private static short idLength;
   private static int width;
@@ -100,31 +99,31 @@ public final class TGALoader {
       IOException {
       return loadImage(fis,false);
   }
-  
+
     /**
-     * 
+     *
      * @param fis InputStream of an uncompressed 24b RGB or 32b RGBA TGA
      * @param flip Flip the image
      * @return <code>com.jme.image.Image</code> object that contains the
      *         image, either as a RGB888 or RGBA8888
-     * @throws java.io.IOException 
+     * @throws java.io.IOException
      */
   public static com.jme.image.Image loadImage(InputStream fis, boolean flip) throws
       IOException {
       return loadImage(fis,flip,false);
   }
-  
+
   /**
      * <code>loadImage</code> is a manual image loader which is entirely
      * independent of AWT.
-     * 
+     *
      * OUT: RGB888 or RGBA8888 jme.image.Image object
      * @return <code>com.jme.image.Image</code> object that contains the
      *         image, either as a RGB888 or RGBA8888
      * @param flip Flip the image
      * @param exp32 Add a dummy Alpha channel to 24b RGB image.
      * @param fis InputStream of an uncompressed 24b RGB or 32b RGBA TGA
-     * @throws java.io.IOException 
+     * @throws java.io.IOException
      */
   public static com.jme.image.Image loadImage(InputStream fis, boolean flip, boolean exp32) throws
       IOException {
@@ -137,17 +136,17 @@ public final class TGALoader {
     DataInputStream dis = new DataInputStream(bis);
     //Read the TGA header
     idLength = (short) dis.read();
-    colorMapType = (short) dis.read();
-    imageType = (short) dis.read();
-    cMapStart = flipEndian(dis.readShort());
-    cMapLength = flipEndian(dis.readShort());
-    cMapDepth = (short) dis.read();
-    xOffset = flipEndian(dis.readShort());
-    yOffset = flipEndian(dis.readShort());
+    /*colorMapType = (short)*/ dis.read();
+    /*imageType = (short)*/ dis.read();
+    /*cMapStart =*/ flipEndian(dis.readShort());
+    /*cMapLength =*/ flipEndian(dis.readShort());
+    /*cMapDepth = (short)*/ dis.read();
+    /*xOffset =*/ flipEndian(dis.readShort());
+    /*yOffset =*/ flipEndian(dis.readShort());
     width = flipEndian(dis.readShort());
     height = flipEndian(dis.readShort());
     pixelDepth = (short) dis.read();
-    imageDescriptor = (short) dis.read();
+    /*imageDescriptor = (short)*/ dis.read();
     //Skip image ID
     if (idLength > 0)
       bis.skip(idLength);
@@ -162,7 +161,7 @@ public final class TGALoader {
       dl=3;
     }
     int rawDataIndex = 0;
-    
+
     // Faster than doing a 24-or-32 check on each individual pixel,
     // just make a seperate loop for each.
     if (pixelDepth == 24)
@@ -179,7 +178,6 @@ public final class TGALoader {
               // create an alpha channel
               rawData[rawDataIndex++] = (byte)255;
           }
-              
         }
       }
     else if (pixelDepth == 32)

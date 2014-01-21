@@ -104,6 +104,7 @@ public class CameraNode extends Node {
 	 * @param time
 	 *            the time between frames.
 	 */
+	@Override
 	public void updateWorldData(float time) {
 		super.updateWorldData(time);
 		if (camera != null) {
@@ -111,14 +112,16 @@ public class CameraNode extends Node {
 		}
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(camera, "camera", null);
         
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         camera = (Camera)capsule.readSavable("camera", null);

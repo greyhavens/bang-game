@@ -365,6 +365,7 @@ public class LWJGLTextureState extends TextureState {
      *
      * @see com.jme.scene.state.RenderState#apply()
      */
+    @Override
     public void apply() {
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()
@@ -1278,7 +1279,8 @@ public class LWJGLTextureState extends TextureState {
         }
     }
 
-    public RenderState extract(Stack stack, SceneElement spat) {
+    @Override
+    public RenderState extract(Stack<?> stack, SceneElement spat) {
         int mode = spat.getTextureCombineMode();
         if (mode == REPLACE || (mode != OFF && stack.size() == 1)) // todo: use
             // dummy
@@ -1338,6 +1340,7 @@ public class LWJGLTextureState extends TextureState {
      *
      * @see com.jme.scene.state.TextureState#delete(int)
      */
+    @Override
     public void delete(int unit) {
         if (unit < 0 || unit >= texture.size() || texture.get(unit) == null)
             return;
@@ -1370,6 +1373,7 @@ public class LWJGLTextureState extends TextureState {
      *
      * @see com.jme.scene.state.TextureState#deleteAll()
      */
+    @Override
     public void deleteAll() {
         deleteAll(false);
     }
@@ -1379,6 +1383,7 @@ public class LWJGLTextureState extends TextureState {
      *
      * @see com.jme.scene.state.TextureState#deleteAll()
      */
+    @Override
     public void deleteAll(boolean removeFromCache) {
 
         // ask for the current state record
@@ -1391,10 +1396,10 @@ public class LWJGLTextureState extends TextureState {
 
         for (int i = 0; i < texture.size(); i++) {
             Texture tex = texture.get(i);
-            if (removeFromCache) TextureManager.releaseTexture(tex);
-            int texId = tex.getTextureId();
             if (tex == null)
                 continue;
+            if (removeFromCache) TextureManager.releaseTexture(tex);
+            int texId = tex.getTextureId();
             id.put(texId);
             tex.setTextureId(0);
 
@@ -1409,6 +1414,7 @@ public class LWJGLTextureState extends TextureState {
         GL11.glDeleteTextures(id);
     }
 
+    @Override
     public void deleteTextureId(int textureId) {
 
         // ask for the current state record

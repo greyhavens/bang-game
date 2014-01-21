@@ -49,7 +49,8 @@ class GameTask<V> implements Future<V> {
         this.callable = callable;
     }
     
-    public boolean cancel(boolean mayInterruptIfRunning) {
+    @Override
+	public boolean cancel(boolean mayInterruptIfRunning) {
         if (result != null) {
             return false;
         }
@@ -57,7 +58,8 @@ class GameTask<V> implements Future<V> {
         return true;
     }
 
-    public synchronized V get() throws InterruptedException, ExecutionException {
+    @Override
+	public synchronized V get() throws InterruptedException, ExecutionException {
         while ((result == null) && (exc == null)) {
             wait();
         }
@@ -65,7 +67,8 @@ class GameTask<V> implements Future<V> {
         return result;
     }
 
-    public synchronized V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    @Override
+	public synchronized V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         if ((result == null) && (exc == null)) {
             unit.timedWait(this, timeout);
         }
@@ -74,11 +77,13 @@ class GameTask<V> implements Future<V> {
         return result;
     }
 
-    public boolean isCancelled() {
+    @Override
+	public boolean isCancelled() {
         return cancelled;
     }
 
-    public boolean isDone() {
+    @Override
+	public boolean isDone() {
         return result != null;
     }
     

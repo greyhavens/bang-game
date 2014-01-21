@@ -123,6 +123,7 @@ public class ParticleDepositionHeightMap extends AbstractHeightMap {
 	 * to <code>load</code> is recommended if attributes have changed using
 	 * the set methods.
 	 */
+	@Override
 	public boolean load() {
 		int x, y;
 		int calderaX, calderaY;

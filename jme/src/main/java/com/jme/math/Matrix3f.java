@@ -967,7 +967,8 @@ public class Matrix3f  implements Serializable, Savable {
      * 
      * @return the string representation of this object.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuffer result = new StringBuffer("com.jme.math.Matrix3f\n[\n");
         result.append(" ");
         result.append(m00);
@@ -1002,7 +1003,8 @@ public class Matrix3f  implements Serializable, Savable {
      * @return the hashcode for this instance of Matrix4f.
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int hash = 37;
         hash = 37 * hash + Float.floatToIntBits(m00);
         hash = 37 * hash + Float.floatToIntBits(m01);
@@ -1026,7 +1028,8 @@ public class Matrix3f  implements Serializable, Savable {
      *            the object to compare for equality
      * @return true if they are equal
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
         if (!(o instanceof Matrix3f) || o == null) {
             return false;
         }
@@ -1051,7 +1054,8 @@ public class Matrix3f  implements Serializable, Savable {
         return true;
     }
 
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule cap = e.getCapsule(this);
         cap.write(m00, "m00", 1);
         cap.write(m01, "m01", 0);
@@ -1064,7 +1068,8 @@ public class Matrix3f  implements Serializable, Savable {
         cap.write(m22, "m22", 1);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule cap = e.getCapsule(this);
         m00 = cap.readFloat("m00", 1);
         m01 = cap.readFloat("m01", 0);
@@ -1077,7 +1082,8 @@ public class Matrix3f  implements Serializable, Savable {
         m22 = cap.readFloat("m22", 1);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Matrix3f> getClassTag() {
         return this.getClass();
     }
 }

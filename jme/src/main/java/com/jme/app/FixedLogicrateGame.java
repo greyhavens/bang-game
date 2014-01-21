@@ -101,7 +101,8 @@ public abstract class FixedLogicrateGame extends AbstractGame {
     /**
      * Ticks logic at a fixed rate while rendering as fast as hardware permits.
      */
-    public final void start() {
+    @Override
+	public final void start() {
         LoggingSystem.getLogger().log(Level.INFO, "Application started.");
         try {
             getAttributes();
@@ -161,7 +162,8 @@ public abstract class FixedLogicrateGame extends AbstractGame {
      * 
      * @see AbstractGame#quit()
      */
-    protected void quit() {
+    @Override
+	protected void quit() {
         if (display != null) {
             display.close();
         }
@@ -173,7 +175,8 @@ public abstract class FixedLogicrateGame extends AbstractGame {
      *            unused in this implementation
      * @see AbstractGame#update(float interpolation)
      */
-    protected abstract void update(float interpolation);
+    @Override
+	protected abstract void update(float interpolation);
 
     /**
      * Renders the scene. Under no circumstances should the render method alter
@@ -183,25 +186,30 @@ public abstract class FixedLogicrateGame extends AbstractGame {
      *            decimal value representing the position between update ticks
      * @see AbstractGame#render(float interpolation)
      */
-    protected abstract void render(float percentWithinTick);
+    @Override
+	protected abstract void render(float percentWithinTick);
 
     /**
      * @see AbstractGame#initSystem()
      */
-    protected abstract void initSystem();
+    @Override
+	protected abstract void initSystem();
 
     /**
      * @see AbstractGame#initGame()
      */
-    protected abstract void initGame();
+    @Override
+	protected abstract void initGame();
 
     /**
      * @see AbstractGame#reinit()
      */
-    protected abstract void reinit();
+    @Override
+	protected abstract void reinit();
 
     /**
      * @see AbstractGame#cleanup()
      */
-    protected abstract void cleanup();
+    @Override
+	protected abstract void cleanup();
 }

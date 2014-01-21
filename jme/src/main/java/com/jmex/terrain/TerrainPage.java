@@ -165,7 +165,8 @@ public class TerrainPage extends Node {
        split(blockSize, heightMap, clod);
    }
 
-   public int getType() {
+   @Override
+public int getType() {
        return (SceneElement.NODE | SceneElement.TERRAIN_PAGE);
    }
 
@@ -198,7 +199,8 @@ public class TerrainPage extends Node {
     * @param v
     *            the bounding volume to set for the terrain blocks.
     */
-   public void setModelBound(BoundingVolume v) {
+   @Override
+public void setModelBound(BoundingVolume v) {
        for (int i = 0; i < this.getQuantity(); i++) {
            if ((this.getChild(i).getType() & SceneElement.TERRAIN_PAGE) != 0) {
                ((TerrainPage) getChild(i)).setModelBound(v
@@ -218,7 +220,8 @@ public class TerrainPage extends Node {
     *
     *
     */
-   public void updateModelBound() {
+   @Override
+public void updateModelBound() {
        for (int i = 0; i < this.getQuantity(); i++) {
            if ((this.getChild(i).getType() & SceneElement.TERRAIN_PAGE) != 0) {
                ((TerrainPage) getChild(i)).updateModelBound();
@@ -1088,7 +1091,8 @@ public class TerrainPage extends Node {
        this.quadrant = quadrant;
    }
    
-   public void write(JMEExporter e) throws IOException {
+   @Override
+public void write(JMEExporter e) throws IOException {
        super.write(e);
        OutputCapsule capsule = e.getCapsule(this);
        capsule.write(offset, "offset", Vector3f.ZERO);
@@ -1099,7 +1103,8 @@ public class TerrainPage extends Node {
        capsule.write(quadrant, "quadrant", (short) 1);
    }
 
-   public void read(JMEImporter e) throws IOException {
+   @Override
+public void read(JMEImporter e) throws IOException {
        super.read(e);
        InputCapsule capsule = e.getCapsule(this);
        offset = (Vector2f)capsule.readSavable("offset", new Vector3f(Vector3f.ZERO));

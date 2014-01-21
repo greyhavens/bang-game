@@ -58,7 +58,8 @@ public class PrimitiveGroup {
         }
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
         return getTypeString() + " : " + numIndices;
     }
     

@@ -235,23 +235,26 @@ public abstract class RenderState implements Serializable, Savable {
 	 *            The spatial to apply the render states too.
 	 * @return The render state to use.
 	 */
-	public RenderState extract(Stack stack, SceneElement spat) {
+	public RenderState extract(Stack<?> stack, SceneElement spat) {
 		// The default behavior is to return the top of the stack, the last item
 		// pushed during the recursive traveral.
 		return (RenderState) stack.peek();
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(enabled, "enabled", true);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         enabled = capsule.readBoolean("enabled", true);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends RenderState> getClassTag() {
         return this.getClass();
     }
 

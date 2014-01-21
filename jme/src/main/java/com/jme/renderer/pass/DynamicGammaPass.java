@@ -41,14 +41,16 @@ public class DynamicGammaPass extends Pass {
     @SuppressWarnings("unused")
     private Histogram m_Histogram;
 
-    public void doRender(Renderer r) {
+    @Override
+	public void doRender(Renderer r) {
         // downsample and transform framebuffer to luminance texture 10% of size
         // analyze luminance texture and calc distribution
         // update gamma ramp by time
         // Apply gamma ramp to scene
     }
 
-    protected void doUpdate(float tpf) {
+    @Override
+	protected void doUpdate(float tpf) {
         // TODO Auto-generated method stub
         
     }

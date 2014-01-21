@@ -120,7 +120,8 @@ public class XMLtoBinary {
     private class SAXConverter extends DefaultHandler{
         private static final boolean DEBUG = false;
 
-        public void startDocument() throws SAXException {
+        @Override
+		public void startDocument() throws SAXException {
             try {
                 myOut.writeLong(BinaryFormatConstants.BEGIN_FILE);
             } catch (IOException e) {
@@ -128,7 +129,8 @@ public class XMLtoBinary {
             }
         }
 
-        public void endDocument() throws SAXException {
+        @Override
+		public void endDocument() throws SAXException {
             try {
                 myOut.writeByte(BinaryFormatConstants.END_FILE);
                 myOut.close();
@@ -137,7 +139,8 @@ public class XMLtoBinary {
             }
         }
 
-        public void startElement(String uri,String localName,String qName, Attributes atts) throws SAXException{
+        @Override
+		public void startElement(String uri,String localName,String qName, Attributes atts) throws SAXException{
             if (DEBUG) System.out.println("startElement:" + qName);
             try {
                 myOut.writeByte(BinaryFormatConstants.BEGIN_TAG);
@@ -530,7 +533,8 @@ public class XMLtoBinary {
         }
 
 
-        public void endElement(String uri,String localName, String qName) throws SAXException{
+        @Override
+		public void endElement(String uri,String localName, String qName) throws SAXException{
             try {
                 if (DEBUG) System.out.println("endElement:" + qName);
                 myOut.writeByte(BinaryFormatConstants.END_TAG);

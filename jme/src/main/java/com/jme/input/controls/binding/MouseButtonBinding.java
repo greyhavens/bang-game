@@ -46,14 +46,17 @@ public class MouseButtonBinding implements Binding {
         this.button = button;
     }
     
+	@Override
 	public String getName() {
 		return Mouse.getButtonName(button);
 	}
 	
+	@Override
 	public float getValue() {
 		return MouseInput.get().isButtonDown(button) ? 1.0f : 0.0f;
 	}
 
+	@Override
 	public String toString() {
 		return getName();
 	}

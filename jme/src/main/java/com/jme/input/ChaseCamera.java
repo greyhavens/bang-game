@@ -133,7 +133,7 @@ public class ChaseCamera extends InputHandler {
      *            from the statics ChaseCamera.PROP_XXXX and
      *            ThirdPersonMouseLook.PROP_XXXX
      */
-    public ChaseCamera(Camera cam, Spatial target, HashMap props) {
+    public ChaseCamera(Camera cam, Spatial target, HashMap<?, ?> props) {
         super();
         this.cam = cam;
         this.target = target;
@@ -163,7 +163,7 @@ public class ChaseCamera extends InputHandler {
      * 
      * @param props
      */
-    public void updateProperties(HashMap props) {
+    public void updateProperties(HashMap<?, ?> props) {
         mouseLook.updateProperties(props);
         
         if (idealSphereCoords == null) idealSphereCoords = new Vector3f((mouseLook.getMaxRollOut()-mouseLook.getMinRollOut()) / 2f, 0, mouseLook.getMaxAscent() * .5f);
@@ -239,7 +239,8 @@ public class ChaseCamera extends InputHandler {
      *            amount of time since last update (in seconds)
      * @see com.jme.input.InputHandler#update(float)
      */
-    public void update(float time) {
+    @Override
+	public void update(float time) {
         if ( !isEnabled() ) return;
 
         super.update(time);
@@ -470,7 +471,8 @@ public class ChaseCamera extends InputHandler {
         this.stayBehindTarget = stayBehind;
     }
 
-    public void setActionSpeed(float speed) {
+    @Override
+	public void setActionSpeed(float speed) {
         super.setActionSpeed(speed);
         this.speed = speed;
     }

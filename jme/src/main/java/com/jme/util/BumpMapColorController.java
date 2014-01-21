@@ -84,7 +84,8 @@ public class BumpMapColorController extends Controller {
         }
     }
 
-    public void update(float time) {
+    @Override
+	public void update(float time) {
         updateBatchList(); // XXX: would be nice to do this reactively
         
         for (TriangleBatch batch : store.keySet()) {

@@ -172,7 +172,8 @@ public class BinaryExporter implements JMEExporter {
         return new BinaryExporter();
     }
 
-    public boolean save(Savable object, OutputStream os) throws IOException {
+    @Override
+	public boolean save(Savable object, OutputStream os) throws IOException {
         classes = new HashMap<String, BinaryClassObject>();
         contentTable = new IdentityHashMap<Savable, BinaryIdContentPair>();
         locationTable = new HashMap<Integer, Integer>();
@@ -230,7 +231,8 @@ public class BinaryExporter implements JMEExporter {
         ArrayList<Map.Entry<Savable, BinaryIdContentPair>> entries =
             new ArrayList<Map.Entry<Savable, BinaryIdContentPair>>(contentTable.entrySet());
         Collections.sort(entries, new Comparator<Map.Entry<Savable, BinaryIdContentPair>>() {
-            public int compare (Map.Entry<Savable, BinaryIdContentPair> m1,
+            @Override
+			public int compare (Map.Entry<Savable, BinaryIdContentPair> m1,
                 Map.Entry<Savable, BinaryIdContentPair> m2) {
                 return m1.getValue().getId() - m2.getValue().getId();
             }
@@ -327,7 +329,8 @@ public class BinaryExporter implements JMEExporter {
         return bytes;
     }
 
-    public boolean save(Savable object, File f) throws IOException {
+    @Override
+	public boolean save(Savable object, File f) throws IOException {
         File parentDirectory = f.getParentFile();
         if(parentDirectory != null && !parentDirectory.exists()) {
             parentDirectory.mkdirs();
@@ -339,7 +342,8 @@ public class BinaryExporter implements JMEExporter {
         return rVal;
     }
 
-    public BinaryOutputCapsule getCapsule(Savable object) {
+    @Override
+	public BinaryOutputCapsule getCapsule(Savable object) {
         return contentTable.get(object).getContent();
     }
 

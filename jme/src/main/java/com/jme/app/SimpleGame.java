@@ -64,7 +64,8 @@ public abstract class SimpleGame extends BaseSimpleGame {
      *            unused in this implementation
      * @see BaseSimpleGame#update(float interpolation)
      */
-    protected final void update(float interpolation) {
+    @Override
+	protected final void update(float interpolation) {
         super.update(interpolation);
 
         if ( !pause ) {
@@ -83,7 +84,8 @@ public abstract class SimpleGame extends BaseSimpleGame {
      *            unused in this implementation
      * @see AbstractGame#render(float interpolation)
      */
-    protected final void render(float interpolation) {
+    @Override
+	protected final void render(float interpolation) {
         super.render(interpolation);
         
         Renderer r = display.getRenderer();

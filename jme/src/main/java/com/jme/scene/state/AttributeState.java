@@ -83,6 +83,7 @@ public abstract class AttributeState extends RenderState {
 	 * @return
 	 * @see com.jme.scene.state.RenderState#getType()
 	 */
+	@Override
 	public int getType() {
 		return RS_ATTRIBUTE;
 	}
@@ -96,19 +97,22 @@ public abstract class AttributeState extends RenderState {
 		return mask;
 	}
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(mask, "mask", ALL_ATTRIB_BIT);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         mask = capsule.readInt("mask", ALL_ATTRIB_BIT);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<AttributeState> getClassTag() {
         return AttributeState.class;
     }
 }

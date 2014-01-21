@@ -111,7 +111,8 @@ public class Fader extends Quad {
         fadeController = new Controller() {
             private static final long serialVersionUID = 1L;
 
-            public void update(float time) {
+            @Override
+			public void update(float time) {
                 // Fix for lagged startups
                 if (ignoreUntilStable) {
                     if (time < 0.1f) {

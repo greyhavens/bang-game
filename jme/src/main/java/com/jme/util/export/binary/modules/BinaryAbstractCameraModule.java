@@ -39,11 +39,13 @@ import com.jme.util.export.Savable;
 import com.jme.util.export.binary.BinaryLoaderModule;
 
 public class BinaryAbstractCameraModule implements BinaryLoaderModule {
-    public String getKey() {
+    @Override
+	public String getKey() {
         return AbstractCamera.class.getName();
     }
 
-    public Savable load(InputCapsule inputCapsule) {
+    @Override
+	public Savable load(InputCapsule inputCapsule) {
         return DisplaySystem.getDisplaySystem().getRenderer().createCamera(640, 480);
     }
 }

@@ -70,15 +70,18 @@ public class LWJGLCanvas extends AWTGLCanvas implements JMECanvas {
         return ((LWJGLDisplaySystem)DisplaySystem.getDisplaySystem()).getFormat();
     }
 
-    public void setVSync(boolean sync) {
+    @Override
+	public void setVSync(boolean sync) {
         setVSyncEnabled(sync);
     }
 
-    public void setImplementor(JMECanvasImplementor impl) {
+    @Override
+	public void setImplementor(JMECanvasImplementor impl) {
         this.impl = impl;
     }
 
-    public void paintGL() {
+    @Override
+	public void paintGL() {
         synchronized (PAINT_LOCK) {
             try {
                 DisplaySystem.getDisplaySystem().setCurrentCanvas(this);
@@ -105,7 +108,8 @@ public class LWJGLCanvas extends AWTGLCanvas implements JMECanvas {
         }
     }
 
-    public void setBackground(Color bgColor) {
+    @Override
+	public void setBackground(Color bgColor) {
         impl.setBackground(makeColorRGBA(bgColor));
     }
 
@@ -117,6 +121,7 @@ public class LWJGLCanvas extends AWTGLCanvas implements JMECanvas {
 	/* (non-Javadoc)
 	 * @see com.jmex.awt.JMECanvas#doUpdateInput()
 	 */
+	@Override
 	public boolean doUpdateInput() {
 		return updateInput;
 	}
@@ -124,6 +129,7 @@ public class LWJGLCanvas extends AWTGLCanvas implements JMECanvas {
 	/* (non-Javadoc)
 	 * @see com.jmex.awt.JMECanvas#setUpdateInput(boolean)
 	 */
+	@Override
 	public void setUpdateInput(boolean doUpdate) {
 		updateInput = doUpdate;
 	}

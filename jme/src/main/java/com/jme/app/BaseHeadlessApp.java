@@ -54,7 +54,8 @@ public abstract class BaseHeadlessApp extends AbstractGame {
    * The simplest main game loop possible: render and update as fast as
    * possible.
    */
-  public final void start() {
+  @Override
+public final void start() {
     LoggingSystem.getLogger().log(Level.INFO, "Application started.");
     try {
       getAttributes();
@@ -98,7 +99,8 @@ public abstract class BaseHeadlessApp extends AbstractGame {
    * Quits the program abruptly using <code>System.exit</code>.
    * @see AbstractGame#quit()
    */
-  protected void quit() {
+  @Override
+protected void quit() {
       if (display != null)
           display.close();
     System.exit(0);
@@ -108,31 +110,37 @@ public abstract class BaseHeadlessApp extends AbstractGame {
    * @param interpolation unused in this implementation
    * @see AbstractGame#update(float interpolation)
    */
-  protected abstract void update(float interpolation);
+  @Override
+protected abstract void update(float interpolation);
 
   /**
    * @param interpolation unused in this implementation
    * @see AbstractGame#render(float interpolation)
    */
-  protected abstract void render(float interpolation);
+  @Override
+protected abstract void render(float interpolation);
 
   /**
    * @see AbstractGame#initSystem()
    */
-  protected abstract void initSystem();
+  @Override
+protected abstract void initSystem();
 
   /**
    * @see AbstractGame#initGame()
    */
-  protected abstract void initGame();
+  @Override
+protected abstract void initGame();
 
   /**
    * @see AbstractGame#reinit()
    */
-  protected abstract void reinit();
+  @Override
+protected abstract void reinit();
 
   /**
    * @see AbstractGame#cleanup()
    */
-  protected abstract void cleanup();
+  @Override
+protected abstract void cleanup();
 }

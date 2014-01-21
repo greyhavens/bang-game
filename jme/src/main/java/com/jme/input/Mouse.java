@@ -110,7 +110,8 @@ public abstract class Mouse extends Quad {
      *            the render state to add.
      * @return the old render state.
      */
-    public RenderState setRenderState(RenderState rs) {
+    @Override
+	public RenderState setRenderState(RenderState rs) {
         if (rs.getType() == RenderState.RS_TEXTURE) {
             hasCursor = true;
             imageHeight = ((TextureState) rs).getTexture().getImage()

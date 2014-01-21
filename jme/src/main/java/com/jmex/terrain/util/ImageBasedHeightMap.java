@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -35,9 +35,6 @@ package com.jmex.terrain.util;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.PixelGrabber;
-import java.awt.image.WritableRaster;
 
 import com.jme.util.TextureManager;
 
@@ -46,7 +43,7 @@ import com.jme.util.TextureManager;
  * conversion of an image. The image used currently must have an equal height
  * and width, although future work could scale an incoming image to a specific
  * height and width.
- * 
+ *
  * @author Mike Kienenberger
  * @version $id$
  */
@@ -90,14 +87,14 @@ public class ImageBasedHeightMap extends AbstractHeightMap {
         // intended for use in the design, construction, operation or
         // maintenance of any nuclear facility.
 
-        //    preserves image's colormodel. Assumes image is loaded
-        public static BufferedImage toBufferedImage(Image image) {
-            if (image instanceof BufferedImage) return (BufferedImage) image;
-            ColorModel cm = getColorModel(image);
-            int width = image.getWidth(null);
-            int height = image.getHeight(null);
-            return copy(createBufferedImage(cm, width, height), image);
-        }
+        // //    preserves image's colormodel. Assumes image is loaded
+        // public static BufferedImage toBufferedImage(Image image) {
+        //     if (image instanceof BufferedImage) return (BufferedImage) image;
+        //     ColorModel cm = getColorModel(image);
+        //     int width = image.getWidth(null);
+        //     int height = image.getHeight(null);
+        //     return copy(createBufferedImage(cm, width, height), image);
+        // }
 
         public static BufferedImage toBufferedImage(Image image, int type) {
             if (image instanceof BufferedImage
@@ -116,32 +113,32 @@ public class ImageBasedHeightMap extends AbstractHeightMap {
             return target;
         }
 
-        public static ColorModel getColorModel(Image image) {
-            try {
-                PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
-                pg.grabPixels();
-                return pg.getColorModel();
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Unexpected interruption", e);
-            }
-        }
+        // public static ColorModel getColorModel(Image image) {
+        //     try {
+        //         PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
+        //         pg.grabPixels();
+        //         return pg.getColorModel();
+        //     } catch (InterruptedException e) {
+        //         throw new RuntimeException("Unexpected interruption", e);
+        //     }
+        // }
 
-        public static BufferedImage createBufferedImage(ColorModel cm, int w,
-                int h) {
-            WritableRaster raster = cm.createCompatibleWritableRaster(w, h);
-            boolean isRasterPremultiplied = cm.isAlphaPremultiplied();
-            return new BufferedImage(cm, raster, isRasterPremultiplied, null);
-        }
+        // public static BufferedImage createBufferedImage(ColorModel cm, int w,
+        //         int h) {
+        //     WritableRaster raster = cm.createCompatibleWritableRaster(w, h);
+        //     boolean isRasterPremultiplied = cm.isAlphaPremultiplied();
+        //     return new BufferedImage(cm, raster, isRasterPremultiplied, null);
+        // }
     }
 
     /**
      * Creates a HeightMap from an Image. The image will be converted to
      * grayscale, and the grayscale values will be used to generate the height
      * map. White is highest point while black is lowest point.
-     * 
+     *
      * Currently, the Image used must be square (width == height), but future
      * work could rescale the image.
-     * 
+     *
      * @param colorImage
      *            Image to map to the height map.
      */
@@ -195,10 +192,11 @@ public class ImageBasedHeightMap extends AbstractHeightMap {
 
     /*
      * This does nothing because heightData is loaded when this class is created.
-     * 
+     *
      * @see com.jmex.terrain.util.AbstractHeightMap#load()
      */
-    public boolean load() {
+    @Override
+	public boolean load() {
         return true;
     }
 }

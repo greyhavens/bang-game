@@ -31,7 +31,8 @@ public class ParticlePoints extends ParticleGeometry {
         super(name, numParticles);
     }
 
-    protected void initializeParticles(int numParticles) {
+    @Override
+	protected void initializeParticles(int numParticles) {
         Vector2f sharedTextureData[];
 
         // setup texture coords
@@ -81,7 +82,8 @@ public class ParticlePoints extends ParticleGeometry {
         return ParticleGeometry.PT_POINT;
     }
 
-    public void draw(Renderer r) {
+    @Override
+	public void draw(Renderer r) {
         Camera camera = r.getCamera();
         for (int i = 0; i < particles.length; i++) {
             Particle particle = particles[i];
@@ -108,14 +110,16 @@ public class ParticlePoints extends ParticleGeometry {
 
     }
     
-    protected void setupBatchList() {
+    @Override
+	protected void setupBatchList() {
         batchList = new ArrayList<GeomBatch>(1);
         PointBatch batch = new PointBatch();
         batch.setParentGeom(this);
         batchList.add(batch);
     }
 
-    public PointBatch getBatch(int index) {
+    @Override
+	public PointBatch getBatch(int index) {
         return (PointBatch) batchList.get(index);
     }
     

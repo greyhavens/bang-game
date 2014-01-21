@@ -184,7 +184,7 @@ public abstract class DisplaySystem {
     private static Map<String, SystemProvider> getSystemProviderMap()
             throws ServiceConfigurationError {
         if (systemProviderMap.isEmpty()) {
-            Iterator displayProviders = Service.providers(SystemProvider.class);
+            Iterator<?> displayProviders = Service.providers(SystemProvider.class);
             while (displayProviders.hasNext()) {
                 SystemProvider provider = (SystemProvider) displayProviders
                         .next();

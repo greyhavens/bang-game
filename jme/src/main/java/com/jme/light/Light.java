@@ -318,7 +318,8 @@ public abstract class Light implements Serializable, Savable {
         specular = new ColorRGBA(light.specular);
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(ambient, "ambient", ColorRGBA.black);
         capsule.write(diffuse, "diffuse", ColorRGBA.black);
@@ -333,7 +334,8 @@ public abstract class Light implements Serializable, Savable {
         capsule.write(shadowCaster, "shadowCaster", false);
     }
     
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         ambient = (ColorRGBA)capsule.readSavable("ambient", new ColorRGBA(ColorRGBA.black));
         diffuse = (ColorRGBA)capsule.readSavable("diffuse", new ColorRGBA(ColorRGBA.black));
@@ -348,7 +350,8 @@ public abstract class Light implements Serializable, Savable {
         shadowCaster = capsule.readBoolean("shadowCaster", false);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<? extends Light> getClassTag() {
         return this.getClass();
     }
 }

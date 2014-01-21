@@ -48,10 +48,12 @@ public class JoystickButtonBinding implements Binding {
         this.button = button;
     }
     
+	@Override
 	public String getName() {
 		return "JS:B" + button;
 	}
 
+	@Override
 	public float getValue() {
 		if (joystick == null) {
 			loadJoystick();
@@ -67,6 +69,7 @@ public class JoystickButtonBinding implements Binding {
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return joystick.getName() + ":Button" + button;
 	}

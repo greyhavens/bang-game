@@ -124,7 +124,7 @@ public class ThirdPersonMouseLook extends MouseInputAction {
      * <code>updateProperties</code>
      * @param props
      */
-    public void updateProperties(HashMap props) {
+    public void updateProperties(HashMap<?, ?> props) {
         maxAscent = InputHandler.getFloatProp(props, PROP_MAXASCENT, DEFAULT_MAXASCENT);
         minAscent = InputHandler.getFloatProp(props, PROP_MINASCENT, DEFAULT_MINASCENT);
         maxRollOut = InputHandler.getFloatProp(props, PROP_MAXROLLOUT, DEFAULT_MAXROLLOUT);
@@ -148,7 +148,8 @@ public class ThirdPersonMouseLook extends MouseInputAction {
      * @param speed
      *            the speed of the mouse look.
      */
-    public void setSpeed(float speed) {
+    @Override
+	public void setSpeed(float speed) {
         super.setSpeed( speed );
         mouseXSpeed = mouseXMultiplier * speed;
         mouseYSpeed = mouseYMultiplier * speed;
@@ -162,7 +163,8 @@ public class ThirdPersonMouseLook extends MouseInputAction {
      * 
      * @see com.jme.input.action.MouseInputAction#performAction
      */
-    public void performAction(InputActionEvent event) {
+    @Override
+	public void performAction(InputActionEvent event) {
         if (!enabled)
             return;
 

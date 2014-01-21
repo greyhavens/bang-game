@@ -199,6 +199,7 @@ public class MotionBlurRenderPass extends Pass {
 	private class SpatialsRenderNode extends Node {
 		private static final long serialVersionUID = 7367501683137581101L;
 
+		@Override
 		public void draw( Renderer r ) {
 			Spatial child;
 			for( int i = 0, cSize = spatials.size(); i < cSize; i++ ) {
@@ -208,6 +209,7 @@ public class MotionBlurRenderPass extends Pass {
 			}
 		}
 
+		@Override
 		public void onDraw( Renderer r ) {
 			draw( r );
 		}
@@ -230,6 +232,7 @@ public class MotionBlurRenderPass extends Pass {
      *            Renderer to use for drawing.
      * @see com.jme.renderer.pass.Pass#doRender(com.jme.renderer.Renderer)
      */
+	@Override
 	public void doRender( Renderer r ) {
 		if( !useCurrentScene && spatials.size() == 0 ) {
 			return;

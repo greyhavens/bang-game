@@ -52,12 +52,13 @@ public class TrianglePickData extends PickData {
     private Vector3f worldScale;
     private Vector3f worldTranslation;
 
-    public TrianglePickData( Ray ray, GeomBatch targetMesh, ArrayList targetTris, boolean checkDistance ) {
+    public TrianglePickData( Ray ray, GeomBatch targetMesh, ArrayList<?> targetTris, boolean checkDistance ) {
         super( ray, targetMesh, targetTris, checkDistance );
     }
 
-    protected float calculateDistance() {
-        ArrayList tris = getTargetTris();
+    @Override
+	protected float calculateDistance() {
+        ArrayList<?> tris = getTargetTris();
         if ( tris.isEmpty() ) {
             return Float.POSITIVE_INFINITY;
         }

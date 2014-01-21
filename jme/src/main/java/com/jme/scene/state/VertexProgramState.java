@@ -109,7 +109,8 @@ public abstract class VertexProgramState extends RenderState {
      * @return RS_VERTEX_PROGRAM
      * @see com.jme.scene.state.RenderState#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return RS_VERTEX_PROGRAM;
     }
 
@@ -165,7 +166,8 @@ public abstract class VertexProgramState extends RenderState {
         }
     }
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(usingParameters, "usingParameters", false);
@@ -173,7 +175,8 @@ public abstract class VertexProgramState extends RenderState {
         capsule.write(program, "program", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         usingParameters = capsule.readBoolean("usingParameters", false);
@@ -181,7 +184,8 @@ public abstract class VertexProgramState extends RenderState {
         program = capsule.readByteBuffer("program", null);
     }
     
-    public Class getClassTag() {
+    @Override
+	public Class<VertexProgramState> getClassTag() {
         return VertexProgramState.class;
     }
 }

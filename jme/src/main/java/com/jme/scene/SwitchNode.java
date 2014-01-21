@@ -188,7 +188,8 @@ public class SwitchNode extends Node {
         return false;
     }
     
-    public void findPick(Ray toTest, PickResults results) {
+    @Override
+	public void findPick(Ray toTest, PickResults results) {
         if (activeChild != SN_INVALID_CHILD) {
             if (activeChildData != null) {
                 activeChildData.findPick(toTest, results);
@@ -197,14 +198,16 @@ public class SwitchNode extends Node {
     }
     
     
-    public void write(JMEExporter e) throws IOException {
+    @Override
+	public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(activeChild, "activeChild", 0);
         capsule.write(activeChildData, "activeChildData", null);
     }
 
-    public void read(JMEImporter e) throws IOException {
+    @Override
+	public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         activeChild = capsule.readInt("activeChild", 0);

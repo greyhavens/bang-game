@@ -8,19 +8,21 @@ import java.util.ArrayList;
  * 
  * @deprecated Replaced by {@link GameTaskQueue}
  */
-@SuppressWarnings({"Deprecation"})
+@Deprecated
 public class RenderThreadActionQueue {
 
     /**
      * @deprecated Replaced by {@link GameTaskQueue}
      */
-    protected static final ArrayList<RenderThreadExecutable> queue = new ArrayList<RenderThreadExecutable>();
+    @Deprecated
+	protected static final ArrayList<RenderThreadExecutable> queue = new ArrayList<RenderThreadExecutable>();
 
     /**
      * @deprecated Replaced by {@link GameTaskQueue}
      * @param qItem -
      */
-    public static void addToQueue(RenderThreadExecutable qItem) {
+    @Deprecated
+	public static void addToQueue(RenderThreadExecutable qItem) {
         queue.add(qItem);
     }
 
@@ -28,14 +30,16 @@ public class RenderThreadActionQueue {
      * @deprecated v
      * @return -
      */
-    public static boolean isEmpty() {
+    @Deprecated
+	public static boolean isEmpty() {
         return queue.isEmpty();
     }
 
     /**
      * @deprecated Replaced by {@link GameTaskQueue}
      */
-    public static void processQueueItem() {
+    @Deprecated
+	public static void processQueueItem() {
         if (!isEmpty())
             queue.remove(0).doAction();
     }
