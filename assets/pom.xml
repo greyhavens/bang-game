@@ -112,36 +112,6 @@
                 <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
                             classdef="${basedir}/rsrc/avatars/classes.xml"
                             target="${target.dir}/rsrc/avatars/metadata.jar"/>
-
-                <taskdef name="cbundle" classpathref="maven.plugin.classpath"
-                         classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
-                <for list="${towns}" param="town" trim="true"><sequential>
-                  <for list="male,female" param="gender"><sequential>
-                    <mkdir dir="${target.dir}/rsrc/avatars/${comp.bundle}"/>
-                    <cbundle actiondef="rsrc/avatars/actions.xml" mapfile="rsrc/avatars/compmap.txt"
-                             root="rsrc/avatars/@{town}"
-                             target="${target.dir}/rsrc/avatars/${comp.bundle}/components.jar">
-                      <fileset dir="rsrc/avatars/@{town}/@{gender}">
-                        <include name="**/*.png"/>
-                        <exclude name="**/*_shadow.png"/>
-                        <exclude name="**/*_crop.png"/>
-                        <exclude name="components/**"/>
-                      </fileset>
-                    </cbundle>
-                  </sequential></for>
-                </sequential></for>
-
-                <mkdir dir="${target.dir}/rsrc/avatars/${comp.bundle}"/>
-                <cbundle actiondef="rsrc/avatars/actions.xml" mapfile="rsrc/avatars/compmap.txt"
-                         root="rsrc/avatars"
-                         target="${target.dir}/rsrc/avatars/${comp.bundle}/components.jar">
-                  <fileset dir="rsrc/avatars/buckle">
-                    <include name="**/*.png"/>
-                    <exclude name="**/*_shadow.png"/>
-                    <exclude name="**/*_crop.png"/>
-                    <exclude name="components/**"/>
-                  </fileset>
-                </cbundle>
               </target>
             </configuration>
             <goals>
@@ -156,6 +126,63 @@
             <version>${project.version}</version>
           </dependency>
         </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>com.threerings</groupId>
+        <artifactId>nenya-maven-plugin</artifactId>
+        <version>1.6-SNAPSHOT</version>
+        <executions>
+<!--
+          <execution>
+            <id>colors</id>
+            <goals><goal>colors</goal></goals>
+          </execution>
+          <execution>
+            <id>mbundle</id>
+            <goals><goal>mbundle</goal></goals>
+          </execution>
+          <execution>
+            <id>tsbundles</id>
+            <goals><goal>tsbundles</goal></goals>
+          </execution>
+-->
+          <execution>
+            <id>cbundle</id>
+            <goals><goal>cbundle</goal></goals>
+            <configuration>
+              <base>rsrc/avatars</base>
+              <targetBase>${project.build.directory}/classes/rsrc/avatars</targetBase>
+              <excludes>
+                <exclude>**/*_shadow.png</exclude>
+                <exclude>**/*_crop.png</exclude>
+                <exclude>components/**</exclude>
+              </excludes>
+              <bundleDirectories>
+                <bundleDirectory>
+                  <root>.</root>
+                  <path>buckle</path>
+                </bundleDirectory>
+                <bundleDirectory>
+                  <root>frontier_town</root>
+                  <path>male</path>
+                </bundleDirectory>
+                <bundleDirectory>
+                  <root>frontier_town</root>
+                  <path>female</path>
+                </bundleDirectory>
+                <bundleDirectory>
+                  <root>indian_post</root>
+                  <path>male</path>
+                </bundleDirectory>
+                <bundleDirectory>
+                  <root>indian_post</root>
+                  <path>female</path>
+                </bundleDirectory>
+              </bundleDirectories>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
