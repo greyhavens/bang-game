@@ -24,6 +24,7 @@
     <module>server</module>
     <module>tools</module>
     <module>assets</module>
+    <module>test</module>
   </modules>
 
   <build>

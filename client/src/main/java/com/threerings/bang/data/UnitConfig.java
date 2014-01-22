@@ -419,8 +419,7 @@ public class UnitConfig
     {
         if (_types.size() == 0) {
             // register our units
-            String[] units = BangUtil.townResourceToStrings(
-                "rsrc/units/TOWN/units.txt");
+            String[] units = BangUtil.townResourceToStrings("rsrc/units/TOWN/units.txt");
             for (int ii = 0; ii < units.length; ii++) {
                 registerUnit(units[ii]);
             }

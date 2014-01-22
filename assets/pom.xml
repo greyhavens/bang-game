@@ -44,11 +44,32 @@
           <exclude>rsrc/**/*.wav</exclude>
         </excludes>
       </resource>
+
       <!-- sounds -->
       <resource>
         <directory>${basedir}</directory>
         <includes>
           <include>rsrc/**/*.ogg</include>
+        </includes>
+      </resource>
+
+      <!-- stuffs -->
+      <resource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>rsrc/units/**/unit.properties</include>
+          <include>rsrc/units/**/*.png</include>
+          <include>rsrc/props/**/prop.properties</include>
+          <include>rsrc/props/**/*.png</include>
+          <include>rsrc/bonuses/**/bonus.properties</include>
+          <include>rsrc/bonuses/**/*.png</include>
+          <include>rsrc/effects/**/particles.txt</include>
+          <include>rsrc/effects/**/particles.properties</include>
+          <include>rsrc/effects/**/particles.jme</include>
+          <include>rsrc/effects/**/icons.txt</include>
+          <include>rsrc/effects/**/icon.properties</include>
+          <include>rsrc/effects/**/*.png</include>
+          <include>rsrc/extras/**/*.png</include>
         </includes>
       </resource>
     </resources>
@@ -112,6 +133,11 @@
                 <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
                             classdef="${basedir}/rsrc/avatars/classes.xml"
                             target="${target.dir}/rsrc/avatars/metadata.jar"/>
+
+                <!-- updates our lists of things -->
+                <exec executable="${basedir}/update_lists" failonerror="true">
+                  <arg value="${towns}"/>
+                </exec>
               </target>
             </configuration>
             <goals>

@@ -120,40 +120,5 @@
         </plugins>
       </build>
     </profile>
-
-    <profile>
-      <id>client</id>
-      <build>
-        <plugins>
-          <!-- allows testing of client backend via: mvn test -Pclient -->
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <phase>test</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <mainClass>com.threerings.bang.client.BangApp</mainClass>
-              <systemProperties>
-                <systemProperty><key>no_unpack_resources</key><value>true</value></systemProperty>
-                <systemProperty><key>bang.home</key><value>${basedir}</value></systemProperty>
-                <systemProperty>
-                  <key>resource_dir</key><value>assets/target/classes/rsrc</value>
-                </systemProperty>
-                <systemProperty><key>rsrc_cache_dir</key><value>/tmp</value></systemProperty>
-                <systemProperty><key>no_log_redir</key><value>true</value></systemProperty>
-                <systemProperty><key>appdir</key><value>assets/target/classes</value></systemProperty>
-              </systemProperties>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
   </profiles>
 </project>
