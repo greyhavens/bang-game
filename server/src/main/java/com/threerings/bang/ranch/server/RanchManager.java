@@ -13,7 +13,6 @@ import com.threerings.util.Name;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -29,6 +28,7 @@ import com.threerings.bang.server.persist.ItemRepository;
 
 import com.threerings.bang.ranch.client.RanchService;
 import com.threerings.bang.ranch.data.RanchCodes;
+import com.threerings.bang.ranch.data.RanchMarshaller;
 import com.threerings.bang.ranch.data.RanchObject;
 
 import static com.threerings.bang.Log.log;
@@ -41,7 +41,7 @@ public class RanchManager extends ShopManager
     implements RanchCodes, RanchProvider
 {
     // documentation inherited from interface RanchProvider
-    public void recruitBigShot (ClientObject caller, String type, Name name,
+    public void recruitBigShot (PlayerObject caller, String type, Name name,
                                 RanchService.ResultListener listener)
         throws InvocationException
     {
@@ -113,7 +113,7 @@ public class RanchManager extends ShopManager
 
         // register our invocation service
         _robj = (RanchObject)_plobj;
-        _robj.setService(BangServer.invmgr.registerDispatcher(new RanchDispatcher(this)));
+        _robj.setService(BangServer.invmgr.registerProvider(this, RanchMarshaller.class));
     }
 
     /** Used to recruit and deliver a big shot to a player. */

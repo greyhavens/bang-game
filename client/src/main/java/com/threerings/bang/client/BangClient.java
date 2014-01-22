@@ -794,7 +794,7 @@ public class BangClient extends BasicClient
 
         // start a tutorial if requested
         if (tutorial) {
-            psvc.playTutorial(_ctx.getClient(), System.getProperty("tutorial"), rl);
+            psvc.playTutorial(System.getProperty("tutorial"), rl);
 
         } else {
             // otherwise we're starting a test game versus the computer
@@ -819,8 +819,8 @@ public class BangClient extends BasicClient
                 // hackery to work around shell escaping problems
                 board = board.replace("~", "'");
             }
-            psvc.playComputer(_ctx.getClient(), pcount, scenarios, board,
-                              Boolean.parseBoolean(System.getProperty("autoplay")), rl);
+            boolean autoPlay = Boolean.parseBoolean(System.getProperty("autoplay"));
+            psvc.playComputer(pcount, scenarios, board, autoPlay, rl);
         }
     }
 
@@ -1179,8 +1179,7 @@ public class BangClient extends BasicClient
         final Handle source = notification.getSource();
         if (source != null && _ctx.getMuteDirector().isMuted(source)) {
             log.info("Auto-rejecting notification", "who", source, "notification", notification);
-            _psvc.respondToNotification(
-                _client, notification.getKey(), notification.getRejectIndex(), rl);
+            _psvc.respondToNotification(notification.getKey(), notification.getRejectIndex(), rl);
             notification.responded = true;
             return false;
         }
@@ -1200,7 +1199,7 @@ public class BangClient extends BasicClient
                     _ctx.getMuteDirector().setMuted(source, true);
                     button = notification.getRejectIndex();
                 }
-                _psvc.respondToNotification(_client, notification.getKey(), button, rl);
+                _psvc.respondToNotification(notification.getKey(), button, rl);
                 notification.responded = true;
             }
         });
@@ -1375,8 +1374,7 @@ public class BangClient extends BasicClient
             _isIdle = isIdle;
             log.info("Setting idle " + isIdle + "", "time", idleTime);
             if (_ctx.getClient().isLoggedOn()) {
-                BodyService bsvc = _ctx.getClient().requireService(BodyService.class);
-                bsvc.setIdle(_ctx.getClient(), isIdle);
+                _ctx.getClient().requireService(BodyService.class).setIdle(isIdle);
             }
         }
 

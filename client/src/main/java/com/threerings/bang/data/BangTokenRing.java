@@ -26,13 +26,6 @@ public class BangTokenRing extends TokenRing
     public static final int OVER_13 = (1 << 5);
 
     /**
-     * A default constructor, used when unserializing token rings.
-     */
-    public BangTokenRing ()
-    {
-    }
-
-    /**
      * Constructs a token ring with the supplied set of tokens.
      */
     public BangTokenRing (int tokens)

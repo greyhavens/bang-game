@@ -3,8 +3,10 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
 
@@ -60,11 +62,9 @@ public class PlagueEffect extends BonusEffect
 
         // determine which pieces will be affected
         ArrayIntSet pids = new ArrayIntSet();
-        Piece[] pieces = bangobj.getPieceArray();
-        ArrayUtil.shuffle(pieces);
-
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
+        List<Piece> pieces = bangobj.getPieceArray();
+        Collections.shuffle(pieces);
+        for (Piece p : pieces) {
             if (p.owner >= 0 && p.isAlive() && ucount[p.owner] > 0 &&
                 // make sure we don't try to turn a dirigible over a
                 // building or water into a windup gunman

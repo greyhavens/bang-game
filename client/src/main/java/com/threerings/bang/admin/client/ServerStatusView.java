@@ -22,7 +22,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.presents.data.ConMgrStats;
+import com.threerings.nio.conman.ConMgrStats;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DSet;
@@ -167,8 +167,7 @@ public class ServerStatusView extends BDecoratedWindow
             }
 
         } else if ("sched_reboot".equals(cmd)) {
-            _statobj.service.scheduleReboot(
-                _ctx.getClient(), ((RebootOption)_rebmins.getSelectedItem()).minutes);
+            _statobj.service.scheduleReboot(((RebootOption)_rebmins.getSelectedItem()).minutes);
         }
     }
 
@@ -309,7 +308,7 @@ public class ServerStatusView extends BDecoratedWindow
     protected void updateConMgrStats ()
     {
         ConMgrStats cms = _statobj.connStats;
-        _constats[0].setText(String.valueOf(cms.authQueueSize));
+        // _constats[0].setText(String.valueOf(cms.authQueueSize));
         _constats[1].setText(String.valueOf(cms.bytesIn));
         _constats[2].setText(String.valueOf(cms.deathQueueSize));
         _constats[3].setText(String.valueOf(cms.bytesOut));

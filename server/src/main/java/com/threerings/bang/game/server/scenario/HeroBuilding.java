@@ -187,7 +187,7 @@ public class HeroBuilding extends Scenario
     }
 
     @Override // documentation inherited
-    public boolean addBonus (BangObject bangobj, Piece[] pieces)
+    public boolean addBonus (BangObject bangobj, List<Piece> pieces)
     {
         // count up the unclaimed scenario bonuses on the board
         int bonuses = 0;

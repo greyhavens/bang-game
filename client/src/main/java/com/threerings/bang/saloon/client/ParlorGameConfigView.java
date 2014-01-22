@@ -242,7 +242,7 @@ public class ParlorGameConfigView extends BContainer
                 modeUpdated();
             }
             if (shouldSyncGameConfig()) {
-                _tobj.service.updateGameConfig(_ctx.getClient(), makeConfig());
+                _tobj.service.updateGameConfig(makeConfig());
             }
         }
     }
@@ -428,8 +428,7 @@ public class ParlorGameConfigView extends BContainer
         // finally start things up
         ReportingListener rl = new ReportingListener(
             _ctx, SaloonCodes.SALOON_MSGS, "m.create_game_failed");
-        _tobj.service.startMatchMaking(
-            _ctx.getClient(), config, bdata, rl);
+        _tobj.service.startMatchMaking(config, bdata, rl);
     }
 
     protected Object[] makeBoxItems (int low, int high)

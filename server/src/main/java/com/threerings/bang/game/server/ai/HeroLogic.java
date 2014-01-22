@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.server.ai;
 
+import java.util.List;
+
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
@@ -41,16 +43,16 @@ public class HeroLogic extends AILogic
     }
 
     @Override // documentation inherited
-    protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         Unit hero = null, ehero = null;
         PointSet bonuses = new PointSet();
         Piece tporter = null, bonus = null;
         boolean canKill = false;
 
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Unit) {
-                Unit u = (Unit)pieces[ii];
+        for (Piece p : pieces) {
+            if (p instanceof Unit) {
+                Unit u = (Unit)p;
                 if (u.owner == unit.owner && u.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
                     hero = u;
                 } else if (u.owner != unit.owner && u.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
@@ -65,20 +67,19 @@ public class HeroLogic extends AILogic
                     canKill = true;
                 }
 
-            } else if (pieces[ii] instanceof Bonus && ((Bonus)pieces[ii]).isScenarioBonus()) {
-                if (moves.contains(pieces[ii].x, pieces[ii].y)) {
-                    bonuses.add(pieces[ii].x, pieces[ii].y);
-                    if (bonus == null || unit.getDistance(pieces[ii].x, pieces[ii].y) <
+            } else if (p instanceof Bonus && ((Bonus)p).isScenarioBonus()) {
+                if (moves.contains(p.x, p.y)) {
+                    bonuses.add(p.x, p.y);
+                    if (bonus == null || unit.getDistance(p.x, p.y) <
                             unit.getDistance(bonus.x, bonus.y)) {
-                        bonus = pieces[ii];
+                        bonus = p;
                     }
                 }
 
-            } else if (pieces[ii] instanceof Teleporter && (tporter == null ||
-                       unit.getDistance(pieces[ii]) < unit.getDistance(tporter))) {
-                tporter = pieces[ii];
+            } else if (p instanceof Teleporter && (tporter == null ||
+                       unit.getDistance(p) < unit.getDistance(tporter))) {
+                tporter = p;
             }
-
         }
 
         // let the hero kill if they can

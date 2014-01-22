@@ -71,8 +71,8 @@ public class RecruitDialog extends BDecoratedWindow
                 addListener(_ctx.getBangClient().makePopupClearer(this, true)), GroupLayout.FIXED);
         _recruit = new ServiceButton(_ctx, _msgs.get("m.recruit"), RanchCodes.RANCH_MSGS, _status) {
             protected boolean callService () {
-                _ranchobj.service.recruitBigShot(_ctx.getClient(), _config.type,
-                                                 new Name(_name.getText()), createResultListener());
+                _ranchobj.service.recruitBigShot(
+                    _config.type, new Name(_name.getText()), createResultListener());
                 return true;
             }
             protected boolean onSuccess (Object result) {

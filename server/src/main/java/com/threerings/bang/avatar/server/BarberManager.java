@@ -18,7 +18,6 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
@@ -41,7 +40,9 @@ import com.threerings.bang.util.NameFactory;
 import com.threerings.bang.avatar.client.AvatarService;
 import com.threerings.bang.avatar.client.BarberService;
 import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.data.AvatarMarshaller;
 import com.threerings.bang.avatar.data.BarberCodes;
+import com.threerings.bang.avatar.data.BarberMarshaller;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
@@ -127,7 +128,7 @@ public class BarberManager extends ShopManager
     }
 
     // from interface BarberProvider
-    public void purchaseLook (ClientObject caller, LookConfig config,
+    public void purchaseLook (PlayerObject caller, LookConfig config,
                               BarberService.ConfirmListener cl)
         throws InvocationException
     {
@@ -168,10 +169,8 @@ public class BarberManager extends ShopManager
     }
 
     // from interface BarberProvider
-    public void configureLook (ClientObject caller, String name, int[] articles)
+    public void configureLook (PlayerObject user, String name, int[] articles)
     {
-        PlayerObject user = (PlayerObject)caller;
-
         // locate the look in question
         Look look = user.looks.get(name);
         if (look == null) {
@@ -215,7 +214,7 @@ public class BarberManager extends ShopManager
     }
 
     // from interface BarberProvider
-    public void changeHandle (ClientObject caller, Handle handle, BarberService.ConfirmListener cl)
+    public void changeHandle (PlayerObject caller, Handle handle, BarberService.ConfirmListener cl)
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
@@ -233,7 +232,7 @@ public class BarberManager extends ShopManager
     }
 
     // from interface AvatarProvider
-    public void createAvatar (ClientObject caller, final Handle handle, boolean isMale,
+    public void createAvatar (PlayerObject caller, final Handle handle, boolean isMale,
                               LookConfig config, int zations,
                               final AvatarService.ConfirmListener cl)
         throws InvocationException
@@ -333,9 +332,8 @@ public class BarberManager extends ShopManager
     }
 
     // from interface AvatarProvider
-    public void selectLook (ClientObject caller, Look.Pose pose, String name)
+    public void selectLook (PlayerObject user, Look.Pose pose, String name)
     {
-        PlayerObject user = (PlayerObject)caller;
         Look look = user.looks.get(name); // sanity check
         if (look == null) {
             log.warning("Player requested to select unknown look", "who", user.who(), "look", name);
@@ -368,7 +366,7 @@ public class BarberManager extends ShopManager
         super.didInit();
 
         // register ourselves as the AvatarService provider
-        BangServer.invmgr.registerDispatcher(new AvatarDispatcher(this), GLOBAL_GROUP);
+        BangServer.invmgr.registerProvider(this, AvatarMarshaller.class, GLOBAL_GROUP);
     }
 
     @Override // from PlaceManager
@@ -378,7 +376,7 @@ public class BarberManager extends ShopManager
 
         // register our invocation service
         _bobj = (BarberObject)_plobj;
-        _bobj.setService(BangServer.invmgr.registerDispatcher(new BarberDispatcher(this)));
+        _bobj.setService(BangServer.invmgr.registerProvider(this, BarberMarshaller.class));
     }
 
     /** Used to purchase a new avatar look. */

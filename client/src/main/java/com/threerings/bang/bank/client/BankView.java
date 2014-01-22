@@ -112,7 +112,7 @@ public class BankView extends ShopView
                 log.warning("Failed to fetch our posted offers", "reason", reason);
             }
         };
-        bankobj.service.getMyOffers(_ctx.getClient(), ol);
+        bankobj.service.getMyOffers(ol);
     }
 
     // from interface ActionListener

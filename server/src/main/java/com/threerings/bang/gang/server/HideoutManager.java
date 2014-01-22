@@ -16,7 +16,6 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
@@ -52,6 +51,7 @@ import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
+import com.threerings.bang.gang.data.HideoutMarshaller;
 import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.RentalGood;
@@ -193,9 +193,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void formGang (ClientObject caller, Handle root, String suffix,
-                          final HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void formGang (PlayerObject caller, Handle root, String suffix,
+                          HideoutService.ConfirmListener listener) throws InvocationException
     {
         final PlayerObject user = requireShopEnabled(caller);
 
@@ -232,7 +231,7 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void leaveGang (ClientObject caller, final HideoutService.ConfirmListener listener)
+    public void leaveGang (PlayerObject caller, HideoutService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure they have access
@@ -243,9 +242,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void setStatement (ClientObject caller, String statement, String url,
-                              final HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void setStatement (PlayerObject caller, String statement, String url,
+                              HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -266,9 +264,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from HideoutProvider
-    public void setBuckle (ClientObject caller, BucklePart[] parts,
-                           HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void setBuckle (PlayerObject caller, BucklePart[] parts,
+                           HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -279,9 +276,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void addToCoffers (ClientObject caller, final int scrip, final int coins,
-                              final HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void addToCoffers (PlayerObject caller, final int scrip, final int coins,
+                              HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -294,14 +290,12 @@ public class HideoutManager extends MatchHostManager
         }
 
         // pass it off to the gang handler
-        BangServer.gangmgr.requireGang(user.gangId).addToCoffers(
-            user, scrip, coins, listener);
+        BangServer.gangmgr.requireGang(user.gangId).addToCoffers(user, scrip, coins, listener);
     }
 
     // documentation inherited from interface HideoutProvider
-    public void expelMember (ClientObject caller, final Handle handle,
-                             final HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void expelMember (PlayerObject caller, final Handle handle,
+                             HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -312,9 +306,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void changeMemberRank (ClientObject caller, Handle handle, byte rank,
-                                  HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void changeMemberRank (PlayerObject caller, Handle handle, byte rank,
+                                  HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -332,9 +325,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void changeMemberTitle (ClientObject caller, Handle handle, int title,
-                                  HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void changeMemberTitle (PlayerObject caller, Handle handle, int title,
+                                  HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -352,9 +344,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void getHistoryEntries (ClientObject caller, int offset, String filter,
-                                   HideoutService.ResultListener listener)
-        throws InvocationException
+    public void getHistoryEntries (PlayerObject caller, int offset, String filter,
+                                   HideoutService.ResultListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -372,9 +363,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void getUpgradeQuote (
-            ClientObject caller, GangGood good, HideoutService.ResultListener listener)
-        throws InvocationException
+    public void getUpgradeQuote (PlayerObject caller, GangGood good,
+                                 HideoutService.ResultListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -385,9 +375,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void getOutfitQuote (ClientObject caller, OutfitArticle[] outfit,
-                                HideoutService.ResultListener listener)
-        throws InvocationException
+    public void getOutfitQuote (PlayerObject caller, OutfitArticle[] outfit,
+                                HideoutService.ResultListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -398,9 +387,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void buyOutfits (ClientObject caller, OutfitArticle[] outfit,
-                            HideoutService.ResultListener listener)
-        throws InvocationException
+    public void buyOutfits (PlayerObject caller, OutfitArticle[] outfit,
+                            HideoutService.ResultListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -411,9 +399,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void buyGangGood (ClientObject caller, String type, Object[] args,
-                             HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void buyGangGood (PlayerObject caller, String type, Object[] args,
+                             HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -424,9 +411,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void rentGangGood (ClientObject caller, String type, Object[] args,
-                             HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void rentGangGood (PlayerObject caller, String type, Object[] args,
+                              HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -437,9 +423,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void renewGangItem (
-            ClientObject caller, int itemId, HideoutService.ConfirmListener listener)
-        throws InvocationException
+    public void renewGangItem (PlayerObject caller, int itemId,
+                               HideoutService.ConfirmListener listener) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -450,7 +435,7 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void broadcastToMembers (ClientObject caller, String message,
+    public void broadcastToMembers (PlayerObject caller, String message,
                                     HideoutService.ConfirmListener listener)
         throws InvocationException
     {
@@ -475,9 +460,8 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void postOffer (
-            ClientObject caller, int coins, int pricePerCoin, HideoutService.ResultListener rl)
-        throws InvocationException
+    public void postOffer (PlayerObject caller, int coins, int pricePerCoin,
+                           HideoutService.ResultListener rl) throws InvocationException
     {
         // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
@@ -562,7 +546,7 @@ public class HideoutManager extends MatchHostManager
 
         // register our invocation service
         _hobj = (HideoutObject)_plobj;
-        _hobj.setService(BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this)));
+        _hobj.setService(BangServer.invmgr.registerProvider(this, HideoutMarshaller.class));
         _hobj.setGoods(new DSet<Good>(_goods.getGoods()));
         _hobj.setRentalGoods(new DSet<Good>(_rentalGoods.getGoods()));
 

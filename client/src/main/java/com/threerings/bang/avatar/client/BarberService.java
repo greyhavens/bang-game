@@ -3,22 +3,22 @@
 
 package com.threerings.bang.avatar.client;
 
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.avatar.data.LookConfig;
 
 /**
  * Provides Barber-related functionality.
  */
-public interface BarberService extends InvocationService
+public interface BarberService extends InvocationService<PlayerObject>
 {
     /**
      * Requests that the specified look be purchased.
      */
-    public void purchaseLook (Client client, LookConfig look, ConfirmListener cl);
+    public void purchaseLook (LookConfig look, ConfirmListener cl);
 
     /**
      * Requests that the specified look be configured with the specified set of
@@ -29,11 +29,11 @@ public interface BarberService extends InvocationService
      * @param articles item ids of the article inventory items to be used to
      * configure the look.
      */
-    public void configureLook (Client client, String name, int[] articles);
+    public void configureLook (String name, int[] articles);
 
     /**
      * Requests that a player's handle be changed. This will charge the player
      * the associated handle changing fee.
      */
-    public void changeHandle (Client client, Handle handle, ConfirmListener cl);
+    public void changeHandle (Handle handle, ConfirmListener cl);
 }

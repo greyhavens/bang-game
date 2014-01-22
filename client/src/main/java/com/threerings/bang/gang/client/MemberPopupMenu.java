@@ -144,8 +144,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
         _ctx.getBangClient().displayPopup(
             new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
                 protected void fireRequest (Object result) {
-                    _hideoutobj.service.changeMemberRank(
-                        _ctx.getClient(), _member.handle, nrank, this);
+                    _hideoutobj.service.changeMemberRank(_member.handle, nrank, this);
                 }
             }, true, 400);
     }
@@ -165,7 +164,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
         _ctx.getBangClient().displayPopup(
             new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
                 protected void fireRequest (Object result) {
-                    _hideoutobj.service.expelMember(_ctx.getClient(), _member.handle, this);
+                    _hideoutobj.service.expelMember(_member.handle, this);
                 }
             }, true, 400);
     }
@@ -207,7 +206,7 @@ public class MemberPopupMenu extends PlayerPopupMenu
             _ctx.getBangClient().clearPopup(this, true);
             if (event.getAction().equals("update")) {
                 _hideoutobj.service.changeMemberTitle(
-                        _ctx.getClient(), _member.handle, _titles.getSelectedIndex(), this);
+                    _member.handle, _titles.getSelectedIndex(), this);
             }
         }
 

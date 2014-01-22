@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.piece;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
@@ -408,7 +409,7 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, List<Piece> pieces)
     {
         if (!isAlive()) {
             return null;

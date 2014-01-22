@@ -3,10 +3,11 @@
 
 package com.threerings.bang.gang.client;
 
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import com.jmex.bui.util.Dimension;
 
@@ -170,7 +171,7 @@ public class GangInventory extends BDecoratedWindow
                     _status.setStatus(_msgs.xlate(cause), true);
                 }
             };
-            _hideoutobj.service.renewGangItem(_ctx.getClient(), _item.getItemId(), cl);
+            _hideoutobj.service.renewGangItem(_item.getItemId(), cl);
 
         } else if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
@@ -320,8 +321,8 @@ public class GangInventory extends BDecoratedWindow
         public void setPredicate (Predicate<Item> itemp)
         {
             clear();
-            Item[] items = _gangobj.inventorySnapshot();
-            Arrays.sort(items, _itemComparator);
+            List<Item> items = _gangobj.inventorySnapshot();
+            Collections.sort(items, _itemComparator);
             _itemp = itemp;
             for (Item item : items) {
                 if (!_itemp.isMatch(item)) {

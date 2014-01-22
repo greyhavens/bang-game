@@ -45,7 +45,7 @@ public class LandGrabLogic extends AILogic
     }
 
     @Override // from AILogic
-    public void tick (Piece[] pieces, short tick)
+    public void tick (List<Piece> pieces, short tick)
     {
         if (_steads == null) {
             _steads = _scenario.getHomesteads();
@@ -54,7 +54,7 @@ public class LandGrabLogic extends AILogic
     }
 
     @Override // from AILogic
-    protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         Point control = getControlCenter(pieces);
         Unit bshot = null; // use special logic for the big shot

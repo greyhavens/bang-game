@@ -43,7 +43,7 @@ public abstract class PieceLogic
     /**
      * Called on every tick to let the AI move the piece.
      */
-    public void tick (Piece[] pieces, short tick)
+    public void tick (List<Piece> pieces, short tick)
     {
         for (Piece p : pieces) {
             if (p instanceof Unit && p.pieceId == pieceId && p.isAlive() &&
@@ -65,8 +65,7 @@ public abstract class PieceLogic
      * @param moves the places to which the unit can move
      * @param attacks the places the unit can attack
      */
-    protected void moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
     }
 

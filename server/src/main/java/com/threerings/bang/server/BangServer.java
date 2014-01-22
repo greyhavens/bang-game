@@ -93,8 +93,7 @@ import static com.threerings.bang.Log.log;
 public class BangServer extends CrowdServer
 {
     /** Configures dependencies needed by the Bang server. */
-    public static class Module extends CrowdServer.Module
-    {
+    public static class Module extends CrowdServer.CrowdModule {
         @Override protected void configure () {
             super.configure();
             ConnectionProvider conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
@@ -304,7 +303,7 @@ public class BangServer extends CrowdServer
         _adminmgr.init();
 
         // start up our periodic server status reporting
-        _repmgr.activatePeriodicReport();
+        _repmgr.activatePeriodicReport(omgr);
 
         // create the town object and initialize the locator which will keep it up-to-date
         townobj = omgr.registerObject(new TownObject());

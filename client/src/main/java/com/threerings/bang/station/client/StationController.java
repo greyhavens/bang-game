@@ -77,15 +77,14 @@ public class StationController extends PlaceController
         }
 
         // otherwise we'll have to first activate our free ticket
-        ((StationObject)_plobj).service.activateTicket(
-            _ctx.getClient(), new StationService.ConfirmListener() {
-                public void requestProcessed () {
-                    connectToTown(townId, _ctx.getUserObject().townId);
+        ((StationObject)_plobj).service.activateTicket(new StationService.ConfirmListener() {
+            public void requestProcessed () {
+                connectToTown(townId, _ctx.getUserObject().townId);
+            }
+            public void requestFailed (String reason) {
+                _view.status.setStatus(StationCodes.STATION_MSGS, reason, true);
                 }
-                public void requestFailed (String reason) {
-                    _view.status.setStatus(StationCodes.STATION_MSGS, reason, true);
-                }
-            });
+        });
     }
 
     protected void connectToTown (final String townId, final String oldTownId)

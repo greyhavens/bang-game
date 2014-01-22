@@ -26,7 +26,6 @@ import com.threerings.io.Streamable;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
@@ -59,6 +58,7 @@ import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangInfo;
 import com.threerings.bang.gang.data.GangInvite;
+import com.threerings.bang.gang.data.GangMarshaller;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.server.persist.GangInviteRecord;
@@ -83,7 +83,7 @@ public class GangManager
         throws PersistenceException
     {
         // register ourselves as the provider of the (bootstrap) GangService
-        BangServer.invmgr.registerDispatcher(new GangDispatcher(this), GLOBAL_GROUP);
+        BangServer.invmgr.registerProvider(this, GangMarshaller.class, GLOBAL_GROUP);
 
         // listen for gang info cache updates
         if (_peermgr.isRunning()) {
@@ -115,7 +115,7 @@ public class GangManager
             if (delay < 0) {
                 delay += ERODE_NOTORIETY_INTERVAL;
             }
-            new Interval () {
+            new Interval (Interval.RUN_DIRECT) {
                 public void expired () {
                     erodeNotoriety();
                 }
@@ -269,9 +269,8 @@ public class GangManager
     }
 
     // documentation inherited from GangProvider
-    public void getGangInfo (
-        ClientObject caller, final Handle name, final GangService.ResultListener listener)
-        throws InvocationException
+    public void getGangInfo (PlayerObject caller, final Handle name,
+                             final GangService.ResultListener listener) throws InvocationException
     {
         // first look in the cache
         GangInfo info = _infoCache.get(name);
@@ -335,17 +334,13 @@ public class GangManager
     }
 
     // documentation inherited from GangProvider
-    public void inviteMember (
-        ClientObject caller, final Handle handle, final String message,
-        final GangService.ConfirmListener listener)
-        throws InvocationException
+    public void inviteMember (PlayerObject user, Handle handle, String message,
+                              GangService.ConfirmListener listener) throws InvocationException
     {
         // make sure it's not the player himself
-        PlayerObject user = (PlayerObject)caller;
         if (user.handle.equals(handle)) {
             throw new InvocationException("e.invite_self");
         }
-
         // pass it off to the gang handler
         requireGangPeerProvider(user.gangId).inviteMember(
             null, user.handle, handle, message, listener);

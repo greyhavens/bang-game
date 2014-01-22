@@ -113,8 +113,7 @@ public class HistoryDialog extends BDecoratedWindow
         final boolean fenable = _forward.isEnabled(), benable = _back.isEnabled();
         _forward.setEnabled(false);
         _back.setEnabled(false);
-        _hideoutobj.service.getHistoryEntries(_ctx.getClient(), offset, filter,
-            new HideoutService.ResultListener() {
+        _hideoutobj.service.getHistoryEntries(offset, filter, new HideoutService.ResultListener() {
             public void requestProcessed (Object result) {
                 HistoryEntry[] entries = (HistoryEntry[])result;
                 if (entries.length > HISTORY_PAGE_ENTRIES) {

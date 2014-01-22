@@ -3,13 +3,16 @@
 
 package com.threerings.bang.gang.data;
 
+import javax.annotation.Generated;
+
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.data.InvocationMarshaller;
+
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.GangPeerService;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.InvocationMarshaller;
 
 /**
  * Provides the implementation of the {@link GangPeerService} interface
@@ -18,19 +21,21 @@ import com.threerings.presents.data.InvocationMarshaller;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class GangPeerMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from GangPeerService.java.")
+public class GangPeerMarshaller extends InvocationMarshaller<ClientObject>
     implements GangPeerService
 {
     /** The method id used to dispatch {@link #addToCoffers} requests. */
     public static final int ADD_TO_COFFERS = 1;
 
     // from interface GangPeerService
-    public void addToCoffers (Client arg1, Handle arg2, String arg3, int arg4, int arg5, InvocationService.ConfirmListener arg6)
+    public void addToCoffers (Handle arg1, String arg2, int arg3, int arg4, InvocationService.ConfirmListener arg5)
     {
-        InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, ADD_TO_COFFERS, new Object[] {
-            arg2, arg3, Integer.valueOf(arg4), Integer.valueOf(arg5), listener6
+        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
+        listener5.listener = arg5;
+        sendRequest(ADD_TO_COFFERS, new Object[] {
+            arg1, arg2, Integer.valueOf(arg3), Integer.valueOf(arg4), listener5
         });
     }
 
@@ -38,12 +43,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int BROADCAST_TO_MEMBERS = 2;
 
     // from interface GangPeerService
-    public void broadcastToMembers (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
+    public void broadcastToMembers (Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, BROADCAST_TO_MEMBERS, new Object[] {
-            arg2, arg3, listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(BROADCAST_TO_MEMBERS, new Object[] {
+            arg1, arg2, listener3
         });
     }
 
@@ -51,12 +56,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int BUY_GANG_GOOD = 3;
 
     // from interface GangPeerService
-    public void buyGangGood (Client arg1, Handle arg2, String arg3, Object[] arg4, boolean arg5, InvocationService.ConfirmListener arg6)
+    public void buyGangGood (Handle arg1, String arg2, Object[] arg3, boolean arg4, InvocationService.ConfirmListener arg5)
     {
-        InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, BUY_GANG_GOOD, new Object[] {
-            arg2, arg3, arg4, Boolean.valueOf(arg5), listener6
+        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
+        listener5.listener = arg5;
+        sendRequest(BUY_GANG_GOOD, new Object[] {
+            arg1, arg2, arg3, Boolean.valueOf(arg4), listener5
         });
     }
 
@@ -64,12 +69,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int CHANGE_MEMBER_RANK = 4;
 
     // from interface GangPeerService
-    public void changeMemberRank (Client arg1, Handle arg2, Handle arg3, byte arg4, InvocationService.ConfirmListener arg5)
+    public void changeMemberRank (Handle arg1, Handle arg2, byte arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
-        listener5.listener = arg5;
-        sendRequest(arg1, CHANGE_MEMBER_RANK, new Object[] {
-            arg2, arg3, Byte.valueOf(arg4), listener5
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(CHANGE_MEMBER_RANK, new Object[] {
+            arg1, arg2, Byte.valueOf(arg3), listener4
         });
     }
 
@@ -77,12 +82,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int CHANGE_MEMBER_TITLE = 5;
 
     // from interface GangPeerService
-    public void changeMemberTitle (Client arg1, Handle arg2, Handle arg3, int arg4, InvocationService.ConfirmListener arg5)
+    public void changeMemberTitle (Handle arg1, Handle arg2, int arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
-        listener5.listener = arg5;
-        sendRequest(arg1, CHANGE_MEMBER_TITLE, new Object[] {
-            arg2, arg3, Integer.valueOf(arg4), listener5
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(CHANGE_MEMBER_TITLE, new Object[] {
+            arg1, arg2, Integer.valueOf(arg3), listener4
         });
     }
 
@@ -90,12 +95,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int GET_UPGRADE_QUOTE = 6;
 
     // from interface GangPeerService
-    public void getUpgradeQuote (Client arg1, Handle arg2, GangGood arg3, InvocationService.ResultListener arg4)
+    public void getUpgradeQuote (Handle arg1, GangGood arg2, InvocationService.ResultListener arg3)
     {
-        InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, GET_UPGRADE_QUOTE, new Object[] {
-            arg2, arg3, listener4
+        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
+        listener3.listener = arg3;
+        sendRequest(GET_UPGRADE_QUOTE, new Object[] {
+            arg1, arg2, listener3
         });
     }
 
@@ -103,10 +108,10 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int GRANT_ACES = 7;
 
     // from interface GangPeerService
-    public void grantAces (Client arg1, Handle arg2, int arg3)
+    public void grantAces (Handle arg1, int arg2)
     {
-        sendRequest(arg1, GRANT_ACES, new Object[] {
-            arg2, Integer.valueOf(arg3)
+        sendRequest(GRANT_ACES, new Object[] {
+            arg1, Integer.valueOf(arg2)
         });
     }
 
@@ -114,10 +119,10 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int GRANT_SCRIP = 8;
 
     // from interface GangPeerService
-    public void grantScrip (Client arg1, int arg2)
+    public void grantScrip (int arg1)
     {
-        sendRequest(arg1, GRANT_SCRIP, new Object[] {
-            Integer.valueOf(arg2)
+        sendRequest(GRANT_SCRIP, new Object[] {
+            Integer.valueOf(arg1)
         });
     }
 
@@ -125,12 +130,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int HANDLE_INVITE_RESPONSE = 9;
 
     // from interface GangPeerService
-    public void handleInviteResponse (Client arg1, Handle arg2, int arg3, Handle arg4, boolean arg5, InvocationService.ConfirmListener arg6)
+    public void handleInviteResponse (Handle arg1, int arg2, Handle arg3, boolean arg4, InvocationService.ConfirmListener arg5)
     {
-        InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, HANDLE_INVITE_RESPONSE, new Object[] {
-            arg2, Integer.valueOf(arg3), arg4, Boolean.valueOf(arg5), listener6
+        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
+        listener5.listener = arg5;
+        sendRequest(HANDLE_INVITE_RESPONSE, new Object[] {
+            arg1, Integer.valueOf(arg2), arg3, Boolean.valueOf(arg4), listener5
         });
     }
 
@@ -138,12 +143,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int INVITE_MEMBER = 10;
 
     // from interface GangPeerService
-    public void inviteMember (Client arg1, Handle arg2, Handle arg3, String arg4, InvocationService.ConfirmListener arg5)
+    public void inviteMember (Handle arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
-        listener5.listener = arg5;
-        sendRequest(arg1, INVITE_MEMBER, new Object[] {
-            arg2, arg3, arg4, listener5
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(INVITE_MEMBER, new Object[] {
+            arg1, arg2, arg3, listener4
         });
     }
 
@@ -151,10 +156,10 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int MEMBER_ENTERED_HIDEOUT = 11;
 
     // from interface GangPeerService
-    public void memberEnteredHideout (Client arg1, Handle arg2, AvatarInfo arg3)
+    public void memberEnteredHideout (Handle arg1, AvatarInfo arg2)
     {
-        sendRequest(arg1, MEMBER_ENTERED_HIDEOUT, new Object[] {
-            arg2, arg3
+        sendRequest(MEMBER_ENTERED_HIDEOUT, new Object[] {
+            arg1, arg2
         });
     }
 
@@ -162,10 +167,10 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int MEMBER_LEFT_HIDEOUT = 12;
 
     // from interface GangPeerService
-    public void memberLeftHideout (Client arg1, Handle arg2)
+    public void memberLeftHideout (Handle arg1)
     {
-        sendRequest(arg1, MEMBER_LEFT_HIDEOUT, new Object[] {
-            arg2
+        sendRequest(MEMBER_LEFT_HIDEOUT, new Object[] {
+            arg1
         });
     }
 
@@ -173,12 +178,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int PROCESS_OUTFITS = 13;
 
     // from interface GangPeerService
-    public void processOutfits (Client arg1, Handle arg2, OutfitArticle[] arg3, boolean arg4, boolean arg5, InvocationService.ResultListener arg6)
+    public void processOutfits (Handle arg1, OutfitArticle[] arg2, boolean arg3, boolean arg4, InvocationService.ResultListener arg5)
     {
-        InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, PROCESS_OUTFITS, new Object[] {
-            arg2, arg3, Boolean.valueOf(arg4), Boolean.valueOf(arg5), listener6
+        InvocationMarshaller.ResultMarshaller listener5 = new InvocationMarshaller.ResultMarshaller();
+        listener5.listener = arg5;
+        sendRequest(PROCESS_OUTFITS, new Object[] {
+            arg1, arg2, Boolean.valueOf(arg3), Boolean.valueOf(arg4), listener5
         });
     }
 
@@ -186,12 +191,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int REMOVE_FROM_GANG = 14;
 
     // from interface GangPeerService
-    public void removeFromGang (Client arg1, Handle arg2, Handle arg3, InvocationService.ConfirmListener arg4)
+    public void removeFromGang (Handle arg1, Handle arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, REMOVE_FROM_GANG, new Object[] {
-            arg2, arg3, listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(REMOVE_FROM_GANG, new Object[] {
+            arg1, arg2, listener3
         });
     }
 
@@ -199,12 +204,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int RENEW_GANG_ITEM = 15;
 
     // from interface GangPeerService
-    public void renewGangItem (Client arg1, Handle arg2, int arg3, InvocationService.ConfirmListener arg4)
+    public void renewGangItem (Handle arg1, int arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, RENEW_GANG_ITEM, new Object[] {
-            arg2, Integer.valueOf(arg3), listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(RENEW_GANG_ITEM, new Object[] {
+            arg1, Integer.valueOf(arg2), listener3
         });
     }
 
@@ -212,12 +217,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int RENT_GANG_GOOD = 16;
 
     // from interface GangPeerService
-    public void rentGangGood (Client arg1, Handle arg2, String arg3, Object[] arg4, boolean arg5, InvocationService.ConfirmListener arg6)
+    public void rentGangGood (Handle arg1, String arg2, Object[] arg3, boolean arg4, InvocationService.ConfirmListener arg5)
     {
-        InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, RENT_GANG_GOOD, new Object[] {
-            arg2, arg3, arg4, Boolean.valueOf(arg5), listener6
+        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
+        listener5.listener = arg5;
+        sendRequest(RENT_GANG_GOOD, new Object[] {
+            arg1, arg2, arg3, Boolean.valueOf(arg4), listener5
         });
     }
 
@@ -225,12 +230,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int RESERVE_SCRIP = 17;
 
     // from interface GangPeerService
-    public void reserveScrip (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
+    public void reserveScrip (int arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, RESERVE_SCRIP, new Object[] {
-            Integer.valueOf(arg2), listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(RESERVE_SCRIP, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 
@@ -238,10 +243,10 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int SEND_SPEAK = 18;
 
     // from interface GangPeerService
-    public void sendSpeak (Client arg1, Handle arg2, String arg3, byte arg4)
+    public void sendSpeak (Handle arg1, String arg2, byte arg3)
     {
-        sendRequest(arg1, SEND_SPEAK, new Object[] {
-            arg2, arg3, Byte.valueOf(arg4)
+        sendRequest(SEND_SPEAK, new Object[] {
+            arg1, arg2, Byte.valueOf(arg3)
         });
     }
 
@@ -249,10 +254,10 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int SET_AVATAR = 19;
 
     // from interface GangPeerService
-    public void setAvatar (Client arg1, int arg2, AvatarInfo arg3)
+    public void setAvatar (int arg1, AvatarInfo arg2)
     {
-        sendRequest(arg1, SET_AVATAR, new Object[] {
-            Integer.valueOf(arg2), arg3
+        sendRequest(SET_AVATAR, new Object[] {
+            Integer.valueOf(arg1), arg2
         });
     }
 
@@ -260,12 +265,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int SET_BUCKLE = 20;
 
     // from interface GangPeerService
-    public void setBuckle (Client arg1, Handle arg2, BucklePart[] arg3, InvocationService.ConfirmListener arg4)
+    public void setBuckle (Handle arg1, BucklePart[] arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, SET_BUCKLE, new Object[] {
-            arg2, arg3, listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(SET_BUCKLE, new Object[] {
+            arg1, arg2, listener3
         });
     }
 
@@ -273,12 +278,12 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int SET_STATEMENT = 21;
 
     // from interface GangPeerService
-    public void setStatement (Client arg1, Handle arg2, String arg3, String arg4, InvocationService.ConfirmListener arg5)
+    public void setStatement (Handle arg1, String arg2, String arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
-        listener5.listener = arg5;
-        sendRequest(arg1, SET_STATEMENT, new Object[] {
-            arg2, arg3, arg4, listener5
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(SET_STATEMENT, new Object[] {
+            arg1, arg2, arg3, listener4
         });
     }
 
@@ -286,10 +291,10 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int TRADE_COMPLETED = 22;
 
     // from interface GangPeerService
-    public void tradeCompleted (Client arg1, int arg2, int arg3, String arg4)
+    public void tradeCompleted (int arg1, int arg2, String arg3)
     {
-        sendRequest(arg1, TRADE_COMPLETED, new Object[] {
-            Integer.valueOf(arg2), Integer.valueOf(arg3), arg4
+        sendRequest(TRADE_COMPLETED, new Object[] {
+            Integer.valueOf(arg1), Integer.valueOf(arg2), arg3
         });
     }
 
@@ -297,8 +302,9 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int UPDATE_COINS = 23;
 
     // from interface GangPeerService
-    public void updateCoins (Client arg1)
+    public void updateCoins ()
     {
-        sendRequest(arg1, UPDATE_COINS, new Object[] {});
+        sendRequest(UPDATE_COINS, new Object[] {
+        });
     }
 }

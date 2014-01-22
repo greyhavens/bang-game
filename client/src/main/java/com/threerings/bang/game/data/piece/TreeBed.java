@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TreeBedSprite;
@@ -102,8 +103,7 @@ public class TreeBed extends Prop
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (
-            short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, List<Piece> pieces)
     {
         // can't heal dead trees
         if (!isAlive()) {
@@ -119,7 +119,7 @@ public class TreeBed extends Prop
         boolean doubleGrowth = false;
         ArrayList<Piece> growers = new ArrayList<Piece>();
         for (Piece piece : pieces) {
-            if(!(piece instanceof Unit && piece.isAlive())) {
+            if (!(piece instanceof Unit && piece.isAlive())) {
                 continue;
             }
             int dist = getDistance(piece);

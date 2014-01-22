@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
+import java.util.List;
 
 import com.threerings.bang.data.UnitConfig;
 
@@ -51,7 +52,7 @@ public class GoldLogic extends AILogic
     }
 
     // documentation inherited
-    protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         // search for own claim, closest enemy claim with nuggets, closest enemy with nugget,
         // closest free nugget, and enemies near our claim
@@ -59,9 +60,9 @@ public class GoldLogic extends AILogic
         Unit ctarget = null;
         Piece cnugget = null, tporter = null;
         boolean breached = false;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Counter) {
-                Counter claim = (Counter)pieces[ii];
+        for (Piece p : pieces) {
+            if (p instanceof Counter) {
+                Counter claim = (Counter)p;
                 if (claim.owner == _pidx) {
                     oclaim = claim;
                 } else if (_stealing && claim.count > 0 &&
@@ -70,13 +71,13 @@ public class GoldLogic extends AILogic
                     cclaim = claim;
                 }
 
-            } else if (NuggetEffect.isNuggetBonus(pieces[ii])) {
-                if (cnugget == null || unit.getDistance(pieces[ii]) < unit.getDistance(cnugget)) {
-                    cnugget = pieces[ii];
+            } else if (NuggetEffect.isNuggetBonus(p)) {
+                if (cnugget == null || unit.getDistance(p) < unit.getDistance(cnugget)) {
+                    cnugget = p;
                 }
 
-            } else if (pieces[ii] instanceof Unit && pieces[ii].owner != _pidx) {
-                Unit target = (Unit)pieces[ii];
+            } else if (p instanceof Unit && p.owner != _pidx) {
+                Unit target = (Unit)p;
                 if (NuggetEffect.isNuggetBonus(target.holding) &&
                     (ctarget == null ||
                      unit.getDistance(target) < unit.getDistance(ctarget)) &&
@@ -88,9 +89,9 @@ public class GoldLogic extends AILogic
                     breached = true;
                 }
 
-            } else if (pieces[ii] instanceof Teleporter && (tporter == null ||
-                       unit.getDistance(pieces[ii]) < unit.getDistance(tporter))) {
-                tporter = pieces[ii];
+            } else if (p instanceof Teleporter && (tporter == null ||
+                       unit.getDistance(p) < unit.getDistance(tporter))) {
+                tporter = p;
             }
         }
 
@@ -154,7 +155,8 @@ public class GoldLogic extends AILogic
      * @return true if we successfully moved towards the destination, false if we couldn't find a
      * path
      */
-    protected boolean moveUnit (Piece[] pieces, Unit unit, PointSet moves, Piece target, int tdist)
+    protected boolean moveUnit (List<Piece> pieces, Unit unit, PointSet moves, Piece target,
+                                int tdist)
     {
         return moveUnit(pieces, unit, moves, target.x, target.y, tdist, TARGET_EVALUATOR);
     }

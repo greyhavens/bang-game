@@ -5,6 +5,7 @@ package com.threerings.bang.game.server.scenario;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 
 import com.samskivert.util.RandomUtil;
 
@@ -85,7 +86,7 @@ public class Practice extends Scenario
     }
 
     @Override // documentation inherited
-    public boolean addBonus (BangObject bangobj, Piece[] pieces)
+    public boolean addBonus (BangObject bangobj, List<Piece> pieces)
     {
         // no automatic bonuses in practice scenario
         return false;

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
@@ -15,8 +16,6 @@ import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
 import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.export.binary.BinaryImporter;
-
-import com.samskivert.util.ArrayUtil;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
@@ -47,7 +46,7 @@ public class BoardFile
     public BangBoard board;
 
     /** The props and markers on the board. */
-    public Piece[] pieces;
+    public ArrayList<Piece> pieces;
 
     /**
      * Loads a board file from the supplied binary data.
@@ -101,7 +100,7 @@ public class BoardFile
         scenarios = capsule.readStringArray("scenarios", DEF_SCENARIOS);
         players = capsule.readInt("players", 2);
         board = (BangBoard)capsule.readSavable("board", null);
-        pieces = ArrayUtil.copy(capsule.readSavableArray("pieces", null), new Piece[0]);
+        pieces = capsule.readSavableArrayList("pieces", NO_PIECES);
         privateBoard = capsule.readBoolean("private", false);
     }
 
@@ -115,9 +114,10 @@ public class BoardFile
         capsule.write(scenarios, "scenarios", DEF_SCENARIOS);
         capsule.write(players, "players", 2);
         capsule.write(board, "board", null);
-        capsule.write(pieces, "pieces", null);
+        capsule.writeSavableArrayList(pieces, "pieces", NO_PIECES);
         capsule.write(privateBoard, "private", false);
     }
 
     protected static final String[] DEF_SCENARIOS = {};
+    protected static final ArrayList<Piece> NO_PIECES = new ArrayList<Piece>();
 }

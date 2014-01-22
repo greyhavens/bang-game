@@ -5,6 +5,7 @@ package com.threerings.bang.game.data;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,8 +17,6 @@ import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
 import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.export.binary.BinaryImporter;
-
-import com.samskivert.util.ArrayUtil;
 
 import com.threerings.io.Streamable;
 
@@ -35,7 +34,7 @@ public class BoardData
     public BangBoard board;
 
     /** The props and markers on the board. */
-    public Piece[] pieces;
+    public ArrayList<Piece> pieces;
 
     /**
      * Loads and decodes the supplied serialized representation.
@@ -68,7 +67,7 @@ public class BoardData
     /**
      * Creates a board data record with the supplied info.
      */
-    public BoardData (BangBoard board, Piece[] pieces)
+    public BoardData (BangBoard board, ArrayList<Piece> pieces)
     {
         this.board = board;
         this.pieces = pieces;
@@ -98,8 +97,7 @@ public class BoardData
     {
         InputCapsule capsule = im.getCapsule(this);
         board = (BangBoard)capsule.readSavable("board", null);
-        pieces = ArrayUtil.copy(
-            capsule.readSavableArray("pieces", null), new Piece[0]);
+        pieces = capsule.readSavableArrayList("pieces", NO_PIECES);
     }
 
     // from interface Savable
@@ -108,6 +106,8 @@ public class BoardData
     {
         OutputCapsule capsule = ex.getCapsule(this);
         capsule.write(board, "board", null);
-        capsule.write(pieces, "pieces", null);
+        capsule.writeSavableArrayList(pieces, "pieces", NO_PIECES);
     }
+
+    protected static final ArrayList<Piece> NO_PIECES = new ArrayList<Piece>();
 }

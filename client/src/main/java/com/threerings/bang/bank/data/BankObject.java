@@ -5,7 +5,6 @@ package com.threerings.bang.bank.data;
 
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService.ResultListener;
 
 import com.threerings.bang.data.ConsolidatedOffer;
@@ -67,10 +66,9 @@ public class BankObject extends PlaceObject
     }
 
     // documentation inherited from BestOffer
-    public void postImmediateOffer (
-        Client client, int coins, int pricePerCoin, boolean buying, ResultListener rl)
+    public void postImmediateOffer (int coins, int pricePerCoin, boolean buying, ResultListener rl)
     {
-        service.postOffer(client, coins, pricePerCoin, buying, true, rl);
+        service.postOffer(coins, pricePerCoin, buying, true, rl);
     }
 
     // AUTO-GENERATED: METHODS START

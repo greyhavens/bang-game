@@ -63,7 +63,7 @@ public class InviteMemberDialog extends RequestDialog
         if (_hfield != null) {
             _handle = new Handle(_hfield.getText());
         }
-        gsvc.inviteMember(_ctx.getClient(), _handle, (String)result, this);
+        gsvc.inviteMember(_handle, (String)result, this);
     }
 
     protected Handle _handle;

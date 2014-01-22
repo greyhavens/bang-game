@@ -3,11 +3,14 @@
 
 package com.threerings.bang.avatar.data;
 
-import com.threerings.bang.avatar.client.AvatarService;
-import com.threerings.bang.data.Handle;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.bang.avatar.client.AvatarService;
+import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PlayerObject;
 
 /**
  * Provides the implementation of the {@link AvatarService} interface
@@ -16,19 +19,21 @@ import com.threerings.presents.data.InvocationMarshaller;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class AvatarMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from AvatarService.java.")
+public class AvatarMarshaller extends InvocationMarshaller<PlayerObject>
     implements AvatarService
 {
     /** The method id used to dispatch {@link #createAvatar} requests. */
     public static final int CREATE_AVATAR = 1;
 
     // from interface AvatarService
-    public void createAvatar (Client arg1, Handle arg2, boolean arg3, LookConfig arg4, int arg5, InvocationService.ConfirmListener arg6)
+    public void createAvatar (Handle arg1, boolean arg2, LookConfig arg3, int arg4, InvocationService.ConfirmListener arg5)
     {
-        InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, CREATE_AVATAR, new Object[] {
-            arg2, Boolean.valueOf(arg3), arg4, Integer.valueOf(arg5), listener6
+        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
+        listener5.listener = arg5;
+        sendRequest(CREATE_AVATAR, new Object[] {
+            arg1, Boolean.valueOf(arg2), arg3, Integer.valueOf(arg4), listener5
         });
     }
 
@@ -36,10 +41,10 @@ public class AvatarMarshaller extends InvocationMarshaller
     public static final int SELECT_LOOK = 2;
 
     // from interface AvatarService
-    public void selectLook (Client arg1, Look.Pose arg2, String arg3)
+    public void selectLook (Look.Pose arg1, String arg2)
     {
-        sendRequest(arg1, SELECT_LOOK, new Object[] {
-            arg2, arg3
+        sendRequest(SELECT_LOOK, new Object[] {
+            arg1, arg2
         });
     }
 }

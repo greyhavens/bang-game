@@ -3,7 +3,7 @@
 
 package com.threerings.bang.admin.data;
 
-import com.threerings.presents.data.ConMgrStats;
+import com.threerings.nio.conman.ConMgrStats;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -16,7 +16,7 @@ import com.threerings.bang.game.data.BangConfig;
 public class StatusObject extends DObject
 {
     /** A superset of {@link BangConfig.Type} which distinguishes between ranked and gang games. */
-    public static enum GameType { 
+    public static enum GameType {
         TUTORIAL, PRACTICE, BOUNTY, SALOON, RANKED, GANG
     };
 

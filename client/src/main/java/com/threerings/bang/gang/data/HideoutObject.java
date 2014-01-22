@@ -3,7 +3,6 @@
 
 package com.threerings.bang.gang.data;
 
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.DSet;
 
@@ -78,10 +77,10 @@ public class HideoutObject extends PlaceObject
     }
 
     // documentation inherited from BestOffer
-    public void postImmediateOffer (Client client, int coins, int pricePerCoin, boolean buying,
+    public void postImmediateOffer (int coins, int pricePerCoin, boolean buying,
                                     InvocationService.ResultListener rl)
     {
-        service.postOffer(client, coins, pricePerCoin, rl);
+        service.postOffer(coins, pricePerCoin, rl);
     }
 
     // documentation inherited from interface GoodsObject
@@ -91,10 +90,9 @@ public class HideoutObject extends PlaceObject
     }
 
     // documentation inherited from interface GoodsObject
-    public void buyGood (
-        Client client, String type, Object[] args, InvocationService.ConfirmListener cl)
+    public void buyGood (String type, Object[] args, InvocationService.ConfirmListener cl)
     {
-        service.buyGangGood(client, type, args, cl);
+        service.buyGangGood(type, args, cl);
     }
 
     /**

@@ -130,7 +130,7 @@ public class InGameOptionsView extends BDecoratedWindow
             final BButton restart = (BButton)event.getSource();
             restart.setEnabled(false);
             PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
-            psvc.playBountyGame(_ctx.getClient(), _bangobj.bounty.ident, _bangobj.bountyGameId,
+            psvc.playBountyGame(_bangobj.bounty.ident, _bangobj.bountyGameId,
                                 new PlayerService.InvocationListener() {
                 public void requestFailed (String cause) {
                     _ctx.getChatDirector().displayFeedback(OfficeCodes.OFFICE_MSGS, cause);

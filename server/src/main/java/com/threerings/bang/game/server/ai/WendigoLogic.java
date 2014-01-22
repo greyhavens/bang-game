@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
+import java.util.List;
 
 import com.samskivert.util.RandomUtil;
 
@@ -49,14 +50,13 @@ public class WendigoLogic extends AILogic
     }
 
     @Override // documentation inherited
-    public void tick (Piece[] pieces, short tick)
+    public void tick (List<Piece> pieces, short tick)
     {
         super.tick(pieces, tick);
     }
 
     // documentation inherited
-    protected void moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         PointSet safeSpots = _scenario.getSafeSpots();
         Unit ctarget = null;
@@ -190,8 +190,8 @@ public class WendigoLogic extends AILogic
      * @return true if we successfully moved towards the destination,
      * false if we couldn't find a path
      */
-    protected boolean moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, Piece target, int tdist)
+    protected boolean moveUnit (List<Piece> pieces, Unit unit, PointSet moves, Piece target,
+                                int tdist)
     {
         return (target != null) && moveUnit(pieces, unit, moves, target.x,
             target.y, tdist, TARGET_EVALUATOR);

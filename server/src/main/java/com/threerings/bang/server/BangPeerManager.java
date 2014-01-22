@@ -30,6 +30,7 @@ import com.threerings.presents.server.PresentsSession;
 import com.threerings.crowd.peer.server.CrowdPeerManager;
 
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.data.BangPeerMarshaller;
 
 import com.threerings.bang.gang.data.GangObject;
 
@@ -132,7 +133,7 @@ public class BangPeerManager extends CrowdPeerManager
         PeerNode peer = getPlayerPeer(invitee);
         if (peer != null) {
             ((BangNodeObject)peer.nodeobj).bangPeerService.deliverPardnerInvite(
-                peer.getClient(), invitee, inviter, message);
+                invitee, inviter, message);
         }
     }
 
@@ -159,7 +160,7 @@ public class BangPeerManager extends CrowdPeerManager
             }
             if (peer.nodeobj.clients.containsKey(inviter)) {
                 ((BangNodeObject)peer.nodeobj).bangPeerService.deliverPardnerInviteResponse(
-                    peer.getClient(), inviter, invitee, accept, full);
+                    inviter, invitee, accept, full);
                 return;
             }
         }
@@ -187,7 +188,7 @@ public class BangPeerManager extends CrowdPeerManager
             }
             if (peer.nodeobj.clients.containsKey(removee)) {
                 ((BangNodeObject)peer.nodeobj).bangPeerService.deliverPardnerRemoval(
-                    peer.getClient(), removee, remover);
+                    removee, remover);
                 return;
             }
         }
@@ -211,7 +212,7 @@ public class BangPeerManager extends CrowdPeerManager
         PeerNode peer = getPlayerPeer(invitee);
         if (peer != null) {
             ((BangNodeObject)peer.nodeobj).bangPeerService.deliverGangInvite(
-                peer.getClient(), invitee, inviter, gangId, name, message);
+                invitee, inviter, gangId, name, message);
         }
     }
 
@@ -239,8 +240,7 @@ public class BangPeerManager extends CrowdPeerManager
                 continue;
             }
             if (((BangPeerNode)peer).players.containsKey(item.getOwnerId())) {
-                ((BangNodeObject)peer.nodeobj).bangPeerService.deliverItem(
-                    peer.getClient(), item, source);
+                ((BangNodeObject)peer.nodeobj).bangPeerService.deliverItem(item, source);
                 return;
             }
         }
@@ -267,7 +267,7 @@ public class BangPeerManager extends CrowdPeerManager
             listener.requestFailed(new Exception(msg));
             return;
         }
-        ((BangNodeObject)peer.nodeobj).bangPeerService.getGangOid(peer.getClient(), gangId,
+        ((BangNodeObject)peer.nodeobj).bangPeerService.getGangOid(gangId,
             new BangPeerService.ResultListener() {
                 public void requestProcessed (Object result) {
                     continueSubscribingToGang(nodeName, (Integer)result, listener);
@@ -342,7 +342,7 @@ public class BangPeerManager extends CrowdPeerManager
         final BangNodeObject bnodeobj = (BangNodeObject)_nodeobj;
         bnodeobj.setTownId(ServerConfig.townId);
         bnodeobj.setBangPeerService(
-            BangServer.invmgr.registerDispatcher(new BangPeerDispatcher(this)));
+            BangServer.invmgr.registerProvider(this, BangPeerMarshaller.class));
 
         // subscribe to server for handle change notifications
         BangServer.locator.addPlayerObserver(new PlayerLocator.PlayerObserver() {

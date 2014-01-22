@@ -87,6 +87,7 @@ import com.threerings.bang.util.NameFactory;
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.Criterion;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
@@ -305,10 +306,9 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void getBoard (ClientObject caller, BangService.BoardListener listener)
+    public void getBoard (PlayerObject user, BangService.BoardListener listener)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
         if (!_bangobj.occupants.contains(user.getOid())) {
             log.warning("Rejecting request for board by non-occupant", "who", user.who());
             throw new InvocationException(INTERNAL_ERROR);
@@ -327,9 +327,8 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void selectTeam (ClientObject caller, int bigShotId, String[] units, int[] cardIds)
+    public void selectTeam (PlayerObject user, int bigShotId, String[] units, int[] cardIds)
     {
-        PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
         if (pidx == -1) {
             log.warning("Request to select team by non-player", "who", user.who());
@@ -399,7 +398,7 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void order (ClientObject caller, int pieceId, short x, short y, int targetId,
+    public void order (PlayerObject user, int pieceId, short x, short y, int targetId,
                        BangService.ResultListener listener)
         throws InvocationException
     {
@@ -407,7 +406,6 @@ public class BangManager extends GameManager
             throw new InvocationException(GameCodes.GAME_ENDED);
         }
 
-        PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
 
         if (!isActivePlayer(pidx)) {
@@ -452,9 +450,8 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void cancelOrder (ClientObject caller, int pieceId)
+    public void cancelOrder (PlayerObject user, int pieceId)
     {
-        PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
         Piece piece = _bangobj.pieces.get(pieceId);
         if (piece == null || piece.owner != pidx) {
@@ -465,7 +462,7 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void playCard (ClientObject caller, int cardId, Object target,
+    public void playCard (PlayerObject user, int cardId, Object target,
                           BangService.ConfirmListener listener)
         throws InvocationException
     {
@@ -475,7 +472,6 @@ public class BangManager extends GameManager
 
         // network lag can result in repeat playCard() requests but the card will be missing for
         // the second and subsequent requests; acknowledge the request but do nothing
-        PlayerObject user = (PlayerObject)caller;
         Card card = _bangobj.cards.get(cardId);
         if (card == null) {
             log.info("Acking dup play card request", "who", user.who(), "sid", cardId);
@@ -526,10 +522,8 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void reportPerformance (
-        ClientObject caller, String board, String driver, int[] perfhisto)
+    public void reportPerformance (PlayerObject user, String board, String driver, int[] perfhisto)
     {
-        PlayerObject user = (PlayerObject)caller;
         BangServer.perfLog("client_perf u:" + user.playerId + " b:" + board + " d:" + driver +
                            " h:" + StringUtil.toString(perfhisto));
     }
@@ -892,7 +886,7 @@ public class BangManager extends GameManager
 
         // set up the bang object
         _bangobj = (BangObject)_gameobj;
-        _bangobj.setService(_invmgr.registerDispatcher(new BangDispatcher(this)));
+        _bangobj.setService(_invmgr.registerProvider(this, BangMarshaller.class));
         _bangobj.addListener(_ticklst);
         _bangobj.addListener(BangServer.playmgr.receivedChatListener);
         _bconfig = (BangConfig)_gameconfig;
@@ -1669,9 +1663,8 @@ public class BangManager extends GameManager
         log.debug("Ticking", "tick", tick, "pcount", _bangobj.pieces.size());
 
         // allow pieces to tick down and possibly die
-        Piece[] pieces = _bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
+        List<Piece> pieces = _bangobj.getPieceArray();
+        for (Piece p : pieces) {
             if (!p.isAlive()) {
                 if (p.expireWreckage(tick)) {
                     log.debug("Expiring wreckage " + p.pieceId + " l:" + p.lastActed + " t:" + tick);

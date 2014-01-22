@@ -342,10 +342,10 @@ public class BangObject extends GameObject
         };
     }
 
-    /** Returns {@link #pieces} as an array to allow for simultaneous iteration and removal. */
-    public Piece[] getPieceArray ()
+    /** Returns {@link #pieces} as an array list to allow for simultaneous iteration and removal. */
+    public ArrayList<Piece> getPieceArray ()
     {
-        return pieces.toArray(new Piece[pieces.size()]);
+        return pieces.toArrayList();
     }
 
     /**
@@ -682,9 +682,7 @@ public class BangObject extends GameObject
             pdata[ii].clear();
         }
 
-        Piece[] pieces = getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
+        for (Piece p : pieces) {
             if (p.isAlive() && p.owner >= 0) {
                 pdata[p.owner].liveUnits++;
                 int pp = (100 - p.damage);

@@ -49,7 +49,7 @@ public class TourneyConfigView extends BDecoratedWindow
         cont.add(new BLabel(_msgs.get("m.tourney_desc"), "right_label"));
         cont.add(_desc = new BTextField(30));
         _desc.setPreferredSize(150, -1);
-        
+
         cont.add(new BLabel(_msgs.get("m.min_players"), "right_label"));
         cont.add(_minPlayers = new BComboBox());
         for (int ii : MIN_PLAYERS) {
@@ -110,8 +110,7 @@ public class TourneyConfigView extends BDecoratedWindow
             }
         };
 
-        TourniesService tsvc = _ctx.getClient().requireService(TourniesService.class);
-        tsvc.createTourney(_ctx.getClient(), config, rl);
+        _ctx.getClient().requireService(TourniesService.class).createTourney(config, rl);
     }
 
     protected BangContext _ctx;

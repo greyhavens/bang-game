@@ -12,7 +12,6 @@ import com.google.inject.Inject;
 import com.samskivert.util.Interval;
 
 import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.OccupantInfo;
@@ -42,12 +41,10 @@ public abstract class MatchHostManager extends ShopManager
     /**
      * Finds or creates a match with the specified criteria.
      */
-    public void findMatch (ClientObject caller, Criterion criterion,
-                          final InvocationService.ResultListener listener)
+    public void findMatch (PlayerObject user, Criterion criterion,
+                           final InvocationService.ResultListener listener)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject)caller;
-
         // if we're not allowing new games, fail immediately
         if (!RuntimeConfig.server.allowNewGames) {
             throw new InvocationException(NEW_GAMES_DISABLED);
@@ -94,7 +91,7 @@ public abstract class MatchHostManager extends ShopManager
     /**
      * Leaves the identified match.
      */
-    public void leaveMatch (ClientObject caller, int matchOid)
+    public void leaveMatch (PlayerObject caller, int matchOid)
     {
         Match match = _matches.get(matchOid);
         if (match != null) {

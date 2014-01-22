@@ -15,7 +15,6 @@ import com.threerings.media.util.MathUtil;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.data.ClientObject;
 
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
@@ -31,9 +30,10 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
-import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorGameConfig.Slot;
+import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.SaloonCodes;
+import com.threerings.bang.saloon.data.TableGameMarshaller;
 import com.threerings.bang.saloon.data.TableGameObject;
 
 import static com.threerings.bang.Log.log;
@@ -47,7 +47,7 @@ public class TableGameManager implements TableGameProvider
     {
         _tobj = new TableGameObject();
         BangServer.omgr.registerObject(_tobj);
-        _tobj.setService(BangServer.invmgr.registerDispatcher(new TableGameDispatcher(this)));
+        _tobj.setService(BangServer.invmgr.registerProvider(this, TableGameMarshaller.class));
     }
 
     /**
@@ -71,7 +71,7 @@ public class TableGameManager implements TableGameProvider
     }
 
     // documentation inherited from interface TableGameProvider
-    public void updateGameConfig (ClientObject caller, ParlorGameConfig game)
+    public void updateGameConfig (PlayerObject caller, ParlorGameConfig game)
     {
         // if we're already matchmaking, reject any config updates
         if (_tobj.playerOids != null) {
@@ -82,7 +82,7 @@ public class TableGameManager implements TableGameProvider
     }
 
     // documentation inherited from interface TableGameProvider
-    public void startMatchMaking (ClientObject caller, ParlorGameConfig game, byte[] bdata,
+    public void startMatchMaking (PlayerObject caller, ParlorGameConfig game, byte[] bdata,
             InvocationService.ConfirmListener listener)
         throws InvocationException
     {
@@ -138,7 +138,7 @@ public class TableGameManager implements TableGameProvider
     }
 
     // documentation inherited from interface TableGameProvider
-    public void joinMatch (ClientObject caller)
+    public void joinMatch (PlayerObject caller)
     {
         // make sure the match wasn't cancelled
         if (_tobj.playerOids == null) {
@@ -168,7 +168,7 @@ public class TableGameManager implements TableGameProvider
     }
 
     // documentation inherited from interface TableGameProvider
-    public void joinMatchSlot (ClientObject caller, int slot)
+    public void joinMatchSlot (PlayerObject caller, int slot)
     {
         // make sure the match wasn't cancelled
         if (_tobj.playerOids == null) {
@@ -204,7 +204,7 @@ public class TableGameManager implements TableGameProvider
     }
 
     // documentation inherited from interface TableGameProvider
-    public void leaveMatch (ClientObject caller)
+    public void leaveMatch (PlayerObject caller)
     {
         clearPlayer(caller.getOid());
     }

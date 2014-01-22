@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.RocketEffect;
@@ -25,10 +26,9 @@ public class Fireworks extends Breakable
         // don't do explosion effect
         return null;
     }
-    
-    
+
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, List<Piece> pieces)
     {
         if (_wasDamaged) {
             ArrayList<Effect> effects = new ArrayList<Effect>();

@@ -195,7 +195,7 @@ public abstract class Scenario
      *
      * @return true if a bonus was added, false if not.
      */
-    public boolean addBonus (BangObject bangobj, Piece[] pieces)
+    public boolean addBonus (BangObject bangobj, List<Piece> pieces)
     {
         // if bonuses are disabled for this game, stop here
         if (bangobj.minCardBonusWeight >= 100) {
@@ -435,7 +435,7 @@ public abstract class Scenario
      *
      * @return true if the bonus was placed, false if a spot could not be located.
      */
-    protected boolean placeBonus (BangObject bangobj, Piece[] pieces,
+    protected boolean placeBonus (BangObject bangobj, List<Piece> pieces,
                                   Bonus bonus, PointSet spots)
     {
         // determine (roughly) who can get to bonus spots on this tick
@@ -537,12 +537,10 @@ public abstract class Scenario
      * positions on the board. If no pieces can reach a spot, no set will be created, the array
      * element will be null.
      */
-    protected ArrayIntSet[] computeReachers (
-        BangObject bangobj, Piece[] pieces, PointSet spots)
+    protected ArrayIntSet[] computeReachers (BangObject bangobj, List<Piece> pieces, PointSet spots)
     {
         ArrayIntSet[] reachers = new ArrayIntSet[spots.size()];
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
+        for (Piece p : pieces) {
             if (!(p instanceof Unit) || p.owner < 0 || !p.isAlive() ||
                 p.ticksUntilMovable(bangobj.tick) > 0) {
                 continue;

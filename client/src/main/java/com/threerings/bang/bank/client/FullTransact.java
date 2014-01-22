@@ -160,7 +160,7 @@ public class FullTransact extends BContainer
                     _status.setStatus(_msgs.xlate(reason), true);
                 }
             };
-            _bankobj.service.cancelOffer(_ctx.getClient(), offer.offerId, cl);
+            _bankobj.service.cancelOffer(offer.offerId, cl);
         }
     }
 
@@ -179,8 +179,7 @@ public class FullTransact extends BContainer
                 _status.setStatus(_msgs.xlate(reason), true);
             }
         };
-        _bankobj.service.postOffer(
-            _ctx.getClient(), _ccount, _price, _buying, false, cl);
+        _bankobj.service.postOffer(_ccount, _price, _buying, false, cl);
     }
 
     protected void updateOffers ()

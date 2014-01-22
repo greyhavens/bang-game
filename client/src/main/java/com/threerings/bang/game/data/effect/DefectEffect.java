@@ -3,7 +3,9 @@
 
 package com.threerings.bang.game.data.effect;
 
-import com.samskivert.util.ArrayUtil;
+import java.util.Collections;
+import java.util.List;
+
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
 
@@ -67,13 +69,13 @@ public class DefectEffect extends BonusEffect
         }
 
         // now steal a random non-bigshot, non-nuggeted unit from this player
-        Piece[] pieces = bangobj.getPieceArray();
-        ArrayUtil.shuffle(pieces);
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii].owner != pidx || !(pieces[ii] instanceof Unit)) {
+        List<Piece> pieces = bangobj.getPieceArray();
+        Collections.shuffle(pieces);
+        for (Piece p : pieces) {
+            if (p.owner != pidx || !(p instanceof Unit)) {
                 continue;
             }
-            Unit unit = (Unit)pieces[ii];
+            Unit unit = (Unit)p;
             if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT ||
                 NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
                 continue;

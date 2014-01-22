@@ -131,7 +131,7 @@
       <plugin>
         <groupId>com.threerings</groupId>
         <artifactId>nenya-maven-plugin</artifactId>
-        <version>1.6-SNAPSHOT</version>
+        <version>${nenya.version}</version>
         <executions>
 <!--
           <execution>

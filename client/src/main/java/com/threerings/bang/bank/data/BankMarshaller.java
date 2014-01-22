@@ -3,12 +3,14 @@
 
 package com.threerings.bang.bank.data;
 
-import com.threerings.bang.bank.client.BankService;
-import com.threerings.coin.data.CoinExOfferInfo;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
+
+import com.threerings.bang.bank.client.BankService;
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.coin.data.CoinExOfferInfo;
 
 /**
  * Provides the implementation of the {@link BankService} interface
@@ -17,11 +19,13 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class BankMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from BankService.java.")
+public class BankMarshaller extends InvocationMarshaller<PlayerObject>
     implements BankService
 {
     /**
-     * Marshalls results to implementations of {@link BankService.OfferListener}.
+     * Marshalls results to implementations of {@code BankService.OfferListener}.
      */
     public static class OfferMarshaller extends ListenerMarshaller
         implements OfferListener
@@ -33,10 +37,7 @@ public class BankMarshaller extends InvocationMarshaller
         // from interface OfferMarshaller
         public void gotOffers (CoinExOfferInfo[] arg1, CoinExOfferInfo[] arg2)
         {
-            _invId = null;
-            omgr.postEvent(new InvocationResponseEvent(
-                               callerOid, requestId, GOT_OFFERS,
-                               new Object[] { arg1, arg2 }, transport));
+            sendResponse(GOT_OFFERS, new Object[] { arg1, arg2 });
         }
 
         @Override // from InvocationMarshaller
@@ -59,12 +60,12 @@ public class BankMarshaller extends InvocationMarshaller
     public static final int CANCEL_OFFER = 1;
 
     // from interface BankService
-    public void cancelOffer (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
+    public void cancelOffer (int arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, CANCEL_OFFER, new Object[] {
-            Integer.valueOf(arg2), listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(CANCEL_OFFER, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 
@@ -72,12 +73,12 @@ public class BankMarshaller extends InvocationMarshaller
     public static final int GET_MY_OFFERS = 2;
 
     // from interface BankService
-    public void getMyOffers (Client arg1, BankService.OfferListener arg2)
+    public void getMyOffers (BankService.OfferListener arg1)
     {
-        BankMarshaller.OfferMarshaller listener2 = new BankMarshaller.OfferMarshaller();
-        listener2.listener = arg2;
-        sendRequest(arg1, GET_MY_OFFERS, new Object[] {
-            listener2
+        BankMarshaller.OfferMarshaller listener1 = new BankMarshaller.OfferMarshaller();
+        listener1.listener = arg1;
+        sendRequest(GET_MY_OFFERS, new Object[] {
+            listener1
         });
     }
 
@@ -85,12 +86,12 @@ public class BankMarshaller extends InvocationMarshaller
     public static final int POST_OFFER = 3;
 
     // from interface BankService
-    public void postOffer (Client arg1, int arg2, int arg3, boolean arg4, boolean arg5, InvocationService.ResultListener arg6)
+    public void postOffer (int arg1, int arg2, boolean arg3, boolean arg4, InvocationService.ResultListener arg5)
     {
-        InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, POST_OFFER, new Object[] {
-            Integer.valueOf(arg2), Integer.valueOf(arg3), Boolean.valueOf(arg4), Boolean.valueOf(arg5), listener6
+        InvocationMarshaller.ResultMarshaller listener5 = new InvocationMarshaller.ResultMarshaller();
+        listener5.listener = arg5;
+        sendRequest(POST_OFFER, new Object[] {
+            Integer.valueOf(arg1), Integer.valueOf(arg2), Boolean.valueOf(arg3), Boolean.valueOf(arg4), listener5
         });
     }
 }

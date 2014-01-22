@@ -127,7 +127,7 @@ public class EditCharacterView extends BContainer
     protected void configureLook (Look.Pose pose, Look look)
     {
         AvatarService asvc = _ctx.getClient().requireService(AvatarService.class);
-        asvc.selectLook(_ctx.getClient(), pose, look.name);
+        asvc.selectLook(pose, look.name);
     }
 
     protected void changeHandle (Handle handle)
@@ -143,7 +143,7 @@ public class EditCharacterView extends BContainer
                 _buy.setEnabled(true);
             }
         };
-        _barbobj.service.changeHandle(_ctx.getClient(), handle, cl);
+        _barbobj.service.changeHandle(handle, cl);
     }
 
     protected BangContext _ctx;

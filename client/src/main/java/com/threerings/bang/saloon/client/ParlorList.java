@@ -203,8 +203,7 @@ public class ParlorList extends BContainer
             return;
         }
 
-        _salobj.service.joinParlor(
-            _ctx.getClient(), owner, password, new SaloonService.ResultListener() {
+        _salobj.service.joinParlor(owner, password, new SaloonService.ResultListener() {
             public void requestProcessed (Object result) {
                 _ctx.getLocationDirector().moveTo((Integer)result);
             }

@@ -3,11 +3,14 @@
 
 package com.threerings.bang.avatar.data;
 
-import com.threerings.bang.avatar.client.BarberService;
-import com.threerings.bang.data.Handle;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.bang.avatar.client.BarberService;
+import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PlayerObject;
 
 /**
  * Provides the implementation of the {@link BarberService} interface
@@ -16,19 +19,21 @@ import com.threerings.presents.data.InvocationMarshaller;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class BarberMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from BarberService.java.")
+public class BarberMarshaller extends InvocationMarshaller<PlayerObject>
     implements BarberService
 {
     /** The method id used to dispatch {@link #changeHandle} requests. */
     public static final int CHANGE_HANDLE = 1;
 
     // from interface BarberService
-    public void changeHandle (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
+    public void changeHandle (Handle arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, CHANGE_HANDLE, new Object[] {
-            arg2, listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(CHANGE_HANDLE, new Object[] {
+            arg1, listener2
         });
     }
 
@@ -36,10 +41,10 @@ public class BarberMarshaller extends InvocationMarshaller
     public static final int CONFIGURE_LOOK = 2;
 
     // from interface BarberService
-    public void configureLook (Client arg1, String arg2, int[] arg3)
+    public void configureLook (String arg1, int[] arg2)
     {
-        sendRequest(arg1, CONFIGURE_LOOK, new Object[] {
-            arg2, arg3
+        sendRequest(CONFIGURE_LOOK, new Object[] {
+            arg1, arg2
         });
     }
 
@@ -47,12 +52,12 @@ public class BarberMarshaller extends InvocationMarshaller
     public static final int PURCHASE_LOOK = 3;
 
     // from interface BarberService
-    public void purchaseLook (Client arg1, LookConfig arg2, InvocationService.ConfirmListener arg3)
+    public void purchaseLook (LookConfig arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, PURCHASE_LOOK, new Object[] {
-            arg2, listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(PURCHASE_LOOK, new Object[] {
+            arg1, listener2
         });
     }
 }

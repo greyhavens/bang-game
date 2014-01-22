@@ -155,8 +155,8 @@ public class WantedPosterView extends BContainer
         _handle = handle;
 
         // request the poster record
-        InvocationService.ResultListener listener =
-            new InvocationService.ResultListener() {
+        _ctx.getClient().requireService(PlayerService.class).getPosterInfo(
+            handle, new InvocationService.ResultListener() {
                 public void requestProcessed(Object result) {
                     setPoster((PosterInfo) result);
                 }
@@ -165,10 +165,7 @@ public class WantedPosterView extends BContainer
                     _ctx.getChatDirector().displayFeedback(
                         BangCodes.BANG_MSGS, "m.poster_failed");
                 }
-            };
-
-        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
-        psvc.getPosterInfo(_ctx.getClient(), handle, listener);
+            });
     }
 
     /**

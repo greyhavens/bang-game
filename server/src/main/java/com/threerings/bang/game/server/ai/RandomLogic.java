@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.server.ai;
 
+import java.util.List;
+
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.RandomUtil;
 
@@ -37,7 +39,7 @@ public class RandomLogic extends AILogic
     }
 
     // documentation inherited
-    protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         moveUnitDegraded(pieces, unit, moves, attacks);
     }

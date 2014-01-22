@@ -14,11 +14,6 @@ public class GuestHandle extends Handle
         _defaultName = name;
     }
 
-    /** Creates a blank instance of unerialization. */
-    public GuestHandle ()
-    {
-    }
-
     /**
      * Creates a guest handle instance with the supplied unique hash.
      */

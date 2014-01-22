@@ -9,7 +9,6 @@ import com.samskivert.io.PersistenceException;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
@@ -31,6 +30,7 @@ import com.threerings.bang.server.persist.PlayerRepository;
 
 import com.threerings.bang.station.client.StationService;
 import com.threerings.bang.station.data.StationCodes;
+import com.threerings.bang.station.data.StationMarshaller;
 import com.threerings.bang.station.data.StationObject;
 
 import static com.threerings.bang.Log.log;
@@ -43,7 +43,7 @@ public class StationManager extends ShopManager
     implements StationCodes, StationProvider
 {
     // documentation inherited from interface StationProvider
-    public void buyTicket (ClientObject caller, StationService.ConfirmListener listener)
+    public void buyTicket (PlayerObject caller, StationService.ConfirmListener listener)
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
@@ -76,7 +76,7 @@ public class StationManager extends ShopManager
     }
 
     // documentation inherited from interface StationProvider
-    public void activateTicket (ClientObject caller, final StationService.ConfirmListener listener)
+    public void activateTicket (PlayerObject caller, final StationService.ConfirmListener listener)
         throws InvocationException
     {
         final PlayerObject user = requireShopEnabled(caller);
@@ -167,7 +167,7 @@ public class StationManager extends ShopManager
 
         // register our invocation service
         _stobj = (StationObject)_plobj;
-        _stobj.setService(BangServer.invmgr.registerDispatcher(new StationDispatcher(this)));
+        _stobj.setService(BangServer.invmgr.registerProvider(this, StationMarshaller.class));
     }
 
     /** Used to recruit and deliver a big shot to a player. */

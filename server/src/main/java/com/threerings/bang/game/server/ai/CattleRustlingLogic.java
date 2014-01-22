@@ -6,6 +6,7 @@ package com.threerings.bang.game.server.ai;
 import java.awt.Point;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.threerings.bang.data.UnitConfig;
@@ -40,7 +41,7 @@ public class CattleRustlingLogic extends AILogic
     }
 
     // documentation inherited
-    protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         // use special logic for the big shot
         if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
@@ -55,33 +56,33 @@ public class CattleRustlingLogic extends AILogic
         Cow ccow = null;
         Piece ctarget = null, tporter = null;
         _sresults.clear();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Unit && pieces[ii].owner == _pidx && pieces[ii].isAlive() &&
-                ((Unit)pieces[ii]).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-                bshot = (Unit)pieces[ii];
+        for (Piece p : pieces) {
+            if (p instanceof Unit && p.owner == _pidx && p.isAlive() &&
+                ((Unit)p).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+                bshot = (Unit)p;
                 continue;
 
-            } else if (unit.validTarget(_bangobj, pieces[ii], false) && (ctarget == null ||
-                       unit.getDistance(pieces[ii]) < unit.getDistance(ctarget)) &&
-                       unit.validTarget(_bangobj, pieces[ii], false)) {
-                ctarget = pieces[ii];
+            } else if (unit.validTarget(_bangobj, p, false) && (ctarget == null ||
+                       unit.getDistance(p) < unit.getDistance(ctarget)) &&
+                       unit.validTarget(_bangobj, p, false)) {
+                ctarget = p;
                 continue;
 
-            } else if (pieces[ii] instanceof Teleporter && (tporter == null ||
-                       unit.getDistance(pieces[ii]) < unit.getDistance(tporter))) {
-                tporter = pieces[ii];
+            } else if (p instanceof Teleporter && (tporter == null ||
+                       unit.getDistance(p) < unit.getDistance(tporter))) {
+                tporter = p;
                 continue;
 
-            } else if (!(pieces[ii] instanceof Cow)) {
+            } else if (!(p instanceof Cow)) {
                 continue;
             }
 
-            Cow cow = (Cow)pieces[ii];
+            Cow cow = (Cow)p;
             if (cow.getTeam(_bangobj) != _bangobj.getTeam(_pidx) &&
                 (ccow == null || unit.getDistance(cow) < unit.getDistance(ccow))) {
                 ccow = cow;
             }
-            updateSpookResults((Cow)pieces[ii], moves, herd);
+            updateSpookResults(cow, moves, herd);
         }
         if (_sresults.isEmpty()) {
             moveUnit(pieces, unit, moves, bshot, herd, ccow, ctarget, tporter);
@@ -111,7 +112,7 @@ public class CattleRustlingLogic extends AILogic
      * solely comprised of the unit), then towards the closest unowned cow (if any), and finally
      * towards the closest valid target (if any).
      */
-    protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, Unit bshot, Point herd,
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, Unit bshot, Point herd,
                              Cow ccow, Piece ctarget, Piece tporter)
     {
         if (bshot != null && moveUnit(pieces, unit, moves, bshot.x, bshot.y, 1)) {
@@ -136,7 +137,7 @@ public class CattleRustlingLogic extends AILogic
      * path.
      */
     protected boolean moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, int dx, int dy, int tdist)
+        List<Piece> pieces, Unit unit, PointSet moves, int dx, int dy, int tdist)
     {
         return moveUnit(pieces, unit, moves, dx, dy, tdist, TARGET_EVALUATOR);
     }
@@ -144,7 +145,7 @@ public class CattleRustlingLogic extends AILogic
     /**
      * Moves the big shot.
      */
-    protected void moveBigShot (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveBigShot (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         // among the cows that we haven't already branded, find the closest and any that we can
         // reach right now
@@ -152,23 +153,23 @@ public class CattleRustlingLogic extends AILogic
         Cow ccow = null;
         Piece ctarget = null, tporter = null;
         _sresults.clear();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (unit.validTarget(_bangobj, pieces[ii], false) &&
-                (ctarget == null || unit.getDistance(pieces[ii]) < unit.getDistance(ctarget)) &&
-                unit.validTarget(_bangobj, pieces[ii], false)) {
-                ctarget = pieces[ii];
+        for (Piece p : pieces) {
+            if (unit.validTarget(_bangobj, p, false) &&
+                (ctarget == null || unit.getDistance(p) < unit.getDistance(ctarget)) &&
+                unit.validTarget(_bangobj, p, false)) {
+                ctarget = p;
                 continue;
 
-            } else if (pieces[ii] instanceof Teleporter && (tporter == null ||
-                unit.getDistance(pieces[ii]) < unit.getDistance(tporter))) {
-                tporter = pieces[ii];
+            } else if (p instanceof Teleporter && (tporter == null ||
+                unit.getDistance(p) < unit.getDistance(tporter))) {
+                tporter = p;
                 continue;
 
-            } else if (!(pieces[ii] instanceof Cow)) {
+            } else if (!(p instanceof Cow)) {
                 continue;
             }
 
-            Cow cow = (Cow)pieces[ii];
+            Cow cow = (Cow)p;
             if (cow.getTeam(_bangobj) == _bangobj.getTeam(_pidx)) {
                 continue;
             }

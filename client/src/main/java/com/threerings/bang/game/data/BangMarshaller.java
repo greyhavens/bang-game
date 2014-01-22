@@ -3,11 +3,13 @@
 
 package com.threerings.bang.game.data;
 
-import com.threerings.bang.game.client.BangService;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
+
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.game.client.BangService;
 
 /**
  * Provides the implementation of the {@link BangService} interface
@@ -16,11 +18,13 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class BangMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from BangService.java.")
+public class BangMarshaller extends InvocationMarshaller<PlayerObject>
     implements BangService
 {
     /**
-     * Marshalls results to implementations of {@link BangService.BoardListener}.
+     * Marshalls results to implementations of {@code BangService.BoardListener}.
      */
     public static class BoardMarshaller extends ListenerMarshaller
         implements BoardListener
@@ -32,10 +36,7 @@ public class BangMarshaller extends InvocationMarshaller
         // from interface BoardMarshaller
         public void requestProcessed (BoardData arg1)
         {
-            _invId = null;
-            omgr.postEvent(new InvocationResponseEvent(
-                               callerOid, requestId, REQUEST_PROCESSED,
-                               new Object[] { arg1 }, transport));
+            sendResponse(REQUEST_PROCESSED, new Object[] { arg1 });
         }
 
         @Override // from InvocationMarshaller
@@ -58,10 +59,10 @@ public class BangMarshaller extends InvocationMarshaller
     public static final int CANCEL_ORDER = 1;
 
     // from interface BangService
-    public void cancelOrder (Client arg1, int arg2)
+    public void cancelOrder (int arg1)
     {
-        sendRequest(arg1, CANCEL_ORDER, new Object[] {
-            Integer.valueOf(arg2)
+        sendRequest(CANCEL_ORDER, new Object[] {
+            Integer.valueOf(arg1)
         });
     }
 
@@ -69,12 +70,12 @@ public class BangMarshaller extends InvocationMarshaller
     public static final int GET_BOARD = 2;
 
     // from interface BangService
-    public void getBoard (Client arg1, BangService.BoardListener arg2)
+    public void getBoard (BangService.BoardListener arg1)
     {
-        BangMarshaller.BoardMarshaller listener2 = new BangMarshaller.BoardMarshaller();
-        listener2.listener = arg2;
-        sendRequest(arg1, GET_BOARD, new Object[] {
-            listener2
+        BangMarshaller.BoardMarshaller listener1 = new BangMarshaller.BoardMarshaller();
+        listener1.listener = arg1;
+        sendRequest(GET_BOARD, new Object[] {
+            listener1
         });
     }
 
@@ -82,12 +83,12 @@ public class BangMarshaller extends InvocationMarshaller
     public static final int ORDER = 3;
 
     // from interface BangService
-    public void order (Client arg1, int arg2, short arg3, short arg4, int arg5, InvocationService.ResultListener arg6)
+    public void order (int arg1, short arg2, short arg3, int arg4, InvocationService.ResultListener arg5)
     {
-        InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, ORDER, new Object[] {
-            Integer.valueOf(arg2), Short.valueOf(arg3), Short.valueOf(arg4), Integer.valueOf(arg5), listener6
+        InvocationMarshaller.ResultMarshaller listener5 = new InvocationMarshaller.ResultMarshaller();
+        listener5.listener = arg5;
+        sendRequest(ORDER, new Object[] {
+            Integer.valueOf(arg1), Short.valueOf(arg2), Short.valueOf(arg3), Integer.valueOf(arg4), listener5
         });
     }
 
@@ -95,12 +96,12 @@ public class BangMarshaller extends InvocationMarshaller
     public static final int PLAY_CARD = 4;
 
     // from interface BangService
-    public void playCard (Client arg1, int arg2, Object arg3, InvocationService.ConfirmListener arg4)
+    public void playCard (int arg1, Object arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, PLAY_CARD, new Object[] {
-            Integer.valueOf(arg2), arg3, listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(PLAY_CARD, new Object[] {
+            Integer.valueOf(arg1), arg2, listener3
         });
     }
 
@@ -108,10 +109,10 @@ public class BangMarshaller extends InvocationMarshaller
     public static final int REPORT_PERFORMANCE = 5;
 
     // from interface BangService
-    public void reportPerformance (Client arg1, String arg2, String arg3, int[] arg4)
+    public void reportPerformance (String arg1, String arg2, int[] arg3)
     {
-        sendRequest(arg1, REPORT_PERFORMANCE, new Object[] {
-            arg2, arg3, arg4
+        sendRequest(REPORT_PERFORMANCE, new Object[] {
+            arg1, arg2, arg3
         });
     }
 
@@ -119,10 +120,10 @@ public class BangMarshaller extends InvocationMarshaller
     public static final int SELECT_TEAM = 6;
 
     // from interface BangService
-    public void selectTeam (Client arg1, int arg2, String[] arg3, int[] arg4)
+    public void selectTeam (int arg1, String[] arg2, int[] arg3)
     {
-        sendRequest(arg1, SELECT_TEAM, new Object[] {
-            Integer.valueOf(arg2), arg3, arg4
+        sendRequest(SELECT_TEAM, new Object[] {
+            Integer.valueOf(arg1), arg2, arg3
         });
     }
 }

@@ -24,13 +24,11 @@ public abstract class CounterDelegate extends ScenarioDelegate
     public void roundWillStart (BangObject bangobj)
         throws InvocationException
     {
-        Piece[] pieces = bangobj.getPieceArray();
-
         // find all the counters on this board
         List<Counter> counters = Lists.newArrayList();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Counter) {
-                counters.add((Counter)pieces[ii]);
+        for (Piece piece : bangobj.getPieceArray()) {
+            if (piece instanceof Counter) {
+                counters.add((Counter)piece);
             }
         }
 

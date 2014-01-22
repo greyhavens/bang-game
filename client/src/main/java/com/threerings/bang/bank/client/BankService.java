@@ -3,7 +3,7 @@
 
 package com.threerings.bang.bank.client;
 
-import com.threerings.presents.client.Client;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.presents.client.InvocationService;
 
 import com.threerings.coin.data.CoinExOfferInfo;
@@ -11,7 +11,7 @@ import com.threerings.coin.data.CoinExOfferInfo;
 /**
  * Defines the services available to the client at the Bank.
  */
-public interface BankService extends InvocationService
+public interface BankService extends InvocationService<PlayerObject>
 {
     /** Used by {@link #getMyOffers}. */
     public interface OfferListener extends InvocationListener
@@ -24,7 +24,7 @@ public interface BankService extends InvocationService
     /**
      * Requests this player's outstanding offers on the exchange.
      */
-    public void getMyOffers (Client client, OfferListener listener);
+    public void getMyOffers (OfferListener listener);
 
     /**
      * Requests that the specified offer be posted to the market.
@@ -36,13 +36,12 @@ public interface BankService extends InvocationService
      * CoinExOfferInfo} for a posted offer or null for an immediately executed
      * transaction.
      */
-    public void postOffer (
-        Client client, int coins, int pricePerCoin, boolean buying,
-        boolean immediate, ResultListener rl);
+    public void postOffer (int coins, int pricePerCoin, boolean buying, boolean immediate,
+                           ResultListener rl);
 
     /**
      * Requests that the specified offer be cancelled. This client must, of
      * course, be the originator of the offer.
      */
-    public void cancelOffer (Client client, int offerId, ConfirmListener cl);
+    public void cancelOffer (int offerId, ConfirmListener cl);
 }

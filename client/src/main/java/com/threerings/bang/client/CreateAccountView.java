@@ -238,9 +238,9 @@ public class CreateAccountView extends SteelWindow
         _cancel.setEnabled(false);
         _create.setEnabled(false);
 
-        psvc.createAccount(_ctx.getClient(), uname,
-                Password.makeFromClear(_password.getText()).getEncrypted(), _email.getText(),
-                BangClient.getAffiliateFromInstallFile(), _birthdate.getTime(), cl);
+        psvc.createAccount(uname, Password.makeFromClear(_password.getText()).getEncrypted(),
+                           _email.getText(), BangClient.getAffiliateFromInstallFile(),
+                           _birthdate.getTime(), cl);
     }
 
     /**

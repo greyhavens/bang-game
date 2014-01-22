@@ -144,8 +144,7 @@ public class PickLookView extends BContainer
         // compare our current look with the unmodified copy; if they differ,
         // send a request to the server to update the look
         if (!_selection.equals(_orig)) {
-            _barbobj.service.configureLook(
-                _ctx.getClient(), _selection.name, _selection.articles);
+            _barbobj.service.configureLook(_selection.name, _selection.articles);
         }
     }
 

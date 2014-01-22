@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.server.ai;
 
+import java.util.List;
+
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
@@ -25,7 +27,7 @@ public class ForestGuardiansLogic extends AILogic
             UnitConfig.Rank.BIGSHOT);
         return getWeightedUnitTypes(configs, UNIT_EVALUATOR, 1)[0];
     }
-    
+
     @Override // documentation inherited
     public String[] getUnitTypes (int count)
     {
@@ -35,12 +37,11 @@ public class ForestGuardiansLogic extends AILogic
     }
 
     // documentation inherited
-    protected void moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         moveUnit(pieces, unit, moves, OBJECTIVE_EVALUATOR, TARGET_EVALUATOR);
     }
-    
+
     /** Prefers air units (because they're immune to the logging robots'
      * melee attack), higher fire distance, greater damage; avoids using
      * the stormcaller. */
@@ -54,7 +55,7 @@ public class ForestGuardiansLogic extends AILogic
                 config.maxFireDistance*10 + config.damage;
         }
     };
-    
+
     /** Seeks out trees and logging robots, using teleporters as a last
      * resort. */
     protected static final ObjectiveEvaluator OBJECTIVE_EVALUATOR =
@@ -82,11 +83,11 @@ public class ForestGuardiansLogic extends AILogic
             }
         }
     };
-    
+
     /** Prefers stronger logging robots with more damage. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
-        public int getWeight (BangObject bangobj, Unit unit, Piece target, 
+        public int getWeight (BangObject bangobj, Unit unit, Piece target,
                 int dist, PointSet preferredMoves) {
             return (target instanceof LoggingRobot &&
                 ((LoggingRobot)target).isSuper() ? 100 : 0) +

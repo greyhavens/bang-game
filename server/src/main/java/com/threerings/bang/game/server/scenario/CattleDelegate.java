@@ -77,11 +77,9 @@ public class CattleDelegate extends ScenarioDelegate
         BangObject bangobj, Piece spooker, int radius)
     {
         // check to see if this piece spooked any cattle
-        Piece[] pieces = bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Cow &&
-                spooker.getDistance(pieces[ii]) <= radius) {
-                spook(bangobj, (Cow)pieces[ii], spooker, false);
+        for (Piece piece : bangobj.getPieceArray()) {
+            if (piece instanceof Cow && spooker.getDistance(piece) <= radius) {
+                spook(bangobj, (Cow)piece, spooker, false);
             }
         }
     }

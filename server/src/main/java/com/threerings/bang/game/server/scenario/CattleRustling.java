@@ -202,10 +202,9 @@ public class CattleRustling extends Scenario
 
             // update the counters with new values
             Arrays.fill(_counts, 0);
-            Piece[] pieces = bangobj.getPieceArray();
-            for (int ii = 0; ii < pieces.length; ii++) {
-                if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
-                    _counts[pieces[ii].owner]++;
+            for (Piece piece : bangobj.getPieceArray()) {
+                if (piece instanceof Cow && piece.owner != -1) {
+                    _counts[piece.owner]++;
                 }
             }
             for (Counter counter : _counters) {

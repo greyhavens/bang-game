@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
@@ -31,7 +32,7 @@ public class DogSoldier extends Unit
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, List<Piece> pieces)
     {
         if (!isAlive()) {
             return null;

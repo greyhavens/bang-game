@@ -48,7 +48,7 @@ public class ModifiableDSet<T extends DSet.Entry> extends DSet<T>
     {
         return remove(entry);
     }
-    
+
     /**
      * Updates an entry directly in this distributed set without creating the
      * necessary distributed events to make things work properly.  This exists

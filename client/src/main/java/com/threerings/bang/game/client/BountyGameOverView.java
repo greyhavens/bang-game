@@ -104,7 +104,7 @@ public class BountyGameOverView extends SteelWindow
             final BButton play = (BButton)event.getSource();
             play.setEnabled(false);
             PlayerService psvc = _bctx.getClient().requireService(PlayerService.class);
-            psvc.playBountyGame(_bctx.getClient(), _bounty.ident, action.substring(5),
+            psvc.playBountyGame(_bounty.ident, action.substring(5),
                                 new PlayerService.InvocationListener() {
                 public void requestFailed (String cause) {
                     _bctx.getChatDirector().displayFeedback(OfficeCodes.OFFICE_MSGS, cause);

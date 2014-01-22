@@ -139,18 +139,18 @@ public class ParlorMatchView extends BContainer
     {
         String action = event.getAction();
         if ("join".equals(action)) {
-            _tobj.service.joinMatch(_ctx.getClient());
+            _tobj.service.joinMatch();
 
         } else if (action.startsWith("join_")) {
             try {
                 int slot = Integer.parseInt(action.substring(5));
-                _tobj.service.joinMatchSlot(_ctx.getClient(), slot);
+                _tobj.service.joinMatchSlot(slot);
             } catch (NumberFormatException nfe) {
-                _tobj.service.joinMatch(_ctx.getClient());
+                _tobj.service.joinMatch();
             }
 
         } else if ("leave".equals(action)) {
-            _tobj.service.leaveMatch(_ctx.getClient());
+            _tobj.service.leaveMatch();
         }
     }
 

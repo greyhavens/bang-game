@@ -3,10 +3,13 @@
 
 package com.threerings.bang.station.data;
 
-import com.threerings.bang.station.client.StationService;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.station.client.StationService;
 
 /**
  * Provides the implementation of the {@link StationService} interface
@@ -15,19 +18,21 @@ import com.threerings.presents.data.InvocationMarshaller;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class StationMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from StationService.java.")
+public class StationMarshaller extends InvocationMarshaller<PlayerObject>
     implements StationService
 {
     /** The method id used to dispatch {@link #activateTicket} requests. */
     public static final int ACTIVATE_TICKET = 1;
 
     // from interface StationService
-    public void activateTicket (Client arg1, InvocationService.ConfirmListener arg2)
+    public void activateTicket (InvocationService.ConfirmListener arg1)
     {
-        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
-        listener2.listener = arg2;
-        sendRequest(arg1, ACTIVATE_TICKET, new Object[] {
-            listener2
+        InvocationMarshaller.ConfirmMarshaller listener1 = new InvocationMarshaller.ConfirmMarshaller();
+        listener1.listener = arg1;
+        sendRequest(ACTIVATE_TICKET, new Object[] {
+            listener1
         });
     }
 
@@ -35,12 +40,12 @@ public class StationMarshaller extends InvocationMarshaller
     public static final int BUY_TICKET = 2;
 
     // from interface StationService
-    public void buyTicket (Client arg1, InvocationService.ConfirmListener arg2)
+    public void buyTicket (InvocationService.ConfirmListener arg1)
     {
-        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
-        listener2.listener = arg2;
-        sendRequest(arg1, BUY_TICKET, new Object[] {
-            listener2
+        InvocationMarshaller.ConfirmMarshaller listener1 = new InvocationMarshaller.ConfirmMarshaller();
+        listener1.listener = arg1;
+        sendRequest(BUY_TICKET, new Object[] {
+            listener1
         });
     }
 }

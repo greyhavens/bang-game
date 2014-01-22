@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
+import java.util.List;
 
 import com.google.inject.Inject;
 
@@ -141,7 +142,7 @@ public class Tutorial extends Scenario
     }
 
     @Override // documentation inherited
-    public boolean addBonus (BangObject bangobj, Piece[] pieces)
+    public boolean addBonus (BangObject bangobj, List<Piece> pieces)
     {
         // no automatic bonuses in tutorials
         return false;

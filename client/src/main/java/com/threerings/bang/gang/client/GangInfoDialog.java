@@ -92,7 +92,7 @@ public class GangInfoDialog extends BWindow
 
         // fetch the gang info from the server
         GangService gsvc = ctx.getClient().requireService(GangService.class);
-        gsvc.getGangInfo(ctx.getClient(), name, new GangService.ResultListener() {
+        gsvc.getGangInfo(name, new GangService.ResultListener() {
             public void requestProcessed (Object result) {
                 populate((GangInfo)result);
             }

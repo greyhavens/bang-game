@@ -442,7 +442,7 @@ public class BangView extends BWindow
 
         log.info("Downloading board", "board", boardId);
         _preparing = true;
-        _bangobj.service.getBoard(_ctx.getClient(), new BangService.BoardListener() {
+        _bangobj.service.getBoard(new BangService.BoardListener() {
             public void requestProcessed (BoardData bdata) {
                 // save the board for future use and continue
                 _ctx.getBoardCache().saveBoard(_bangobj.boardHash, bdata);
@@ -674,7 +674,7 @@ public class BangView extends BWindow
                 String driver = GL11.glGetString(GL11.GL_VENDOR) + ", " +
                     GL11.glGetString(GL11.GL_RENDERER) + ", " +
                     GL11.glGetString(GL11.GL_VERSION);
-                _bangobj.service.reportPerformance(_ctx.getClient(), _boardId, driver, histo);
+                _bangobj.service.reportPerformance(_boardId, driver, histo);
             }
 
             // if >half of the samples are below 20 fps, recommend lowering the detail level

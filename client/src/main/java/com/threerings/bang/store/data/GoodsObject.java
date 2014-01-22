@@ -3,7 +3,6 @@
 
 package com.threerings.bang.store.data;
 
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.DSet;
 
@@ -20,6 +19,5 @@ public interface GoodsObject
     /**
      * Makes a request to the server to buy one of the goods.
      */
-    public void buyGood (
-        Client client, String type, Object[] args, InvocationService.ConfirmListener cl);
+    public void buyGood (String type, Object[] args, InvocationService.ConfirmListener cl);
 }

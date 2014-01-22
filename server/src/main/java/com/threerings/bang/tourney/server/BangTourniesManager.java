@@ -14,10 +14,10 @@ import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.parlor.tourney.data.TourneyConfig;
+import com.threerings.parlor.tourney.data.TourniesMarshaller;
 import com.threerings.parlor.tourney.server.TourneyManager;
 import com.threerings.parlor.tourney.server.TourniesManager;
-import com.threerings.parlor.tourney.server.TourniesDispatcher;
-import com.threerings.parlor.tourney.data.TourneyConfig;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -35,7 +35,7 @@ public class BangTourniesManager extends TourniesManager
     @Inject public BangTourniesManager (InvocationManager invmgr, Lifecycle cycle)
     {
         super(cycle);
-        invmgr.registerDispatcher(new TourniesDispatcher(this), GLOBAL_GROUP);
+        invmgr.registerProvider(this, TourniesMarshaller.class, GLOBAL_GROUP);
     }
 
     // documentation inherited

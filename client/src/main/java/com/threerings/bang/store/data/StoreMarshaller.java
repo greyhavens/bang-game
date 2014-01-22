@@ -3,10 +3,13 @@
 
 package com.threerings.bang.store.data;
 
-import com.threerings.bang.store.client.StoreService;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.store.client.StoreService;
 
 /**
  * Provides the implementation of the {@link StoreService} interface
@@ -15,19 +18,21 @@ import com.threerings.presents.data.InvocationMarshaller;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class StoreMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from StoreService.java.")
+public class StoreMarshaller extends InvocationMarshaller<PlayerObject>
     implements StoreService
 {
     /** The method id used to dispatch {@link #buyGood} requests. */
     public static final int BUY_GOOD = 1;
 
     // from interface StoreService
-    public void buyGood (Client arg1, String arg2, Object[] arg3, InvocationService.ConfirmListener arg4)
+    public void buyGood (String arg1, Object[] arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, BUY_GOOD, new Object[] {
-            arg2, arg3, listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(BUY_GOOD, new Object[] {
+            arg1, arg2, listener3
         });
     }
 }

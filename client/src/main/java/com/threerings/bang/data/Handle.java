@@ -12,14 +12,9 @@ import com.threerings.util.Name;
  */
 public class Handle extends Name
 {
-    /** Creates a blank instance for unserialization. */
-    public Handle ()
-    {
-    }
-
     /**
-     * Creates a handle instance with the supplied name. Whitespace will
-     * automatically be trimmed from either end of the string.
+     * Creates a handle instance with the supplied name. Whitespace will automatically be trimmed
+     * from either end of the string.
      */
     public Handle (String name)
     {

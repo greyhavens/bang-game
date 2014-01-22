@@ -34,9 +34,9 @@ public class InvitePardnerDialog extends RequestDialog
     // documentation inherited
     protected void fireRequest (Object result)
     {
-        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
-        psvc.invitePardner(_ctx.getClient(), _handle, (String)result, this);
+        _ctx.getClient().requireService(PlayerService.class).invitePardner(
+            _handle, (String)result, this);
     }
-    
+
     protected Handle _handle;
 }

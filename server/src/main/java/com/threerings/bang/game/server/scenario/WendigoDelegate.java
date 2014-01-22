@@ -231,8 +231,7 @@ public class WendigoDelegate extends CounterDelegate
         int[] survivals = new int[bangobj.players.length];
         int[] talsurvivals = new int[bangobj.players.length];
 
-        Piece[] pieces = bangobj.getPieceArray();
-        for (Piece p : pieces) {
+        for (Piece p : bangobj.getPieceArray()) {
             if (p instanceof Unit && p.owner > -1) {
                 if (p.isAlive()) {
                     survivals[p.owner]++;

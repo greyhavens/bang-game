@@ -142,7 +142,7 @@ public class TutorialGameOverView extends SteelWindow
                     _start.setEnabled(true);
                 }
             };
-            psvc.playTutorial(_bctx.getClient(), action, rl);
+            psvc.playTutorial(action, rl);
             _start.setEnabled(false);
         }
     }

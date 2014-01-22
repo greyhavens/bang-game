@@ -231,7 +231,7 @@ public class NewLookView extends BContainer
                 _buy.setEnabled(true);
             }
         };
-        _barbobj.service.purchaseLook(_ctx.getClient(), getLookConfig(), cl);
+        _barbobj.service.purchaseLook(getLookConfig(), cl);
     }
 
     @Override // documentation inherited

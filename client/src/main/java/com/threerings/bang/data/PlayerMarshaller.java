@@ -3,10 +3,12 @@
 
 package com.threerings.bang.data;
 
-import com.threerings.bang.client.PlayerService;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.bang.client.PlayerService;
 
 /**
  * Provides the implementation of the {@link PlayerService} interface
@@ -15,19 +17,21 @@ import com.threerings.presents.data.InvocationMarshaller;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class PlayerMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from PlayerService.java.")
+public class PlayerMarshaller extends InvocationMarshaller<PlayerObject>
     implements PlayerService
 {
     /** The method id used to dispatch {@link #bootPlayer} requests. */
     public static final int BOOT_PLAYER = 1;
 
     // from interface PlayerService
-    public void bootPlayer (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
+    public void bootPlayer (Handle arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, BOOT_PLAYER, new Object[] {
-            arg2, listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(BOOT_PLAYER, new Object[] {
+            arg1, listener2
         });
     }
 
@@ -35,12 +39,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int CREATE_ACCOUNT = 2;
 
     // from interface PlayerService
-    public void createAccount (Client arg1, String arg2, String arg3, String arg4, String arg5, long arg6, InvocationService.ConfirmListener arg7)
+    public void createAccount (String arg1, String arg2, String arg3, String arg4, long arg5, InvocationService.ConfirmListener arg6)
     {
-        InvocationMarshaller.ConfirmMarshaller listener7 = new InvocationMarshaller.ConfirmMarshaller();
-        listener7.listener = arg7;
-        sendRequest(arg1, CREATE_ACCOUNT, new Object[] {
-            arg2, arg3, arg4, arg5, Long.valueOf(arg6), listener7
+        InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
+        listener6.listener = arg6;
+        sendRequest(CREATE_ACCOUNT, new Object[] {
+            arg1, arg2, arg3, arg4, Long.valueOf(arg5), listener6
         });
     }
 
@@ -48,12 +52,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int DESTROY_ITEM = 3;
 
     // from interface PlayerService
-    public void destroyItem (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
+    public void destroyItem (int arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, DESTROY_ITEM, new Object[] {
-            Integer.valueOf(arg2), listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(DESTROY_ITEM, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 
@@ -61,12 +65,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int GET_POSTER_INFO = 4;
 
     // from interface PlayerService
-    public void getPosterInfo (Client arg1, Handle arg2, InvocationService.ResultListener arg3)
+    public void getPosterInfo (Handle arg1, InvocationService.ResultListener arg2)
     {
-        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, GET_POSTER_INFO, new Object[] {
-            arg2, listener3
+        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
+        listener2.listener = arg2;
+        sendRequest(GET_POSTER_INFO, new Object[] {
+            arg1, listener2
         });
     }
 
@@ -74,12 +78,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int INVITE_PARDNER = 5;
 
     // from interface PlayerService
-    public void invitePardner (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
+    public void invitePardner (Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, INVITE_PARDNER, new Object[] {
-            arg2, arg3, listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(INVITE_PARDNER, new Object[] {
+            arg1, arg2, listener3
         });
     }
 
@@ -87,12 +91,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int NOTE_FOLK = 6;
 
     // from interface PlayerService
-    public void noteFolk (Client arg1, int arg2, int arg3, InvocationService.ConfirmListener arg4)
+    public void noteFolk (int arg1, int arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, NOTE_FOLK, new Object[] {
-            Integer.valueOf(arg2), Integer.valueOf(arg3), listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(NOTE_FOLK, new Object[] {
+            Integer.valueOf(arg1), Integer.valueOf(arg2), listener3
         });
     }
 
@@ -100,12 +104,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int PLAY_BOUNTY_GAME = 7;
 
     // from interface PlayerService
-    public void playBountyGame (Client arg1, String arg2, String arg3, InvocationService.InvocationListener arg4)
+    public void playBountyGame (String arg1, String arg2, InvocationService.InvocationListener arg3)
     {
-        ListenerMarshaller listener4 = new ListenerMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, PLAY_BOUNTY_GAME, new Object[] {
-            arg2, arg3, listener4
+        ListenerMarshaller listener3 = new ListenerMarshaller();
+        listener3.listener = arg3;
+        sendRequest(PLAY_BOUNTY_GAME, new Object[] {
+            arg1, arg2, listener3
         });
     }
 
@@ -113,12 +117,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int PLAY_COMPUTER = 8;
 
     // from interface PlayerService
-    public void playComputer (Client arg1, int arg2, String[] arg3, String arg4, boolean arg5, InvocationService.InvocationListener arg6)
+    public void playComputer (int arg1, String[] arg2, String arg3, boolean arg4, InvocationService.InvocationListener arg5)
     {
-        ListenerMarshaller listener6 = new ListenerMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, PLAY_COMPUTER, new Object[] {
-            Integer.valueOf(arg2), arg3, arg4, Boolean.valueOf(arg5), listener6
+        ListenerMarshaller listener5 = new ListenerMarshaller();
+        listener5.listener = arg5;
+        sendRequest(PLAY_COMPUTER, new Object[] {
+            Integer.valueOf(arg1), arg2, arg3, Boolean.valueOf(arg4), listener5
         });
     }
 
@@ -126,12 +130,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int PLAY_PRACTICE = 9;
 
     // from interface PlayerService
-    public void playPractice (Client arg1, String arg2, InvocationService.InvocationListener arg3)
+    public void playPractice (String arg1, InvocationService.InvocationListener arg2)
     {
-        ListenerMarshaller listener3 = new ListenerMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, PLAY_PRACTICE, new Object[] {
-            arg2, listener3
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(PLAY_PRACTICE, new Object[] {
+            arg1, listener2
         });
     }
 
@@ -139,12 +143,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int PLAY_TUTORIAL = 10;
 
     // from interface PlayerService
-    public void playTutorial (Client arg1, String arg2, InvocationService.InvocationListener arg3)
+    public void playTutorial (String arg1, InvocationService.InvocationListener arg2)
     {
-        ListenerMarshaller listener3 = new ListenerMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, PLAY_TUTORIAL, new Object[] {
-            arg2, listener3
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(PLAY_TUTORIAL, new Object[] {
+            arg1, listener2
         });
     }
 
@@ -152,12 +156,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int PREP_SONG_FOR_DOWNLOAD = 11;
 
     // from interface PlayerService
-    public void prepSongForDownload (Client arg1, String arg2, InvocationService.ResultListener arg3)
+    public void prepSongForDownload (String arg1, InvocationService.ResultListener arg2)
     {
-        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, PREP_SONG_FOR_DOWNLOAD, new Object[] {
-            arg2, listener3
+        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
+        listener2.listener = arg2;
+        sendRequest(PREP_SONG_FOR_DOWNLOAD, new Object[] {
+            arg1, listener2
         });
     }
 
@@ -165,12 +169,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int REGISTER_COMPLAINT = 12;
 
     // from interface PlayerService
-    public void registerComplaint (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
+    public void registerComplaint (Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, REGISTER_COMPLAINT, new Object[] {
-            arg2, arg3, listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(REGISTER_COMPLAINT, new Object[] {
+            arg1, arg2, listener3
         });
     }
 
@@ -178,12 +182,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int REMOVE_PARDNER = 13;
 
     // from interface PlayerService
-    public void removePardner (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
+    public void removePardner (Handle arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, REMOVE_PARDNER, new Object[] {
-            arg2, listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(REMOVE_PARDNER, new Object[] {
+            arg1, listener2
         });
     }
 
@@ -191,12 +195,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int RESPOND_TO_NOTIFICATION = 14;
 
     // from interface PlayerService
-    public void respondToNotification (Client arg1, Comparable<?> arg2, int arg3, InvocationService.ConfirmListener arg4)
+    public void respondToNotification (Comparable<?> arg1, int arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, RESPOND_TO_NOTIFICATION, new Object[] {
-            arg2, Integer.valueOf(arg3), listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(RESPOND_TO_NOTIFICATION, new Object[] {
+            arg1, Integer.valueOf(arg2), listener3
         });
     }
 
@@ -204,12 +208,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int UPDATE_POSTER_INFO = 15;
 
     // from interface PlayerService
-    public void updatePosterInfo (Client arg1, int arg2, String arg3, int[] arg4, InvocationService.ConfirmListener arg5)
+    public void updatePosterInfo (int arg1, String arg2, int[] arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
-        listener5.listener = arg5;
-        sendRequest(arg1, UPDATE_POSTER_INFO, new Object[] {
-            Integer.valueOf(arg2), arg3, arg4, listener5
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(UPDATE_POSTER_INFO, new Object[] {
+            Integer.valueOf(arg1), arg2, arg3, listener4
         });
     }
 }

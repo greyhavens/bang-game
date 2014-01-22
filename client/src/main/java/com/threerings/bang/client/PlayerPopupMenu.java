@@ -122,7 +122,7 @@ public class PlayerPopupMenu extends BPopupMenu
                 ParlorObject parlor = (ParlorObject)pobj;
                 BangOccupantInfo boi = (BangOccupantInfo)parlor.getOccupantInfo(_handle);
                 if (boi != null) {
-                    parlor.service.bootPlayer(_ctx.getClient(), boi.getBodyOid());
+                    parlor.service.bootPlayer(boi.getBodyOid());
                 }
             }
 
@@ -269,7 +269,7 @@ public class PlayerPopupMenu extends BPopupMenu
     protected void bootPlayer ()
     {
         PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
-        psvc.bootPlayer(_ctx.getClient(), _handle, new PlayerService.ConfirmListener() {
+        psvc.bootPlayer(_handle, new PlayerService.ConfirmListener() {
             public void requestProcessed () {
                 String msg = MessageBundle.tcompose("m.player_booted", _handle);
                 _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
@@ -283,7 +283,7 @@ public class PlayerPopupMenu extends BPopupMenu
     protected void removePardner ()
     {
         PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
-        psvc.removePardner(_ctx.getClient(), _handle, new PlayerService.ConfirmListener() {
+        psvc.removePardner(_handle, new PlayerService.ConfirmListener() {
             public void requestProcessed () {
                 String msg = MessageBundle.tcompose("m.pardner_removed", _handle);
                 _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
@@ -337,7 +337,7 @@ public class PlayerPopupMenu extends BPopupMenu
                 _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, cause);
             }
         };
-        psvc.registerComplaint(_ctx.getClient(), _handle, reason, listener);
+        psvc.registerComplaint(_handle, reason, listener);
     }
 
     protected BangContext _ctx;

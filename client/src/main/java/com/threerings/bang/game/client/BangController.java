@@ -338,14 +338,13 @@ public class BangController extends GameController
 
         // determine which units are available for selection
         _selections.clear();
-        Piece[] pieces = _bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if ((pieces[ii].owner != _pidx) || !(pieces[ii] instanceof Unit) ||
-                _view.view.hasAdvanceOrder(pieces[ii].pieceId) ||
-                !_view.view.isSelectable(pieces[ii])) {
+        for (Piece piece : _bangobj.getPieceArray()) {
+            if ((piece.owner != _pidx) || !(piece instanceof Unit) ||
+                _view.view.hasAdvanceOrder(piece.pieceId) ||
+                !_view.view.isSelectable(piece)) {
                 continue;
             }
-            _selections.add((Unit)pieces[ii]);
+            _selections.add((Unit)piece);
         }
         Collections.sort(_selections, UNIT_COMPARATOR);
 
@@ -418,7 +417,7 @@ public class BangController extends GameController
         };
 
         log.info("Requesting move and fire", "[unit", unit, "to", "+"+tx+"+"+ty, "tid", targetId);
-        _bangobj.service.order(_ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, rl);
+        _bangobj.service.order(pieceId, (short)tx, (short)ty, targetId, rl);
 
         // clear out our last selected unit as we want to start afresh
         _lastSelection = -1;
@@ -429,7 +428,7 @@ public class BangController extends GameController
     {
         log.info("Requesting order cancellation", "pid", pieceId);
         // if the order is canceled, we'll hear about it via orderInvalidated
-        _bangobj.service.cancelOrder(_ctx.getClient(), pieceId);
+        _bangobj.service.cancelOrder(pieceId);
     }
 
     /** Handles a request to place a card. */
@@ -485,7 +484,7 @@ public class BangController extends GameController
                     _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, reason);
                 }
             };
-            _bangobj.service.playCard(_ctx.getClient(), cardId, target, cl);
+            _bangobj.service.playCard(cardId, target, cl);
         }
     }
 

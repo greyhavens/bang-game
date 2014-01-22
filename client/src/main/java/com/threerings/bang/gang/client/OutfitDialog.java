@@ -22,7 +22,6 @@ import com.jmex.bui.util.Dimension;
 import com.samskivert.util.ArrayUtil;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
@@ -122,9 +121,8 @@ public class OutfitDialog extends BDecoratedWindow
             public DSet<Good> getGoods() {
                 return _hideoutobj.rentalGoods;
             }
-            public void buyGood (
-                Client client, String type, Object[] args, InvocationService.ConfirmListener cl) {
-                _hideoutobj.service.rentGangGood(client, type, args, cl);
+            public void buyGood (String type, Object[] args, InvocationService.ConfirmListener cl) {
+                _hideoutobj.service.rentGangGood(type, args, cl);
             }
         };
         _palette.init(_goodsobj);
@@ -219,7 +217,7 @@ public class OutfitDialog extends BDecoratedWindow
                     _status.setStatus(_msgs.xlate(cause), true);
                 }
             };
-            _goodsobj.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
+            _goodsobj.buyGood(_good.getType(), _args, cl);
 
         } else if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);

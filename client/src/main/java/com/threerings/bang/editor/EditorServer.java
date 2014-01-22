@@ -20,7 +20,7 @@ import static com.threerings.bang.Log.log;
 public class EditorServer extends CrowdServer
 {
     /** Configures dependencies needed by the Editor server. */
-    public static class Module extends CrowdServer.Module
+    public static class Module extends CrowdServer.CrowdModule
     {
         @Override protected void configure () {
             super.configure();

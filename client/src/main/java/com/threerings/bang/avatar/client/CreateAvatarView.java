@@ -182,7 +182,7 @@ public class CreateAvatarView extends SteelWindow
 
         Handle handle = new Handle(_handle.getText());
         boolean isMale = (_gender.getSelectedIndex() == 0);
-        asvc.createAvatar(_ctx.getClient(), handle, isMale, _look.getLookConfig(),
+        asvc.createAvatar(handle, isMale, _look.getLookConfig(),
                           _look.getDefaultArticleColorizations(), cl);
     }
 

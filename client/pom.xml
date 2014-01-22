@@ -28,12 +28,12 @@
     <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>narya</artifactId>
-      <version>1.15-SNAPSHOT</version>
+      <version>${narya.version}</version>
     </dependency>
     <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>nenya</artifactId>
-      <version>1.6-SNAPSHOT</version>
+      <version>${nenya.version}</version>
     </dependency>
     <dependency>
       <groupId>com.threerings</groupId>
@@ -83,6 +83,44 @@
   </dependencies>
 
   <profiles>
+    <profile>
+      <id>genservice</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>genservice</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <target>
+                    <taskdef resource="com/threerings/presents/tools.properties"
+                             classpathref="maven.plugin.classpath"/>
+                    <genservice header="${basedir}/../lib/SOURCE_HEADER"
+                                classpathref="maven.compile.classpath">
+                      <fileset dir="${project.build.sourceDirectory}" includes="**/*Service.java"/>
+                    </genservice>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>com.threerings</groupId>
+                <artifactId>narya-tools</artifactId>
+                <version>${narya.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>client</id>
       <build>

@@ -215,7 +215,7 @@ public class BountyGameEditor extends BDecoratedWindow
             ReportingListener rl = new ReportingListener(
                 _ctx, OfficeCodes.OFFICE_MSGS, "m.test_game_failed");
             try {
-                _offobj.service.testBountyGame(_ctx.getClient(), createConfig(), rl);
+                _offobj.service.testBountyGame(createConfig(), rl);
                 _ctx.getBangClient().clearPopup(this, true);
             } catch (Exception e) {
                 String msg = MessageBundle.tcompose("m.test_game_failed", e.getMessage());

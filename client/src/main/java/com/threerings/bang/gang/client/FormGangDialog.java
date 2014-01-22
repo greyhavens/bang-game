@@ -31,7 +31,7 @@ public class FormGangDialog extends RequestDialog
     {
         ctx.getBangClient().displayPopup(new FormGangDialog(ctx, status, hsvc), true, 400);
     }
-    
+
     public FormGangDialog (BangContext ctx, StatusLabel status, HideoutService hsvc)
     {
         super(ctx, HIDEOUT_MSGS, "m.gang_name_tip", "m.form_gang", "m.cancel", "m.formed_gang",
@@ -42,20 +42,20 @@ public class FormGangDialog extends RequestDialog
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
         add(1, ncont);
         ncont.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, "m.gang_name_prefix")));
-        
+
         // initialize the root with the player's name
         _root = new BTextField(ctx.getUserObject().handle.toString(),
             NameFactory.getValidator().getMaxHandleLength());
         _root.setPreferredWidth(140);
         ncont.add(_root);
-        
+
         // sort the gang name suffixes by name and start with a random one
         String[] suffixes = NameFactory.getCreator().getGangSuffixes().toArray(new String[0]);
         QuickSort.sort(suffixes);
         _suffix = new BComboBox(suffixes);
         _suffix.selectItem(RandomUtil.getInt(suffixes.length));
         ncont.add(_suffix);
-        
+
         // enable the form button for valid roots
         new EnablingValidator(_root, _buttons[0]) {
             protected boolean checkEnabled (String text) {
@@ -63,16 +63,15 @@ public class FormGangDialog extends RequestDialog
             }
         };
     }
-    
+
     // documentation inherited
     protected void fireRequest (Object result)
     {
-        _hsvc.formGang(_ctx.getClient(), new Handle(_root.getText()),
-            (String)_suffix.getSelectedItem(), this);
+        _hsvc.formGang(new Handle(_root.getText()), (String)_suffix.getSelectedItem(), this);
     }
-    
+
     protected HideoutService _hsvc;
- 
-    protected BTextField _root;   
+
+    protected BTextField _root;
     protected BComboBox _suffix;
 }

@@ -31,10 +31,9 @@ public class TotemBaseDelegate extends CounterDelegate
         super.roundWillStart(bangobj);
 
         // locate our totem bases
-        Piece[] pieces = bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof TotemBase) {
-                _bases.add((TotemBase)pieces[ii]);
+        for (Piece p : bangobj.getPieceArray()) {
+            if (p instanceof TotemBase) {
+                _bases.add((TotemBase)p);
             }
         }
     }

@@ -348,7 +348,7 @@ public class TownView extends BWindow
             // trigger a marquee being displayed with the town name
             bangobj.marquee = townId.equals(_presented) ? null : MessageBundle.taint(bfile.name);
             bangobj.board = bfile.board;
-            bangobj.pieces = new ModifiableDSet<Piece>(bfile.pieces);
+            bangobj.pieces = new ModifiableDSet<Piece>(bfile.pieces.iterator());
             prepareForRound(bangobj, null, 0);
         }
 

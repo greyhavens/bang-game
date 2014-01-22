@@ -42,7 +42,7 @@ public class SaloonController extends PlaceController
                 _view.findMatchFailed(reason);
             }
         };
-        _salobj.service.findMatch(_ctx.getClient(), criterion, rl);
+        _salobj.service.findMatch(criterion, rl);
     }
 
     /**
@@ -55,7 +55,7 @@ public class SaloonController extends PlaceController
             return;
         }
         if (matchOid != -1) {
-            _salobj.service.leaveMatch(_ctx.getClient(), matchOid);
+            _salobj.service.leaveMatch(matchOid);
         }
         _view.clearMatchView(null);
     }

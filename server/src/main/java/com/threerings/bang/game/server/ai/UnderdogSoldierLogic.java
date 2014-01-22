@@ -6,6 +6,7 @@ package com.threerings.bang.game.server.ai;
 import java.awt.Point;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.RandomUtil;
@@ -22,8 +23,7 @@ import com.threerings.bang.game.util.PointSet;
 public class UnderdogSoldierLogic extends PieceLogic
 {
     @Override // documentation inherited
-    protected void moveUnit (
-       Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         // determine each player's rank based on their points
         int[] spoints = _bangobj.points.clone();

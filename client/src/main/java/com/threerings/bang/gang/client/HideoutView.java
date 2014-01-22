@@ -357,7 +357,7 @@ public class HideoutView extends ShopView
                     new EnablingValidator(_input, _buttons[0]);
                 }
                 protected void fireRequest (Object result) {
-                    _hideoutobj.service.broadcastToMembers(_ctx.getClient(), (String)result, this);
+                    _hideoutobj.service.broadcastToMembers((String)result, this);
                 }
             }, true, 400);
     }
@@ -372,7 +372,7 @@ public class HideoutView extends ShopView
         _ctx.getBangClient().displayPopup(
             new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
                 protected void fireRequest (Object result) {
-                    _hideoutobj.service.leaveGang(_ctx.getClient(), this);
+                    _hideoutobj.service.leaveGang(this);
                 }
             }, true, 400);
     }

@@ -18,7 +18,6 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.server.InvocationException;
 
@@ -40,6 +39,7 @@ import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.ParlorConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorObject;
+import com.threerings.bang.saloon.data.SaloonMarshaller;
 import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;
@@ -99,11 +99,9 @@ public class SaloonManager extends MatchHostManager
                     return;
                 }
                 if (_clearThisWeek) {
-                    TopRankedList[] lists = rankobj.getTopRanked().toArray(
-                            new TopRankedList[rankobj.getTopRanked().size()]);
-                    for (int ii = 0; ii < lists.length; ii++) {
-                        if (lists[ii].period != TopRankedList.LIFETIME) {
-                            rankobj.removeFromTopRanked(lists[ii].getKey());
+                    for (TopRankedList list : rankobj.getTopRanked().toArrayList()) {
+                        if (list.period != TopRankedList.LIFETIME) {
+                            rankobj.removeFromTopRanked(list.getKey());
                         }
                     }
                 }
@@ -118,7 +116,7 @@ public class SaloonManager extends MatchHostManager
     }
 
     // documentation inherited from interface SaloonProvider
-    public void createParlor (ClientObject caller, ParlorInfo.Type type, String password,
+    public void createParlor (PlayerObject caller, ParlorInfo.Type type, String password,
                               boolean matched, SaloonService.ResultListener rl)
         throws InvocationException
     {
@@ -152,7 +150,7 @@ public class SaloonManager extends MatchHostManager
     }
 
     // documentation inherited from interface SaloonProvider
-    public void joinParlor (ClientObject caller, Handle creator, String password,
+    public void joinParlor (PlayerObject caller, Handle creator, String password,
                             SaloonService.ResultListener rl)
         throws InvocationException
     {
@@ -190,7 +188,7 @@ public class SaloonManager extends MatchHostManager
 
         // register our invocation service
         _salobj = (SaloonObject)_plobj;
-        _salobj.setService(BangServer.invmgr.registerDispatcher(new SaloonDispatcher(this)));
+        _salobj.setService(BangServer.invmgr.registerProvider(this, SaloonMarshaller.class));
 
         // create our default parlor
         createParlor(new Handle("!!!SERVER!!!"), ParlorInfo.Type.SOCIAL, null, true, 0, true, null);

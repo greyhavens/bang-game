@@ -128,7 +128,7 @@ public class SongDownloadView extends BDecoratedWindow
     {
         // request a temporary identifier through which to download this song
         PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
-        psvc.prepSongForDownload(_ctx.getClient(), _song, new PlayerService.ResultListener() {
+        psvc.prepSongForDownload(_song, new PlayerService.ResultListener() {
             public void requestProcessed (Object result) {
                 actuallyStartDownload((String)result);
             }

@@ -17,7 +17,6 @@ import com.samskivert.util.Invoker;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.Name;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
@@ -45,6 +44,7 @@ import com.threerings.bang.bounty.client.OfficeService;
 import com.threerings.bang.bounty.data.BoardInfo;
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
+import com.threerings.bang.bounty.data.OfficeMarshaller;
 import com.threerings.bang.bounty.data.OfficeObject;
 import com.threerings.bang.bounty.data.RecentCompleters;
 import com.threerings.bang.bounty.server.persist.BountyRepository;
@@ -63,7 +63,7 @@ public class OfficeManager extends ShopManager
      * This would be part of {@link OfficeService} but we need to be able to call it at the end of
      * a bounty game at which point we are not in the Sheriff's Office.
      */
-    public void playBountyGame (ClientObject caller, String bountyId, final String gameId,
+    public void playBountyGame (PlayerObject caller, String bountyId, final String gameId,
                                 final OfficeService.InvocationListener listener)
         throws InvocationException
     {
@@ -180,7 +180,7 @@ public class OfficeManager extends ShopManager
     }
 
     // from interface OfficeProvider
-    public void testBountyGame (ClientObject caller, BangConfig config,
+    public void testBountyGame (PlayerObject caller, BangConfig config,
                                 OfficeService.InvocationListener listener)
         throws InvocationException
     {
@@ -257,7 +257,7 @@ public class OfficeManager extends ShopManager
 
         // register our invocation service
         _offobj = (OfficeObject)_plobj;
-        _offobj.setService(BangServer.invmgr.registerDispatcher(new OfficeDispatcher(this)));
+        _offobj.setService(BangServer.invmgr.registerProvider(this, OfficeMarshaller.class));
 
         // publish all known boards as board info records
         ArrayList<BoardInfo> infos = new ArrayList<BoardInfo>();

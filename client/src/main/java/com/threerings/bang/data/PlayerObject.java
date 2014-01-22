@@ -7,6 +7,7 @@ import java.sql.Date;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import com.threerings.util.Name;
 
@@ -110,7 +111,7 @@ public class PlayerObject extends BodyObject
     public boolean isMale;
 
     /** Indicates which access control tokens are held by this user. */
-    public BangTokenRing tokens = new BangTokenRing();
+    public BangTokenRing tokens = new BangTokenRing(0);
 
     /** The id of the user's gang, if any. */
     public int gangId;
@@ -379,9 +380,9 @@ public class PlayerObject extends BodyObject
      * Returns a snapshot of this user's inventory, useful for iterating over if you plan to remove
      * items from their inventory.
      */
-    public Item[] inventorySnapshot ()
+    public List<Item> inventorySnapshot ()
     {
-        return inventory.toArray(new Item[inventory.size()]);
+        return inventory.toArrayList();
     }
 
     /**

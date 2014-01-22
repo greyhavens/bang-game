@@ -3,10 +3,13 @@
 
 package com.threerings.bang.data;
 
-import com.threerings.bang.client.BangPeerService;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.bang.client.BangPeerService;
 
 /**
  * Provides the implementation of the {@link BangPeerService} interface
@@ -15,17 +18,19 @@ import com.threerings.presents.data.InvocationMarshaller;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class BangPeerMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from BangPeerService.java.")
+public class BangPeerMarshaller extends InvocationMarshaller<ClientObject>
     implements BangPeerService
 {
     /** The method id used to dispatch {@link #deliverGangInvite} requests. */
     public static final int DELIVER_GANG_INVITE = 1;
 
     // from interface BangPeerService
-    public void deliverGangInvite (Client arg1, Handle arg2, Handle arg3, int arg4, Handle arg5, String arg6)
+    public void deliverGangInvite (Handle arg1, Handle arg2, int arg3, Handle arg4, String arg5)
     {
-        sendRequest(arg1, DELIVER_GANG_INVITE, new Object[] {
-            arg2, arg3, Integer.valueOf(arg4), arg5, arg6
+        sendRequest(DELIVER_GANG_INVITE, new Object[] {
+            arg1, arg2, Integer.valueOf(arg3), arg4, arg5
         });
     }
 
@@ -33,10 +38,10 @@ public class BangPeerMarshaller extends InvocationMarshaller
     public static final int DELIVER_ITEM = 2;
 
     // from interface BangPeerService
-    public void deliverItem (Client arg1, Item arg2, String arg3)
+    public void deliverItem (Item arg1, String arg2)
     {
-        sendRequest(arg1, DELIVER_ITEM, new Object[] {
-            arg2, arg3
+        sendRequest(DELIVER_ITEM, new Object[] {
+            arg1, arg2
         });
     }
 
@@ -44,10 +49,10 @@ public class BangPeerMarshaller extends InvocationMarshaller
     public static final int DELIVER_PARDNER_INVITE = 3;
 
     // from interface BangPeerService
-    public void deliverPardnerInvite (Client arg1, Handle arg2, Handle arg3, String arg4)
+    public void deliverPardnerInvite (Handle arg1, Handle arg2, String arg3)
     {
-        sendRequest(arg1, DELIVER_PARDNER_INVITE, new Object[] {
-            arg2, arg3, arg4
+        sendRequest(DELIVER_PARDNER_INVITE, new Object[] {
+            arg1, arg2, arg3
         });
     }
 
@@ -55,10 +60,10 @@ public class BangPeerMarshaller extends InvocationMarshaller
     public static final int DELIVER_PARDNER_INVITE_RESPONSE = 4;
 
     // from interface BangPeerService
-    public void deliverPardnerInviteResponse (Client arg1, Handle arg2, Handle arg3, boolean arg4, boolean arg5)
+    public void deliverPardnerInviteResponse (Handle arg1, Handle arg2, boolean arg3, boolean arg4)
     {
-        sendRequest(arg1, DELIVER_PARDNER_INVITE_RESPONSE, new Object[] {
-            arg2, arg3, Boolean.valueOf(arg4), Boolean.valueOf(arg5)
+        sendRequest(DELIVER_PARDNER_INVITE_RESPONSE, new Object[] {
+            arg1, arg2, Boolean.valueOf(arg3), Boolean.valueOf(arg4)
         });
     }
 
@@ -66,10 +71,10 @@ public class BangPeerMarshaller extends InvocationMarshaller
     public static final int DELIVER_PARDNER_REMOVAL = 5;
 
     // from interface BangPeerService
-    public void deliverPardnerRemoval (Client arg1, Handle arg2, Handle arg3)
+    public void deliverPardnerRemoval (Handle arg1, Handle arg2)
     {
-        sendRequest(arg1, DELIVER_PARDNER_REMOVAL, new Object[] {
-            arg2, arg3
+        sendRequest(DELIVER_PARDNER_REMOVAL, new Object[] {
+            arg1, arg2
         });
     }
 
@@ -77,12 +82,12 @@ public class BangPeerMarshaller extends InvocationMarshaller
     public static final int GET_GANG_OID = 6;
 
     // from interface BangPeerService
-    public void getGangOid (Client arg1, int arg2, InvocationService.ResultListener arg3)
+    public void getGangOid (int arg1, InvocationService.ResultListener arg2)
     {
-        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, GET_GANG_OID, new Object[] {
-            Integer.valueOf(arg2), listener3
+        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
+        listener2.listener = arg2;
+        sendRequest(GET_GANG_OID, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 }

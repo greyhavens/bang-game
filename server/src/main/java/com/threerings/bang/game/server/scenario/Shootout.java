@@ -38,11 +38,9 @@ public class Shootout extends Scenario
 
         // check to see whether anyone's pieces are still alive
         _havers.clear();
-        Piece[] pieces = bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if ((pieces[ii] instanceof Unit) &&
-                pieces[ii].isAlive()) {
-                _havers.add(pieces[ii].owner);
+        for (Piece p : bangobj.getPieceArray()) {
+            if ((p instanceof Unit) && p.isAlive()) {
+                _havers.add(p.owner);
             }
         }
 

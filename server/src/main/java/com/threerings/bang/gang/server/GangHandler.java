@@ -58,9 +58,9 @@ import com.threerings.crowd.server.PlaceRegistry;
 
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.server.ChatProvider;
-import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.chat.server.SpeakHandler;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.chat.server.SpeakUtil;
@@ -114,6 +114,7 @@ import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
+import com.threerings.bang.gang.data.GangPeerMarshaller;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.RentalGood;
@@ -2068,12 +2069,11 @@ public class GangHandler
         }
 
         // register the service for peers
-        _gangobj.gangPeerService =
-            _invmgr.registerDispatcher(new GangPeerDispatcher(this));
+        _gangobj.gangPeerService = _invmgr.registerProvider(this, GangPeerMarshaller.class);
 
         // register the speak service for local users
-        _gangobj.speakService = _invmgr.registerDispatcher(
-            new SpeakDispatcher(new SpeakHandler(_gangobj, this)));
+        _gangobj.speakService = _invmgr.registerProvider(
+            new SpeakHandler(_gangobj, this), SpeakMarshaller.class);
 
         // create our table game manager for this town
         _tmgr = new TableGameManager();
@@ -2305,15 +2305,13 @@ public class GangHandler
     {
         _gangobj = gangobj;
 
-        // rewrite the speak service with a provider of our own that forwards speech to
-        // the controlling node
-        _gangobj.speakService = _invmgr.registerDispatcher(
-            new SpeakDispatcher(new SpeakProvider() {
+        // rewrite the speak service with a provider of our own that forwards speech to the
+        // controlling node
+        _gangobj.speakService = _invmgr.registerProvider(new SpeakProvider() {
             public void speak (ClientObject caller, String message, byte mode) {
-                _gangobj.gangPeerService.sendSpeak(
-                    _client, ((PlayerObject)caller).handle, message, mode);
+                _gangobj.gangPeerService.sendSpeak(((PlayerObject)caller).handle, message, mode);
             }
-        }));
+        }, SpeakMarshaller.class);
 
         // create our local TableGameManager
         _tmgr = new TableGameManager();
@@ -2339,9 +2337,7 @@ public class GangHandler
     protected void didInit ()
     {
         // initialize any players already online
-        GangMemberEntry[] members = _gangobj.members.toArray(
-            new GangMemberEntry[_gangobj.members.size()]);
-        for (GangMemberEntry member : members) {
+        for (GangMemberEntry member : _gangobj.members.toArrayList()) {
             PlayerObject user = _locator.lookupPlayer(member.playerId);
             if (user != null) {
                 initPlayer(user, member);

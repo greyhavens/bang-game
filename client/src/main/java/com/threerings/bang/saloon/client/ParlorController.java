@@ -57,7 +57,7 @@ public class ParlorController extends PlaceController
                 _view.findSaloonMatchFailed(reason);
             }
         };
-        _parobj.service.findSaloonMatch(_ctx.getClient(), criterion, rl);
+        _parobj.service.findSaloonMatch(criterion, rl);
     }
 
     /**
@@ -69,7 +69,7 @@ public class ParlorController extends PlaceController
             return;
         }
         if (matchOid != -1) {
-            _parobj.service.leaveSaloonMatch(_ctx.getClient(), matchOid);
+            _parobj.service.leaveSaloonMatch(matchOid);
         }
         _view.clearSaloonMatchView(null);
     }

@@ -15,8 +15,7 @@ import com.google.inject.Singleton;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
-
-import com.threerings.presents.server.ShutdownManager;
+import com.samskivert.util.Lifecycle;
 
 import com.threerings.parlor.rating.util.Percentiler;
 
@@ -32,11 +31,11 @@ import static com.threerings.bang.Log.*;
  */
 @Singleton
 public class RatingManager
-    implements ShutdownManager.Shutdowner
+    implements Lifecycle.ShutdownComponent
 {
-    @Inject public RatingManager (ShutdownManager shutmgr)
+    @Inject public RatingManager (Lifecycle cycle)
     {
-        shutmgr.registerShutdowner(this);
+        cycle.addComponent(this);
     }
 
     /**
@@ -97,7 +96,7 @@ public class RatingManager
         return pct;
     }
 
-    // from RatingManager.Shutdowner
+    // from Lifecycle.ShutdownComponent
     public void shutdown ()
     {
         log.info("Rating manager shutting down.");

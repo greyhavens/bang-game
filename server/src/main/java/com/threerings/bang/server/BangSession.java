@@ -12,7 +12,6 @@ import com.samskivert.util.ObjectUtil;
 import com.threerings.presents.annotation.AuthInvoker;
 import com.threerings.presents.net.BootstrapData;
 import com.threerings.crowd.server.CrowdSession;
-import com.threerings.stats.data.Stat;
 
 import com.threerings.bang.admin.server.BangAdminManager;
 import com.threerings.bang.server.persist.BangStatRepository;
@@ -171,9 +170,7 @@ public class BangSession extends CrowdSession
     {
         try {
             // write out any modified stats
-            Stat[] stats = new Stat[user.stats.size()];
-            user.stats.toArray(stats);
-            _statrepo.writeModified(user.playerId, stats);
+            _statrepo.writeModified(user.playerId, user.stats.toArrayList());
 
             // write out any modified looks
             boolean updatedWanted = false;

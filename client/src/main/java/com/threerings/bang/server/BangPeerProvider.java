@@ -3,17 +3,22 @@
 
 package com.threerings.bang.server;
 
-import com.threerings.bang.client.BangPeerService;
-import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.Item;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
 
+import com.threerings.bang.client.BangPeerService;
+import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
+
 /**
  * Defines the server-side of the {@link BangPeerService}.
  */
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from BangPeerService.java.")
 public interface BangPeerProvider extends InvocationProvider
 {
     /**

@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
@@ -113,7 +114,7 @@ public abstract class Piece
      *
      * @return a list of effects to apply to the unit as a result of having been ticked or null.
      */
-    public ArrayList<Effect> tick (short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, List<Piece> pieces)
     {
         return null;
     }

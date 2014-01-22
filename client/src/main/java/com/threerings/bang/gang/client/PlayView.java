@@ -97,16 +97,15 @@ public class PlayView extends BContainer
 
     protected void findMatch (Criterion criterion)
     {
-        _hideoutobj.service.findMatch(_ctx.getClient(), criterion,
-            new HideoutService.ResultListener() {
-                public void requestProcessed (Object result) {
-                    displayMatchView((Integer)result);
-                }
-                public void requestFailed (String cause) {
-                    _status.setStatus(HIDEOUT_MSGS, cause, true);
-                    _crview.reenable();
-                }
-            });
+        _hideoutobj.service.findMatch(criterion, new HideoutService.ResultListener() {
+            public void requestProcessed (Object result) {
+                displayMatchView((Integer)result);
+            }
+            public void requestFailed (String cause) {
+                _status.setStatus(HIDEOUT_MSGS, cause, true);
+                _crview.reenable();
+            }
+        });
     }
 
     protected void displayMatchView (int matchOid)
@@ -143,7 +142,7 @@ public class PlayView extends BContainer
             return;
         }
         if (matchOid != -1) {
-            _hideoutobj.service.leaveMatch(_ctx.getClient(), matchOid);
+            _hideoutobj.service.leaveMatch(matchOid);
         }
 
         // out with the old match view

@@ -3,7 +3,6 @@
 
 package com.threerings.bang.bank.data;
 
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.dobj.ChangeListener;
 
@@ -37,8 +36,7 @@ public interface BestOffer
      * CoinExOfferInfo} for a posted offer or null for an immediately executed
      * transaction.
      */
-    public void postImmediateOffer (
-        Client client, int coins, int pricePerCoin, boolean buying, ResultListener rl);
+    public void postImmediateOffer (int coins, int pricePerCoin, boolean buying, ResultListener rl);
 
     public void addListener (ChangeListener listener);
 }

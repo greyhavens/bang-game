@@ -39,7 +39,6 @@ import com.threerings.resource.ResourceManager;
 
 import com.threerings.presents.annotation.AuthInvoker;
 import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.MessageEvent;
@@ -51,8 +50,9 @@ import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.data.SpeakObject;
+import com.threerings.crowd.chat.data.UserMessage;
+import com.threerings.crowd.chat.server.ChatHistory;
 import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.parlor.server.ParlorSender;
 
@@ -66,6 +66,7 @@ import com.threerings.util.StreamableHashMap;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.server.persist.LookRepository;
+import com.threerings.bang.data.PlayerMarshaller;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
 import com.threerings.bang.gang.server.persist.GangRepository;
 import com.threerings.bang.saloon.data.SaloonCodes;
@@ -162,7 +163,7 @@ public class PlayerManager
         throws PersistenceException
     {
         // register ourselves as the provider of the (bootstrap) PlayerService
-        BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), GLOBAL_GROUP);
+        BangServer.invmgr.registerProvider(this, PlayerMarshaller.class, GLOBAL_GROUP);
 
         // register our remote player observer and poster cache observer
         _pardwatcher = new RemotePlayerWatcher<PardnerEntry>() {
@@ -206,20 +207,15 @@ public class PlayerManager
 
         // register our download symlink cleaning interval; note that because this simply posts an
         // invoker unit, it is not routed through the dobjmgr
-        new Interval() {
+        new Interval(BangServer.invoker) {
             public void expired () {
-                BangServer.invoker.postUnit(new Invoker.Unit("purgeDownloadLinks") {
-                    public boolean invoke () {
-                        purgeDownloadLinks();
-                        return false;
-                    }
-                });
+                purgeDownloadLinks();
             }
         }.schedule(DOWNLOAD_PURGE_INTERVAL, true);
 
         // register our player purging interval if we're on frontier town
         if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
-            new Interval() {
+            new Interval(Interval.RUN_DIRECT) {
                 public void expired () {
                     purgeExpiredPlayers();
                 }
@@ -227,7 +223,7 @@ public class PlayerManager
         }
 
         // register our late night purging interval
-        new Interval() {
+        new Interval(BangServer.omgr) {
             public void expired () {
                 clearLateNighters();
             }
@@ -354,12 +350,11 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void invitePardner (ClientObject caller, final Handle handle, final String message,
+    public void invitePardner (final PlayerObject inviter, final Handle handle, final String message,
                                final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure we're not anonymous (the client should prevent this)
-        final PlayerObject inviter = (PlayerObject)caller;
         if (inviter.tokens.isAnonymous() || !inviter.hasCharacter()) {
             throw new InvocationException(INTERNAL_ERROR);
 
@@ -399,12 +394,11 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void respondToNotification (ClientObject caller, final Comparable<?> key, int resp,
+    public void respondToNotification (final PlayerObject player, final Comparable<?> key, int resp,
                                        final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure the notification exists
-        final PlayerObject player = (PlayerObject)caller;
         Notification notification = player.notifications.get(key);
         if (notification == null) {
             log.warning("Missing notification for response", "who", player.who(), "key", key);
@@ -435,12 +429,11 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void removePardner (ClientObject caller, final Handle handle,
+    public void removePardner (final PlayerObject player, final Handle handle,
                                final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure the pardner entry is present
-        final PlayerObject player = (PlayerObject)caller;
         PardnerEntry entry = player.pardners.get(handle);
         if (entry == null) {
             throw new InvocationException(INTERNAL_ERROR);
@@ -464,12 +457,10 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void playTutorial (ClientObject caller, String tutId,
+    public void playTutorial (PlayerObject player, String tutId,
                               PlayerService.InvocationListener il)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
-
         // if we're not allowing new games, fail immediately
         if (!RuntimeConfig.server.allowNewGames) {
             throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
@@ -526,11 +517,9 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void playPractice (ClientObject caller, String unit, PlayerService.InvocationListener il)
+    public void playPractice (PlayerObject player, String unit, PlayerService.InvocationListener il)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
-
         // if we're not allowing new games, fail immediately
         if (!RuntimeConfig.server.allowNewGames) {
             throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
@@ -548,12 +537,10 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void playComputer (ClientObject caller, int players, String[] scenarios, String board,
+    public void playComputer (PlayerObject player, int players, String[] scenarios, String board,
                               boolean autoplay, PlayerService.InvocationListener listener)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
-
         // if we're not allowing new games, fail immediately
         if (!RuntimeConfig.server.allowNewGames) {
             throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
@@ -585,7 +572,7 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void playBountyGame (ClientObject caller, String bountyId, String gameId,
+    public void playBountyGame (PlayerObject caller, String bountyId, String gameId,
                                 PlayerService.InvocationListener listener)
         throws InvocationException
     {
@@ -594,7 +581,7 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void getPosterInfo (ClientObject caller, final Handle handle,
+    public void getPosterInfo (PlayerObject caller, final Handle handle,
                                final PlayerService.ResultListener listener)
         throws InvocationException
     {
@@ -701,12 +688,10 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void updatePosterInfo (ClientObject caller, int playerId, String statement,
+    public void updatePosterInfo (final PlayerObject user, int playerId, String statement,
                                   int[] badgeIds, final PlayerService.ConfirmListener cl)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject)caller;
-
         // create a poster record and populate it
         final PosterRecord poster = new PosterRecord(playerId);
         poster.statement = statement;
@@ -742,11 +727,10 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void noteFolk (ClientObject caller, final int folkId, int note,
+    public void noteFolk (final PlayerObject user, final int folkId, int note,
                           PlayerService.ConfirmListener cl)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject) caller;
         int ixFoe = Arrays.binarySearch(user.foes, folkId);
         int ixFriend = Arrays.binarySearch(user.friends, folkId);
 
@@ -794,12 +778,10 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void registerComplaint (ClientObject caller, final Handle target, String reason,
+    public void registerComplaint (final PlayerObject user, final Handle target, String reason,
                                    PlayerService.ConfirmListener listener)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject)caller;
-
         // populate the event with what we can
         final EventRecord event = new EventRecord();
         event.source = user.username.toString();
@@ -810,7 +792,7 @@ public class PlayerManager
         // format and provide the complainer's chat history
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss:SSS");
         StringBuilder chatHistory = new StringBuilder();
-        for (SpeakUtil.ChatHistoryEntry histEntry : SpeakUtil.getChatHistory(user.handle)) {
+        for (ChatHistory.Entry histEntry : _history.get(user.handle)) {
             UserMessage umsg = (UserMessage)histEntry.message;
             chatHistory.append(df.format(new Date(umsg.timestamp))).append(' ');
             chatHistory.append(StringUtil.pad(ChatCodes.XLATE_MODES[umsg.mode], 10)).append(' ');
@@ -851,12 +833,11 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void prepSongForDownload (ClientObject caller, final String song,
+    public void prepSongForDownload (PlayerObject user, final String song,
                                      final PlayerService.ResultListener listener)
         throws InvocationException
     {
         // make sure the player owns this song
-        PlayerObject user = (PlayerObject)caller;
         if (!user.ownsSong(song)) {
             throw new InvocationException(ACCESS_DENIED);
         }
@@ -880,11 +861,10 @@ public class PlayerManager
 
     // from interface PlayerProvider
     public void destroyItem (
-        ClientObject caller, final int itemId, final PlayerService.ConfirmListener listener)
+        final PlayerObject user, final int itemId, final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure the player is holding the item
-        final PlayerObject user = (PlayerObject)caller;
         final Item item = user.inventory.get(itemId);
         if (item == null) {
             log.warning("User requested to destroy invalid item", "who", user.who(),
@@ -920,13 +900,11 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void createAccount (
-            ClientObject caller, final String username, final String password, final String email,
-            final String affiliate, long birthdate, final PlayerService.ConfirmListener listener)
+    public void createAccount (final PlayerObject user, final String username, final String password,
+                               final String email, final String affiliate, long birthdate,
+                               final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject)caller;
-
         if (_creatingAccounts.contains(user.playerId)) {
             listener.requestFailed(E_IN_PROGRESS);
             return;
@@ -982,7 +960,7 @@ public class PlayerManager
     }
 
     // documentation inherited from PlayerProvider
-    public void bootPlayer (ClientObject client, Handle handle,
+    public void bootPlayer (PlayerObject client, Handle handle,
                             PlayerService.ConfirmListener listener)
         throws InvocationException
     {
@@ -1654,6 +1632,7 @@ public class PlayerManager
     @Inject protected BangInvoker _invoker;
     @Inject protected ResourceManager _rsrcmgr;
     @Inject protected GoodsCatalog _goods;
+    @Inject protected ChatHistory _history;
     @Inject protected BangCoinManager _coinmgr;
     @Inject protected BangCoinExchangeManager _coinexmgr;
     @Inject protected BangPeerManager _peermgr;

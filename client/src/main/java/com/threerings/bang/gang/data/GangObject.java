@@ -4,6 +4,7 @@
 package com.threerings.bang.gang.data;
 
 import java.net.URL;
+import java.util.List;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
@@ -245,9 +246,9 @@ public class GangObject extends DObject
      * Returns a snapshot of this gang's inventory, useful for iterating over if you plan to remove
      * items from their inventory.
      */
-    public Item[] inventorySnapshot ()
+    public List<Item> inventorySnapshot ()
     {
-        return inventory.toArray(new Item[inventory.size()]);
+        return inventory.toArrayList();
     }
 
     // documentation inherited from interface SpeakObject

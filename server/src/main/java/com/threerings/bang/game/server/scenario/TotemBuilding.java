@@ -86,23 +86,23 @@ public class TotemBuilding extends Scenario
     }
 
     @Override // documentation inherited
-    public boolean addBonus (BangObject bangobj, Piece[] pieces)
+    public boolean addBonus (BangObject bangobj, List<Piece> pieces)
     {
         // count up the totem pieces that are "in play"
         int totems = 0;
         int crowns = 0;
         int bases = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
+        for (Piece p : pieces) {
             String type = null;
-            if (pieces[ii] instanceof TotemBonus) {
+            if (p instanceof TotemBonus) {
                 totems++;
-                type = ((TotemBonus)pieces[ii]).getConfig().type;
-            } else if (pieces[ii] instanceof Unit && TotemBonus.isHolding((Unit)pieces[ii])) {
+                type = ((TotemBonus)p).getConfig().type;
+            } else if (p instanceof Unit && TotemBonus.isHolding((Unit)p)) {
                 totems++;
-                type = ((Unit)pieces[ii]).holding;
-            } else if (pieces[ii] instanceof TotemBase) {
+                type = ((Unit)p).holding;
+            } else if (p instanceof TotemBase) {
                 bases++;
-                if (!((TotemBase)pieces[ii]).canAddPiece()) {
+                if (!((TotemBase)p).canAddPiece()) {
                     crowns++;
                 }
             }

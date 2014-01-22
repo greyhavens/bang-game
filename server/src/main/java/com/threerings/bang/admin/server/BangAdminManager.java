@@ -12,7 +12,6 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.chat.server.ChatProvider;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsServer;
@@ -24,6 +23,7 @@ import com.threerings.admin.server.AdminManager;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 
+import com.threerings.bang.admin.data.BangAdminMarshaller;
 import com.threerings.bang.admin.data.StatusObject;
 
 import static com.threerings.bang.Log.log;
@@ -45,7 +45,7 @@ public class BangAdminManager extends AdminManager
         // create and configure our status object
         statobj = omgr.registerObject(new StatusObject());
         statobj.serverStartTime = System.currentTimeMillis();
-        statobj.setService(invmgr.registerDispatcher(new BangAdminDispatcher(this)));
+        statobj.setService(invmgr.registerProvider(this, BangAdminMarshaller.class));
     }
 
     /**
@@ -78,9 +78,8 @@ public class BangAdminManager extends AdminManager
     }
 
     // from interface BangAdminProvider
-    public void scheduleReboot (ClientObject caller, int minutes)
+    public void scheduleReboot (PlayerObject user, int minutes)
     {
-        PlayerObject user = (PlayerObject)caller;
         if (!user.tokens.isSupport()) {
             log.warning("Got reboot schedule request from non-admin/support", "who", user.who());
             return;
@@ -133,11 +132,10 @@ public class BangAdminManager extends AdminManager
         @Inject protected ChatProvider _chatprov;
     }
 
-    /** This reads the status from the connection manager and stuffs it into
-     * our server status object every 5 seconds. Because it reads synchronized
-     * data and then just posts an event, it's OK that it runs directly on the
-     * Interval dispatch thread. */
-    protected Interval _conmgrStatsUpdater = new Interval() {
+    /** This reads the status from the connection manager and stuffs it into our server status
+     * object every 5 seconds. Because it reads synchronized data and then just posts an event,
+     * it's OK that it runs directly on the Interval dispatch thread. */
+    protected Interval _conmgrStatsUpdater = new Interval(Interval.RUN_DIRECT) {
         public void expired () {
             statobj.setConnStats(_conmgr.getStats());
         }

@@ -87,14 +87,13 @@ public class GoldRush extends Scenario
     }
 
     @Override // documentation inherited
-    public boolean addBonus (BangObject bangobj, Piece[] pieces)
+    public boolean addBonus (BangObject bangobj, List<Piece> pieces)
     {
         // count up the nuggets that are "in play"
         int nuggets = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (Bonus.isBonus(pieces[ii], NuggetEffect.NUGGET_BONUS) ||
-                (pieces[ii] instanceof Unit &&
-                 NuggetEffect.NUGGET_BONUS.equals(((Unit)pieces[ii]).holding))) {
+        for (Piece p : pieces) {
+            if (Bonus.isBonus(p, NuggetEffect.NUGGET_BONUS) ||
+                (p instanceof Unit && NuggetEffect.NUGGET_BONUS.equals(((Unit)p).holding))) {
                 nuggets++;
             }
         }

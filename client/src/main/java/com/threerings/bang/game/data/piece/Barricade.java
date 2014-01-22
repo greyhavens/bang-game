@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -18,11 +19,10 @@ import com.threerings.bang.game.data.effect.ClearPieceEffect;
 public class Barricade extends Piece
 {
     /** The number of ticks remaining until this barricade disappears. */
-    public transient int tickCounter = 6;    
+    public transient int tickCounter = 6;
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (
-            short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, List<Piece> pieces)
     {
         if (tickCounter-- > 0) {
             return null;
@@ -39,7 +39,7 @@ public class Barricade extends Piece
     {
         return board.getElevation(tx, ty);
     }
-    
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {

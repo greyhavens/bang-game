@@ -223,8 +223,7 @@ public class GangInfoView extends BContainer
         // documentation inherited
         protected void fireRequest (Object result)
         {
-            _hideoutobj.service.setStatement(
-                _ctx.getClient(), _statement.getText(), _url.getText(), this);
+            _hideoutobj.service.setStatement(_statement.getText(), _url.getText(), this);
         }
 
         protected BTextField _statement, _url;
@@ -276,7 +275,7 @@ public class GangInfoView extends BContainer
         // documentation inherited
         protected void fireRequest (Object result)
         {
-            _hideoutobj.service.addToCoffers(_ctx.getClient(),
+            _hideoutobj.service.addToCoffers(
                 parseInt(_scrip.getText()), parseInt(_coins.getText()), this);
         }
 

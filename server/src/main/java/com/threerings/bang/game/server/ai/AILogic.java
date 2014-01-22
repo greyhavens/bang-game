@@ -6,6 +6,7 @@ package com.threerings.bang.game.server.ai;
 import java.awt.Point;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.samskivert.util.QuickSort;
 import com.samskivert.util.RandomUtil;
@@ -64,12 +65,12 @@ public abstract class AILogic extends PieceLogic
      * @param pieces the array of pieces on the board.
      * @param tick the current tick.
      */
-    public void tick (Piece[] pieces, short tick)
+    public void tick (List<Piece> pieces, short tick)
     {
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Unit && pieces[ii].owner == _pidx &&
-                pieces[ii].isAlive() && pieces[ii].ticksUntilMovable(tick) == 0) {
-                Unit unit = (Unit)pieces[ii];
+        for (Piece piece : pieces) {
+            if (piece instanceof Unit && piece.owner == _pidx && piece.isAlive() &&
+                piece.ticksUntilMovable(tick) == 0) {
+                Unit unit = (Unit)piece;
                 _moves.clear();
                 _attacks.clear();
                 unit.computeMoves(_bangobj.board, _moves, _attacks);
@@ -93,7 +94,7 @@ public abstract class AILogic extends PieceLogic
      * @param moves the places to which the unit can move.
      * @param attacks the places the unit can attack.
      */
-    protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
     }
 
@@ -105,14 +106,13 @@ public abstract class AILogic extends PieceLogic
      * @param moves the places to which the unit can move.
      * @param attacks the places the unit can attack.
      */
-    protected void moveUnitDegraded (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnitDegraded (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         // unless we're really stupid, we'll generally attack someone if we can
         int rando = RandomUtil.getInt(100);
         if (rando < 3*_ai.skill/2) {
             Piece target = null;
-            for (int tt = 0; tt < pieces.length; tt++) {
-                Piece p = pieces[tt];
+            for (Piece p : pieces) {
                 if (p instanceof Unit && attacks.contains(p.x, p.y) &&
                     unit.validTarget(_bangobj, p, false)) {
                     target = p;
@@ -164,7 +164,7 @@ public abstract class AILogic extends PieceLogic
      *
      * @return true if we successfully moved, false if there were no suitable objectives.
      */
-    protected boolean moveUnit (Piece[] pieces, final Unit unit, PointSet moves,
+    protected boolean moveUnit (List<Piece> pieces, final Unit unit, PointSet moves,
                                 final ObjectiveEvaluator oeval, TargetEvaluator teval)
     {
         // gather the objectives of interest
@@ -198,7 +198,7 @@ public abstract class AILogic extends PieceLogic
      * @return true if we successfully moved towards the destination, false if we couldn't find a
      * path.
      */
-    protected boolean moveUnit (Piece[] pieces, Unit unit, PointSet moves, int dx, int dy,
+    protected boolean moveUnit (List<Piece> pieces, Unit unit, PointSet moves, int dx, int dy,
                                 int tdist, TargetEvaluator evaluator)
     {
         Point dest = null;
@@ -224,20 +224,19 @@ public abstract class AILogic extends PieceLogic
      * Finds and returns the best target that the unit can reach according to the provided
      * evaluator.
      */
-    protected Piece getBestTarget (Piece[] pieces, Unit unit, PointSet attacks,
+    protected Piece getBestTarget (List<Piece> pieces, Unit unit, PointSet attacks,
                                    PointSet preferredMoves, TargetEvaluator evaluator)
     {
         Piece best = null;
         int bweight = -1;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (!unit.validTarget(_bangobj, pieces[ii], false) ||
-                !attacks.contains(pieces[ii].x, pieces[ii].y)) {
+        for (Piece p : pieces) {
+            if (!unit.validTarget(_bangobj, p, false) || !attacks.contains(p.x, p.y)) {
                 continue;
             }
-            int dist = pieces[ii].getDistance(unit.x, unit.y);
-            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], dist, preferredMoves);
+            int dist = p.getDistance(unit.x, unit.y);
+            int tweight = evaluator.getWeight(_bangobj, unit, p, dist, preferredMoves);
             if (tweight > bweight) {
-                best = pieces[ii];
+                best = p;
                 bweight = tweight;
             }
         }
@@ -249,21 +248,21 @@ public abstract class AILogic extends PieceLogic
      * destination, according to the provided evaluator.
      */
     protected Piece getBestTarget (
-        Piece[] pieces, Unit unit, int dx, int dy, TargetEvaluator evaluator)
+        List<Piece> pieces, Unit unit, int dx, int dy, TargetEvaluator evaluator)
     {
         Piece best = null;
         int bweight = -1;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (!unit.validTarget(_bangobj, pieces[ii], false)) {
+        for (Piece p : pieces) {
+            if (!unit.validTarget(_bangobj, p, false)) {
                 continue;
             }
-            int dist = pieces[ii].getDistance(dx, dy);
+            int dist = p.getDistance(dx, dy);
             if (dist < unit.getMinFireDistance() || dist > unit.getMaxFireDistance()) {
                 continue;
             }
-            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], dist, EMPTY_POINT_SET);
+            int tweight = evaluator.getWeight(_bangobj, unit, p, dist, EMPTY_POINT_SET);
             if (tweight > bweight) {
-                best = pieces[ii];
+                best = p;
                 bweight = tweight;
             }
         }
@@ -276,7 +275,7 @@ public abstract class AILogic extends PieceLogic
      *
      * @param dest will be set to the location to move to for the target if one is found.
      */
-    protected Piece getBestTargetInMoves (Piece[] pieces, Unit unit, PointSet attacks,
+    protected Piece getBestTargetInMoves (List<Piece> pieces, Unit unit, PointSet attacks,
                                           PointSet moves, Point dest, TargetEvaluator evaluator)
     {
         Piece best = null;
@@ -303,7 +302,7 @@ public abstract class AILogic extends PieceLogic
     /**
      * Computes and returns the average location of all of our owned and living pieces.
      */
-    protected Point getControlCenter (Piece[] pieces)
+    protected Point getControlCenter (List<Piece> pieces)
     {
         Point center = new Point();
         int owned = 0;

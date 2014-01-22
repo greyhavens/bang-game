@@ -117,7 +117,7 @@ public class ForestGuardians extends Scenario
         _treedel.resetTrees(bangobj, _difficulty);
 
         // place the four fetishes
-        Piece[] pieces = bangobj.getPieceArray();
+        List<Piece> pieces = bangobj.getPieceArray();
         placeBonus(bangobj, pieces,
             Bonus.createBonus("indian_post/fetish_bear"), _fetishSpots);
         placeBonus(bangobj, pieces,

@@ -3,8 +3,9 @@
 
 package com.threerings.bang.client;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import com.samskivert.util.Predicate;
 
@@ -149,8 +150,8 @@ public class InventoryPalette extends IconPalette
     protected void populate ()
     {
         PlayerObject user = _ctx.getUserObject();
-        Item[] items = user.inventorySnapshot();
-        Arrays.sort(items, _itemComparator);
+        List<Item> items = user.inventorySnapshot();
+        Collections.sort(items, _itemComparator);
         // sort the items in some vaguely sensible order
         for (Item item : items) {
             if (!_itemp.isMatch(item)) {

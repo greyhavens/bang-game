@@ -255,7 +255,7 @@ public class GangStoreDialog extends BDecoratedWindow
                         _status.setStatus(_msgs.xlate(cause), true);
                     }
                 };
-                _hideoutobj.service.getUpgradeQuote(_ctx.getClient(), fgood, rl);
+                _hideoutobj.service.getUpgradeQuote(fgood, rl);
             }
         }
 

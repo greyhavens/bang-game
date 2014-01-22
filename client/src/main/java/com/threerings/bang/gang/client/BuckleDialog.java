@@ -131,7 +131,7 @@ public class BuckleDialog extends BDecoratedWindow
                     for (int ii = 0; ii < parts.length; ii++) {
                         parts[ii] = _parts.get(_buckle[ii]);
                     }
-                    _hideoutobj.service.setBuckle(_ctx.getClient(), parts, this);
+                    _hideoutobj.service.setBuckle(parts, this);
                 }
                 public void requestProcessed () {
                     super.requestProcessed();

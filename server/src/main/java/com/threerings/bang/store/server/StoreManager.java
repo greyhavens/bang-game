@@ -10,7 +10,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.samskivert.util.Interval;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
@@ -25,6 +24,7 @@ import com.threerings.bang.server.ShopManager;
 
 import com.threerings.bang.store.client.StoreService;
 import com.threerings.bang.store.data.Good;
+import com.threerings.bang.store.data.StoreMarshaller;
 import com.threerings.bang.store.data.StoreObject;
 
 import static com.threerings.bang.Log.log;
@@ -37,7 +37,7 @@ public class StoreManager extends ShopManager
     implements StoreProvider
 {
     // documentation inherited from interface StoreProvider
-    public void buyGood (ClientObject caller, String type, Object[] args,
+    public void buyGood (PlayerObject caller, String type, Object[] args,
                          StoreService.ConfirmListener cl)
         throws InvocationException
     {
@@ -85,7 +85,7 @@ public class StoreManager extends ShopManager
 
         // register our invocation service
         _stobj = (StoreObject)_plobj;
-        _stobj.setService(BangServer.invmgr.registerDispatcher(new StoreDispatcher(this)));
+        _stobj.setService(BangServer.invmgr.registerProvider(this, StoreMarshaller.class));
 
         ArrayList<Good> goods = _goods.getGoods(ServerConfig.townId);
 
@@ -102,12 +102,11 @@ public class StoreManager extends ShopManager
         _stobj.setGoods(new DSet<Good>(goods));
 
         // register our goods update interval
-        new Interval() {
+        new Interval(BangServer.omgr) {
             public void expired () {
                 long now = System.currentTimeMillis();
                 // remove expired goods
-                Good[] goods = _stobj.goods.toArray(new Good[_stobj.goods.size()]);
-                for (Good good : goods) {
+                for (Good good : _stobj.goods.toArrayList()) {
                     if (good.isExpired(now)) {
                         _stobj.removeFromGoods(good.getKey());
                     }

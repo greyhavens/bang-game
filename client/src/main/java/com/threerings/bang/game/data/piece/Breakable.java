@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -53,8 +54,7 @@ public class Breakable extends Prop
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (
-            short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, List<Piece> pieces)
     {
         if (_wasDamaged) {
             ArrayList<Effect> effects = new ArrayList<Effect>();

@@ -37,9 +37,7 @@ public class EntryReplacedEvent<T extends DSet.Entry> extends EntryRemovedEvent<
      */
     public EntryReplacedEvent (DObject target, String name, Comparable<?> oldKey, T newEntry)
     {
-        _toid = target.getOid();
-        _name = name;
-        _key = oldKey;
+        super(target.getOid(), name, oldKey);
         _newEntry = newEntry;
 
         try {
@@ -48,14 +46,6 @@ public class EntryReplacedEvent<T extends DSet.Entry> extends EntryRemovedEvent<
             log.warning("Error applying replacement", "target", target.which(), "name", name,
                         "oldKey", oldKey, "newEntry", newEntry, "error", e);
         }
-    }
-
-    /**
-     * Constructs a blank instance of this event in preparation for unserialization from the
-     * network.
-     */
-    public EntryReplacedEvent ()
-    {
     }
 
     @Override // documentation inherited

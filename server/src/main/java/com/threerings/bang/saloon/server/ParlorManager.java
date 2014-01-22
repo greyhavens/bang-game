@@ -30,6 +30,7 @@ import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
+import com.threerings.bang.saloon.data.ParlorMarshaller;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 
@@ -59,20 +60,19 @@ public class ParlorManager extends PlaceManager
         // create a table manager if we're not matched
         if (!info.matched) {
             _tmgr = new TableGameManager() {
-                public void updateGameConfig (ClientObject caller, ParlorGameConfig game)
+                public void updateGameConfig (PlayerObject caller, ParlorGameConfig game)
                 {
-                    if (_parobj.onlyCreatorStart &&
-                            !((PlayerObject)caller).handle.equals(_parobj.info.creator)) {
+                    if (_parobj.onlyCreatorStart && !caller.handle.equals(_parobj.info.creator)) {
                         return;
                     }
                     super.updateGameConfig(caller, game);
                 }
-                public void startMatchMaking (ClientObject caller, ParlorGameConfig game,
-                        byte[] bdata, InvocationService.ConfirmListener listener)
+                public void startMatchMaking (PlayerObject caller, ParlorGameConfig game,
+                                              byte[] bdata,
+                                              InvocationService.ConfirmListener listener)
                     throws InvocationException
                 {
-                    if (_parobj.onlyCreatorStart &&
-                            !((PlayerObject)caller).handle.equals(_parobj.info.creator)) {
+                    if (_parobj.onlyCreatorStart && !caller.handle.equals(_parobj.info.creator)) {
                         throw new InvocationException(SaloonCodes.CREATOR_ONLY);
                     }
                     super.startMatchMaking(caller, game, bdata, listener);
@@ -131,9 +131,8 @@ public class ParlorManager extends PlaceManager
     }
 
     // from interface ParlorProvider
-    public void updateParlorConfig (ClientObject caller, ParlorInfo info, boolean onlyCreatorStart)
+    public void updateParlorConfig (PlayerObject user, ParlorInfo info, boolean onlyCreatorStart)
     {
-        PlayerObject user = (PlayerObject)caller;
         if (user.handle.equals(_parobj.info.creator) && info.type != ParlorInfo.Type.RECRUITING) {
             _parobj.startTransaction();
             try {
@@ -152,33 +151,30 @@ public class ParlorManager extends PlaceManager
     }
 
     // from interface ParlorProvider
-    public void updateParlorPassword (ClientObject caller, String password)
+    public void updateParlorPassword (PlayerObject user, String password)
     {
-        PlayerObject user = (PlayerObject)caller;
         if (user.handle.equals(_parobj.info.creator)) {
             _password = password;
         }
     }
 
     // from interface ParlorProvider
-    public void findSaloonMatch (ClientObject caller, Criterion criterion,
-            ParlorService.ResultListener listener)
+    public void findSaloonMatch (PlayerObject caller, Criterion criterion,
+                                 ParlorService.ResultListener listener)
         throws InvocationException
     {
         _salmgr.findMatch(caller, criterion, listener);
     }
 
     // documentation inhertied from interface ParlorProvider
-    public void leaveSaloonMatch (ClientObject caller, int matchOid)
+    public void leaveSaloonMatch (PlayerObject caller, int matchOid)
     {
         _salmgr.leaveMatch(caller, matchOid);
     }
 
     // from interface ParlorProvider
-    public void bootPlayer (ClientObject caller, int bodyOid)
+    public void bootPlayer (PlayerObject user, int bodyOid)
     {
-        PlayerObject user = (PlayerObject)caller;
-
         // only power users can boot
         if (!_parobj.info.powerUser(user)) {
             return;
@@ -235,7 +231,7 @@ public class ParlorManager extends PlaceManager
         super.didStartup();
 
         _parobj = (ParlorObject)_plobj;
-        _parobj.setService(BangServer.invmgr.registerDispatcher(new ParlorDispatcher(this)));
+        _parobj.setService(BangServer.invmgr.registerProvider(this, ParlorMarshaller.class));
         _parobj.addListener(BangServer.playmgr.receivedChatListener);
     }
 

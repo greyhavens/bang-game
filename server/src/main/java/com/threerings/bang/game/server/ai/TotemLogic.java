@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server.ai;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.samskivert.util.RandomUtil;
 
@@ -43,21 +44,20 @@ public class TotemLogic extends AILogic
     }
 
     // documentation inherited
-    protected void moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (List<Piece> pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         TotemBase cbase = null;
-        ArrayList<TotemBase> baseAttack = new ArrayList<TotemBase>(), 
+        ArrayList<TotemBase> baseAttack = new ArrayList<TotemBase>(),
             baseMove = new ArrayList<TotemBase>();
         Unit ctarget = null;
         Piece ctotem = null, tporter = null;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof TotemBase) {
-                TotemBase base = (TotemBase)pieces[ii];
+        for (Piece p : pieces) {
+            if (p instanceof TotemBase) {
+                TotemBase base = (TotemBase)p;
                 if (!base.canAddPiece()) {
                     continue;
                 }
-                if (cbase == null || 
+                if (cbase == null ||
                         unit.getDistance(base) < unit.getDistance(cbase)) {
                     cbase = base;
                 }
@@ -69,28 +69,28 @@ public class TotemLogic extends AILogic
                         baseAttack.add(base);
                     }
                 }
-            } else if (pieces[ii] instanceof TotemBonus) {
-                if (ctotem == null || unit.getDistance(pieces[ii]) <
+            } else if (p instanceof TotemBonus) {
+                if (ctotem == null || unit.getDistance(p) <
                         unit.getDistance(ctotem)) {
-                    ctotem = pieces[ii];
+                    ctotem = p;
                 }
-            } else if (pieces[ii] instanceof Unit &&
-                    pieces[ii].owner != _pidx) {
-                Unit target = (Unit)pieces[ii];
+            } else if (p instanceof Unit &&
+                    p.owner != _pidx) {
+                Unit target = (Unit)p;
                 if (TotemBonus.isHolding(target) &&
                     (ctarget == null ||
                      unit.getDistance(target) < unit.getDistance(ctarget)) &&
                     unit.validTarget(_bangobj, target, false)) {
                     ctarget = target;
                 }
-            } else if (pieces[ii] instanceof Teleporter && (tporter == null ||
-                unit.getDistance(pieces[ii]) < unit.getDistance(tporter))) {
-                tporter = pieces[ii];
+            } else if (p instanceof Teleporter && (tporter == null ||
+                unit.getDistance(p) < unit.getDistance(tporter))) {
+                tporter = p;
             }
         }
+
         // if we're holding a totem piece, let's try to place it
-        if (TotemBonus.isHolding(unit) && 
-                moveUnit(pieces, unit, moves, cbase, 1)) {
+        if (TotemBonus.isHolding(unit) && moveUnit(pieces, unit, moves, cbase, 1)) {
             return;
         }
 
@@ -107,42 +107,36 @@ public class TotemLogic extends AILogic
             return;
         }
 
-        // if there's a loaded base within reach, shoot it 
-        if (!baseAttack.isEmpty() && 
-                executeOrder(unit, Short.MAX_VALUE, 0, 
-                    baseAttack.get(RandomUtil.getInt(baseAttack.size())))) {
+        // if there's a loaded base within reach, shoot it
+        if (!baseAttack.isEmpty() && executeOrder(
+                unit, Short.MAX_VALUE, 0, baseAttack.get(RandomUtil.getInt(baseAttack.size())))) {
             return;
         }
 
         // otherwise, move towards nearest free totem
-        if (ctotem != null &&
-            moveUnit(pieces, unit, moves, ctotem, 0)) {
+        if (ctotem != null && moveUnit(pieces, unit, moves, ctotem, 0)) {
             return;
         }
 
         // or nearest loaded base
-        // if there's a loaded base within reach, shoot it 
-        if (!baseMove.isEmpty() && 
-            moveUnit(pieces, unit, moves, baseMove.get(
-                    RandomUtil.getInt(baseAttack.size())), -1)) {
+        // if there's a loaded base within reach, shoot it
+        if (!baseMove.isEmpty() &&
+            moveUnit(pieces, unit, moves, baseMove.get(RandomUtil.getInt(baseAttack.size())), -1)) {
             return;
         }
 
         // or nearest totem holding target
-        if (ctarget != null &&
-            moveUnit(pieces, unit, moves, ctarget, -1)) {
+        if (ctarget != null && moveUnit(pieces, unit, moves, ctarget, -1)) {
             return;
         }
 
         // or nearest teleporter
-        if (tporter != null &&
-            moveUnit(pieces, unit, moves, tporter, 0)) {
+        if (tporter != null && moveUnit(pieces, unit, moves, tporter, 0)) {
             return;
         }
-            
+
         // or just try to find something to shoot
-        Piece target = getBestTarget(pieces, unit, attacks,
-            EMPTY_POINT_SET, TARGET_EVALUATOR);
+        Piece target = getBestTarget(pieces, unit, attacks, EMPTY_POINT_SET, TARGET_EVALUATOR);
         if (target != null) {
             executeOrder(unit, Short.MAX_VALUE, 0, target);
         }
@@ -156,7 +150,7 @@ public class TotemLogic extends AILogic
      * false if we couldn't find a path
      */
     protected boolean moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, Piece target, int tdist)
+        List<Piece> pieces, Unit unit, PointSet moves, Piece target, int tdist)
     {
         return (target != null) && moveUnit(pieces, unit, moves, target.x,
             target.y, tdist, TARGET_EVALUATOR);
@@ -190,16 +184,16 @@ public class TotemLogic extends AILogic
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
 
-        public int getWeight (BangObject bangobj, Unit unit, Piece target, 
+        public int getWeight (BangObject bangobj, Unit unit, Piece target,
                 int dist, PointSet preferredMoves) {
             // don't go an shoot the totem we just put our piece on
             if ((target instanceof TotemBase) && TotemBonus.isHolding(unit) &&
                     dist == 1) {
                 return -1;
             }
-            return ((target instanceof Unit) && 
+            return ((target instanceof Unit) &&
                     TotemBonus.isHolding((Unit)target) ? 1000 : 0) +
-                unit.computeScaledDamage(bangobj, target, 1f) * 
+                unit.computeScaledDamage(bangobj, target, 1f) *
                 100 + target.damage;
         }
     };

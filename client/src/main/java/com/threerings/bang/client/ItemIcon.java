@@ -186,9 +186,8 @@ public class ItemIcon extends PaletteIcon
     protected void destroyItem ()
     {
         BangContext ctx = (BangContext)_ctx;
-        PlayerService psvc = ctx.getClient().requireService(PlayerService.class);
-        psvc.destroyItem(ctx.getClient(), _item.getItemId(),
-            new ReportingListener(ctx, BangCodes.BANG_MSGS, "m.destroy_failed"));
+        ctx.getClient().requireService(PlayerService.class).destroyItem(
+            _item.getItemId(), new ReportingListener(ctx, BangCodes.BANG_MSGS, "m.destroy_failed"));
     }
 
     protected BasicContext _ctx;

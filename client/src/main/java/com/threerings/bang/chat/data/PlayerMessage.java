@@ -5,6 +5,7 @@ package com.threerings.bang.chat.data;
 
 import com.threerings.util.Name;
 
+import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.data.AvatarInfo;
@@ -19,18 +20,11 @@ public class PlayerMessage extends UserMessage
     public AvatarInfo avatar;
 
     /**
-     * For unserialization.
-     */
-    public PlayerMessage ()
-    {
-    }
-
-    /**
      * Constructs a message for a player originated tell.
      */
     public PlayerMessage (Name speaker, AvatarInfo avatar, String message)
     {
-        super(speaker, message);
+        super(speaker, null, message, ChatCodes.DEFAULT_MODE);
         this.avatar = avatar;
     }
 }

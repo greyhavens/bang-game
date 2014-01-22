@@ -126,7 +126,7 @@ public class ParlorConfigView extends BDecoratedWindow
     {
         ParlorInfo info = new ParlorInfo();
         info.type = (ParlorInfo.Type)_type.getSelectedValue();
-        _parobj.service.updateParlorConfig(_ctx.getClient(), info, _creator.isSelected());
+        _parobj.service.updateParlorConfig(info, _creator.isSelected());
     }
 
     protected static ArrayList<BComboBox.Item> getParlorTypes (BangContext ctx, boolean create)
@@ -155,7 +155,7 @@ public class ParlorConfigView extends BDecoratedWindow
 
         public void resultPosted (int button, Object result) {
             if (button == 0) {
-                _parobj.service.updateParlorPassword(_ctx.getClient(), ((String)result).trim());
+                _parobj.service.updateParlorPassword(((String)result).trim());
             }
         }
     }

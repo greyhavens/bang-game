@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.samskivert.util.ListUtil;
 
@@ -101,8 +102,7 @@ public class LoggingRobot extends Unit
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (
-            short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, List<Piece> pieces)
     {
         ArrayList<Effect> effects = super.tick(tick, bangobj, pieces);
         if (!isAlive() || isLocust()) {

@@ -126,7 +126,7 @@ public class TicketView extends BContainer
             _buy.setEnabled(false);
 
             // fire off a request to buy the ticket
-            _stobj.service.buyTicket(_ctx.getClient(), new StationService.ConfirmListener() {
+            _stobj.service.buyTicket(new StationService.ConfirmListener() {
                 public void requestProcessed () {
                     _status.setStatus(
                         StationCodes.STATION_MSGS, getTownMessage("m.bought_ticket"), true);

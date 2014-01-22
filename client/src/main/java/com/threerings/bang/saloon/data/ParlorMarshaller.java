@@ -3,10 +3,13 @@
 
 package com.threerings.bang.saloon.data;
 
-import com.threerings.bang.saloon.client.ParlorService;
-import com.threerings.presents.client.Client;
+import javax.annotation.Generated;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.saloon.client.ParlorService;
 
 /**
  * Provides the implementation of the {@link ParlorService} interface
@@ -15,17 +18,19 @@ import com.threerings.presents.data.InvocationMarshaller;
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class ParlorMarshaller extends InvocationMarshaller
+@Generated(value={"com.threerings.presents.tools.GenServiceTask"},
+           comments="Derived from ParlorService.java.")
+public class ParlorMarshaller extends InvocationMarshaller<PlayerObject>
     implements ParlorService
 {
     /** The method id used to dispatch {@link #bootPlayer} requests. */
     public static final int BOOT_PLAYER = 1;
 
     // from interface ParlorService
-    public void bootPlayer (Client arg1, int arg2)
+    public void bootPlayer (int arg1)
     {
-        sendRequest(arg1, BOOT_PLAYER, new Object[] {
-            Integer.valueOf(arg2)
+        sendRequest(BOOT_PLAYER, new Object[] {
+            Integer.valueOf(arg1)
         });
     }
 
@@ -33,12 +38,12 @@ public class ParlorMarshaller extends InvocationMarshaller
     public static final int FIND_SALOON_MATCH = 2;
 
     // from interface ParlorService
-    public void findSaloonMatch (Client arg1, Criterion arg2, InvocationService.ResultListener arg3)
+    public void findSaloonMatch (Criterion arg1, InvocationService.ResultListener arg2)
     {
-        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, FIND_SALOON_MATCH, new Object[] {
-            arg2, listener3
+        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
+        listener2.listener = arg2;
+        sendRequest(FIND_SALOON_MATCH, new Object[] {
+            arg1, listener2
         });
     }
 
@@ -46,10 +51,10 @@ public class ParlorMarshaller extends InvocationMarshaller
     public static final int LEAVE_SALOON_MATCH = 3;
 
     // from interface ParlorService
-    public void leaveSaloonMatch (Client arg1, int arg2)
+    public void leaveSaloonMatch (int arg1)
     {
-        sendRequest(arg1, LEAVE_SALOON_MATCH, new Object[] {
-            Integer.valueOf(arg2)
+        sendRequest(LEAVE_SALOON_MATCH, new Object[] {
+            Integer.valueOf(arg1)
         });
     }
 
@@ -57,10 +62,10 @@ public class ParlorMarshaller extends InvocationMarshaller
     public static final int UPDATE_PARLOR_CONFIG = 4;
 
     // from interface ParlorService
-    public void updateParlorConfig (Client arg1, ParlorInfo arg2, boolean arg3)
+    public void updateParlorConfig (ParlorInfo arg1, boolean arg2)
     {
-        sendRequest(arg1, UPDATE_PARLOR_CONFIG, new Object[] {
-            arg2, Boolean.valueOf(arg3)
+        sendRequest(UPDATE_PARLOR_CONFIG, new Object[] {
+            arg1, Boolean.valueOf(arg2)
         });
     }
 
@@ -68,10 +73,10 @@ public class ParlorMarshaller extends InvocationMarshaller
     public static final int UPDATE_PARLOR_PASSWORD = 5;
 
     // from interface ParlorService
-    public void updateParlorPassword (Client arg1, String arg2)
+    public void updateParlorPassword (String arg1)
     {
-        sendRequest(arg1, UPDATE_PARLOR_PASSWORD, new Object[] {
-            arg2
+        sendRequest(UPDATE_PARLOR_PASSWORD, new Object[] {
+            arg1
         });
     }
 }

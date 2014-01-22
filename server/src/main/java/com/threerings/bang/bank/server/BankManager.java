@@ -7,9 +7,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.ResultAdapter;
-import com.threerings.presents.dobj.MessageEvent;
 
 import com.threerings.crowd.data.PlaceObject;
 
@@ -25,6 +25,7 @@ import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.bank.client.BankService;
 import com.threerings.bang.bank.data.BankCodes;
+import com.threerings.bang.bank.data.BankMarshaller;
 import com.threerings.bang.bank.data.BankObject;
 
 import static com.threerings.bang.Log.log;
@@ -37,7 +38,7 @@ public class BankManager extends ShopManager
     implements BankProvider, BankCodes, BangCoinExchangeManager.OfferPublisher
 {
     // documentation inherited from interface BankProvider
-    public void getMyOffers (ClientObject caller, BankService.OfferListener ol)
+    public void getMyOffers (PlayerObject caller, BankService.OfferListener ol)
         throws InvocationException
     {
         PlayerObject user = requireShopEnabled(caller);
@@ -46,7 +47,7 @@ public class BankManager extends ShopManager
     }
 
     // documentation inherited from interface BankProvider
-    public void postOffer (ClientObject caller, int coins, int pricePerCoin, boolean buying,
+    public void postOffer (PlayerObject caller, int coins, int pricePerCoin, boolean buying,
                            boolean immediate, BankService.ResultListener listener)
         throws InvocationException
     {
@@ -61,7 +62,7 @@ public class BankManager extends ShopManager
     }
 
     // documentation inherited from interface BankProvider
-    public void cancelOffer (ClientObject caller, int offerId, BankService.ConfirmListener cl)
+    public void cancelOffer (PlayerObject caller, int offerId, BankService.ConfirmListener cl)
         throws InvocationException
     {
         PlayerObject player = requireShopEnabled(caller);
@@ -131,7 +132,7 @@ public class BankManager extends ShopManager
 
         // register our invocation service
         _bankobj = (BankObject)_plobj;
-        _bankobj.setService(BangServer.invmgr.registerDispatcher(new BankDispatcher(this)));
+        _bankobj.setService(BangServer.invmgr.registerProvider(this, BankMarshaller.class));
 
         // register with the coin exchange manager
         _coinexmgr.registerPublisher(this);

@@ -14,7 +14,6 @@ import com.samskivert.util.ObjectUtil;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.ObjectAccessException;
 
 import com.threerings.bang.admin.data.ConfigObject;
 
@@ -96,11 +95,7 @@ public abstract class FieldEditor extends BContainer
 
         // submit an attribute changed event with the new value
         if (!ObjectUtil.equals(value, getValue())) {
-            try {
-                _object.changeAttribute(_field.getName(), value);
-            } catch (ObjectAccessException oae) {
-                log.warning("Failed to update field " + _field.getName() + ": " + oae);
-            }
+            _object.changeAttribute(_field.getName(), value);
         }
     }
 

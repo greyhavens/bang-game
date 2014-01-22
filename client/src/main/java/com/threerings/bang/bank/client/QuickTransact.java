@@ -88,8 +88,7 @@ public class QuickTransact extends BContainer
                 _status.setStatus(_msgs.xlate(reason), true);
             }
         };
-        _boffer.postImmediateOffer(
-            _ctx.getClient(), _ccount, best.price, _buying, rl);
+        _boffer.postImmediateOffer(_ccount, best.price, _buying, rl);
     }
 
     protected void coinsUpdated ()

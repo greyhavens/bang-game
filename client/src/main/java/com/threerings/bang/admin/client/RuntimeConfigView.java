@@ -52,10 +52,8 @@ public class RuntimeConfigView extends BDecoratedWindow
         bcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         add(bcont, GroupLayout.FIXED);
 
-        // ship off a getConfigInfo request to find out what config objects are
-        // available for editing
-        AdminService service = ctx.getClient().requireService(AdminService.class);
-        service.getConfigInfo(ctx.getClient(), this);
+        // ship off a getConfigInfo request to find out what config objects are available
+        ctx.getClient().requireService(AdminService.class).getConfigInfo(this);
     }
 
     // documentation inherited from interface AdminService.ConfigInfoListener

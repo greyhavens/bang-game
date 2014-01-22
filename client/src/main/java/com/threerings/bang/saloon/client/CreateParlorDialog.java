@@ -79,7 +79,7 @@ public class CreateParlorDialog extends BDecoratedWindow
                 ParlorInfo.Type type = (ParlorInfo.Type)_type.getSelectedValue();
                 String passwd = type == ParlorInfo.Type.PASSWORD ? _password.getText() : null;
                 _salobj.service.createParlor(
-                    _ctx.getClient(), type, passwd, _matched.isSelected(), createResultListener());
+                    type, passwd, _matched.isSelected(), createResultListener());
                 return true;
             }
             protected boolean onSuccess (Object result) {

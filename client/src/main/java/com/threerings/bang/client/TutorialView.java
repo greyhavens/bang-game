@@ -238,7 +238,7 @@ public class TutorialView extends SteelWindow
                     enableButtons(true);
                 }
             };
-            psvc.playTutorial(_ctx.getClient(), action, rl);
+            psvc.playTutorial(action, rl);
             enableButtons(false);
         }
 
