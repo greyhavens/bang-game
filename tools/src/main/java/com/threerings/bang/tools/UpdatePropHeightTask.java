@@ -24,7 +24,7 @@ import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.bounding.BoundingVolume;
 import com.jme.util.LoggingSystem;
-import com.jmex.model.XMLparser.Converters.DummyDisplaySystem;
+import com.jme.util.DummyDisplaySystem;
 
 import com.threerings.jme.model.Model;
 

@@ -33,7 +33,7 @@ import com.google.common.collect.Maps;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.util.LoggingSystem;
-import com.jmex.model.XMLparser.Converters.DummyDisplaySystem;
+import com.jme.util.DummyDisplaySystem;
 
 import com.samskivert.util.PropertiesUtil;
 import com.samskivert.util.StringUtil;

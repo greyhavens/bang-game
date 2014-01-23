@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.FileSet;
 import com.google.common.collect.Lists;
 
 import com.jme.util.LoggingSystem;
-import com.jmex.model.XMLparser.Converters.DummyDisplaySystem;
+import com.jme.util.DummyDisplaySystem;
 
 /**
  * An ant task for compiling 3D models defined in XML to fast-loading binary files.

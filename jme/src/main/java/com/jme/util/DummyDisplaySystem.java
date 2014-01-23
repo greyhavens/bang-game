@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.jmex.model.XMLparser.Converters;
+package com.jme.util;
 
 import java.awt.Canvas;
 import java.net.URL;
@@ -75,7 +75,6 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.scene.state.lwjgl.records.StateRecord;
 import com.jme.system.DisplaySystem;
 import com.jme.system.SystemProvider;
-import com.jme.util.Timer;
 import com.jmex.awt.JMECanvas;
 
 /**
