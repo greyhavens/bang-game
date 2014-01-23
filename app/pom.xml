@@ -21,27 +21,23 @@
     </dependency>
 
     <dependency>
-      <groupId>com.samskivert</groupId>
-      <artifactId>samskivert</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>narya</artifactId>
-      <version>1.2</version>
+      <version>${narya.version}</version>
     </dependency>
     <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>nenya</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.threerings</groupId>
-      <artifactId>vilya</artifactId>
-      <version>1.0</version>
+      <version>${nenya.version}</version>
     </dependency>
 
     <!-- these are only for tools, so we don't export them as depends -->
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>nenya-tools</artifactId>
+      <version>${nenya.version}</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>

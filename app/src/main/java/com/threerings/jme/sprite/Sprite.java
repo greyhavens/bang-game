@@ -85,7 +85,7 @@ public class Sprite extends Node
             }
         }
     }
-    
+
     public Sprite ()
     {
         super("");
@@ -99,8 +99,7 @@ public class Sprite extends Node
     public void addObserver (SpriteObserver obs)
     {
         if (_observers == null) {
-            _observers = new ObserverList<SpriteObserver>(
-                ObserverList.SAFE_IN_ORDER_NOTIFY);
+            _observers = ObserverList.newSafeInOrder();
         }
         _observers.add(obs);
     }
@@ -198,7 +197,7 @@ public class Sprite extends Node
     {
         setAnimationRepeatType(this, repeatType);
     }
-    
+
     /** Used to dispatch {@link PathObserver#pathCancelled}. */
     protected static class CancelledOp
         implements ObserverList.ObserverOp<SpriteObserver>

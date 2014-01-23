@@ -1128,8 +1128,7 @@ public class Model extends ModelNode
     protected boolean _outside;
 
     /** Animation completion listeners. */
-    protected ObserverList<AnimationObserver> _animObservers =
-        new ObserverList<AnimationObserver>(ObserverList.FAST_UNSAFE_NOTIFY);
+    protected ObserverList<AnimationObserver> _animObservers = ObserverList.newFastUnsafe();
 
     /** Used to notify observers of animation initiation. */
     protected class AnimStartedOp
