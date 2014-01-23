@@ -14,7 +14,7 @@ import com.google.inject.Singleton;
 
 import com.samskivert.depot.PersistenceContext;
 import com.samskivert.depot.Stats;
-import com.samskivert.depot.impl.Query;
+import com.samskivert.depot.impl.Fetcher;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 
@@ -63,7 +63,7 @@ public class BangStatRepository extends StatRepository
         final String query = "select STATS.PLAYER_ID, ACCOUNT_NAME, HANDLE, CREATED, " +
             "SESSION_MINUTES, STAT_DATA from STATS, PLAYERS " +
             "where PLAYERS.PLAYER_ID = STATS.PLAYER_ID and STAT_CODE = " + type.code();
-        _ctx.invoke(new Query.Trivial<Void>() {
+        _ctx.invoke(new Fetcher.Trivial<Void>() {
             public Void invoke (PersistenceContext ctx, Connection conn, DatabaseLiaison liaison)
                 throws SQLException
             {

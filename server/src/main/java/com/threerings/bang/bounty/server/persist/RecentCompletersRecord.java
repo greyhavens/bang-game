@@ -21,9 +21,9 @@ public class RecentCompletersRecord extends PersistentRecord
 {
     // AUTO-GENERATED: FIELDS START
     public static final Class<RecentCompletersRecord> _R = RecentCompletersRecord.class;
-    public static final ColumnExp BOUNTY_ID = colexp(_R, "bountyId");
-    public static final ColumnExp TOWN_ID = colexp(_R, "townId");
-    public static final ColumnExp HANDLES = colexp(_R, "handles");
+    public static final ColumnExp<String> BOUNTY_ID = colexp(_R, "bountyId");
+    public static final ColumnExp<String> TOWN_ID = colexp(_R, "townId");
+    public static final ColumnExp<String> HANDLES = colexp(_R, "handles");
     // AUTO-GENERATED: FIELDS END
 
     /** Increment this value if you modify the definition of this persistent object in a way that
