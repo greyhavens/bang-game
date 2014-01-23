@@ -5,6 +5,7 @@
 # A script run as part of the build process to update our lists of props,
 # units, etc.
 
+CWD=`dirname $0`
 TOWNS=`echo $1 | sed 's/,/ /g'`
 TARGET=target/classes
 
@@ -46,7 +47,7 @@ done
 # Update our list of terrain codes
 find rsrc/terrain -name 'terrain.properties' | \
   sed 's:rsrc/terrain/::g' | sed 's:/terrain.properties::' | \
-  ./bin/update_terrain_codes
+  $CWD/update_terrain_codes
 
 # Update our list of bounties
 for TOWN in $TOWNS; do
