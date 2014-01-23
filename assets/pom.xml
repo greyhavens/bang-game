@@ -53,7 +53,7 @@
         </includes>
       </resource>
 
-      <!-- stuffs -->
+      <!-- per-town stuffs which we copy wholesale, then prune -->
       <resource>
         <directory>${basedir}</directory>
         <includes>
@@ -63,6 +63,7 @@
           <include>rsrc/props/**/*.png</include>
           <include>rsrc/bonuses/**/bonus.properties</include>
           <include>rsrc/bonuses/**/*.png</include>
+          <include>rsrc/cards/**/*.png</include>
           <include>rsrc/effects/**/particles.txt</include>
           <include>rsrc/effects/**/particles.properties</include>
           <include>rsrc/effects/**/particles.jme</include>
@@ -138,6 +139,18 @@
                 <exec executable="${basedir}/update_lists" failonerror="true">
                   <arg value="${towns}"/>
                 </exec>
+
+                <!-- compiles our model XML into binary form -->
+                <taskdef name="compile" classpathref="maven.plugin.classpath"
+                         classname="com.threerings.jme.tools.CompileModelTask"/>
+                <compile dest="${target.dir}">
+                  <fileset dir="rsrc" includes="**/model.properties"/>
+                </compile>
+                <taskdef name="updatepropheight" classpathref="maven.plugin.classpath"
+                         classname="com.threerings.bang.tools.UpdatePropHeightTask"/>
+                <updatepropheight>
+                  <fileset dir="rsrc" includes="**/prop.properties"/>
+                </updatepropheight>
               </target>
             </configuration>
             <goals>
