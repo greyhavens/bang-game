@@ -11,6 +11,6 @@
 
   <modules>
     <module>client</module>
-    <!-- <module>server</module> -->
+    <module>server</module>
   </modules>
 </project>
