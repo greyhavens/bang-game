@@ -18,7 +18,10 @@ import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.export.binary.BinaryImporter;
 
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.util.BangUtil;
 
 /**
  * Contains all the data stored for a board when stored on the file system.
@@ -47,6 +50,16 @@ public class BoardFile
 
     /** The props and markers on the board. */
     public ArrayList<Piece> pieces;
+
+    /** A hash of our board and pieces data. Not serialized. */
+    public byte[] dataHash;
+
+    /**
+     * Creates a board data instance from this file.
+     */
+    public BoardData toData () {
+        return new BoardData(board, pieces);
+    }
 
     /**
      * Loads a board file from the supplied binary data.
@@ -84,6 +97,21 @@ public class BoardFile
         BinaryExporter.getInstance().save(file, new FileOutputStream(target));
     }
 
+    /**
+     * Returns the index of the earliest town in which this board can be used.
+     */
+    public int getMinimumTownIndex ()
+    {
+        int minTownIdx = 0;
+        for (String scenId : scenarios) {
+            ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenId);
+            if (info != null) {
+                minTownIdx = Math.max(minTownIdx, BangUtil.getTownIndex(info.getTownId()));
+            }
+        }
+        return minTownIdx;
+    }
+
     // from interface Savable
     public Class<?> getClassTag ()
     {
@@ -102,6 +130,7 @@ public class BoardFile
         board = (BangBoard)capsule.readSavable("board", null);
         pieces = capsule.readSavableArrayList("pieces", NO_PIECES);
         privateBoard = capsule.readBoolean("private", false);
+        dataHash = BoardData.getDataHash(toData().toBytes());
     }
 
     // from interface Savable

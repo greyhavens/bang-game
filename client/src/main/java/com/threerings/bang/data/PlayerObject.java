@@ -94,8 +94,8 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>lastScenId</code> field. */
     public static final String LAST_SCEN_ID = "lastScenId";
 
-    /** The field name of the <code>lastBoardId</code> field. */
-    public static final String LAST_BOARD_ID = "lastBoardId";
+    /** The field name of the <code>lastBoard</code> field. */
+    public static final String LAST_BOARD = "lastBoard";
 
     /** The field name of the <code>quitter</code> field. */
     public static final String QUITTER = "quitter";
@@ -165,7 +165,7 @@ public class PlayerObject extends BodyObject
     public String lastScenId;
 
     /** The last board played by this player. */
-    public int lastBoardId = -1;
+    public String lastBoard;
 
     /** Quitter level. */
     public int quitter;
@@ -1030,19 +1030,19 @@ public class PlayerObject extends BodyObject
     }
 
     /**
-     * Requests that the <code>lastBoardId</code> field be set to the
+     * Requests that the <code>lastBoard</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setLastBoardId (int value)
+    public void setLastBoard (String value)
     {
-        int ovalue = this.lastBoardId;
+        String ovalue = this.lastBoard;
         requestAttributeChange(
-            LAST_BOARD_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.lastBoardId = value;
+            LAST_BOARD, value, ovalue);
+        this.lastBoard = value;
     }
 
     /**

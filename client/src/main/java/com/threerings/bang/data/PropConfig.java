@@ -21,10 +21,10 @@ public class PropConfig
 
     /** The prop model (usually the same as the prop type). */
     public String model;
-    
+
     /** The prop variant, where <code>null</code> is the default. */
     public String variant;
-    
+
     /** The width of this prop in tiles. */
     public int width;
 
@@ -36,10 +36,10 @@ public class PropConfig
 
     /** The passable elevation of this prop in tiles. */
     public float passElev;
-    
+
     /** If true, even air units cannot pass over the prop. */
     public boolean tall;
-    
+
     /** A custom class for this prop, if one was specified. */
     public String propClass;
 
@@ -48,13 +48,13 @@ public class PropConfig
 
     /** Whether or not units can pass over/through the prop. */
     public boolean passable;
-    
+
     /** Whether or not units can fire through the prop. */
     public boolean penetrable;
 
     /** Which directions a unit is blocked by this prop. */
     public String blockDir;
-    
+
     /** Returns a string representation of this instance. */
     public String toString ()
     {
@@ -78,7 +78,7 @@ public class PropConfig
         ensurePropsRegistered();
         return _types.values();
     }
-    
+
     /**
      * Returns an array of configurations for all prop types
      * accessible in the specified town.
@@ -126,16 +126,16 @@ public class PropConfig
         config.width = BangUtil.getIntProperty(type, props, "width", 1);
         config.length = BangUtil.getIntProperty(type, props, "length", 1);
         config.height = BangUtil.getFloatProperty(type, props, "height", 2f);
-        
+
         config.tall = Boolean.parseBoolean(props.getProperty("tall"));
         config.passable = Boolean.parseBoolean(props.getProperty("passable"));
-        config.passElev = BangUtil.getFloatProperty(type, props, "passElev", 
+        config.passElev = BangUtil.getFloatProperty(type, props, "passElev",
                 (config.passable ? 0f : config.height));
         config.penetrable = Boolean.parseBoolean(
             props.getProperty("penetrable",
                 (config.width == 1 && config.length == 1) ? "true" : "false"));
         config.blockDir = props.getProperty("blockDir", "");
-        
+
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");
         boolean andSoOn = false;

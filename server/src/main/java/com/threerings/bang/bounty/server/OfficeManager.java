@@ -32,13 +32,13 @@ import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.BoardManager;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.ShopManager;
-import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.server.BangManager;
+import com.threerings.bang.game.util.BoardFile;
 
 import com.threerings.bang.bounty.client.OfficeService;
 import com.threerings.bang.bounty.data.BoardInfo;
@@ -262,11 +262,11 @@ public class OfficeManager extends ShopManager
         // publish all known boards as board info records
         ArrayList<BoardInfo> infos = new ArrayList<BoardInfo>();
         for (int pp = 2; pp <= GameCodes.MAX_PLAYERS; pp++) {
-            for (BoardRecord brec : _boardmgr.getBoards(pp)) {
+            for (BoardFile brec : _boardmgr.getBoards(pp)) {
                 BoardInfo info = new BoardInfo();
                 info.name = brec.name;
                 info.players = brec.players;
-                info.scenarios = brec.getScenarios();
+                info.scenarios = brec.scenarios;
                 infos.add(info);
             }
         }

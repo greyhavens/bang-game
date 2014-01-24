@@ -3,10 +3,9 @@
 
 package com.threerings.bang.game.server;
 
-import java.io.IOException;
-
 import java.awt.Point;
 import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -16,7 +15,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -30,7 +31,6 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.Multex;
 import com.samskivert.util.RandomUtil;
-import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
@@ -77,7 +77,6 @@ import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.BoardManager;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BangStatRepository;
-import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.RatingRepository;
@@ -109,11 +108,11 @@ import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.util.BoardFile;
 
 import com.threerings.bang.game.client.BangService;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.util.PieceSet;
@@ -214,11 +213,8 @@ public class BangManager extends GameManager
         /** The duration of this round in ticks. */
         public int duration;
 
-        /** The metadata for the board we played on this round. */
-        public BoardRecord board;
-
         /** The data for the board we played on this round. */
-        public BoardData bdata;
+        public BoardFile board;
 
         /** A snapshot of the in-game stats at the end of this round. */
         public StatSet[] stats;
@@ -316,14 +312,7 @@ public class BangManager extends GameManager
             log.warning("Rejecting request for non-existent board", "who", user.who());
             throw new InvocationException(INTERNAL_ERROR);
         }
-
-        BoardRecord brec = _rounds[_bangobj.roundId].board;
-        try {
-            listener.requestProcessed(brec.getBoardData());
-        } catch (IOException ioe) {
-            log.warning("Failed to decode board " + brec + ".", ioe);
-            throw new InvocationException(INTERNAL_ERROR);
-        }
+        listener.requestProcessed(_rounds[_bangobj.roundId].board.toData());
     }
 
     // documentation inherited from interface BangProvider
@@ -554,6 +543,12 @@ public class BangManager extends GameManager
 
         // now check to see if we should proceed
         checkStartNextPhase();
+    }
+
+    @Override protected boolean allowManagerCall (String method)
+    {
+        return super.allowManagerCall(method) || method.equals("playerReadyFor") ||
+            method.equals(TutorialCodes.ACTION_PROCESSED);
     }
 
     @Override // documentation inherited
@@ -910,15 +905,15 @@ public class BangManager extends GameManager
         _startRoundMultex.satisfied(Multex.CONDITION_TWO);
 
         // ask the board manager to select or load up our boards
-        ArrayIntSet prevIds = new ArrayIntSet();
+        Set<String> prevs = Sets.newHashSet();
         for (int ii = 0; ii < getPlayerCount(); ii++) {
             PlayerObject user = (PlayerObject)getPlayer(ii);
-            if (user != null) {
-                prevIds.add(user.lastBoardId);
+            if (user != null && user.lastBoard != null) {
+                prevs.add(user.lastBoard);
             }
         }
-        BoardRecord[] boards = _boardmgr.selectBoards(
-            Math.max(_bconfig.players.length, 2), _bconfig.rounds, prevIds);
+        BoardFile[] boards = _boardmgr.selectBoards(
+            Math.max(_bconfig.players.length, 2), _bconfig.rounds, prevs);
 
         // set up our round records
         _rounds = new RoundRecord[_bconfig.getRounds()];
@@ -1129,31 +1124,6 @@ public class BangManager extends GameManager
             return;
         }
 
-        // find out if the desired board has been loaded, loading it if not
-        if (round.bdata != null) {
-            continueStartingRound();
-            return;
-        }
-
-        _boardmgr.loadBoardData(round.board, new ResultListener<BoardRecord>() {
-            public void requestCompleted (BoardRecord record) {
-                try {
-                    round.bdata = record.getBoardData();
-                    continueStartingRound();
-                } catch (IOException ioe) {
-                    requestFailed(ioe);
-                }
-            }
-            public void requestFailed (Exception cause) {
-                log.warning("Failed to load or decode board data", "brec", round.board, cause);
-                cancelGame();
-            }
-        });
-    }
-
-    /** Continues starting the round once the board's data is loaded. */
-    protected void continueStartingRound ()
-    {
         _bangobj.boardEffect = null;
         _bangobj.globalHindrance = null;
 
@@ -1185,8 +1155,6 @@ public class BangManager extends GameManager
             }
         }
         _scenario.init(this, _bangobj.scenario);
-
-        RoundRecord round = _rounds[_bangobj.roundId];
         round.scenario = _scenario;
 
         // create the logic for our ai players, if any
@@ -1202,7 +1170,7 @@ public class BangManager extends GameManager
         _pLogics = new HashIntMap<PieceLogic>();
 
         // set up the board and pieces and select a board tour marquee
-        _bangobj.board = (BangBoard)round.bdata.board.clone();
+        _bangobj.board = (BangBoard)round.board.board.clone();
         String marquee = (_bounty == null) ? round.board.name :
             _bounty.getGame(_bangobj.bountyGameId).name;
         _bangobj.setMarquee(MessageBundle.taint(marquee));
@@ -1210,7 +1178,7 @@ public class BangManager extends GameManager
 
         // clone the pieces we get from the board as we may modify them during the game
         ArrayList<Piece> pieces = new ArrayList<Piece>();
-        for (Piece p : round.bdata.pieces) {
+        for (Piece p : round.board.pieces) {
             // sanity check our pieces
             if (p.x < 0 || p.x >= _bangobj.board.getWidth() ||
                 p.y < 0 || p.y >= _bangobj.board.getHeight()) {
@@ -1815,7 +1783,7 @@ public class BangManager extends GameManager
                     try {
                         user.startTransaction();
                         user.setLastScenId(_bconfig.getScenario(_bangobj.roundId));
-                        user.setLastBoardId(_rounds[_bangobj.roundId].board.boardId);
+                        user.setLastBoard(_rounds[_bangobj.roundId].board.name);
                     } finally {
                         user.commitTransaction();
                     }
