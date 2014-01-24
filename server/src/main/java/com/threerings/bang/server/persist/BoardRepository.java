@@ -78,7 +78,7 @@ public class BoardRepository extends JORARepository
                         brec.flags = rs.getInt(6);
                         blist.add(brec);
                     }
-                    
+
                 } finally {
                     JDBCUtil.close(stmt);
                 }
@@ -106,11 +106,11 @@ public class BoardRepository extends JORARepository
                     if (rs.next()) {
                         brec.data = (byte[])rs.getObject(1);
                         brec.dataHash = (byte[])rs.getObject(2);
-                        
+
                     } else {
                         log.warning("Couldn't find board data!", "brec", brec);
                     }
-                    
+
                 } finally {
                     JDBCUtil.close(stmt);
                 }
@@ -118,7 +118,7 @@ public class BoardRepository extends JORARepository
             }
         });
     }
-    
+
     /**
      * Inserts a new board into the repository for the first time. If the
      * board's name conflicts with an existing board an exception is
@@ -190,8 +190,7 @@ public class BoardRepository extends JORARepository
     @Override // documentation inherited
     protected void createTables ()
     {
-	_btable = new Table<BoardRecord>(
-            BoardRecord.class, "BOARDS", "BOARD_ID", true);
+        _btable = new Table<BoardRecord>(BoardRecord.class, "BOARDS", "BOARD_ID", true);
     }
 
     protected Table<BoardRecord> _btable;
