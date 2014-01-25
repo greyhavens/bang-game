@@ -49,8 +49,7 @@ public class GameInputHandler extends GodViewHandler
         // reset the camera's orientation
         _camhand.resetAxes();
 
-        // start the camera in the center of the board, pointing straight
-        // down
+        // start the camera in the center of the board, pointing straight down
         GameCameraHandler gcamhand = (GameCameraHandler)_camhand;
         float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
         float cy = TILE_SIZE * bangobj.board.getHeight() / 2;
@@ -61,8 +60,8 @@ public class GameInputHandler extends GodViewHandler
         // rotate the camera by 45 degrees and orient it properly
         _camhand.orbitCamera(FastMath.PI/4);
 
-        // add a camera observer that updates the board view's hover state
-        // after the camera completes a path
+        // add a camera observer that updates the board view's hover state after the camera
+        // completes a path
         _camhand.addCameraObserver(_hoverUpdater = new HoverUpdater(view.view));
     }
 
@@ -93,14 +92,13 @@ public class GameInputHandler extends GodViewHandler
         }
 
         float angvel = 2*FastMath.PI;
-        _camhand.moveCamera(
-            new SwingPath(_camhand, _camhand.getGroundPoint(),
-                          _camhand.getGroundNormal(), deltaAngle, angvel, 0));
+        _camhand.moveCamera(new SwingPath(_camhand, _camhand.getGroundPoint(),
+                                          _camhand.getGroundNormal(), deltaAngle, angvel, 0));
     }
 
     /**
-     * Moves the camera to the next elevation angle. The camera will smoothly
-     * roll to the appropriate angle rather than changing abruptly.
+     * Moves the camera to the next elevation angle. The camera will smoothly roll to the
+     * appropriate angle rather than changing abruptly.
      */
     public void rollCamera ()
     {
@@ -108,9 +106,9 @@ public class GameInputHandler extends GodViewHandler
     }
 
     /**
-     * Moves the camera to the next elevation angle. The camera will smoothly
-     * roll to the appropriate angle at the specified velocity (in radians per
-     * second) rather than changing abruptly.
+     * Moves the camera to the next elevation angle. The camera will smoothly roll to the
+     * appropriate angle at the specified velocity (in radians per second) rather than changing
+     * abruptly.
      */
     public void rollCamera (float angvel)
     {
@@ -127,9 +125,9 @@ public class GameInputHandler extends GodViewHandler
     }
 
     /**
-     * Pans the camera to a point where the specified location is basically in
-     * the center of the view. The specified location's x and y coordinate will
-     * be used but the z coordinate will be assumed to be on the ground.
+     * Pans the camera to a point where the specified location is basically in the center of the
+     * view. The specified location's x and y coordinate will be used but the z coordinate will be
+     * assumed to be on the ground.
      */
     public void aimCamera (Vector3f location)
     {
@@ -149,10 +147,9 @@ public class GameInputHandler extends GodViewHandler
             nextzoom = CAMERA_ZOOMS[nextidx];
         float deltaAngle = nextang-curang, deltaZoom = nextzoom-curzoom;
         _camidx = nextidx;
-        _camhand.moveCamera(
-            new SwingPath(_camhand, _camhand.getGroundPoint(),
-                          _camhand.getCamera().getLeft(), deltaAngle,
-                          angvel, deltaZoom));
+        _camhand.moveCamera(new SwingPath(_camhand, _camhand.getGroundPoint(),
+                                          _camhand.getCamera().getLeft(), deltaAngle,
+                                          angvel, deltaZoom));
     }
 
     protected void setKeyBindings ()

@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -47,13 +47,13 @@ import com.jme.input.mouse.MouseInputHandlerDevice;
 import com.jme.util.LoggingSystem;
 
 /**
- * <code>InputHandler</code> handles mouse, key and other inputs. Actions can be subscribed for specific event triggers.
- * {@link InputAction#performAction(InputActionEvent)} is invoked within the {@link #update} method whenever the
- * trigger criterias match. For a usage example see TestInputHandler. InputHandler is also used to decouple event
- * occurence and action invocation (see {@link ActionTrigger}) - an event may occur in another thread (e.g. polling
- * thread) but the action is still invoked in the thread that is calling the {@link #update} method.
- * <br>
- * You can add custom devices via the {@link #addDevice(InputHandlerDevice)} method.
+ * <code>InputHandler</code> handles mouse, key and other inputs. Actions can be subscribed for
+ * specific event triggers. {@link InputAction#performAction(InputActionEvent)} is invoked within
+ * the {@link #update} method whenever the trigger criterias match. For a usage example see
+ * TestInputHandler. InputHandler is also used to decouple event occurence and action invocation
+ * (see {@link ActionTrigger}) - an event may occur in another thread (e.g. polling thread) but the
+ * action is still invoked in the thread that is calling the {@link #update} method. <br> You can
+ * add custom devices via the {@link #addDevice(InputHandlerDevice)} method.
  *
  * @author Mark Powell
  * @author Jack Lindamood - (javadoc only)
@@ -62,8 +62,8 @@ import com.jme.util.LoggingSystem;
  */
 public class InputHandler {
     /**
-     * Stores first active trigger that is invoked upon next update. Other active triggers are reachable via
-     * {@link ActionTrigger#getNext()} (linked list).
+     * Stores first active trigger that is invoked upon next update. Other active triggers are
+     * reachable via {@link ActionTrigger#getNext()} (linked list).
      */
     ActionTrigger activeTriggers;
 
@@ -149,7 +149,7 @@ public class InputHandler {
             }
         }
     }
-    
+
     public void setActionSpeed(float speed, String trigger) {
         synchronized ( this ) {
             if ( allTriggers != null ) {
@@ -397,31 +397,31 @@ public class InputHandler {
         if ( props == null || props.get( key ) == null ) {
             return defaultVal;
         }
-        
-        return Float.parseFloat( props.get( key ).toString() );        
+
+        return Float.parseFloat( props.get( key ).toString() );
     }
 
     public static int getIntProp( HashMap<?, ?> props, String key, int defaultVal ) {
         if ( props == null || props.get( key ) == null ) {
             return defaultVal;
         }
-        
-        return Integer.parseInt( props.get( key ).toString() );        
+
+        return Integer.parseInt( props.get( key ).toString() );
     }
 
     public static boolean getBooleanProp( HashMap<?, ?> props, String key, boolean defaultVal ) {
         if ( props == null || props.get( key ) == null ) {
             return defaultVal;
         }
-        
-        return "true".equalsIgnoreCase( props.get( key ).toString() );        
+
+        return "true".equalsIgnoreCase( props.get( key ).toString() );
     }
 
     public static Object getObjectProp( HashMap<?, ?> props, String key, Object defaultVal ) {
         if ( props == null || props.get( key ) == null ) {
             return defaultVal;
         }
-        
+
         return props.get( key );
     }
 
@@ -479,8 +479,8 @@ public class InputHandler {
         if ( value != null ) {
             return value.setParent( this );
         }
-        
-        return false;       
+
+        return false;
     }
 
     /**
@@ -516,8 +516,8 @@ public class InputHandler {
         if ( attachedHandlers != null && index >= 0 && index < attachedHandlers.size() ) {
             return attachedHandlers.get( index );
         }
-        
-        return null;       
+
+        return null;
     }
 
     public void removeAllFromAttachedHandlers() {
