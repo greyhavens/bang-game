@@ -42,7 +42,6 @@ import sun.misc.Service;
 import sun.misc.ServiceConfigurationError;
 
 import com.jme.image.Image;
-import com.jme.input.joystick.JoystickInput;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -162,10 +161,6 @@ public abstract class DisplaySystem {
      * @return the appropriate display system specified by the key.
      */
     public static DisplaySystem getDisplaySystem(String key) {
-
-        // force to initialize joystick input before display system as there are
-        // lwjgl issues with creating it afterwards
-        JoystickInput.get();
 
         system = getCachedSystemProvider(key);
 

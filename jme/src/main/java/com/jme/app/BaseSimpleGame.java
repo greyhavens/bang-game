@@ -39,7 +39,6 @@ import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
-import com.jme.input.joystick.JoystickInput;
 import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -540,7 +539,6 @@ public abstract class BaseSimpleGame extends BaseGame {
         TextureManager.doTextureCleanup();
         KeyInput.destroyIfInitalized();
         MouseInput.destroyIfInitalized();
-        JoystickInput.destroyIfInitalized();
     }
 
     /**

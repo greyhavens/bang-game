@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -32,16 +32,12 @@
 
 package com.jme.input;
 
-import com.jme.input.joystick.JoystickInput;
-
-
 /**
- * <code>InputSystem</code> creates the required input objects (mouse and
- * keyboard, disabled by default: joystick) depending on the API desired for the handling
- * of the input. This will allow the client application to only deal with
- * <code>KeyInput</code>, <code>MouseInput</code> and <code>JoystickInput</code> not
- * having to worry about the API specifics.
- * 
+ * <code>InputSystem</code> creates the required input objects (mouse and keyboard) depending on
+ * the API desired for the handling of the input. This will allow the client application to only
+ * deal with <code>KeyInput</code>, <code>MouseInput</code> not having to worry about the API
+ * specifics.
+ *
  * @see com.jme.input.KeyInput
  * @see com.jme.input.MouseInput
  * @author Mark Powell
@@ -54,18 +50,14 @@ public class InputSystem {
     public static final String INPUT_SYSTEM_DUMMY = "DUMMY";
 
     /**
-     * Update the core input system - mouse, keyboard and joystick.
+     * Update the core input system - mouse and keyboard.
      * Thus all events are handled within this method call.<br>
-     * To disable joystick support call {@link JoystickInput#setProvider} with {@link #INPUT_SYSTEM_DUMMY} as
-     * parameter proir to creating the display.
      * @see KeyInput#update()
      * @see MouseInput#update()
-     * @see JoystickInput#update()
      */
     public static void update()
     {
         MouseInput.get().update();
         KeyInput.get().update();
-        JoystickInput.get().update();
     }
 }

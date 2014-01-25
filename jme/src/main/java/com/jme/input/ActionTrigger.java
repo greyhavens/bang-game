@@ -96,15 +96,11 @@ public abstract class ActionTrigger {
      * @param character some character data associated with the event, default '\0'.
      *                  <br>example: keyboard character
      * @param index     index of the device part that caused the event, default -1, >= 0 if valid
-     *                  <br>example: mouse button index, joystick axis index
+     *                  <br>example: mouse button index
      * @param position  new position of the device part that caused the event, default NaN, common range [-1;1]
-     *                  <br>example: joystick axis position
      * @param delta     position delta of the device part that caused the event, default NaN, common range [-1;1]
-     *                  <br>example: joystick axis delta
      * @param pressed   indicates if a button was pressed or released, default: false
-     *                  <br>example: true if joystick button is pressed, false if joystick button is released
      * @param data      any trigger specific data
-     *                  <br>example: joystick triggers get the Joystick instance for fast comparison
      * @see #activate()
      * @see #deactivate()
      */

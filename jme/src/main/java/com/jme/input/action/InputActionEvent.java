@@ -143,7 +143,7 @@ public class InputActionEvent {
 
     /**
      * @return index of the device part that caused the event, -1 if not applicable
-     *         <br>example: mouse button index, joystick axis index
+     *         <br>example: mouse button index
      */
     public int getTriggerIndex() {
         return this.triggerIndex;
@@ -166,7 +166,6 @@ public class InputActionEvent {
 
     /**
      * @return new position of the device part that caused the event, default 0, range [-1;1]
-     *         <br>example: joystick axis position
      */
     public float getTriggerPosition() {
         return this.triggerPosition;
@@ -189,7 +188,6 @@ public class InputActionEvent {
 
     /**
      * @return position delta of the device part that caused the event, default 0, range [-1;1]
-     *         <br>example: joystick axis delta
      */
     public float getTriggerDelta() {
         return this.triggerDelta;
@@ -212,7 +210,6 @@ public class InputActionEvent {
 
     /**
      * @return true if a button was pressed, false if released, default: false
-     *         <br>example: true if joystick button is pressed, false if joystick button is released
      */
     public boolean getTriggerPressed() {
         return this.triggerPressed;

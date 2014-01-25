@@ -41,7 +41,6 @@ import com.jme.input.action.InputAction;
  *
  * @see com.jme.input.mouse.MouseInputHandlerDevice
  * @see com.jme.input.keyboard.KeyboardInputHandlerDevice
- * @see com.jme.input.joystick.JoystickInputHandlerDevice
  */
 public abstract class InputHandlerDevice {
     /**

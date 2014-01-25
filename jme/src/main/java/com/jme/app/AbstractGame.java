@@ -52,8 +52,6 @@ import com.jme.util.LoggingSystem;
 public abstract class AbstractGame {
 
     protected AbstractGame() {
-        //let joystick disabled by default
-        //JoystickInput.setProvider( InputSystem.INPUT_SYSTEM_LWJGL );
     }
 
     /** Flag for running the system. */

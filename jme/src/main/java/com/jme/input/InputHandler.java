@@ -39,9 +39,6 @@ import java.util.Map;
 import com.jme.input.action.InputAction;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.MouseInputAction;
-import com.jme.input.joystick.Joystick;
-import com.jme.input.joystick.JoystickInput;
-import com.jme.input.joystick.JoystickInputHandlerDevice;
 import com.jme.input.keyboard.KeyboardInputHandlerDevice;
 import com.jme.input.mouse.MouseInputHandlerDevice;
 import com.jme.util.LoggingSystem;
@@ -213,7 +210,7 @@ public class InputHandler {
     private static Map<String, InputHandlerDevice> devices;
 
     /**
-     * create mouse, keyboard and joystick devices (if not yet created).
+     * create mouse, and keyboard devices (if not yet created).
      */
     private static void initializeDefaultDevices() {
         //TODO: synchronize if multithreaded creation of handlers should be supported
@@ -221,10 +218,6 @@ public class InputHandler {
             devices = new HashMap<String, InputHandlerDevice>();
             addDevice( new MouseInputHandlerDevice() );
             addDevice( new KeyboardInputHandlerDevice() );
-            for ( int i = JoystickInput.get().getJoystickCount() - 1; i >= 0; i-- ) {
-                Joystick joystick = JoystickInput.get().getJoystick( i );
-                addDevice( new JoystickInputHandlerDevice( joystick ) );
-            }
         }
     }
 
@@ -251,7 +244,7 @@ public class InputHandler {
      *
      * @param action       the input action to be added
      * @param deviceName   name of the deviceName: {@link #DEVICE_MOUSE}, {@link #DEVICE_KEYBOARD},
-     *                     a joystick name or {@link #DEVICE_ALL}
+     *                     or {@link #DEVICE_ALL}
      * @param button       index of the button that triggers this event, {@link #BUTTON_NONE} for no button,
      *                     {@link #BUTTON_ALL} for all buttons. (for keyboad deviceName this is a key code).
      *                     If DEVICE_ALL is specified button will not be interpreted as key code, thus
