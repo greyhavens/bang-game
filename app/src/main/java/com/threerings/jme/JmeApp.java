@@ -111,37 +111,21 @@ public class JmeApp
         if (_dispatchThread == null) {
             _dispatchThread = Thread.currentThread();
         }
-        try {
-            // render the current frame
-            long frameStart = processFrame();
 
-            // and process events until it's time to render the next
-          PROCESS_EVENTS:
-            do {
-                Runnable r = _evqueue.getNonBlocking();
-                if (r != null) {
-                    r.run();
-                }
-                if (_timer.getTime() - frameStart >= _ticksPerFrame) {
-                    break PROCESS_EVENTS;
-                } else {
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ie) {
-                    }
-                }
-            } while (!_finished);
-            _failures = 0;
-
-        } catch (Throwable t) {
-            log.warning(t);
-            // stick a fork in things if we fail too many times in a row
-            if (++_failures > MAX_SUCCESSIVE_FAILURES) {
-                stop();
-            }
+        // update our simulation and render a frame
+        long frameStart = _timer.getTime();
+        if (_updateEnabled) {
+            update(frameStart);
         }
-        if (_display.isClosing()) {
-            stop();
+        if (_renderEnabled) {
+            render(frameStart);
+            _display.getRenderer().displayBackBuffer();
+        }
+
+        // process any pending events
+        Runnable r;
+        while ((r = _evqueue.getNonBlocking()) != null) {
+            r.run();
         }
     }
 
@@ -318,23 +302,6 @@ public class JmeApp
     protected BRootNode createRootNode ()
     {
         return new PolledRootNode(_timer, _input);
-    }
-
-    /**
-     * Processes a single frame.
-     */
-    protected final long processFrame ()
-    {
-        // update our simulation and render a frame
-        long frameStart = _timer.getTime();
-        if (_updateEnabled) {
-            update(frameStart);
-        }
-        if (_renderEnabled) {
-            render(frameStart);
-            _display.getRenderer().displayBackBuffer();
-        }
-        return frameStart;
     }
 
     /**

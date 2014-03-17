@@ -514,16 +514,9 @@ public class GDXRenderer extends Renderer {
     @Override
     public void displayBackBuffer() {
         renderQueue();
-
         Renderer.defaultStateList[RenderState.RS_COLORMASK_STATE].apply();
-
         reset();
-
-
         GL11.glFlush();
-        if (!isHeadless())
-            Display.update();
-
         vboMap.expunge();
     }
 
