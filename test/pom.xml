@@ -10,7 +10,6 @@
   <name>Bang Test Parent</name>
 
   <modules>
-    <module>client</module>
     <module>server</module>
   </modules>
 </project>

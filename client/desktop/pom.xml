@@ -5,18 +5,18 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.threerings</groupId>
-    <artifactId>bang-test</artifactId>
+    <artifactId>bang-client</artifactId>
     <version>1.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>bang-test-client</artifactId>
+  <artifactId>bang-client-desktop</artifactId>
   <packaging>jar</packaging>
-  <name>Bang Test Client</name>
+  <name>Bang Desktop Client</name>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>bang-client</artifactId>
+      <artifactId>bang-client-shared</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -25,6 +25,8 @@
       <artifactId>bang-assets</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- TODO: move GDX desktop depend herein once we've migrated code to GDX APIs -->
   </dependencies>
 
   <build>
@@ -57,7 +59,7 @@
               </execution>
             </executions>
             <configuration>
-              <mainClass>com.threerings.bang.client.BangApp</mainClass>
+              <mainClass>com.threerings.bang.client.BangDesktop</mainClass>
               <systemProperties>
                 <systemProperty><key>no_unpack_resources</key>
                 <value>true</value></systemProperty>
