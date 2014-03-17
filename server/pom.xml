@@ -16,7 +16,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>bang-client</artifactId>
+      <artifactId>bang-client-shared</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

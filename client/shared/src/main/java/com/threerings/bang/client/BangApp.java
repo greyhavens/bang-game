@@ -14,9 +14,6 @@ import org.lwjgl.opengl.Display;
 
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
-import com.jme.system.DisplaySystem;
-import com.jme.system.JmeException;
-import com.jme.system.PropertiesIO;
 import com.jme.util.LoggingSystem;
 
 import com.jmex.bui.BButton;
@@ -49,7 +46,6 @@ import com.threerings.bang.game.client.GameCameraHandler;
 import com.threerings.bang.game.client.GameInputHandler;
 
 import com.threerings.bang.client.bui.SelectableIcon;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
@@ -115,52 +111,26 @@ public class BangApp extends JmeApp
         }
     }
 
-    public static void main (String[] args)
+        // // default to connecting to the frontier town server
+        // String username = (args.length > 0) ? args[0] : System.getProperty("username");
+        // String password = (args.length > 1) ? args[1] : System.getProperty("password");
+        // String townId = (args.length > 2) ? args[2] : BangCodes.FRONTIER_TOWN;
+        // String server = DeploymentConfig.getServerHost(townId);
+        // int[] ports = DeploymentConfig.getServerPorts(townId);
+        // BangApp app = new BangApp();
+        // if (app.init()) {
+        //     app.run(server, ports, username, password);
+        // }
+
+    @Override // documentation inherited
+    public void create ()
     {
         // configure our debug log
         configureLog("bang.log");
 
-        try {
-            // unpack the LWJGL native libraries and wire them up
-            SharedLibraryExtractor extractor = new SharedLibraryExtractor();
-            File nativesDir = null;
-            try {
-                nativesDir = extractor.extractLibrary("lwjgl", null).getParentFile();
-            } catch (Throwable ex) {
-                throw new RuntimeException("Unable to extract LWJGL native libraries.", ex);
-            }
-            System.setProperty("org.lwjgl.librarypath", nativesDir.getAbsolutePath());
+        // set up our application icons
+        BangUI.configIcons();
 
-            // this is a hack, but we can't set our translated title until we've create our client
-            // and message manager and whatnot; but I'll be damned if we're going to have it say
-            // "Game" for even half a second
-            Display.setTitle("Bang! Howdy");
-
-            // set up our application icons
-            BangUI.configIcons();
-
-        } catch (Throwable t) {
-            // we need to catch any errors thrown by LWJGL here because we're not yet in the
-            // standard JmeApp init process which will do that for us automagically
-            reportInitFailure(null, t);
-            return;
-        }
-
-        // default to connecting to the frontier town server
-        String username = (args.length > 0) ? args[0] : System.getProperty("username");
-        String password = (args.length > 1) ? args[1] : System.getProperty("password");
-        String townId = (args.length > 2) ? args[2] : BangCodes.FRONTIER_TOWN;
-        String server = DeploymentConfig.getServerHost(townId);
-        int[] ports = DeploymentConfig.getServerPorts(townId);
-        BangApp app = new BangApp();
-        if (app.init()) {
-            app.run(server, ports, username, password);
-        }
-    }
-
-    @Override // documentation inherited
-    public boolean init ()
-    {
         // Initilize our tracking system
         String csid = System.getProperty("csid");
         TrackingUtil.init(csid, BANGHOWDY_CSID, CS_URL_BASE);
@@ -171,12 +141,10 @@ public class BangApp extends JmeApp
             checkJavaVersion();
         } catch (Throwable t) {
             reportInitFailure(t);
-            return false;
+            return;
         }
 
-        if (!super.init()) {
-            return false;
-        }
+        super.create();
 
         // two-pass transparency is expensive
         _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
@@ -192,8 +160,6 @@ public class BangApp extends JmeApp
 
         // speed up key input
         _input.setActionSpeed(150f);
-
-        return true;
     }
 
     public void run (String server, int[] ports, String username, String password)
@@ -212,7 +178,7 @@ public class BangApp extends JmeApp
         }
 
         // now start up the main event loop
-        run();
+        // run();
     }
 
     @Override // documentation inherited
@@ -223,19 +189,19 @@ public class BangApp extends JmeApp
         }
     }
 
-    @Override // documentation inherited
-    protected DisplaySystem createDisplay ()
-        throws JmeException
-    {
-        PropertiesIO props = new PropertiesIO(getConfigPath("jme.cfg"));
-        BangPrefs.configureDisplayMode(props, Boolean.getBoolean("safemode"));
-        _api = props.getRenderer();
-        DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
-        display.setVSyncEnabled(!_profiling);
-        display.createWindow(props.getWidth(), props.getHeight(), props.getDepth(), props.getFreq(),
-                             props.getFullscreen());
-        return display;
-    }
+    // @Override // documentation inherited
+    // protected DisplaySystem createDisplay ()
+    //     throws JmeException
+    // {
+    //     PropertiesIO props = new PropertiesIO(getConfigPath("jme.cfg"));
+    //     BangPrefs.configureDisplayMode(props, Boolean.getBoolean("safemode"));
+    //     _api = props.getRenderer();
+    //     DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
+    //     display.setVSyncEnabled(!_profiling);
+    //     display.createWindow(props.getWidth(), props.getHeight(), props.getDepth(), props.getFreq(),
+    //                          props.getFullscreen());
+    //     return display;
+    // }
 
     @Override // documentation inherited
     protected CameraHandler createCameraHandler (Camera camera)
@@ -309,7 +275,6 @@ public class BangApp extends JmeApp
         }
     }
 
-    @Override // documentation inherited
     protected void reportInitFailure (Throwable t)
     {
         reportInitFailure(_client, t);

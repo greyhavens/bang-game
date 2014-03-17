@@ -29,6 +29,8 @@ import com.samskivert.util.Queue;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
+import com.badlogic.gdx.ApplicationListener;
+
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -40,8 +42,6 @@ import com.jme.scene.state.ZBufferState;
 
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
-import com.jme.system.PropertiesIO;
-import com.jme.system.lwjgl.LWJGLPropertiesDialog;
 
 import com.jme.input.InputHandler;
 import com.jme.input.KeyInput;
@@ -63,7 +63,7 @@ import static com.threerings.jme.Log.log;
  * targeting the framerate of the display.
  */
 public class JmeApp
-    implements RunQueue
+    implements RunQueue, ApplicationListener
 {
     /**
      * Returns a context implementation that provides access to all the
@@ -74,58 +74,83 @@ public class JmeApp
         return _ctx;
     }
 
-    /**
-     * Does the main initialization of the application. This method should
-     * be called first, and then the {@link #run} method should be called
-     * to begin the rendering/event loop. Derived classes can override
-     * this, being sure to call super before doing their own
-     * initalization.
-     *
-     * @return true if the application initialized successfully, false if
-     * initialization failed. (See {@link #reportInitFailure}.)
-     */
-    public boolean init ()
-    {
+    @Override public void create () {
+        // initialize the rendering system
+        initDisplay();
+        if (!_display.isCreated()) {
+            throw new IllegalStateException("Failed to initialize display?");
+        }
+
+        // create an appropriate timer
+        _timer = Timer.getTimer();
+
+        // initialize our main camera controls and user input handling
+        initInput();
+
+        // initialize the root node
+        initRoot();
+
+        // initialize the lighting
+        initLighting();
+
+        // initialize the UI support stuff
+        initInterface();
+
+        // update everything for the zeroth tick
+        _iface.updateRenderState();
+        _geom.updateRenderState();
+        _root.updateGeometricState(0f, true);
+        _root.updateRenderState();
+    }
+
+    @Override public void resize (int width, int height) {
+    }
+
+    @Override public void render () {
+        if (_dispatchThread == null) {
+            _dispatchThread = Thread.currentThread();
+        }
         try {
-            // initialize the rendering system
-            initDisplay();
-            if (!_display.isCreated()) {
-                throw new IllegalStateException(
-                    "Failed to initialize display?");
-            }
+            // render the current frame
+            long frameStart = processFrame();
 
-            // create an appropriate timer
-            _timer = Timer.getTimer();
-
-            // start with the target FPS equal to the refresh rate (but
-            // sometimes the refresh rate is reported as zero so don't let that
-            // freak us out)
-            setTargetFPS(Math.max(_display.getFrequency(), 60));
-
-            // initialize our main camera controls and user input handling
-            initInput();
-
-            // initialize the root node
-            initRoot();
-
-            // initialize the lighting
-            initLighting();
-
-            // initialize the UI support stuff
-            initInterface();
-
-            // update everything for the zeroth tick
-            _iface.updateRenderState();
-            _geom.updateRenderState();
-            _root.updateGeometricState(0f, true);
-            _root.updateRenderState();
-
-            return true;
+            // and process events until it's time to render the next
+          PROCESS_EVENTS:
+            do {
+                Runnable r = _evqueue.getNonBlocking();
+                if (r != null) {
+                    r.run();
+                }
+                if (_timer.getTime() - frameStart >= _ticksPerFrame) {
+                    break PROCESS_EVENTS;
+                } else {
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException ie) {
+                    }
+                }
+            } while (!_finished);
+            _failures = 0;
 
         } catch (Throwable t) {
-            reportInitFailure(t);
-            return false;
+            log.warning(t);
+            // stick a fork in things if we fail too many times in a row
+            if (++_failures > MAX_SUCCESSIVE_FAILURES) {
+                stop();
+            }
         }
+        if (_display.isClosing()) {
+            stop();
+        }
+    }
+
+    @Override public void pause () {
+    }
+
+    @Override public void resume () {
+    }
+
+    @Override public void dispose () {
     }
 
     /**
@@ -152,99 +177,11 @@ public class JmeApp
     }
 
     /**
-     * Sets the target frames per second.
-     *
-     * @return the old target frames per second.
-     */
-    public int setTargetFPS (int targetFPS)
-    {
-        int oldTargetFPS = _targetFPS;
-        _targetFPS = targetFPS;
-        _ticksPerFrame =  _timer.getResolution() / _targetFPS;
-        return oldTargetFPS;
-    }
-
-    /**
      * Returns the frames per second averaged over the last 32 frames.
      */
     public float getRecentFrameRate ()
     {
         return _timer.getFrameRate();
-    }
-
-    /**
-     * Enables or disables the update and render part of the
-     * update/render/process events application loop.
-     */
-    public void setEnabled (boolean update, boolean render)
-    {
-        _updateEnabled = update;
-        _renderEnabled = render;
-    }
-
-    /**
-     * Starts up the main rendering and event processing loop. This method
-     * will not return until the application is terminated with a call to
-     * {@link #stop}.
-     */
-    public void run ()
-    {
-        synchronized (this) {
-            _dispatchThread = Thread.currentThread();
-        }
-
-        // enter the main rendering and event processing loop
-        while (!_finished) {
-            try {
-                // render the current frame
-                long frameStart = processFrame();
-
-                // and process events until it's time to render the next
-              PROCESS_EVENTS:
-                do {
-                    Runnable r = _evqueue.getNonBlocking();
-                    if (r != null) {
-                        r.run();
-                    }
-                    if (_timer.getTime() - frameStart >= _ticksPerFrame) {
-                        break PROCESS_EVENTS;
-                    } else {
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException ie) {
-                        }
-                    }
-                } while (!_finished);
-                _failures = 0;
-
-            } catch (Throwable t) {
-                log.warning(t);
-                // stick a fork in things if we fail too many times in a row
-                if (++_failures > MAX_SUCCESSIVE_FAILURES) {
-                    stop();
-                }
-            }
-            if (_display.isClosing()) {
-                stop();
-            }
-        }
-
-        try {
-            cleanup();
-        } catch (Throwable t) {
-            log.warning(t);
-        } finally {
-            exit();
-        }
-    }
-
-    /**
-     * Returns the duration (in seconds) between the previous frame and the
-     * current frame.
-     */
-    public float getFrameTime ()
-    {
-        return _frameTime;
     }
 
     /**
@@ -274,34 +211,6 @@ public class JmeApp
     }
 
     /**
-     * Determines the display configuration and creates the display. This must
-     * fill in {@link #_api} as a side-effect.
-     */
-    protected DisplaySystem createDisplay ()
-        throws JmeException
-    {
-        PropertiesIO props = new PropertiesIO(getConfigPath("jme.cfg"));
-        if (!props.load()) {
-            LWJGLPropertiesDialog dialog =
-                new LWJGLPropertiesDialog(props, (String)null);
-            while (dialog.isVisible()) {
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    log.warning("Error waiting for dialog system, " +
-                                "using defaults.");
-                }
-            }
-        }
-        _api = props.getRenderer();
-        DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
-        display.createWindow(props.getWidth(), props.getHeight(),
-                             props.getDepth(), props.getFreq(),
-                             props.getFullscreen());
-        return display;
-    }
-
-    /**
      * Initializes the underlying rendering system, creating a display of
      * the proper resolution and depth.
      */
@@ -309,7 +218,7 @@ public class JmeApp
         throws JmeException
     {
         // create the main display system
-        _display = createDisplay();
+        _display = DisplaySystem.getDisplaySystem();
 
         // create a camera
         int width = _display.getWidth(), height = _display.getHeight();
@@ -426,15 +335,6 @@ public class JmeApp
     protected BRootNode createRootNode ()
     {
         return new PolledRootNode(_timer, _input);
-    }
-
-    /**
-     * Called when initialization fails to give the application a chance
-     * to report the failure to the user.
-     */
-    protected void reportInitFailure (Throwable t)
-    {
-        log.warning(t);
     }
 
     /**

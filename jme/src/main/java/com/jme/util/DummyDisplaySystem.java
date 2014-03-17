@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -93,184 +93,178 @@ public class DummyDisplaySystem extends DisplaySystem {
     public DummyDisplaySystem() {
         system = new SystemProvider() {
             @Override
-			public String getProviderIdentifier() {
+            public String getProviderIdentifier() {
                 return "dummy";
             }
 
             @Override
-			public DisplaySystem getDisplaySystem() {
+            public DisplaySystem getDisplaySystem() {
                 return DummyDisplaySystem.this;
             }
 
             @Override
-			public Timer getTimer() {
+            public Timer getTimer() {
                 return Timer.getTimer();
-            }
-
-            @Override
-			public void installLibs() {
             }
         };
     }
-    
+
     @Override
-	public boolean isValidDisplayMode( int width, int height, int bpp, int freq ) {
+    public boolean isValidDisplayMode( int width, int height, int bpp, int freq ) {
         return false;
     }
-    
+
     @Override
-	public void setIcon(com.jme.image.Image[] iconImages) {
+    public void setIcon(com.jme.image.Image[] iconImages) {
     }
 
     @Override
-	public void setVSyncEnabled( boolean enabled ) {
+    public void setVSyncEnabled( boolean enabled ) {
     }
 
     @Override
-	public void setTitle( String title ) {
+    public void setTitle( String title ) {
     }
 
     @Override
-	public void createWindow( int w, int h, int bpp, int frq, boolean fs ) {
+    public void createWindow( int w, int h, int bpp, int frq, boolean fs ) {
     }
 
     @Override
-	public void createHeadlessWindow( int w, int h, int bpp ) {
+    public void createHeadlessWindow( int w, int h, int bpp ) {
     }
 
     @Override
-	public void recreateWindow( int w, int h, int bpp, int frq, boolean fs ) {
+    public void recreateWindow( int w, int h, int bpp, int frq, boolean fs ) {
     }
 
     @Override
-	public Renderer getRenderer() {
+    public Renderer getRenderer() {
         return new Renderer() {
 
             @Override
-			public void setCamera( Camera camera ) {
+            public void setCamera( Camera camera ) {
             }
 
             @Override
-			public Camera createCamera( int width, int height ) {
+            public Camera createCamera( int width, int height ) {
                 return null;
             }
 
             @Override
-			public AlphaState createAlphaState() {
+            public AlphaState createAlphaState() {
                 return new AlphaState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
 
                     @Override
-					public StateRecord createStateRecord() { return null; }
-                    
-                    
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public void flush() {
+            public void flush() {
             }
 
             @Override
-			public AttributeState createAttributeState() {
+            public AttributeState createAttributeState() {
                 return new AttributeState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public CullState createCullState() {
+            public CullState createCullState() {
                 return new CullState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public DitherState createDitherState() {
+            public DitherState createDitherState() {
                 return new DitherState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public FogState createFogState() {
+            public FogState createFogState() {
                 return new FogState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public LightState createLightState() {
+            public LightState createLightState() {
                 return new LightState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public MaterialState createMaterialState() {
+            public MaterialState createMaterialState() {
                 return new MaterialState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public ShadeState createShadeState() {
+            public ShadeState createShadeState() {
                 return new ShadeState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
@@ -284,364 +278,364 @@ public class DummyDisplaySystem extends DisplaySystem {
                 }
 
                 @Override
-				public void load( int unit ) {
+                public void load( int unit ) {
                 }
 
                 @Override
-				public void delete( int unit ) {
+                public void delete( int unit ) {
                 }
 
                 @Override
-				public void deleteAll() {
+                public void deleteAll() {
                 }
 
                 @Override
-				public void deleteAll(boolean removeFromCache) {
+                public void deleteAll(boolean removeFromCache) {
                 }
 
                 @Override
-				public void apply() {
+                public void apply() {
                 }
                 @Override
-				public StateRecord createStateRecord() { return null; }
+                public StateRecord createStateRecord() { return null; }
             }
 
             @Override
-			public TextureState createTextureState() {
+            public TextureState createTextureState() {
                 return new TextureStateN();
             }
 
             @Override
-			public WireframeState createWireframeState() {
+            public WireframeState createWireframeState() {
                 return new WireframeState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public ZBufferState createZBufferState() {
+            public ZBufferState createZBufferState() {
                 return new ZBufferState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public VertexProgramState createVertexProgramState() {
+            public VertexProgramState createVertexProgramState() {
                 return new VertexProgramState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public boolean isSupported() {
+                    public boolean isSupported() {
                         return false;
                     }
 
                     @Override
-					public void load( URL file ) {
+                    public void load( URL file ) {
                     }
 
                     @Override
-					public void load( String contents ) {
+                    public void load( String contents ) {
                     }
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
 
                     @Override
-					public String getProgram() {
+                    public String getProgram() {
                         return null;
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public FragmentProgramState createFragmentProgramState() {
+            public FragmentProgramState createFragmentProgramState() {
                 return new FragmentProgramState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public boolean isSupported() {
+                    public boolean isSupported() {
                         return false;
                     }
 
                     @Override
-					public void load( URL file ) {
+                    public void load( URL file ) {
                     }
 
                     @Override
-					public void load( String contents ) {
+                    public void load( String contents ) {
                     }
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
 
                     @Override
-					public String getProgram() {
+                    public String getProgram() {
                         return null;
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public GLSLShaderObjectsState createGLSLShaderObjectsState() {
+            public GLSLShaderObjectsState createGLSLShaderObjectsState() {
                 return new GLSLShaderObjectsState() {
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public boolean isSupported() {
+                    public boolean isSupported() {
                         return false;
                     }
 
                     @Override
-					public void load( URL vert, URL frag ) {
-                    }
-                    
-                    @Override
-					public void load(String vert, String frag) {
-                        
+                    public void load( URL vert, URL frag ) {
                     }
 
                     @Override
-					public void apply() {
+                    public void load(String vert, String frag) {
+
                     }
 
                     @Override
-					public void relinkProgram() {
+                    public void apply() {
+                    }
+
+                    @Override
+                    public void relinkProgram() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public StencilState createStencilState() {
+            public StencilState createStencilState() {
                 return new StencilState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public ClipState createClipState() {
+            public ClipState createClipState() {
                 return new ClipState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public ColorMaskState createColorMaskState() {
+            public ColorMaskState createColorMaskState() {
                 return new ColorMaskState() {
 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-					public void apply() {
+                    public void apply() {
                     }
                     @Override
-					public StateRecord createStateRecord() { return null; }
+                    public StateRecord createStateRecord() { return null; }
                 };
             }
 
             @Override
-			public void enableStatistics( boolean value ) {
+            public void enableStatistics( boolean value ) {
             }
 
             @Override
-			public void clearStatistics() {
+            public void clearStatistics() {
             }
 
             @Override
-			public void setBackgroundColor( ColorRGBA c ) {
+            public void setBackgroundColor( ColorRGBA c ) {
             }
 
             @Override
-			public ColorRGBA getBackgroundColor() {
+            public ColorRGBA getBackgroundColor() {
                 return null;
             }
 
             @Override
-			public void clearZBuffer() {
+            public void clearZBuffer() {
             }
 
             @Override
-			public void clearColorBuffer() {
+            public void clearColorBuffer() {
             }
 
             @Override
-			public void clearStencilBuffer() {
+            public void clearStencilBuffer() {
             }
 
             @Override
-			public void clearBuffers() {
+            public void clearBuffers() {
             }
 
             @Override
-			public void clearStrictBuffers() {
+            public void clearStrictBuffers() {
             }
 
             @Override
-			public void displayBackBuffer() {
+            public void displayBackBuffer() {
             }
 
             @Override
-			public void setOrtho() {
+            public void setOrtho() {
             }
 
             @Override
-			public void setOrthoCenter() {
+            public void setOrthoCenter() {
             }
 
             @Override
-			public void unsetOrtho() {
+            public void unsetOrtho() {
             }
 
             @Override
-			public boolean takeScreenShot( String filename ) {
+            public boolean takeScreenShot( String filename ) {
                 return false;
             }
 
             @Override
-			public void grabScreenContents( IntBuffer buff, int x, int y, int w,
+            public void grabScreenContents( IntBuffer buff, int x, int y, int w,
                                             int h ) {
             }
 
             @Override
-			public void draw( Spatial s ) {
+            public void draw( Spatial s ) {
             }
 
             @Override
-			public void draw( PointBatch batch ) {
+            public void draw( PointBatch batch ) {
             }
 
             @Override
-			public void draw( LineBatch batch ) {
+            public void draw( LineBatch batch ) {
             }
 
             @Override
-			public void draw( Text t ) {
+            public void draw( Text t ) {
             }
 
             @Override
-			public RenderQueue getQueue() {
+            public RenderQueue getQueue() {
                 return null;
             }
 
             @Override
-			public boolean isProcessingQueue() {
+            public boolean isProcessingQueue() {
                 return false;
             }
 
             @Override
-			public boolean checkAndAdd( SceneElement s ) {
+            public boolean checkAndAdd( SceneElement s ) {
                 return false;
             }
 
             @Override
-			public boolean supportsVBO() {
+            public boolean supportsVBO() {
                 return false;
             }
 
             @Override
-			public boolean isHeadless() {
+            public boolean isHeadless() {
                 return false;
             }
 
             @Override
-			public void setHeadless( boolean headless ) {
+            public void setHeadless( boolean headless ) {
             }
 
             @Override
-			public int getWidth() {
+            public int getWidth() {
                 return -1;
             }
 
             @Override
-			public int getHeight() {
+            public int getHeight() {
                 return -1;
             }
 
             @Override
-			public void reinit( int width, int height ) {
+            public void reinit( int width, int height ) {
             }
 
             @Override
-			public int createDisplayList( GeomBatch g ) {
+            public int createDisplayList( GeomBatch g ) {
                 return -1;
             }
 
             @Override
-			public void releaseDisplayList( int listId ) {
+            public void releaseDisplayList( int listId ) {
             }
 
             @Override
-			public void setPolygonOffset( float factor, float offset ) {
+            public void setPolygonOffset( float factor, float offset ) {
             }
 
             @Override
-			public void clearPolygonOffset() {
+            public void clearPolygonOffset() {
             }
 
             @Override
-			public void deleteVBO( Buffer buffer ) {
-                
+            public void deleteVBO( Buffer buffer ) {
+
             }
 
             @Override
-			public void deleteVBO( int vboid ) {
-                
+            public void deleteVBO( int vboid ) {
+
             }
 
             @Override
-			public void clearVBOCache() {
-                
+            public void clearVBOCache() {
+
             }
 
             @Override
-			public Integer removeFromVBOCache( Buffer buffer ) {
+            public Integer removeFromVBOCache( Buffer buffer ) {
                 return null;
             }
 
             @Override
-			public void draw(TriangleBatch batch) {
+            public void draw(TriangleBatch batch) {
             }
 
-			@Override
-			public void draw(QuadBatch batch) {
-			}
+            @Override
+            public void draw(QuadBatch batch) {
+            }
 
             @Override
             public StateRecord createLineRecord() {
@@ -651,53 +645,53 @@ public class DummyDisplaySystem extends DisplaySystem {
     }
 
     @Override
-	public boolean isClosing() {
+    public boolean isClosing() {
         return false;
     }
 
     @Override
     public boolean isActive()
     {
-    	return true;
-    }
-    
-    @Override
-	public void reset() {
+        return true;
     }
 
     @Override
-	public void close() {
+    public void reset() {
     }
 
     @Override
-	public Vector3f getScreenCoordinates( Vector3f worldPosition, Vector3f store ) {
+    public void close() {
+    }
+
+    @Override
+    public Vector3f getScreenCoordinates( Vector3f worldPosition, Vector3f store ) {
         return null;
     }
 
     @Override
-	public Vector3f getWorldCoordinates( Vector2f screenPosition, float zPos,
+    public Vector3f getWorldCoordinates( Vector2f screenPosition, float zPos,
                                          Vector3f store ) {
         return null;
     }
 
     @Override
-	public void setRenderer( Renderer r ) {
+    public void setRenderer( Renderer r ) {
     }
 
     @Override
-	public Canvas createCanvas( int w, int h ) {
+    public Canvas createCanvas( int w, int h ) {
         return null;
     }
 
     @Override
-	public TextureRenderer createTextureRenderer( int width, int height,
+    public TextureRenderer createTextureRenderer( int width, int height,
                                                   boolean useRGB, boolean useRGBA, boolean useDepth,
                                                   boolean isRectangle, int target, int mipmaps ) {
         return null;
     }
 
     @Override
-	public TextureRenderer createTextureRenderer( int width, int height,
+    public TextureRenderer createTextureRenderer( int width, int height,
                                                   boolean useRGB, boolean useRGBA, boolean useDepth,
                                                   boolean isRectangle, int target, int mipmaps, int bpp, int alpha,
                                                   int depth, int stencil, int samples ) {
@@ -705,7 +699,7 @@ public class DummyDisplaySystem extends DisplaySystem {
     }
 
     @Override
-	protected void updateDisplayBGC() { }
+    protected void updateDisplayBGC() { }
 
     @Override
     public String getAdapter() {

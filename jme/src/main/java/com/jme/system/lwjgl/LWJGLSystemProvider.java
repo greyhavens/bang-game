@@ -35,7 +35,6 @@ package com.jme.system.lwjgl;
 // import org.lwjgl.util.applet.LWJGLInstaller;
 
 import com.jme.system.DisplaySystem;
-import com.jme.system.JmeException;
 import com.jme.system.SystemProvider;
 import com.jme.util.Timer;
 import com.jme.util.lwjgl.LWJGLTimer;
@@ -63,16 +62,5 @@ public class LWJGLSystemProvider implements SystemProvider {
 	public Timer getTimer() {
         if (timer == null) timer = new LWJGLTimer();
         return timer;
-    }
-
-    @Override
-	public void installLibs() {
-        // try {
-        //     LWJGLInstaller.tempInstall();
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        //     throw new JmeException("Could not install lwjgl libs! "+e);
-        // }
-        throw new JmeException("No longer supported!");
     }
 }

@@ -450,7 +450,9 @@ public class BangBoardView extends BoardView
         // drop rendering to 1 FPS while we load the models
         final long start = System.currentTimeMillis();
         // final int oldFPS = _ctx.getApp().setTargetFPS(1);
-        _ctx.getApp().setEnabled(true, false);
+
+        // TODO: disable renderer?
+        // _ctx.getApp().setEnabled(true, false);
 
         // when the round starts a bunch of piece creation notifications come
         // in which are thrown onto the event queue, and we need to postpone
@@ -1156,7 +1158,8 @@ public class BangBoardView extends BoardView
 
         // restore normal rendering
         long end = System.currentTimeMillis();
-        _ctx.getApp().setEnabled(true, true);
+        // TODO: turn renderer back on?
+        // _ctx.getApp().setEnabled(true, true);
         // _ctx.getApp().setTargetFPS(oldFPS);
 
         // report model loading time to admins

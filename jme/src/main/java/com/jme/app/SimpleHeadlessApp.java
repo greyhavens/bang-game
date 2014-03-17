@@ -152,7 +152,7 @@ public abstract class SimpleHeadlessApp extends BaseHeadlessApp {
 	protected final void initSystem() {
         try {
             /** Get a DisplaySystem acording to the renderer selected in the startup box. */
-            display = DisplaySystem.getDisplaySystem( properties.getRenderer() );
+            display = DisplaySystem.getDisplaySystem();
             /** Create a window with the startup box's information. */
             display.createHeadlessWindow(
                     properties.getWidth(),

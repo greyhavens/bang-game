@@ -3,99 +3,93 @@
 
 package com.threerings.bang.editor;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Canvas;
+
 import javax.swing.JFrame;
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 
-import com.threerings.jme.JmeCanvasApp;
-
-import com.threerings.bang.client.BangApp;
-
-import static com.threerings.bang.Log.log;
+import com.threerings.jme.JmeApp;
 
 /**
  * Sets up the necessary business for the Bang! editor.
  */
 @Singleton
-public class EditorApp extends JmeCanvasApp
+public class EditorApp extends JmeApp // TODO: use GDX's canvas stuffs
 {
     public static String[] appArgs;
 
-    public static void main (String[] args)
-    {
-        // configure our debug log
-        BangApp.configureLog("editor.log");
+    // public static void main (String[] args)
+    // {
+    //     // configure our debug log
+    //     BangApp.configureLog("editor.log");
 
-        // save these for later
-        appArgs = args;
+    //     // save these for later
+    //     appArgs = args;
 
-        // create our editor server which we're going to run in the same JVM with the client
-        Injector injector = Guice.createInjector(new EditorServer.Module());
-        EditorServer server = injector.getInstance(EditorServer.class);
-        try {
-            server.init(injector);
-        } catch (Exception e) {
-            log.warning("Unable to initialize server.", e);
-        }
+    //     // create our editor server which we're going to run in the same JVM with the client
+    //     Injector injector = Guice.createInjector(new EditorServer.Module());
+    //     EditorServer server = injector.getInstance(EditorServer.class);
+    //     try {
+    //         server.init(injector);
+    //     } catch (Exception e) {
+    //         log.warning("Unable to initialize server.", e);
+    //     }
 
-        // let the BangClientController know we're in editor mode
-        System.setProperty("editor", "true");
+    //     // let the BangClientController know we're in editor mode
+    //     System.setProperty("editor", "true");
 
-        // this is the entry point for all the "client-side" stuff
-        EditorApp app = injector.getInstance(EditorApp.class);
-        app.create();
-        app.run();
+    //     // this is the entry point for all the "client-side" stuff
+    //     EditorApp app = injector.getInstance(EditorApp.class);
+    //     app.create();
+    //     app.run();
+    // }
+
+    public Canvas getCanvas () {
+        throw new RuntimeException("TODO");
     }
 
     @Override // documentation inherited
-    public boolean init ()
-    {
-        if (super.init()) {
-            // two-pass transparency is expensive
-            _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
-
-            // queue an update to make sure that the context is current before the client's event
-            // handlers start firing.  somehow calling repaint() doesn't have the same effect.
-            postRunnable(new Runnable() {
-                public void run () {
-                    _canvas.update(_canvas.getGraphics());
-                }
-            });
-
-            // initialize and start our client instance
-            _client.init(this, _frame);
-            _client.start();
-
-            return true;
-        }
-        return false;
-    }
-
     public void create ()
     {
-        // create a frame
-        _frame = new JFrame("Bang Editor");
-        _frame.setSize(new Dimension(1224, 768));
-        _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.create();
+        // two-pass transparency is expensive
+        _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
 
-        // display the GL canvas to start so that it initializes everything
-        _frame.getContentPane().add(_canvas, BorderLayout.CENTER);
-        _frame.setVisible(true);
+        // // queue an update to make sure that the context is current before the client's event
+        // // handlers start firing.  somehow calling repaint() doesn't have the same effect.
+        // postRunnable(new Runnable() {
+        //     public void run () {
+        //         _canvas.update(_canvas.getGraphics());
+        //     }
+        // });
+
+        // initialize and start our client instance
+        _client.init(this, _frame);
+        _client.start();
     }
 
-    protected EditorApp ()
-    {
-        super(1024, 768);
-    }
+    // public void create ()
+    // {
+    //     // create a frame
+    //     _frame = new JFrame("Bang Editor");
+    //     _frame.setSize(new Dimension(1224, 768));
+    //     _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    //     // display the GL canvas to start so that it initializes everything
+    //     _frame.getContentPane().add(_canvas, BorderLayout.CENTER);
+    //     _frame.setVisible(true);
+    // }
+
+    // protected EditorApp ()
+    // {
+    //     super(1024, 768);
+    // }
 
     @Override // documentation inherited
     protected void initRoot ()

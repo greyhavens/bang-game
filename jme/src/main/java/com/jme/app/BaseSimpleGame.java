@@ -322,7 +322,7 @@ public abstract class BaseSimpleGame extends BaseGame {
              * Get a DisplaySystem acording to the renderer selected in the
              * startup box.
              */
-            display = DisplaySystem.getDisplaySystem( properties.getRenderer() );
+            display = DisplaySystem.getDisplaySystem();
             LoggingSystem.getLogger().log( Level.INFO, "Running on: "+display.getAdapter()+"\nDriver version: "+display.getDriverVersion());
             
             display.setMinDepthBits( depthBits );

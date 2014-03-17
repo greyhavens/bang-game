@@ -100,12 +100,11 @@ public abstract class Timer {
      */
     public static Timer getTimer() {
         if (instance == null) {
-            if(DisplaySystem.getSystemProvider() == null) {
+            if (DisplaySystem.getSystemProvider() == null) {
                 throw new JmeException("Display System must be initialized before Timer.");
             }
             instance = DisplaySystem.getSystemProvider().getTimer();
         }
-        
         return instance;
     }
 

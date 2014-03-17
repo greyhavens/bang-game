@@ -46,21 +46,21 @@ public class EditorPanel extends JPanel
 
     /** Displays board metadata. */
     public BoardInfoPanel info;
-    
+
     /** Allows user to select and configure tools. */
     public ToolPanel tools;
 
     /** The undo and redo menu items, which are enabled and disabled by the
      * controller. */
-    public JMenuItem undo, redo; 
-    
+    public JMenuItem undo, redo;
+
     /** The recenter camera menu item, which is enabled and disabled by the
      * viewpoint editor. */
     public JMenuItem recenter;
 
     /** The prop menu items. */
     public JCheckBoxMenuItem[] propChecks;
-    
+
     /** Creates the main panel and its sub-interfaces. */
     public EditorPanel (EditorContext ctx, EditorController ctrl)
     {
@@ -101,23 +101,23 @@ public class EditorPanel extends JPanel
                        KeyEvent.VK_O, EditorController.LOAD_BOARD);
         createMenuItem(file, msgs.get("m.menu_save"), KeyEvent.VK_S,
                        KeyEvent.VK_S, EditorController.SAVE_BOARD);
-        
+
         file.addSeparator();
-        
+
         createMenuItem(file, msgs.get("m.menu_import_hf"), KeyEvent.VK_I,
                        KeyEvent.VK_I, EditorController.IMPORT_HEIGHTFIELD);
         createMenuItem(file, msgs.get("m.menu_export_hf"), KeyEvent.VK_E,
                        KeyEvent.VK_E, EditorController.EXPORT_HEIGHTFIELD);
-        
+
         file.addSeparator();
-        
+
         createMenuItem(file, msgs.get("m.menu_quit"), KeyEvent.VK_Q,
                        KeyEvent.VK_Q, EditorController.EXIT);
-        
+
         JMenu edit = new JMenu(msgs.get("m.menu_edit"));
         edit.setMnemonic(KeyEvent.VK_E);
         menubar.add(edit);
-        
+
         undo = createMenuItem(edit, msgs.get("m.menu_undo"), KeyEvent.VK_Z,
             KeyEvent.VK_U, EditorController.UNDO);
         redo = createMenuItem(edit, msgs.get("m.menu_redo"), KeyEvent.VK_Y,
@@ -140,11 +140,11 @@ public class EditorPanel extends JPanel
             KeyEvent.VK_G, EditorController.GENERATE_SHADOWS);
         createMenuItem(edit, msgs.get("m.menu_clear_shadows"), -1,
             KeyEvent.VK_C, EditorController.CLEAR_SHADOWS);
-            
+
         JMenu view = new JMenu(msgs.get("m.menu_view"));
         view.setMnemonic(KeyEvent.VK_V);
         menubar.add(view);
-        
+
         createCheckBoxMenuItem(view, msgs.get("m.menu_wireframe"),
             KeyEvent.VK_W, KeyEvent.VK_W, EditorController.TOGGLE_WIREFRAME,
             false);
@@ -160,7 +160,7 @@ public class EditorPanel extends JPanel
         createCheckBoxMenuItem(view, msgs.get("m.menu_markers"),
             KeyEvent.VK_M, KeyEvent.VK_M, EditorController.TOGGLE_MARKERS,
             true);
-        
+
         view.addSeparator();
         recenter = createMenuItem(view, msgs.get("m.menu_recenter_camera"),
             KeyEvent.VK_R, KeyEvent.VK_R, EditorController.RECENTER_CAMERA);
@@ -192,7 +192,7 @@ public class EditorPanel extends JPanel
         _vwin.add(view, BorderLayout.CENTER);
         _ctx.getRootNode().addWindow(_vwin);
         DisplaySystem ds = DisplaySystem.getDisplaySystem();
-        
+
         // resize the window with the canvas
         ((EditorApp)_ctx.getApp()).getCanvas().addComponentListener(
             new ComponentAdapter() {
@@ -202,7 +202,7 @@ public class EditorPanel extends JPanel
                 }
             }
         );
-        
+
         _vwin.setBounds(0, 0, ds.getWidth(), ds.getHeight());
     }
 
@@ -211,7 +211,7 @@ public class EditorPanel extends JPanel
     {
         _ctx.getRootNode().removeWindow(_vwin);
     }
-    
+
     protected JMenuItem createMenuItem (
         JMenu menu, String label, int accelerator, int mnemonic,
         String command)

@@ -11,11 +11,10 @@ public class BangDesktop
     public static void main (String[] args) {
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Bang! Howdy";
-        cfg.useGL20 = true;
         cfg.width = 1024;
         cfg.height = 768;
         // cfg.resizble = false;
         // TODO: cfg.setFromDisplayMode when in fullscreen mode
-        new LwjglApplication(new TestolaGame(), cfg);
+        new LwjglApplication(new BangApp(), cfg);
     }
 }

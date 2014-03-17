@@ -32,14 +32,11 @@
 
 package com.jme.app;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.logging.Level;
 
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.system.PropertiesIO;
-import com.jme.system.lwjgl.LWJGLPropertiesDialog;
 import com.jme.util.LoggingSystem;
 
 /**
@@ -58,22 +55,6 @@ public abstract class AbstractGame {
     protected boolean finished;
 
     private final static String JME_VERSION_TAG = "jME version 0.11 beta";
-    private final static String DEFAULT_IMAGE = "/jmetest/data/images/Monkey.png";
-
-    /** Never displays a <code>PropertiesDialog</code> on startup, using defaults
-     * if no configuration file is found. */
-    protected final static int NEVER_SHOW_PROPS_DIALOG = 0;
-
-    /** Displays a <code>PropertiesDialog</code> only if the properties file is not
-     * found or could not be loaded. */
-    protected final static int FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG = 1;
-
-    /** Always displays a <code>PropertiesDialog</code> on startup. */
-    protected final static int ALWAYS_SHOW_PROPS_DIALOG = 2;
-
-    //Default to first-run-only behaviour
-    private int dialogBehaviour = FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG;
-    private URL dialogImage = null;
 
     /** Game display properties. */
     protected PropertiesIO properties;
@@ -112,95 +93,13 @@ public abstract class AbstractGame {
     }
 
     /**
-     * <code>setDialogBehaviour</code> defines if and when the display properties
-     * dialog should be shown. Setting the behaviour after <code>start</code> has
-     * been called has no effect.
-     * @param behaviour properties dialog behaviour ID
-     */
-    public void setDialogBehaviour(int behaviour) {
-        URL url = null;
-        try {
-            url = AbstractGame.class.getResource(DEFAULT_IMAGE);
-        } catch (Exception e) {
-            LoggingSystem.getLogger().throwing(getClass().toString(), "setDialogBehavior(int)", e);
-        }
-        if ( url != null ) {
-            setDialogBehaviour( behaviour, url );
-        }
-        else {
-            setDialogBehaviour( behaviour, DEFAULT_IMAGE );
-        }
-    }
-
-    /**
-     * <code>setDialogBehaviour</code> defines if and when the display properties
-     * dialog should be shown as well as its accompanying image. Setting the
-     * behaviour after <code>start</code> has been called has no effect.
-     * @param behaviour properties dialog behaviour ID
-     * @param image a String specifying the filename of an image to be displayed
-     *                       	  with the <code>PropertiesDialog</code>. Passing <code>null</code>
-     *                       	  will result in no image being used.
-     */
-    public void setDialogBehaviour(int behaviour, String image){
-        if ( behaviour < NEVER_SHOW_PROPS_DIALOG || behaviour > ALWAYS_SHOW_PROPS_DIALOG ) {
-            throw new IllegalArgumentException( "No such properties dialog behaviour" );
-        }
-
-        dialogBehaviour = behaviour;
-
-        URL file = null;
-        try {
-            file = new URL("file:" + image);
-        } catch (MalformedURLException e) {}
-        dialogImage = file;
-    }
-
-    /**
-     *
-     * <code>setDialogBehaviour</code> sets how the properties dialog should
-     * appear. ALWAYS_SHOW_PROPS, NEVER_SHOW_PROPS and FIRSTRUN_OR_NOCONFIGFILE
-     * are the three valid choices. The url of an image file is also used so
-     * you can customize the dialog.
-     * @param behaviour ALWAYS_SHOW_PROPS, NEVER_SHOW_PROPS and
-     *      FIRSTRUN_OR_NOCONFIGFILE are the valid choices.
-     * @param image the image to display in the box.
-     */
-    public void setDialogBehaviour(int behaviour, URL image){
-        if ( behaviour < NEVER_SHOW_PROPS_DIALOG || behaviour > ALWAYS_SHOW_PROPS_DIALOG ) {
-            throw new IllegalArgumentException( "No such properties dialog behaviour" );
-        }
-
-        dialogBehaviour = behaviour;
-        dialogImage = image;
-    }
-
-    /**
      * <code>getAttributes</code> attempts to first obtain the properties
      * information from the "properties.cfg" file, then a dialog depending
      * on the dialog behaviour.
      */
     protected void getAttributes() {
         properties = new PropertiesIO("properties.cfg");
-        boolean loaded = properties.load();
-
-        if ((!loaded && dialogBehaviour == FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG)
-            || dialogBehaviour == ALWAYS_SHOW_PROPS_DIALOG) {
-
-            LWJGLPropertiesDialog dialog = new LWJGLPropertiesDialog(properties, dialogImage);
-
-            while (dialog.isVisible()) {
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    LoggingSystem.getLogger().log(Level.WARNING, "Error waiting for dialog system, using defaults.");
-                }
-            }
-
-            if (dialog.isCancelled()) {
-                //System.exit(0);
-                finish();
-            }
-        }
+        properties.load();
     }
 
     //
