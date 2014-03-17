@@ -29,22 +29,52 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.jme.scene.state.lwjgl.records;
 
-import java.nio.FloatBuffer;
+package com.jme.input.gdx;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.util.geom.BufferUtils;
+import com.badlogic.gdx.Gdx;
 
-public class TextureRecord {
+import com.jme.input.KeyInput;
+import com.jme.input.KeyInputListener;
 
-    public int wrapS, wrapT;
-    public int magFilter, minFilter;
+public class GDXKeyInput extends KeyInput {
 
-    public FloatBuffer colorBuffer;
-    public static ColorRGBA defaultColor = new ColorRGBA(0,0,0,0);
-    
-    public TextureRecord() {
-        colorBuffer = BufferUtils.createColorBuffer(1);
+    @Override
+    public boolean isKeyDown(int key) {
+        return Gdx.input.isKeyPressed(key);
     }
+
+    public boolean keyDown (int keycode) {
+        for ( int i = 0; i < listeners.size(); i++ ) {
+            KeyInputListener listener = listeners.get( i );
+            listener.onKey( NO_CHAR, keycode,  true );
+        }
+        return listeners.size() > 0;
+    }
+
+    public boolean keyUp (int keycode) {
+        for ( int i = 0; i < listeners.size(); i++ ) {
+            KeyInputListener listener = listeners.get( i );
+            listener.onKey( NO_CHAR, keycode,  false );
+        }
+        return listeners.size() > 0;
+    }
+
+    public boolean keyTyped (char character) {
+        for ( int i = 0; i < listeners.size(); i++ ) {
+            KeyInputListener listener = listeners.get( i );
+            listener.onKey( character, 0,  false );
+        }
+        return listeners.size() > 0;
+    }
+
+    @Override
+    public void update() {
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    private static final char NO_CHAR = 0;
 }

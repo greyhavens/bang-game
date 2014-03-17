@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -32,10 +32,9 @@
 
 package com.jme.input;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
-import com.jme.input.lwjgl.LWJGLKeyInput;
+import com.jme.input.gdx.GDXKeyInput;
 
 /**
  * <code>KeyInput</code> provides an interface for dealing with keyboard input.
@@ -556,89 +555,20 @@ public abstract class KeyInput extends Input {
      */
     public static final int KEY_SLEEP = 0xDF;
 
+    private static KeyInput instance = new GDXKeyInput();
 
-    private static KeyInput instance;
     /**
      * list of event listeners.
      */
-    protected ArrayList<KeyInputListener> listeners;
-    public static final String INPUT_LWJGL = LWJGLKeyInput.class.getName();
-    public static final String INPUT_AWT = "com.jmex.awt.input.AWTKeyInput";
+    protected ArrayList<KeyInputListener> listeners = new ArrayList<KeyInputListener>();
 
     /**
      * @return the input instance, implementation is determined by querying {@link #getProvider()}
      */
     public static KeyInput get() {
-        if ( instance == null ) {
-            try {
-                final Constructor<?> constructor = getProvider().getDeclaredConstructor( (Class[])null );
-                constructor.setAccessible( true );
-                instance = (KeyInput) constructor.newInstance( (Object[])null );
-            } catch ( Exception e ) {
-                throw new RuntimeException( "Error creating input provider", e );
-            }
-        }
         return instance;
     }
 
-
-    /**
-     * Query current provider for input.
-     *
-     * @return currently selected provider
-     */
-    public static Class<?> getProvider() {
-        return provider;
-    }
-
-    /**
-     * store the value for field provider
-     */
-    private static Class<?> provider = LWJGLKeyInput.class;
-
-    /**
-     * Change the provider used for keyboard input. Default is {@link KeyInput.INPUT_LWJGL}.
-     *
-     * @param value new provider class name
-     * @throws IllegalStateException    if called after first call of {@link #get()}. Note that get is called when
-     *                                  creating the DisplaySystem.
-     * @throws IllegalArgumentException if the specified class cannot be found using {@link Class#forName(String)}
-     */
-    public static void setProvider( String value ) {
-        if ( instance != null ) {
-            throw new IllegalStateException( "Provider may only be changed before input is created!" );
-        }
-        if ( InputSystem.INPUT_SYSTEM_LWJGL.equals( value ) ) {
-            value = INPUT_LWJGL;
-        }
-        else if ( InputSystem.INPUT_SYSTEM_AWT.equals( value ) ) {
-            value = INPUT_AWT;
-        }
-        try {
-            setProvider( Class.forName( value ) );
-        } catch ( ClassNotFoundException e ) {
-            throw new IllegalArgumentException( "Unsupported provider: " + e.getMessage() );
-        }
-    }
-
-    /**
-     * Change the provider used for keyboard input. Default is {@link InputSystem.INPUT_SYSTEM_LWJGL}.
-     *
-     * @param value new provider
-     * @throws IllegalStateException if called after first call of {@link #get()}. Note that get is called when
-     *                               creating the DisplaySystem.
-     */
-    public static void setProvider( final Class<?> value ) {
-        if ( instance != null ) {
-            throw new IllegalStateException( "Provider may only be changed before input is created!" );
-        }
-        if ( KeyInput.class.isAssignableFrom( value ) ) {
-            provider = value;
-        }
-        else {
-            throw new IllegalArgumentException( "Specified class does not extend KeyInput" );
-        }
-    }
 
     /**
      * <code>isKeyDown</code> returns true if the given key is pressed. False
@@ -652,29 +582,12 @@ public abstract class KeyInput extends Input {
     /**
      * <code>isInited</code> returns true if the key class is not setup
      * already (ie. .get() was not yet called).
-     * 
+     *
      * @return true if it is initialized and ready for use, false otherwise.
      */
     public static boolean isInited() {
         return instance != null;
     }
-
-    /**
-     * <code>getKeyName</code> returns the string prepresentation of a
-     * key code.
-     *
-     * @param key the key code to check.
-     * @return the string representation of a key code.
-     */
-    public abstract String getKeyName( int key );
-
-    /**
-     * The reverse of getKeyName, returns the value of the key given the name
-     *
-     * @param name
-     * @return the value of the key
-     */
-    public abstract int getKeyIndex( String name );
 
     /**
      * Updates the current state of the keyboard, holding
@@ -684,7 +597,7 @@ public abstract class KeyInput extends Input {
      * @see
      */
     @Override
-	public abstract void update();
+    public abstract void update();
 
     /**
      * <code>destroy</code> frees the keyboard for use by other applications.
@@ -698,10 +611,6 @@ public abstract class KeyInput extends Input {
      * @param listener to be subscribed
      */
     public void addListener( KeyInputListener listener ) {
-        if ( listeners == null ) {
-            listeners = new ArrayList<KeyInputListener>();
-        }
-
         listeners.add( listener );
     }
 
@@ -712,18 +621,14 @@ public abstract class KeyInput extends Input {
      * @see #addListener(KeyInputListener)
      */
     public void removeListener( KeyInputListener listener ) {
-        if ( listeners != null ) {
-            listeners.remove( listener );
-        }
+        listeners.remove( listener );
     }
 
     /**
      * Remove all listeners and disable event generation.
      */
     public void removeListeners() {
-        if ( listeners != null ) {
-            listeners.clear();
-        }
+        listeners.clear();
     }
 
     /**

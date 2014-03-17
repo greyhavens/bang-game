@@ -35,7 +35,7 @@ package com.jmex.awt;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.lwjgl.LWJGLRenderer;
+import com.jme.renderer.gdx.GDXRenderer;
 import com.jme.scene.Node;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
@@ -75,7 +75,7 @@ public class SimpleCanvasImpl extends JMECanvasImplementor {
 	public void doSetup() {
         
         DisplaySystem display = DisplaySystem.getDisplaySystem();
-        renderer = new LWJGLRenderer(width, height);
+        renderer = new GDXRenderer(width, height);
         renderer.setHeadless(true);
         display.setRenderer(renderer);
         display.getCurrentContext().setupRecords(renderer);

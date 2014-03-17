@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -32,10 +32,9 @@
 
 package com.jme.input;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
-import com.jme.input.lwjgl.LWJGLMouseInput;
+import com.jme.input.gdx.GDXMouseInput;
 
 
 /**
@@ -53,87 +52,18 @@ import com.jme.input.lwjgl.LWJGLMouseInput;
  */
 public abstract class MouseInput extends Input {
 
-    private static MouseInput instance;
+    private static MouseInput instance = new GDXMouseInput();
+
     /**
      * list of event listeners.
      */
-    protected ArrayList<MouseInputListener> listeners;
-    public static final String INPUT_LWJGL = LWJGLMouseInput.class.getName();
-    public static final String INPUT_AWT = "com.jmex.awt.input.AWTMouseInput";
+    protected ArrayList<MouseInputListener> listeners = new ArrayList<MouseInputListener>();
 
     /**
      * @return the input instance, implementation is determined by querying {@link #getProvider()}
      */
     public static MouseInput get() {
-        if ( instance == null ) {
-            try {
-                final Constructor<?> constructor = getProvider().getDeclaredConstructor( (Class[])null );
-                constructor.setAccessible( true );
-                instance = (MouseInput) constructor.newInstance( (Object[])null );
-            } catch ( Exception e ) {
-                throw new RuntimeException( "Error creating input provider", e );
-            }
-        }
         return instance;
-    }
-
-
-    /**
-     * Query current provider for input.
-     *
-     * @return currently selected provider
-     */
-    public static Class<?> getProvider() {
-        return provider;
-    }
-
-    /**
-     * store the value for field provider
-     */
-    private static Class<?> provider = LWJGLMouseInput.class;
-
-    /**
-     * Change the provider used for mouse input. Default is {@link MouseInput.INPUT_LWJGL}.
-     *
-     * @param value new provider class name
-     * @throws IllegalStateException    if called after first call of {@link #get()}. Note that get is called when
-     *                                  creating the DisplaySystem.
-     * @throws IllegalArgumentException if the specified class cannot be found using {@link Class#forName(String)}
-     */
-    public static void setProvider( String value ) {
-        if ( instance != null ) {
-            throw new IllegalStateException( "Provider may only be changed before input is created!" );
-        }
-        if ( InputSystem.INPUT_SYSTEM_LWJGL.equals( value ) ) {
-            value = INPUT_LWJGL;
-        }
-        else if ( InputSystem.INPUT_SYSTEM_AWT.equals( value ) ) {
-            value = INPUT_AWT;
-        }
-        try {
-            setProvider( Class.forName( value ) );
-        } catch ( ClassNotFoundException e ) {
-            throw new IllegalArgumentException( "Unsupported provider: " + e.getMessage() );
-        }
-    }
-
-    /**
-     * Change the provider used for mouse input. Default is {@link InputSystem.INPUT_SYSTEM_LWJGL}.
-     *
-     * @param value new provider
-     * @throws IllegalStateException if called after first call of {@link #get()}. Note that get is called when
-     *                               creating the DisplaySystem.
-     */
-    public static void setProvider( final Class<?> value ) {
-        if ( instance != null ) {
-            throw new IllegalStateException( "Provider may only be changed before input is created!" );
-        }
-        if ( MouseInput.class.isAssignableFrom( value ) ) {
-            provider = value;
-        }
-        else {
-            throw new IllegalArgumentException( "Specified class does not extend MouseInput" );
-        }
     }
 
     /**
@@ -141,15 +71,6 @@ public abstract class MouseInput extends Input {
      * Destroy is protected now - please is {@link #destroyIfInitalized()}.
      */
     protected abstract void destroy();
-
-    /**
-     *
-     * <code>getButtonIndex</code> gets the button code for a given button
-     * name.
-     * @param buttonName the name to get the code for.
-     * @return the code for the given button name.
-     */
-    public abstract int getButtonIndex(String buttonName);
 
     /**
      *
@@ -161,30 +82,14 @@ public abstract class MouseInput extends Input {
     public abstract boolean isButtonDown(int buttonCode);
 
     /**
-     *
-     * <code>getButtonName</code> gets the button name for a given button
-     * code.
-     * @param buttonIndex the code to get the name for.
-     * @return the name for the given button code.
-     */
-    public abstract String getButtonName(int buttonIndex);
-
-    /**
      * <code>isInited</code> returns true if the key class is not setup
      * already (ie. .get() was not yet called).
-     * 
+     *
      * @return true if it is initialized and ready for use, false otherwise.
      */
     public static boolean isInited() {
         return instance != null;
     }
-
-    /**
-     *
-     * <code>getWheelDelta</code> gets the change in the mouse wheel.
-     * @return the change in the mouse wheel.
-     */
-    public abstract int getWheelDelta();
 
     /**
      *
@@ -218,7 +123,7 @@ public abstract class MouseInput extends Input {
      * Updates the state of the mouse (position and button states). Invokes event listeners synchronously.
      */
     @Override
-	public abstract void update();
+    public abstract void update();
 
     //todo:
     /**
@@ -238,10 +143,6 @@ public abstract class MouseInput extends Input {
      * @param listener to be subscribed
      */
     public void addListener( MouseInputListener listener ) {
-        if ( listeners == null ) {
-            listeners = new ArrayList<MouseInputListener>();
-        }
-
         listeners.add( listener );
     }
 
@@ -251,18 +152,14 @@ public abstract class MouseInput extends Input {
      * @param listener to be unsuscribed
      */
     public void removeListener( MouseInputListener listener ) {
-        if ( listeners != null ) {
-            listeners.remove( listener );
-        }
+        listeners.remove( listener );
     }
 
     /**
      * Remove all listeners and disable event generation.
      */
     public void removeListeners() {
-        if ( listeners != null ) {
-            listeners.clear();
-        }
+        listeners.clear();
     }
 
     /**
@@ -277,15 +174,9 @@ public abstract class MouseInput extends Input {
     }
 
     /**
-     * @return absolte wheel rotation
-     */
-    public abstract int getWheelRotation();
-
-    /**
      * @return number of mouse buttons
      */
     public abstract int getButtonCount();
-    
+
     public abstract void setCursorPosition( int x, int y);
-    
 }

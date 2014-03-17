@@ -29,8 +29,8 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.lwjgl.LWJGLTextureState;
-import com.jme.scene.state.lwjgl.records.TextureStateRecord;
+import com.jme.scene.state.gdx.GDXTextureState;
+import com.jme.scene.state.gdx.records.TextureStateRecord;
 import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.client.BangPrefs;
@@ -329,7 +329,7 @@ public class WaterNode extends Node
         _sstate.setUniform("normalMap", 0);
 
         setRenderState(_sstate);
-        setRenderState(_nmtstate = new LWJGLTextureState() {
+        setRenderState(_nmtstate = new GDXTextureState() {
             public void apply () {
                 super.apply();
                 if (needsRefresh() && _nmap != null) {

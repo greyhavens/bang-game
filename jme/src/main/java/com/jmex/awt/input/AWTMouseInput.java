@@ -56,9 +56,6 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
 
     public static int WHEEL_AMP = 40;   // arbitrary...  Java's mouse wheel seems to report something a lot lower than lwjgl's
 
-    private int currentWheelDelta;
-    private int wheelDelta;
-    private int wheelRotation;
     private boolean enabled = true;
     private boolean dragOnly = false;
     private BitSet buttons = new BitSet(3);
@@ -80,35 +77,8 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
     }
 
     @Override
-	public int getButtonIndex(String buttonName) {
-        if ("MOUSE0".equalsIgnoreCase(buttonName)) return 0;
-        else if ("MOUSE1".equalsIgnoreCase(buttonName)) return 1;
-        else if ("MOUSE2".equalsIgnoreCase(buttonName)) return 2;
-
-        throw new IllegalArgumentException("invalid buttonName: "+buttonName);
-    }
-
-    @Override
 	public boolean isButtonDown(int buttonCode) {
         return buttons.get(buttonCode);
-    }
-
-    @Override
-	public String getButtonName(int buttonIndex) {
-        switch (buttonIndex) {
-        case 0:
-            return "MOUSE0";
-        case 1:
-            return "MOUSE1";
-        case 2:
-            return "MOUSE2";
-        }
-        throw new IllegalArgumentException("invalid buttonIndex: "+buttonIndex);
-    }
-
-    @Override
-	public int getWheelDelta() {
-        return wheelDelta;
     }
 
     @Override
@@ -174,7 +144,7 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
                     case MouseEvent.MOUSE_MOVED:
                         for ( int i = 0; i < listeners.size(); i++ ) {
                             MouseInputListener listener = listeners.get( i );
-                            listener.onMove( event.getX() - x, y - event.getY(), event.getX(), event.getY() );
+                            listener.onMove( event.getX(), event.getY() );
                         }
                         x = event.getX();
                         y = event.getY();
@@ -203,8 +173,6 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
 
         lastEventX = x;
         lastEventY = y;
-        wheelDelta = currentWheelDelta;
-        currentWheelDelta = 0;
         deltaPoint.setLocation(currentDeltaPoint);
         currentDeltaPoint.setLocation(0,0);
     }
@@ -218,11 +186,6 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
 	public boolean isCursorVisible() {
         // always true
         return true;
-    }
-
-    @Override
-	public int getWheelRotation() {
-        return wheelRotation;
     }
 
     @Override
@@ -332,11 +295,6 @@ public class AWTMouseInput extends MouseInput implements MouseListener, MouseWhe
     @Override
 	public void mouseWheelMoved(MouseWheelEvent arg0) {
         if (!enabled) return;
-
-        final int delta = arg0.getUnitsToScroll() * WHEEL_AMP;
-        currentWheelDelta -= delta;
-        wheelRotation -= delta;
-
         swingEvents.add( arg0 );
     }
 

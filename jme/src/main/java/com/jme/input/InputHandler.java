@@ -40,7 +40,6 @@ import com.jme.input.action.InputAction;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.MouseInputAction;
 import com.jme.input.keyboard.KeyboardInputHandlerDevice;
-import com.jme.input.mouse.MouseInputHandlerDevice;
 import com.jme.util.LoggingSystem;
 
 /**
@@ -216,7 +215,7 @@ public class InputHandler {
         //TODO: synchronize if multithreaded creation of handlers should be supported
         if ( devices == null ) {
             devices = new HashMap<String, InputHandlerDevice>();
-            addDevice( new MouseInputHandlerDevice() );
+            // addDevice( new MouseInputHandlerDevice() );
             addDevice( new KeyboardInputHandlerDevice() );
         }
     }

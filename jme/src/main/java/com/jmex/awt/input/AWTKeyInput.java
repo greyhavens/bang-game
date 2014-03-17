@@ -62,16 +62,6 @@ public class AWTKeyInput extends KeyInput implements KeyListener {
     }
 
     @Override
-	public String getKeyName( int key ) {
-        return KeyEvent.getKeyText( toAWTCode( key ) );
-    }
-
-    @Override
-	public int getKeyIndex( String name ) {
-        throw new UnsupportedOperationException( "getKeyIndex is not supported by AWTKeyInput." );
-    }
-
-    @Override
 	public void update() {
         //todo: replace with linked list or synchronize this to avoid missing events
         if ( listeners != null && listeners.size() > 0 ) {

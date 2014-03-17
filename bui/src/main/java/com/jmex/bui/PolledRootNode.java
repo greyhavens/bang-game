@@ -180,7 +180,7 @@ public class PolledRootNode extends BRootNode
             }
         }
 
-        public void onMove (int xDelta, int yDelta, int newX, int newY) {
+        public void onMove (int newX, int newY) {
             mouseDidMove(newX, newY);
             dispatchEvent(new MouseEvent(
                               PolledRootNode.this, _tickStamp, _modifiers,

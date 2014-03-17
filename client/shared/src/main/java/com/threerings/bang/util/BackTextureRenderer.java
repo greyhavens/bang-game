@@ -17,7 +17,7 @@ import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.RenderState;
-import com.jme.scene.state.lwjgl.records.TextureStateRecord;
+import com.jme.scene.state.gdx.records.TextureStateRecord;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 

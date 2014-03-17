@@ -48,17 +48,13 @@ public interface MouseInputListener {
     /**
      * Called in {@link com.jme.input.KeyInput#update()} whenever the mouse wheel is rotated.
      * @param wheelDelta steps the wheel was rotated
-     * @param x x position of the mouse while wheel was rotated
-     * @param y y position of the mouse while wheel was rotated
      */
     void onWheel( int wheelDelta, int x, int y );
 
     /**
      * Called in {@link com.jme.input.KeyInput#update()} whenever the mouse is moved.
-     * @param xDelta delta of the x coordinate since the last mouse movement event
-     * @param yDelta delta of the y coordinate since the last mouse movement event
      * @param newX x position of the mouse after the mouse was moved
      * @param newY y position of the mouse after the mouse was moved
      */
-    void onMove( int xDelta, int yDelta, int newX, int newY );
+    void onMove( int newX, int newY );
 }

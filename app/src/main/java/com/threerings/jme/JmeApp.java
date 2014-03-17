@@ -56,8 +56,6 @@ import com.jme.util.Timer;
 
 import com.threerings.jme.camera.CameraHandler;
 
-import static com.threerings.jme.Log.log;
-
 /**
  * Defines a basic application framework providing integration with the
  * <a href="../presents/package.html">Presents</a> networking system and

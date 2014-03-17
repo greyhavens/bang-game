@@ -33,31 +33,36 @@
 package com.jme.system.gdx;
 
 import java.awt.Canvas;
-import java.awt.Toolkit;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.opengl.RenderTexture;
 
+import com.jme.input.KeyInput;
+import com.jme.input.MouseInput;
 import com.jme.image.Image;
 import com.jme.renderer.RenderContext;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
-import com.jme.renderer.gdx.GDXRenderer;
-import com.jme.renderer.gdx.GDXTextureRenderer;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.ImageUtils;
 import com.jme.util.LoggingSystem;
 import com.jme.util.WeakIdentityCache;
 import com.jmex.awt.JMECanvas;
+
+import com.jme.input.gdx.GDXKeyInput;
+import com.jme.input.gdx.GDXMouseInput;
+import com.jme.renderer.gdx.GDXRenderer;
+import com.jme.renderer.gdx.GDXTextureRenderer;
 
 public class GDXDisplaySystem extends DisplaySystem {
 
@@ -77,6 +82,36 @@ public class GDXDisplaySystem extends DisplaySystem {
     public GDXDisplaySystem() {
         super();
         LoggingSystem.getLogger().log( Level.INFO, "GDX Display System created." );
+
+        // wire up keyboard and mouse dispatch
+        Gdx.input.setInputProcessor(new InputProcessor() {
+            final GDXKeyInput _key = (GDXKeyInput)KeyInput.get();
+            final GDXMouseInput _mouse = (GDXMouseInput)MouseInput.get();
+            public boolean keyDown (int keycode) {
+                return _key.keyDown(keycode);
+            }
+            public boolean keyUp (int keycode) {
+                return _key.keyUp(keycode);
+            }
+            public boolean keyTyped (char character) {
+                return _key.keyTyped(character);
+            }
+            public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+                return _mouse.touchDown(screenX, screenY, pointer, button);
+            }
+            public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+                return _mouse.touchUp(screenX, screenY, pointer, button);
+            }
+            public boolean touchDragged (int screenX, int screenY, int pointer) {
+                return _mouse.touchDragged(screenX, screenY, pointer);
+            }
+            public boolean mouseMoved (int screenX, int screenY) {
+                return _mouse.mouseMoved(screenX, screenY);
+            }
+            public boolean scrolled (int amount) {
+                return _mouse.scrolled(amount);
+            }
+        });
     }
 
     /**

@@ -48,7 +48,6 @@ import javax.imageio.ImageIO;
 import org.lwjgl.opengl.ARBBufferObject;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.ContextCapabilities;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.EXTCompiledVertexArray;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;

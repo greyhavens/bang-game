@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.RenderContext;
 import com.jme.renderer.Renderer;
-import com.jme.scene.state.lwjgl.records.LineRecord;
+import com.jme.scene.state.gdx.records.LineRecord;
 import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BComponent;
