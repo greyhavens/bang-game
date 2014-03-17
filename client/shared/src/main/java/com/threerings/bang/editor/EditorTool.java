@@ -92,21 +92,21 @@ public abstract class EditorTool
     public void mouseWheeled (MouseEvent e)
     {
     }
-    
+
     /**
      * Called by the tool palette when we're the active tool.
      */
     public void keyPressed (KeyEvent e)
     {
     }
-    
+
     /**
      * Called by the tool palette when we're the active tool.
      */
     public void keyReleased (KeyEvent e)
     {
     }
-    
+
     /**
      * Notifies the tool that the tile over which the mouse is hovering has
      * changed.

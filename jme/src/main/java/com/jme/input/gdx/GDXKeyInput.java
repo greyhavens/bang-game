@@ -47,7 +47,7 @@ public class GDXKeyInput extends KeyInput {
     public boolean keyDown (int keycode) {
         for ( int i = 0; i < listeners.size(); i++ ) {
             KeyInputListener listener = listeners.get( i );
-            listener.onKey( NO_CHAR, keycode,  true );
+            listener.onPress(keycode);
         }
         return listeners.size() > 0;
     }
@@ -55,7 +55,7 @@ public class GDXKeyInput extends KeyInput {
     public boolean keyUp (int keycode) {
         for ( int i = 0; i < listeners.size(); i++ ) {
             KeyInputListener listener = listeners.get( i );
-            listener.onKey( NO_CHAR, keycode,  false );
+            listener.onRelease(keycode);
         }
         return listeners.size() > 0;
     }
@@ -63,7 +63,7 @@ public class GDXKeyInput extends KeyInput {
     public boolean keyTyped (char character) {
         for ( int i = 0; i < listeners.size(); i++ ) {
             KeyInputListener listener = listeners.get( i );
-            listener.onKey( character, 0,  false );
+            listener.onType(character);
         }
         return listeners.size() > 0;
     }
@@ -75,6 +75,4 @@ public class GDXKeyInput extends KeyInput {
     @Override
     public void destroy() {
     }
-
-    private static final char NO_CHAR = 0;
 }

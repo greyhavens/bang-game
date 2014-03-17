@@ -12,7 +12,6 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
 import com.jmex.bui.event.KeyEvent;
-import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 
 import com.threerings.jme.camera.CameraHandler;
@@ -23,7 +22,6 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Allows the user to move the camera around the board.
  */
 public class CameraDolly extends EditorTool
-    implements KeyListener
 {
     /** The name of this tool. */
     public static final String NAME = "camera_dolly";
@@ -122,8 +120,7 @@ public class CameraDolly extends EditorTool
         _ctx.getCameraHandler().zoomCamera(e.getDelta() * 10 * LINEAR_SCALE);
     }
 
-    // documentation inherited from interface KeyListener
-    public void keyPressed (KeyEvent e)
+    @Override public void keyPressed (KeyEvent e)
     {
         int code = e.getKeyCode();
         CameraHandler camhand = _ctx.getCameraHandler();
@@ -141,8 +138,7 @@ public class CameraDolly extends EditorTool
         }
     }
 
-    // documentation inherited from interface KeyListener
-    public void keyReleased (KeyEvent e)
+    @Override public void keyReleased (KeyEvent e)
     {
         // no-op
     }

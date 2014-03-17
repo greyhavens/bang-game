@@ -352,7 +352,7 @@ public class CanvasRootNode extends BRootNode
 //        case java.awt.event.KeyEvent.VK_0: return Keys.NEXT;
         case java.awt.event.KeyEvent.VK_PAGE_DOWN: return Keys.PAGE_DOWN;
         case java.awt.event.KeyEvent.VK_INSERT: return Keys.INSERT;
-        case java.awt.event.KeyEvent.VK_DELETE: return Keys.DEL;
+        case java.awt.event.KeyEvent.VK_DELETE: return Keys.FORWARD_DEL;
 //        case java.awt.event.KeyEvent.VK_0: return Keys.LWIN;
 //        case java.awt.event.KeyEvent.VK_0: return Keys.RWIN;
 //        case java.awt.event.KeyEvent.VK_0: return Keys.APPS;

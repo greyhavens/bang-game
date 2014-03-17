@@ -19,7 +19,6 @@ import com.jmex.bui.event.TextEvent;
 import com.jmex.bui.text.BKeyMap;
 import com.jmex.bui.text.BText;
 import com.jmex.bui.text.Document;
-import com.jmex.bui.text.EditCommands;
 import com.jmex.bui.text.LengthLimitedDocument;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Insets;
@@ -29,7 +28,7 @@ import com.jmex.bui.util.Rectangle;
  * Displays and allows for the editing of a single line of text.
  */
 public class BTextField extends BTextComponent
-    implements EditCommands, Document.Listener
+    implements Document.Listener
 {
     /**
      * Creates a blank text field.
@@ -172,8 +171,10 @@ public class BTextField extends BTextComponent
     {
         if (event instanceof KeyEvent) {
             KeyEvent kev = (KeyEvent)event;
-            if (kev.getType() == KeyEvent.KEY_PRESSED) {
-                int modifiers = kev.getModifiers(), keyCode = kev.getKeyCode();
+            int modifiers = kev.getModifiers();
+            switch (kev.getType()) {
+            case KeyEvent.KEY_PRESSED:
+                int keyCode = kev.getKeyCode();
                 switch (_keymap.lookupMapping(modifiers, keyCode)) {
                 case BACKSPACE:
                     if (_cursp > 0 && _text.getLength() > 0) {
@@ -207,8 +208,7 @@ public class BTextField extends BTextComponent
                     break;
 
                 case ACTION:
-                    emitEvent(new ActionEvent(
-                                  this, kev.getWhen(), kev.getModifiers(), ""));
+                    emitEvent(new ActionEvent(this, kev.getWhen(), kev.getModifiers(), ""));
                     break;
 
                 case RELEASE_FOCUS:
@@ -220,21 +220,27 @@ public class BTextField extends BTextComponent
                     break;
 
                 default:
-                    // insert printable and shifted printable characters
-                    char c = kev.getKeyChar();
-                    if ((modifiers & ~KeyEvent.SHIFT_DOWN_MASK) == 0 &&
-                        !Character.isISOControl(c)) {
-                        String text = String.valueOf(kev.getKeyChar());
-                        if (_text.insert(_cursp, text)) {
-                            setCursorPos(_cursp + 1);
-                        }
-                    } else {
-                        return super.dispatchEvent(event);
-                    }
-                    break;
+                    return super.dispatchEvent(event);
                 }
 
                 return true; // we've consumed these events
+
+            case KeyEvent.KEY_TYPED:
+                // insert printable and shifted printable characters
+                char c = kev.getKeyChar();
+                if ((modifiers & ~KeyEvent.SHIFT_DOWN_MASK) == 0 && !Character.isISOControl(c) &&
+                    /* GDX generates weird key chars; ignore them */ c < Short.MAX_VALUE) {
+                    String text = String.valueOf(kev.getKeyChar());
+                    System.err.println("INS '" + kev.getKeyChar() + "' " + (int)kev.getKeyChar());
+                    if (_text.insert(_cursp, text)) {
+                        setCursorPos(_cursp + 1);
+                    }
+                    return true;
+                }
+                break;
+
+            default:
+                break;
             }
 
         } else if (event instanceof MouseEvent) {

@@ -22,7 +22,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.jme.math.Vector3f;
 
 import com.jmex.bui.event.KeyEvent;
-import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 
 import com.samskivert.swing.VGroupLayout;
@@ -37,7 +36,6 @@ import com.threerings.bang.game.data.piece.Viewpoint;
  * terrain.
  */
 public class ViewpointEditor extends EditorTool
-    implements KeyListener
 {
     /** The name of this tool. */
     public static final String NAME = "viewpoint_editor";

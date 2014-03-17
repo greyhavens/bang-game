@@ -40,32 +40,36 @@ import com.jme.input.MouseInputListener;
 public class GDXMouseInput extends MouseInput {
 
     public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+        int invY = Gdx.graphics.getHeight() - screenY;
         for ( int i = 0; i < listeners.size(); i++ ) {
             MouseInputListener listener = listeners.get( i );
-            listener.onButton( button,  true, screenX, screenY );
+            listener.onButton( button,  true, screenX, invY );
         }
         return listeners.size() > 0;
     }
 
     public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+        int invY = Gdx.graphics.getHeight() - screenY;
         for ( int i = 0; i < listeners.size(); i++ ) {
             MouseInputListener listener = listeners.get( i );
-            listener.onButton( button,  false, screenX, screenY );
+            listener.onButton( button,  false, screenX, invY );
         }
         return listeners.size() > 0;
     }
 
     public boolean touchDragged (int screenX, int screenY, int pointer) {
+        int invY = Gdx.graphics.getHeight() - screenY;
         for ( int i = 0; i < listeners.size(); i++ ) {
             MouseInputListener listener = listeners.get( i );
-            listener.onMove( screenX, screenY );
+            listener.onMove( screenX, invY );
         }
         return listeners.size() > 0;
     }
     public boolean mouseMoved (int screenX, int screenY) {
+        int invY = Gdx.graphics.getHeight() - screenY;
         for ( int i = 0; i < listeners.size(); i++ ) {
             MouseInputListener listener = listeners.get( i );
-            listener.onMove( screenX, screenY );
+            listener.onMove( screenX, invY );
         }
         return listeners.size() > 0;
     }
@@ -73,7 +77,7 @@ public class GDXMouseInput extends MouseInput {
     public boolean scrolled (int amount) {
         for ( int i = 0; i < listeners.size(); i++ ) {
             MouseInputListener listener = listeners.get( i );
-            listener.onWheel( amount, Gdx.input.getX(), Gdx.input.getY() );
+            listener.onWheel( amount, getXAbsolute(), getYAbsolute() );
         }
         return listeners.size() > 0;
     }
@@ -90,7 +94,7 @@ public class GDXMouseInput extends MouseInput {
 
     @Override
     public int getYDelta() {
-        return Gdx.input.getDeltaY();
+        return Gdx.input.getDeltaY(); // TODO: invert?
     }
 
     @Override
@@ -100,7 +104,7 @@ public class GDXMouseInput extends MouseInput {
 
     @Override
     public int getYAbsolute() {
-        return Gdx.input.getY();
+        return Gdx.graphics.getHeight() - Gdx.input.getY();
     }
 
     @Override

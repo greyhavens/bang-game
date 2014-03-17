@@ -58,10 +58,24 @@ class TriggersKeyboardInputListener implements KeyInputListener {
     private ArrayList<KeyboardInputHandlerDevice.KeyTrigger> buttonTriggers = new ArrayList<KeyboardInputHandlerDevice.KeyTrigger>();
 
     @Override
-	public void onKey( char character, int keyCode, boolean pressed ) {
+	public void onPress( int keyCode ) {
         for ( int i = buttonTriggers.size() - 1; i >= 0; i-- ) {
             final ActionTrigger trigger = buttonTriggers.get( i );
-            trigger.checkActivation( character, keyCode, Float.NaN, Float.NaN, pressed, null );
+            trigger.checkActivation( (char)0, keyCode, Float.NaN, Float.NaN, true, null );
+        }
+
+    }
+
+    @Override
+	public void onType( char character ) {
+        // nada
+    }
+
+    @Override
+	public void onRelease( int keyCode ) {
+        for ( int i = buttonTriggers.size() - 1; i >= 0; i-- ) {
+            final ActionTrigger trigger = buttonTriggers.get( i );
+            trigger.checkActivation( (char)0, keyCode, Float.NaN, Float.NaN, false, null );
         }
 
     }

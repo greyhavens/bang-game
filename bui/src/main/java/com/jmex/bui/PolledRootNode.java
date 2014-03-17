@@ -88,7 +88,7 @@ public class PolledRootNode extends BRootNode
                 _nextRepeat += SUBSEQ_REPEAT_DELAY;
                 KeyEvent event = new KeyEvent(
                     PolledRootNode.this, _tickStamp, _modifiers,
-                    KeyEvent.KEY_PRESSED, _presschar, _pressed);
+                    KeyEvent.KEY_TYPED, _presschar, _pressed);
                 dispatchEvent(_focus, event);
             }
         }
@@ -112,40 +112,46 @@ public class PolledRootNode extends BRootNode
 
     /** This listener is notified when a key is pressed or released. */
     protected KeyInputListener _keyListener = new KeyInputListener() {
-        public void onKey (char character, int keyCode, boolean pressed) {
+
+        public void onPress (int keyCode) {
             // first update the state of the modifiers
-            int modifierMask = -1;
+            int modMask = getModMask(keyCode);
+            if (modMask != -1) _modifiers |= modMask;
+            // generate a key event and dispatch it
+            dispatch(KeyEvent.KEY_PRESSED, (char)0, keyCode);
+            // update our pressed key, for repeat handling
+            _pressed = keyCode;
+            _nextRepeat = _tickStamp + INITIAL_REPEAT_DELAY;
+        }
+
+        public void onType (char keyChar) {
+            dispatch(KeyEvent.KEY_TYPED, keyChar, 0);
+            // update our pressed key, for repeat handling
+            _presschar = keyChar;
+        }
+
+        public void onRelease (int keyCode) {
+            // first update the state of the modifiers
+            int modMask = getModMask(keyCode);
+            if (modMask != -1) _modifiers &= ~modMask;
+            // generate a key event and dispatch it
+            dispatch(KeyEvent.KEY_RELEASED, (char)0, keyCode);
+            // update our pressed key, for repeat handling
+            _pressed = -1;
+        }
+
+        private void dispatch (int type, char keyChar, int keyCode) {
+            dispatchEvent(_focus, new KeyEvent(PolledRootNode.this, _tickStamp, _modifiers,
+                                               type, keyChar, keyCode));
+        }
+
+        private int getModMask (int keyCode) {
             for (int ii = 0; ii < KEY_MODIFIER_MAP.length; ii += 2) {
                 if (KEY_MODIFIER_MAP[ii] == keyCode) {
-                    modifierMask = KEY_MODIFIER_MAP[ii+1];
-                    break;
+                    return KEY_MODIFIER_MAP[ii+1];
                 }
             }
-            if (modifierMask != -1) {
-                if (pressed) {
-                    _modifiers |= modifierMask;
-                } else {
-                    _modifiers &= ~modifierMask;
-                }
-            }
-
-            // generate a key event and dispatch it
-            KeyEvent event = new KeyEvent(
-                PolledRootNode.this, _tickStamp, _modifiers,
-                pressed ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_RELEASED,
-                character, keyCode);
-            dispatchEvent(_focus, event);
-
-            // update our stored list of pressed keys
-            if (pressed) {
-                _pressed = keyCode;
-                _presschar = character;
-                _nextRepeat = _tickStamp + INITIAL_REPEAT_DELAY;
-            } else {
-                if (_pressed == keyCode) {
-                    _pressed = -1;
-                }
-            }
+            return -1;
         }
     };
 

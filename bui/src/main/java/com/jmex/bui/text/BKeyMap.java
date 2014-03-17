@@ -11,10 +11,6 @@ package com.jmex.bui.text;
  */
 public class BKeyMap
 {
-    /** A command constant indicating no mapping exists for a particular
-     * modifier and key code combination. */
-    public static final int NO_MAPPING = -1;
-
     /** A modifiers code that if specified, will default any keyCode to
      * the specified command unless a specific modifier mapping is set. */
     public static final int ANY_MODIFIER = -1;
@@ -23,7 +19,7 @@ public class BKeyMap
      * Adds a mapping for the specified modifier and key code combination
      * to the specified command.
      */
-    public void addMapping (int modifiers, int keyCode, int command)
+    public void addMapping (int modifiers, int keyCode, EditCommand command)
     {
         int kidx = keyCode % BUCKETS;
 
@@ -43,13 +39,13 @@ public class BKeyMap
 
     /**
      * Looks up and returns the command associated with the specified set
-     * of modifiers and key code. Returns {@link #NO_MAPPING} if no
+     * of modifiers and key code. Returns {@link EditCommand#NONE} if no
      * matching mapping can be found.
      */
-    public int lookupMapping (int modifiers, int keyCode)
+    public EditCommand lookupMapping (int modifiers, int keyCode)
     {
         int kidx = keyCode % BUCKETS;
-        int defaultCommand = NO_MAPPING;
+        EditCommand defaultCommand = EditCommand.NONE;
         for (Mapping map = _mappings[kidx]; map != null; map = map.next) {
             if (map.matches(modifiers, keyCode)) {
                 return map.command;
@@ -65,10 +61,10 @@ public class BKeyMap
     {
         public int modifiers;
         public int keyCode;
-        public int command;
+        public EditCommand command;
         public Mapping next;
 
-        public Mapping (int modifiers, int keyCode, int command) {
+        public Mapping (int modifiers, int keyCode, EditCommand command) {
             this.modifiers = modifiers;
             this.keyCode = keyCode;
             this.command = command;

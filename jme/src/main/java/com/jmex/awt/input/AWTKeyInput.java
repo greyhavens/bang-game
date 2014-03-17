@@ -73,7 +73,8 @@ public class AWTKeyInput extends KeyInput implements KeyListener {
 
                 for ( int i = 0; i < listeners.size(); i++ ) {
                     KeyInputListener listener = listeners.get( i );
-                    listener.onKey( c, keyCode, pressed );
+                    // TODO: onPress/onType/onRelease
+                    // listener.onKey( c, keyCode, pressed );
                 }
             }
         }

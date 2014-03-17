@@ -15,22 +15,22 @@ public class DefaultKeyMap extends BKeyMap
 {
     public DefaultKeyMap ()
     {
-        addMapping(ANY_MODIFIER, Keys.ENTER, EditCommands.ACTION);
-        addMapping(ANY_MODIFIER, Keys.BACK, EditCommands.BACKSPACE);
-        addMapping(ANY_MODIFIER, Keys.DEL, EditCommands.DELETE);
+        addMapping(ANY_MODIFIER, Keys.ENTER, EditCommand.ACTION);
+        addMapping(ANY_MODIFIER, Keys.BACKSPACE, EditCommand.BACKSPACE);
+        addMapping(ANY_MODIFIER, Keys.FORWARD_DEL, EditCommand.DELETE);
 
-        addMapping(ANY_MODIFIER, Keys.LEFT, EditCommands.CURSOR_LEFT);
-        addMapping(ANY_MODIFIER, Keys.RIGHT, EditCommands.CURSOR_RIGHT);
+        addMapping(ANY_MODIFIER, Keys.LEFT, EditCommand.CURSOR_LEFT);
+        addMapping(ANY_MODIFIER, Keys.RIGHT, EditCommand.CURSOR_RIGHT);
 
-        addMapping(ANY_MODIFIER, Keys.HOME, EditCommands.START_OF_LINE);
-        addMapping(ANY_MODIFIER, Keys.END, EditCommands.END_OF_LINE);
+        addMapping(ANY_MODIFIER, Keys.HOME, EditCommand.START_OF_LINE);
+        addMapping(ANY_MODIFIER, Keys.END, EditCommand.END_OF_LINE);
 
-        addMapping(ANY_MODIFIER, Keys.ESCAPE, EditCommands.RELEASE_FOCUS);
+        addMapping(ANY_MODIFIER, Keys.ESCAPE, EditCommand.RELEASE_FOCUS);
 
         // some emacs commands because I love them so
-        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.A, EditCommands.START_OF_LINE);
-        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.E, EditCommands.END_OF_LINE);
-        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.D, EditCommands.DELETE);
-        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.K, EditCommands.CLEAR);
+        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.A, EditCommand.START_OF_LINE);
+        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.E, EditCommand.END_OF_LINE);
+        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.D, EditCommand.DELETE);
+        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.K, EditCommand.CLEAR);
     }
 }

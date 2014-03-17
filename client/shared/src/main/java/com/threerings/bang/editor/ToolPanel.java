@@ -33,13 +33,13 @@ public class ToolPanel extends JPanel
     implements ItemListener
 {
     public CameraDolly cameraDolly;
-    
+
     public ToolPanel (EditorContext ctx, EditorPanel panel)
     {
         VGroupLayout gl = new VGroupLayout(VGroupLayout.STRETCH);
         gl.setOffAxisPolicy(VGroupLayout.STRETCH);
         setLayout(gl);
-        
+
         // add the chooser panel on top
         JPanel cpanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
         cpanel.add(new JLabel(ctx.xlate("editor", "m.tool")),
@@ -55,7 +55,7 @@ public class ToolPanel extends JPanel
         _tools.addItemListener(this);
         cpanel.add(_tools);
         add(cpanel, VGroupLayout.FIXED);
-        
+
         // add actions to select tools using ctrl-1+
         addSelectAction(panel, KeyEvent.VK_1, 0);
         addSelectAction(panel, KeyEvent.VK_2, 1);
@@ -63,7 +63,7 @@ public class ToolPanel extends JPanel
         addSelectAction(panel, KeyEvent.VK_4, 3);
         addSelectAction(panel, KeyEvent.VK_5, 4);
         addSelectAction(panel, KeyEvent.VK_6, 5);
-        
+
         // and the tool options below
         add(_scroll = new JScrollPane(cameraDolly.getOptions(),
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -75,7 +75,7 @@ public class ToolPanel extends JPanel
         // add our event dispatcher
         panel.view.addListener(_dispatcher);
     }
-    
+
     /**
      * Returns a reference to the active tool.
      */
@@ -83,7 +83,7 @@ public class ToolPanel extends JPanel
     {
         return (EditorTool)_tools.getSelectedItem();
     }
-    
+
     /**
      * Selects a tool by name.
      */
@@ -97,7 +97,7 @@ public class ToolPanel extends JPanel
             }
         }
     }
-    
+
     // inherited from interface ItemListener
     public void itemStateChanged (ItemEvent ie)
     {
@@ -106,12 +106,12 @@ public class ToolPanel extends JPanel
             _scroll.setViewportView(tool.getOptions());
             SwingUtil.refresh(this);
             tool.activate();
-            
+
         } else if (ie.getStateChange() == ItemEvent.DESELECTED) {
             tool.deactivate();
         }
     }
-    
+
     /**
      * Adds a binding to ctrl-keyCode that selected the tool at the given
      * index.
@@ -157,6 +157,9 @@ public class ToolPanel extends JPanel
         }
         public void keyPressed (com.jmex.bui.event.KeyEvent e) {
             getActiveTool().keyPressed(e);
+        }
+        public void keyTyped (com.jmex.bui.event.KeyEvent e) {
+            // don't care
         }
         public void keyReleased (com.jmex.bui.event.KeyEvent e) {
             getActiveTool().keyReleased(e);
