@@ -53,8 +53,8 @@ import org.lwjgl.opengl.GLContext;
 
 import com.jme.renderer.RenderContext;
 import com.jme.scene.state.GLSLShaderObjectsState;
+import com.jme.scene.state.StateRecord;
 import com.jme.scene.state.lwjgl.records.ShaderObjectsStateRecord;
-import com.jme.scene.state.lwjgl.records.StateRecord;
 import com.jme.system.DisplaySystem;
 import com.jme.util.LoggingSystem;
 import com.jme.util.ShaderAttribute;

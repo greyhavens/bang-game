@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -48,49 +48,31 @@ import com.jme.util.export.Savable;
 /**
  * An utily class to store shader's attribute variables content. Used by the
  * <code>ShaderObjectsState</code> class.
- * 
+ *
  * @author Joshua Slack
  * @see com.jme.scene.state.ShaderObjectsState
  */
 public class ShaderAttribute implements Savable {
 
     public final static int SU_SHORT = 0;
-
     public final static int SU_SHORT2 = 1;
-
     public final static int SU_SHORT3 = 2;
-
     public final static int SU_SHORT4 = 3;
-
     public final static int SU_FLOAT = 4;
-
     public final static int SU_FLOAT2 = 5;
-
     public final static int SU_FLOAT3 = 6;
-
     public final static int SU_FLOAT4 = 7;
-
     public final static int SU_NORMALIZED_UBYTE4 = 8;
-
     public final static int SU_POINTER_BYTE = 9;
-
     public final static int SU_POINTER_FLOAT = 10;
-
     public final static int SU_POINTER_SHORT = 11;
-
     public final static int SU_POINTER_INT = 12;
-    
     public final static int SB_FLOAT = 13;
-    
     public final static int SB_DOUBLE = 14;
-    
     public final static int SB_INT = 15;
-    
     public final static int SB_SHORT = 16;
-    
     public final static int SB_BYTE = 17;
 
-    
     /** Name of the attribute variable. */
     public String name;
 
@@ -112,16 +94,16 @@ public class ShaderAttribute implements Savable {
     /** For nio content. */
     public Buffer data;
     public int bufferType;
-    
+
     public boolean normalized, unsigned, useVBO;
-    
+
     public int stride, size;
-    
+
     public int vboID = -1;
-    
+
     /**
      * Create a new attribute object.
-     * 
+     *
      * @param name
      *            attribute's name
      * @param type
@@ -133,7 +115,7 @@ public class ShaderAttribute implements Savable {
     }
 
     @Override
-	public boolean equals(Object obj) {
+    public boolean equals(Object obj) {
         if (obj instanceof ShaderAttribute) {
             ShaderAttribute temp = (ShaderAttribute)obj;
             if (name.equals(temp.name)) return true;
@@ -142,9 +124,9 @@ public class ShaderAttribute implements Savable {
     }
 
     @Override
-	public void write(JMEExporter e) throws IOException {
+    public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
-        
+
         capsule.write(name, "name", "");
         capsule.write(type, "type", SU_SHORT);
         capsule.write(attributeID, "attributeID", -1);
@@ -178,9 +160,9 @@ public class ShaderAttribute implements Savable {
     }
 
     @Override
-	public void read(JMEImporter e) throws IOException {
+    public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
-        
+
         name = capsule.readString("name", "");
         type = capsule.readInt("type", SU_SHORT);
         attributeID = capsule.readInt("attributeID", -1);
@@ -212,9 +194,9 @@ public class ShaderAttribute implements Savable {
         stride = capsule.readInt("stride", 0);
         size = capsule.readInt("size", 0);
     }
-    
+
     @Override
-	public Class<? extends ShaderAttribute> getClassTag() {
+    public Class<? extends ShaderAttribute> getClassTag() {
         return this.getClass();
     }
 }

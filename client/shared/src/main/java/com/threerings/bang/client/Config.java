@@ -112,7 +112,7 @@ public class Config
         // register some internal hooks
         registerHook("displayStats", new Hook() {
             public void valueUpdated () {
-                ctx.getApp().displayStatistics(displayStats);
+                // ctx.getApp().displayStatistics(displayStats);
                 PerfMonitor.setReportToChat(displayStats);
             }
         });

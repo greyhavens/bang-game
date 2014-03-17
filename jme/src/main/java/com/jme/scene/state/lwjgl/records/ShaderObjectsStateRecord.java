@@ -33,6 +33,7 @@ package com.jme.scene.state.lwjgl.records;
 
 import java.util.HashSet;
 
+import com.jme.scene.state.StateRecord;
 import com.jme.scene.state.lwjgl.LWJGLShaderObjectsState;
 
 

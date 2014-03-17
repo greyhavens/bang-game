@@ -46,9 +46,9 @@ import com.jme.renderer.RenderContext;
 import com.jme.scene.SceneElement;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
+import com.jme.scene.state.StateRecord;
 import com.jme.scene.state.lwjgl.records.LightRecord;
 import com.jme.scene.state.lwjgl.records.LightStateRecord;
-import com.jme.scene.state.lwjgl.records.StateRecord;
 import com.jme.system.DisplaySystem;
 
 /**

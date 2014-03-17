@@ -30,6 +30,7 @@ import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
@@ -154,29 +155,6 @@ public class JmeApp
     }
 
     /**
-     * Configures whether or not we display FPS and other statistics atop the
-     * display.
-     */
-    public void displayStatistics (boolean display)
-    {
-        if (display && (_stats == null)) {
-            _stats = new StatsDisplay(_display.getRenderer());
-            _stats.updateGeometricState(0f, true);
-            _stats.updateRenderState();
-        } else if (!display && (_stats != null)) {
-            _stats = null;
-        }
-    }
-
-    /**
-     * Returns true if we are displaying statistics, false if not.
-     */
-    public boolean showingStatistics ()
-    {
-        return (_stats != null);
-    }
-
-    /**
      * Returns the frames per second averaged over the last 32 frames.
      */
     public float getRecentFrameRate ()
@@ -219,6 +197,11 @@ public class JmeApp
     {
         // create the main display system
         _display = DisplaySystem.getDisplaySystem();
+
+        // tell JME about GDX's display parameters
+        boolean fullscreen = false; // TODO
+        _display.createWindow(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+                              Gdx.graphics.getBufferFormat().depth, 60, fullscreen);
 
         // create a camera
         int width = _display.getWidth(), height = _display.getHeight();
@@ -371,11 +354,6 @@ public class JmeApp
             _timer.getResolution();
         _lastTick = frameTick;
         _root.updateGeometricState(_frameTime, true);
-
-        // update our stats display if we have one
-        if (_stats != null) {
-            _stats.update(_timer, _display.getRenderer());
-        }
     }
 
     /**
@@ -392,11 +370,6 @@ public class JmeApp
 
         // this would render bounding boxes
         // _display.getRenderer().drawBounds(_root);
-
-        // draw our stats atop everything
-        if (_stats != null) {
-            _display.getRenderer().draw(_stats);
-        }
     }
 
     /**
@@ -493,7 +466,6 @@ public class JmeApp
 
     protected Node _root, _geom, _iface;
     protected LightState _lights;
-    protected StatsDisplay _stats;
 
     /** If we fail 100 frames in a row, stick a fork in ourselves. */
     protected static final int MAX_SUCCESSIVE_FAILURES = 100;

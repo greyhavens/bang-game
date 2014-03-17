@@ -67,7 +67,6 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Line;
 import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
-import com.jme.scene.Text;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.LineBatch;
@@ -87,6 +86,7 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.ShadeState;
+import com.jme.scene.state.StateRecord;
 import com.jme.scene.state.StencilState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
@@ -110,7 +110,6 @@ import com.jme.scene.state.lwjgl.LWJGLVertexProgramState;
 import com.jme.scene.state.lwjgl.LWJGLWireframeState;
 import com.jme.scene.state.lwjgl.LWJGLZBufferState;
 import com.jme.scene.state.lwjgl.records.LineRecord;
-import com.jme.scene.state.lwjgl.records.StateRecord;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.LoggingSystem;
@@ -1136,22 +1135,6 @@ public class LWJGLRenderer extends Renderer {
         }
 
     }  
-
-    /**
-     * <code>draw</code> renders a text object using a predefined font.
-     * 
-     * @see com.jme.renderer.Renderer#draw(com.jme.scene.Text)
-     */
-    @Override
-	public void draw(Text t) {
-        if (font == null) {
-            font = new LWJGLFont();
-        }
-        font.setColor(t.getTextColor());
-        applyStates(t.states);
-        font.print(this, (int) t.getWorldTranslation().x, (int) t
-                .getWorldTranslation().y, t.getWorldScale(), t.getText(), 0);
-    }
 
     /**
      * checkAndAdd is used to process the SceneElement for the render queue. It's

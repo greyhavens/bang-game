@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -37,7 +37,6 @@ import java.nio.IntBuffer;
 
 import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
-import com.jme.scene.Text;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.LineBatch;
 import com.jme.scene.batch.PointBatch;
@@ -56,31 +55,31 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.ShadeState;
+import com.jme.scene.state.StateRecord;
 import com.jme.scene.state.StencilState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.scene.state.WireframeState;
 import com.jme.scene.state.ZBufferState;
-import com.jme.scene.state.lwjgl.records.StateRecord;
 
 /**
  * <code>Renderer</code> defines an abstract class that handles displaying of
  * graphics data to the context. Creation of this object is typically handled
  * via a call to a <code>DisplaySystem</code> subclass.
- * 
+ *
  * All rendering state and tasks can be handled through this class.
- * 
+ *
  * Example Usage: <br>
  * NOTE: This example uses the <code>DisplaySystem</code> class to obtain the
  * <code>Renderer</code>.
- * 
+ *
  * <code>
  * DisplaySystem ds = new LWJGLDisplaySystem();<br>
  * ds.createWindow(640,480,16,60,false);<br>
  * Renderer r = ds.getRenderer();<br>
  * r.draw(point);<br>
  * </code>
- * 
+ *
  * @see com.jme.system.DisplaySystem
  * @author Mark Powell
  * @author Tijl Houtbeckers (added VBO delete methods)
@@ -102,9 +101,9 @@ public abstract class Renderer {
 
     /** The Spatial will render in the ortho bucket. */
     public final static int QUEUE_ORTHO = 4;
-    
+
     protected AbstractCamera camera;
-    
+
     // clear color
     protected ColorRGBA backgroundColor;
 
@@ -117,7 +116,7 @@ public abstract class Renderer {
     protected boolean statisticsOn;
 
     private boolean headless = false;
-    
+
  // width and height of renderer
     protected int width;
 
@@ -129,7 +128,7 @@ public abstract class Renderer {
     /**
      * <code>setCamera</code> sets the reference to the applications camera
      * object.
-     * 
+     *
      * @param camera
      *            the camera object to use with this <code>Renderer</code>.
      */
@@ -139,7 +138,7 @@ public abstract class Renderer {
 
     /**
      * <code>getCamera</code> returns the camera used by this renderer.
-     * 
+     *
      * @see com.jme.renderer.Renderer#getCamera()
      */
     public Camera getCamera() {
@@ -147,9 +146,9 @@ public abstract class Renderer {
     }
 
     /**
-     * 
+     *
      * <code>createCamera</code> retrieves a default camera for this renderer.
-     * 
+     *
      * @param width
      *            the width of the frame.
      * @param height
@@ -159,100 +158,100 @@ public abstract class Renderer {
     public abstract Camera createCamera(int width, int height);
 
     /**
-     * 
+     *
      * <code>createAlphaState</code> retrieves the alpha state object for the
      * proper renderer.
-     * 
+     *
      * @return the <code>AlphaState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract AlphaState createAlphaState();
 
     /**
-     * 
+     *
      * <code>createAttributeState</code> retrieves the attribute saving state
      * object for the proper renderer.
-     * 
+     *
      * @return the <code>AttributeState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract AttributeState createAttributeState();
 
     /**
-     * 
+     *
      * <code>createCullState</code> retrieves the cull state object for the
      * proper renderer.
-     * 
+     *
      * @return the <code>CullState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract CullState createCullState();
 
     /**
-     * 
+     *
      * <code>createDitherState</code> retrieves the dither state object for
      * the proper renderer.
-     * 
+     *
      * @return the <code>DitherState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract DitherState createDitherState();
 
     /**
-     * 
+     *
      * <code>createFogState</code> retrieves the fog state object for the
      * proper renderer.
-     * 
+     *
      * @return the <code>FogState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract FogState createFogState();
 
     /**
-     * 
+     *
      * <code>createLightState</code> retrieves the light state object for the
      * proper renderer.
-     * 
+     *
      * @return the <code>LightState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract LightState createLightState();
 
     /**
-     * 
+     *
      * <code>createMaterialState</code> retrieves the material state object
      * for the proper renderer.
-     * 
+     *
      * @return the <code>MaterialState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract MaterialState createMaterialState();
 
     /**
-     * 
+     *
      * <code>createShadeState</code> retrieves the shade state object for the
      * proper renderer.
-     * 
+     *
      * @return the <code>ShadeState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract ShadeState createShadeState();
 
     /**
-     * 
+     *
      * <code>createTextureState</code> retrieves the texture state object for
      * the proper renderer.
-     * 
+     *
      * @return the <code>TextureState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract TextureState createTextureState();
 
     /**
-     * 
+     *
      * <code>createWireframeState</code> retrieves the wireframe state object
      * for the proper renderer.
-     * 
+     *
      * @return the <code>WireframeState</code> object that can make use of the
      *         proper renderer.
      */
@@ -260,7 +259,7 @@ public abstract class Renderer {
 
     /**
      * Retrieves the Z buffer state object for the proper renderer.
-     * 
+     *
      * @return The <code>ZBufferState</code> object that can make use of the
      *         proper renderer.
      */
@@ -268,7 +267,7 @@ public abstract class Renderer {
 
     /**
      * Retrieves the vertex program state object for the proper renderer.
-     * 
+     *
      * @return The <code>VertexProgramState</code> object that can make use of
      *         the proper renderer.
      */
@@ -276,7 +275,7 @@ public abstract class Renderer {
 
     /**
      * Retrieves the fragment program state object for the proper renderer.
-     * 
+     *
      * @return The <code>VertexProgramState</code> object that can make use of
      *         the proper renderer.
      */
@@ -285,7 +284,7 @@ public abstract class Renderer {
     /**
      * <code>createShaderObjectsState</code> retrieves the shader object state
      * object for the proper renderer.
-     * 
+     *
      * @return the <code>ShaderObjectsState</code> object that can make use of
      *         the proper renderer.
      */
@@ -293,12 +292,12 @@ public abstract class Renderer {
 
     /**
      * Retrieves the stencil state object for the proper renderer.
-     * 
+     *
      * @return The <code>StencilState</code> object that can make use of the
      *         proper renderer.
      */
     public abstract StencilState createStencilState();
-    
+
     /**
     * Retrieves the clip state object for the proper renderer.
     *
@@ -309,7 +308,7 @@ public abstract class Renderer {
 
     /**
      * Retrieves the stencil state object for the proper renderer.
-     * 
+     *
      * @return The <code>StencilState</code> object that can make use of the
      *         proper renderer.
      */
@@ -317,7 +316,7 @@ public abstract class Renderer {
 
  /**
      * <code>enableStatistics</code> will turn on statistics gathering.
-     * 
+     *
      * @param value
      *            true to use statistics, false otherwise.
      */
@@ -337,7 +336,7 @@ public abstract class Renderer {
     /**
      * <code>getStatistics</code> returns a string value of the rendering
      * statistics information (number of triangles and number of vertices).
-     * 
+     *
      * @return the string representation of the current statistics.
      */
     public RenderStatistics getStatistics() {
@@ -347,7 +346,7 @@ public abstract class Renderer {
     /**
      * <code>getStatistics</code> returns a string value of the rendering
      * statistics information (number of triangles and number of vertices).
-     * 
+     *
      * @return the string representation of the current statistics.
      */
     public void setStatistics(RenderStatistics stats) {
@@ -357,12 +356,12 @@ public abstract class Renderer {
     /**
      * <code>getStatistics</code> returns a string value of the rendering
      * statistics information (number of triangles and number of vertices).
-     * 
+     *
      * @return the string representation of the current statistics.
      */
     public StringBuffer getStatistics(StringBuffer a) {
         a.setLength(0);
-        if (stats != null) 
+        if (stats != null)
             stats.append(a);
         return a;
     }
@@ -371,7 +370,7 @@ public abstract class Renderer {
      * <code>setBackgroundColor</code> sets the color of window. This color
      * will be shown for any pixel that is not set via typical rendering
      * operations.
-     * 
+     *
      * @param c
      *            the color to set the background to.
      */
@@ -380,7 +379,7 @@ public abstract class Renderer {
     /**
      * <code>getBackgroundColor</code> retrieves the clear color of the
      * current OpenGL context.
-     * 
+     *
      * @see com.jme.renderer.Renderer#getBackgroundColor()
      * @return the current clear color.
      */
@@ -392,7 +391,7 @@ public abstract class Renderer {
      * <code>clearZBuffer</code> clears the depth buffer of the renderer. The
      * Z buffer allows sorting of pixels by depth or distance from the view
      * port. Clearing this buffer prepares it for the next frame.
-     *  
+     *
      */
     public abstract void clearZBuffer();
 
@@ -400,7 +399,7 @@ public abstract class Renderer {
      * <code>clearBackBuffer</code> clears the back buffer of the renderer.
      * The backbuffer is the buffer being rendered to before it is displayed to
      * the screen. Clearing this buffer frees it for rendering the next frame.
-     *  
+     *
      */
     public abstract void clearColorBuffer();
 
@@ -412,7 +411,7 @@ public abstract class Renderer {
     /**
      * <code>clearBuffers</code> clears both the depth buffer and the back
      * buffer.
-     *  
+     *
      */
     public abstract void clearBuffers();
 
@@ -420,7 +419,7 @@ public abstract class Renderer {
      * <code>clearBuffers</code> clears both the depth buffer and the back
      * buffer restricting the clear to the rectangle defined by the width and
      * height of the renderer.
-     *  
+     *
      */
     public abstract void clearStrictBuffers();
 
@@ -428,17 +427,17 @@ public abstract class Renderer {
      * <code>displayBackBuffer</code> swaps the back buffer with the currently
      * displayed buffer. Swapping (page flipping) allows the renderer to display
      * a prerenderer display without any flickering.
-     *  
+     *
      */
     public abstract void displayBackBuffer();
 
     /**
-     * 
+     *
      * <code>setOrtho</code> sets the display system to be in orthographic
      * mode. If the system has already been set to orthographic mode a
      * <code>JmeException</code> is thrown. The origin (0,0) is the bottom
      * left of the screen.
-     *  
+     *
      */
     public abstract void setOrtho();
 
@@ -459,31 +458,31 @@ public abstract class Renderer {
     }
 
     /**
-     * 
+     *
      * <code>setOrthoCenter</code> sets the display system to be in
      * orthographic mode. If the system has already been set to orthographic
      * mode a <code>JmeException</code> is thrown. The origin (0,0) is the
      * center of the screen.
-     * 
-     *  
+     *
+     *
      */
     public abstract void setOrthoCenter();
 
     /**
-     * 
+     *
      * <code>unsetOrhto</code> unsets the display system from orthographic
      * mode back into regular projection mode. If the system is not in
      * orthographic mode a <code>JmeException</code> is thrown.
-     * 
-     *  
+     *
+     *
      */
     public abstract void unsetOrtho();
 
     /**
-     * 
+     *
      * <code>takeScreenShot</code> saves the current buffer to a png file. The
      * filename is provided, .png will be appended to the end of the name.
-     * 
+     *
      * @param filename
      *            the name of the screenshot file.
      * @return true if the screen capture was successful, false otherwise.
@@ -493,7 +492,7 @@ public abstract class Renderer {
     /**
      * <code>grabScreenContents</code> reads a block of pixels from the
      * current framebuffer.
-     * 
+     *
      * @param buff
      *            a buffer to store contents in.
      * @param x -
@@ -512,7 +511,7 @@ public abstract class Renderer {
      * <code>Spatial</code> the renderer hands off management of the scene to
      * spatial for it to determine when a <code>Geometry</code> leaf is
      * reached.
-     * 
+     *
      * @param s
      *            the scene to render.
      */
@@ -520,15 +519,15 @@ public abstract class Renderer {
 
     /**
      * <code>draw</code> renders a single TriangleBatch to the back buffer.
-     * 
+     *
      * @param batch
      *            the batch to be rendered.
      */
     public abstract void draw(TriangleBatch batch);
-    
+
     /**
      * <code>draw</code> renders a single QuadBatch to the back buffer.
-     * 
+     *
      * @param batch
      *            the batch to be rendered.
      */
@@ -536,7 +535,7 @@ public abstract class Renderer {
 
     /**
      * <code>draw</code> renders a single PointBatch to the back buffer.
-     * 
+     *
      * @param batch
      *            the batch to be rendered.
      */
@@ -544,30 +543,21 @@ public abstract class Renderer {
 
     /**
      * <code>draw</code> renders a single LineBatch to the back buffer.
-     * 
+     *
      * @param batch
      *            the batch to be rendered.
      */
     public abstract void draw(LineBatch batch);
 
     /**
-     * 
-     * <code>draw</code> renders text to the back buffer.
-     * 
-     * @param t
-     *            the text object to be rendered.
-     */
-    public abstract void draw(Text t);
-
-    /**
       * <code>flush</code> tells opengl to finish all currently waiting
      * commands in the buffer.
      */
     public abstract void flush();
-    
+
     /**
      * Get the render queue associated with this Renderer.
-     * 
+     *
      * @return RenderQueue
      */
     public RenderQueue getQueue() {
@@ -577,7 +567,7 @@ public abstract class Renderer {
     /**
      * Return true if this renderer is in the middle of processing its
      * RenderQueue.
-     * 
+     *
      * @return boolean
      */
     public boolean isProcessingQueue() {
@@ -587,7 +577,7 @@ public abstract class Renderer {
     /**
      * Check a given SceneElement to see if it should be queued. return true if it
      * was queued.
-     * 
+     *
      * @param s
      *            Spatial to check
      * @return true if it was queued.
@@ -596,14 +586,14 @@ public abstract class Renderer {
 
     /**
      * Return true if the system running this supports VBO
-     * 
+     *
      * @return boolean
      */
     public abstract boolean supportsVBO();
 
     /**
      * See Renderer.isHeadless()
-     * 
+     *
      * @return boolean
      */
     public boolean isHeadless() {
@@ -612,7 +602,7 @@ public abstract class Renderer {
 
     /**
      * See Renderer.setHeadless()
-     * 
+     *
      * @return boolean
      */
     public void setHeadless(boolean headless) {
@@ -621,7 +611,7 @@ public abstract class Renderer {
 
     /**
      * Retrieve the width set on this renderer.
-     * 
+     *
      * @return width
      */
     public int getWidth() {
@@ -631,18 +621,18 @@ public abstract class Renderer {
 
     /**
      * Retrieve the height set on this renderer.
-     * 
+     *
      * @return height
      */
     public int getHeight() {
         return height;
     }
 
-    
+
     /**
      * Reinitialize the renderer with the given width/height. Also calls resize
      * on the attached camera if present.
-     * 
+     *
      * @param width
      *            int
      * @param height
@@ -653,7 +643,7 @@ public abstract class Renderer {
 
     /**
      * Generate a DisplayList for drawing the given GeomBatch.
-     * 
+     *
      * @param batch
      *            the batch to make a display list for
      * @return the id of the list
@@ -662,16 +652,16 @@ public abstract class Renderer {
 
     /**
      * Releases a DisplayList from the card.
-     * 
+     *
      * @param listId
      *            the id of the display list to release
      */
     public abstract void releaseDisplayList(int listId);
-    
+
     /**
      * Sets an offset to the zbuffer to be used when comparing an incoming
      * polygon for depth buffer pass/fail.
-     * 
+     *
      * @param factor
      *            Specifies a scale factor that is used to create a variable
      *            depth offset for each polygon. The initial value is 0.
@@ -680,19 +670,19 @@ public abstract class Renderer {
      *            constant depth offset. The initial value is 0.
      */
     public abstract void setPolygonOffset(float factor, float offset);
-    
+
     /**
      * Removes any previously set offset from the renderer.
      */
     public abstract void clearPolygonOffset();
-        
+
     /**
 	 * Checks the VBO cache to see if this Buffer is mapped to a VBO-id.
 	 * If it does the mapping will be removed from the cache and the VBO with the
 	 * VBO-id found will be deleted.
-	 * 
+	 *
 	 * If no mapped VBO-id is found, this method does not do anything else.
-	 * 
+	 *
 	 * @param buffer
 	 *            The Buffer who's associated VBO should be deleted.
 	 */
@@ -700,7 +690,7 @@ public abstract class Renderer {
 
 	/**
 	 * Attempts to delete the VBO with this VBO id. Ignores ids < 1.
-	 * 
+	 *
 	 * @param vboid
 	 */
 	public abstract void deleteVBO(int vboid);
@@ -708,7 +698,7 @@ public abstract class Renderer {
 	/**
 	 * Clears all entries from the VBO cache. Does not actually delete any VBO
 	 * buffer, only all mappings between Buffers and VBO-ids.
-	 * 
+	 *
 	 */
 	public abstract void clearVBOCache();
 
@@ -720,7 +710,7 @@ public abstract class Renderer {
 	 * and remove if from the VBO cache. You can now reuse the same buffer with
 	 * another Geometry object. <br>
 	 * If no association is found, this method does nothing.
-	 * 
+	 *
 	 * @param buffer
 	 *            The nio Buffer whose associated VBO should be deleted.
 	 * @return An int wrapped in an Integer object that's the VBO-id of the VBO
@@ -731,7 +721,7 @@ public abstract class Renderer {
 
 	/**
      * Create a renderstate via a given renderstate type.
-     * 
+     *
      * @param type
      *            one of RenderState.RS_****
      * @return the new RenderState or null if an invalid type is given.

@@ -38,7 +38,6 @@ import java.util.Arrays;
 import java.util.Stack;
 
 import com.jme.scene.SceneElement;
-import com.jme.scene.state.lwjgl.records.StateRecord;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;

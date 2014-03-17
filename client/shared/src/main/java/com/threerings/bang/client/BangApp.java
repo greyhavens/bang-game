@@ -10,8 +10,6 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.lwjgl.opengl.Display;
-
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.util.LoggingSystem;
@@ -149,10 +147,10 @@ public class BangApp extends JmeApp
         // two-pass transparency is expensive
         _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
 
-        // turn on the FPS display if we're profiling
-        if (_profiling) {
-            displayStatistics(true);
-        }
+        // // turn on the FPS display if we're profiling
+        // if (_profiling) {
+        //     displayStatistics(true);
+        // }
 
         // initialize our client instance
         _client = new BangClient();

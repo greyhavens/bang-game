@@ -42,7 +42,7 @@ import com.jme.renderer.RenderContext;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.state.RenderState;
-import com.jme.system.lwjgl.LWJGLSystemProvider;
+import com.jme.system.gdx.GDXSystemProvider;
 import com.jmex.awt.JMECanvas;
 
 /**
@@ -67,7 +67,7 @@ import com.jmex.awt.JMECanvas;
 public abstract class DisplaySystem {
 
     /** The display system that has been created. */
-    protected static SystemProvider system = new LWJGLSystemProvider();
+    protected static SystemProvider system = new GDXSystemProvider();
 
     /**
      * Width selected for the renderer.

@@ -32,9 +32,11 @@
 package com.jme.scene.state.lwjgl.records;
 
 import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferUtils;
 
 import com.jme.math.Vector3f;
+import com.jme.scene.state.StateRecord;
 import com.jme.util.HashIntMap;
 
 public class TextureStateRecord extends StateRecord {

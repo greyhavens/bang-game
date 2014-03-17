@@ -16,7 +16,7 @@ import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.lwjgl.records.TextureStateRecord;
+import com.jme.scene.state.gdx.records.TextureStateRecord;
 
 import com.jmex.bui.BImage;
 

@@ -49,7 +49,6 @@ import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
-import com.jme.scene.Text;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.LineBatch;
 import com.jme.scene.batch.PointBatch;
@@ -67,12 +66,12 @@ import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.ShadeState;
+import com.jme.scene.state.StateRecord;
 import com.jme.scene.state.StencilState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.scene.state.WireframeState;
 import com.jme.scene.state.ZBufferState;
-import com.jme.scene.state.lwjgl.records.StateRecord;
 import com.jme.system.DisplaySystem;
 import com.jme.system.SystemProvider;
 import com.jmex.awt.JMECanvas;
@@ -543,10 +542,6 @@ public class DummyDisplaySystem extends DisplaySystem {
 
             @Override
             public void draw( LineBatch batch ) {
-            }
-
-            @Override
-            public void draw( Text t ) {
             }
 
             @Override

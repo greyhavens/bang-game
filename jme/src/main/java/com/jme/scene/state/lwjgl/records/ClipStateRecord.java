@@ -32,6 +32,7 @@
 package com.jme.scene.state.lwjgl.records;
 
 import com.jme.scene.state.ClipState;
+import com.jme.scene.state.StateRecord;
 
 public class ClipStateRecord extends StateRecord {
 

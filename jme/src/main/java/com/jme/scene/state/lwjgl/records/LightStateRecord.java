@@ -35,6 +35,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.StateRecord;
 import com.jme.util.geom.BufferUtils;
 
 public class LightStateRecord extends StateRecord {

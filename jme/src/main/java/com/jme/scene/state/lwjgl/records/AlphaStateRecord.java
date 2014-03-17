@@ -31,6 +31,8 @@
  */
 package com.jme.scene.state.lwjgl.records;
 
+import com.jme.scene.state.StateRecord;
+
 public class AlphaStateRecord extends StateRecord {
     public boolean blendEnabled = false;
     public boolean testEnabled = false;

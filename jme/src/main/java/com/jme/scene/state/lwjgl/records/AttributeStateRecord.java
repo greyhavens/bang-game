@@ -31,6 +31,8 @@
  */
 package com.jme.scene.state.lwjgl.records;
 
+import com.jme.scene.state.StateRecord;
+
 public class AttributeStateRecord extends StateRecord {
 	private int mask = -1;
 	

@@ -31,6 +31,8 @@
  */
 package com.jme.scene.state.lwjgl.records;
 
+import com.jme.scene.state.StateRecord;
+
 public class CullStateRecord extends StateRecord {
     public boolean enabled = false;
     public int face = -1;
