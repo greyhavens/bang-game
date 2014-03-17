@@ -20,10 +20,11 @@ import java.util.regex.Pattern;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import com.badlogic.gdx.Input.Keys;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
@@ -1253,7 +1254,7 @@ public class BangClient extends BasicClient
 
             // also re-wire up our options view whenever the main view changes as the BangView
             // overrides the escape mapping during the game
-            _ctx.getKeyManager().registerCommand(KeyInput.KEY_ESCAPE, _clearPopup);
+            _ctx.getKeyManager().registerCommand(Keys.ESCAPE, _clearPopup);
         }
 
         // don't fade in the game or town views, they'll handle that themselves when they're ready

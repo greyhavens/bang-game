@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.jme.input.KeyInput;
+import com.badlogic.gdx.Input.Keys;
+
 import com.jme.math.FastMath;
 import com.jmex.bui.BWindow;
 
@@ -172,18 +173,18 @@ public class BangController extends GameController
             }
         }, 3);
 
-        mapCommand(KeyInput.KEY_SPACE, "StartChat");
-        mapCommand(KeyInput.KEY_RETURN, "StartChat");
-        mapCommand(KeyInput.KEY_ESCAPE, "ShowOptions");
-        mapCommand(KeyInput.KEY_F1, "ShowOptions");
-        mapCommand(KeyInput.KEY_TAB, "SelectNextUnit");
-        mapCommand(KeyInput.KEY_C, "AdjustZoom");
-        mapCommand(KeyInput.KEY_Q, "SwingCameraLeft");
-        mapCommand(KeyInput.KEY_E, "SwingCameraRight");
-        //mapCommand(KeyInput.KEY_G, "ToggleGrid");
-        mapCommand(KeyInput.KEY_1, PLACE_CARD, new Integer(0));
-        mapCommand(KeyInput.KEY_2, PLACE_CARD, new Integer(1));
-        mapCommand(KeyInput.KEY_3, PLACE_CARD, new Integer(2));
+        mapCommand(Keys.SPACE, "StartChat");
+        mapCommand(Keys.ENTER, "StartChat");
+        mapCommand(Keys.ESCAPE, "ShowOptions");
+        mapCommand(Keys.F1, "ShowOptions");
+        mapCommand(Keys.TAB, "SelectNextUnit");
+        mapCommand(Keys.C, "AdjustZoom");
+        mapCommand(Keys.Q, "SwingCameraLeft");
+        mapCommand(Keys.E, "SwingCameraRight");
+        //mapCommand(Keys.G, "ToggleGrid");
+        mapCommand(Keys.NUM_1, PLACE_CARD, new Integer(0));
+        mapCommand(Keys.NUM_2, PLACE_CARD, new Integer(1));
+        mapCommand(Keys.NUM_3, PLACE_CARD, new Integer(2));
     }
 
     @Override // documentation inherited

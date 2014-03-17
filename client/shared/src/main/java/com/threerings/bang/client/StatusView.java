@@ -3,7 +3,7 @@
 
 package com.threerings.bang.client;
 
-import com.jme.input.KeyInput;
+import com.badlogic.gdx.Input.Keys;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
@@ -303,10 +303,10 @@ public class StatusView extends BWindow
 
     // TODO: sort out how we'll localize these
     protected static final int[] STATUS_KEYMAP = {
-        KeyInput.KEY_I, ITEMS_TAB,
-        KeyInput.KEY_S, BIGSHOTS_TAB,
-        KeyInput.KEY_B, BADGES_TAB,
-        KeyInput.KEY_D, DUDS_TAB,
-        KeyInput.KEY_P, PARDNERS_TAB,
+        Keys.I, ITEMS_TAB,
+        Keys.S, BIGSHOTS_TAB,
+        Keys.B, BADGES_TAB,
+        Keys.D, DUDS_TAB,
+        Keys.P, PARDNERS_TAB,
     };
 }

@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -31,6 +31,8 @@
  */
 
 package com.jme.input;
+
+import com.badlogic.gdx.Input.Keys;
 
 import com.jme.input.action.KeyBackwardAction;
 import com.jme.input.action.KeyForwardAction;
@@ -56,14 +58,14 @@ public class KeyboardLookHandler extends InputHandler {
     public KeyboardLookHandler( Camera cam, float moveSpeed, float rotateSpeed ) {
         KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
 
-        keyboard.set( "forward", KeyInput.KEY_W );
-        keyboard.set( "backward", KeyInput.KEY_S );
-        keyboard.set( "strafeLeft", KeyInput.KEY_A );
-        keyboard.set( "strafeRight", KeyInput.KEY_D );
-        keyboard.set( "lookUp", KeyInput.KEY_UP );
-        keyboard.set( "lookDown", KeyInput.KEY_DOWN );
-        keyboard.set( "turnRight", KeyInput.KEY_RIGHT );
-        keyboard.set( "turnLeft", KeyInput.KEY_LEFT );
+        keyboard.set( "forward", Keys.W );
+        keyboard.set( "backward", Keys.S );
+        keyboard.set( "strafeLeft", Keys.A );
+        keyboard.set( "strafeRight", Keys.D );
+        keyboard.set( "lookUp", Keys.UP );
+        keyboard.set( "lookDown", Keys.DOWN );
+        keyboard.set( "turnRight", Keys.RIGHT );
+        keyboard.set( "turnLeft", Keys.LEFT );
 
         addAction( new KeyForwardAction( cam, moveSpeed ), "forward", true );
         addAction( new KeyBackwardAction( cam, moveSpeed ), "backward", true );
@@ -78,7 +80,7 @@ public class KeyboardLookHandler extends InputHandler {
         left.setLockAxis(new Vector3f(cam.getUp()));
         addAction( left, "turnLeft", true );
     }
-    
+
     public void setLockAxis(Vector3f lock) {
         right.setLockAxis(new Vector3f(lock));
         left.setLockAxis(new Vector3f(lock));

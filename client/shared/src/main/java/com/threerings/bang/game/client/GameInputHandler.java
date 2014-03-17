@@ -3,8 +3,9 @@
 
 package com.threerings.bang.game.client;
 
+import com.badlogic.gdx.Input.Keys;
+
 import com.jme.input.KeyBindingManager;
-import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 
@@ -157,14 +158,14 @@ public class GameInputHandler extends GodViewHandler
         KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
 
         // we only allow free form panning, nothing else
-        keyboard.set("forward", KeyInput.KEY_W);
-        keyboard.set("arrow_forward", KeyInput.KEY_UP);
-        keyboard.set("backward", KeyInput.KEY_S);
-        keyboard.set("arrow_backward", KeyInput.KEY_DOWN);
-        keyboard.set("left", KeyInput.KEY_A);
-        keyboard.set("arrow_left", KeyInput.KEY_LEFT);
-        keyboard.set("right", KeyInput.KEY_D);
-        keyboard.set("arrow_right", KeyInput.KEY_RIGHT);
+        keyboard.set("forward", Keys.W);
+        keyboard.set("arrow_forward", Keys.UP);
+        keyboard.set("backward", Keys.S);
+        keyboard.set("arrow_backward", Keys.DOWN);
+        keyboard.set("left", Keys.A);
+        keyboard.set("arrow_left", Keys.LEFT);
+        keyboard.set("right", Keys.D);
+        keyboard.set("arrow_right", Keys.RIGHT);
     }
 
     /** Updates the board view's hover state on completion of camera paths. */

@@ -7,6 +7,8 @@ import java.net.URL;
 
 import java.util.HashMap;
 
+import com.badlogic.gdx.Input.Keys;
+
 import com.jme.input.KeyInput;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BScrollPane;
@@ -128,7 +130,7 @@ public class PaperView extends BContainer
             CachedDocument news = _news.get(_ctx.getUserObject().townId);
             if (news == null) {
                 refreshNews(false);
-            } else if (KeyInput.get().isKeyDown(KeyInput.KEY_LCONTROL)) {
+            } else if (KeyInput.get().isKeyDown(Keys.CONTROL_LEFT)) {
                 refreshNews(true);
             } else {
                 setContents(news.getDocument());

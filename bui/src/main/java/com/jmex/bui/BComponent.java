@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.opengl.GL11;
+import com.badlogic.gdx.Input.Keys;
 
-import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.RenderContext;
 import com.jme.renderer.Renderer;
@@ -666,7 +666,7 @@ public class BComponent
             KeyEvent kev = (KeyEvent)event;
             if (kev.getType() == KeyEvent.KEY_PRESSED) {
                 int modifiers = kev.getModifiers(), keyCode = kev.getKeyCode();
-                if (keyCode == KeyInput.KEY_TAB) {
+                if (keyCode == Keys.TAB) {
                     if (modifiers == 0) {
                         getWindow().requestFocus(getNextFocus());
                         processed = true;

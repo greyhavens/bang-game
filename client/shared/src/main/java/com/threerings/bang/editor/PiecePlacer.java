@@ -9,7 +9,8 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
-import com.jme.input.KeyInput;
+import com.badlogic.gdx.Input.Keys;
+
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 
@@ -32,18 +33,18 @@ public class PiecePlacer extends EditorTool
 {
     /** The name of this tool. */
     public static final String NAME = "piece_placer";
-    
+
     public PiecePlacer (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
     }
-    
+
     // documentation inherited
     public String getName ()
     {
         return NAME;
     }
-    
+
     @Override // documentation inherited
     public void mousePressed (MouseEvent e)
     {
@@ -58,13 +59,13 @@ public class PiecePlacer extends EditorTool
             if (e.getButton() == MouseEvent.BUTTON2) {
                 _ctrl.removePiece(_dragPiece);
                 _dragPiece = null;
-                
+
             } else {
                 _dragType = NORMAL_DRAG;
                 if (_dragPiece instanceof Prop) {
                     if (_scaleMode != 0) {
                         _dragType = SCALE_DRAG;
-                    } else if ((e.getModifiers() & 
+                    } else if ((e.getModifiers() &
                                 MouseEvent.SHIFT_DOWN_MASK) != 0) {
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             _dragType = FINE_DRAG;
@@ -81,19 +82,19 @@ public class PiecePlacer extends EditorTool
                             (p.x * 256 + p.fx),
                         (int)(_loc.y / PropSprite.FINE_POSITION_SCALE) -
                             (p.y * 256 + p.fy));
-                    
+
                 } else if (_dragType == NORMAL_DRAG) {
                     _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
                 }
             }
-        
+
         // otherwise, create a piece and start dragging
         } else if (e.getButton() == MouseEvent.BUTTON1) {
             Piece piece = _chooser.getSelectedPiece();
             if (piece == null) {
                 return;
             }
-            
+
             _dragPiece = (Piece)piece.clone();
             if (_placeRot > 0) {
                 for (int ii = 0; ii < DIRECTIONS.length; ii++) {
@@ -122,11 +123,11 @@ public class PiecePlacer extends EditorTool
         _dragPiece = null;
         _ctrl.maybeCommitPieceEdit();
     }
-    
+
     @Override // documentation inherited
     public void mouseDragged (MouseEvent e)
     {
-        if (_dragPiece == null || _dragType == NORMAL_DRAG || 
+        if (_dragPiece == null || _dragType == NORMAL_DRAG ||
                 !(_dragPiece instanceof Prop)) {
             return;
         }
@@ -139,7 +140,7 @@ public class PiecePlacer extends EditorTool
                     _dragOffset.x,
                 (int)(_loc.y / PropSprite.FINE_POSITION_SCALE) -
                     _dragOffset.y);
-            
+
         } else if (_dragType == SCALE_DRAG) {
             Vector3f v = p.getScale();
             if ((_scaleMode & (SCALE_ALL | SCALE_X)) != 0) {
@@ -160,7 +161,7 @@ public class PiecePlacer extends EditorTool
         }
         getBangObject().updatePieces(_dragPiece = p);
     }
-    
+
     @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {
@@ -187,7 +188,7 @@ public class PiecePlacer extends EditorTool
     public void hoverTileChanged (int tx, int ty)
     {
         _hoverTile.setLocation(tx, ty);
-        
+
         // if we are dragging a piece, move that feller around
         if (_dragPiece != null && _dragType == NORMAL_DRAG) {
             _ctrl.maybeStartPieceEdit(_dragPiece);
@@ -205,29 +206,29 @@ public class PiecePlacer extends EditorTool
             hover == null ? Cursor.getDefaultCursor() :
             Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
-    
+
     @Override // documentation inherited
     public void keyPressed (KeyEvent e)
     {
         int code = e.getKeyCode(), lr = -1, ud = 0;
         byte ws = 0, ad = 0;
         switch (code) {
-             case KeyInput.KEY_LEFT: lr = -1; break;
-             case KeyInput.KEY_RIGHT: lr = +1; break;
-             case KeyInput.KEY_UP: ud = +1; break;
-             case KeyInput.KEY_DOWN: ud = -1; break;
-             case KeyInput.KEY_W: ws = +1; break;
-             case KeyInput.KEY_A: ad = -1; break;
-             case KeyInput.KEY_S: ws = -1; break;
-             case KeyInput.KEY_D: ad = +1; break;
-             case KeyInput.KEY_Z: _scaleMode = _scaleMode | SCALE_ALL; break;
-             case KeyInput.KEY_X: _scaleMode = _scaleMode | SCALE_X; break;
-             case KeyInput.KEY_C: _scaleMode = _scaleMode | SCALE_Y; break;
-             case KeyInput.KEY_V: _scaleMode = _scaleMode | SCALE_Z; break;
-             case KeyInput.KEY_1: _placeRot = _placeRot | ROT_NORTH; break;
-             case KeyInput.KEY_2: _placeRot = _placeRot | ROT_EAST; break;
-             case KeyInput.KEY_3: _placeRot = _placeRot | ROT_SOUTH; break;
-             case KeyInput.KEY_4: _placeRot = _placeRot | ROT_WEST; break;
+             case Keys.LEFT: lr = -1; break;
+             case Keys.RIGHT: lr = +1; break;
+             case Keys.UP: ud = +1; break;
+             case Keys.DOWN: ud = -1; break;
+             case Keys.W: ws = +1; break;
+             case Keys.A: ad = -1; break;
+             case Keys.S: ws = -1; break;
+             case Keys.D: ad = +1; break;
+             case Keys.Z: _scaleMode = _scaleMode | SCALE_ALL; break;
+             case Keys.X: _scaleMode = _scaleMode | SCALE_X; break;
+             case Keys.C: _scaleMode = _scaleMode | SCALE_Y; break;
+             case Keys.V: _scaleMode = _scaleMode | SCALE_Z; break;
+             case Keys.NUM_1: _placeRot = _placeRot | ROT_NORTH; break;
+             case Keys.NUM_2: _placeRot = _placeRot | ROT_EAST; break;
+             case Keys.NUM_3: _placeRot = _placeRot | ROT_SOUTH; break;
+             case Keys.NUM_4: _placeRot = _placeRot | ROT_WEST; break;
              default: return;
         }
         Piece piece = _panel.view.getHoverPiece();
@@ -247,7 +248,7 @@ public class PiecePlacer extends EditorTool
             } else {
                 ((Prop)piece).rotateFine(lr*8);
             }
-            
+
         } else if (lr != -1) {
             piece.rotate(lr < 0 ? Piece.CW : Piece.CCW);
         } else if (piece instanceof Prop) {
@@ -267,24 +268,24 @@ public class PiecePlacer extends EditorTool
         }
         getBangObject().updatePieces(piece);
     }
-    
+
     @Override // documentation inherited
     public void keyReleased (KeyEvent e)
     {
         switch (e.getKeyCode()) {
-             case KeyInput.KEY_Z: _scaleMode = _scaleMode & ~SCALE_ALL; break;
-             case KeyInput.KEY_X: _scaleMode = _scaleMode & ~SCALE_X; break;
-             case KeyInput.KEY_C: _scaleMode = _scaleMode & ~SCALE_Y; break;
-             case KeyInput.KEY_V: _scaleMode = _scaleMode & ~SCALE_Z; break;
-             case KeyInput.KEY_1: _placeRot = _placeRot & ~ROT_NORTH; break;
-             case KeyInput.KEY_2: _placeRot = _placeRot & ~ROT_EAST; break;
-             case KeyInput.KEY_3: _placeRot = _placeRot & ~ROT_SOUTH; break;
-             case KeyInput.KEY_4: _placeRot = _placeRot & ~ROT_WEST; break;
+             case Keys.Z: _scaleMode = _scaleMode & ~SCALE_ALL; break;
+             case Keys.X: _scaleMode = _scaleMode & ~SCALE_X; break;
+             case Keys.C: _scaleMode = _scaleMode & ~SCALE_Y; break;
+             case Keys.V: _scaleMode = _scaleMode & ~SCALE_Z; break;
+             case Keys.NUM_1: _placeRot = _placeRot & ~ROT_NORTH; break;
+             case Keys.NUM_2: _placeRot = _placeRot & ~ROT_EAST; break;
+             case Keys.NUM_3: _placeRot = _placeRot & ~ROT_SOUTH; break;
+             case Keys.NUM_4: _placeRot = _placeRot & ~ROT_WEST; break;
              default:
                 _ctrl.maybeCommitPieceEdit();
         }
     }
-    
+
     // documentation inherited
     protected JPanel createOptions ()
     {
@@ -292,13 +293,13 @@ public class PiecePlacer extends EditorTool
         options.add(_chooser = new PieceChooser(_ctx), BorderLayout.CENTER);
         return options;
     }
-    
+
     /** The piece chooser component. */
     protected PieceChooser _chooser;
-    
+
     /** The location of the mouse pointer in tile coordinates. */
     protected Point _hoverTile = new Point(-1, -1);
-        
+
     /** The screen coordinates where our drag started. */
     protected Point _dragStart = new Point();
 
@@ -310,10 +311,10 @@ public class PiecePlacer extends EditorTool
 
     /** The button that started our drag or -1. */
     protected int _dragButton = -1;
-    
+
     /** The type of drag operation we're performing. */
     protected int _dragType;
-    
+
     /** A temporary vector to reuse. */
     protected Vector3f _loc = new Vector3f();
 
@@ -330,13 +331,13 @@ public class PiecePlacer extends EditorTool
     protected static final int ROT_EAST = 1 << EAST;
     protected static final int ROT_SOUTH = 1 << SOUTH;
     protected static final int ROT_WEST = 1 << WEST;
-    
+
     /** The normal drag type: dragging pieces with tile coordinates. */
     protected static final int NORMAL_DRAG = 0;
-    
+
     /** The fine drag type: dragging pieces with fine coordinates. */
     protected static final int FINE_DRAG = 1;
-    
+
     /** The elevation drag type: dragging pieces vertically. */
     protected static final int ELEVATION_DRAG = 2;
 

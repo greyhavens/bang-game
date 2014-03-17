@@ -5,7 +5,7 @@ package com.threerings.bang.client.bui;
 
 import java.util.ArrayList;
 
-import com.jme.input.KeyInput;
+import com.badlogic.gdx.Input.Keys;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -310,16 +310,16 @@ public class IconPalette extends BContainer
             KeyEvent kev = (KeyEvent)event;
             if (kev.getType() == KeyEvent.KEY_PRESSED) {
                 switch (kev.getKeyCode()) {
-                case KeyInput.KEY_LEFT:
+                case Keys.LEFT:
                     moveSelection(-1);
                     break;
-                case KeyInput.KEY_RIGHT:
+                case Keys.RIGHT:
                     moveSelection(1);
                     break;
-                case KeyInput.KEY_UP:
+                case Keys.UP:
                     moveSelection(-_cols);
                     break;
-                case KeyInput.KEY_DOWN:
+                case Keys.DOWN:
                     moveSelection(_cols);
                     break;
                 default:

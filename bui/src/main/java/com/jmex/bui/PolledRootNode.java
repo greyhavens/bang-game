@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.Display;
 
+import com.badlogic.gdx.Input.Keys;
+
 import com.jme.input.InputHandler;
 import com.jme.input.KeyInput;
 import com.jme.input.KeyInputListener;
@@ -104,8 +106,8 @@ public class PolledRootNode extends BRootNode
     // documentation inherited
     public float getTooltipTimeout ()
     {
-        return (KeyInput.get().isKeyDown(KeyInput.KEY_LCONTROL) ||
-                KeyInput.get().isKeyDown(KeyInput.KEY_RCONTROL)) ? 0 : _tipTime;
+        return (KeyInput.get().isKeyDown(Keys.CONTROL_LEFT) ||
+                KeyInput.get().isKeyDown(Keys.CONTROL_RIGHT)) ? 0 : _tipTime;
     }
 
     /** This listener is notified when a key is pressed or released. */
@@ -218,14 +220,15 @@ public class PolledRootNode extends BRootNode
 
     /** Maps key codes to modifier flags. */
     protected static final int[] KEY_MODIFIER_MAP = {
-        KeyInput.KEY_LSHIFT, InputEvent.SHIFT_DOWN_MASK,
-        KeyInput.KEY_RSHIFT, InputEvent.SHIFT_DOWN_MASK,
-        KeyInput.KEY_LCONTROL, InputEvent.CTRL_DOWN_MASK,
-        KeyInput.KEY_RCONTROL, InputEvent.CTRL_DOWN_MASK,
-        KeyInput.KEY_LMENU, InputEvent.ALT_DOWN_MASK,
-        KeyInput.KEY_RMENU, InputEvent.ALT_DOWN_MASK,
-        KeyInput.KEY_LWIN, InputEvent.META_DOWN_MASK,
-        KeyInput.KEY_RWIN, InputEvent.META_DOWN_MASK,
+        Keys.SHIFT_LEFT, InputEvent.SHIFT_DOWN_MASK,
+        Keys.SHIFT_RIGHT, InputEvent.SHIFT_DOWN_MASK,
+        Keys.CONTROL_LEFT, InputEvent.CTRL_DOWN_MASK,
+        Keys.CONTROL_RIGHT, InputEvent.CTRL_DOWN_MASK,
+        Keys.ALT_LEFT, InputEvent.ALT_DOWN_MASK,
+        Keys.ALT_RIGHT, InputEvent.ALT_DOWN_MASK,
+        // TODO: no meta key codes in GDX?
+        Keys.SOFT_LEFT, InputEvent.META_DOWN_MASK,
+        Keys.SOFT_RIGHT, InputEvent.META_DOWN_MASK,
     };
 
     /** Maps button indices to modifier flags. */

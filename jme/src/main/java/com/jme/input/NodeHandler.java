@@ -32,6 +32,8 @@
 
 package com.jme.input;
 
+import com.badlogic.gdx.Input.Keys;
+
 import com.jme.input.action.KeyNodeBackwardAction;
 import com.jme.input.action.KeyNodeForwardAction;
 import com.jme.input.action.KeyNodeLookDownAction;
@@ -91,14 +93,14 @@ public class NodeHandler extends InputHandler {
     private void setKeyBindings() {
         KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
 
-        keyboard.set("forward", KeyInput.KEY_W);
-        keyboard.set("backward", KeyInput.KEY_S);
-        keyboard.set("strafeLeft", KeyInput.KEY_A);
-        keyboard.set("strafeRight", KeyInput.KEY_D);
-        keyboard.set("lookUp", KeyInput.KEY_UP);
-        keyboard.set("lookDown", KeyInput.KEY_DOWN);
-        keyboard.set("turnRight", KeyInput.KEY_RIGHT);
-        keyboard.set("turnLeft", KeyInput.KEY_LEFT);
+        keyboard.set("forward", Keys.W);
+        keyboard.set("backward", Keys.S);
+        keyboard.set("strafeLeft", Keys.A);
+        keyboard.set("strafeRight", Keys.D);
+        keyboard.set("lookUp", Keys.UP);
+        keyboard.set("lookDown", Keys.DOWN);
+        keyboard.set("turnRight", Keys.RIGHT);
+        keyboard.set("turnLeft", Keys.LEFT);
     }
 
     /**

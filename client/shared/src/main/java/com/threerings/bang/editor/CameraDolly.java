@@ -5,7 +5,8 @@ package com.threerings.bang.editor;
 
 import javax.swing.JPanel;
 
-import com.jme.input.KeyInput;
+import com.badlogic.gdx.Input.Keys;
+
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -30,7 +31,7 @@ public class CameraDolly extends EditorTool
     public CameraDolly (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
-        
+
         CameraHandler camhand = _ctx.getCameraHandler();
         camhand.setZoomLimits(MIN_DISTANCE, MAX_DISTANCE);
         camhand.setTiltLimits(MIN_ELEVATION, MAX_ELEVATION);
@@ -105,12 +106,12 @@ public class CameraDolly extends EditorTool
                 _ctx.getCameraHandler().panCamera(dx * LINEAR_SCALE,
                     dy * LINEAR_SCALE);
                 break;
-            
+
             case MouseEvent.BUTTON3: // middle "zooms"
                 _ctx.getCameraHandler().zoomCamera(dy * LINEAR_SCALE);
                 break;
         }
-        
+
         _lastX = e.getX();
         _lastY = e.getY();
     }
@@ -127,16 +128,16 @@ public class CameraDolly extends EditorTool
         int code = e.getKeyCode();
         CameraHandler camhand = _ctx.getCameraHandler();
         switch (code) {
-            case KeyInput.KEY_Q: camhand.zoomCamera(+5f); break;
-            case KeyInput.KEY_W: camhand.panCamera(0f, +5f); break;
-            case KeyInput.KEY_E: camhand.zoomCamera(-5f); break;
-            case KeyInput.KEY_A: camhand.panCamera(-5f, 0f); break;
-            case KeyInput.KEY_S: camhand.panCamera(0f, -5f); break;
-            case KeyInput.KEY_D: camhand.panCamera(+5f, 0f); break;
-            case KeyInput.KEY_UP: camhand.tiltCamera(FastMath.PI * 0.01f); break;
-            case KeyInput.KEY_DOWN: camhand.tiltCamera(-FastMath.PI * 0.01f); break;
-            case KeyInput.KEY_LEFT: camhand.orbitCamera(-FastMath.PI * 0.01f); break;
-            case KeyInput.KEY_RIGHT: camhand.orbitCamera(+FastMath.PI * 0.01f); break;
+            case Keys.Q: camhand.zoomCamera(+5f); break;
+            case Keys.W: camhand.panCamera(0f, +5f); break;
+            case Keys.E: camhand.zoomCamera(-5f); break;
+            case Keys.A: camhand.panCamera(-5f, 0f); break;
+            case Keys.S: camhand.panCamera(0f, -5f); break;
+            case Keys.D: camhand.panCamera(+5f, 0f); break;
+            case Keys.UP: camhand.tiltCamera(FastMath.PI * 0.01f); break;
+            case Keys.DOWN: camhand.tiltCamera(-FastMath.PI * 0.01f); break;
+            case Keys.LEFT: camhand.orbitCamera(-FastMath.PI * 0.01f); break;
+            case Keys.RIGHT: camhand.orbitCamera(+FastMath.PI * 0.01f); break;
         }
     }
 
@@ -157,7 +158,7 @@ public class CameraDolly extends EditorTool
 
     /** Camera position saved on suspension. */
     protected Vector3f _camloc, _camleft, _camup, _camdir;
-    
+
     /** The angular scale (radians per pixel). */
     protected static final float ANGULAR_SCALE = FastMath.PI / 1000;
 
