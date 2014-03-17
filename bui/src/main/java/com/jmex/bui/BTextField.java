@@ -231,7 +231,6 @@ public class BTextField extends BTextComponent
                 if ((modifiers & ~KeyEvent.SHIFT_DOWN_MASK) == 0 && !Character.isISOControl(c) &&
                     /* GDX generates weird key chars; ignore them */ c < Short.MAX_VALUE) {
                     String text = String.valueOf(kev.getKeyChar());
-                    System.err.println("INS '" + kev.getKeyChar() + "' " + (int)kev.getKeyChar());
                     if (_text.insert(_cursp, text)) {
                         setCursorPos(_cursp + 1);
                     }
