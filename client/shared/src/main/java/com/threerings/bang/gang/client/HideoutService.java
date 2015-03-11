@@ -15,7 +15,6 @@ import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.gang.data.GangGood;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
-import com.threerings.coin.data.CoinExOfferInfo;
 
 /**
  * Provides hideout-related functionality.
@@ -121,15 +120,6 @@ public interface HideoutService extends InvocationService<PlayerObject>
      * Broadcast a message to all online members of the player's gang.
      */
     public void broadcastToMembers (String message, ConfirmListener listener);
-
-    /**
-     * Requests that the specified offer be posted to the market.
-     *
-     * @param rl a result listener that will be notified with a {@link
-     * CoinExOfferInfo} for a posted offer or null for an immediately executed
-     * transaction.
-     */
-    public void postOffer (int coins, int pricePerCoin, ResultListener rl);
 
     /**
      * Requests a price quote for the specified gang upgrade.  The listener will receive an integer

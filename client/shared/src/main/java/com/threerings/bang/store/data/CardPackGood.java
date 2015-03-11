@@ -3,7 +3,6 @@
 
 package com.threerings.bang.store.data;
 
-import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
@@ -64,12 +63,6 @@ public class CardPackGood extends Good
     {
         String msg = MessageBundle.tcompose("m.card_tip", String.valueOf(_size));
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
-    }
-
-    @Override // from Good
-    public int getCoinType ()
-    {
-        return CoinTransaction.CARD_PURCHASE;
     }
 
     protected int _size;

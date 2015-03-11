@@ -128,9 +128,6 @@ public class HideoutView extends ShopView
                 new GangStoreDialog(_ctx, _hideoutobj, _gangobj), true, 500);
         } else if (action.equals("member_broadcast")) {
             displayBroadcastDialog();
-        } else if (action.equals("exchange_scrip")) {
-            _ctx.getBangClient().displayPopup(
-                new GangExchangeDialog(_ctx, _hideoutobj, _gangobj), true, 500);
         } else if (action.equals("history")) {
             _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), false, 500);
         } else if (action.equals("leave")) {
@@ -323,9 +320,6 @@ public class HideoutView extends ShopView
         menu.addMenuItem(new BMenuItem(_msgs.get("m.inventory"), "inventory"));
         menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_items"), "purchase_items"));
         menu.addMenuItem(new BMenuItem(_msgs.get("m.member_broadcast"), "member_broadcast"));
-        if (DeploymentConfig.usesCoins()) {
-            menu.addMenuItem(new BMenuItem(_msgs.get("m.exchange_scrip"), "exchange_scrip"));
-        }
         menu.addListener(this);
 
         menu.popup(_options.getAbsoluteX(), _options.getAbsoluteY() + _options.getHeight(), true);

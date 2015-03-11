@@ -3,7 +3,6 @@
 
 package com.threerings.bang.store.data;
 
-import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.Badge;
@@ -91,12 +90,6 @@ public class CardTripletGood extends Good
         String msg = getTip();
         msg = MessageBundle.compose("m.card_tool_tip", msg, MessageBundle.taint("" + _quantity));
         return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
-    }
-
-    @Override // from Good
-    public int getCoinType ()
-    {
-        return CoinTransaction.CARD_PURCHASE;
     }
 
     protected String _cardType;

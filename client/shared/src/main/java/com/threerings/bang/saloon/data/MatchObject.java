@@ -8,6 +8,7 @@ import com.threerings.io.Streamable;
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.crowd.chat.data.SpeakObject;
+import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
@@ -136,6 +137,11 @@ public class MatchObject extends DObject
         this.starting = value;
     }
     // AUTO-GENERATED: METHODS END
+
+    // documentation inherited from interface SpeakObject
+    public String getChatIdentifier (UserMessage message) {
+        return DEFAULT_IDENTIFIER;
+    }
 
     // documentation inherited from interface SpeakObject
     public void applyToListeners (ListenerOp op)

@@ -5,8 +5,6 @@ package com.threerings.bang.store.data;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
@@ -56,12 +54,6 @@ public class SongGood extends Good
     public String getTip ()
     {
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.song_tip");
-    }
-
-    @Override // from Good
-    public int getCoinType ()
-    {
-        return CoinTransaction.SONG_PURCHASE;
     }
 
     @Override // from Good

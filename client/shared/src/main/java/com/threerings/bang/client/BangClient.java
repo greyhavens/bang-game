@@ -41,7 +41,6 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.BrowserUtil;
-import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -108,6 +107,7 @@ import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
+import com.threerings.bang.util.IdentUtil;
 
 import static com.threerings.bang.Log.log;
 

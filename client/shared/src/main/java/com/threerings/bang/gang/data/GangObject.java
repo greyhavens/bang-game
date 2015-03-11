@@ -11,6 +11,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.data.SpeakObject;
+import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BuckleInfo;
@@ -252,12 +253,17 @@ public class GangObject extends DObject
     }
 
     // documentation inherited from interface SpeakObject
+    public String getChatIdentifier (UserMessage message) {
+        return DEFAULT_IDENTIFIER;
+    }
+
+    // documentation inherited from interface SpeakObject
     public void applyToListeners (SpeakObject.ListenerOp op)
     {
         for (GangMemberEntry member : members) {
             // if they're in the Hideout, then they're subscribed to the gang object
             if (member.isInHideout()) {
-                op.apply(member.handle);
+                op.apply(this, member.handle);
             }
         }
     }

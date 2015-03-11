@@ -5,8 +5,6 @@ package com.threerings.bang.gang.data;
 
 import com.jmex.bui.icon.ImageIcon;
 
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.media.image.Colorization;
 
 import com.threerings.presents.dobj.DObject;
@@ -124,12 +122,6 @@ public class RentalGood extends GangGood
     {
         return Math.round(getCoinCost() * (_good instanceof ArticleGood ?
                         gangobj.articleRentMultiplier : gangobj.rentMultiplier));
-    }
-
-    @Override // documentation inherited
-    public int getCoinType ()
-    {
-        return CoinTransaction.GANG_RENTAL;
     }
 
     // documentation inhertied

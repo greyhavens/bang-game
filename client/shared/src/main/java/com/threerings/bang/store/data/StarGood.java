@@ -5,8 +5,6 @@ package com.threerings.bang.store.data;
 
 import com.samskivert.util.StringUtil;
 
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
@@ -56,12 +54,6 @@ public class StarGood extends Good
     public String getIconPath ()
     {
         return Star.getIconPath(_townIdx, _difficulty);
-    }
-
-    @Override // from Good
-    public int getCoinType ()
-    {
-        return CoinTransaction.STAR_PURCHASE;
     }
 
     @Override // from Good

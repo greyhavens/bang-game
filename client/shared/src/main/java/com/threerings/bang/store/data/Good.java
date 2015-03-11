@@ -10,7 +10,6 @@ import com.jmex.bui.icon.ImageIcon;
 
 import com.samskivert.util.Comparators;
 
-import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.image.Colorization;
 import com.threerings.presents.dobj.DObject;
@@ -159,14 +158,6 @@ public abstract class Good extends SimpleStreamableObject
     public boolean honorsGoldPass ()
     {
         return false;
-    }
-
-    /**
-     * Returns the coin transaction type to use when tracking the purchase of this good.
-     */
-    public int getCoinType ()
-    {
-        return CoinTransaction.GOOD_PURCHASE;
     }
 
     /**

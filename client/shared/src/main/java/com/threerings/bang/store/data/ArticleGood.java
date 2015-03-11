@@ -14,7 +14,6 @@ import com.threerings.media.image.Colorization;
 
 import com.threerings.presents.dobj.DObject;
 
-import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;
@@ -153,12 +152,6 @@ public class ArticleGood extends Good
         return MessageBundle.qualify(BangCodes.GOODS_MSGS,
                 (_dstop == null ? "m.article_tip" : MessageBundle.tcompose(
                         "m.article_tip_expires", Item.EXPIRE_FORMAT.format(_dstop))));
-    }
-
-    @Override // from Good
-    public int getCoinType ()
-    {
-        return CoinTransaction.DUDS_PURCHASE;
     }
 
     @Override // from Good

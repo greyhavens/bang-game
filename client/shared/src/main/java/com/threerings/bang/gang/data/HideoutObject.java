@@ -12,13 +12,12 @@ import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.GoodsObject;
-import com.threerings.bang.bank.data.BestOffer;
 
 /**
  * Contains distributed data for the Hideout.
  */
 public class HideoutObject extends PlaceObject
-    implements GoodsObject, BestOffer
+    implements GoodsObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
@@ -57,31 +56,6 @@ public class HideoutObject extends PlaceObject
 
     /** The rental goods available for sale. */
     public DSet<Good> rentalGoods;
-
-    // documentation inherited from BestOffer
-    public ConsolidatedOffer getBestBuy ()
-    {
-        return null;
-    }
-
-    // documentation inherited from BestOffer
-    public ConsolidatedOffer getBestSell ()
-    {
-        ConsolidatedOffer best = null;
-        for (int ii = 0; ii < sellOffers.length; ii++) {
-            if (best == null || sellOffers[ii].price < best.price) {
-                best = sellOffers[ii];
-            }
-        }
-        return best;
-    }
-
-    // documentation inherited from BestOffer
-    public void postImmediateOffer (int coins, int pricePerCoin, boolean buying,
-                                    InvocationService.ResultListener rl)
-    {
-        service.postOffer(coins, pricePerCoin, rl);
-    }
 
     // documentation inherited from interface GoodsObject
     public DSet<Good> getGoods ()

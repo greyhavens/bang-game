@@ -3,8 +3,6 @@
 
 package com.threerings.bang.util;
 
-import com.threerings.util.NameUtil;
-
 import com.threerings.bang.data.Handle;
 
 /**
