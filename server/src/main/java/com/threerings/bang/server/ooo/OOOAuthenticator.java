@@ -23,7 +23,6 @@ import com.samskivert.util.HashIntMap;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -55,6 +54,7 @@ import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.DeploymentConfig;
+import com.threerings.bang.util.IdentUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.data.BangAuthCodes.*;

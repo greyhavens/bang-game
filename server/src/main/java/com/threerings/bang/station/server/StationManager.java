@@ -14,8 +14,6 @@ import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.PlayerObject;
@@ -181,9 +179,6 @@ public class StationManager extends ShopManager
             _listener = listener;
         }
 
-        protected int getCoinType () {
-            return CoinTransaction.TICKET_PURCHASE;
-        }
         protected String getCoinDescrip () {
             return MessageBundle.compose(
                 "m.ticket_purchase", _ticket.getTownId());

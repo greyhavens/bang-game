@@ -8,7 +8,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.TreeSet;
 
-import com.samskivert.jdbc.StaticConnectionProvider;
+import com.samskivert.depot.StaticConnectionProvider;
 import com.samskivert.depot.PersistenceContext;
 import com.samskivert.util.CountHashMap;
 import com.samskivert.util.StringUtil;

@@ -87,12 +87,6 @@ public interface PlayerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
-     * Handles a {@link PlayerService#registerComplaint} request.
-     */
-    void registerComplaint (PlayerObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
-        throws InvocationException;
-
-    /**
      * Handles a {@link PlayerService#removePardner} request.
      */
     void removePardner (PlayerObject caller, Handle arg1, InvocationService.ConfirmListener arg2)

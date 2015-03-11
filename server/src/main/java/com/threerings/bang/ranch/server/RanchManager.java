@@ -11,8 +11,6 @@ import com.samskivert.util.ListUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -127,9 +125,6 @@ public class RanchManager extends ShopManager
             _listener = listener;
         }
 
-        protected int getCoinType () {
-            return CoinTransaction.BIGSHOT_PURCHASE;
-        }
         protected String getCoinDescrip () {
             return MessageBundle.compose(
                 "m.bigshot_purchase", UnitConfig.getName(_unit.getType()));

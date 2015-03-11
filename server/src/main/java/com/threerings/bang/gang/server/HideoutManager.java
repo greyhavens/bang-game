@@ -30,7 +30,6 @@ import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangPeerManager;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.util.NameFactory;
@@ -65,7 +64,7 @@ import static com.threerings.bang.Log.log;
  */
 @Singleton
 public class HideoutManager extends MatchHostManager
-    implements GangCodes, HideoutCodes, HideoutProvider, BangCoinExchangeManager.OfferPublisher
+    implements GangCodes, HideoutCodes, HideoutProvider
 {
     /**
      * Adds an entry to the Hideout's list of gangs or reactivates an existing gang and broadcasts
@@ -459,38 +458,6 @@ public class HideoutManager extends MatchHostManager
             null, user.handle, message, listener);
     }
 
-    // documentation inherited from interface HideoutProvider
-    public void postOffer (PlayerObject caller, int coins, int pricePerCoin,
-                           HideoutService.ResultListener rl) throws InvocationException
-    {
-        // make sure they have access
-        PlayerObject user = requireShopEnabled(caller);
-
-        // pass it off to the gang handler
-        BangServer.gangmgr.requireGang(user.gangId).postOffer(
-            user, coins, pricePerCoin, rl);
-    }
-
-    // documentation inherited from interface OfferPublisher
-    public void updateOffers (ConsolidatedOffer[] buys, ConsolidatedOffer[] sells, int lastPrice)
-    {
-        if (sells != null) {
-            _hobj.setSellOffers(sells);
-        }
-    }
-
-    // documentation inherited from interface OfferPublisher
-    public void offerModified (int offerId)
-    {
-        // nothing doing
-    }
-
-    // documentation inherited from interface OfferPublisher
-    public void offersDestroyed (int[] ooferIds)
-    {
-        // nothing doing
-    }
-
     /**
      * Calculates the cost to upgrade rented gang items to a new weight class.
      */
@@ -549,9 +516,6 @@ public class HideoutManager extends MatchHostManager
         _hobj.setService(BangServer.invmgr.registerProvider(this, HideoutMarshaller.class));
         _hobj.setGoods(new DSet<Good>(_goods.getGoods()));
         _hobj.setRentalGoods(new DSet<Good>(_rentalGoods.getGoods()));
-
-        // register with the coin exchange manager
-        _coinexmgr.registerPublisher(this);
 
         // load up the gangs for the directory
         BangServer.gangmgr.loadGangs(new ResultListener<List<GangEntry>>() {
@@ -714,7 +678,6 @@ public class HideoutManager extends MatchHostManager
 
     // dependencies
     @Inject protected BangChatManager _chatmgr;
-    @Inject protected BangCoinExchangeManager _coinexmgr;
     @Inject protected BangPeerManager _peermgr;
     @Inject protected GangGoodsCatalog _goods;
     @Inject protected GangRepository _gangrepo;

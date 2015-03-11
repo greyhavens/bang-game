@@ -24,6 +24,11 @@
       <artifactId>depot</artifactId>
       <version>1.7-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>ooo-user</artifactId>
+      <version>1.4.3</version>
+    </dependency>
 
     <dependency>
       <groupId>net.sf.ehcache</groupId>
@@ -39,11 +44,6 @@
       <groupId>commons-digester</groupId>
       <artifactId>commons-digester</artifactId>
       <version>1.8</version>
-    </dependency>
-    <dependency>
-      <groupId>com.threerings</groupId>
-      <artifactId>underwire</artifactId>
-      <version>1.0</version>
     </dependency>
   </dependencies>
 </project>

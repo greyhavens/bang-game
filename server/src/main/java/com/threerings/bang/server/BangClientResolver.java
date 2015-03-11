@@ -149,7 +149,7 @@ public class BangClientResolver extends CrowdClientResolver
         buser.tokens.setToken(BangTokenRing.OVER_13, player.isOver13);
         buser.tokens.setToken(BangTokenRing.DEMO, player.isSet(PlayerRecord.IS_DEMO_ACCOUNT));
         buser.scrip = player.scrip;
-        buser.coins = _coinmgr.getCoinRepository().getCoinCount(player.accountName);
+        // buser.coins = _coinmgr.getCoinRepository().getCoinCount(player.accountName);
 
         // load up this player's gang information
         _grecord = _gangrepo.loadMember(player.playerId);
@@ -430,7 +430,6 @@ public class BangClientResolver extends CrowdClientResolver
     protected List<GangInviteRecord> _ginvites;
 
     // dependencies
-    @Inject protected BangCoinManager _coinmgr;
     @Inject protected PlayerRepository _playrepo;
     @Inject protected GangRepository _gangrepo;
     @Inject protected ItemRepository _itemrepo;

@@ -14,11 +14,8 @@ import com.samskivert.util.Invoker;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.server.BangCoinManager;
 import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.util.DeploymentConfig;
@@ -47,7 +44,7 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         try {
             if (DeploymentConfig.usesCoins() && _coinCost > 0) {
-                _coinres = _coinmgr.getCoinRepository().reserveCoins(getCoinAccount(), _coinCost);
+                // _coinres = _coinmgr.getCoinRepository().reserveCoins(getCoinAccount(), _coinCost);
                 if (_coinres == -1) {
                     log.warning("Failed to reserve coins " + this + ".");
                     fail(BangCodes.E_INSUFFICIENT_COINS);
@@ -127,15 +124,6 @@ public abstract class FinancialAction extends Invoker.Unit
     }
 
     /**
-     * If a financial action involves coins, this method <em>must</em> be overridden to classify
-     * the purchase. See {@link CoinTransaction}.
-     */
-    protected int getCoinType ()
-    {
-        return CoinTransaction.PRODUCT_PURCHASE;
-    }
-
-    /**
      * If a financial action involves coins, this method <em>must</em> be overridden to provide a
      * translatable string describing the purchase.
      */
@@ -202,17 +190,17 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         _failmsg = failureMessage;
 
-        // roll everything back that needs it
-        if (_coinres != -1) {
-            // return the coin reservation
-            try {
-                if (!_coinmgr.getCoinRepository().returnReservation(_coinres)) {
-                    log.warning("Failed to return coins " + this + ".");
-                }
-            } catch (Exception e) {
-                log.warning("Failed to return coins " + this, e);
-            }
-        }
+        // // roll everything back that needs it
+        // if (_coinres != -1) {
+        //     // return the coin reservation
+        //     try {
+        //         if (!_coinmgr.getCoinRepository().returnReservation(_coinres)) {
+        //             log.warning("Failed to return coins " + this + ".");
+        //         }
+        //     } catch (Exception e) {
+        //         log.warning("Failed to return coins " + this, e);
+        //     }
+        // }
 
         if (_cashSpent) {
             try {
@@ -354,7 +342,8 @@ public abstract class FinancialAction extends Invoker.Unit
     protected boolean spendCoins (int resId)
         throws PersistenceException
     {
-        return _coinmgr.getCoinRepository().spendCoins(resId, getCoinType(), getCoinDescrip());
+        // return _coinmgr.getCoinRepository().spendCoins(resId, getCoinType(), getCoinDescrip());
+        return false;
     }
 
     /**
@@ -385,7 +374,6 @@ public abstract class FinancialAction extends Invoker.Unit
     protected int _coinres = -1;
 
     @Inject protected @MainInvoker Invoker _invoker;
-    @Inject protected BangCoinManager _coinmgr;
     @Inject protected PlayerRepository _playrepo;
 
     protected static Map<String,String> _accountLock = Maps.newHashMap();

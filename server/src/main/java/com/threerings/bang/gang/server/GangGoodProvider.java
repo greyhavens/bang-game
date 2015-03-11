@@ -45,12 +45,6 @@ public abstract class GangGoodProvider extends GangFinancialAction
     }
 
     @Override // documentation inherited
-    protected int getCoinType ()
-    {
-        return _good.getCoinType();
-    }
-
-    @Override // documentation inherited
     protected String getCoinDescrip ()
     {
         return MessageBundle.compose("m.good_purchase", _good.getName());

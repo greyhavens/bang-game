@@ -65,10 +65,6 @@ import com.threerings.crowd.chat.server.SpeakHandler;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.chat.server.SpeakUtil;
 
-import com.threerings.coin.data.CoinExOfferInfo;
-import com.threerings.coin.server.CoinExOffer;
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
@@ -82,8 +78,6 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.WeightClassUpgrade;
-import com.threerings.bang.server.BangCoinExchangeManager;
-import com.threerings.bang.server.BangCoinManager;
 import com.threerings.bang.server.BangInvoker;
 import com.threerings.bang.server.BangPeerManager.RemotePlayerObserver;
 import com.threerings.bang.server.BangPeerManager;
@@ -244,26 +238,6 @@ public class GangHandler
                 listener.requestFailed(cause);
             }
         });
-    }
-
-    /**
-     * Posts an immediate buy offer on the gold exchange for the town the user is situated in.
-     * This must be coordinated between the peer on which the used is logged in and the
-     * controlling peer.
-     */
-    public void postOffer (PlayerObject user, int coins, int pricePerCoin,
-            InvocationService.ResultListener listener)
-        throws InvocationException
-    {
-        verifyIsLeader(user.handle);
-
-        CoinExOffer offer = new CoinExOffer();
-        offer.accountName = _gangobj.getCoinAccount();
-        offer.gameName = user.handle.toString();
-        offer.buy = true;
-        offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
-        offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
-        _coinexmgr.postOffer(_gangobj, offer, true, new ResultAdapter<CoinExOfferInfo>(listener));
     }
 
     /**
@@ -1002,9 +976,10 @@ public class GangHandler
                 }
             }
             protected boolean spendCoins (int reservationId) throws PersistenceException {
-                return _coinmgr.getCoinRepository().transferCoins(
-                    reservationId, _gangobj.getCoinAccount(), CoinTransaction.GANG_DONATION,
-                    "m.gang_donation", "m.gang_donation");
+                // return _coinmgr.getCoinRepository().transferCoins(
+                //     reservationId, _gangobj.getCoinAccount(), CoinTransaction.GANG_DONATION,
+                //     "m.gang_donation", "m.gang_donation");
+                return false;
             }
             protected void rollbackPersistentAction () throws PersistenceException {
                 _gangrepo.spendScrip(_gangId, scrip);
@@ -1123,8 +1098,8 @@ public class GangHandler
 
         _invoker.postUnit(new RepositoryUnit("updateCoins") {
             public void invokePersist () throws Exception {
-                _coins = _coinmgr.getCoinRepository().getCoinCount(
-                    _gangobj.getCoinAccount());
+                // _coins = _coinmgr.getCoinRepository().getCoinCount(
+                //     _gangobj.getCoinAccount());
             }
             public void handleSuccess () {
                 _gangobj.setCoins(_coins);
@@ -1157,9 +1132,6 @@ public class GangHandler
             refund[0] = refund[1] = 0;
         }
         _invoker.post(new GangFinancialAction(_gangobj, false, refund[0], refund[1], 0) {
-            protected int getCoinType () {
-                return CoinTransaction.GANG_MEMBER_REIMBURSEMENT;
-            }
             protected String getCoinDescrip () {
                 return "m.gang_member_reimbursement";
             }
@@ -1192,9 +1164,10 @@ public class GangHandler
                 }
             }
             protected boolean spendCoins (int reservationId) throws PersistenceException {
-                return _coinmgr.getCoinRepository().transferCoins(
-                    reservationId, _playerAccount, CoinTransaction.GANG_MEMBER_REIMBURSEMENT,
-                    "m.gang_member_reimbursement", "m.gang_member_reimbursement");
+                // return _coinmgr.getCoinRepository().transferCoins(
+                //     reservationId, _playerAccount, CoinTransaction.GANG_MEMBER_REIMBURSEMENT,
+                //     "m.gang_member_reimbursement", "m.gang_member_reimbursement");
+                return false;
             }
             protected void rollbackPersistentAction () throws PersistenceException {
                 if (_deleting) {
@@ -1733,9 +1706,6 @@ public class GangHandler
         throws InvocationException
     {
         _invoker.post(new GangFinancialAction(_gangobj, admin, scripCost, coinCost, 0) {
-            protected int getCoinType () {
-                return CoinTransaction.GANG_OUTFIT_PURCHASE;
-            }
             protected String getCoinDescrip () {
                 return "m.gang_outfits";
             }
@@ -2617,8 +2587,6 @@ public class GangHandler
     @Inject protected PlayerLocator _locator;
     @Inject protected PlayerManager _playmgr;
     @Inject protected SaloonManager _saloonmgr;
-    @Inject protected BangCoinManager _coinmgr;
-    @Inject protected BangCoinExchangeManager _coinexmgr;
     @Inject protected BangPeerManager _peermgr;
     @Inject protected HideoutManager _hideoutmgr;
     @Inject protected GangManager _gangmgr;

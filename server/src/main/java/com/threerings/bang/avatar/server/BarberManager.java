@@ -16,8 +16,6 @@ import com.samskivert.util.StringUtil;
 import com.threerings.media.image.ColorPository;
 import com.threerings.util.MessageBundle;
 
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
@@ -397,9 +395,6 @@ public class BarberManager extends ShopManager
             return start;
         }
 
-        protected int getCoinType () {
-            return CoinTransaction.LOOK_PURCHASE;
-        }
         protected String getCoinDescrip () {
             return MessageBundle.compose("m.look_purchase", _look.name);
         }
@@ -449,9 +444,6 @@ public class BarberManager extends ShopManager
             _listener = listener;
         }
 
-        protected int getCoinType () {
-            return CoinTransaction.HANDLE_CHANGE;
-        }
         protected String getCoinDescrip () {
             return MessageBundle.compose("m.handle_change", _ohandle, _handle);
         }

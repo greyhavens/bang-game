@@ -56,9 +56,6 @@ import com.threerings.crowd.chat.server.ChatHistory;
 import com.threerings.crowd.chat.server.SpeakUtil;
 import com.threerings.parlor.server.ParlorSender;
 
-import com.threerings.underwire.server.persist.EventRecord;
-import com.threerings.underwire.web.data.Event;
-
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 import com.threerings.util.StreamableHashMap;
@@ -106,11 +103,8 @@ import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.Warning;
 import com.threerings.bang.util.BangUtil;
 
-import com.threerings.bang.server.BangCoinExchangeManager;
-import com.threerings.bang.server.BangCoinManager;
 import com.threerings.bang.server.BangPeerManager;
 import com.threerings.bang.server.persist.BangStatRepository;
-import com.threerings.bang.server.persist.BangUnderwireRepository;
 import com.threerings.bang.server.persist.FolkRecord;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PardnerRecord;
@@ -316,7 +310,7 @@ public class PlayerManager
                 if (data[1].equalsIgnoreCase("coins")) {
                     int coins = Integer.parseInt(data[2]);
                     log.info("Granting coin reward", "account", player.username, "coins", coins);
-                    _coinmgr.grantRewardCoins(player, coins);
+                    // _coinmgr.grantRewardCoins(player, coins);
 
                 }  else if (data[1].equalsIgnoreCase("billing") &&
                             data[2].equalsIgnoreCase("goldpass")) {
@@ -773,61 +767,6 @@ public class PlayerManager
             }
             public String getFailureMessage() {
                 return "Failed to register opinion [who=" + user.who() + ", folk=" + folkId + "]";
-            }
-        });
-    }
-
-    // from interface PlayerProvider
-    public void registerComplaint (final PlayerObject user, final Handle target, String reason,
-                                   PlayerService.ConfirmListener listener)
-        throws InvocationException
-    {
-        // populate the event with what we can
-        final EventRecord event = new EventRecord();
-        event.source = user.username.toString();
-        event.sourceHandle = user.handle.toString();
-        event.status = Event.OPEN;
-        event.subject = reason;
-
-        // format and provide the complainer's chat history
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss:SSS");
-        StringBuilder chatHistory = new StringBuilder();
-        for (ChatHistory.Entry histEntry : _history.get(user.handle)) {
-            UserMessage umsg = (UserMessage)histEntry.message;
-            chatHistory.append(df.format(new Date(umsg.timestamp))).append(' ');
-            chatHistory.append(StringUtil.pad(ChatCodes.XLATE_MODES[umsg.mode], 10)).append(' ');
-            chatHistory.append(umsg.speaker).append(": ").append(umsg.message).append('\n');
-        }
-        event.chatHistory = chatHistory.toString();
-
-        // if the target is online, get their username from their player object
-        PlayerObject tuser = BangServer.locator.lookupPlayer(target);
-        event.targetHandle = target.toString();
-        if (tuser != null) {
-            event.target = tuser.username.toString();
-        }
-
-        // now finish the job on the invoker thread
-        BangServer.invoker.postUnit(new PersistingUnit("registerComplaint", listener) {
-            public void invokePersistent() throws PersistenceException {
-                // if the target is unset, look that up
-                if (event.target == null) {
-                    PlayerRecord tplayer = _playrepo.loadByHandle(target);
-                    if (tplayer == null) {
-                        log.warning("Unable to locate target of complaint", "event", event,
-                                    "target", target);
-                    } else {
-                        event.target = tplayer.accountName;
-                    }
-                }
-                // insert the event into the support repository
-                _underepo.insertEvent(event);
-            }
-            public void handleSuccess() {
-                ((PlayerService.ConfirmListener)_listener).requestProcessed();
-            }
-            public String getFailureMessage() {
-                return "Failed to record complaint [event=" + event + "].";
             }
         });
     }
@@ -1497,7 +1436,6 @@ public class PlayerManager
                 _playrepo.deletePlayer(user);
             }
             public void handleSuccess () {
-                _coinexmgr.userWasDeleted(user.handle);
                 listener.requestProcessed();
             }
             public String getFailureMessage () {
@@ -1596,14 +1534,13 @@ public class PlayerManager
     }
 
     public static SpeakObject.ListenerOp _messageCounter = new SpeakObject.ListenerOp() {
-        public void apply (int bodyOid) {
+        @Override public void apply (SpeakObject obj, int bodyOid) {
             DObject dobj = BangServer.omgr.getObject(bodyOid);
             if (dobj != null && dobj instanceof PlayerObject) {
                 ((PlayerObject)dobj).stats.incrementStat(StatType.CHAT_RECEIVED, 1);
             }
         }
-
-        public void apply (Name username) {
+        @Override public void apply (SpeakObject obj, Name username) {
             PlayerObject user = (PlayerObject)BangServer.locator.lookupBody(username);
             if (user != null) {
                 user.stats.incrementStat(StatType.CHAT_RECEIVED, 1);
@@ -1633,8 +1570,6 @@ public class PlayerManager
     @Inject protected ResourceManager _rsrcmgr;
     @Inject protected GoodsCatalog _goods;
     @Inject protected ChatHistory _history;
-    @Inject protected BangCoinManager _coinmgr;
-    @Inject protected BangCoinExchangeManager _coinexmgr;
     @Inject protected BangPeerManager _peermgr;
     @Inject protected PardnerRepository _pardrepo;
     @Inject protected PosterRepository _postrepo;
@@ -1642,7 +1577,6 @@ public class PlayerManager
     @Inject protected RatingRepository _raterepo;
     @Inject protected PlayerRepository _playrepo;
     @Inject protected GangRepository _gangrepo;
-    @Inject protected BangUnderwireRepository _underepo;
     @Inject protected ItemRepository _itemrepo;
     @Inject protected BangStatRepository _statrepo;
     @Inject protected RatingRepository _ratingrepo;

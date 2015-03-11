@@ -11,10 +11,9 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-import com.samskivert.jdbc.ConnectionProvider;
-import com.samskivert.jdbc.StaticConnectionProvider;
-import com.samskivert.jdbc.TransitionRepository;
+import com.samskivert.depot.ConnectionProvider;
 import com.samskivert.depot.PersistenceContext;
+import com.samskivert.depot.StaticConnectionProvider;
 
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.Interval;
@@ -61,8 +60,6 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.admin.server.BangAdminManager;
 import com.threerings.bang.admin.server.RuntimeConfig;
-import com.threerings.bang.bank.data.BankConfig;
-import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.bounty.data.OfficeConfig;
 import com.threerings.bang.bounty.server.OfficeManager;
 import com.threerings.bang.bounty.server.persist.BountyRepository;
@@ -96,12 +93,20 @@ public class BangServer extends CrowdServer
     public static class Module extends CrowdServer.CrowdModule {
         @Override protected void configure () {
             super.configure();
+
+            // we need a legacy samskivert JDBC connection provider for our ye olde JORA and Simple
+            // repositories; I'm not too keen to rewrite this decade+ old code... blah.
+            com.samskivert.jdbc.ConnectionProvider legconprov =
+                new com.samskivert.jdbc.StaticConnectionProvider(ServerConfig.getJDBCConfig());
+            bind(com.samskivert.jdbc.ConnectionProvider.class).toInstance(legconprov);
+
             ConnectionProvider conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
             bind(ConnectionProvider.class).toInstance(conprov);
             // depot dependencies (we will initialize this persistence context later when the
             // server is ready to do database operations; not initializing it now ensures that no
             // one sneaks any database manipulations into the dependency resolution phase)
-            bind(PersistenceContext.class).toInstance(new PersistenceContext());
+            PersistenceContext pctx = new PersistenceContext();
+            bind(PersistenceContext.class).toInstance(pctx);
             bind(PeerManager.class).to(BangPeerManager.class);
             bind(ReportManager.class).to(BangReportManager.class);
             bind(ChatProvider.class).to(BangChatProvider.class);
@@ -110,7 +115,7 @@ public class BangServer extends CrowdServer
             bind(ConfigRegistry.class).to(BangConfigRegistry.class);
             // bang dependencies
             ResourceManager rsrcmgr = new ResourceManager("rsrc");
-            AccountActionRepository aarepo = new AccountActionRepository(conprov);
+            AccountActionRepository aarepo = new AccountActionRepository(pctx);
             AvatarLogic alogic;
             try {
                 rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
@@ -137,9 +142,6 @@ public class BangServer extends CrowdServer
     /** Used to provide database access to our Depot repositories. */
     public static PersistenceContext perCtx;
 
-    /** Used to coordinate transitions to persistent data. */
-    public static TransitionRepository transitrepo;
-
     /** A reference to the authenticator in use by the server. */
     public static BangAuthenticator author;
 
@@ -163,9 +165,6 @@ public class BangServer extends CrowdServer
 
     /** Manages the General Store and item purchase. */
     public static StoreManager storemgr;
-
-    /** Manages the Bank and the coin exchange. */
-    public static BankManager bankmgr;
 
     /** Manages the Barber and avatar customization. */
     public static BarberManager barbermgr;
@@ -261,9 +260,6 @@ public class BangServer extends CrowdServer
             System.exit(255);
         }
 
-        // create our transition manager prior to doing anything else
-        transitrepo = new TransitionRepository(conprov);
-
         // set up some legacy static references
         invoker = _invoker;
         conmgr = _conmgr;
@@ -299,7 +295,6 @@ public class BangServer extends CrowdServer
         _gangmgr.init();
         tournmgr.init();
         ratingmgr.init();
-        _coinexmgr.init();
         _adminmgr.init();
 
         // start up our periodic server status reporting
@@ -312,7 +307,6 @@ public class BangServer extends CrowdServer
         // create our managers
         saloonmgr = (SaloonManager)plreg.createPlace(new SaloonConfig());
         storemgr = (StoreManager)plreg.createPlace(new StoreConfig());
-        bankmgr = (BankManager)plreg.createPlace(new BankConfig());
         ranchmgr = (RanchManager)plreg.createPlace(new RanchConfig());
         barbermgr = (BarberManager)plreg.createPlace(new BarberConfig());
         stationmgr = (StationManager)plreg.createPlace(new StationConfig());
@@ -409,7 +403,6 @@ public class BangServer extends CrowdServer
         _ilog.close();
         _stlog.close();
         _plog.close();
-        BangCoinManager.coinlog.close();
     }
 
     protected void checkAutoRestart ()
@@ -456,7 +449,6 @@ public class BangServer extends CrowdServer
 
     @Inject protected PlayerLocator _locator;
     @Inject protected BangAdminManager _adminmgr;
-    @Inject protected BangCoinExchangeManager _coinexmgr;
     @Inject protected BoardManager _boardmgr;
     @Inject protected GangManager _gangmgr;
     @Inject protected PlayerManager _playmgr;

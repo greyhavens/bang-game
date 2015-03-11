@@ -113,9 +113,6 @@ public class PlayerPopupMenu extends BPopupMenu
         } else if ("unmute".equals(event.getAction())) {
             _ctx.getMuteDirector().setMuted(_handle, false);
 
-        } else if ("complain".equals(event.getAction())) {
-            showComplainDialog();
-
         } else if ("boot".equals(event.getAction())) {
             PlaceObject pobj = _ctx.getLocationDirector().getPlaceObject();
             if (pobj instanceof ParlorObject) {
@@ -212,8 +209,6 @@ public class PlayerPopupMenu extends BPopupMenu
 
         // add an item for viewing their wanted poster
         if (isPresent) {
-            addMenuItem(new BMenuItem(msgs.get("m.pm_register_complaint"), "complain"));
-
             // if we're in a parlor, we may be able to boot the player
             if (isParlor) {
                 ParlorObject parlor = (ParlorObject)pobj;
@@ -292,52 +287,6 @@ public class PlayerPopupMenu extends BPopupMenu
                 _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, cause);
             }
         });
-    }
-
-    protected void showComplainDialog ()
-    {
-        String title = MessageBundle.tcompose("m.comp_title", _handle);
-        title = _ctx.xlate(BangCodes.BANG_MSGS, title);
-        final BDecoratedWindow cdiag = BangUI.createDialog(title);
-
-        cdiag.add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.comp_intro"), "dialog_text_left"));
-        final BTextField reason = new BTextField("", MAX_SUBJECT_LENGTH);
-        cdiag.add(reason, GroupLayout.FIXED);
-        reason.requestFocus();
-        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        cdiag.add(buttons, GroupLayout.FIXED);
-
-        ActionListener listener = new ActionListener() {
-            public void actionPerformed (ActionEvent event) {
-                if (event.getAction().equals("submit")) {
-                    submitComplaint(reason.getText());
-                }
-                _ctx.getBangClient().clearPopup(cdiag, true);
-            }
-        };
-        BButton submit = new BButton(
-            _ctx.xlate(BangCodes.BANG_MSGS, "m.comp_submit"), listener, "submit");
-        buttons.add(submit);
-        buttons.add(new BButton(_ctx.xlate(BangCodes.BANG_MSGS, "m.cancel"), listener, "cancel"));
-        // disable the submit button until a reason is entered
-
-        new EnablingValidator(reason, submit);
-        _ctx.getBangClient().displayPopup(cdiag, true, 650, true);
-    }
-
-    protected void submitComplaint (String reason)
-    {
-        PlayerService psvc = _ctx.getClient().requireService(PlayerService.class);
-        PlayerService.ConfirmListener listener = new PlayerService.ConfirmListener() {
-            public void requestProcessed () {
-                String msg = MessageBundle.tcompose("m.comp_submitted", _handle);
-                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
-            }
-            public void requestFailed (String cause) {
-                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, cause);
-            }
-        };
-        psvc.registerComplaint(_handle, reason, listener);
     }
 
     protected BangContext _ctx;

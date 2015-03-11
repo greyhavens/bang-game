@@ -8,5 +8,5 @@ package com.threerings.bang.data;
  */
 public enum Shop
 {
-    BANK, BARBER, HIDEOUT, OFFICE, RANCH, SALOON, STATION, STORE
+    BARBER, HIDEOUT, OFFICE, RANCH, SALOON, STATION, STORE
 }

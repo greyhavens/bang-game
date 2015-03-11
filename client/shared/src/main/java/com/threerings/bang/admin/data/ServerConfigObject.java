@@ -27,9 +27,6 @@ public class ServerConfigObject extends ConfigObject
     /** The field name of the <code>looseRankRange</code> field. */
     public static final String LOOSE_RANK_RANGE = "looseRankRange";
 
-    /** The field name of the <code>bankEnabled</code> field. */
-    public static final String BANK_ENABLED = "bankEnabled";
-
     /** The field name of the <code>barberEnabled</code> field. */
     public static final String BARBER_ENABLED = "barberEnabled";
 
@@ -82,9 +79,6 @@ public class ServerConfigObject extends ConfigObject
     /** The +/- raing range for "looser match" matched games. */
     public int looseRankRange = 400;
 
-    /** Controls activation of Bank services. */
-    public boolean bankEnabled = true;
-
     /** Controls activation of Barber services. */
     public boolean barberEnabled = true;
 
@@ -92,7 +86,7 @@ public class ServerConfigObject extends ConfigObject
     public boolean hideoutEnabled = false;
 
     /** Controls activation of Sheriff's Office services. */
-    public boolean officeEnabled = false;
+    public boolean officeEnabled = true;
 
     /** Controls activation of Ranch services. */
     public boolean ranchEnabled = true;
@@ -213,22 +207,6 @@ public class ServerConfigObject extends ConfigObject
         requestAttributeChange(
             LOOSE_RANK_RANGE, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.looseRankRange = value;
-    }
-
-    /**
-     * Requests that the <code>bankEnabled</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setBankEnabled (boolean value)
-    {
-        boolean ovalue = this.bankEnabled;
-        requestAttributeChange(
-            BANK_ENABLED, Boolean.valueOf(value), Boolean.valueOf(ovalue));
-        this.bankEnabled = value;
     }
 
     /**

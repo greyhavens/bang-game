@@ -44,12 +44,6 @@ public class ItemRenewal extends GangFinancialAction
     }
 
     @Override // documentation inherited
-    protected int getCoinType ()
-    {
-        return _good.getCoinType();
-    }
-
-    @Override // documentation inherited
     protected String getCoinDescrip ()
     {
         return MessageBundle.compose("m.good_renewal", _good.getName());

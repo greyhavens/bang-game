@@ -36,7 +36,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.server.BangCoinManager;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.server.persist.PlayerRepository;
@@ -133,7 +132,7 @@ public class GangRepository extends JORARepository
         grec.members = loadGangMembers(gangId);
 
         // load the coin count
-        grec.coins = _coinmgr.getCoinRepository().getCoinCount(grec.getCoinAccount());
+        // grec.coins = _coinmgr.getCoinRepository().getCoinCount(grec.getCoinAccount());
 
         // load the outfit
         ArrayList<GangOutfitRecord> recs = loadAll(_otable, "where GANG_ID = " + gangId);
@@ -907,13 +906,11 @@ public class GangRepository extends JORARepository
     protected Table<GangOutfitRecord> _otable;
     protected FieldMask _gangIdMask, _normalizedMask, _playerIdMask, _buckleMask;
 
-    @Inject protected BangCoinManager _coinmgr;
     @Inject protected PlayerRepository _playrepo;
     @Inject protected ItemRepository _itemrepo;
     @Inject protected LookRepository _lookrepo;
 
-    /** The cutoff after which a gang is considered inactive and is no longer
-     * considered when calculating top scores. */
-    protected static final String STALE_DATE =
-        "DATE_SUB(NOW(), INTERVAL 2 WEEK)";
+    /** The cutoff after which a gang is considered inactive and is no longer considered when
+      * calculating top scores. */
+    protected static final String STALE_DATE = "DATE_SUB(NOW(), INTERVAL 2 WEEK)";
 }

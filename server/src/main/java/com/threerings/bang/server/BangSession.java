@@ -59,7 +59,6 @@ public class BangSession extends CrowdSession
         bbd.townOid = BangServer.townobj.getOid();
         bbd.saloonOid = BangServer.saloonmgr.getPlaceObject().getOid();
         bbd.storeOid = BangServer.storemgr.getPlaceObject().getOid();
-        bbd.bankOid = BangServer.bankmgr.getPlaceObject().getOid();
         bbd.ranchOid = BangServer.ranchmgr.getPlaceObject().getOid();
         bbd.barberOid = BangServer.barbermgr.getPlaceObject().getOid();
         bbd.stationOid = BangServer.stationmgr.getPlaceObject().getOid();

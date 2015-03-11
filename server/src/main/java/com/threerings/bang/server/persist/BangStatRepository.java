@@ -15,7 +15,7 @@ import com.google.inject.Singleton;
 import com.samskivert.depot.PersistenceContext;
 import com.samskivert.depot.Stats;
 import com.samskivert.depot.impl.Fetcher;
-import com.samskivert.jdbc.DatabaseLiaison;
+import com.samskivert.depot.impl.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 
 import com.threerings.stats.data.Stat;

@@ -30,8 +30,6 @@ import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
-import com.threerings.coin.server.persist.CoinTransaction;
-
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BuckleInfo;
@@ -419,9 +417,6 @@ public class GangManager
 
         // start up the action
         _invoker.post(new FinancialAction(user, FORM_GANG_SCRIP_COST, FORM_GANG_COIN_COST) {
-            protected int getCoinType () {
-                return CoinTransaction.GANG_CREATION;
-            }
             protected String getCoinDescrip () {
                 return MessageBundle.tcompose("m.gang_creation", name);
             }

@@ -108,12 +108,6 @@ public interface HideoutProvider extends InvocationProvider
     void leaveMatch (PlayerObject caller, int arg1);
 
     /**
-     * Handles a {@link HideoutService#postOffer} request.
-     */
-    void postOffer (PlayerObject caller, int arg1, int arg2, InvocationService.ResultListener arg3)
-        throws InvocationException;
-
-    /**
      * Handles a {@link HideoutService#renewGangItem} request.
      */
     void renewGangItem (PlayerObject caller, int arg1, InvocationService.ConfirmListener arg2)

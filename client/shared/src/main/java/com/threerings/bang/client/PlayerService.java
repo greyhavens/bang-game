@@ -76,11 +76,6 @@ public interface PlayerService extends InvocationService<PlayerObject>
     public void noteFolk (int playerId, int opinion, ConfirmListener listener);
 
     /**
-     * Registers a complaint about a particular player.
-     */
-    public void registerComplaint (Handle target, String reason, ConfirmListener listener);
-
-    /**
      * Requests that the specified song be perpared for download. Informs the listener of the
      * randomly assigned identifier that can be used to download the song.
      */

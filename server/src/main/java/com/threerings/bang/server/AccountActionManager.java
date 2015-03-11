@@ -121,14 +121,6 @@ public class AccountActionManager
     protected void handleAccountAction (AccountAction aa)
     {
         switch (aa.action) {
-        case AccountAction.COINS_UPDATED:
-            coinsUpdated(aa.accountName);
-            break;
-
-        case AccountAction.INITIAL_COIN_PURCHASE:
-            logInitialCoinPurchase(aa.accountName);
-            break;
-
         case AccountAction.ACCOUNT_DELETED:
             disableAccount(aa.accountName, aa.data);
             break;
@@ -136,50 +128,6 @@ public class AccountActionManager
         default:
             log.warning("Unknown account action", "action", aa);
         }
-    }
-
-    /**
-     * Handles notification that a user had their coins amount updated.
-     */
-    protected void coinsUpdated (String accountName)
-    {
-        // if this player is online, update their coin count
-        PlayerObject player = BangServer.locator.lookupByAccountName(new Name(accountName));
-        if (player != null) {
-            _coinmgr.updateCoinCount(player);
-        }
-    }
-
-    /**
-     * Logs that a user made an initial coin purchase.
-     */
-    protected void logInitialCoinPurchase (final String accountName)
-    {
-        // if this player is online, update their coin count
-        PlayerObject player = BangServer.locator.lookupByAccountName(new Name(accountName));
-        if (player != null) {
-            BangCoinManager.coinlog.log("first_coins " + player.playerId);
-            return;
-        }
-
-        // if they're not online, we'll need to load them from the database
-        BangServer.invoker.postUnit(new Invoker.Unit("logInitialCoinPurchase") {
-            public boolean invoke () {
-                try {
-                    _user = _playrepo.loadPlayer(accountName);
-                    return _user != null;
-                } catch (PersistenceException pe) {
-                    log.warning("Failed to load user!", "cause", pe);
-                }
-                return false;
-            }
-
-            public void handleResult () {
-                BangCoinManager.coinlog.log("first_coins " + _user.playerId);
-            }
-
-            protected PlayerRecord _user;
-        });
     }
 
     /**
@@ -208,7 +156,6 @@ public class AccountActionManager
 
     // dependencies
     @Inject protected @AuthInvoker Invoker _authInvoker;
-    @Inject protected BangCoinManager _coinmgr;
     @Inject protected PlayerRepository _playrepo;
 
     /** Interval with which we check for new accounting actions. */

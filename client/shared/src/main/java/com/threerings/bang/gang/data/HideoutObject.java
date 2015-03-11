@@ -32,9 +32,6 @@ public class HideoutObject extends PlaceObject
     /** The field name of the <code>goods</code> field. */
     public static final String GOODS = "goods";
 
-    /** The field name of the <code>sellOffers</code> field. */
-    public static final String SELL_OFFERS = "sellOffers";
-
     /** The field name of the <code>rentalGoods</code> field. */
     public static final String RENTAL_GOODS = "rentalGoods";
     // AUTO-GENERATED: FIELDS END
@@ -50,9 +47,6 @@ public class HideoutObject extends PlaceObject
 
     /** Gang goods available for sale. */
     public DSet<Good> goods;
-
-    /** The top N offers to sell coins for scrip. */
-    public ConsolidatedOffer[] sellOffers;
 
     /** The rental goods available for sale. */
     public DSet<Good> rentalGoods;
@@ -238,39 +232,6 @@ public class HideoutObject extends PlaceObject
         requestAttributeChange(GOODS, value, this.goods);
         DSet<Good> clone = (value == null) ? null : value.clone();
         this.goods = clone;
-    }
-
-    /**
-     * Requests that the <code>sellOffers</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setSellOffers (ConsolidatedOffer[] value)
-    {
-        ConsolidatedOffer[] ovalue = this.sellOffers;
-        requestAttributeChange(
-            SELL_OFFERS, value, ovalue);
-        this.sellOffers = (value == null) ? null : value.clone();
-    }
-
-    /**
-     * Requests that the <code>index</code>th element of
-     * <code>sellOffers</code> field be set to the specified value.
-     * The local value will be updated immediately and an event will be
-     * propagated through the system to notify all listeners that the
-     * attribute did change. Proxied copies of this object (on clients)
-     * will apply the value change when they received the attribute
-     * changed notification.
-     */
-    public void setSellOffersAt (ConsolidatedOffer value, int index)
-    {
-        ConsolidatedOffer ovalue = this.sellOffers[index];
-        requestElementUpdate(
-            SELL_OFFERS, index, value, ovalue);
-        this.sellOffers[index] = value;
     }
 
     /**

@@ -287,35 +287,6 @@ public class GoodsInspector extends BContainer
         _icon.setIcon(_good.createIcon(_ctx, _zations));
     }
 
-    protected class BankInfoWindow extends BDecoratedWindow
-        implements ActionListener
-    {
-        public BankInfoWindow ()
-        {
-            super(_ctx.getStyleSheet(), _msgs.get("m.binfo_title"));
-            setModal(true);
-            ((GroupLayout)getLayoutManager()).setGap(20);
-
-            BLabel info = new BLabel(_msgs.get("m.binfo_info"));
-            add(info);
-
-            BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
-            ((GroupLayout)bcont.getLayoutManager()).setGap(25);
-            bcont.add(new BButton(_msgs.get("m.to_bank"), this, "to_bank"));
-            bcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
-            add(bcont, GroupLayout.FIXED);
-        }
-
-        // from interface ActionListener
-        public void actionPerformed (ActionEvent event)
-        {
-            _ctx.getBangClient().clearPopup(this, true);
-            if ("to_bank".equals(event.getAction())) {
-                _ctx.getBangClient().goTo(Shop.BANK);
-            }
-        }
-    }
-
     protected ActionListener _colorpal = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             ColorSelector colorsel = (ColorSelector)event.getSource();
