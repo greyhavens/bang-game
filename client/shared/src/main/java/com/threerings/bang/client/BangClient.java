@@ -948,7 +948,8 @@ public class BangClient extends BasicClient
         } else {
             // check for a "go" parameter used by developers to go right to a shop
             try {
-                where = Enum.valueOf(Shop.class, System.getProperty("go").toUpperCase());
+                String go = System.getProperty("go");
+                if (go != null) where = Enum.valueOf(Shop.class, go.toUpperCase());
             } catch (Exception e) {
                 log.warning("Invalid 'go' parameter " + e);
             }
