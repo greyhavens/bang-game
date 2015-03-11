@@ -119,12 +119,6 @@ public class JmeApp
             render(frameStart);
             _display.getRenderer().displayBackBuffer();
         }
-
-        // process any pending events
-        Runnable r;
-        while ((r = _evqueue.getNonBlocking()) != null) {
-            r.run();
-        }
     }
 
     @Override public void pause () {
@@ -150,12 +144,13 @@ public class JmeApp
     public void stop ()
     {
         _finished = true;
+        Gdx.app.exit();
     }
 
     // from interface RunQueue
     public void postRunnable (Runnable r)
     {
-        _evqueue.append(r);
+        Gdx.app.postRunnable(r);
     }
 
     // from interface RunQueue
@@ -411,7 +406,6 @@ public class JmeApp
 
     protected Timer _timer;
     protected Thread _dispatchThread;
-    protected Queue<Runnable> _evqueue = Queue.newQueue();
     protected long _lastTick;
     protected float _frameTime;
 
