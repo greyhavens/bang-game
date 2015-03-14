@@ -45,8 +45,8 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.getdown.util.LaunchUtil;
-import com.threerings.hemiptera.data.Report;
-import com.threerings.hemiptera.util.SendReportUtil;
+// import com.threerings.hemiptera.data.Report;
+// import com.threerings.hemiptera.util.SendReportUtil;
 
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.effect.WindowSlider;
@@ -208,60 +208,60 @@ public class BangClient extends BasicClient
         return true;
     }
 
-    /**
-     * Asynchronously submits a bug report with the specified description.
-     */
-    public static void submitBugReport (final BangContext ctx, String descrip,
-                                        final boolean exitAfterSubmit)
-    {
-        // fill in a bug report
-        PlayerObject user = ctx.getUserObject();
-        Report report = new Report();
-        report.submitter = (user == null) ? "<unknown>" : user.username.toString();
-        if (descrip.length() > 255) {
-            report.summary = StringUtil.truncate(descrip, 255);
-            report.setAttribute("Description", descrip);
-        } else {
-            report.summary = descrip;
-        }
-        report.version = String.valueOf(DeploymentConfig.getVersion());
-        if (user != null) {
-            report.setAttribute("Handle", "" + user.handle);
-        }
-        report.setAttribute("Driver", Display.getAdapter());
-        report.setAttribute("GL Display Mode", "" + Display.getDisplayMode());
-        report.setAttribute("GL Version", GL11.glGetString(GL11.GL_VERSION));
-        report.setAttribute("GL Vendor", GL11.glGetString(GL11.GL_VENDOR));
-        report.setAttribute("GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
-        report.setAttribute("GL Extensions", GL11.glGetString(GL11.GL_EXTENSIONS));
-        report.setAttribute("Graphics Detail", BangPrefs.getDetailLevel().toString());
+    // /**
+    //  * Asynchronously submits a bug report with the specified description.
+    //  */
+    // public static void submitBugReport (final BangContext ctx, String descrip,
+    //                                     final boolean exitAfterSubmit)
+    // {
+    //     // fill in a bug report
+    //     PlayerObject user = ctx.getUserObject();
+    //     Report report = new Report();
+    //     report.submitter = (user == null) ? "<unknown>" : user.username.toString();
+    //     if (descrip.length() > 255) {
+    //         report.summary = StringUtil.truncate(descrip, 255);
+    //         report.setAttribute("Description", descrip);
+    //     } else {
+    //         report.summary = descrip;
+    //     }
+    //     report.version = String.valueOf(DeploymentConfig.getVersion());
+    //     if (user != null) {
+    //         report.setAttribute("Handle", "" + user.handle);
+    //     }
+    //     report.setAttribute("Driver", Display.getAdapter());
+    //     report.setAttribute("GL Display Mode", "" + Display.getDisplayMode());
+    //     report.setAttribute("GL Version", GL11.glGetString(GL11.GL_VERSION));
+    //     report.setAttribute("GL Vendor", GL11.glGetString(GL11.GL_VENDOR));
+    //     report.setAttribute("GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
+    //     report.setAttribute("GL Extensions", GL11.glGetString(GL11.GL_EXTENSIONS));
+    //     report.setAttribute("Graphics Detail", BangPrefs.getDetailLevel().toString());
 
-        // and send it along with our debug logs
-        URL submitURL = DeploymentConfig.getBugSubmitURL();
-        if (submitURL == null) {
-            log.warning("Unable to submit bug report, no submit URL.");
-            return;
-        }
+    //     // and send it along with our debug logs
+    //     URL submitURL = DeploymentConfig.getBugSubmitURL();
+    //     if (submitURL == null) {
+    //         log.warning("Unable to submit bug report, no submit URL.");
+    //         return;
+    //     }
 
-        log.info("Submitting bug report '" + descrip + "'.");
-        String[] files = { BangClient.localDataDir("old-bang.log"),
-                           BangClient.localDataDir("bang.log")};
-        ResultListener<Object> rl = new ResultListener<Object>() {
-            public void requestCompleted (Object result) {
-                ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_completed");
-                if (exitAfterSubmit) {
-                    ctx.getApp().stop();
-                }
-            }
-            public void requestFailed (Exception cause) {
-                log.warning("Bug submission failed.", cause);
-                ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_failed");
-            }
-        };
-        SendReportUtil.submitReportAsync(
-            submitURL, report, files, ctx.getClient().getRunQueue(), rl);
-        ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_started");
-    }
+    //     log.info("Submitting bug report '" + descrip + "'.");
+    //     String[] files = { BangClient.localDataDir("old-bang.log"),
+    //                        BangClient.localDataDir("bang.log")};
+    //     ResultListener<Object> rl = new ResultListener<Object>() {
+    //         public void requestCompleted (Object result) {
+    //             ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_completed");
+    //             if (exitAfterSubmit) {
+    //                 ctx.getApp().stop();
+    //             }
+    //         }
+    //         public void requestFailed (Exception cause) {
+    //             log.warning("Bug submission failed.", cause);
+    //             ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_failed");
+    //         }
+    //     };
+    //     SendReportUtil.submitReportAsync(
+    //         submitURL, report, files, ctx.getClient().getRunQueue(), rl);
+    //     ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_started");
+    // }
 
     /**
      * Attempts to locate and read the file created by our installer which contains the name of the

@@ -20,8 +20,8 @@ import com.samskivert.swing.MultiLineLabel;
 import com.samskivert.swing.VGroupLayout;
 import com.samskivert.util.ResultListener;
 
-import com.threerings.hemiptera.data.Report;
-import com.threerings.hemiptera.util.SendReportUtil;
+// import com.threerings.hemiptera.data.Report;
+// import com.threerings.hemiptera.util.SendReportUtil;
 
 import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
@@ -87,20 +87,20 @@ public class InitFailedDialog extends JFrame
 
         // create buttons for submitting a report or not
         JPanel row = VGroupLayout.makeButtonBox(VGroupLayout.CENTER);
-        if (canReport) {
-            content.add(createLabel(msgs.get("m.init_failed_report")));
-            AbstractAction exitReport = new AbstractAction() {
-                public void actionPerformed (ActionEvent event) {
-                    submitReport(error);
-                    System.exit(-1);
-                }
-            };
-            exitReport.putValue(
-                AbstractAction.NAME, msgs.get("m.report_and_exit"));
-            row.add(new JButton(exitReport));
-        } else {
+        // if (canReport) {
+        //     content.add(createLabel(msgs.get("m.init_failed_report")));
+        //     AbstractAction exitReport = new AbstractAction() {
+        //         public void actionPerformed (ActionEvent event) {
+        //             submitReport(error);
+        //             System.exit(-1);
+        //         }
+        //     };
+        //     exitReport.putValue(
+        //         AbstractAction.NAME, msgs.get("m.report_and_exit"));
+        //     row.add(new JButton(exitReport));
+        // } else {
             content.add(createLabel(msgs.get("m.init_failed_sorry")));
-        }
+        // }
 
         AbstractAction exitNoReport = new AbstractAction() {
             public void actionPerformed (ActionEvent event) {
@@ -130,43 +130,43 @@ public class InitFailedDialog extends JFrame
         }
     }
 
-    protected void submitReport (Throwable error)
-    {
-        // fill in a bug report
-        Report report = new Report();
-        report.submitter = "[initbug]";
-        report.summary = "Initialization failed: " + error;
-        report.version = String.valueOf(DeploymentConfig.getVersion());
+    // protected void submitReport (Throwable error)
+    // {
+    //     // fill in a bug report
+    //     Report report = new Report();
+    //     report.submitter = "[initbug]";
+    //     report.summary = "Initialization failed: " + error;
+    //     report.version = String.valueOf(DeploymentConfig.getVersion());
 
-        try {
-            report.setAttribute("Driver", Display.getAdapter());
-            report.setAttribute("GL Display Mode", "" + Display.getDisplayMode());
-            if (Display.isCreated()) {
-                // These GL calls can only be made with a valid context
-                report.setAttribute("GL Version", GL11.glGetString(GL11.GL_VERSION));
-                report.setAttribute("GL Vendor", GL11.glGetString(GL11.GL_VENDOR));
-                report.setAttribute("GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
-                report.setAttribute("GL Extensions", GL11.glGetString(GL11.GL_EXTENSIONS));
-            }
-        } catch (Throwable t) {
-            log.warning("Failed to get GL info.", t);
-        }
+    //     try {
+    //         report.setAttribute("Driver", Display.getAdapter());
+    //         report.setAttribute("GL Display Mode", "" + Display.getDisplayMode());
+    //         if (Display.isCreated()) {
+    //             // These GL calls can only be made with a valid context
+    //             report.setAttribute("GL Version", GL11.glGetString(GL11.GL_VERSION));
+    //             report.setAttribute("GL Vendor", GL11.glGetString(GL11.GL_VENDOR));
+    //             report.setAttribute("GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
+    //             report.setAttribute("GL Extensions", GL11.glGetString(GL11.GL_EXTENSIONS));
+    //         }
+    //     } catch (Throwable t) {
+    //         log.warning("Failed to get GL info.", t);
+    //     }
 
-        URL submitURL = DeploymentConfig.getBugSubmitURL();
-        if (submitURL == null) {
-            log.warning("Unable to submit bug report, no submit URL.");
-            return;
-        }
+    //     URL submitURL = DeploymentConfig.getBugSubmitURL();
+    //     if (submitURL == null) {
+    //         log.warning("Unable to submit bug report, no submit URL.");
+    //         return;
+    //     }
 
-        // and send it along with our debug logs
-        try {
-            log.info("Submitting init failed bug report.");
-            String[] files = { BangClient.localDataDir("bang.log")};
-            SendReportUtil.submitReport(submitURL, report, files);
-        } catch (Exception e) {
-            log.warning("Failed to submit bug report.", e);
-        }
-    }
+    //     // and send it along with our debug logs
+    //     try {
+    //         log.info("Submitting init failed bug report.");
+    //         String[] files = { BangClient.localDataDir("bang.log")};
+    //         SendReportUtil.submitReport(submitURL, report, files);
+    //     } catch (Exception e) {
+    //         log.warning("Failed to submit bug report.", e);
+    //     }
+    // }
 
     protected static Font LABEL_FONT = new Font("Dialog", Font.BOLD, 16);
 }

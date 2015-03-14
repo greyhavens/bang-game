@@ -51,11 +51,6 @@
       <artifactId>ooo-util</artifactId>
       <version>1.4.1</version>
     </dependency>
-    <dependency>
-      <groupId>com.threerings</groupId>
-      <artifactId>hemiptera</artifactId>
-      <version>1.0</version>
-    </dependency>
 
     <dependency>
       <groupId>commons-io</groupId>

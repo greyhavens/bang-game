@@ -61,7 +61,7 @@ public class FKeyPopups
         HELP(Keys.F1, 0, 0, true),
         TUTORIALS(Keys.T, 0, 0, true),
         WHERETO(Keys.W, 0, 0, true),
-        REPORT_BUG(Keys.F2, 0, 0, false),
+        // REPORT_BUG(Keys.F2, 0, 0, false),
         CLIENT_LOG(Keys.F3, InputEvent.SHIFT_DOWN_MASK, 0, false),
         CHAT_HISTORY(Keys.F3, 0, 0, false),
         SERVER_STATUS(Keys.F4, 0, BangTokenRing.SUPPORT, false),
@@ -150,9 +150,9 @@ public class FKeyPopups
         case HELP:
             popup = createHelp();
             break;
-        case REPORT_BUG:
-            popup = createReportBug();
-            break;
+        // case REPORT_BUG:
+        //     popup = createReportBug();
+        //     break;
         case TUTORIALS:
             popup = new TutorialView(_ctx);
             whint = TutorialView.WIDTH_HINT;
@@ -188,14 +188,14 @@ public class FKeyPopups
     // documentation inherited from interface GlobalKeyManager.Command
     public void invoke (int keyCode, int modifiers)
     {
-        // special hackery to handle Ctrl-Shift-F2 which submits an
-        // auto-bug-report and exits the client
-        if (keyCode == Keys.F2 && modifiers == CTRL_SHIFT) {
-            if (!_autoBugged) { // avoid repeat pressage
-                BangClient.submitBugReport(_ctx, "Autobug!", true);
-            }
-            return;
-        }
+        // // special hackery to handle Ctrl-Shift-F2 which submits an
+        // // auto-bug-report and exits the client
+        // if (keyCode == Keys.F2 && modifiers == CTRL_SHIFT) {
+        //     if (!_autoBugged) { // avoid repeat pressage
+        //         BangClient.submitBugReport(_ctx, "Autobug!", true);
+        //     }
+        //     return;
+        // }
 
         // other hackery to handle taking screen shots
         if (keyCode == Keys.F12) {
@@ -253,39 +253,39 @@ public class FKeyPopups
         return help;
     }
 
-    protected BDecoratedWindow createReportBug ()
-    {
-        if (_ctx.getUserObject() != null && _ctx.getUserObject().tokens.isAnonymous()) {
-            return null;
-        }
-        final BDecoratedWindow bug = BangUI.createDialog(_msgs.get("m.bug_title"));
-        ((GroupLayout)bug.getLayoutManager()).setOffAxisPolicy(
-            GroupLayout.STRETCH);
-        bug.setLayer(BangCodes.NEVER_CLEAR_LAYER);
-        bug.add(new BLabel(_msgs.get("m.bug_intro"), "dialog_text_left"));
-        final BTextField descrip = new BTextField("", BangUI.TEXT_FIELD_MAX_LENGTH);
-        bug.add(descrip, GroupLayout.FIXED);
-        descrip.requestFocus();
-        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        bug.add(buttons, GroupLayout.FIXED);
+    // protected BDecoratedWindow createReportBug ()
+    // {
+    //     if (_ctx.getUserObject() != null && _ctx.getUserObject().tokens.isAnonymous()) {
+    //         return null;
+    //     }
+    //     final BDecoratedWindow bug = BangUI.createDialog(_msgs.get("m.bug_title"));
+    //     ((GroupLayout)bug.getLayoutManager()).setOffAxisPolicy(
+    //         GroupLayout.STRETCH);
+    //     bug.setLayer(BangCodes.NEVER_CLEAR_LAYER);
+    //     bug.add(new BLabel(_msgs.get("m.bug_intro"), "dialog_text_left"));
+    //     final BTextField descrip = new BTextField("", BangUI.TEXT_FIELD_MAX_LENGTH);
+    //     bug.add(descrip, GroupLayout.FIXED);
+    //     descrip.requestFocus();
+    //     BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
+    //     bug.add(buttons, GroupLayout.FIXED);
 
-        ActionListener buglist = new ActionListener() {
-            public void actionPerformed (ActionEvent event) {
-                if (event.getAction().equals("submit")) {
-                    BangClient.submitBugReport(_ctx, descrip.getText(), false);
-                }
-                _ctx.getBangClient().clearPopup(bug, true);
-            }
-        };
-        BButton submit =
-            new BButton(_msgs.get("m.bug_submit"), buglist, "submit");
-        buttons.add(submit);
-        buttons.add(new BButton(_msgs.get("m.cancel"), buglist, "cancel"));
-        // disable the submit button until a description is entered
-        new EnablingValidator(descrip, submit);
-        bug.setModal(true);
-        return bug;
-    }
+    //     ActionListener buglist = new ActionListener() {
+    //         public void actionPerformed (ActionEvent event) {
+    //             if (event.getAction().equals("submit")) {
+    //                 BangClient.submitBugReport(_ctx, descrip.getText(), false);
+    //             }
+    //             _ctx.getBangClient().clearPopup(bug, true);
+    //         }
+    //     };
+    //     BButton submit =
+    //         new BButton(_msgs.get("m.bug_submit"), buglist, "submit");
+    //     buttons.add(submit);
+    //     buttons.add(new BButton(_msgs.get("m.cancel"), buglist, "cancel"));
+    //     // disable the submit button until a description is entered
+    //     new EnablingValidator(descrip, submit);
+    //     bug.setModal(true);
+    //     return bug;
+    // }
 
     protected BDecoratedWindow createRecentLog ()
     {
