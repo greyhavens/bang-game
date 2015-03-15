@@ -5,13 +5,13 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.threerings</groupId>
-    <artifactId>bang-test</artifactId>
+    <artifactId>bang-project</artifactId>
     <version>1.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>bang-test-server</artifactId>
+  <artifactId>bang-deploy</artifactId>
   <packaging>jar</packaging>
-  <name>Bang Test Server</name>
+  <name>Bang Deployed Server</name>
 
   <properties>
     <node>frontier_town</node>
@@ -34,7 +34,7 @@
   <build>
     <resources>
       <resource>
-        <directory>${basedir}/../../etc</directory>
+        <directory>${basedir}/../etc</directory>
         <includes>
           <include>deployment.properties</include>
           <include>server.properties</include>
