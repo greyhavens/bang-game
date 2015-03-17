@@ -1,0 +1,11 @@
+dependencies {
+  compile "com.badlogicgames.gdx:gdx:${gdxVersion}"
+  // TEMP: pull in LWJGL directly until we rewrite everything to use GDX
+  compile ("org.lwjgl.lwjgl:lwjgl:2.9.2") {
+     exclude group: 'org.lwjgl.lwjgl', module: 'lwjgl-platform'
+     exclude group: 'net.java.jinput', module: 'jinput-platform'
+  }
+  compile "org.lwjgl.lwjgl:lwjgl_util:2.9.2"
+  // ant is only for tools, so we don't export it as a depend
+  provided "org.apache.ant:ant:1.7.1"
+}
