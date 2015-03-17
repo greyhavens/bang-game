@@ -1,0 +1,7 @@
+dependencies {
+  compile project(":server")
+  // compile "com.threerings:nenya-tools:${nenyaVersion}"
+  compile "com.threerings:nenya-tools:1.7-SNAPSHOT"
+  compile "org.apache.ant:ant:1.7.1"
+  compile "commons-digester:commons-digester:1.8"
+}

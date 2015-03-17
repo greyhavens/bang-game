@@ -1,0 +1,7 @@
+dependencies {
+  compile project(":assets")
+  compile project(":client/shared")
+  compile "com.badlogicgames.gdx:gdx-backend-lwjgl:${gdxVersion}"
+  compile group: "com.badlogicgames.gdx", name: "gdx-platform", version: gdxVersion,
+          classifier: "natives-desktop"
+}

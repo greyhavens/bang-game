@@ -5,3 +5,4 @@ etc/build_settings.properties
 etc/blosxom.conf
 etc/bang-client.pro
 log/*.log
+.gradle

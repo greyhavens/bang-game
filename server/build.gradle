@@ -1,0 +1,8 @@
+dependencies {
+  compile project(":client/shared")
+  compile "com.samskivert:depot:1.7"
+  compile "com.threerings:ooo-user:1.4.3"
+  compile "net.sf.ehcache:ehcache:1.6.0"
+  compile "mysql:mysql-connector-java:5.1.6"
+  compile "commons-digester:commons-digester:1.8"
+}
