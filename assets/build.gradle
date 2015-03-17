@@ -27,9 +27,29 @@ task copyOggs (type: Copy) {
 }
 processResources.dependsOn "copyOggs"
 
+task copyTownBits (type: Copy) {
+  from "."
+  into sourceSets.main.output.resourcesDir
+  include "rsrc/units/**/unit.properties"
+  include "rsrc/units/**/*.png"
+  include "rsrc/props/**/prop.properties"
+  include "rsrc/props/**/*.png"
+  include "rsrc/bonuses/**/bonus.properties"
+  include "rsrc/bonuses/**/*.png"
+  include "rsrc/cards/**/*.png"
+  include "rsrc/effects/**/particles.txt"
+  include "rsrc/effects/**/particles.properties"
+  include "rsrc/effects/**/particles.jme"
+  include "rsrc/effects/**/icons.txt"
+  include "rsrc/effects/**/icon.properties"
+  include "rsrc/effects/**/*.png"
+  include "rsrc/extras/**/*.png"
+}
+processResources.dependsOn "copyTownBits"
+
 task genSoundsList (type: Exec) {
   workingDir sourceSets.main.output.resourcesDir
-  standardOutput = new FileOutputStream("${sourceSets.main.output.resourcesDir}/sounds.txt")
+  standardOutput = new FileOutputStream("${sourceSets.main.output.resourcesDir}/rsrc/sounds.txt")
   commandLine "find", "rsrc", "-name", "*.ogg"
 }
 processResources.dependsOn "genSoundsList"
