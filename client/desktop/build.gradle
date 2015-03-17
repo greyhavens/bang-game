@@ -5,3 +5,21 @@ dependencies {
   compile group: "com.badlogicgames.gdx", name: "gdx-platform", version: gdxVersion,
           classifier: "natives-desktop"
 }
+
+task copyConfig (type: Copy) {
+  from "../../etc"
+  into sourceSets.main.output.classesDir
+  include "deployment.properties"
+}
+processResources.dependsOn "copyConfig"
+
+task client (type :JavaExec) {
+  classpath sourceSets.main.runtimeClasspath
+  main = "com.threerings.bang.client.BangDesktop"
+  systemProperties = [ "no_unpack_resources": "true",
+                       "no_log_redir": "true",
+                       // "bang.home": bang.home,
+                       "resource_dir": "../../assets/build/resources/main/rsrc",
+                       "rsrc_cache_dir": "/tmp",
+                       "appdir": "../../assets/build/resources/main" ]
+}
