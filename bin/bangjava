@@ -12,8 +12,10 @@ umask 002
 # set up our java arguments
 JAVA_ARGS="-Dno_unpack_resources=true \
     -Dbang.home=$BANG_HOME \
-    -Dresource_dir=$BANG_HOME/dist/rsrc \
+    -Dresource_dir=$BANG_HOME/assets/build/resources/main/rsrc \
     -Drsrc_cache_dir=/tmp"
+
+JARS="server"
 
 # extract -D arguments so that we can put them before the classname
 while [ ! -z "$1" ]; do
@@ -34,7 +36,7 @@ while [ ! -z "$1" ]; do
             ;;
 
         -client)
-            CLIENT="true"
+            JARS="client"
             ;;
 
         -D*)
@@ -48,30 +50,12 @@ while [ ! -z "$1" ]; do
     shift
 done
 
-# Some temporary business for multiprocessor FreeBSD machines
-NEEDS_MEMBAR=`java -fullversion 2>&1 | grep diablo`
-if [ ! -z "$NEEDS_MEMBAR" ]; then
-     JAVA_ARGS="$JAVA_ARGS -XX:+UseMembar"
-fi
-
 # add all necessary JAR files and $BANG_HOME to the CLASSPATH
-CLASSPATH="$BANG_HOME/dist"
-if [ -z "$NODEVLIBS" -a -d $BANG_HOME/dist/classes ]; then
-    CLASSPATH=$BANG_HOME/dist/classes:$CLASSPATH
-else
-    for JAR in $BANG_HOME/dist/bang-*.jar; do
-        CLASSPATH=$CLASSPATH:$JAR
-    done
-fi
+CLASSPATH="$BANG_HOME/assets/build/resources/main"
 
-for JAR in $BANG_HOME/dist/lib/*.jar; do
+for JAR in $BANG_HOME/build/deploy/$JARS/*.jar; do
     CLASSPATH=$CLASSPATH:$JAR
 done
-if [ "$CLIENT" = "true" ]; then
-    for JAR in $BANG_HOME/dist/client/*.jar; do
-        CLASSPATH=$CLASSPATH:$JAR
-    done
-fi
 export CLASSPATH
 
 # do the deed
