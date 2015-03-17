@@ -296,6 +296,7 @@
   <!-- enumerates all of our units, props, etc. into master lists -->
   <target name="lists">
     <exec executable="${basedir}/bin/update_lists" failonerror="true">
+        <arg value="${deploy.dir}"/>
         <arg value="${towns}"/>
     </exec>
   </target>

@@ -137,6 +137,7 @@
 
                 <!-- updates our lists of things -->
                 <exec executable="${basedir}/update_lists" failonerror="true">
+                  <arg value="${target.dir}"/>
                   <arg value="${towns}"/>
                 </exec>
 

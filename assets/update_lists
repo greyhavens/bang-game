@@ -6,8 +6,8 @@
 # units, etc.
 
 CWD=`dirname $0`
-TOWNS=`echo $1 | sed 's/,/ /g'`
-TARGET=target/classes
+TARGET=$1
+TOWNS=`echo $2 | sed 's/,/ /g'`
 
 # Update our list of props
 for TOWN in $TOWNS; do
