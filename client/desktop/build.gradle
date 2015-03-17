@@ -1,3 +1,5 @@
+apply plugin:'application'
+
 dependencies {
   compile project(":assets")
   compile project(":client/shared")
@@ -13,12 +15,12 @@ task copyConfig (type: Copy) {
 }
 processResources.dependsOn "copyConfig"
 
-task client (type :JavaExec) {
-  classpath sourceSets.main.runtimeClasspath
-  main = "com.threerings.bang.client.BangDesktop"
-  systemProperties = [ "no_unpack_resources": "true",
-                       "no_log_redir": "true",
-                       "resource_dir": "../../assets/build/resources/main/rsrc",
-                       "rsrc_cache_dir": "/tmp",
-                       "appdir": "../../assets/build/resources/main" ]
-}
+mainClassName = "com.threerings.bang.client.BangDesktop"
+
+applicationDefaultJvmArgs = [
+  "-Dno_unpack_resources=true",
+  "-Dno_log_redir=true",
+  "-Dresource_dir=../../assets/build/resources/main/rsrc",
+  "-Drsrc_cache_dir=/tmp",
+  "-Dappdir=../../assets/build/resources/main"
+]

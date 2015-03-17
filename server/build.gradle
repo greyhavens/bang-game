@@ -1,8 +1,32 @@
+apply plugin:'application'
+
 dependencies {
   compile project(":client/shared")
+  compile project(":assets")
   compile "com.samskivert:depot:1.7"
   compile "com.threerings:ooo-user:1.4.3"
   compile "net.sf.ehcache:ehcache:1.6.0"
   compile "mysql:mysql-connector-java:5.1.6"
   compile "commons-digester:commons-digester:1.8"
 }
+
+task copyConfig (type: Copy) {
+  from "../etc"
+  into sourceSets.main.output.resourcesDir
+  include "deployment.properties"
+  include "server.properties"
+}
+processResources.dependsOn "copyConfig"
+
+mainClassName = "com.threerings.bang.server.BangServer"
+
+applicationDefaultJvmArgs = [
+  "-Dhostname=localhost",
+  "-Dnode=frontier_town",
+  "-Dis_node=true",
+  "-Dno_unpack_resources=true",
+  "-Dno_log_redir=true",
+  "-Dresource_dir=../assets/build/resources/main/rsrc",
+  "-Drsrc_cache_dir=/tmp",
+  "-Dappdir=../assets/build/resources/main"
+]
