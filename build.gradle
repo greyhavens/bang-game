@@ -2,6 +2,13 @@ allprojects {
   group = "com.threerings"
   version = "1.1-SNAPSHOT"
 
+  ext {
+    gdxVersion = "1.5.4"
+    naryaVersion = "1.15"
+    nenyaVersion = "1.6.1"
+    towns = [ "frontier_town", "indian_post" ]
+  }
+
   apply plugin: "java"
   compileJava {
     options.compilerArgs << '-Xlint:all' << '-Xlint:-serial' << '-Xlint:-path'
@@ -9,13 +16,12 @@ allprojects {
 
   configurations {
     provided
+    tools
   }
 
-  ext {
-    gdxVersion = "1.5.4"
-    naryaVersion = "1.15"
-    nenyaVersion = "1.6.1"
-    towns = [ "frontier_town", "indian_post" ]
+  dependencies {
+    tools "com.threerings:narya-tools:${naryaVersion}"
+    tools project(":tools")
   }
 
   sourceSets {

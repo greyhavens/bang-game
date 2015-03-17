@@ -1,11 +1,3 @@
-configurations {
-  tools
-}
-
-dependencies {
-  tools project(":tools")
-}
-
 sourceSets {
   main {
     resources {

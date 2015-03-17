@@ -11,3 +11,14 @@ dependencies {
 
   testCompile "junit:junit:4.8.1"
 }
+
+task genService << {
+  ant.taskdef(classpath: configurations.tools.asPath,
+              resource: "com/threerings/presents/tools.properties")
+
+  ant.path(id: "classpath", location: configurations.compile.asPath)
+  ant.genservice(header: "../../lib/SOURCE_HEADER",
+                 classpathref: "classpath") {
+    fileset(dir: "src/main/java", includes: "**/*Service.java")
+  }
+}
