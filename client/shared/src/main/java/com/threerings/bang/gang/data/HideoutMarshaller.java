@@ -206,21 +206,8 @@ public class HideoutMarshaller extends InvocationMarshaller<PlayerObject>
         });
     }
 
-    /** The method id used to dispatch {@link #postOffer} requests. */
-    public static final int POST_OFFER = 15;
-
-    // from interface HideoutService
-    public void postOffer (int arg1, int arg2, InvocationService.ResultListener arg3)
-    {
-        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
-        listener3.listener = arg3;
-        sendRequest(POST_OFFER, new Object[] {
-            Integer.valueOf(arg1), Integer.valueOf(arg2), listener3
-        });
-    }
-
     /** The method id used to dispatch {@link #renewGangItem} requests. */
-    public static final int RENEW_GANG_ITEM = 16;
+    public static final int RENEW_GANG_ITEM = 15;
 
     // from interface HideoutService
     public void renewGangItem (int arg1, InvocationService.ConfirmListener arg2)
@@ -233,7 +220,7 @@ public class HideoutMarshaller extends InvocationMarshaller<PlayerObject>
     }
 
     /** The method id used to dispatch {@link #rentGangGood} requests. */
-    public static final int RENT_GANG_GOOD = 17;
+    public static final int RENT_GANG_GOOD = 16;
 
     // from interface HideoutService
     public void rentGangGood (String arg1, Object[] arg2, InvocationService.ConfirmListener arg3)
@@ -246,7 +233,7 @@ public class HideoutMarshaller extends InvocationMarshaller<PlayerObject>
     }
 
     /** The method id used to dispatch {@link #setBuckle} requests. */
-    public static final int SET_BUCKLE = 18;
+    public static final int SET_BUCKLE = 17;
 
     // from interface HideoutService
     public void setBuckle (BucklePart[] arg1, InvocationService.ConfirmListener arg2)
@@ -259,7 +246,7 @@ public class HideoutMarshaller extends InvocationMarshaller<PlayerObject>
     }
 
     /** The method id used to dispatch {@link #setStatement} requests. */
-    public static final int SET_STATEMENT = 19;
+    public static final int SET_STATEMENT = 18;
 
     // from interface HideoutService
     public void setStatement (String arg1, String arg2, InvocationService.ConfirmListener arg3)
