@@ -53,7 +53,7 @@ done
 # add all necessary JAR files and $BANG_HOME to the CLASSPATH
 CLASSPATH="$BANG_HOME/assets/build/resources/main"
 
-for JAR in $BANG_HOME/build/deploy/$JARS/*.jar; do
+for JAR in $BANG_HOME/build/$JARS/*.jar; do
     CLASSPATH=$CLASSPATH:$JAR
 done
 export CLASSPATH

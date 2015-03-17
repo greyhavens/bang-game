@@ -18,16 +18,5 @@ processResources.dependsOn "copyConfig"
 task deploy (type: Sync) {
   from jar
   from configurations.runtime
-  into project.file("../build/deploy/server")
+  into project.file("../build/server")
 }
-
-// applicationDefaultJvmArgs = [
-//   "-Dhostname=localhost",
-//   "-Dnode=frontier_town",
-//   "-Dis_node=true",
-//   "-Dno_unpack_resources=true",
-//   "-Dno_log_redir=true",
-//   "-Dresource_dir=../assets/build/resources/main/rsrc",
-//   "-Drsrc_cache_dir=/tmp",
-//   "-Dappdir=../assets/build/resources/main"
-// ]

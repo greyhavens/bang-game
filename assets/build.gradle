@@ -143,5 +143,5 @@ processResources.dependsOn "updateLists"
 task deploy (type: Sync) {
   from jar
   // from configurations.runtime
-  into project.file("../build/deploy/assets")
+  into project.file("../build/assets")
 }
