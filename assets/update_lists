@@ -9,6 +9,9 @@ CWD=`dirname $0`
 TARGET=$1
 TOWNS=`echo $2 | sed 's/,/ /g'`
 
+# Update our list of sounds
+find rsrc -name '*.ogg' > $TARGET/rsrc/sounds.txt
+
 # Update our list of props
 for TOWN in $TOWNS; do
     mkdir -p $TARGET/rsrc/props/$TOWN

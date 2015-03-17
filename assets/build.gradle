@@ -1,3 +1,8 @@
+dependencies {
+  compile project(":client/shared")
+  compile project(":tools")
+}
+
 sourceSets {
   main {
     resources {
@@ -46,13 +51,6 @@ task copyTownBits (type: Copy) {
   include "rsrc/extras/**/*.png"
 }
 processResources.dependsOn "copyTownBits"
-
-task genSoundsList (type: Exec) {
-  workingDir sourceSets.main.output.resourcesDir
-  standardOutput = new FileOutputStream("${sourceSets.main.output.resourcesDir}/rsrc/sounds.txt")
-  commandLine "find", "rsrc", "-name", "*.ogg"
-}
-processResources.dependsOn "genSoundsList"
 
 task genConfigs << {
   ant.taskdef(classpath: configurations.tools.asPath, name: "confcomp",
@@ -142,3 +140,9 @@ task updateLists (type: Exec) {
   commandLine "./update_lists", sourceSets.main.output.resourcesDir, towns.join(",")
 }
 processResources.dependsOn "updateLists"
+
+task deploy (type: Sync) {
+  from jar
+  // from configurations.runtime
+  into project.file("../build/deploy/assets")
+}
