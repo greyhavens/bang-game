@@ -3,37 +3,38 @@ dependencies {
   compile project(":tools")
 }
 
-sourceSets {
-  main {
-    resources {
-      srcDir "."
-      include "rsrc/**"
-      exclude "rsrc/avatars/**"
-      exclude "rsrc/boards/**"
-      exclude "rsrc/bonuses/**"
-      exclude "rsrc/cards/**"
-      exclude "rsrc/config/**/*.xml"
-      exclude "rsrc/effects/**"
-      exclude "rsrc/extras/**"
-      exclude "rsrc/props/**"
-      exclude "rsrc/sounds/**"
-      exclude "rsrc/tutorials/**/*.xml"
-      exclude "rsrc/units/**"
-      exclude "rsrc/**/*.wav"
-    }
-  }
+ext {
+  stagingDir = "build/staging"
 }
+
+task copyResources (type: Copy) {
+  from "."
+  into stagingDir
+  include "rsrc/**"
+  exclude "rsrc/avatars/**"
+  exclude "rsrc/bonuses/**"
+  exclude "rsrc/cards/**"
+  exclude "rsrc/config/**/*.xml"
+  exclude "rsrc/effects/**"
+  exclude "rsrc/extras/**"
+  exclude "rsrc/props/**"
+  exclude "rsrc/sounds/**"
+  exclude "rsrc/tutorials/**/*.xml"
+  exclude "rsrc/units/**"
+  exclude "rsrc/**/*.wav"
+}
+processResources.dependsOn "copyResources"
 
 task copyOggs (type: Copy) {
   from "."
-  into sourceSets.main.output.resourcesDir
+  into stagingDir
   include "rsrc/**/*.ogg"
 }
 processResources.dependsOn "copyOggs"
 
 task copyTownBits (type: Copy) {
   from "."
-  into sourceSets.main.output.resourcesDir
+  into stagingDir
   include "rsrc/bonuses/**/*.png"
   include "rsrc/bonuses/**/bonus.properties"
   include "rsrc/cards/**/*.png"
@@ -56,23 +57,23 @@ task genConfigs << {
               classname: "com.threerings.tools.CompiledConfigTask")
 
   // compiles our tutorial XML definitions
-  ant.confcomp(dest: sourceSets.main.output.resourcesDir,
+  ant.confcomp(dest: stagingDir,
                parser: "com.threerings.bang.game.tools.xml.TutorialConfigParser") {
     fileset(dir: "rsrc/tutorials", includes: "**/*.xml")
   }
 
   // creates the serialized color repository config
-  ant.confcomp(dest: sourceSets.main.output.resourcesDir,
+  ant.confcomp(dest: stagingDir,
                parser: "com.threerings.media.image.tools.xml.ColorPositoryParser",
                configdef: "rsrc/config/media/colordefs.xml")
   // creates the serialized article and aspect catalogs
-  ant.confcomp(dest: sourceSets.main.output.resourcesDir,
+  ant.confcomp(dest: stagingDir,
                parser: "com.threerings.bang.avatar.tools.xml.ArticleCatalogParser",
                configdef: "rsrc/avatars/articles.xml")
-  ant.confcomp(dest: sourceSets.main.output.resourcesDir,
+  ant.confcomp(dest: stagingDir,
                parser: "com.threerings.bang.avatar.tools.xml.AspectCatalogParser",
                configdef: "rsrc/avatars/aspects.xml")
-  ant.confcomp(dest: sourceSets.main.output.resourcesDir,
+  ant.confcomp(dest: stagingDir,
                parser: "com.threerings.bang.avatar.tools.xml.BucklePartCatalogParser",
                configdef: "rsrc/avatars/buckle_parts.xml")
 }
@@ -83,19 +84,22 @@ task genBundles << {
   ant.taskdef(classpath: configurations.tools.asPath, name: "metabundle",
               classname: "com.threerings.cast.bundle.tools.MetadataBundlerTask")
 
+  def avatarDir = new File(stagingDir, "rsrc/avatars")
+  avatarDir.mkdirs()
+
   ant.metabundle(actiondef: "rsrc/avatars/actions.xml", classdef: "rsrc/avatars/classes.xml",
-                 target: "${sourceSets.main.output.resourcesDir}/rsrc/avatars/metadata.jar")
+                 target: "${avatarDir}/metadata.jar")
 
   ant.taskdef(classpath: configurations.tools.asPath, name: "cbundle",
               classname: "com.threerings.cast.bundle.tools.ComponentBundlerTask")
 
   towns.each { town ->
     [ "male", "female" ].each { sex ->
-      String townDir = "rsrc/avatars/${town}"
+      def townDir = "rsrc/avatars/${town}"
       // <mkdir dir="${deploy.dir}/rsrc/avatars/${comp.bundle}"/>
       ant.cbundle(actiondef: "rsrc/avatars/actions.xml", mapfile: "rsrc/avatars/compmap.txt",
                   root: townDir,
-                  target: "${sourceSets.main.output.resourcesDir}/${townDir}/${sex}/components.jar") {
+                  target: "${stagingDir}/${townDir}/${sex}/components.jar") {
         fileset(dir: "${townDir}/${sex}") {
           include(name: "**/*.png")
           exclude(name: "**/*_shadow.png")
@@ -108,7 +112,7 @@ task genBundles << {
 
   ant.cbundle(actiondef: "rsrc/avatars/actions.xml", mapfile: "rsrc/avatars/compmap.txt",
               root: "rsrc/avatars/",
-              target: "${sourceSets.main.output.resourcesDir}/rsrc/avatars/buckle/components.jar") {
+              target: "${avatarDir}/buckle/components.jar") {
     fileset(dir: "rsrc/avatars/buckle") {
       include(name: "**/*.png")
       exclude(name: "**/*_crop.png")
@@ -122,7 +126,7 @@ processResources.dependsOn "genBundles"
 task compileModels << {
   ant.taskdef(classpath: configurations.tools.asPath, name: "compile",
               classname: "com.threerings.jme.tools.CompileModelTask")
-  ant.compile(dest: sourceSets.main.output.resourcesDir) {
+  ant.compile(dest: stagingDir) {
     fileset(dir: "rsrc",  includes: "**/model.properties")
   }
 
@@ -136,12 +140,35 @@ processResources.dependsOn "compileModels"
 
 // generates lists of props, units, etc.
 task updateLists (type: Exec) {
-  commandLine "./update_lists", sourceSets.main.output.resourcesDir, towns.join(",")
+  commandLine "./update_lists", stagingDir, towns.join(",")
 }
 processResources.dependsOn "updateLists"
 
-task deploy (type: Sync) {
-  from jar
-  // from configurations.runtime
-  into project.file("../build/assets")
+// package our assets into a bunch of jar files
+task generalJar (type: Jar) {
+  from stagingDir
+  include "rsrc/**"
+  exclude "**/frontier_town/**"
+  exclude "**/indian_post/**"
+  exclude "**/boom_town/**"
+  exclude "**/*.jar"
+  baseName = "general"
 }
+jar.dependsOn "generalJar"
+towns.each { town ->
+  tasks.create(name: "${town}_jar", type: Jar) {
+    from stagingDir
+    include "rsrc/**/$town/**"
+    exclude "**/*.jar"
+    baseName = "$town"
+  }
+  jar.dependsOn "${town}_jar"
+}
+
+task deploy (type: Sync) {
+  from("build/libs", stagingDir)
+  include "**/*.jar"
+  into "../build/assets"
+  includeEmptyDirs = false
+}
+deploy.dependsOn "build"

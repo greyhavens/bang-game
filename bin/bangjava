@@ -12,7 +12,7 @@ umask 002
 # set up our java arguments
 JAVA_ARGS="-Dno_unpack_resources=true \
     -Dbang.home=$BANG_HOME \
-    -Dresource_dir=$BANG_HOME/assets/build/resources/main/rsrc \
+    -Dresource_dir=$BANG_HOME/assets/build/staging/rsrc \
     -Drsrc_cache_dir=/tmp"
 
 JARS="server"
@@ -37,6 +37,7 @@ while [ ! -z "$1" ]; do
 
         -client)
             JARS="client"
+            JAVA_ARGS="-Dappdir=$BANG_HOME/assets/build/staging $JAVA_ARGS"
             ;;
 
         -D*)
@@ -51,7 +52,7 @@ while [ ! -z "$1" ]; do
 done
 
 # add all necessary JAR files and $BANG_HOME to the CLASSPATH
-CLASSPATH="$BANG_HOME/assets/build/resources/main"
+CLASSPATH="$BANG_HOME/assets/build/staging"
 
 for JAR in $BANG_HOME/build/$JARS/*.jar; do
     CLASSPATH=$CLASSPATH:$JAR
