@@ -712,8 +712,7 @@ public class Texture implements Serializable, Savable {
     return envMapMode;
   }
 
-  @Override
-public String toString() {
+  @Override public String toString() {
     return "Texture with id: " + textureId;
   }
 
@@ -729,8 +728,7 @@ public String toString() {
     return anisoLevel;
   }
 
-  @Override
-public boolean equals(Object other) {
+  @Override public boolean equals(Object other) {
     if (other == this) {
       return true;
     }
@@ -840,31 +838,31 @@ public boolean equals(Object other) {
     public void setMatrix(Matrix4f matrix) {
         this.matrix = matrix;
     }
-	/**
-	 * @return Returns the scale.
-	 */
-	public Vector3f getScale() {
-	    return scale;
-	}
-	/**
-	 * @param scale The scale to set.
-	 */
-	public void setScale(Vector3f scale) {
-	    this.scale = scale;
-	}
-	/**
-	 * @return Returns the translation.
-	 */
-	public Vector3f getTranslation() {
-	    return translation;
-	}
-	/**
-	 * @param translation The translation to set.
-	 */
-	public void setTranslation(Vector3f translation) {
-	    this.translation = translation;
-	}
-	/**
+ /**
+  * @return Returns the scale.
+  */
+ public Vector3f getScale() {
+     return scale;
+ }
+ /**
+  * @param scale The scale to set.
+  */
+ public void setScale(Vector3f scale) {
+     this.scale = scale;
+ }
+ /**
+  * @return Returns the translation.
+  */
+ public Vector3f getTranslation() {
+     return translation;
+ }
+ /**
+  * @param translation The translation to set.
+  */
+ public void setTranslation(Vector3f translation) {
+     this.translation = translation;
+ }
+ /**
      * @return Returns the rttSource.
      */
     public int getRTTSource() {
@@ -939,7 +937,7 @@ public boolean equals(Object other) {
     }
 
     @Override
-	public void write(JMEExporter e) throws IOException {
+ public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(imageLocation, "imageLocation", null);
         capsule.write(storeTexture, "storeTexture", false);
@@ -981,7 +979,7 @@ public boolean equals(Object other) {
     }
 
     @Override
-	public void read(JMEImporter e) throws IOException {
+ public void read(JMEImporter e) throws IOException {
         InputCapsule capsule = e.getCapsule(this);
         imageLocation = capsule.readString("imageLocation", null);
         storeTexture = capsule.readBoolean("storeTexture", false);
@@ -1023,7 +1021,7 @@ public boolean equals(Object other) {
     }
 
     @Override
-	public Class<?> getClassTag() {
+ public Class<?> getClassTag() {
         return this.getClass();
     }
 

@@ -149,7 +149,7 @@ public class ItemRepository extends SimpleRepository
                     JDBCUtil.checkedUpdate(stmt, 1);
 
                     // grab and fill in the item id
-                    item.setItemId(liaison.lastInsertedId(conn, "ITEMS", "ITEM_ID"));
+                    item.setItemId(liaison.lastInsertedId(conn, stmt, "ITEMS", "ITEM_ID"));
 
                     // record the insertion
                     BangServer.itemLog("item_created id:" + item.getItemId() +
@@ -200,7 +200,7 @@ public class ItemRepository extends SimpleRepository
                         item.setOwnerId(it.nextInt());
                         stmt.setInt(1, item.getOwnerId());
                         JDBCUtil.checkedUpdate(stmt, 1);
-                        item.setItemId(liaison.lastInsertedId(conn, "ITEMS", "ITEM_ID"));
+                        item.setItemId(liaison.lastInsertedId(conn, stmt, "ITEMS", "ITEM_ID"));
                         items.add(item);
 
                         // record the insertion

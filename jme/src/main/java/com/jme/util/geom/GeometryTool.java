@@ -11,14 +11,14 @@ import com.jme.scene.batch.SharedBatch;
 import com.jme.scene.batch.TriangleBatch;
 
 public class GeometryTool {
-    
+
     public static final int MV_SAME_NORMALS = 1;
     public static final int MV_SAME_TEXS = 2;
     public static final int MV_SAME_COLORS = 4;
 
     public static VertMap[] minimizeVerts(TriMesh mesh, int options) {
         VertMap[] result = new VertMap[mesh.getBatchCount()];
-        
+
         for (int x = mesh.getBatchCount(); --x >= 0; )
             result[x] = minimizeVerts(mesh.getBatch(x), options);
 
@@ -28,13 +28,13 @@ public class GeometryTool {
     public static VertMap minimizeVerts(TriangleBatch batch, int options) {
         if (batch instanceof SharedBatch)
             batch = ((SharedBatch)batch).getTarget();
-        
+
         int vertCount = -1;
         int oldCount = batch.getVertexCount();
         int newCount = 0;
-        
+
         VertMap result = new VertMap(batch);
-                
+
         while (vertCount != newCount) {
             vertCount = batch.getVertexCount();
             // go through each vert...
@@ -42,20 +42,20 @@ public class GeometryTool {
             Vector3f[] norms = null;
             if (batch.getNormalBuffer() != null)
                 norms = BufferUtils.getVector3Array(batch.getNormalBuffer());
-            
+
             ColorRGBA[] colors = null;
             if (batch.getColorBuffer() != null)
                 colors = BufferUtils.getColorArray(batch.getColorBuffer());
-            
+
             Vector2f[][] tex = new Vector2f[batch.getNumberOfUnits()][];
             for (int x = 0; x < tex.length; x++) {
                 if (batch.getTextureBuffer(x) != null) {
                     tex[x] = BufferUtils.getVector2Array(batch.getTextureBuffer(x));
                 }
             }
-    
+
             int[] inds = BufferUtils.getIntArray(batch.getIndexBuffer());
-            
+
             HashMap<VertKey, Integer> store = new HashMap<VertKey, Integer>();
             int good = 0;
             for (int x = 0, max = verts.length; x < max; x++) {
@@ -75,7 +75,7 @@ public class GeometryTool {
                     good++;
                 }
             }
-                
+
             ArrayList<Vector3f> newVects = new ArrayList<Vector3f>(good);
             ArrayList<Vector3f> newNorms = new ArrayList<Vector3f>(good);
             ArrayList<ColorRGBA> newColors = new ArrayList<ColorRGBA>(good);
@@ -114,19 +114,19 @@ public class GeometryTool {
                 batch.setNormalBuffer(BufferUtils.createFloatBuffer(newNorms.toArray(new Vector3f[0])));
             if (colors != null)
                 batch.setColorBuffer(BufferUtils.createFloatBuffer(newColors.toArray(new ColorRGBA[0])));
-            
+
             for (int x = 0; x < newTexs.size(); x++) {
                 if (batch.getTextureBuffer(x) != null) {
-                    batch.setTextureBuffer(BufferUtils.createFloatBuffer((Vector2f[])newTexs.get(x).toArray(new Vector2f[0])), x);
+                    batch.setTextureBuffer(BufferUtils.createFloatBuffer(newTexs.get(x).toArray(new Vector2f[0])), x);
                 }
             }
-    
+
             batch.getIndexBuffer().clear();
             batch.getIndexBuffer().put(inds);
             newCount = batch.getVertexCount();
         }
         System.err.println("batch: "+batch+" old: "+oldCount+" new: "+newCount);
-        
+
         return result;
     }
 

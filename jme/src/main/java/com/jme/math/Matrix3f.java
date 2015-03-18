@@ -162,18 +162,21 @@ public class Matrix3f  implements Serializable, Savable {
             case 1: return m01;
             case 2: return m02;
             }
+            break;
         case 1:
             switch (j) {
             case 0: return m10;
             case 1: return m11;
             case 2: return m12;
             }
+            break;
         case 2:
             switch (j) {
             case 0: return m20;
             case 1: return m21;
             case 2: return m22;
             }
+            break;
         }
 
         LoggingSystem.getLogger().log(Level.WARNING, "Invalid matrix index.");
@@ -410,18 +413,21 @@ public class Matrix3f  implements Serializable, Savable {
             case 1: m01 = value; return;
             case 2: m02 = value; return;
             }
+            break;
         case 1:
             switch (j) {
             case 0: m10 = value; return;
             case 1: m11 = value; return;
             case 2: m12 = value; return;
             }
+            break;
         case 2:
             switch (j) {
             case 0: m20 = value; return;
             case 1: m21 = value; return;
             case 2: m22 = value; return;
             }
+            break;
         }
 
         LoggingSystem.getLogger().log(Level.WARNING, "Invalid matrix index.");
@@ -502,25 +508,25 @@ public class Matrix3f  implements Serializable, Savable {
                 "Array must be of size 9.");
 
         if (rowMajor) {
-	        m00 = matrix[0];
-	        m01 = matrix[1];
-	        m02 = matrix[2];
-	        m10 = matrix[3];
-	        m11 = matrix[4];
-	        m12 = matrix[5];
-	        m20 = matrix[6];
-	        m21 = matrix[7];
-	        m22 = matrix[8];
+         m00 = matrix[0];
+         m01 = matrix[1];
+         m02 = matrix[2];
+         m10 = matrix[3];
+         m11 = matrix[4];
+         m12 = matrix[5];
+         m20 = matrix[6];
+         m21 = matrix[7];
+         m22 = matrix[8];
         } else {
-	        m00 = matrix[0];
-	        m01 = matrix[3];
-	        m02 = matrix[6];
-	        m10 = matrix[1];
-	        m11 = matrix[4];
-	        m12 = matrix[7];
-	        m20 = matrix[2];
-	        m21 = matrix[5];
-	        m22 = matrix[8];
+         m00 = matrix[0];
+         m01 = matrix[3];
+         m02 = matrix[6];
+         m10 = matrix[1];
+         m11 = matrix[4];
+         m12 = matrix[7];
+         m20 = matrix[2];
+         m21 = matrix[5];
+         m22 = matrix[8];
         }
     }
 
@@ -968,7 +974,7 @@ public class Matrix3f  implements Serializable, Savable {
      * @return the string representation of this object.
      */
     @Override
-	public String toString() {
+ public String toString() {
         StringBuffer result = new StringBuffer("com.jme.math.Matrix3f\n[\n");
         result.append(" ");
         result.append(m00);
@@ -1004,7 +1010,7 @@ public class Matrix3f  implements Serializable, Savable {
      * @see java.lang.Object#hashCode()
      */
     @Override
-	public int hashCode() {
+ public int hashCode() {
         int hash = 37;
         hash = 37 * hash + Float.floatToIntBits(m00);
         hash = 37 * hash + Float.floatToIntBits(m01);
@@ -1029,7 +1035,7 @@ public class Matrix3f  implements Serializable, Savable {
      * @return true if they are equal
      */
     @Override
-	public boolean equals(Object o) {
+ public boolean equals(Object o) {
         if (!(o instanceof Matrix3f) || o == null) {
             return false;
         }
@@ -1055,7 +1061,7 @@ public class Matrix3f  implements Serializable, Savable {
     }
 
     @Override
-	public void write(JMEExporter e) throws IOException {
+ public void write(JMEExporter e) throws IOException {
         OutputCapsule cap = e.getCapsule(this);
         cap.write(m00, "m00", 1);
         cap.write(m01, "m01", 0);
@@ -1069,7 +1075,7 @@ public class Matrix3f  implements Serializable, Savable {
     }
 
     @Override
-	public void read(JMEImporter e) throws IOException {
+ public void read(JMEImporter e) throws IOException {
         InputCapsule cap = e.getCapsule(this);
         m00 = cap.readFloat("m00", 1);
         m01 = cap.readFloat("m01", 0);
@@ -1083,7 +1089,7 @@ public class Matrix3f  implements Serializable, Savable {
     }
     
     @Override
-	public Class<? extends Matrix3f> getClassTag() {
+ public Class<? extends Matrix3f> getClassTag() {
         return this.getClass();
     }
 }

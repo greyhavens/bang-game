@@ -44,7 +44,7 @@ public class ToolPanel extends JPanel
         JPanel cpanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
         cpanel.add(new JLabel(ctx.xlate("editor", "m.tool")),
             HGroupLayout.FIXED);
-        _tools = new JComboBox();
+        _tools = new JComboBox<EditorTool>();
         cameraDolly = new CameraDolly(ctx, panel);
         _tools.addItem(cameraDolly);
         _tools.addItem(new PiecePlacer(ctx, panel));
@@ -90,7 +90,7 @@ public class ToolPanel extends JPanel
     public void selectTool (String name)
     {
         for (int i = 0, c = _tools.getItemCount(); i < c; i++) {
-            EditorTool tool = (EditorTool)_tools.getItemAt(i);
+            EditorTool tool = _tools.getItemAt(i);
             if (tool.getName().equals(name)) {
                 _tools.setSelectedIndex(i);
                 return;
@@ -166,7 +166,7 @@ public class ToolPanel extends JPanel
         }
     }
 
-    protected JComboBox _tools;
+    protected JComboBox<EditorTool> _tools;
     protected JScrollPane _scroll;
     protected EventDispatcher _dispatcher = new EventDispatcher();
 }

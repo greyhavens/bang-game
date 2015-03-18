@@ -91,8 +91,6 @@ public class TableGameManager implements TableGameProvider
             throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
         }
 
-        PlayerObject user = (PlayerObject)caller;
-
         // if we've already started, then just turn this into a join
         if (_tobj.playerOids != null) {
             joinMatch(caller);
@@ -123,7 +121,7 @@ public class TableGameManager implements TableGameProvider
         _tobj.setGame(game);
 
         // if this player is an admin, allow the board data
-        if (user.tokens.isAdmin()) {
+        if (caller.tokens.isAdmin()) {
             _bdata = bdata;
         }
 
@@ -146,20 +144,19 @@ public class TableGameManager implements TableGameProvider
         }
 
         // look for a spot, and make sure they're not already joined
-        PlayerObject user = (PlayerObject)caller;
         int idx = -1;
         for (int ii = 0; ii < _tobj.playerOids.length; ii++) {
             if (idx == -1 && _tobj.playerOids[ii] == 0) {
                 idx = ii;
             }
-            if (_tobj.playerOids[ii] == user.getOid()) {
+            if (_tobj.playerOids[ii] == caller.getOid()) {
                 // abort!
                 return;
             }
         }
 
         if (idx != -1) {
-            _tobj.playerOids[idx] = user.getOid();
+            _tobj.playerOids[idx] = caller.getOid();
             _tobj.setPlayerOids(_tobj.playerOids);
         }
 
@@ -179,15 +176,14 @@ public class TableGameManager implements TableGameProvider
         if (slot < 0 || slot >= _tobj.playerOids.length || _tobj.playerOids[slot] != 0) {
             return;
         }
-        PlayerObject user = (PlayerObject)caller;
         for (int ii = 0; ii < _tobj.playerOids.length; ii++) {
-            if (_tobj.playerOids[ii] == user.getOid()) {
+            if (_tobj.playerOids[ii] == caller.getOid()) {
                 // abort!
                 return;
             }
         }
 
-        _tobj.playerOids[slot] = user.getOid();
+        _tobj.playerOids[slot] = caller.getOid();
         _tobj.setPlayerOids(_tobj.playerOids);
 
         // start a "start the game" timer if we're ready to go

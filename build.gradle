@@ -11,7 +11,7 @@ allprojects {
 
   apply plugin: "java"
   compileJava {
-    options.compilerArgs << '-Xlint:all' << '-Xlint:-serial' << '-Xlint:-path'
+    options.compilerArgs << '-Xlint:all' << '-Xlint:-serial' << '-Xlint:-path' << '-Xlint:-overrides'
   }
 
   configurations {

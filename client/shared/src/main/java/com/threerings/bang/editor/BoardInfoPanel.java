@@ -55,7 +55,7 @@ public class BoardInfoPanel extends JPanel
             new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH, 2, VGroupLayout.TOP));
 
         // prop visibility combo box
-        _props = new JComboBox();
+        _props = new JComboBox<ScenarioLabel>();
         _props.addItem(new ScenarioLabel(null));
 
         String townId = BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1];
@@ -78,7 +78,7 @@ public class BoardInfoPanel extends JPanel
 
         // create the prop visibility panel
         JPanel ppanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
-        ppanel.add(_plabel = new JLabel(_msgs.get("m.props")), 
+        ppanel.add(_plabel = new JLabel(_msgs.get("m.props")),
                 HGroupLayout.FIXED);
         ppanel.add(_props);
         _props.addItemListener(this);
@@ -175,7 +175,7 @@ public class BoardInfoPanel extends JPanel
         _props.setForeground(sl.getColor());
         ((EditorController)_panel.getController()).setViewingProps(sl.id);
     }
-    
+
     protected class ScenarioLabel {
         String id;
 
@@ -193,7 +193,7 @@ public class BoardInfoPanel extends JPanel
 
         public Color getColor ()
         {
-            return (id == null) ? Color.BLACK : Color.RED; 
+            return (id == null) ? Color.BLACK : Color.RED;
         }
 
         String _name;
@@ -204,12 +204,11 @@ public class BoardInfoPanel extends JPanel
 
     protected JTextField _name;
     protected JLabel _pcount, _plabel;
-    protected JComboBox _props;
+    protected JComboBox<ScenarioLabel> _props;
     protected JCheckBox _privateBoard;
     protected int _players;
 
     protected EditorPanel _panel;
 
-    protected HashMap<String,JCheckBox> _sboxes =
-        new HashMap<String,JCheckBox>();
+    protected HashMap<String,JCheckBox> _sboxes = new HashMap<String,JCheckBox>();
 }

@@ -225,10 +225,10 @@ public class BangServer extends CrowdServer
      */
     public static void main (String[] args)
     {
-        // if we're on the dev server, up our long invoker warning to 3 seconds
-        if (ServerConfig.config.getValue("auto_restart", false)) {
-            Invoker.setDefaultLongThreshold(3000L);
-        }
+        // // if we're on the dev server, up our long invoker warning to 3 seconds
+        // if (ServerConfig.config.getValue("auto_restart", false)) {
+        //     Invoker.setDefaultLongThreshold(3000L);
+        // }
 
         Injector injector = Guice.createInjector(new Module());
         BangServer server = injector.getInstance(BangServer.class);

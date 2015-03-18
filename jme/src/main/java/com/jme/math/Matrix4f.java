@@ -226,6 +226,7 @@ public class Matrix4f  implements Serializable, Savable {
             case 2: return m02;
             case 3: return m03;
             }
+            break;
         case 1:
             switch (j) {
             case 0: return m10;
@@ -233,6 +234,7 @@ public class Matrix4f  implements Serializable, Savable {
             case 2: return m12;
             case 3: return m13;
             }
+            break;
         case 2:
             switch (j) {
             case 0: return m20;
@@ -240,6 +242,7 @@ public class Matrix4f  implements Serializable, Savable {
             case 2: return m22;
             case 3: return m23;
             }
+            break;
         case 3:
             switch (j) {
             case 0: return m30;
@@ -247,6 +250,7 @@ public class Matrix4f  implements Serializable, Savable {
             case 2: return m32;
             case 3: return m33;
             }
+            break;
         }
 
         LoggingSystem.getLogger().log(Level.WARNING, "Invalid matrix index.");
@@ -380,6 +384,7 @@ public class Matrix4f  implements Serializable, Savable {
             case 2: m02 = value; return;
             case 3: m03 = value; return;
             }
+            break;
         case 1:
             switch (j) {
             case 0: m10 = value; return;
@@ -387,6 +392,7 @@ public class Matrix4f  implements Serializable, Savable {
             case 2: m12 = value; return;
             case 3: m13 = value; return;
             }
+            break;
         case 2:
             switch (j) {
             case 0: m20 = value; return;
@@ -394,6 +400,7 @@ public class Matrix4f  implements Serializable, Savable {
             case 2: m22 = value; return;
             case 3: m23 = value; return;
             }
+            break;
         case 3:
             switch (j) {
             case 0: m30 = value; return;
@@ -401,6 +408,7 @@ public class Matrix4f  implements Serializable, Savable {
             case 2: m32 = value; return;
             case 3: m33 = value; return;
             }
+            break;
         }
 
         LoggingSystem.getLogger().log(Level.WARNING, "Invalid matrix index.");
@@ -522,7 +530,7 @@ public class Matrix4f  implements Serializable, Savable {
      * @deprecated use setRotationQuaternion instead
      */
     @Deprecated
-	public void set(Quaternion quaternion) {
+ public void set(Quaternion quaternion) {
         setRotationQuaternion(quaternion);
     }
 
@@ -693,10 +701,10 @@ public class Matrix4f  implements Serializable, Savable {
     }
     
     public Matrix4f mult(float scalar) {
-    	Matrix4f out = new Matrix4f();
-    	out.set(this);
-    	out.multLocal(scalar);
-    	return out;
+     Matrix4f out = new Matrix4f();
+     out.set(this);
+     out.multLocal(scalar);
+     return out;
     }
 
     /**
@@ -1549,7 +1557,7 @@ public class Matrix4f  implements Serializable, Savable {
      * @return the string representation of this object.
      */
     @Override
-	public String toString() {
+ public String toString() {
         StringBuffer result = new StringBuffer("com.jme.math.Matrix4f\n[\n");
         result.append(" ");
         result.append(m00);
@@ -1600,7 +1608,7 @@ public class Matrix4f  implements Serializable, Savable {
      * @see java.lang.Object#hashCode()
      */
     @Override
-	public int hashCode() {
+ public int hashCode() {
         int hash = 37;
         hash = 37 * hash + Float.floatToIntBits(m00);
         hash = 37 * hash + Float.floatToIntBits(m01);
@@ -1633,7 +1641,7 @@ public class Matrix4f  implements Serializable, Savable {
      * @return true if they are equal
      */
     @Override
-	public boolean equals(Object o) {
+ public boolean equals(Object o) {
         if (!(o instanceof Matrix4f) || o == null) {
             return false;
         }
@@ -1667,7 +1675,7 @@ public class Matrix4f  implements Serializable, Savable {
     }
 
     @Override
-	public void write(JMEExporter e) throws IOException {
+ public void write(JMEExporter e) throws IOException {
         OutputCapsule cap = e.getCapsule(this);
         cap.write(m00, "m00", 1);
         cap.write(m01, "m01", 0);
@@ -1688,7 +1696,7 @@ public class Matrix4f  implements Serializable, Savable {
     }
 
     @Override
-	public void read(JMEImporter e) throws IOException {
+ public void read(JMEImporter e) throws IOException {
         InputCapsule cap = e.getCapsule(this);
         m00 = cap.readFloat("m00", 1);
         m01 = cap.readFloat("m01", 0);
@@ -1709,7 +1717,7 @@ public class Matrix4f  implements Serializable, Savable {
     }
     
     @Override
-	public Class<? extends Matrix4f> getClassTag() {
+ public Class<? extends Matrix4f> getClassTag() {
         return this.getClass();
     }
 

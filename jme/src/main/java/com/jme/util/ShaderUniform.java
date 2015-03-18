@@ -110,14 +110,13 @@ public class ShaderUniform implements Cloneable {
         this.type = type;
     }
 
-    @Override
-	public Object clone () {
+    @Override public Object clone () {
         ShaderUniform other = null;
         try {
             other = (ShaderUniform)super.clone();
-            other.vint = (vint == null) ? null : (int[])vint.clone();
-            other.vfloat = (vfloat == null) ? null : (float[])vfloat.clone();
-            other.matrix2f = (matrix2f == null) ? null : (float[])matrix2f.clone();
+            other.vint = (vint == null) ? null : vint.clone();
+            other.vfloat = (vfloat == null) ? null : vfloat.clone();
+            other.matrix2f = (matrix2f == null) ? null : matrix2f.clone();
             other.matrix3f = (matrix3f == null) ? null : new Matrix3f(matrix3f);
             other.matrix4f = (matrix4f == null) ? null : new Matrix4f(matrix4f);
 
@@ -127,8 +126,7 @@ public class ShaderUniform implements Cloneable {
         return other;
     }
 
-    @Override
-	public boolean equals(Object obj) {
+    @Override public boolean equals(Object obj) {
         if (obj instanceof ShaderUniform) {
             ShaderUniform temp = (ShaderUniform)obj;
             if (name.equals(temp.name)) return true;

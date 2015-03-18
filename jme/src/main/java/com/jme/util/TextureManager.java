@@ -479,7 +479,7 @@ final public class TextureManager {
         TextureKey key;
         Texture next;
         while (it.hasNext()) {
-            key = (TextureKey) it.next();
+            key = it.next();
             next = m_tCache.get(key);
             if (texture.equals(next)) {
                 return releaseTexture(key);

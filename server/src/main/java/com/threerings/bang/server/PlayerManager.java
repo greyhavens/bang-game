@@ -899,11 +899,10 @@ public class PlayerManager
     }
 
     // documentation inherited from PlayerProvider
-    public void bootPlayer (PlayerObject client, Handle handle,
+    public void bootPlayer (PlayerObject user, Handle handle,
                             PlayerService.ConfirmListener listener)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)client;
         if (!user.tokens.isSupport()) {
             log.warning("Attempting to boot player from non-support user", "who", user.who());
             throw new InvocationException(ACCESS_DENIED);

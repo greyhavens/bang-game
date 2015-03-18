@@ -199,8 +199,8 @@ public class ViewpointEditor extends EditorTool
     protected class ViewpointEditorOptions extends JPanel
         implements ActionListener, ListSelectionListener
     {
-        public JList vlist;
-        public DefaultListModel lmodel;
+        public JList<Viewpoint> vlist;
+        public DefaultListModel<Viewpoint> lmodel;
         public JPanel props;
         public JTextField name;
 
@@ -215,7 +215,7 @@ public class ViewpointEditor extends EditorTool
             lpanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
             lpanel.add(new JLabel(_ctx.xlate("editor", "m.viewpoints")));
 
-            vlist = new JList(lmodel = new DefaultListModel());
+            vlist = new JList<Viewpoint>(lmodel = new DefaultListModel<Viewpoint>());
             vlist.setBorder(BorderFactory.createEtchedBorder(
                 EtchedBorder.LOWERED));
             vlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -248,7 +248,7 @@ public class ViewpointEditor extends EditorTool
             lmodel.clear();
             for (Piece piece : bangobj.pieces) {
                 if (piece instanceof Viewpoint) {
-                    lmodel.addElement(piece);
+                    lmodel.addElement((Viewpoint)piece);
                     if (piece.equals(selected)) {
                         vlist.setSelectedValue(selected, true);
                     }
@@ -258,14 +258,14 @@ public class ViewpointEditor extends EditorTool
 
         public void actionPerformed (ActionEvent ae)
         {
-            Viewpoint vp = (Viewpoint)vlist.getSelectedValue();
+            Viewpoint vp = vlist.getSelectedValue();
             vp.name = name.getText();
             lmodel.set(vlist.getSelectedIndex(), vp);
         }
 
         public void valueChanged (ListSelectionEvent lse)
         {
-            Viewpoint vp = (Viewpoint)vlist.getSelectedValue();
+            Viewpoint vp = vlist.getSelectedValue();
             boolean enabled = (vp != null);
             props.setVisible(enabled);
             if (enabled) {

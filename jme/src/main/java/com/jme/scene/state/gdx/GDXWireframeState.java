@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -44,23 +44,23 @@ import com.jme.system.DisplaySystem;
  * <code>GDXWireframeState</code> subclasses WireframeState to use the GDX
  * API to access OpenGL. If the state is enabled, wireframe mode is used,
  * otherwise solid fill is used.
- * 
+ *
  * @author Mark Powell
  * @author Joshua Slack - reworked for StateRecords.
  * @version $Id$
  */
 public class GDXWireframeState extends WireframeState {
 
-	private static final long serialVersionUID = 1L;
+ private static final long serialVersionUID = 1L;
 
-	/**
-	 * <code>set</code> sets the polygon mode to line or fill depending on if
-	 * the state is enabled or not.
-	 * 
-	 * @see com.jme.scene.state.WireframeState#apply()
-	 */
-	@Override
-	public void apply() {
+ /**
+  * <code>set</code> sets the polygon mode to line or fill depending on if
+  * the state is enabled or not.
+  *
+  * @see com.jme.scene.state.WireframeState#apply()
+  */
+ @Override
+ public void apply() {
         // ask for the current state record
         RenderContext context = DisplaySystem.getDisplaySystem()
                 .getCurrentContext();
@@ -73,10 +73,11 @@ public class GDXWireframeState extends WireframeState {
             lineRecord.applyLineWidth(lineWidth);
             lineRecord.applyLineSmooth(isAntialiased());
             lineRecord.applyLineStipple(false, -1, (short)-1);
-			
-			switch (face) {
+
+   switch (face) {
                 case WS_FRONT:
                     applyPolyMode(GL11.GL_LINE, GL11.GL_FILL, record);
+                    break;
                 case WS_BACK:
                     applyPolyMode(GL11.GL_FILL, GL11.GL_LINE, record);
                     break;
@@ -85,15 +86,15 @@ public class GDXWireframeState extends WireframeState {
                     applyPolyMode(GL11.GL_LINE, GL11.GL_LINE, record);
                     break;
             }
-		} else {
+  } else {
             applyPolyMode(GL11.GL_FILL, GL11.GL_FILL, record);
-		}
-	}
+  }
+ }
 
     private void applyPolyMode(int frontMode, int backMode, WireframeStateRecord record) {
         if (frontMode == backMode && (record.frontMode != frontMode || record.backMode != backMode)) {
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, frontMode);
-            record.frontMode = frontMode;            
+            record.frontMode = frontMode;
             record.backMode = backMode;
         } else if (frontMode != backMode) {
             if (record.frontMode != frontMode) {
