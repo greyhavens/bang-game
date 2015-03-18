@@ -35,6 +35,7 @@ package com.jme.scene.state;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.image.Texture;
 import com.jme.util.TextureManager;
@@ -100,7 +101,7 @@ public abstract class TextureState extends RenderState {
     public static final int CM_PERSPECTIVE = 1;
 
     /** The texture(s). */
-    protected transient ArrayList<Texture> texture;
+    protected transient List<Texture> texture;
 
     /** The current number of used texture units. */
     protected static int numTotalTexUnits = -1;
@@ -155,13 +156,13 @@ public abstract class TextureState extends RenderState {
         correction = CM_PERSPECTIVE;
 
         if (defaultTexture == null)
-            try {
-                defaultTexture = TextureManager.loadTexture(TextureState.class
-                        .getResource("notloaded.png"), Texture.MM_LINEAR,
-                        Texture.FM_LINEAR, 1.0f, true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            defaultTexture = TextureManager.loadTexture(TextureState.class
+                                                        .getResource("notloaded.png"), Texture.MM_LINEAR,
+                                                        Texture.FM_LINEAR, 1.0f, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -245,7 +246,7 @@ public abstract class TextureState extends RenderState {
 
         int index = texture.indexOf(tex);
         if (index == -1)
-            return false;
+        return false;
 
         texture.set(index, null);
         idCache[index] = 0;
@@ -254,12 +255,12 @@ public abstract class TextureState extends RenderState {
 
     public boolean removeTexture(int textureUnit) {
         if (textureUnit >= 0 && textureUnit < numTotalTexUnits
-                && textureUnit < texture.size())
-            return false;
+            && textureUnit < texture.size())
+        return false;
 
         Texture t = getTexture(textureUnit);
         if (t == null)
-            return false;
+        return false;
 
         return removeTexture(t);
 
@@ -494,14 +495,14 @@ public abstract class TextureState extends RenderState {
      * @see java.io.Serializable
      */
     private void readObject(java.io.ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    ClassNotFoundException {
         in.defaultReadObject();
         int ii = in.readShort();
         texture = new ArrayList<Texture>(1);
         for (int i = 0; i < ii; i++) {
             if (in.readBoolean()) {
                 texture.add(TextureManager.loadTexture(new URL(in.readUTF()),
-                        in.readInt(), in.readInt()));
+                                                       in.readInt(), in.readInt()));
             }
         }
         resetFirstLast();
@@ -548,8 +549,7 @@ public abstract class TextureState extends RenderState {
     public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
-        capsule.writeSavableArrayList(texture, "texture",
-                new ArrayList<Texture>(1));
+        capsule.writeSavableArrayList(texture, "texture", new ArrayList<Texture>(1));
         capsule.write(offset, "offset", 0);
         capsule.write(correction, "correction", CM_PERSPECTIVE);
 
@@ -559,8 +559,7 @@ public abstract class TextureState extends RenderState {
     public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
-        texture = capsule.readSavableArrayList("texture",
-                new ArrayList<Texture>(1));
+        texture = capsule.readSavableArrayList("texture", new ArrayList<Texture>(1));
         offset = capsule.readInt("offset", 0);
         correction = capsule.readInt("correction", CM_PERSPECTIVE);
         resetFirstLast();

@@ -84,7 +84,7 @@ task genBundles << {
   ant.taskdef(classpath: configurations.tools.asPath, name: "metabundle",
               classname: "com.threerings.cast.bundle.tools.MetadataBundlerTask")
 
-  def avatarDir = new File(stagingDir, "rsrc/avatars")
+  def avatarDir = project.file(stagingDir + "/rsrc/avatars")
   avatarDir.mkdirs()
 
   ant.metabundle(actiondef: "rsrc/avatars/actions.xml", classdef: "rsrc/avatars/classes.xml",

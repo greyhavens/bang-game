@@ -6,6 +6,7 @@ package com.threerings.bang.bounty.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import com.samskivert.util.StringUtil;
@@ -170,7 +171,7 @@ public class BountyConfig extends SimpleStreamableObject
     public boolean showBars = true;
 
     /** The names of our game definition files. */
-    public ArrayList<GameInfo> games = new ArrayList<GameInfo>();
+    public List<GameInfo> games = new ArrayList<GameInfo>();
 
     /** The reward earned by completing this bounty. */
     public Reward reward;

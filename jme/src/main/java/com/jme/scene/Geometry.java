@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import com.jme.bounding.BoundingVolume;
@@ -54,12 +55,11 @@ import com.jme.util.export.Savable;
  * @author Joshua Slack
  * @version $Id$
  */
-public abstract class Geometry extends Spatial implements Serializable,
-                                                          Savable {
+public abstract class Geometry extends Spatial implements Serializable, Savable {
 
     private static final long serialVersionUID = 1;
 
-    protected ArrayList<GeomBatch> batchList;
+    protected List<GeomBatch> batchList;
 
     /**
      * Empty Constructor to be used internally only.
@@ -192,8 +192,7 @@ public abstract class Geometry extends Spatial implements Serializable,
 
         for (int i = 0; i < getBatchCount(); i++) {
             GeomBatch gb = getBatch(i);
-            if (gb.isEnabled())
-                count += gb.getVertexCount();
+            if (gb.isEnabled()) count += gb.getVertexCount();
         }
 
         return count;
@@ -219,10 +218,8 @@ public abstract class Geometry extends Spatial implements Serializable,
 
     public void reconstruct(FloatBuffer vertices, FloatBuffer normals,
                             FloatBuffer colors, FloatBuffer textureCoords, int batchIndex) {
-        if (vertices == null)
-            getBatch(batchIndex).setVertexCount(0);
-        else
-            getBatch(batchIndex).setVertexCount(vertices.capacity() / 3);
+        if (vertices == null) getBatch(batchIndex).setVertexCount(0);
+        else getBatch(batchIndex).setVertexCount(vertices.capacity() / 3);
 
         getBatch(batchIndex).setVertexBuffer(vertices);
         getBatch(batchIndex).setNormalBuffer(normals);
@@ -234,8 +231,7 @@ public abstract class Geometry extends Spatial implements Serializable,
         getBatch(batchIndex).clearTextureBuffers();
         getBatch(batchIndex).addTextureCoordinates(textureCoords);
 
-        if (getBatch(batchIndex).getVBOInfo() != null)
-            getBatch(batchIndex).resizeTextureIds(1);
+        if (getBatch(batchIndex).getVBOInfo() != null) getBatch(batchIndex).resizeTextureIds(1);
     }
 
     public void setVBOInfo(VBOInfo info) {
@@ -262,7 +258,7 @@ public abstract class Geometry extends Spatial implements Serializable,
         for (int i = 0; i < getBatchCount(); i++) {
             GeomBatch gb = getBatch(i);
             if (gb.isEnabled())
-                gb.setSolidColor(color);
+            gb.setSolidColor(color);
         }
     }
 
@@ -273,7 +269,7 @@ public abstract class Geometry extends Spatial implements Serializable,
         for (int i = 0; i < getBatchCount(); i++) {
             GeomBatch gb = getBatch(i);
             if (gb.isEnabled())
-                gb.setRandomColors();
+            gb.setRandomColors();
         }
     }
 
@@ -370,7 +366,6 @@ public abstract class Geometry extends Spatial implements Serializable,
      */
     public void copyTextureCoords(int batchIndex, int fromIndex, int toIndex, float factor) {
         getBatch(batchIndex).copyTextureCoordinates(fromIndex, toIndex, factor);
-
     }
 
     /**
@@ -434,7 +429,7 @@ public abstract class Geometry extends Spatial implements Serializable,
     }
 
     @Override
-	public int getType() {
+    public int getType() {
         return SceneElement.GEOMETRY;
     }
 
@@ -452,7 +447,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * vertex information.
      */
     @Override
-	public void updateModelBound() {
+    public void updateModelBound() {
         for (int i = 0; i < getBatchCount(); i++) {
             GeomBatch batch =  batchList.get(i);
             if (batch != null && batch.isEnabled()) {
@@ -469,17 +464,16 @@ public abstract class Geometry extends Spatial implements Serializable,
      *            the bounding object for this geometry.
      */
     @Override
-	public void setModelBound(BoundingVolume modelBound) {
+    public void setModelBound(BoundingVolume modelBound) {
         this.worldBound = null;
         if (batchList != null)
-            for (int i = 0; i < getBatchCount(); i++) {
-                GeomBatch batch = batchList.get(i);
-                if (batch != null && batch.isEnabled()) {
-                    batch.setModelBound(modelBound.clone(null));
-                }
+        for (int i = 0; i < getBatchCount(); i++) {
+            GeomBatch batch = batchList.get(i);
+            if (batch != null && batch.isEnabled()) {
+                batch.setModelBound(modelBound.clone(null));
             }
+        }
     }
-
 
     /**
      * <code>updateWorldData</code> updates all the children maintained by
@@ -489,16 +483,16 @@ public abstract class Geometry extends Spatial implements Serializable,
      *            the frame time.
      */
     @Override
-	public void updateWorldData(float time) {
+    public void updateWorldData(float time) {
         super.updateWorldData(time);
 
         if (batchList != null)
-            for (int i = 0; i < getBatchCount(); i++) {
-                GeomBatch batch =  batchList.get(i);
-                if (batch != null && batch.isEnabled()) {
-                    batch.updateGeometricState(time, false);
-                }
+        for (int i = 0; i < getBatchCount(); i++) {
+            GeomBatch batch =  batchList.get(i);
+            if (batch != null && batch.isEnabled()) {
+                batch.updateGeometricState(time, false);
             }
+        }
     }
 
     /**
@@ -511,7 +505,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      *            the renderer that displays to the context.
      */
     @Override
-	public void draw(Renderer r) {
+    public void draw(Renderer r) {
     }
 
     /**
@@ -522,7 +516,7 @@ public abstract class Geometry extends Spatial implements Serializable,
      * @see com.jme.scene.Spatial#updateWorldBound()
      */
     @Override
-	public void updateWorldBound() {
+    public void updateWorldBound() {
         if ((lockedMode & SceneElement.LOCKED_BOUNDS) != 0) return;
 
         boolean foundFirstBound = false;
@@ -537,7 +531,7 @@ public abstract class Geometry extends Spatial implements Serializable,
                     // set world bound to first non-null child world bound
                     if (child.getWorldBound() != null) {
                         worldBound = child.getWorldBound()
-                            .clone(worldBound);
+                        .clone(worldBound);
                         foundFirstBound = true;
                     }
                 }
@@ -551,13 +545,12 @@ public abstract class Geometry extends Spatial implements Serializable,
      * is set for this Geometry. If not, the default state will be used.
      */
     @Override
-	protected void applyRenderState(Stack<RenderState>[] states) {
+    protected void applyRenderState(Stack<RenderState>[] states) {
         if (batchList != null)
-            for (int i = 0, cSize = getBatchCount(); i < cSize; i++) {
-                GeomBatch batch = getBatch(i);
-                if (batch != null && batch.isEnabled())
-                    batch.updateRenderState(states);
-            }
+        for (int i = 0, cSize = getBatchCount(); i < cSize; i++) {
+            GeomBatch batch = getBatch(i);
+            if (batch != null && batch.isEnabled()) batch.updateRenderState(states);
+        }
     }
 
     /**
@@ -577,14 +570,14 @@ public abstract class Geometry extends Spatial implements Serializable,
     }
 
     @Override
-	public void findPick(Ray ray, PickResults results) {
+    public void findPick(Ray ray, PickResults results) {
         if (getWorldBound() != null && isCollidable) {
             if (getWorldBound().intersects(ray)) {
                 // further checking needed.
                 for (int i = 0; i < getBatchCount(); i++) {
                     GeomBatch gb = getBatch(i);
                     if (gb.isEnabled())
-                        gb.findPick(ray, results);
+                    gb.findPick(ray, results);
                 }
             }
         }
@@ -600,7 +593,7 @@ public abstract class Geometry extends Spatial implements Serializable,
         for (int i = 0; i < getBatchCount(); i++) {
             GeomBatch gb = getBatch(i);
             if (gb.isEnabled())
-                gb.setDefaultColor(color);
+            gb.setDefaultColor(color);
         }
     }
 
@@ -636,112 +629,96 @@ public abstract class Geometry extends Spatial implements Serializable,
         return getBatch(batchIndex).getWorldCoords(store);
     }
 
-	/**
-	 * <code>getWorldNormals</code> rotates the
-	 * normals of this Geometry (from the first batch) to world normals
-	 * based on its world settings. The results are stored in the given
-	 * FloatBuffer. If given FloatBuffer is null, one is created.
-	 *
-	 * @param store
-	 *            the FloatBuffer to store the results in, or null if you want
-	 *            one created.
-	 * @return store or new FloatBuffer if store == null.
-	 */
-	public FloatBuffer getWorldNormals(FloatBuffer store) {
-		return getWorldNormals(store, 0);
-	}
+    /**
+     * <code>getWorldNormals</code> rotates the
+     * normals of this Geometry (from the first batch) to world normals
+     * based on its world settings. The results are stored in the given
+     * FloatBuffer. If given FloatBuffer is null, one is created.
+     *
+     * @param store
+     *            the FloatBuffer to store the results in, or null if you want
+     *            one created.
+     * @return store or new FloatBuffer if store == null.
+     */
+    public FloatBuffer getWorldNormals(FloatBuffer store) {
+        return getWorldNormals(store, 0);
+    }
 
-	/**
-	 * <code>getWorldNormals</code> rotates the
-	 * normals of this Geometry (from the given batch index) to world
-	 * normals based on its world settings. The results are stored in the
-	 * given FloatBuffer. If given FloatBuffer is null, one is created.
-	 *
-	 * @param store
-	 *            the FloatBuffer to store the results in, or null if you want
-	 *            one created.
-	 * @param batchIndex
-	 *            the batch to process
-	 * @return store or new FloatBuffer if store == null.
-	 */
-	public FloatBuffer getWorldNormals(FloatBuffer store, int batchIndex) {
-		return getBatch(batchIndex).getWorldNormals(store);
-	}
+    /**
+     * <code>getWorldNormals</code> rotates the
+     * normals of this Geometry (from the given batch index) to world
+     * normals based on its world settings. The results are stored in the
+     * given FloatBuffer. If given FloatBuffer is null, one is created.
+     *
+     * @param store
+     *            the FloatBuffer to store the results in, or null if you want
+     *            one created.
+     * @param batchIndex
+     *            the batch to process
+     * @return store or new FloatBuffer if store == null.
+     */
+    public FloatBuffer getWorldNormals(FloatBuffer store, int batchIndex) {
+        return getBatch(batchIndex).getWorldNormals(store);
+    }
 
-	//  inheritted docs
+    //  inheritted docs
     @Override
-	public void lockBounds() {
+    public void lockBounds() {
         super.lockBounds();
-
-        for (int x = 0; x < getBatchCount(); x++)
-            getBatch(x).lockBounds();
+        for (int x = 0; x < getBatchCount(); x++) getBatch(x).lockBounds();
     }
 
     //  inheritted docs
     @Override
-	public void lockShadows() {
+    public void lockShadows() {
         super.lockShadows();
-
-        for (int x = 0; x < getBatchCount(); x++)
-            getBatch(x).lockShadows();
+        for (int x = 0; x < getBatchCount(); x++) getBatch(x).lockShadows();
     }
 
     //  inheritted docs
     @Override
-	public void lockTransforms() {
+    public void lockTransforms() {
         super.lockTransforms();
-
-        for (int x = 0; x < getBatchCount(); x++)
-            getBatch(x).lockTransforms();
+        for (int x = 0; x < getBatchCount(); x++) getBatch(x).lockTransforms();
     }
 
     //  inheritted docs
     @Override
-	public void lockMeshes(Renderer r) {
+    public void lockMeshes(Renderer r) {
         super.lockMeshes(r);
-
-        for (int x = 0; x < getBatchCount(); x++)
-            getBatch(x).lockMeshes(r);
+        for (int x = 0; x < getBatchCount(); x++) getBatch(x).lockMeshes(r);
     }
 
     //  inheritted docs
     @Override
-	public void unlockBounds() {
+    public void unlockBounds() {
         super.unlockBounds();
-
-        for (int x = 0; x < getBatchCount(); x++)
-            getBatch(x).unlockBounds();
+        for (int x = 0; x < getBatchCount(); x++) getBatch(x).unlockBounds();
     }
 
     //  inheritted docs
     @Override
-	public void unlockShadows() {
+    public void unlockShadows() {
         super.unlockShadows();
-
-        for (int x = 0; x < getBatchCount(); x++)
-            getBatch(x).unlockShadows();
+        for (int x = 0; x < getBatchCount(); x++) getBatch(x).unlockShadows();
     }
 
     //  inheritted docs
     @Override
-	public void unlockTransforms() {
+    public void unlockTransforms() {
         super.unlockTransforms();
-
-        for (int x = 0; x < getBatchCount(); x++)
-            getBatch(x).unlockTransforms();
+        for (int x = 0; x < getBatchCount(); x++) getBatch(x).unlockTransforms();
     }
 
     //  inheritted docs
     @Override
-	public void unlockMeshes(Renderer r) {
+    public void unlockMeshes(Renderer r) {
         super.unlockMeshes(r);
-
-        for (int x = 0; x < getBatchCount(); x++)
-            getBatch(x).unlockMeshes(r);
+        for (int x = 0; x < getBatchCount(); x++) getBatch(x).unlockMeshes(r);
     }
 
     private void readObject(java.io.ObjectInputStream s) throws IOException,
-        ClassNotFoundException {
+    ClassNotFoundException {
         s.defaultReadObject();
         // go through children and set parent to this node
         for (int x = 0, cSize = getBatchCount(); x < cSize; x++) {
@@ -752,11 +729,10 @@ public abstract class Geometry extends Spatial implements Serializable,
 
     public int getBatchIndex(GeomBatch bat) {
         if (bat == null)
-            return -1;
+        return -1;
         for (int x = 0, cSize = getBatchCount(); x < cSize; x++) {
             GeomBatch batch = getBatch(x);
-            if (bat.equals(batch))
-                return x;
+            if (bat.equals(batch)) return x;
         }
         return -1;
     }
@@ -774,22 +750,22 @@ public abstract class Geometry extends Spatial implements Serializable,
     }
 
     @Override
-	public void write(JMEExporter e) throws IOException {
+    public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.writeSavableArrayList(batchList, "batchList", new ArrayList<GeomBatch>(1));
     }
 
     @Override
-	public void read(JMEImporter e) throws IOException {
+    public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         batchList = capsule.readSavableArrayList("batchList", new ArrayList<GeomBatch>(1));
 
         if (batchList != null)
-            for (int x = 0, cSize = getBatchCount(); x < cSize; x++) {
-                GeomBatch batch = getBatch(x);
-                batch.setParentGeom(this);
-            }
+        for (int x = 0, cSize = getBatchCount(); x < cSize; x++) {
+            GeomBatch batch = getBatch(x);
+            batch.setParentGeom(this);
+        }
     }
 }

@@ -6,6 +6,7 @@ package com.threerings.bang.game.data;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,7 +35,7 @@ public class BoardData
     public BangBoard board;
 
     /** The props and markers on the board. */
-    public ArrayList<Piece> pieces;
+    public List<Piece> pieces;
 
     /**
      * Loads and decodes the supplied serialized representation.
@@ -67,7 +68,7 @@ public class BoardData
     /**
      * Creates a board data record with the supplied info.
      */
-    public BoardData (BangBoard board, ArrayList<Piece> pieces)
+    public BoardData (BangBoard board, List<Piece> pieces)
     {
         this.board = board;
         this.pieces = pieces;
@@ -109,5 +110,5 @@ public class BoardData
         capsule.writeSavableArrayList(pieces, "pieces", NO_PIECES);
     }
 
-    protected static final ArrayList<Piece> NO_PIECES = new ArrayList<Piece>();
+    protected static final List<Piece> NO_PIECES = new ArrayList<Piece>();
 }

@@ -35,6 +35,7 @@ package com.jme.scene.state;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.light.Light;
 import com.jme.renderer.ColorRGBA;
@@ -117,7 +118,7 @@ public abstract class LightState extends RenderState {
     public static final int MASK_GLOBALAMBIENT = 8;
 
     // holds the lights
-    private ArrayList<Light> lightList;
+    private List<Light> lightList;
 
     // mask value - default is no masking
     protected int lightMask = 0;

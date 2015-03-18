@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import com.jme.bounding.BoundingVolume;
 import com.jme.math.FastMath;
@@ -55,7 +56,7 @@ import com.jme.util.export.Savable;
  * The utility allows the user to place multiple lights in a single container and
  * the best eight lights (those lights that most directly affect a Spatial) will be
  * applied.
- * 
+ *
  * @author Badmi
  * @author Mark Powell (cleaning, savable)
  */
@@ -65,7 +66,7 @@ public class LightManagement implements Serializable, Savable {
 
     public static boolean LIGHTS_ENABLED = true;
 
-    ArrayList<Light> lightList;
+    List<Light> lightList;
 
     /** Creates a new instance of LightStateCreator */
     public LightManagement() {
@@ -79,11 +80,11 @@ public class LightManagement implements Serializable, Savable {
     public void addLight(Light l) {
         lightList.add(l);
     }
-    
+
     public boolean contains(Light l) {
         return lightList.contains(l);
     }
-    
+
     public boolean removeLight(Light l) {
         return lightList.remove(l);
     }
@@ -140,7 +141,7 @@ public class LightManagement implements Serializable, Savable {
     protected void sort( final Spatial sp ) {
         Collections.sort( lightList, new Comparator<Light>() {
             @Override
-			public int compare( Light l1, Light l2 ) {
+   public int compare( Light l1, Light l2 ) {
                 float v1 = getValueFor( l1, sp.getWorldBound() );
                 float v2 = getValueFor( l2, sp.getWorldBound() );
                 float cmp = v1 - v2;
@@ -190,7 +191,7 @@ public class LightManagement implements Serializable, Savable {
             return color / amlat;
         }
 
-        return getColorValue(l);        
+        return getColorValue(l);
     }
 
     float getValueFor(SpotLight l, BoundingVolume val) {
@@ -214,27 +215,27 @@ public class LightManagement implements Serializable, Savable {
         return newtool;
     }
 
-	@Override
-	public void read(JMEImporter im) throws IOException {
-		InputCapsule cap = im.getCapsule(this);
-		lightList = cap.readSavableArrayList("lightList", new ArrayList<Light>());
-	}
-
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		OutputCapsule cap = ex.getCapsule(this);
-		cap.writeSavableArrayList(lightList, "lightList", new ArrayList<Light>());
-	}
-    
     @Override
-	public Class<? extends LightManagement> getClassTag() {
+    public void read(JMEImporter im) throws IOException {
+        InputCapsule cap = im.getCapsule(this);
+        lightList = cap.readSavableArrayList("lightList", new ArrayList<Light>());
+    }
+
+    @Override
+    public void write(JMEExporter ex) throws IOException {
+        OutputCapsule cap = ex.getCapsule(this);
+        cap.writeSavableArrayList(lightList, "lightList", new ArrayList<Light>());
+    }
+
+    @Override
+    public Class<? extends LightManagement> getClassTag() {
         return this.getClass();
     }
 
-    public ArrayList<Light> getLights() {
+    public List<Light> getLights() {
         return lightList;
     }
-    
+
     public void setLights(ArrayList<Light> lights) {
         lightList = lights;
     }

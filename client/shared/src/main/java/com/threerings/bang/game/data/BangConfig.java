@@ -6,6 +6,7 @@ package com.threerings.bang.game.data;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.ObjectUtil;
@@ -228,13 +229,13 @@ public class BangConfig extends GameConfig
     public boolean grantAces;
 
     /** The configuration of each round of the game. */
-    public ArrayList<Round> rounds = new ArrayList<Round>();
+    public List<Round> rounds = new ArrayList<Round>();
 
     /** The configuration for each player in the game. */
-    public ArrayList<Player> plist = new ArrayList<Player>();
+    public List<Player> plist = new ArrayList<Player>();
 
     /** Additional criteria to be met in addition to winning the game (used in bounty games). */
-    public ArrayList<Criterion> criteria = new ArrayList<Criterion>();
+    public List<Criterion> criteria = new ArrayList<Criterion>();
 
     /**
      * Used to configure the number of players and team size for non-preconfigured games.

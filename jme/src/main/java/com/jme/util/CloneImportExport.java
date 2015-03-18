@@ -44,6 +44,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.List;
 
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
@@ -639,18 +640,18 @@ public class CloneImportExport implements JMEExporter, JMEImporter {
         }
 
         /**
-         * @see com.jme.util.export.OutputCapsule#writeFloatBufferArrayList(java.util.ArrayList, java.lang.String, java.util.ArrayList)
+         * @see com.jme.util.export.OutputCapsule#writeFloatBufferArrayList(java.util.List, java.lang.String, java.util.List)
          */
         @Override
-        public void writeFloatBufferArrayList(ArrayList<FloatBuffer> array, String name, ArrayList<FloatBuffer> defVal) throws IOException {
+        public void writeFloatBufferArrayList(List<FloatBuffer> array, String name, List<FloatBuffer> defVal) throws IOException {
             values.put(name, array);
         }
 
         /**
-         * @see com.jme.util.export.OutputCapsule#writeSavableArrayList(java.util.ArrayList, java.lang.String, java.util.ArrayList)
+         * @see com.jme.util.export.OutputCapsule#writeSavableArrayList(java.util.List, java.lang.String, java.util.List)
          */
         @Override
-        public void writeSavableArrayList(ArrayList<?> array, String name, ArrayList<?> defVal) throws IOException {
+        public void writeSavableArrayList(List<?> array, String name, List<?> defVal) throws IOException {
             if (array == null) {
                 return;
             }
@@ -975,16 +976,16 @@ public class CloneImportExport implements JMEExporter, JMEImporter {
         }
 
         /**
-         * @see com.jme.util.export.InputCapsule#readFloatBufferArrayList(java.lang.String, java.util.ArrayList)
+         * @see com.jme.util.export.InputCapsule#readFloatBufferArrayList(java.lang.String, java.util.List)
          */
         @Override
         @SuppressWarnings("unchecked")
-        public ArrayList<FloatBuffer> readFloatBufferArrayList(String name, ArrayList<FloatBuffer> defVal) throws IOException {
+        public List<FloatBuffer> readFloatBufferArrayList(String name, List<FloatBuffer> defVal) throws IOException {
             if (ignoreField(name)) {
                 return defVal;
             }
 
-            ArrayList<FloatBuffer> original = (ArrayList<FloatBuffer>) values.get(name);
+            List<FloatBuffer> original = (List<FloatBuffer>) values.get(name);
             if (original == null) {
                 return defVal;
             }
@@ -992,7 +993,7 @@ public class CloneImportExport implements JMEExporter, JMEImporter {
                 return original;
             }
 
-            ArrayList<FloatBuffer> copy = new ArrayList<FloatBuffer>();
+            List<FloatBuffer> copy = new ArrayList<FloatBuffer>();
 
             for (int i=0;i<original.size();i++) {
                 FloatBuffer clone = BufferUtils.clone(original.get(i));
@@ -1239,15 +1240,15 @@ public class CloneImportExport implements JMEExporter, JMEImporter {
         }
 
         /**
-         * @see com.jme.util.export.InputCapsule#readSavableArrayList(java.lang.String, java.util.ArrayList)
+         * @see com.jme.util.export.InputCapsule#readSavableArrayList(java.lang.String, java.util.List)
          */
         @Override
-        public <T extends Savable> ArrayList<T> readSavableArrayList(String name, ArrayList<T> defVal) throws IOException {
+        public <T extends Savable> List<T> readSavableArrayList(String name, List<T> defVal) throws IOException {
             if (ignoreField(name)) {
                 return defVal;
             }
 
-            @SuppressWarnings("unchecked") ArrayList<T> original = (ArrayList<T>) values.get(name);
+            @SuppressWarnings("unchecked") List<T> original = (List<T>) values.get(name);
             if (original == null) {
                 return defVal;
             }
@@ -1255,7 +1256,7 @@ public class CloneImportExport implements JMEExporter, JMEImporter {
                 return original;
             }
 
-            ArrayList<T> copy = new ArrayList<T>();
+            List<T> copy = new ArrayList<T>();
             for (int i=0;i<original.size();i++) {
                 Savable c = oldToNew.get(original.get(i));
                 if (c == null) {

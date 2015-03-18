@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -35,6 +35,7 @@ package com.jme.scene;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 
@@ -54,7 +55,7 @@ import com.jme.util.export.Savable;
  * node maintains a collection of children and handles merging said children
  * into a single bound to allow for very fast culling of multiple nodes. Node
  * allows for any number of children to be attached.
- * 
+ *
  * @author Mark Powell
  * @author Gregg Patton
  * @version $Id$
@@ -64,7 +65,7 @@ public class Node extends Spatial implements Serializable, Savable {
     private static final long serialVersionUID = 1L;
 
     /** This node's children. */
-    protected ArrayList<Spatial> children;
+    protected List<Spatial> children;
 
     /**
      * Default constructor.
@@ -76,7 +77,7 @@ public class Node extends Spatial implements Serializable, Savable {
     /**
      * Constructor instantiates a new <code>Node</code> with a default empty
      * list for containing children.
-     * 
+     *
      * @param name
      *            the name of the scene element. This is required for
      *            identification and comparision purposes.
@@ -87,20 +88,20 @@ public class Node extends Spatial implements Serializable, Savable {
     }
 
     /**
-     * 
+     *
      * <code>getQuantity</code> returns the number of children this node
      * maintains.
-     * 
+     *
      * @return the number of children this node maintains.
      */
     public int getQuantity() {
         if(children == null) {
             return 0;
-        } 
-            
-        return children.size();        
+        }
+
+        return children.size();
     }
-    
+
     /**
      * <code>getTriangleCount</code> returns the number of triangles contained
      * in all sub-branches of this node that contain geometry.
@@ -117,10 +118,10 @@ public class Node extends Spatial implements Serializable, Savable {
                     count += ((TriMesh)spat).getTotalTriangles();
             }
         }
-        
+
         return count;
     }
-    
+
     /**
      * <code>getVertexCount</code> returns the number of vertices contained
      * in all sub-branches of this node that contain geometry.
@@ -137,18 +138,18 @@ public class Node extends Spatial implements Serializable, Savable {
                     count += ((TriMesh)spat).getTotalVertices();
             }
         }
-        
+
         return count;
     }
 
     /**
-     * 
+     *
      * <code>attachChild</code> attaches a child to this node. This node
      * becomes the child's parent. The current number of children maintained is
      * returned.
      * <br>
      * If the child already had a parent it is detached from that former parent.
-     * 
+     *
      * @param child
      *            the child to attach to this node.
      * @return the number of children maintained by this node.
@@ -161,7 +162,7 @@ public class Node extends Spatial implements Serializable, Savable {
                 }
                 child.setParent(this);
                 if(children == null) {
-                    children = new ArrayList<Spatial>(1);  
+                    children = new ArrayList<Spatial>(1);
                 }
                 children.add(child);
                 if (LoggingSystem.getLogger().isLoggable(Level.INFO)) {
@@ -172,19 +173,19 @@ public class Node extends Spatial implements Serializable, Savable {
                 }
             }
         }
-        
+
         if (children == null) return 0;
         return children.size();
     }
-    
+
     /**
-     * 
+     *
      * <code>attachChildAt</code> attaches a child to this node at an index. This node
      * becomes the child's parent. The current number of children maintained is
      * returned.
      * <br>
      * If the child already had a parent it is detached from that former parent.
-     * 
+     *
      * @param child
      *            the child to attach to this node.
      * @return the number of children maintained by this node.
@@ -197,7 +198,7 @@ public class Node extends Spatial implements Serializable, Savable {
                 }
                 child.setParent(this);
                 if(children == null) {
-                    children = new ArrayList<Spatial>(1);  
+                    children = new ArrayList<Spatial>(1);
                 }
                 children.add(index, child);
                 if (LoggingSystem.getLogger().isLoggable(Level.INFO)) {
@@ -216,7 +217,7 @@ public class Node extends Spatial implements Serializable, Savable {
     /**
      * <code>detachChild</code> removes a given child from the node's list.
      * This child will no longe be maintained.
-     * 
+     *
      * @param child
      *            the child to remove.
      * @return the index the child was at. -1 if the child was not in the list.
@@ -233,16 +234,16 @@ public class Node extends Spatial implements Serializable, Savable {
                 detachChildAt(index);
             }
             return index;
-        } 
-            
-        return -1;        
+        }
+
+        return -1;
     }
 
     /**
      * <code>detachChild</code> removes a given child from the node's list.
      * This child will no longe be maintained. Only the first child with a
      * matching name is removed.
-     * 
+     *
      * @param childName
      *            the child to remove.
      * @return the index the child was at. -1 if the child was not in the list.
@@ -264,10 +265,10 @@ public class Node extends Spatial implements Serializable, Savable {
     }
 
     /**
-     * 
+     *
      * <code>detachChildAt</code> removes a child at a given index. That child
      * is returned for saving purposes.
-     * 
+     *
      * @param index
      *            the index of the child to be removed.
      * @return the child at the supplied index.
@@ -285,7 +286,7 @@ public class Node extends Spatial implements Serializable, Savable {
     }
 
     /**
-     * 
+     *
      * <code>detachAllChildren</code> removes all children attached to this
      * node.
      */
@@ -314,9 +315,9 @@ public class Node extends Spatial implements Serializable, Savable {
     }
 
     /**
-     * 
+     *
      * <code>getChild</code> returns a child at a given index.
-     * 
+     *
      * @param i
      *            the index to retrieve the child from.
      * @return the child at a specified index.
@@ -329,10 +330,10 @@ public class Node extends Spatial implements Serializable, Savable {
     }
 
     /**
-     * 
+     *
      * <code>getChild</code> returns the first child found with exactly the
      * given name (case sensitive.)
-     * 
+     *
      * @param name
      *            the name of the child to retrieve.
      * @return the child if found, or null.
@@ -351,16 +352,16 @@ public class Node extends Spatial implements Serializable, Savable {
         }
         return null;
     }
-    
+
     @Override
-	public int getType() {
-    	return SceneElement.NODE;
+ public int getType() {
+     return SceneElement.NODE;
     }
 
     /**
      * determines if the provide Spatial is contained in the children list of
      * this node.
-     * 
+     *
      * @param spat
      *            the spatial object to check.
      * @return true if the object is contained, false otherwise.
@@ -384,12 +385,12 @@ public class Node extends Spatial implements Serializable, Savable {
     /**
      * <code>updateWorldData</code> updates all the children maintained by
      * this node.
-     * 
+     *
      * @param time
      *            the frame time.
      */
     @Override
-	public void updateWorldData(float time) {
+ public void updateWorldData(float time) {
         super.updateWorldData(time);
 
         Spatial child;
@@ -409,7 +410,7 @@ public class Node extends Spatial implements Serializable, Savable {
 
     // inheritted docs
     @Override
-	public void lockBounds() {
+ public void lockBounds() {
         super.lockBounds();
         for (int i = 0, max = getQuantity(); i < max; i++) {
             Spatial child =  children.get(i);
@@ -421,7 +422,7 @@ public class Node extends Spatial implements Serializable, Savable {
 
     //  inheritted docs
     @Override
-	public void lockShadows() {
+ public void lockShadows() {
         super.lockShadows();
         for (int i = 0, max = getQuantity(); i < max; i++) {
             Spatial child =  children.get(i);
@@ -430,10 +431,10 @@ public class Node extends Spatial implements Serializable, Savable {
             }
         }
     }
-    
+
     //  inheritted docs
     @Override
-	public void lockTransforms() {
+ public void lockTransforms() {
         super.lockTransforms();
         for (int i = 0, max = getQuantity(); i < max; i++) {
             Spatial child =  children.get(i);
@@ -445,7 +446,7 @@ public class Node extends Spatial implements Serializable, Savable {
 
     //  inheritted docs
     @Override
-	public void lockMeshes(Renderer r) {
+ public void lockMeshes(Renderer r) {
         super.lockMeshes(r);
         for (int i = 0, max = getQuantity(); i < max; i++) {
             Spatial child =  children.get(i);
@@ -454,10 +455,10 @@ public class Node extends Spatial implements Serializable, Savable {
             }
         }
     }
-    
+
     //  inheritted docs
     @Override
-	public void unlockBounds() {
+ public void unlockBounds() {
         super.unlockBounds();
         for (int i = 0, max = getQuantity(); i < max; i++) {
             Spatial child =  children.get(i);
@@ -466,10 +467,10 @@ public class Node extends Spatial implements Serializable, Savable {
             }
         }
     }
-    
+
     //  inheritted docs
     @Override
-	public void unlockShadows() {
+ public void unlockShadows() {
         super.unlockShadows();
         for (int i = 0, max = getQuantity(); i < max; i++) {
             Spatial child =  children.get(i);
@@ -478,10 +479,10 @@ public class Node extends Spatial implements Serializable, Savable {
             }
         }
     }
-    
+
     //  inheritted docs
     @Override
-	public void unlockTransforms() {
+ public void unlockTransforms() {
         super.unlockTransforms();
         for (int i = 0, max = getQuantity(); i < max; i++) {
             Spatial child =  children.get(i);
@@ -493,7 +494,7 @@ public class Node extends Spatial implements Serializable, Savable {
 
     //  inheritted docs
     @Override
-	public void unlockMeshes(Renderer r) {
+ public void unlockMeshes(Renderer r) {
         super.unlockMeshes(r);
         for (int i = 0, max = getQuantity(); i < max; i++) {
             Spatial child =  children.get(i);
@@ -506,13 +507,13 @@ public class Node extends Spatial implements Serializable, Savable {
     /**
      * <code>draw</code> calls the onDraw method for each child maintained by
      * this node.
-     * 
+     *
      * @see com.jme.scene.Spatial#draw(com.jme.renderer.Renderer)
      * @param r
      *            the renderer to draw to.
      */
     @Override
-	public void draw(Renderer r) {
+ public void draw(Renderer r) {
         if(children == null) {
             return;
         }
@@ -527,12 +528,12 @@ public class Node extends Spatial implements Serializable, Savable {
     /**
      * Applies the stack of render states to each child by calling
      * updateRenderState(states) on each child.
-     * 
+     *
      * @param states
      *            The Stack[] of render states to apply to each child.
      */
     @Override
-	protected void applyRenderState(Stack<RenderState>[] states) {
+ protected void applyRenderState(Stack<RenderState>[] states) {
         if(children == null) {
             return;
         }
@@ -546,11 +547,11 @@ public class Node extends Spatial implements Serializable, Savable {
     /**
      * <code>updateWorldBound</code> merges the bounds of all the children
      * maintained by this node. This will allow for faster culling operations.
-     * 
+     *
      * @see com.jme.scene.Spatial#updateWorldBound()
      */
     @Override
-	public void updateWorldBound() {
+ public void updateWorldBound() {
         if ((lockedMode & SceneElement.LOCKED_BOUNDS) != 0) return;
         if (children == null) {
             return;
@@ -578,7 +579,7 @@ public class Node extends Spatial implements Serializable, Savable {
      * @see Spatial#updateCollisionTree()
      */
     @Override
-	public void updateCollisionTree() {
+ public void updateCollisionTree() {
         if(children == null) {
             return;
         }
@@ -589,12 +590,12 @@ public class Node extends Spatial implements Serializable, Savable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.jme.scene.Spatial#hasCollision(com.jme.scene.Spatial,
      *      com.jme.intersection.CollisionResults)
      */
     @Override
-	public void findCollisions(Spatial scene, CollisionResults results) {
+ public void findCollisions(Spatial scene, CollisionResults results) {
         if (getWorldBound() != null && isCollidable && scene.isCollidable()) {
             if (getWorldBound().intersects(scene.getWorldBound())) {
                 // further checking needed.
@@ -606,7 +607,7 @@ public class Node extends Spatial implements Serializable, Savable {
     }
 
     @Override
-	public boolean hasCollision(Spatial scene, boolean checkTriangles) {
+ public boolean hasCollision(Spatial scene, boolean checkTriangles) {
         if (getWorldBound() != null && isCollidable && scene.isCollidable()) {
             if (getWorldBound().intersects(scene.getWorldBound())) {
                 if(children == null && !checkTriangles) {
@@ -625,7 +626,7 @@ public class Node extends Spatial implements Serializable, Savable {
     }
 
     @Override
-	public void findPick(Ray toTest, PickResults results) {
+ public void findPick(Ray toTest, PickResults results) {
         if(children == null) {
             return;
         }
@@ -639,13 +640,13 @@ public class Node extends Spatial implements Serializable, Savable {
         }
     }
 
-    public ArrayList<Spatial> getChildren() {
+    public List<Spatial> getChildren() {
         return children;
     }
 
     /**
      * Used with Serialization. Do not call this directly.
-     * 
+     *
      * @param s
      * @throws IOException
      * @throws ClassNotFoundException
@@ -669,9 +670,9 @@ public class Node extends Spatial implements Serializable, Savable {
             parent.batchChange(geometry, index1, index2);
         }
     }
-    
+
     @Override
-	public void write(JMEExporter e) throws IOException {
+    public void write(JMEExporter e) throws IOException {
         super.write(e);
         e.getCapsule(this).writeSavableArrayList(children, "children", null);
     }

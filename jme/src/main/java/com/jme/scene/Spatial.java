@@ -35,6 +35,7 @@ package com.jme.scene;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import com.jme.bounding.BoundingVolume;
@@ -89,7 +90,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
     protected transient Node parent;
 
     /** ArrayList of controllers for this spatial. */
-    protected ArrayList<Controller> geometricalControllers;
+    protected List<Controller> geometricalControllers;
 
     private static final Vector3f compVecA = new Vector3f();
     private static final Quaternion compQuat = new Quaternion();
@@ -175,7 +176,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      *
      * @return This spatial's geometricalControllers.
      */
-    public ArrayList<Controller> getControllers() {
+    public List<Controller> getControllers() {
         if (geometricalControllers == null) {
             geometricalControllers = new ArrayList<Controller>(1);
         }
@@ -312,7 +313,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      *            true if this node started the update process.
      */
     @Override
-	public void updateGeometricState(float time, boolean initiator) {
+ public void updateGeometricState(float time, boolean initiator) {
         if ((lockedMode & SceneElement.LOCKED_BRANCH) != 0) return;
         updateWorldData(time);
         if ((lockedMode & SceneElement.LOCKED_BOUNDS) == 0) {
@@ -538,7 +539,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      * @return the cull mode of this spatial, or if set to INHERIT, the cullmode of it's parent.
      */
     @Override
-	public int getCullMode() {
+ public int getCullMode() {
         if (cullMode != CULL_INHERIT)
             return cullMode;
         else if (parent != null)
@@ -552,7 +553,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      * @return The spatial's texture current combine mode.
      */
     @Override
-	public int getTextureCombineMode() {
+ public int getTextureCombineMode() {
         if (textureCombineMode != TextureState.INHERIT)
             return textureCombineMode;
         else if (parent != null)
@@ -568,7 +569,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      * @return The spatial's light current combine mode.
      */
     @Override
-	public int getLightCombineMode() {
+ public int getLightCombineMode() {
         if (lightCombineMode != LightState.INHERIT)
             return lightCombineMode;
         else if (parent != null)
@@ -578,7 +579,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
     }
 
     @Override
-	public int getRenderQueueMode() {
+ public int getRenderQueueMode() {
         if (renderQueueMode != Renderer.QUEUE_INHERIT)
             return renderQueueMode;
         else if (parent != null)
@@ -588,7 +589,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
     }
 
     @Override
-	public int getNormalsMode() {
+ public int getNormalsMode() {
         if (normalsMode != NM_INHERIT)
             return normalsMode;
         else if (parent != null)
@@ -624,7 +625,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
      *
      */
     @Override
-	public void propagateBoundToRoot() {
+ public void propagateBoundToRoot() {
         if (parent != null) {
             parent.updateWorldBound();
             parent.propagateBoundToRoot();
@@ -680,7 +681,7 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
     }
 
     @Override
-	public void write(JMEExporter ex) throws IOException {
+    public void write(JMEExporter ex) throws IOException {
         super.write(ex);
         OutputCapsule capsule = ex.getCapsule(this);
 
@@ -689,10 +690,10 @@ public abstract class Spatial extends SceneElement implements Serializable, Sava
         capsule.write(localScale, "localScale", Vector3f.UNIT_XYZ);
 
         capsule.writeSavableArrayList(geometricalControllers, "geometricalControllers", null);
-   }
+    }
 
     @Override
-	public void read(JMEImporter im) throws IOException {
+    public void read(JMEImporter im) throws IOException {
         super.read(im);
         InputCapsule capsule = im.getCapsule(this);
 

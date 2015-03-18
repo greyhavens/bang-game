@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
@@ -49,7 +50,7 @@ public class BoardFile
     public BangBoard board;
 
     /** The props and markers on the board. */
-    public ArrayList<Piece> pieces;
+    public List<Piece> pieces;
 
     /** A hash of our board and pieces data. Not serialized. */
     public byte[] dataHash;

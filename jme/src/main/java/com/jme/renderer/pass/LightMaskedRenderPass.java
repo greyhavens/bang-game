@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -33,6 +33,7 @@
 package com.jme.renderer.pass;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
@@ -48,18 +49,18 @@ import com.jme.scene.state.RenderState;
  * mask. This is useful for doing things like an ambient pass of a scene. Any
  * masks set on the light states prior to rendering this pass are replaced after
  * the pass is run.
- * 
+ *
  * @author Joshua Slack
  * @version $Id$
  */
 public class LightMaskedRenderPass extends Pass {
-    
+
     private static final long serialVersionUID = 1L;
     protected ArrayList<LightState> lightStates = new ArrayList<LightState>();
     protected int mask = 0;
 
     @Override
-	public void doRender(Renderer r) {
+    public void doRender(Renderer r) {
         for (int i = 0, sSize = spatials.size(); i < sSize; i++) {
             Spatial s = spatials.get(i);
             maskLightStates(s);
@@ -84,7 +85,7 @@ public class LightMaskedRenderPass extends Pass {
         }
         if ((s.getType() & SceneElement.NODE) != 0) {
             Node n = (Node)s;
-            ArrayList<?> children = n.getChildren();
+            List<?> children = n.getChildren();
             if (children != null) {
                 for (int i = children.size(); --i >= 0; ) {
                     Spatial child = (Spatial)children.get(i);

@@ -34,6 +34,7 @@ package com.jme.renderer.pass;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.List;
 
 import com.jme.light.Light;
 import com.jme.math.Vector3f;
@@ -70,446 +71,445 @@ import com.jme.system.DisplaySystem;
  */
 public class ShadowedRenderPass extends Pass {
 
-   private static final long serialVersionUID = 1L;
-
-   /**
-    * value for lightingMethod indicating that a scene should be rendered first
-    * with ambient lighting and then multiple passes per light done to
-    * illuminate unshadowed areas (resulting in shadows.) More costly but more
-    * accurate than MODULATIVE.
-    */
-   public final static int ADDITIVE = 0;
-
-   /**
-    * value for lightingMethod indicating that a scene should be rendered first
-    * with full lighting and then multiple screens applied per light to darken
-    * shadowed areas. More prone to artifacts than ADDITIVE, but faster.
-    */
-   public final static int MODULATIVE = 1;
-
-   /** list of occluders registered with this pass. */
-   protected ArrayList<Spatial> occluders = new ArrayList<Spatial>();
-
-   /** node used to gather and hold shadow volumes for rendering. */
-   protected Node volumeNode = new Node("Volumes");
-
-   /** whether or not the renderstates for this pass have been init'd yet. */
-   protected boolean initialised = false;
-
-   /**
-    * A quad to use with MODULATIVE lightMethod for full screen darkening
-    * against the shadow stencil.
-    */
-   protected Quad shadowQuad = new Quad("RenderForeground", 10, 10);
-
-   /**
-    * Used with MODULATIVE lightMethod. Defines the base color of the shadow -
-    * the alpha value is replaced with 1 - the alpha of the light's alpha.
-    */
-   protected ColorRGBA shadowColor = new ColorRGBA(.2f,.2f,.2f,.1f);
-
-   /** Whether shadow volumes are visible */
-   protected boolean renderVolume = false;
-
-   /** Whether to render shadows (true) or act like a normal RenderPass (false) */
-   protected boolean renderShadows = true;
-
-   /** Sets the type of pass to do to show shadows - ADDITIVE or MODULATIVE */
-   protected int lightingMethod = ADDITIVE;
-
-   /** collection of TriMesh to MeshShadows mappings */
-   protected IdentityHashMap<TriangleBatch, MeshShadows> meshes = new IdentityHashMap<TriangleBatch, MeshShadows>();
-
-   /**
-    * list of occluders that will be casting shadows in this pass. If no
-    * occluders set, pass acts like normal RenderPass.
-    */
-   protected ArrayList<TriangleBatch> occluderMeshes = new ArrayList<TriangleBatch>();
-
-   /**
-    * list of lights that will be used to calculate shadows in this pass.
-    * Constructed dynamically by searching through the scene for lights with
-    * shadowCaster set to true.
-    */
-   protected ArrayList<Light> shadowLights = new ArrayList<Light>();
-
-   /**
-    * a place to internally save previous enforced states setup before
-    * rendering this pass
-    */
-   protected RenderState[] preStates = new RenderState[RenderState.RS_MAX_STATE];
-
-   protected int quadWidth = -1, quadHeight = -1;
-
-   private ShadowGate shadowGate = new DefaultShadowGate();    
-
-   public static boolean rTexture = true;
-
-
-   /**
-    * <code>addOccluder</code> adds an occluder to this pass.
-    *
-    * @param toAdd
-    *            Occluder Spatial to add to this pass.
-    */
-   public void addOccluder(Spatial toAdd) {
-       occluders.add(toAdd);
-   }
-
-   /**
-    * <code>clearOccluders</code> removes all occluders from this pass.
-    */
-   public void clearOccluders() {
-       occluders.clear();
-   }
-
-   /**
-    * <code>containsOccluder</code>
-    *
-    * @param s
-    * @return
-    */
-   public boolean containsOccluder(Spatial s) {
-       return occluders.contains(s);
-   }
-
-   /**
-    * <code>removeOccluder</code>
-    *
-    * @param toRemove the Occluder Spatial to remove from this pass.
-    * @return true if the Spatial was found and removed.
-    */
-   public boolean removeOccluder(Spatial toRemove) {
-       return occluders.remove(toRemove);
-   }
-
-   /**
-    * @return the number of occluders registered with this pass
-    */
-   public int occludersSize() {
-       return occluders.size();
-   }
-
-   /**
-    * @return Returns whether shadow volumes will be rendered to the display.
-    */
-   public boolean getRenderVolume() {
-       return renderVolume;
-   }
-
-   /**
-    * @param renderVolume
-    *            sets whether shadow volumes will be rendered to the display
-    */
-   public void setRenderVolume(boolean renderVolume) {
-       this.renderVolume = renderVolume;
-   }
-
-   /**
-    * @return whether shadow volumes will be rendered to the display.
-    */
-   public boolean getRenderShadows() {
-       return renderShadows;
-   }
-
-   /**
-    * @param renderShadows
-    *            whether shadows will be rendered by this pass.
-    */
-   public void setRenderShadows(boolean renderShadows) {
-       this.renderShadows = renderShadows;
-   }
-
-
-   /**
-    * @return the shadowColor used by MODULATIVE lightMethod.
-    */
-   public ColorRGBA getShadowColor() {
-       return shadowColor;
-   }
-
-
-   /**
-    * @param shadowColor
-    *            the shadowColor used by MODULATIVE lightMethod.
-    */
-   public void setShadowColor(ColorRGBA shadowColor) {
-       if (shadowColor == null)
-           throw new IllegalArgumentException("shadowColor must not be null!");
-       this.shadowColor = shadowColor;
-   }
-
-
-   /**
-    * @return the lightingMethod currently in use.
-    */
-   public int getLightingMethod() {
-       return lightingMethod;
-   }
-
-
-   /**
-    * Sets which method to use with the shadow volume stencils in order to
-    * generate shadows in the scene. See javadoc descriptions of ADDITIVE and
-    * MODULATIVE for more info.
-    *
-    * @param lightingMethod
-    *            method to use - ADDITIVE or MODULATIVE
-    */
-   public void setLightingMethod(int lightingMethod) {
-       this.lightingMethod = lightingMethod;
-   }
-
-
-   /**
-    * <code>doRender</code> renders this pass to the framebuffer
-    *
-    * @param r
-    *            Renderer to use for drawing.
-    * @see com.jme.renderer.pass.Pass#doRender(com.jme.renderer.Renderer)
-    */
-   @Override
-public void doRender(Renderer r) {
-       // init states
-       init();
-       
-       if (!renderShadows) {
-           renderScene(r);
-           if (renderVolume) {
-               getShadowLights();
-               setupOccluderMeshes();
-               generateVolumes();
-               drawVolumes(r);
-           }
-           return;
-       }
-
-       // grab the shadowcasting lights
-       getShadowLights();
-
-       // grab the occluders
-       setupOccluderMeshes();
-
-       // if no occluders or no shadow casting lights, just render the scene normally and return.
-       if (occluderMeshes.size() == 0 || shadowLights.size() == 0) {
-           //render normal
-           renderScene(r);
-           cleanup();
-           return;
-       } 
-           
-       // otherwise render an ambient pass by masking the diffuse and specular of shadowcasting lights.
-       if (lightingMethod == ADDITIVE) {
-           maskShadowLights(LightState.MASK_DIFFUSE | LightState.MASK_SPECULAR);
-           saveEnforcedStates();
-           context.enforceState(noTexture);
-           renderScene(r);
-           replaceEnforcedStates();
-           unmaskShadowLights();
-           r.setPolygonOffset(0.0f, -5.0f);
-       } else {
-           renderScene(r);
-       }       
-
-       generateVolumes();
-
-       for (int l = shadowLights.size(); --l >= 0; ) {
-           Light light = shadowLights.get(l);
-           light.setEnabled(false);
-       }
-       for (int l = shadowLights.size(); --l >= 0; ) {
-           Light light = shadowLights.get(l);
-           // Clear out the stencil buffer
-           r.clearStencilBuffer();
-           light.setEnabled(true);
-
-           saveEnforcedStates();
-           context.enforceState(noTexture);
-           context.enforceState(forTesting);
-           context.enforceState(colorDisabled);
-           context.enforceState(stencilFrontFaces);
-           context.enforceState(cullBackFace);
-
-           volumeNode.getChildren().clear();
-           addShadowVolumes(light);
-           volumeNode.updateWorldVectors();
-           volumeNode.onDraw(r);
-
-           context.enforceState(stencilBackFaces);
-           context.enforceState(cullFrontFace);
-           volumeNode.onDraw(r);
-
-           context.enforceState(colorEnabled);
-           context.enforceState(forColorPassTesting);
-           context.enforceState(cullBackFace);
-           if (lightingMethod == ADDITIVE) {
-               context.enforceState(lights);
-               context.enforceState(blended);
-               lights.detachAll();
-               lights.attach(light);
-               context.enforceState(stencilDrawWhenNotSet);
-               renderScene(r);
-           } else {
-               if (rTexture) {
-                   context.enforceState(modblended);
-                   context.enforceState(zbufferAlways);
-                   context.enforceState(cullBackFace);
-                   context.enforceState(noLights);
-                   context.enforceState(stencilDrawOnlyWhenSet);
-    
-                   shadowColor.a = 1 - light.getAmbient().a;
-                   shadowQuad.setDefaultColor(shadowColor);
-                   r.setOrtho();
-                   resetShadowQuad(r);
-                   shadowQuad.draw(r);
-                   r.unsetOrtho();
-               }
-           }
-           light.setEnabled(false);
-           replaceEnforcedStates();
-       }
-
-       for (int l = shadowLights.size(); --l >= 0; ) {
-           Light light = shadowLights.get(l);
-           light.setEnabled(true);
-       }
-
-       if (lightingMethod == ADDITIVE && rTexture ) {
-           saveEnforcedStates();
-           context.enforceState(noStencil);
-           context.enforceState(colorEnabled);
-           context.enforceState(cullBackFace);
-           context.enforceState(blendTex);
-           renderScene(r);
-           replaceEnforcedStates();
-       }
-
-       if (renderVolume) {
-           drawVolumes(r);
-       }
-
-       cleanup();
-   }
-
-   protected void cleanup() {
-       occluderMeshes.clear();
-       shadowLights.clear();
-   }
-
-
-   protected void maskShadowLights(int mask) {
-       for (int x = shadowLights.size(); --x >= 0; ) {
-           Light l = shadowLights.get(x);
-           l.pushLightMask();
-           l.setLightMask(mask);
-       }
-   }
-
-   protected void unmaskShadowLights() {
-       for (int x = shadowLights.size(); --x >= 0; ) {
-           Light l = shadowLights.get(x);
-           l.popLightMask();
-       }
-   }
-
-
-   protected void renderScene(Renderer r) {
-       for (int i = 0, sSize = spatials.size(); i < sSize; i++) {
-           Spatial s = spatials.get(i);
-           s.onDraw(r);
-       }
-       r.renderQueue();
-   }
-
-
-   protected void getShadowLights() {
-       if (shadowLights == null) shadowLights = new ArrayList<Light>();
-       for (int x = occluders.size(); --x >= 0; )
-           getShadowLights(occluders.get(x));
-   }
-
-   protected void getShadowLights(Spatial s) {
-       if ((s.getType() & SceneElement.GEOMETRY) != 0) {
-           Geometry g = (Geometry)s;
-           int batches = g.getBatchCount();
-           for (int x = 0; x < batches; x++) {
-               GeomBatch gb = g.getBatch(x);
-               LightState ls = (LightState)gb.states[RenderState.RS_LIGHT];
-               if (ls != null)
-                   for (int q = ls.getQuantity(); --q >= 0; ) {
-                       Light l = ls.get(q);
-                       if (l.isShadowCaster()
-                               && (l.getType() == Light.LT_DIRECTIONAL ||
-                                       l.getType() == Light.LT_POINT)
-                               && !shadowLights.contains(l)) {
-                           shadowLights.add(l);
-                       }
-                   }
-           }
-       }
-       if ((s.getType() & SceneElement.NODE) != 0) {
-           Node n = (Node)s;
-           if (n.getChildren() != null) {
-               ArrayList<Spatial> children = n.getChildren();
-               for (int i = children.size(); --i >= 0; ) {
-                   Spatial child = children.get(i);
-                   getShadowLights(child);
-               }
-           }
-       }
-
-   }
-
-   protected void setupOccluderMeshes() {
-       if (occluderMeshes == null) occluderMeshes = new ArrayList<TriangleBatch>();
-       occluderMeshes.clear();
-       for (int x = occluders.size(); --x >= 0; )
-           setupOccluderMeshes(occluders.get(x));
-       
-       meshes.keySet().retainAll(occluderMeshes);
-   }
-
-   protected void setupOccluderMeshes(Spatial spat) {
-       if ((spat.getType() & SceneElement.TRIMESH) != 0)
-           addOccluderBatches((TriMesh)spat);
-       else if ((spat.getType() & SceneElement.NODE) != 0) {
-           Node node = (Node)spat;
-           for (int c = 0, nQ = node.getQuantity(); c < nQ; c++) {
-               Spatial child = node.getChild(c);
-               setupOccluderMeshes(child);
-           }
-       }
-   }
-
-   private void addOccluderBatches(TriMesh mesh) {
-       int batches = mesh.getBatchCount();
-       for (int x = 0; x < batches; x++) {
-           TriangleBatch batch = mesh.getBatch(x);
-           if (batch.isCastsShadows())
-               occluderMeshes.add(batch);
-       }
-   }
-
-/**
-    * saves any states enforced by the user for replacement at the end of the
-    * pass.
-    */
-   protected void saveEnforcedStates() {
-       for (int x = RenderState.RS_MAX_STATE; --x >= 0; ) {
-           preStates[x] = context.enforcedStateList[x];
-       }
-   }
-
-   /**
-    * replaces any states enforced by the user at the end of the pass.
-    */
-   protected void replaceEnforcedStates() {
-       for (int x = RenderState.RS_MAX_STATE; --x >= 0; ) {
-           context.enforcedStateList[x] = preStates[x];
-       }
-   }
-
-   protected void generateVolumes() {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * value for lightingMethod indicating that a scene should be rendered first
+     * with ambient lighting and then multiple passes per light done to
+     * illuminate unshadowed areas (resulting in shadows.) More costly but more
+     * accurate than MODULATIVE.
+     */
+    public final static int ADDITIVE = 0;
+
+    /**
+     * value for lightingMethod indicating that a scene should be rendered first
+     * with full lighting and then multiple screens applied per light to darken
+     * shadowed areas. More prone to artifacts than ADDITIVE, but faster.
+     */
+    public final static int MODULATIVE = 1;
+
+    /** list of occluders registered with this pass. */
+    protected List<Spatial> occluders = new ArrayList<Spatial>();
+
+    /** node used to gather and hold shadow volumes for rendering. */
+    protected Node volumeNode = new Node("Volumes");
+
+    /** whether or not the renderstates for this pass have been init'd yet. */
+    protected boolean initialised = false;
+
+    /**
+     * A quad to use with MODULATIVE lightMethod for full screen darkening
+     * against the shadow stencil.
+     */
+    protected Quad shadowQuad = new Quad("RenderForeground", 10, 10);
+
+    /**
+     * Used with MODULATIVE lightMethod. Defines the base color of the shadow -
+     * the alpha value is replaced with 1 - the alpha of the light's alpha.
+     */
+    protected ColorRGBA shadowColor = new ColorRGBA(.2f,.2f,.2f,.1f);
+
+    /** Whether shadow volumes are visible */
+    protected boolean renderVolume = false;
+
+    /** Whether to render shadows (true) or act like a normal RenderPass (false) */
+    protected boolean renderShadows = true;
+
+    /** Sets the type of pass to do to show shadows - ADDITIVE or MODULATIVE */
+    protected int lightingMethod = ADDITIVE;
+
+    /** collection of TriMesh to MeshShadows mappings */
+    protected IdentityHashMap<TriangleBatch, MeshShadows> meshes = new IdentityHashMap<TriangleBatch, MeshShadows>();
+
+    /**
+     * list of occluders that will be casting shadows in this pass. If no
+     * occluders set, pass acts like normal RenderPass.
+     */
+    protected List<TriangleBatch> occluderMeshes = new ArrayList<TriangleBatch>();
+
+    /**
+     * list of lights that will be used to calculate shadows in this pass.
+     * Constructed dynamically by searching through the scene for lights with
+     * shadowCaster set to true.
+     */
+    protected List<Light> shadowLights = new ArrayList<Light>();
+
+    /**
+     * a place to internally save previous enforced states setup before
+     * rendering this pass
+     */
+    protected RenderState[] preStates = new RenderState[RenderState.RS_MAX_STATE];
+
+    protected int quadWidth = -1, quadHeight = -1;
+
+    private ShadowGate shadowGate = new DefaultShadowGate();
+
+    public static boolean rTexture = true;
+
+
+    /**
+     * <code>addOccluder</code> adds an occluder to this pass.
+     *
+     * @param toAdd
+     *            Occluder Spatial to add to this pass.
+     */
+    public void addOccluder(Spatial toAdd) {
+        occluders.add(toAdd);
+    }
+
+    /**
+     * <code>clearOccluders</code> removes all occluders from this pass.
+     */
+    public void clearOccluders() {
+        occluders.clear();
+    }
+
+    /**
+     * <code>containsOccluder</code>
+     *
+     * @param s
+     * @return
+     */
+    public boolean containsOccluder(Spatial s) {
+        return occluders.contains(s);
+    }
+
+    /**
+     * <code>removeOccluder</code>
+     *
+     * @param toRemove the Occluder Spatial to remove from this pass.
+     * @return true if the Spatial was found and removed.
+     */
+    public boolean removeOccluder(Spatial toRemove) {
+        return occluders.remove(toRemove);
+    }
+
+    /**
+     * @return the number of occluders registered with this pass
+     */
+    public int occludersSize() {
+        return occluders.size();
+    }
+
+    /**
+     * @return Returns whether shadow volumes will be rendered to the display.
+     */
+    public boolean getRenderVolume() {
+        return renderVolume;
+    }
+
+    /**
+     * @param renderVolume
+     *            sets whether shadow volumes will be rendered to the display
+     */
+    public void setRenderVolume(boolean renderVolume) {
+        this.renderVolume = renderVolume;
+    }
+
+    /**
+     * @return whether shadow volumes will be rendered to the display.
+     */
+    public boolean getRenderShadows() {
+        return renderShadows;
+    }
+
+    /**
+     * @param renderShadows
+     *            whether shadows will be rendered by this pass.
+     */
+    public void setRenderShadows(boolean renderShadows) {
+        this.renderShadows = renderShadows;
+    }
+
+
+    /**
+     * @return the shadowColor used by MODULATIVE lightMethod.
+     */
+    public ColorRGBA getShadowColor() {
+        return shadowColor;
+    }
+
+
+    /**
+     * @param shadowColor
+     *            the shadowColor used by MODULATIVE lightMethod.
+     */
+    public void setShadowColor(ColorRGBA shadowColor) {
+        if (shadowColor == null)
+        throw new IllegalArgumentException("shadowColor must not be null!");
+        this.shadowColor = shadowColor;
+    }
+
+
+    /**
+     * @return the lightingMethod currently in use.
+     */
+    public int getLightingMethod() {
+        return lightingMethod;
+    }
+
+
+    /**
+     * Sets which method to use with the shadow volume stencils in order to
+     * generate shadows in the scene. See javadoc descriptions of ADDITIVE and
+     * MODULATIVE for more info.
+     *
+     * @param lightingMethod
+     *            method to use - ADDITIVE or MODULATIVE
+     */
+    public void setLightingMethod(int lightingMethod) {
+        this.lightingMethod = lightingMethod;
+    }
+
+
+    /**
+     * <code>doRender</code> renders this pass to the framebuffer
+     *
+     * @param r
+     *            Renderer to use for drawing.
+     * @see com.jme.renderer.pass.Pass#doRender(com.jme.renderer.Renderer)
+     */
+    @Override
+    public void doRender(Renderer r) {
+        // init states
+        init();
+
+        if (!renderShadows) {
+            renderScene(r);
+            if (renderVolume) {
+                getShadowLights();
+                setupOccluderMeshes();
+                generateVolumes();
+                drawVolumes(r);
+            }
+            return;
+        }
+
+        // grab the shadowcasting lights
+        getShadowLights();
+
+        // grab the occluders
+        setupOccluderMeshes();
+
+        // if no occluders or no shadow casting lights, just render the scene normally and return.
+        if (occluderMeshes.size() == 0 || shadowLights.size() == 0) {
+            //render normal
+            renderScene(r);
+            cleanup();
+            return;
+        }
+
+        // otherwise render an ambient pass by masking the diffuse and specular of shadowcasting lights.
+        if (lightingMethod == ADDITIVE) {
+            maskShadowLights(LightState.MASK_DIFFUSE | LightState.MASK_SPECULAR);
+            saveEnforcedStates();
+            context.enforceState(noTexture);
+            renderScene(r);
+            replaceEnforcedStates();
+            unmaskShadowLights();
+            r.setPolygonOffset(0.0f, -5.0f);
+        } else {
+            renderScene(r);
+        }
+
+        generateVolumes();
+
+        for (int l = shadowLights.size(); --l >= 0; ) {
+            Light light = shadowLights.get(l);
+            light.setEnabled(false);
+        }
+        for (int l = shadowLights.size(); --l >= 0; ) {
+            Light light = shadowLights.get(l);
+            // Clear out the stencil buffer
+            r.clearStencilBuffer();
+            light.setEnabled(true);
+
+            saveEnforcedStates();
+            context.enforceState(noTexture);
+            context.enforceState(forTesting);
+            context.enforceState(colorDisabled);
+            context.enforceState(stencilFrontFaces);
+            context.enforceState(cullBackFace);
+
+            volumeNode.getChildren().clear();
+            addShadowVolumes(light);
+            volumeNode.updateWorldVectors();
+            volumeNode.onDraw(r);
+
+            context.enforceState(stencilBackFaces);
+            context.enforceState(cullFrontFace);
+            volumeNode.onDraw(r);
+
+            context.enforceState(colorEnabled);
+            context.enforceState(forColorPassTesting);
+            context.enforceState(cullBackFace);
+            if (lightingMethod == ADDITIVE) {
+                context.enforceState(lights);
+                context.enforceState(blended);
+                lights.detachAll();
+                lights.attach(light);
+                context.enforceState(stencilDrawWhenNotSet);
+                renderScene(r);
+            } else {
+                if (rTexture) {
+                    context.enforceState(modblended);
+                    context.enforceState(zbufferAlways);
+                    context.enforceState(cullBackFace);
+                    context.enforceState(noLights);
+                    context.enforceState(stencilDrawOnlyWhenSet);
+
+                    shadowColor.a = 1 - light.getAmbient().a;
+                    shadowQuad.setDefaultColor(shadowColor);
+                    r.setOrtho();
+                    resetShadowQuad(r);
+                    shadowQuad.draw(r);
+                    r.unsetOrtho();
+                }
+            }
+            light.setEnabled(false);
+            replaceEnforcedStates();
+        }
+
+        for (int l = shadowLights.size(); --l >= 0; ) {
+            Light light = shadowLights.get(l);
+            light.setEnabled(true);
+        }
+
+        if (lightingMethod == ADDITIVE && rTexture ) {
+            saveEnforcedStates();
+            context.enforceState(noStencil);
+            context.enforceState(colorEnabled);
+            context.enforceState(cullBackFace);
+            context.enforceState(blendTex);
+            renderScene(r);
+            replaceEnforcedStates();
+        }
+
+        if (renderVolume) {
+            drawVolumes(r);
+        }
+
+        cleanup();
+    }
+
+    protected void cleanup() {
+        occluderMeshes.clear();
+        shadowLights.clear();
+    }
+
+
+    protected void maskShadowLights(int mask) {
+        for (int x = shadowLights.size(); --x >= 0; ) {
+            Light l = shadowLights.get(x);
+            l.pushLightMask();
+            l.setLightMask(mask);
+        }
+    }
+
+    protected void unmaskShadowLights() {
+        for (int x = shadowLights.size(); --x >= 0; ) {
+            Light l = shadowLights.get(x);
+            l.popLightMask();
+        }
+    }
+
+
+    protected void renderScene(Renderer r) {
+        for (int i = 0, sSize = spatials.size(); i < sSize; i++) {
+            Spatial s = spatials.get(i);
+            s.onDraw(r);
+        }
+        r.renderQueue();
+    }
+
+
+    protected void getShadowLights() {
+        if (shadowLights == null) shadowLights = new ArrayList<Light>();
+        for (int x = occluders.size(); --x >= 0; )
+        getShadowLights(occluders.get(x));
+    }
+
+    protected void getShadowLights(Spatial s) {
+        if ((s.getType() & SceneElement.GEOMETRY) != 0) {
+            Geometry g = (Geometry)s;
+            int batches = g.getBatchCount();
+            for (int x = 0; x < batches; x++) {
+                GeomBatch gb = g.getBatch(x);
+                LightState ls = (LightState)gb.states[RenderState.RS_LIGHT];
+                if (ls != null)
+                for (int q = ls.getQuantity(); --q >= 0; ) {
+                    Light l = ls.get(q);
+                    if (l.isShadowCaster()
+                        && (l.getType() == Light.LT_DIRECTIONAL ||
+                            l.getType() == Light.LT_POINT)
+                        && !shadowLights.contains(l)) {
+                        shadowLights.add(l);
+                    }
+                }
+            }
+        }
+        if ((s.getType() & SceneElement.NODE) != 0) {
+            Node n = (Node)s;
+            if (n.getChildren() != null) {
+                List<Spatial> children = n.getChildren();
+                for (int i = children.size(); --i >= 0; ) {
+                    Spatial child = children.get(i);
+                    getShadowLights(child);
+                }
+            }
+        }
+    }
+
+    protected void setupOccluderMeshes() {
+        if (occluderMeshes == null) occluderMeshes = new ArrayList<TriangleBatch>();
+        occluderMeshes.clear();
+        for (int x = occluders.size(); --x >= 0; )
+        setupOccluderMeshes(occluders.get(x));
+
+        meshes.keySet().retainAll(occluderMeshes);
+    }
+
+    protected void setupOccluderMeshes(Spatial spat) {
+        if ((spat.getType() & SceneElement.TRIMESH) != 0)
+        addOccluderBatches((TriMesh)spat);
+        else if ((spat.getType() & SceneElement.NODE) != 0) {
+            Node node = (Node)spat;
+            for (int c = 0, nQ = node.getQuantity(); c < nQ; c++) {
+                Spatial child = node.getChild(c);
+                setupOccluderMeshes(child);
+            }
+        }
+    }
+
+    private void addOccluderBatches(TriMesh mesh) {
+        int batches = mesh.getBatchCount();
+        for (int x = 0; x < batches; x++) {
+            TriangleBatch batch = mesh.getBatch(x);
+            if (batch.isCastsShadows())
+            occluderMeshes.add(batch);
+        }
+    }
+
+    /**
+     * saves any states enforced by the user for replacement at the end of the
+     * pass.
+     */
+    protected void saveEnforcedStates() {
+        for (int x = RenderState.RS_MAX_STATE; --x >= 0; ) {
+            preStates[x] = context.enforcedStateList[x];
+        }
+    }
+
+    /**
+     * replaces any states enforced by the user at the end of the pass.
+     */
+    protected void replaceEnforcedStates() {
+        for (int x = RenderState.RS_MAX_STATE; --x >= 0; ) {
+            context.enforcedStateList[x] = preStates[x];
+        }
+    }
+
+    protected void generateVolumes() {
 
         for (int c = 0; c < occluderMeshes.size(); c++) {
             TriangleBatch tb = occluderMeshes.get(c);
@@ -527,228 +527,227 @@ public void doRender(Renderer r) {
         }
     }
 
-   /**
+    /**
      * <code>addShadowVolumes</code> adds the shadow volumes for a given light
      * to volumeNode
-     * 
+     *
      * @param light
      *            the light whose volumes should be added
      */
-   protected void addShadowVolumes(Light light) {
-       if (enabled) {
-           for (int i = occluderMeshes.size(); --i >= 0; ) {
-               TriangleBatch key = occluderMeshes.get(i);
-               if (!shadowGate.shouldDrawShadows(key)) continue;
-               MeshShadows ms = meshes.get(key);
-               ShadowVolume lv = ms.getShadowVolume(light);
-               if (lv != null)
-                   volumeNode.getChildren().add(lv);
-           }
-       }
+    protected void addShadowVolumes(Light light) {
+        if (enabled) {
+            for (int i = occluderMeshes.size(); --i >= 0; ) {
+                TriangleBatch key = occluderMeshes.get(i);
+                if (!shadowGate.shouldDrawShadows(key)) continue;
+                MeshShadows ms = meshes.get(key);
+                ShadowVolume lv = ms.getShadowVolume(light);
+                if (lv != null)
+                volumeNode.getChildren().add(lv);
+            }
+        }
 
-   }
+    }
 
 
-   /**
-    * <code>drawVolumes</code> is a debug method used to draw the shadow
-    * volumes currently in use in the pass.
-    *
-    * @param r
-    *            Renderer to draw with.
-    */
-   protected void drawVolumes(Renderer r) {
+    /**
+     * <code>drawVolumes</code> is a debug method used to draw the shadow
+     * volumes currently in use in the pass.
+     *
+     * @param r
+     *            Renderer to draw with.
+     */
+    protected void drawVolumes(Renderer r) {
 
-       Node renderNode = new Node("renderVolume");
-       renderNode.setRenderState(cullBackFace);
-       renderNode.setRenderState(forTesting);
-       renderNode.setRenderState(colorEnabled);
-       renderNode.setRenderState(noStencil);
-       renderNode.setRenderState(alphaBlended);
+        Node renderNode = new Node("renderVolume");
+        renderNode.setRenderState(cullBackFace);
+        renderNode.setRenderState(forTesting);
+        renderNode.setRenderState(colorEnabled);
+        renderNode.setRenderState(noStencil);
+        renderNode.setRenderState(alphaBlended);
 
-       for (int i = occluderMeshes.size(); --i >= 0; ) {
-           Object key = occluderMeshes.get(i);
-           MeshShadows ms = meshes.get(key);
-           if(ms != null) {
-               ArrayList<ShadowVolume> volumes = ms.getVolumes();
-               for (int v = 0, vSize = volumes.size(); v < vSize; v++) {
-                   ShadowVolume vol = volumes.get(v);
-                   renderNode.attachChild(vol);
-                   vol.setDefaultColor(new ColorRGBA(0,1,0,.075f));
-               }
-           }
-       }
+        for (int i = occluderMeshes.size(); --i >= 0; ) {
+            Object key = occluderMeshes.get(i);
+            MeshShadows ms = meshes.get(key);
+            if(ms != null) {
+                ArrayList<ShadowVolume> volumes = ms.getVolumes();
+                for (int v = 0, vSize = volumes.size(); v < vSize; v++) {
+                    ShadowVolume vol = volumes.get(v);
+                    renderNode.attachChild(vol);
+                    vol.setDefaultColor(new ColorRGBA(0,1,0,.075f));
+                }
+            }
+        }
 
-       renderNode.updateRenderState();
-       renderNode.updateGeometricState(0, true);
-       renderNode.onDraw(r);
-   }
+        renderNode.updateRenderState();
+        renderNode.updateGeometricState(0, true);
+        renderNode.onDraw(r);
+    }
 
-   protected static ZBufferState zbufferWriteLE;
-   protected static ZBufferState zbufferAlways;
-   protected static ZBufferState forTesting;
-   protected static ZBufferState forColorPassTesting;
+    protected static ZBufferState zbufferWriteLE;
+    protected static ZBufferState zbufferAlways;
+    protected static ZBufferState forTesting;
+    protected static ZBufferState forColorPassTesting;
 
-   protected static StencilState noStencil;
-   protected static StencilState stencilFrontFaces;
-   protected static StencilState stencilBackFaces;
-   protected static StencilState stencilDrawOnlyWhenSet;
-   protected static StencilState stencilDrawWhenNotSet;
+    protected static StencilState noStencil;
+    protected static StencilState stencilFrontFaces;
+    protected static StencilState stencilBackFaces;
+    protected static StencilState stencilDrawOnlyWhenSet;
+    protected static StencilState stencilDrawWhenNotSet;
 
-   protected static CullState cullFrontFace;
-   protected static CullState cullBackFace;
-   protected static CullState noCull;
+    protected static CullState cullFrontFace;
+    protected static CullState cullBackFace;
+    protected static CullState noCull;
 
-   protected static TextureState noTexture;
+    protected static TextureState noTexture;
 
-   protected static LightState lights;
-   protected static LightState noLights;
+    protected static LightState lights;
+    protected static LightState noLights;
 
-   public static AlphaState blended;
-   public static AlphaState alphaBlended;
-   public static AlphaState modblended;
-   public static AlphaState blendTex;
-   
-   protected static ColorMaskState colorEnabled;
-   protected static ColorMaskState colorDisabled;
+    public static AlphaState blended;
+    public static AlphaState alphaBlended;
+    public static AlphaState modblended;
+    public static AlphaState blendTex;
 
-   protected void init() {
-       if (initialised)
-           return;
+    protected static ColorMaskState colorEnabled;
+    protected static ColorMaskState colorDisabled;
 
-       initialised = true;
+    protected void init() {
+        if (initialised)
+        return;
 
-       Renderer r = DisplaySystem.getDisplaySystem().getRenderer();
+        initialised = true;
 
-       zbufferWriteLE = r.createZBufferState();
-       zbufferWriteLE.setWritable(true);
-       zbufferWriteLE.setFunction(ZBufferState.CF_LEQUAL);
-       zbufferWriteLE.setEnabled(true);
+        Renderer r = DisplaySystem.getDisplaySystem().getRenderer();
 
-       zbufferAlways = r.createZBufferState();
-       zbufferAlways.setEnabled(false);
-       zbufferAlways.setWritable(false);
+        zbufferWriteLE = r.createZBufferState();
+        zbufferWriteLE.setWritable(true);
+        zbufferWriteLE.setFunction(ZBufferState.CF_LEQUAL);
+        zbufferWriteLE.setEnabled(true);
 
-       forTesting = r.createZBufferState();
-       forTesting.setWritable(false);
-       forTesting.setFunction(ZBufferState.CF_LESS);
-       forTesting.setEnabled(true);
+        zbufferAlways = r.createZBufferState();
+        zbufferAlways.setEnabled(false);
+        zbufferAlways.setWritable(false);
 
-       forColorPassTesting = r.createZBufferState();
-       forColorPassTesting.setWritable(false);
-       forColorPassTesting.setFunction(ZBufferState.CF_LEQUAL);
-       forColorPassTesting.setEnabled(true);
+        forTesting = r.createZBufferState();
+        forTesting.setWritable(false);
+        forTesting.setFunction(ZBufferState.CF_LESS);
+        forTesting.setEnabled(true);
 
-       noStencil = r.createStencilState();
-       noStencil.setEnabled(false);
+        forColorPassTesting = r.createZBufferState();
+        forColorPassTesting.setWritable(false);
+        forColorPassTesting.setFunction(ZBufferState.CF_LEQUAL);
+        forColorPassTesting.setEnabled(true);
 
-       stencilFrontFaces = r.createStencilState();
-       stencilFrontFaces.setEnabled(true);
-       stencilFrontFaces.setStencilMask(~0);
-       stencilFrontFaces.setStencilFunc(StencilState.SF_ALWAYS);
-       stencilFrontFaces.setStencilOpFail(StencilState.SO_KEEP);
-       stencilFrontFaces.setStencilOpZFail(StencilState.SO_KEEP);
-       stencilFrontFaces.setStencilOpZPass(StencilState.SO_INCR);
+        noStencil = r.createStencilState();
+        noStencil.setEnabled(false);
 
-       stencilBackFaces = r.createStencilState();
-       stencilBackFaces.setEnabled(true);
-       stencilBackFaces.setStencilMask(~0);
-       stencilBackFaces.setStencilFunc(StencilState.SF_ALWAYS);
-       stencilBackFaces.setStencilOpFail(StencilState.SO_KEEP);
-       stencilBackFaces.setStencilOpZFail(StencilState.SO_KEEP);
-       stencilBackFaces.setStencilOpZPass(StencilState.SO_DECR);
+        stencilFrontFaces = r.createStencilState();
+        stencilFrontFaces.setEnabled(true);
+        stencilFrontFaces.setStencilMask(~0);
+        stencilFrontFaces.setStencilFunc(StencilState.SF_ALWAYS);
+        stencilFrontFaces.setStencilOpFail(StencilState.SO_KEEP);
+        stencilFrontFaces.setStencilOpZFail(StencilState.SO_KEEP);
+        stencilFrontFaces.setStencilOpZPass(StencilState.SO_INCR);
 
-       stencilDrawOnlyWhenSet = r.createStencilState();
-       stencilDrawOnlyWhenSet.setEnabled(true);
-       stencilDrawOnlyWhenSet.setStencilMask(~0);
-       stencilDrawOnlyWhenSet.setStencilFunc(StencilState.SF_NOTEQUAL);
-       stencilDrawOnlyWhenSet.setStencilOpFail(StencilState.SO_KEEP);
-       stencilDrawOnlyWhenSet.setStencilOpZFail(StencilState.SO_KEEP);
-       stencilDrawOnlyWhenSet.setStencilOpZPass(StencilState.SO_KEEP);
-       stencilDrawOnlyWhenSet.setStencilRef(0);
+        stencilBackFaces = r.createStencilState();
+        stencilBackFaces.setEnabled(true);
+        stencilBackFaces.setStencilMask(~0);
+        stencilBackFaces.setStencilFunc(StencilState.SF_ALWAYS);
+        stencilBackFaces.setStencilOpFail(StencilState.SO_KEEP);
+        stencilBackFaces.setStencilOpZFail(StencilState.SO_KEEP);
+        stencilBackFaces.setStencilOpZPass(StencilState.SO_DECR);
 
-       stencilDrawWhenNotSet = r.createStencilState();
-       stencilDrawWhenNotSet.setEnabled(true);
-       stencilDrawWhenNotSet.setStencilMask(~0);
-       stencilDrawWhenNotSet.setStencilFunc(StencilState.SF_EQUAL);
-       stencilDrawWhenNotSet.setStencilOpFail(StencilState.SO_KEEP);
-       stencilDrawWhenNotSet.setStencilOpZFail(StencilState.SO_KEEP);
-       stencilDrawWhenNotSet.setStencilOpZPass(StencilState.SO_KEEP);
-       stencilDrawWhenNotSet.setStencilRef(0);
+        stencilDrawOnlyWhenSet = r.createStencilState();
+        stencilDrawOnlyWhenSet.setEnabled(true);
+        stencilDrawOnlyWhenSet.setStencilMask(~0);
+        stencilDrawOnlyWhenSet.setStencilFunc(StencilState.SF_NOTEQUAL);
+        stencilDrawOnlyWhenSet.setStencilOpFail(StencilState.SO_KEEP);
+        stencilDrawOnlyWhenSet.setStencilOpZFail(StencilState.SO_KEEP);
+        stencilDrawOnlyWhenSet.setStencilOpZPass(StencilState.SO_KEEP);
+        stencilDrawOnlyWhenSet.setStencilRef(0);
 
-       cullFrontFace = r.createCullState();
-       cullFrontFace.setEnabled(true);
-       cullFrontFace.setCullMode(CullState.CS_FRONT);
+        stencilDrawWhenNotSet = r.createStencilState();
+        stencilDrawWhenNotSet.setEnabled(true);
+        stencilDrawWhenNotSet.setStencilMask(~0);
+        stencilDrawWhenNotSet.setStencilFunc(StencilState.SF_EQUAL);
+        stencilDrawWhenNotSet.setStencilOpFail(StencilState.SO_KEEP);
+        stencilDrawWhenNotSet.setStencilOpZFail(StencilState.SO_KEEP);
+        stencilDrawWhenNotSet.setStencilOpZPass(StencilState.SO_KEEP);
+        stencilDrawWhenNotSet.setStencilRef(0);
 
-       noCull = r.createCullState();
-       noCull.setEnabled(false);
+        cullFrontFace = r.createCullState();
+        cullFrontFace.setEnabled(true);
+        cullFrontFace.setCullMode(CullState.CS_FRONT);
 
-       noLights = r.createLightState();
-       noLights.setEnabled(false);
+        noCull = r.createCullState();
+        noCull.setEnabled(false);
 
-       cullBackFace = r.createCullState();
-       cullBackFace.setEnabled(true);
-       cullBackFace.setCullMode(CullState.CS_BACK);
+        noLights = r.createLightState();
+        noLights.setEnabled(false);
 
-       blended = r.createAlphaState();
-       blended.setEnabled(true);
-       blended.setBlendEnabled(true);
-       blended.setDstFunction(AlphaState.DB_ONE);
-       blended.setSrcFunction(AlphaState.SB_DST_COLOR);
+        cullBackFace = r.createCullState();
+        cullBackFace.setEnabled(true);
+        cullBackFace.setCullMode(CullState.CS_BACK);
 
-       alphaBlended = r.createAlphaState();
-       alphaBlended.setEnabled(true);
-       alphaBlended.setBlendEnabled(true);
-       alphaBlended.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-       alphaBlended.setSrcFunction(AlphaState.SB_ONE);
+        blended = r.createAlphaState();
+        blended.setEnabled(true);
+        blended.setBlendEnabled(true);
+        blended.setDstFunction(AlphaState.DB_ONE);
+        blended.setSrcFunction(AlphaState.SB_DST_COLOR);
 
-       modblended = r.createAlphaState();
-       modblended.setEnabled(true);
-       modblended.setBlendEnabled(true);
-       modblended.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-       modblended.setSrcFunction(AlphaState.SB_DST_COLOR);
+        alphaBlended = r.createAlphaState();
+        alphaBlended.setEnabled(true);
+        alphaBlended.setBlendEnabled(true);
+        alphaBlended.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        alphaBlended.setSrcFunction(AlphaState.SB_ONE);
 
-       blendTex = r.createAlphaState();
-       blendTex.setEnabled(true);
-       blendTex.setBlendEnabled(true);
-       blendTex.setDstFunction(AlphaState.DB_ZERO);
-       blendTex.setSrcFunction(AlphaState.SB_DST_COLOR);
+        modblended = r.createAlphaState();
+        modblended.setEnabled(true);
+        modblended.setBlendEnabled(true);
+        modblended.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        modblended.setSrcFunction(AlphaState.SB_DST_COLOR);
 
-       colorEnabled = r.createColorMaskState();
-       colorEnabled.setAll(true);
+        blendTex = r.createAlphaState();
+        blendTex.setEnabled(true);
+        blendTex.setBlendEnabled(true);
+        blendTex.setDstFunction(AlphaState.DB_ZERO);
+        blendTex.setSrcFunction(AlphaState.SB_DST_COLOR);
 
-       colorDisabled = r.createColorMaskState();
-       colorDisabled.setAll(false);
+        colorEnabled = r.createColorMaskState();
+        colorEnabled.setAll(true);
 
-       volumeNode.setRenderQueueMode(Renderer.QUEUE_SKIP);
-       volumeNode.updateRenderState();
-       volumeNode.attachChild(new Node());
+        colorDisabled = r.createColorMaskState();
+        colorDisabled.setAll(false);
 
-       noTexture = r.createTextureState();
-       noTexture.setEnabled(false);
+        volumeNode.setRenderQueueMode(Renderer.QUEUE_SKIP);
+        volumeNode.updateRenderState();
+        volumeNode.attachChild(new Node());
 
-       resetShadowQuad(r);
-       
-       lights = r.createLightState();
-       lights.setEnabled(true);
-       lights.setLightMask(LightState.MASK_AMBIENT | LightState.MASK_GLOBALAMBIENT);
-   }
-   
-   public void resetShadowQuad(Renderer r) {
-       if (r.getWidth() == quadWidth && r.getHeight() == quadHeight) return;
-       quadWidth = r.getWidth();
-       quadHeight = r.getHeight();
-       shadowQuad.resize(quadWidth, r.getHeight());
-       shadowQuad.setLocalTranslation(new Vector3f(quadWidth >> 1, quadHeight >> 1, 0));
-       shadowQuad.setRenderQueueMode(Renderer.QUEUE_SKIP);
-       shadowQuad.updateGeometricState(0, true);
-       shadowQuad.updateRenderState();
-       
-   }
+        noTexture = r.createTextureState();
+        noTexture.setEnabled(false);
+
+        resetShadowQuad(r);
+
+        lights = r.createLightState();
+        lights.setEnabled(true);
+        lights.setLightMask(LightState.MASK_AMBIENT | LightState.MASK_GLOBALAMBIENT);
+    }
+
+    public void resetShadowQuad(Renderer r) {
+        if (r.getWidth() == quadWidth && r.getHeight() == quadHeight) return;
+        quadWidth = r.getWidth();
+        quadHeight = r.getHeight();
+        shadowQuad.resize(quadWidth, r.getHeight());
+        shadowQuad.setLocalTranslation(new Vector3f(quadWidth >> 1, quadHeight >> 1, 0));
+        shadowQuad.setRenderQueueMode(Renderer.QUEUE_SKIP);
+        shadowQuad.updateGeometricState(0, true);
+        shadowQuad.updateRenderState();
+    }
 
     public ShadowGate getShadowGate() {
         return shadowGate;
     }
-    
+
     public void setShadowGate(ShadowGate shadowCheck) {
         this.shadowGate = shadowCheck;
     }

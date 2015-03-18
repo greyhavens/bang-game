@@ -34,6 +34,7 @@ package com.jmex.effects.particles;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.math.FastMath;
 import com.jme.scene.Controller;
@@ -66,7 +67,7 @@ public class ParticleController extends Controller {
     private boolean controlFlow;
 
     private int iterations;
-    private ArrayList<ParticleInfluence> influences;
+    private List<ParticleInfluence> influences;
 
     public ParticleController() {}
 
@@ -101,7 +102,7 @@ public class ParticleController extends Controller {
      *            float
      */
     @Override
-	public void update(float secondsPassed) {
+ public void update(float secondsPassed) {
         if (isActive()) {
             currentTime += secondsPassed * getSpeed();
             timePassed = currentTime - prevTime;
@@ -307,10 +308,8 @@ public class ParticleController extends Controller {
 
     /**
      * Returns the list of influences acting on this particle controller.
-     *
-     * @return ArrayList
      */
-    public ArrayList<ParticleInfluence> getInfluences() {
+    public List<ParticleInfluence> getInfluences() {
         return influences;
     }
 
@@ -335,7 +334,7 @@ public class ParticleController extends Controller {
     }
 
     @Override
-	public void write(JMEExporter e) throws IOException {
+ public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(particles, "particleMesh", null);

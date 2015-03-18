@@ -8,9 +8,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 
 import com.jme.bounding.BoundingBox;
@@ -217,7 +217,7 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
         instance.setMaximumLifeTime(prototype.getMaximumLifeTime());
 
         // copy influence parameters
-        ArrayList<ParticleInfluence> infs = prototype.getInfluences();
+        List<ParticleInfluence> infs = prototype.getInfluences();
         if (infs != null) {
             for (ParticleInfluence inf : infs) {
                 instance.addInfluence(inf);

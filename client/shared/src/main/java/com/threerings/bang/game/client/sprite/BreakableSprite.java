@@ -3,11 +3,11 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.threerings.openal.SoundGroup;
-
-import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.scene.Spatial;
+
+import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.ParticleUtil;
@@ -64,7 +64,7 @@ import com.threerings.bang.client.util.ResultAttacher;
             if (_smoke != null) {
                 ParticleUtil.stopAndRemove(_smoke);
                 _smoke = null;
-                ArrayList<Spatial> children = getChildren();
+                List<Spatial> children = getChildren();
                 for (Spatial child : children) {
                     if (!(child instanceof WreckViz.Wreckage))
                     {

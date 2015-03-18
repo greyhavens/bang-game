@@ -35,6 +35,7 @@ package com.jme.math.spring;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.math.Vector3f;
 import com.jme.util.export.InputCapsule;
@@ -51,11 +52,11 @@ import com.jme.util.export.Savable;
  */
 public class SpringSystem implements Savable {
     /** Array of SpringNodes in this system. */
-    protected ArrayList<SpringPoint> nodes = new ArrayList<SpringPoint>();
+    protected List<SpringPoint> nodes = new ArrayList<SpringPoint>();
     /** Array of Springs in this system. */
-    protected ArrayList<Spring> springs = new ArrayList<Spring>();
+    protected List<Spring> springs = new ArrayList<Spring>();
     /** Array of external forces to apply to this system. */
-    private ArrayList<SpringPointForce> externalForces = new ArrayList<SpringPointForce>();
+    private List<SpringPointForce> externalForces = new ArrayList<SpringPointForce>();
     /** Number of times to update the Springs per system update.  Default is 2 */
     private int relaxLoops = 2;
 
@@ -289,7 +290,7 @@ public class SpringSystem implements Savable {
     }
 
     @Override
-	public void write(JMEExporter e) throws IOException {
+    public void write(JMEExporter e) throws IOException {
         OutputCapsule capsule = e.getCapsule(this);
         capsule.writeSavableArrayList(nodes, "nodes", new ArrayList<Object>());
         capsule.writeSavableArrayList(springs, "springs", new ArrayList<Object>());
@@ -309,7 +310,7 @@ public class SpringSystem implements Savable {
     }
 
     @Override
-	public Class<? extends SpringSystem> getClassTag() {
+    public Class<? extends SpringSystem> getClassTag() {
         return this.getClass();
     }
 }

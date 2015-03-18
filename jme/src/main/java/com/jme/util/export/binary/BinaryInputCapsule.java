@@ -31,6 +31,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.List;
 
 import com.jme.util.export.ByteUtils;
 import com.jme.util.export.InputCapsule;
@@ -62,154 +63,154 @@ public class BinaryInputCapsule implements InputCapsule {
                 Object value = null;
 
                 switch (type) {
-                    case BinaryClassField.BITSET: {
+                case BinaryClassField.BITSET: {
                         value = readBitSet(content);
                         break;
                     }
-                    case BinaryClassField.BOOLEAN: {
+                case BinaryClassField.BOOLEAN: {
                         value = readBoolean(content);
                         break;
                     }
-                    case BinaryClassField.BOOLEAN_1D: {
+                case BinaryClassField.BOOLEAN_1D: {
                         value = readBooleanArray(content);
                         break;
                     }
-                    case BinaryClassField.BOOLEAN_2D: {
+                case BinaryClassField.BOOLEAN_2D: {
                         value = readBooleanArray2D(content);
                         break;
                     }
-                    case BinaryClassField.BYTE: {
+                case BinaryClassField.BYTE: {
                         value = readByte(content);
                         break;
                     }
-                    case BinaryClassField.BYTE_1D: {
+                case BinaryClassField.BYTE_1D: {
                         value = readByteArray(content);
                         break;
                     }
-                    case BinaryClassField.BYTE_2D: {
+                case BinaryClassField.BYTE_2D: {
                         value = readByteArray2D(content);
                         break;
                     }
-                    case BinaryClassField.BYTEBUFFER: {
+                case BinaryClassField.BYTEBUFFER: {
                         value = readByteBuffer(content);
                         break;
                     }
-                    case BinaryClassField.DOUBLE: {
+                case BinaryClassField.DOUBLE: {
                         value = readDouble(content);
                         break;
                     }
-                    case BinaryClassField.DOUBLE_1D: {
+                case BinaryClassField.DOUBLE_1D: {
                         value = readDoubleArray(content);
                         break;
                     }
-                    case BinaryClassField.DOUBLE_2D: {
+                case BinaryClassField.DOUBLE_2D: {
                         value = readDoubleArray2D(content);
                         break;
                     }
-                    case BinaryClassField.FLOAT: {
+                case BinaryClassField.FLOAT: {
                         value = readFloat(content);
                         break;
                     }
-                    case BinaryClassField.FLOAT_1D: {
+                case BinaryClassField.FLOAT_1D: {
                         value = readFloatArray(content);
                         break;
                     }
-                    case BinaryClassField.FLOAT_2D: {
+                case BinaryClassField.FLOAT_2D: {
                         value = readFloatArray2D(content);
                         break;
                     }
-                    case BinaryClassField.FLOATBUFFER: {
+                case BinaryClassField.FLOATBUFFER: {
                         value = readFloatBuffer(content);
                         break;
                     }
-                    case BinaryClassField.FLOATBUFFER_ARRAYLIST: {
+                case BinaryClassField.FLOATBUFFER_ARRAYLIST: {
                         value = readFloatBufferArrayList(content);
                         break;
                     }
-                    case BinaryClassField.INT: {
+                case BinaryClassField.INT: {
                         value = readInt(content);
                         break;
                     }
-                    case BinaryClassField.INT_1D: {
+                case BinaryClassField.INT_1D: {
                         value = readIntArray(content);
                         break;
                     }
-                    case BinaryClassField.INT_2D: {
+                case BinaryClassField.INT_2D: {
                         value = readIntArray2D(content);
                         break;
                     }
-                    case BinaryClassField.INTBUFFER: {
+                case BinaryClassField.INTBUFFER: {
                         value = readIntBuffer(content);
                         break;
                     }
-                    case BinaryClassField.LONG: {
+                case BinaryClassField.LONG: {
                         value = readLong(content);
                         break;
                     }
-                    case BinaryClassField.LONG_1D: {
+                case BinaryClassField.LONG_1D: {
                         value = readLongArray(content);
                         break;
                     }
-                    case BinaryClassField.LONG_2D: {
+                case BinaryClassField.LONG_2D: {
                         value = readLongArray2D(content);
                         break;
                     }
-                    case BinaryClassField.SAVABLE: {
+                case BinaryClassField.SAVABLE: {
                         value = readSavable(content);
                         break;
                     }
-                    case BinaryClassField.SAVABLE_1D: {
+                case BinaryClassField.SAVABLE_1D: {
                         value = readSavableArray(content);
                         break;
                     }
-                    case BinaryClassField.SAVABLE_2D: {
+                case BinaryClassField.SAVABLE_2D: {
                         value = readSavableArray2D(content);
                         break;
                     }
-                    case BinaryClassField.SAVABLE_ARRAYLIST: {
+                case BinaryClassField.SAVABLE_ARRAYLIST: {
                         value = readSavableArray(content);
                         break;
                     }
-                    case BinaryClassField.SAVABLE_ARRAYLIST_1D: {
+                case BinaryClassField.SAVABLE_ARRAYLIST_1D: {
                         value = readSavableArray2D(content);
                         break;
                     }
-                    case BinaryClassField.SAVABLE_ARRAYLIST_2D: {
+                case BinaryClassField.SAVABLE_ARRAYLIST_2D: {
                         value = readSavableArray3D(content);
                         break;
                     }
-                    case BinaryClassField.SHORT: {
+                case BinaryClassField.SHORT: {
                         value = readShort(content);
                         break;
                     }
-                    case BinaryClassField.SHORT_1D: {
+                case BinaryClassField.SHORT_1D: {
                         value = readShortArray(content);
                         break;
                     }
-                    case BinaryClassField.SHORT_2D: {
+                case BinaryClassField.SHORT_2D: {
                         value = readShortArray2D(content);
                         break;
                     }
-                    case BinaryClassField.SHORTBUFFER: {
+                case BinaryClassField.SHORTBUFFER: {
                         value = readShortBuffer(content);
                         break;
                     }
-                    case BinaryClassField.STRING: {
+                case BinaryClassField.STRING: {
                         value = readString(content);
                         break;
                     }
-                    case BinaryClassField.STRING_1D: {
+                case BinaryClassField.STRING_1D: {
                         value = readStringArray(content);
                         break;
                     }
-                    case BinaryClassField.STRING_2D: {
+                case BinaryClassField.STRING_2D: {
                         value = readStringArray2D(content);
                         break;
                     }
 
-                    default:
-                        // skip put statement
-                        continue;
+                default:
+                    // skip put statement
+                    continue;
                 }
 
                 fieldData.put(alias, value);
@@ -221,230 +222,229 @@ public class BinaryInputCapsule implements InputCapsule {
     }
 
     @Override
-	public BitSet readBitSet(String name, BitSet defVal) throws IOException {
+    public BitSet readBitSet(String name, BitSet defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (BitSet) fieldData.get(field.alias);
     }
 
     @Override
-	public boolean readBoolean(String name, boolean defVal) throws IOException {
+    public boolean readBoolean(String name, boolean defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return ((Boolean) fieldData.get(field.alias)).booleanValue();
     }
 
     @Override
-	public boolean[] readBooleanArray(String name, boolean[] defVal)
-            throws IOException {
+    public boolean[] readBooleanArray(String name, boolean[] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (boolean[]) fieldData.get(field.alias);
     }
 
     @Override
-	public boolean[][] readBooleanArray2D(String name, boolean[][] defVal)
-            throws IOException {
+    public boolean[][] readBooleanArray2D(String name, boolean[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (boolean[][]) fieldData.get(field.alias);
     }
 
     @Override
-	public byte readByte(String name, byte defVal) throws IOException {
+    public byte readByte(String name, byte defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return ((Byte) fieldData.get(field.alias)).byteValue();
     }
 
     @Override
-	public byte[] readByteArray(String name, byte[] defVal) throws IOException {
+    public byte[] readByteArray(String name, byte[] defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (byte[]) fieldData.get(field.alias);
     }
 
     @Override
-	public byte[][] readByteArray2D(String name, byte[][] defVal)
-            throws IOException {
+    public byte[][] readByteArray2D(String name, byte[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (byte[][]) fieldData.get(field.alias);
     }
 
     @Override
-	public ByteBuffer readByteBuffer(String name, ByteBuffer defVal)
-            throws IOException {
+    public ByteBuffer readByteBuffer(String name, ByteBuffer defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (ByteBuffer) fieldData.get(field.alias);
     }
 
     @Override
-	public double readDouble(String name, double defVal) throws IOException {
+    public double readDouble(String name, double defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return ((Double) fieldData.get(field.alias)).doubleValue();
     }
 
     @Override
-	public double[] readDoubleArray(String name, double[] defVal)
-            throws IOException {
+    public double[] readDoubleArray(String name, double[] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (double[]) fieldData.get(field.alias);
     }
 
     @Override
-	public double[][] readDoubleArray2D(String name, double[][] defVal)
-            throws IOException {
+    public double[][] readDoubleArray2D(String name, double[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (double[][]) fieldData.get(field.alias);
     }
 
     @Override
-	public float readFloat(String name, float defVal) throws IOException {
+    public float readFloat(String name, float defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return ((Float) fieldData.get(field.alias)).floatValue();
     }
 
     @Override
-	public float[] readFloatArray(String name, float[] defVal)
-            throws IOException {
+    public float[] readFloatArray(String name, float[] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (float[]) fieldData.get(field.alias);
     }
 
     @Override
-	public float[][] readFloatArray2D(String name, float[][] defVal)
-            throws IOException {
+    public float[][] readFloatArray2D(String name, float[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (float[][]) fieldData.get(field.alias);
     }
 
     @Override
-	public FloatBuffer readFloatBuffer(String name, FloatBuffer defVal)
-            throws IOException {
+    public FloatBuffer readFloatBuffer(String name, FloatBuffer defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (FloatBuffer) fieldData.get(field.alias);
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
-	public ArrayList<FloatBuffer> readFloatBufferArrayList(String name,
-            ArrayList<FloatBuffer> defVal) throws IOException {
+    @Override @SuppressWarnings("unchecked")
+    public List<FloatBuffer> readFloatBufferArrayList(String name,
+                                                      List<FloatBuffer> defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
-        return (ArrayList<FloatBuffer>) fieldData.get(field.alias);
+        return defVal;
+        return (List<FloatBuffer>) fieldData.get(field.alias);
     }
 
     @Override
-	public int readInt(String name, int defVal) throws IOException {
+    public int readInt(String name, int defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return ((Integer) fieldData.get(field.alias)).intValue();
     }
 
     @Override
-	public int[] readIntArray(String name, int[] defVal) throws IOException {
+    public int[] readIntArray(String name, int[] defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (int[]) fieldData.get(field.alias);
     }
 
     @Override
-	public int[][] readIntArray2D(String name, int[][] defVal)
-            throws IOException {
+    public int[][] readIntArray2D(String name, int[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (int[][]) fieldData.get(field.alias);
     }
 
     @Override
-	public IntBuffer readIntBuffer(String name, IntBuffer defVal)
-            throws IOException {
+    public IntBuffer readIntBuffer(String name, IntBuffer defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (IntBuffer) fieldData.get(field.alias);
     }
 
     @Override
-	public long readLong(String name, long defVal) throws IOException {
+    public long readLong(String name, long defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return ((Long) fieldData.get(field.alias)).longValue();
     }
 
     @Override
-	public long[] readLongArray(String name, long[] defVal) throws IOException {
+    public long[] readLongArray(String name, long[] defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (long[]) fieldData.get(field.alias);
     }
 
     @Override
-	public long[][] readLongArray2D(String name, long[][] defVal)
-            throws IOException {
+    public long[][] readLongArray2D(String name, long[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (long[][]) fieldData.get(field.alias);
     }
 
     @Override
-	public Savable readSavable(String name, Savable defVal) throws IOException {
+    public Savable readSavable(String name, Savable defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         Object value = fieldData.get(field.alias);
         if (value instanceof ID) {
             value = importer.readObject(((ID) value).id);
             fieldData.put(field.alias, value);
             return (Savable) value;
         } else 
-            return defVal;
+        return defVal;
     }
 
     @Override
-	public Savable[] readSavableArray(String name, Savable[] defVal)
-            throws IOException {
+    public Savable[] readSavableArray(String name, Savable[] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         Object[] values = (Object[]) fieldData.get(field.alias);
         if (values instanceof ID[]) {
             values = resolveIDs(values);
             fieldData.put(field.alias, values);
             return (Savable[]) values;
         } else
-            return defVal;
+        return defVal;
     }
 
     private Savable[] resolveIDs(Object[] values) {
@@ -461,11 +461,11 @@ public class BinaryInputCapsule implements InputCapsule {
     }
 
     @Override
-	public Savable[][] readSavableArray2D(String name, Savable[][] defVal)
-            throws IOException {
+    public Savable[][] readSavableArray2D(String name, Savable[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null ||!fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         Object[][] values = (Object[][]) fieldData.get(field.alias);
         if (values instanceof ID[][]) {
             Savable[][] savables = new Savable[values.length][];
@@ -481,10 +481,10 @@ public class BinaryInputCapsule implements InputCapsule {
     }
 
     public Savable[][][] readSavableArray3D(String name, Savable[][][] defVal)
-            throws IOException {
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         Object[][][] values = (Object[][][]) fieldData.get(field.alias);
         if (values instanceof ID[][][]) {
             Savable[][][] savables = new Savable[values.length][][];
@@ -499,14 +499,14 @@ public class BinaryInputCapsule implements InputCapsule {
             fieldData.put(field.alias, savables);
             return savables;
         } else 
-            return defVal;
+        return defVal;
     }
 
-    private ArrayList<Savable> savableArrayListFromArray(Savable[] savables) {
+    private List<Savable> savableArrayListFromArray(Savable[] savables) {
         if(savables == null) {
             return null;
         }
-        ArrayList<Savable> arrayList = new ArrayList<Savable>(savables.length);
+        List<Savable> arrayList = new ArrayList<Savable>(savables.length);
         for (int x = 0; x < savables.length; x++) {
             arrayList.add(savables[x]);
         }
@@ -514,12 +514,12 @@ public class BinaryInputCapsule implements InputCapsule {
     }
 
     @Override
-	@SuppressWarnings("unchecked")
-	public <T extends Savable> ArrayList<T> readSavableArrayList(String name, ArrayList<T> defVal)
-            throws IOException {
+    @SuppressWarnings("unchecked")
+    public <T extends Savable> List<T> readSavableArrayList(String name, List<T> defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         Object value = fieldData.get(field.alias);
         if (value instanceof ID[]) {
             // read Savable array and convert to ArrayList
@@ -527,67 +527,67 @@ public class BinaryInputCapsule implements InputCapsule {
             value = savableArrayListFromArray(savables);
             fieldData.put(field.alias, value);
         }
-        return (ArrayList<T>) value;
+        return (List<T>) value;
     }
 
     @Override
-	public short readShort(String name, short defVal) throws IOException {
+    public short readShort(String name, short defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return ((Short) fieldData.get(field.alias)).shortValue();
     }
 
     @Override
-	public short[] readShortArray(String name, short[] defVal)
-            throws IOException {
+    public short[] readShortArray(String name, short[] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (short[]) fieldData.get(field.alias);
     }
 
     @Override
-	public short[][] readShortArray2D(String name, short[][] defVal)
-            throws IOException {
+    public short[][] readShortArray2D(String name, short[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (short[][]) fieldData.get(field.alias);
     }
 
     @Override
-	public ShortBuffer readShortBuffer(String name, ShortBuffer defVal)
-            throws IOException {
+    public ShortBuffer readShortBuffer(String name, ShortBuffer defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (ShortBuffer) fieldData.get(field.alias);
     }
 
     @Override
-	public String readString(String name, String defVal) throws IOException {
+    public String readString(String name, String defVal) throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (String) fieldData.get(field.alias);
     }
 
     @Override
-	public String[] readStringArray(String name, String[] defVal)
-            throws IOException {
+    public String[] readStringArray(String name, String[] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (String[]) fieldData.get(field.alias);
     }
 
     @Override
-	public String[][] readStringArray2D(String name, String[][] defVal)
-            throws IOException {
+    public String[][] readStringArray2D(String name, String[][] defVal)
+    throws IOException {
         BinaryClassField field = cObj.nameFields.get(name);
         if (field == null || !fieldData.containsKey(field.alias))
-            return defVal;
+        return defVal;
         return (String[][]) fieldData.get(field.alias);
     }
 
@@ -601,21 +601,19 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected byte[] readByteArray(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         byte[] value = new byte[length];
         for (int x = 0; x < length; x++)
-            value[x] = readByte(content);
+        value[x] = readByte(content);
         return value;
     }
 
     protected byte[][] readByteArray2D(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         byte[][] value = new byte[length][];
         for (int x = 0; x < length; x++)
-            value[x] = readByteArray(content);
+        value[x] = readByteArray(content);
         return value;
     }
 
@@ -627,28 +625,26 @@ public class BinaryInputCapsule implements InputCapsule {
         bytes = ByteUtils.rightAlignBytes(bytes, 4);
         int value = ByteUtils.convertIntFromBytes(bytes);
         if (value == BinaryOutputCapsule.NULL_OBJECT
-                || value == BinaryOutputCapsule.DEFAULT_OBJECT)
-            index -= 4;
+            || value == BinaryOutputCapsule.DEFAULT_OBJECT)
+        index -= 4;
         return value;
     }
 
     protected int[] readIntArray(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         int[] value = new int[length];
         for (int x = 0; x < length; x++)
-            value[x] = readInt(content);
+        value[x] = readInt(content);
         return value;
     }
 
     protected int[][] readIntArray2D(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         int[][] value = new int[length][];
         for (int x = 0; x < length; x++)
-            value[x] = readIntArray(content);
+        value[x] = readIntArray(content);
         return value;
     }
 
@@ -662,21 +658,19 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected float[] readFloatArray(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         float[] value = new float[length];
         for (int x = 0; x < length; x++)
-            value[x] = readFloat(content);
+        value[x] = readFloat(content);
         return value;
     }
 
     protected float[][] readFloatArray2D(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         float[][] value = new float[length][];
         for (int x = 0; x < length; x++)
-            value[x] = readFloatArray(content);
+        value[x] = readFloatArray(content);
         return value;
     }
 
@@ -690,21 +684,19 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected double[] readDoubleArray(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         double[] value = new double[length];
         for (int x = 0; x < length; x++)
-            value[x] = readDouble(content);
+        value[x] = readDouble(content);
         return value;
     }
 
     protected double[][] readDoubleArray2D(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         double[][] value = new double[length][];
         for (int x = 0; x < length; x++)
-            value[x] = readDoubleArray(content);
+        value[x] = readDoubleArray(content);
         return value;
     }
 
@@ -720,21 +712,19 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected long[] readLongArray(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         long[] value = new long[length];
         for (int x = 0; x < length; x++)
-            value[x] = readLong(content);
+        value[x] = readLong(content);
         return value;
     }
 
     protected long[][] readLongArray2D(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         long[][] value = new long[length][];
         for (int x = 0; x < length; x++)
-            value[x] = readLongArray(content);
+        value[x] = readLongArray(content);
         return value;
     }
 
@@ -748,21 +738,19 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected short[] readShortArray(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         short[] value = new short[length];
         for (int x = 0; x < length; x++)
-            value[x] = readShort(content);
+        value[x] = readShort(content);
         return value;
     }
 
     protected short[][] readShortArray2D(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         short[][] value = new short[length][];
         for (int x = 0; x < length; x++)
-            value[x] = readShortArray(content);
+        value[x] = readShortArray(content);
         return value;
     }
 
@@ -776,21 +764,19 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected boolean[] readBooleanArray(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         boolean[] value = new boolean[length];
         for (int x = 0; x < length; x++)
-            value[x] = readBoolean(content);
+        value[x] = readBoolean(content);
         return value;
     }
 
     protected boolean[][] readBooleanArray2D(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         boolean[][] value = new boolean[length][];
         for (int x = 0; x < length; x++)
-            value[x] = readBooleanArray(content);
+        value[x] = readBooleanArray(content);
         return value;
     }
 
@@ -798,31 +784,28 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected String readString(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         byte[] bytes = new byte[length];
         for (int x = 0; x < length; x++)
-            bytes[x] = content[index++];
+        bytes[x] = content[index++];
         return new String(bytes);
     }
 
     protected String[] readStringArray(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         String[] value = new String[length];
         for (int x = 0; x < length; x++)
-            value[x] = readString(content);
+        value[x] = readString(content);
         return value;
     }
 
     protected String[][] readStringArray2D(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         String[][] value = new String[length][];
         for (int x = 0; x < length; x++)
-            value[x] = readStringArray(content);
+        value[x] = readStringArray(content);
         return value;
     }
 
@@ -830,11 +813,10 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected BitSet readBitSet(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         BitSet value = new BitSet(length);
         for (int x = 0; x < length; x++)
-            value.set(x, readBoolean(content));
+        value.set(x, readBoolean(content));
         return value;
     }
 
@@ -843,15 +825,15 @@ public class BinaryInputCapsule implements InputCapsule {
     protected static byte[] inflateFrom(byte[] contents, int index) {
         byte firstByte = contents[index];
         if (firstByte == BinaryOutputCapsule.NULL_OBJECT)
-            return ByteUtils.convertToBytes(BinaryOutputCapsule.NULL_OBJECT);
+        return ByteUtils.convertToBytes(BinaryOutputCapsule.NULL_OBJECT);
         else if (firstByte == BinaryOutputCapsule.DEFAULT_OBJECT)
-            return ByteUtils.convertToBytes(BinaryOutputCapsule.DEFAULT_OBJECT);
+        return ByteUtils.convertToBytes(BinaryOutputCapsule.DEFAULT_OBJECT);
         else if (firstByte == 0)
-            return new byte[0];
+        return new byte[0];
         else {
             byte[] rVal = new byte[firstByte];
             for (int x = 0; x < rVal.length; x++)
-                rVal[x] = contents[x + 1 + index];
+            rVal[x] = contents[x + 1 + index];
             return rVal;
         }
     }
@@ -871,8 +853,7 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected ID[] readSavableArray(byte[] content) throws IOException {
         int elements = readInt(content);
-        if (elements == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (elements == BinaryOutputCapsule.NULL_OBJECT) return null;
         ID[] rVal = new ID[elements];
         for (int x = 0; x < elements; x++) {
             rVal[x] = readSavable(content);
@@ -882,8 +863,7 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected ID[][] readSavableArray2D(byte[] content) throws IOException {
         int elements = readInt(content);
-        if (elements == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (elements == BinaryOutputCapsule.NULL_OBJECT) return null;
         ID[][] rVal = new ID[elements][];
         for (int x = 0; x < elements; x++) {
             rVal[x] = readSavableArray(content);
@@ -893,8 +873,7 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected ID[][][] readSavableArray3D(byte[] content) throws IOException {
         int elements = readInt(content);
-        if (elements == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (elements == BinaryOutputCapsule.NULL_OBJECT) return null;
         ID[][][] rVal = new ID[elements][][];
         for (int x = 0; x < elements; x++) {
             rVal[x] = readSavableArray2D(content);
@@ -904,13 +883,13 @@ public class BinaryInputCapsule implements InputCapsule {
 
     // ArrayList<FloatBuffer>
 
-    protected ArrayList<FloatBuffer> readFloatBufferArrayList(byte[] content)
-            throws IOException {
+    protected List<FloatBuffer> readFloatBufferArrayList(byte[] content)
+    throws IOException {
         int length = readInt(content);
         if (length == BinaryOutputCapsule.NULL_OBJECT) {
             return null;
         }
-        ArrayList<FloatBuffer> rVal = new ArrayList<FloatBuffer>(length);
+        List<FloatBuffer> rVal = new ArrayList<FloatBuffer>(length);
         for (int x = 0; x < length; x++) {
             rVal.add(readFloatBuffer(content));
         }
@@ -922,8 +901,7 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected FloatBuffer readFloatBuffer(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         FloatBuffer value = BufferUtils.createFloatBuffer(length);
         for (int x = 0; x < length; x++) {
             value.put(readFloat(content));
@@ -936,8 +914,7 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected IntBuffer readIntBuffer(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         IntBuffer value = BufferUtils.createIntBuffer(length);
         for (int x = 0; x < length; x++) {
             value.put(readInt(content));
@@ -950,8 +927,7 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected ByteBuffer readByteBuffer(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         ByteBuffer value = BufferUtils.createByteBuffer(length);
         for (int x = 0; x < length; x++) {
             value.put(readByte(content));
@@ -964,8 +940,7 @@ public class BinaryInputCapsule implements InputCapsule {
 
     protected ShortBuffer readShortBuffer(byte[] content) throws IOException {
         int length = readInt(content);
-        if (length == BinaryOutputCapsule.NULL_OBJECT)
-            return null;
+        if (length == BinaryOutputCapsule.NULL_OBJECT) return null;
         ShortBuffer value = BufferUtils.createShortBuffer(length);
         for (int x = 0; x < length; x++) {
             value.put(readShort(content));

@@ -2,7 +2,7 @@ package com.jmex.effects.particles;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.math.FastMath;
 import com.jme.math.Frustum;
@@ -27,7 +27,7 @@ import com.jme.util.export.OutputCapsule;
 /**
  * ParticleGeometry is an abstract class representing a particle system. A
  * ParticleController must be attached for the effect to be complete.
- * 
+ *
  * @author Joshua Slack
  * @version $Id$
  */
@@ -41,13 +41,13 @@ public abstract class ParticleGeometry extends Geometry {
     public static final int ET_GEOMBATCH = 3;
     public static final int ET_RING = 4;
     public static final int ET_FRUSTUM = 5;
-    
+
     public static final int PT_QUAD = 0;
     public static final int PT_TRIANGLE = 1;
     public static final int PT_POINT = 2;
     public static final int PT_LINE = 3;
     public static final int PT_GEOMBATCH = 4; // NOT YET SUPPORTED
-    
+
     protected static final float DEFAULT_END_SIZE = 4f;
     protected static final float DEFAULT_START_SIZE = 20f;
     protected static final float DEFAULT_MAX_ANGLE = 0.7853982f;
@@ -66,7 +66,7 @@ public abstract class ParticleGeometry extends Geometry {
     protected Frustum psFrustum;
     protected boolean cameraFacing = true;
     protected boolean velocityAligned = false;
-    
+
     protected float startSize, endSize;
     protected ColorRGBA startColor;
     protected ColorRGBA endColor;
@@ -105,11 +105,11 @@ public abstract class ParticleGeometry extends Geometry {
     protected ParticleController controller;
 
     public ParticleGeometry() { }
-    
+
     public ParticleGeometry(String name, int numParticles) {
         this(name, numParticles, ParticleGeometry.PT_QUAD);
     }
-    
+
     public ParticleGeometry(String name, int numParticles, int particleType) {
         super(name);
         this.numParticles = numParticles;
@@ -246,7 +246,7 @@ public abstract class ParticleGeometry extends Geometry {
     }
 
     @Override
-	public void addController(Controller c) {
+ public void addController(Controller c) {
         super.addController(c);
         if (c instanceof ParticleController) {
             this.controller = (ParticleController) c;
@@ -279,7 +279,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Set the start color for particles. This is the base color of the quad.
-     * 
+     *
      * @param color
      *            The start color.
      */
@@ -289,7 +289,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * <code>getStartColor</code> returns the starting color.
-     * 
+     *
      * @return ColorRGBA The begining color.
      */
     public ColorRGBA getStartColor() {
@@ -300,7 +300,7 @@ public abstract class ParticleGeometry extends Geometry {
      * Set the end color for particles. The base color of the quad will linearly
      * approach this color from the start color over the lifetime of the
      * particle.
-     * 
+     *
      * @param color
      *            ColorRGBA The ending color.
      */
@@ -310,7 +310,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * getEndColor returns the ending color.
-     * 
+     *
      * @return The ending color
      */
     public ColorRGBA getEndColor() {
@@ -328,7 +328,7 @@ public abstract class ParticleGeometry extends Geometry {
     public void setAlphaFalloff(float falloff) {
         alphaFalloff = falloff;
     }
-    
+
     /**
      * getAlphaFalloff returns the alpha falloff rate.
      *
@@ -337,11 +337,11 @@ public abstract class ParticleGeometry extends Geometry {
     public float getAlphaFalloff() {
         return alphaFalloff;
     }
-    
+
     /**
      * Set the spinSpeed of new particles managed by this manager. Setting it to
      * 0 means no spin.
-     * 
+     *
      * @param speed
      *            float
      */
@@ -351,7 +351,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * getParticleSpinSpeed returns the current spin speed of particles.
-     * 
+     *
      * @return current spin speed of particles.
      */
     public float getParticleSpinSpeed() {
@@ -373,7 +373,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Add an external influence to the particle controller for this mesh.
-     * 
+     *
      * @param influence
      *            ParticleInfluence
      */
@@ -383,7 +383,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Remove an influence from the particle controller for this mesh.
-     * 
+     *
      * @param influence
      *            ParticleInfluence
      * @return true if found and removed.
@@ -391,20 +391,18 @@ public abstract class ParticleGeometry extends Geometry {
     public boolean removeInfluence(ParticleInfluence influence) {
         return controller.removeInfluence(influence);
     }
-    
+
     /**
      * Returns the list of influences acting on this particle controller.
-     *
-     * @return ArrayList
      */
-    public ArrayList<ParticleInfluence> getInfluences() {
+    public List<ParticleInfluence> getInfluences() {
         return controller.getInfluences();
     }
-    
+
     public void clearInfluences() {
         controller.clearInfluences();
     }
-    
+
     public void setParticleMass(float mass) {
         float invMass = 0;
         if (mass == 0)
@@ -418,11 +416,11 @@ public abstract class ParticleGeometry extends Geometry {
         for (int x = particles.length; --x >= 0; )
             particles[x].setMasses(mass, invMass);
     }
-    
+
     /**
      * Set the minimum angle (in radians) that particles can be emitted away
      * from the emission direction. Any angle less than 0 is trimmed to 0.
-     * 
+     *
      * @param f
      *            The new emission minimum angle.
      */
@@ -432,7 +430,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * getEmissionMinimumAngle returns the minimum emission angle.
-     * 
+     *
      * @return The minimum emission angle.
      */
     public float getMinimumAngle() {
@@ -442,7 +440,7 @@ public abstract class ParticleGeometry extends Geometry {
     /**
      * Set the maximum angle (in radians) that particles can be emitted away
      * from the emission direction. Any angle less than 0 is trimmed to 0.
-     * 
+     *
      * @param f
      *            The new emission maximum angle.
      */
@@ -452,7 +450,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * getEmissionMaximumAngle returns the maximum emission angle.
-     * 
+     *
      * @return The maximum emission angle.
      */
     public float getMaximumAngle() {
@@ -462,7 +460,7 @@ public abstract class ParticleGeometry extends Geometry {
     /**
      * Set the minimum lifespan of new particles (or recreated) managed by this
      * manager. if a value less than zero is given, 1.0f is used.
-     * 
+     *
      * @param lifeSpan
      *            in ms
      */
@@ -472,7 +470,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * getParticlesMinimumLifeTime returns the minimum life time of a particle.
-     * 
+     *
      * @return The current minimum life time in ms.
      */
     public float getMinimumLifeTime() {
@@ -482,7 +480,7 @@ public abstract class ParticleGeometry extends Geometry {
     /**
      * Set the maximum lifespan of new particles (or recreated) managed by this
      * manager. if a value less than zero is given, 1.0f is used.
-     * 
+     *
      * @param lifeSpan
      *            in ms
      */
@@ -492,7 +490,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * getParticlesMaximumLifeTime returns the maximum life time of a particle.
-     * 
+     *
      * @return The current maximum life time in ms.
      */
     public float getMaximumLifeTime() {
@@ -510,11 +508,11 @@ public abstract class ParticleGeometry extends Geometry {
     public TransformMatrix getEmitterTransform() {
         return emitterTransform;
     }
-    
+
     public void setEmitterTransform(TransformMatrix emitterTransform) {
         this.emitterTransform = emitterTransform;
     }
-    
+
     public float getParticleOrientation() {
         return particleOrientation;
     }
@@ -526,7 +524,7 @@ public abstract class ParticleGeometry extends Geometry {
     /**
      * Set the acceleration for any new particles created (or recreated) by this
      * manager.
-     * 
+     *
      * @param velocity
      *            particle v0
      */
@@ -536,7 +534,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Get the acceleration set in this manager.
-     * 
+     *
      * @return The initialVelocity
      */
     public float getInitialVelocity() {
@@ -547,7 +545,7 @@ public abstract class ParticleGeometry extends Geometry {
      * Set the offset for any new particles created (or recreated) by this
      * manager. This is applicable only to managers generating from a point (not
      * a line, rectangle, etc..)
-     * 
+     *
      * @param origin
      *            new origin position
      */
@@ -557,7 +555,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Get the offset point set in this manager.
-     * 
+     *
      * @return origin
      */
     public Vector3f getOriginOffset() {
@@ -574,7 +572,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Get the number of particles the manager should release per second.
-     * 
+     *
      * @return The number of particles that should be released per second.
      */
     public int getReleaseRate() {
@@ -583,7 +581,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Set the number of particles the manager should release per second.
-     * 
+     *
      * @param particlesPerSecond
      *            number of particles per second
      */
@@ -594,7 +592,7 @@ public abstract class ParticleGeometry extends Geometry {
     /**
      * Get which emittype method is being used by the underlying system.
      * One of ET_POINT, ET_LINE, ET_RECTANGLE, ET_GEOMBATCH, ET_RING
-     * 
+     *
      * @return An int representing the current geometry method being used.
      */
     public int getEmitType() {
@@ -606,7 +604,7 @@ public abstract class ParticleGeometry extends Geometry {
      * already done by setGeometry(Line) and setGeometry(Rectangle) You should
      * not need to use this method unless you are switching between geometry
      * already set by those methods.
-     * 
+     *
      * @param type
      *            emit type to use
      */
@@ -617,7 +615,7 @@ public abstract class ParticleGeometry extends Geometry {
     /**
      * Get which emittype method is being used by the underlying system.
      * One of PT_QUAD, PT_TRIANGLE, PT_POINT, PT_LINE, PT_GEOMBATCH
-     * 
+     *
      * @return An int representing the type of particle we are emitting.
      */
     public int getParticleType() {
@@ -627,7 +625,7 @@ public abstract class ParticleGeometry extends Geometry {
     /**
      * Set what type of particle to emit from this sytem. Does not have an
      * effect unless recreate is called.
-     * 
+     *
      * @param type
      *            particle type to use, should be one of PT_QUAD, PT_TRIANGLE,
      *            PT_POINT, PT_LINE, PT_GEOMBATCH
@@ -638,7 +636,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Set a line segment to be used as the "emittor".
-     * 
+     *
      * @param line
      *            New emittor line segment.
      */
@@ -649,7 +647,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Set a rectangular patch to be used as the "emittor".
-     * 
+     *
      * @param rect
      *            New rectangular patch.
      */
@@ -668,7 +666,7 @@ public abstract class ParticleGeometry extends Geometry {
         psRing = ring;
         emitType = ET_RING;
     }
-    
+
     /**
      * Set a pyramidal frustum to be used as the "emittor".  The frustum will
      * track the camera's parameters (except for the far plane) as it moves.
@@ -680,10 +678,10 @@ public abstract class ParticleGeometry extends Geometry {
         psFrustum = frustum;
         emitType = ET_FRUSTUM;
     }
-    
+
     /**
      * Set a GeomBatch's verts to be the random emission points
-     * 
+     *
      * @param mesh
      *            The new geometry random verts.
      */
@@ -691,10 +689,10 @@ public abstract class ParticleGeometry extends Geometry {
         psBatch = batch;
         emitType = ET_GEOMBATCH;
     }
-    
+
     /**
      * Set a GeomBatch's verts to be the random emission points
-     * 
+     *
      * @param mesh
      *            The new geometry random verts.
      */
@@ -702,10 +700,10 @@ public abstract class ParticleGeometry extends Geometry {
         psBatch = batch.getBatch(0);
         emitType = ET_GEOMBATCH;
     }
-    
+
     /**
      * Set a GeomBatch's verts to be the random emission points
-     * 
+     *
      * @param mesh
      *            The new geometry random verts.
      */
@@ -716,7 +714,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * getLine returns the currently set line segment.
-     * 
+     *
      * @return Current line segment.
      */
     public Line getLine() {
@@ -725,7 +723,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * getRectangle returns the currently set rectangle segment.
-     * 
+     *
      * @return Current rectangle segment.
      */
     public Rectangle getRectangle() {
@@ -740,7 +738,7 @@ public abstract class ParticleGeometry extends Geometry {
     public Ring getRing() {
         return psRing;
     }
-    
+
     /**
      * getFrustum returns the currently set frustum emission area.
      *
@@ -749,10 +747,10 @@ public abstract class ParticleGeometry extends Geometry {
     public Frustum getFrustum() {
         return psFrustum;
     }
-    
+
     /**
      * getGeomBatch returns the currently set GeomBatch.
-     * 
+     *
      * @return Current GeomBatch.
      */
     public GeomBatch getGeomBatch() {
@@ -768,7 +766,7 @@ public abstract class ParticleGeometry extends Geometry {
             Triangle t = p.getTriangleModel();
             if (t == null)
                 t = new Triangle(vertices[0],vertices[1],vertices[2]);
-            else 
+            else
                 for (int x = 0; x < 3; x++)
                     t.set(x, vertices[x]);
             t.calculateCenter();
@@ -784,17 +782,17 @@ public abstract class ParticleGeometry extends Geometry {
             p.setTriangleModel(t);
             psBatch.getParentGeom().localToWorld(t.getCenter(), p.getPosition());
             p.getPosition().multLocal(getInvScale());
-                
+
         } else if (getEmitType() == ET_GEOMBATCH) {
             if (getGeomBatch() != null && getGeomBatch() instanceof TriangleBatch)
                 ((TriangleBatch)getGeomBatch()).randomPointOnTriangles(p.getPosition(), workVect3);
             else if (getGeomBatch() != null)
                 getGeomBatch().randomVertex(p.getPosition());
             p.getPosition().multLocal(getInvScale());
-        
+
         } else if (getEmitType() == ET_FRUSTUM) {
             p.getPosition().set(getFrustum().random());
-            
+
         } else {
             switch (getEmitType()) {
                 case ET_LINE:
@@ -824,7 +822,7 @@ public abstract class ParticleGeometry extends Geometry {
     public void setCameraFacing(boolean cameraFacing) {
         this.cameraFacing = cameraFacing;
     }
-    
+
     public boolean isVelocityAligned() {
         return velocityAligned;
     }
@@ -832,7 +830,7 @@ public abstract class ParticleGeometry extends Geometry {
     public void setVelocityAligned(boolean velocityAligned) {
         this.velocityAligned = velocityAligned;
     }
-        
+
     public Particle getParticle(int i) {
         return particles[i];
     }
@@ -888,7 +886,7 @@ public abstract class ParticleGeometry extends Geometry {
     public void setTransformParticles(boolean transform) {
         this.transformParticles = transform;
     }
-    
+
     public void resetParticleVelocity(int i) {
         getRandomVelocity(particles[i].getVelocity());
     }
@@ -902,7 +900,7 @@ public abstract class ParticleGeometry extends Geometry {
         return getMinimumAngle() +
             FastMath.nextRandomFloat() * (getMaximumAngle() - getMinimumAngle());
     }
-    
+
     /**
      * generate a random lifespan between the min and max lifespan of the particle system.
      *
@@ -911,7 +909,7 @@ public abstract class ParticleGeometry extends Geometry {
     public float getRandomLifeSpan() {
         return getMinimumLifeTime() + ((getMaximumLifeTime() - getMinimumLifeTime()) * FastMath.nextRandomFloat());
     }
-    
+
     /**
      * Generate a random velocity within the parameters of max angle and
      * the rotation matrix.
@@ -930,24 +928,24 @@ public abstract class ParticleGeometry extends Geometry {
         pSpeed.multLocal(getInitialVelocity());
         return pSpeed;
     }
-    
+
     /**
      * Apply the rotation matrix to a given vector representing a particle velocity.
      *
      * @param pSpeed the velocity vector to be modified.
      */
     protected void rotateVectorSpeed(Vector3f pSpeed) {
-        
+
         float x = pSpeed.x, y = pSpeed.y, z = pSpeed.z;
-        
+
         pSpeed.x = -1 * ( (rotMatrix.m00 * x) +
                 (rotMatrix.m10 * y) +
                 (rotMatrix.m20 * z));
-        
+
         pSpeed.y = (getRotMatrix().m01 * x) +
                 (rotMatrix.m11 * y) +
                 (rotMatrix.m21 * z);
-        
+
         pSpeed.z = -1 * ( (rotMatrix.m02 * x) +
                 (rotMatrix.m12 * y) +
                 (rotMatrix.m22 * z));
@@ -982,7 +980,7 @@ public abstract class ParticleGeometry extends Geometry {
 
     /**
      * Changes the number of particles in this particle mesh.
-     * 
+     *
      * @param count
      *            the desired number of particles to change to.
      */
@@ -1001,7 +999,7 @@ public abstract class ParticleGeometry extends Geometry {
     }
 
     @Override
-	public void updateWorldVectors() {
+ public void updateWorldVectors() {
         super.updateWorldVectors();
         if (isRotateWithScene() && !transformParticles) {
             if (emitType == ET_GEOMBATCH && getGeomBatch() != null) {
@@ -1013,15 +1011,15 @@ public abstract class ParticleGeometry extends Geometry {
 
         emitterTransform.set(worldRotation,
             worldTranslation.divideLocal(worldScale));
-        
+
         originCenter.set(worldTranslation).addLocal(originOffset);
 
         getWorldTranslation().set(0,0,0);
         getWorldRotation().set(0, 0, 0, 1);
     }
-    
+
     @Override
-	public void write(JMEExporter e) throws IOException {
+ public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(emitType, "emitType", ET_POINT);
@@ -1061,7 +1059,7 @@ public abstract class ParticleGeometry extends Geometry {
     }
 
     @Override
-	public void read(JMEImporter e) throws IOException {
+ public void read(JMEImporter e) throws IOException {
         super.read(e);
         InputCapsule capsule = e.getCapsule(this);
         emitType = capsule.readInt("emitType",ET_POINT);
@@ -1091,7 +1089,7 @@ public abstract class ParticleGeometry extends Geometry {
         transformParticles = capsule.readBoolean("transformParticles", false);
         geometryCoordinates = capsule.readFloatBuffer("geometryCoordinates", null);
         appearanceColors = capsule.readFloatBuffer("appearanceColors", null);
-        
+
         releaseRate = capsule.readInt("releaseRate", numParticles);
         particleOrientation = capsule.readFloat("particleOrientation", 0);
         originCenter = (Vector3f)capsule.readSavable("originCenter", new Vector3f());

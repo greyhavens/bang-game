@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -33,6 +33,7 @@
 package com.jme.scene;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.jme.intersection.CollisionResults;
 import com.jme.renderer.Renderer;
@@ -43,106 +44,105 @@ import com.jme.scene.batch.GeomBatch;
  * different batches such as <code>PointBatch</code>, <code>LineBatch</code>,
  * <code>TriangleBatch</code> and <code>QuadBatch</code>. <br>
  * It does not support OBBTree for triangle accurate collision.
- * 
+ *
  * @author Tijl Houtbeckers
  * @version $Id$
  */
 public class BatchMesh extends Geometry implements Serializable {
 
-	private static final long serialVersionUID = 7639644164611314728L;
+    private static final long serialVersionUID = 7639644164611314728L;
 
-	/**
-	 * Empty Constructor to be used internally only.
-	 */
-	public BatchMesh() {
-		super();
-	}
+    /**
+     * Empty Constructor to be used internally only.
+     */
+    public BatchMesh() {
+        super();
+    }
 
-	/**
-	 * Constructor instantiates a new <code>BatchMesh</code> object.
-	 * 
-	 * @param name
-	 *            the name of the scene element. This is required for
-	 *            identification and comparision purposes.
-	 */
-	public BatchMesh(String name) {
-		super(name);
-	}
+    /**
+     * Constructor instantiates a new <code>BatchMesh</code> object.
+     *
+     * @param name
+     *            the name of the scene element. This is required for
+     *            identification and comparision purposes.
+     */
+    public BatchMesh(String name) {
+        super(name);
+    }
 
-	/**
-	 * Constructor instantiates a new <code>BatchMesh</code> object.
-	 * 
-	 * @param name
-	 *            the name of the scene element. This is required for
-	 *            identification and comparision purposes.
-	 * 
-	 * @param batches
-	 *            The batch(es) to use with this BatchMesh.
-	 * 
-	 */
-	public BatchMesh(String name, GeomBatch... batches) {
-		super(name);
-		if (batches != null && batches.length > 0)
-			setupBatchList(batches);
-	}
+    /**
+     * Constructor instantiates a new <code>BatchMesh</code> object.
+     *
+     * @param name
+     *            the name of the scene element. This is required for
+     *            identification and comparision purposes.
+     *
+     * @param batches
+     *            The batch(es) to use with this BatchMesh.
+     *
+     */
+    public BatchMesh(String name, GeomBatch... batches) {
+        super(name);
+        if (batches != null && batches.length > 0)
+        setupBatchList(batches);
+    }
 
-	protected void setupBatchList(GeomBatch[] batches) {
-		removeBatch(0);
-		batchList.ensureCapacity(batches.length);
-		for (GeomBatch batch : batches)
-			addBatch(batch);
-	}
+    protected void setupBatchList(GeomBatch[] batches) {
+        removeBatch(0);
+        ((ArrayList<?>)batchList).ensureCapacity(batches.length);
+        for (GeomBatch batch : batches)
+        addBatch(batch);
+    }
 
-	@Override
-	public void findCollisions(Spatial scene, CollisionResults results) {
-		if (this == scene || !isCollidable || !scene.isCollidable()) {
-			return;
-		}
+    @Override
+    public void findCollisions(Spatial scene, CollisionResults results) {
+        if (this == scene || !isCollidable || !scene.isCollidable()) {
+            return;
+        }
 
-		if (getWorldBound().intersects(scene.getWorldBound())) {
-			if ((scene.getType() & SceneElement.NODE) != 0) {
-				Node parent = (Node) scene;
-				for (int i = 0; i < parent.getQuantity(); i++) {
-					findCollisions(parent.getChild(i), results);
-				}
-			} else {
-				results.addCollision(this, (Geometry) scene);
-			}
-		}
+        if (getWorldBound().intersects(scene.getWorldBound())) {
+            if ((scene.getType() & SceneElement.NODE) != 0) {
+                Node parent = (Node) scene;
+                for (int i = 0; i < parent.getQuantity(); i++) {
+                    findCollisions(parent.getChild(i), results);
+                }
+            } else {
+                results.addCollision(this, (Geometry) scene);
+            }
+        }
+    }
 
-	}
+    @Override
+    public boolean hasCollision(Spatial scene, boolean checkTriangles) {
+        if (this == scene || !isCollidable || !scene.isCollidable()) {
+            return false;
+        }
+        if (getWorldBound().intersects(scene.getWorldBound())) {
+            if ((scene.getType() & SceneElement.NODE) != 0) {
+                Node parent = (Node) scene;
+                for (int i = 0; i < parent.getQuantity(); i++) {
+                    if (hasCollision(parent.getChild(i), checkTriangles)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            // we do not check for triangles yet.
+            return true;
+        }
 
-	@Override
-	public boolean hasCollision(Spatial scene, boolean checkTriangles) {
-		if (this == scene || !isCollidable || !scene.isCollidable()) {
-			return false;
-		}
-		if (getWorldBound().intersects(scene.getWorldBound())) {
-			if ((scene.getType() & SceneElement.NODE) != 0) {
-				Node parent = (Node) scene;
-				for (int i = 0; i < parent.getQuantity(); i++) {
-					if (hasCollision(parent.getChild(i), checkTriangles)) {
-						return true;
-					}
-				}
-				return false;
-			}
-			// we do not check for triangles yet.
-			return true;
-		}
+        return false;
+    }
 
-		return false;
-	}
-	
-	/**
+    /**
      * <code>draw</code> calls the onDraw method of the batches in this BatchMesh
      * if they are enabled.
-     * 
+     *
      * @param r
      *            the renderer to display
      */
     @Override
-	public void draw(Renderer r) {
+    public void draw(Renderer r) {
         GeomBatch batch;
         if (getBatchCount() == 1) {
             batch = getBatch(0);
@@ -155,8 +155,7 @@ public class BatchMesh extends Geometry implements Serializable {
 
         for (int i = 0, cSize = getBatchCount(); i < cSize; i++) {
             batch = getBatch(i);
-            if (batch != null && batch.isEnabled())
-                batch.onDraw(r);
+            if (batch != null && batch.isEnabled()) batch.onDraw(r);
         }
     }
 

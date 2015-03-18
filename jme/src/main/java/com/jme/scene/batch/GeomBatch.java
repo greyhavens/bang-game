@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 
@@ -71,24 +72,24 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
     protected BoundingVolume bound;
 
     /** The number of vertexes in this geometry. */
- protected int vertQuantity = 0;
+    protected int vertQuantity = 0;
 
- /** The geometry's per vertex color information. */
- protected transient FloatBuffer colorBuf;
+    /** The geometry's per vertex color information. */
+    protected transient FloatBuffer colorBuf;
 
- /** The geometry's per vertex normal information. */
- protected transient FloatBuffer normBuf;
+    /** The geometry's per vertex normal information. */
+    protected transient FloatBuffer normBuf;
 
- /** The geometry's vertex information. */
- protected transient FloatBuffer vertBuf;
+    /** The geometry's vertex information. */
+    protected transient FloatBuffer vertBuf;
 
- /** The geometry's per Texture per vertex texture coordinate information. */
- protected transient ArrayList<FloatBuffer> texBuf;
+    /** The geometry's per Texture per vertex texture coordinate information. */
+    protected transient List<FloatBuffer> texBuf;
 
- /** The geometry's VBO information. */
- protected transient VBOInfo vboInfo;
+    /** The geometry's VBO information. */
+    protected transient VBOInfo vboInfo;
 
- protected boolean enabled = true;
+    protected boolean enabled = true;
 
     protected transient Geometry parentGeom = null;
 
@@ -104,66 +105,66 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
 
     protected ColorRGBA defaultColor = new ColorRGBA(ColorRGBA.white);
 
- /**
-  * Non -1 values signal that drawing this scene should use the provided
-  * display list instead of drawing from the buffers.
-  */
- protected int displayListID = -1;
+    /**
+     * Non -1 values signal that drawing this scene should use the provided
+     * display list instead of drawing from the buffers.
+     */
+    protected int displayListID = -1;
 
     /** Static computation field */
     protected static Vector3f compVect = new Vector3f();
 
- public GeomBatch() {
+    public GeomBatch() {
         super();
-  texBuf = new ArrayList<FloatBuffer>(1);
+        texBuf = new ArrayList<FloatBuffer>(1);
         texBuf.add(null);
- }
+    }
 
- public void setEnabled(boolean enabled) {
+    public void setEnabled(boolean enabled) {
 
         this.enabled = enabled;
     }
 
- public boolean isEnabled() {
+    public boolean isEnabled() {
         return this.enabled;
- }
+    }
 
- public FloatBuffer getColorBuffer() {
-  return colorBuf;
- }
+    public FloatBuffer getColorBuffer() {
+        return colorBuf;
+    }
 
- public void setColorBuffer(FloatBuffer colorBuf) {
-  this.colorBuf = colorBuf;
- }
+    public void setColorBuffer(FloatBuffer colorBuf) {
+        this.colorBuf = colorBuf;
+    }
 
- public int getDisplayListID() {
-  return displayListID;
- }
+    public int getDisplayListID() {
+        return displayListID;
+    }
 
- public void setDisplayListID(int displayListID) {
-  this.displayListID = displayListID;
- }
+    public void setDisplayListID(int displayListID) {
+        this.displayListID = displayListID;
+    }
 
- public FloatBuffer getNormalBuffer() {
-  return normBuf;
- }
+    public FloatBuffer getNormalBuffer() {
+        return normBuf;
+    }
 
- public void setNormalBuffer(FloatBuffer normBuf) {
-  this.normBuf = normBuf;
- }
+    public void setNormalBuffer(FloatBuffer normBuf) {
+        this.normBuf = normBuf;
+    }
 
- public ArrayList<FloatBuffer> getTextureBuffers() {
-  return texBuf;
- }
+    public List<FloatBuffer> getTextureBuffers() {
+        return texBuf;
+    }
 
- public void setTextureBuffers(ArrayList<FloatBuffer> texBuf) {
-  this.texBuf = texBuf;
-  checkTextureCoordinates();
- }
+    public void setTextureBuffers(List<FloatBuffer> texBuf) {
+        this.texBuf = texBuf;
+        checkTextureCoordinates();
+    }
 
- public VBOInfo getVBOInfo() {
-  return vboInfo;
- }
+    public VBOInfo getVBOInfo() {
+        return vboInfo;
+    }
 
     public void setVBOInfo(VBOInfo info) {
         vboInfo = info;
@@ -172,91 +173,91 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
         }
     }
 
- public FloatBuffer getVertexBuffer() {
-  return vertBuf;
- }
+    public FloatBuffer getVertexBuffer() {
+        return vertBuf;
+    }
 
- public void setVertexBuffer(FloatBuffer vertBuf) {
-  this.vertBuf = vertBuf;
-  if (vertBuf != null)
-   vertQuantity = vertBuf.capacity() / 3;
-  else
-   vertQuantity = 0;
- }
+    public void setVertexBuffer(FloatBuffer vertBuf) {
+        this.vertBuf = vertBuf;
+        if (vertBuf != null)
+        vertQuantity = vertBuf.capacity() / 3;
+        else
+        vertQuantity = 0;
+    }
 
- public int getVertexCount() {
-  return vertQuantity;
- }
+    public int getVertexCount() {
+        return vertQuantity;
+    }
 
- public void setVertexCount(int vertQuantity) {
-  this.vertQuantity = vertQuantity;
- }
+    public void setVertexCount(int vertQuantity) {
+        this.vertQuantity = vertQuantity;
+    }
 
- public void clearTextureBuffers() {
+    public void clearTextureBuffers() {
         if(texBuf != null) {
             texBuf.clear();
         }
- }
+    }
 
- public void addTextureCoordinates(FloatBuffer textureCoords) {
+    public void addTextureCoordinates(FloatBuffer textureCoords) {
         if(texBuf != null) {
             texBuf.add(textureCoords);
         }
         checkTextureCoordinates();
- }
-
- public void resizeTextureIds(int i) {
-  vboInfo.resizeTextureIds(i);
- }
-
- public void setSolidColor(ColorRGBA color) {
-  if (colorBuf == null)
-   colorBuf = BufferUtils.createColorBuffer(vertQuantity);
-
-  colorBuf.rewind();
-  for (int x = 0, cLength = colorBuf.remaining(); x < cLength; x += 4) {
-   colorBuf.put(color.r);
-   colorBuf.put(color.g);
-   colorBuf.put(color.b);
-   colorBuf.put(color.a);
-  }
-  colorBuf.flip();
- }
-
- public void setRandomColors() {
-  if (colorBuf == null)
-   colorBuf = BufferUtils.createColorBuffer(vertQuantity);
-
-  for (int x = 0, cLength = colorBuf.capacity(); x < cLength; x += 4) {
-   colorBuf.put(FastMath.nextRandomFloat());
-   colorBuf.put(FastMath.nextRandomFloat());
-   colorBuf.put(FastMath.nextRandomFloat());
-   colorBuf.put(1);
-  }
-  colorBuf.flip();
- }
-
- protected void checkTextureCoordinates() {
-  int max = TextureState.getNumberOfFixedUnits();
-  if (max == -1)
-   return; // No texture state created yet.
-  if (texBuf.size() > max) {
-   for (int i = max; i < texBuf.size(); i++) {
-    if (texBuf.get(i) != null) {
-      LoggingSystem.getLogger().log(Level.WARNING,
-                       "Texture coordinates set for unit "+i
-                       +". Only "+max+" units are available.");
     }
-   }
-  }
- }
+
+    public void resizeTextureIds(int i) {
+        vboInfo.resizeTextureIds(i);
+    }
+
+    public void setSolidColor(ColorRGBA color) {
+        if (colorBuf == null)
+        colorBuf = BufferUtils.createColorBuffer(vertQuantity);
+
+        colorBuf.rewind();
+        for (int x = 0, cLength = colorBuf.remaining(); x < cLength; x += 4) {
+            colorBuf.put(color.r);
+            colorBuf.put(color.g);
+            colorBuf.put(color.b);
+            colorBuf.put(color.a);
+        }
+        colorBuf.flip();
+    }
+
+    public void setRandomColors() {
+        if (colorBuf == null)
+        colorBuf = BufferUtils.createColorBuffer(vertQuantity);
+
+        for (int x = 0, cLength = colorBuf.capacity(); x < cLength; x += 4) {
+            colorBuf.put(FastMath.nextRandomFloat());
+            colorBuf.put(FastMath.nextRandomFloat());
+            colorBuf.put(FastMath.nextRandomFloat());
+            colorBuf.put(1);
+        }
+        colorBuf.flip();
+    }
+
+    protected void checkTextureCoordinates() {
+        int max = TextureState.getNumberOfFixedUnits();
+        if (max == -1)
+        return; // No texture state created yet.
+        if (texBuf.size() > max) {
+            for (int i = max; i < texBuf.size(); i++) {
+                if (texBuf.get(i) != null) {
+                    LoggingSystem.getLogger().log(Level.WARNING,
+                                                  "Texture coordinates set for unit "+i
+                                                  +". Only "+max+" units are available.");
+                }
+            }
+        }
+    }
 
     public void copyTextureCoordinates(int fromIndex, int toIndex, float factor) {
         if (texBuf == null)
-            return;
+        return;
 
         if (fromIndex < 0 || fromIndex >= texBuf.size()
-                || texBuf.get(fromIndex) == null) {
+            || texBuf.get(fromIndex) == null) {
             return;
         }
 
@@ -298,10 +299,10 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
 
     public void scaleTextureCoordinates(int index, Vector2f factor) {
         if (texBuf == null)
-            return;
+        return;
 
         if (index < 0 || index >= texBuf.size()
-                || texBuf.get(index) == null) {
+            || texBuf.get(index) == null) {
             return;
         }
 
@@ -316,29 +317,29 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
         }
     }
 
- public FloatBuffer getTextureBuffer(int textureUnit) {
-  if (texBuf == null)
-   return null;
-  if (textureUnit >= texBuf.size())
-   return null;
-  return  texBuf.get(textureUnit);
- }
+    public FloatBuffer getTextureBuffer(int textureUnit) {
+        if (texBuf == null)
+        return null;
+        if (textureUnit >= texBuf.size())
+        return null;
+        return  texBuf.get(textureUnit);
+    }
 
- public void setTextureBuffer(FloatBuffer buff, int position) {
-  if (position >= texBuf.size()) {
-   while (position >= texBuf.size()) {
-    texBuf.add(null);
-   }
-  }
+    public void setTextureBuffer(FloatBuffer buff, int position) {
+        if (position >= texBuf.size()) {
+            while (position >= texBuf.size()) {
+                texBuf.add(null);
+            }
+        }
 
-  texBuf.set(position, buff);
-  if (vboInfo != null) {
-   vboInfo.resizeTextureIds(texBuf.size());
-  }
-  checkTextureCoordinates();
- }
+        texBuf.set(position, buff);
+        if (vboInfo != null) {
+            vboInfo.resizeTextureIds(texBuf.size());
+        }
+        checkTextureCoordinates();
+    }
 
- /**
+    /**
      * Used with Serialization. Do not call this directly.
      *
      * @param s
@@ -347,53 +348,53 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
      */
     private void writeObject(java.io.ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
-            // vert buffer
-            if (getVertexBuffer() == null)
-                s.writeInt(0);
-            else {
-                s.writeInt(getVertexBuffer().capacity());
-                getVertexBuffer().rewind();
-                for (int x = 0, len = getVertexBuffer().capacity(); x < len; x++)
-                    s.writeFloat(getVertexBuffer().get());
-            }
+        // vert buffer
+        if (getVertexBuffer() == null)
+        s.writeInt(0);
+        else {
+            s.writeInt(getVertexBuffer().capacity());
+            getVertexBuffer().rewind();
+            for (int x = 0, len = getVertexBuffer().capacity(); x < len; x++)
+            s.writeFloat(getVertexBuffer().get());
+        }
 
-            // norm buffer
-            if (getNormalBuffer() == null)
-                s.writeInt(0);
-            else {
-                s.writeInt(getNormalBuffer().capacity());
-                getNormalBuffer().rewind();
-                for (int x = 0, len = getNormalBuffer().capacity(); x < len; x++)
-                    s.writeFloat(getNormalBuffer().get());
-            }
+        // norm buffer
+        if (getNormalBuffer() == null)
+        s.writeInt(0);
+        else {
+            s.writeInt(getNormalBuffer().capacity());
+            getNormalBuffer().rewind();
+            for (int x = 0, len = getNormalBuffer().capacity(); x < len; x++)
+            s.writeFloat(getNormalBuffer().get());
+        }
 
-            // color buffer
-            if (getColorBuffer() == null)
-                s.writeInt(0);
-            else {
-                s.writeInt(getColorBuffer().capacity());
-                getColorBuffer().rewind();
-                for (int x = 0, len = getColorBuffer().capacity(); x < len; x++)
-                    s.writeFloat(getColorBuffer().get());
-            }
+        // color buffer
+        if (getColorBuffer() == null)
+        s.writeInt(0);
+        else {
+            s.writeInt(getColorBuffer().capacity());
+            getColorBuffer().rewind();
+            for (int x = 0, len = getColorBuffer().capacity(); x < len; x++)
+            s.writeFloat(getColorBuffer().get());
+        }
 
-            // tex buffer
-            if (getTextureBuffers() == null || getTextureBuffers().size() == 0)
+        // tex buffer
+        if (getTextureBuffers() == null || getTextureBuffers().size() == 0)
+        s.writeInt(0);
+        else {
+            s.writeInt(getTextureBuffers().size());
+            for (int i = 0; i < getTextureBuffers().size(); i++) {
+                if (getTextureBuffers().get(i) == null)
                 s.writeInt(0);
-            else {
-                s.writeInt(getTextureBuffers().size());
-                for (int i = 0; i < getTextureBuffers().size(); i++) {
-                    if (getTextureBuffers().get(i) == null)
-                        s.writeInt(0);
-                    else {
-                        FloatBuffer src = getTextureBuffers().get(i);
-                        s.writeInt(src.capacity());
-                        src.rewind();
-                        for (int x = 0, len = src.capacity(); x < len; x++)
-                            s.writeFloat(src.get());
-                    }
+                else {
+                    FloatBuffer src = getTextureBuffers().get(i);
+                    s.writeInt(src.capacity());
+                    src.rewind();
+                    for (int x = 0, len = src.capacity(); x < len; x++)
+                    s.writeFloat(src.get());
                 }
             }
+        }
 
     }
 
@@ -406,7 +407,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
      * @see java.io.Serializable
      */
     private void readObject(java.io.ObjectInputStream s) throws IOException,
-            ClassNotFoundException {
+    ClassNotFoundException {
         s.defaultReadObject();
         // vert buffer
         int len = s.readInt();
@@ -415,7 +416,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
         } else {
             FloatBuffer buf = BufferUtils.createFloatBuffer(len);
             for (int x = 0; x < len; x++)
-                buf.put(s.readFloat());
+            buf.put(s.readFloat());
             setVertexBuffer(buf);
         }
         // norm buffer
@@ -425,7 +426,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
         } else {
             FloatBuffer buf = BufferUtils.createFloatBuffer(len);
             for (int x = 0; x < len; x++)
-                buf.put(s.readFloat());
+            buf.put(s.readFloat());
             setNormalBuffer(buf);
         }
         // color buffer
@@ -435,7 +436,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
         } else {
             FloatBuffer buf = BufferUtils.createFloatBuffer(len);
             for (int x = 0; x < len; x++)
-                buf.put(s.readFloat());
+            buf.put(s.readFloat());
             setColorBuffer(buf);
         }
         // tex buffers
@@ -443,7 +444,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
         if (len == 0) {
             setTextureBuffers(null);
         } else {
-           setTextureBuffers(new ArrayList<FloatBuffer>(1));
+            setTextureBuffers(new ArrayList<FloatBuffer>(1));
             for (int i = 0; i < len; i++) {
                 int len2 = s.readInt();
                 if (len2 == 0) {
@@ -451,7 +452,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
                 } else {
                     FloatBuffer buf = BufferUtils.createFloatBuffer(len2);
                     for (int x = 0; x < len2; x++)
-                        buf.put(s.readFloat());
+                    buf.put(s.readFloat());
                     setTextureBuffer(buf, i);
                 }
             }
@@ -470,9 +471,9 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
     }
 
     @Override
- public String toString() {
-     if (parentGeom != null)
-      return parentGeom.getName() + ": Batch "+parentGeom.getBatchIndex(this);
+    public String toString() {
+        if (parentGeom != null)
+        return parentGeom.getName() + ": Batch "+parentGeom.getBatchIndex(this);
 
         return "orphaned batch";
     }
@@ -481,18 +482,18 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
         this.castsShadows = castsShadows;
     }
 
- public Vector3f randomVertex(Vector3f fill) {
-  if (getVertexBuffer() == null)
-   return null;
-  int i = (int) (FastMath.nextRandomFloat() * getVertexCount());
+    public Vector3f randomVertex(Vector3f fill) {
+        if (getVertexBuffer() == null)
+        return null;
+        int i = (int) (FastMath.nextRandomFloat() * getVertexCount());
 
-  if (fill == null) fill = new Vector3f();
-  BufferUtils.populateFromBuffer(fill, getVertexBuffer(), i);
+        if (fill == null) fill = new Vector3f();
+        BufferUtils.populateFromBuffer(fill, getVertexBuffer(), i);
 
-  parentGeom.localToWorld(fill, fill);
+        parentGeom.localToWorld(fill, fill);
 
-  return fill;
- }
+        return fill;
+    }
 
     /**
      * Check if this geom intersects the ray if yes add it to the results.
@@ -511,7 +512,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
     }
 
     @Override
- public int getType() {
+    public int getType() {
         return SceneElement.GEOMBATCH;
     }
 
@@ -523,12 +524,12 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
     @Override
     public void lockMeshes(Renderer r) {
         if (getDisplayListID() != -1) {
-   LoggingSystem.getLogger().log(Level.WARNING,
-     "This GeomBatch already has locked meshes. (Use unlockMeshes to clear)");
-   return;
-  }
+            LoggingSystem.getLogger().log(Level.WARNING,
+                                          "This GeomBatch already has locked meshes. (Use unlockMeshes to clear)");
+            return;
+        }
 
-     updateRenderState();
+        updateRenderState();
         lockedMode |= LOCKED_MESH_DATA;
 
         setDisplayListID(r.createDisplayList(this));
@@ -574,15 +575,15 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
      * @see com.jme.scene.Spatial#updateWorldBound()
      */
     @Override
- public void updateWorldBound() {
+    public void updateWorldBound() {
         if (bound != null && parentGeom != null) {
             worldBound = bound.transform(parentGeom.getWorldRotation(), parentGeom.getWorldTranslation(),
-                    parentGeom.getWorldScale(), worldBound);
+                                         parentGeom.getWorldScale(), worldBound);
         }
     }
 
     @Override
- public void updateGeometricState(float time, boolean initiator) {
+    public void updateGeometricState(float time, boolean initiator) {
         if ((lockedMode & SceneElement.LOCKED_BOUNDS) == 0) {
             updateWorldBound();
             if (initiator) {
@@ -598,7 +599,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
      *
      */
     @Override
- public void propagateBoundToRoot() {
+    public void propagateBoundToRoot() {
         if (parentGeom != null) {
             parentGeom.updateWorldBound();
             parentGeom.propagateBoundToRoot();
@@ -619,7 +620,7 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
 
         // check to see if we can cull this node
         frustrumIntersects = (parentGeom != null ? parentGeom.getLastFrustumIntersection()
-                : Camera.INTERSECTS_FRUSTUM);
+                              : Camera.INTERSECTS_FRUSTUM);
         if (cm == SceneElement.CULL_DYNAMIC && frustrumIntersects == Camera.INTERSECTS_FRUSTUM) {
             frustrumIntersects = camera.contains(worldBound);
         }
@@ -631,13 +632,13 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
     }
 
     @Override
- public int getRenderQueueMode() {
+    public int getRenderQueueMode() {
         if (renderQueueMode != Renderer.QUEUE_INHERIT)
-            return renderQueueMode;
+        return renderQueueMode;
         else if (parentGeom != null)
-            return parentGeom.getRenderQueueMode();
+        return parentGeom.getRenderQueueMode();
         else
-            return Renderer.QUEUE_SKIP;
+        return Renderer.QUEUE_SKIP;
     }
 
     /**
@@ -647,13 +648,13 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
      * @return The spatial's light current combine mode.
      */
     @Override
- public int getLightCombineMode() {
+    public int getLightCombineMode() {
         if (lightCombineMode != LightState.INHERIT)
-            return lightCombineMode;
+        return lightCombineMode;
         else if (parentGeom != null)
-            return parentGeom.getLightCombineMode();
+        return parentGeom.getLightCombineMode();
         else
-            return LightState.COMBINE_FIRST;
+        return LightState.COMBINE_FIRST;
     }
 
     /**
@@ -663,13 +664,13 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
      * @return The spatial's texture current combine mode.
      */
     @Override
- public int getTextureCombineMode() {
+    public int getTextureCombineMode() {
         if (textureCombineMode != TextureState.INHERIT)
-            return textureCombineMode;
+        return textureCombineMode;
         else if (parentGeom != null)
-            return parentGeom.getTextureCombineMode();
+        return parentGeom.getTextureCombineMode();
         else
-            return TextureState.COMBINE_CLOSEST;
+        return TextureState.COMBINE_CLOSEST;
     }
 
 
@@ -679,50 +680,50 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
      * @return the cull mode of this spatial
      */
     @Override
- public int getCullMode() {
+    public int getCullMode() {
         if (cullMode != CULL_INHERIT)
-            return cullMode;
+        return cullMode;
         else if (parentGeom != null)
-            return parentGeom.getCullMode();
+        return parentGeom.getCullMode();
         else return CULL_DYNAMIC;
     }
 
     @Override
- public int getNormalsMode() {
+    public int getNormalsMode() {
         if (normalsMode != NM_INHERIT)
-            return normalsMode;
+        return normalsMode;
         else if (parentGeom != null)
-            return parentGeom.getNormalsMode();
+        return parentGeom.getNormalsMode();
         else
-            return NM_GL_NORMALIZE_IF_SCALED;
+        return NM_GL_NORMALIZE_IF_SCALED;
     }
 
     public FloatBuffer getWorldCoords(FloatBuffer store) {
         if (store == null || store.capacity() != getVertexBuffer().capacity())
-            store = BufferUtils.clone(getVertexBuffer());
+        store = BufferUtils.clone(getVertexBuffer());
         for (int v = 0, vSize = store.capacity() / 3; v < vSize; v++) {
             BufferUtils.populateFromBuffer(compVect, store, v);
             parentGeom.getWorldRotation().multLocal(compVect).multLocal(parentGeom.getWorldScale()).addLocal(
-                    parentGeom.getWorldTranslation());
+                parentGeom.getWorldTranslation());
             BufferUtils.setInBuffer(compVect, store, v);
         }
         store.clear();
         return store;
     }
 
- public FloatBuffer getWorldNormals(FloatBuffer store) {
-  if (store == null || store.capacity() != getNormalBuffer().capacity())
-   store = BufferUtils.clone(getNormalBuffer());
-  for (int v = 0, vSize = store.capacity() / 3; v < vSize; v++) {
-   BufferUtils.populateFromBuffer(compVect, store, v);
-   parentGeom.getWorldRotation().multLocal(compVect);
-   BufferUtils.setInBuffer(compVect, store, v);
-  }
-  store.clear();
-  return store;
- }
+    public FloatBuffer getWorldNormals(FloatBuffer store) {
+        if (store == null || store.capacity() != getNormalBuffer().capacity())
+        store = BufferUtils.clone(getNormalBuffer());
+        for (int v = 0, vSize = store.capacity() / 3; v < vSize; v++) {
+            BufferUtils.populateFromBuffer(compVect, store, v);
+            parentGeom.getWorldRotation().multLocal(compVect);
+            BufferUtils.setInBuffer(compVect, store, v);
+        }
+        store.clear();
+        return store;
+    }
 
- /**
+    /**
      * Called during updateRenderState(Stack[]), this function goes up the scene
      * graph tree until the parent is null and pushes RenderStates onto the
      * states Stack array.
@@ -734,16 +735,16 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
     public void propagateStatesFromRoot(Stack<RenderState>[] states) {
         // traverse to root to allow downward state propagation
         if (parentGeom != null)
-            parentGeom.propagateStatesFromRoot(states);
+        parentGeom.propagateStatesFromRoot(states);
 
         // push states onto current render state stack
         for (int x = 0; x < RenderState.RS_MAX_STATE; x++)
-            if (getRenderState(x) != null)
-                states[x].push(getRenderState(x));
+        if (getRenderState(x) != null)
+        states[x].push(getRenderState(x));
     }
 
     @Override
- protected void applyRenderState(Stack<RenderState>[] states) {
+    protected void applyRenderState(Stack<RenderState>[] states) {
         for (int x = 0; x < states.length; x++) {
             if (states[x].size() > 0) {
                 this.states[x] = states[x].peek().extract(states[x], this);
@@ -802,11 +803,11 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
     }
 
     @Override
- public void draw(Renderer r) {
+    public void draw(Renderer r) {
     }
 
     @Override
- public void write(JMEExporter e) throws IOException {
+    public void write(JMEExporter e) throws IOException {
         super.write(e);
         OutputCapsule capsule = e.getCapsule(this);
         capsule.write(colorBuf, "colorBuf", null);
@@ -827,10 +828,8 @@ public class GeomBatch extends SceneElement implements Serializable, Savable {
         colorBuf = capsule.readFloatBuffer("colorBuf", null);
         normBuf = capsule.readFloatBuffer("normBuf", null);
         vertBuf = capsule.readFloatBuffer("vertBuf", null);
-        if (vertBuf != null)
-            vertQuantity = vertBuf.capacity() / 3;
-        else
-            vertQuantity = 0;
+        if (vertBuf != null) vertQuantity = vertBuf.capacity() / 3;
+        else vertQuantity = 0;
         texBuf = capsule.readFloatBufferArrayList("texBuf", new ArrayList<FloatBuffer>(1));
         checkTextureCoordinates();
 
