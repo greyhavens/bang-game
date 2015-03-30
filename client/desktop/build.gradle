@@ -6,7 +6,7 @@ dependencies {
 }
 
 task copyConfig (type: Copy) {
-  from "../../etc"
+  from "../../etc/${deployment}"
   into sourceSets.main.output.classesDir
   include "deployment.properties"
 }

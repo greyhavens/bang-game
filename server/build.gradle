@@ -8,7 +8,7 @@ dependencies {
 }
 
 task copyConfig (type: Copy) {
-  from "../etc"
+  from "../etc/${deployment}"
   into sourceSets.main.output.resourcesDir
   include "deployment.properties"
   include "server.properties"
