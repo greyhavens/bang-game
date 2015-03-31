@@ -23,9 +23,9 @@
     <mkdir dir="${deploy.dir}"/>
 
     <!-- determine which deployment we're building -->
-    <if><not><isset property="deployment"/></not><then>
-      <property name="deployment" value="test"/>
-    </then></if>
+    <if><not><isset property="deployment"/></not>
+      <then><property name="deployment" value="test"/></then>
+    </if>
 
     <!-- grab the deployment et al properties from the configuration location. -->
     <copy todir="${deploy.dir}">
@@ -45,7 +45,7 @@
   <target name="-declare-maven">
     <!-- declare our runtime dependencies -->
     <artifact:pom id="pom" file="pom.xml"/>
-    <artifact:dependencies filesetId="runtime.fileset" pomRefId="pom" useScope="compile"/>
+    <artifact:dependencies filesetId="runtime.fileset" pomRefId="pom" useScope="runtime"/>
 
     <!-- set up a classpath for the non-runtime dependencies -->
     <artifact:dependencies pathId="build.classpath">
@@ -57,6 +57,11 @@
     <artifact:dependencies filesetId="getdown-pro.fileset">
       <dependency groupId="com.threerings" artifactId="getdown" version="1.4"/>
     </artifact:dependencies>
+  </target>
+
+  <target name="-genversion">
+    <tstamp><format property="pkgVersion" pattern="yyyyMMddHHmmss"/></tstamp>
+    <property name="clientVersion" value="${pkgVersion}"/>
   </target>
 
   <target name="showdeps" depends="-declare-maven"
@@ -86,8 +91,6 @@
 
     <!-- Copy some libs we depend on. -->
     <filelist dir="." id="dist.libs">
-      <file name="lib/lwjgl.jar"/>
-      <file name="lib/lwjgl_util.jar"/>
       <file name="lib/jl1.0.jar"/>
       <file name="lib/en-us.wordlist.jar"/>
     </filelist>
@@ -98,22 +101,22 @@
     <!-- copy global static resources -->
     <copy todir="${deploy.dir}/rsrc">
       <fileset dir="rsrc">
-       <include name="**/*"/>
-       <exclude name="avatars/**"/>
-       <exclude name="boards/**"/>
-       <exclude name="bonuses/**"/>
-       <exclude name="bounties/**"/>
-       <exclude name="cards/**"/>
-       <exclude name="config/**/*.xml"/>
-       <exclude name="effects/**"/>
-       <exclude name="extras/**"/>
-       <exclude name="goods/**"/>
-       <exclude name="props/**"/>
-       <exclude name="sounds/**"/>
-       <exclude name="tutorials/**/*.xml"/>
-       <exclude name="units/**"/>
-       <exclude name="**/*.wav"/>
-       <exclude name="**/source/**"/>
+        <include name="**/*"/>
+        <exclude name="avatars/**"/>
+        <exclude name="boards/**"/>
+        <exclude name="bonuses/**"/>
+        <exclude name="bounties/**"/>
+        <exclude name="cards/**"/>
+        <exclude name="config/**/*.xml"/>
+        <exclude name="effects/**"/>
+        <exclude name="extras/**"/>
+        <exclude name="goods/**"/>
+        <exclude name="props/**"/>
+        <exclude name="sounds/**"/>
+        <exclude name="tutorials/**/*.xml"/>
+        <exclude name="units/**"/>
+        <exclude name="**/*.wav"/>
+        <exclude name="**/source/**"/>
       </fileset>
     </copy>
 
@@ -285,14 +288,13 @@
   <!-- enumerates all of our units, props, etc. into master lists -->
   <target name="lists">
     <exec executable="${basedir}/bin/update_lists" failonerror="true">
-        <arg value="${towns}"/>
+      <arg value="${towns}"/>
     </exec>
   </target>
 
   <!-- builds bundles for a specific town -->
   <target name="town_bundles">
-    <for list="units,props,bonuses,cards,effects,extras,goods,bounties" param="type">
-    <sequential>
+    <for list="units,props,bonuses,cards,effects,extras,goods,bounties" param="type"><sequential>
       <!-- Card and Unit icons were included in the general resource bundle -->
       <if><equals arg1="@{type}" arg2="cards"/><then>
         <var name="excluding" value="**/card.png"/>
@@ -331,10 +333,10 @@
     </updatepropheight>
 
     <copy todir="${deploy.dir}/rsrc/units/wreckage">
-        <fileset dir="rsrc/units/wreckage">
-          <include name="**/*.png"/>
-          <exclude name="**/source/**"/>
-        </fileset>
+      <fileset dir="rsrc/units/wreckage">
+        <include name="**/*.png"/>
+        <exclude name="**/source/**"/>
+      </fileset>
     </copy>
 
     <for list="${towns}" param="town" trim="true"><sequential>
@@ -396,7 +398,7 @@
   <!-- creates the serialized color repository config -->
   <target name="colorpos">
     <taskdef name="confcomp" classpathref="tool.classpath"
-      classname="com.threerings.tools.CompiledConfigTask"/>
+             classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp dest="${deploy.dir}" parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
               configdef="rsrc/config/media/colordefs.xml"/>
   </target>
@@ -422,7 +424,7 @@
                 target="${deploy.dir}/rsrc/avatars/metadata.jar"/>
 
     <taskdef name="cbundle" classpathref="tool.classpath"
-      classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
+             classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
     <for list="${towns}" param="town" trim="true"><sequential>
       <for list="male,female" param="gender"><sequential>
         <antcall target="-avatar-comps">
@@ -569,8 +571,8 @@
         **/jme/tools/**"/>
 
       <libraryjar name="${java.home}/lib/plugin.jar"/>
-      <libraryjar name="${deploy.dir}/lib/lwjgl.jar"/>
-      <libraryjar name="${deploy.dir}/lib/lwjgl_util.jar"/>
+      <libraryjar name="${org.lwjgl.lwjgl:lwjgl:jar}"/>
+      <libraryjar name="${org.lwjgl.lwjgl:lwjgl_util:jar}"/>
 
       <!-- these are just for the model viewer, sigh -->
       <libraryjar name="${commons-digester:commons-digester:jar}"/>
@@ -583,7 +585,6 @@
     <!-- create our directories if necessary -->
     <mkdir dir="${client_dir}/code"/>
     <mkdir dir="${client_dir}/rsrc"/>
-    <mkdir dir="${client_dir}/native"/>
 
     <!-- create our configuration jar file -->
     <jar destfile="${client_dir}/code/config.jar">
@@ -600,47 +601,64 @@
         <include name="progress.png"/>
       </fileset>
     </copy>
-    <copy todir="${client_dir}/code">
-      <fileset dir="dist" includes="bang-pcode.jar"/>
-      <fileset dir="dist" includes="bang-config.jar"/>
-      <fileset dir="${deploy.dir}/lib" includes="lwjgl.jar"/>
-      <fileset dir="${deploy.dir}/lib" includes="lwjgl_util.jar"/>
-    </copy>
-    <copy tofile="${client_dir}/code/commons-beanutils.jar">
-      <fileset dir="${deploy.dir}/lib" includes="commons-beanutils*.jar"/>
-    </copy>
-    <copy tofile="${client_dir}/code/commons-digester.jar">
-      <fileset dir="${deploy.dir}/lib" includes="commons-digester*.jar"/>
-    </copy>
-    <copy tofile="${client_dir}/code/commons-logging.jar">
-      <fileset dir="${deploy.dir}/lib" includes="commons-logging*.jar"/>
-    </copy>
+    <copy todir="${client_dir}/code" file="${deploy.dir}/bang-pcode.jar"/>
+    <copy todir="${client_dir}/code" file="${deploy.dir}/bang-config.jar"/>
+
+    <copy tofile="${client_dir}/code/lwjgl.jar"
+          file="${org.lwjgl.lwjgl:lwjgl:jar}"/>
+    <copy tofile="${client_dir}/code/lwjgl_util.jar"
+          file="${org.lwjgl.lwjgl:lwjgl_util:jar}"/>
+    <copy tofile="${client_dir}/code/lwjgl-platform-windows.jar"
+          file="${org.lwjgl.lwjgl:lwjgl-platform:jar:natives-windows}"/>
+    <copy tofile="${client_dir}/code/lwjgl-platform-linux.jar"
+          file="${org.lwjgl.lwjgl:lwjgl-platform:jar:natives-linux}"/>
+    <copy tofile="${client_dir}/code/lwjgl-platform-osx.jar"
+          file="${org.lwjgl.lwjgl:lwjgl-platform:jar:natives-osx}"/>
+
+    <copy tofile="${client_dir}/code/jinput.jar"
+          file="${net.java.jinput:jinput:jar}"/>
+    <copy tofile="${client_dir}/code/jutils.jar"
+          file="${net.java.jutils:jutils:jar}"/>
+    <copy tofile="${client_dir}/code/jinput-platform-windows.jar"
+          file="${net.java.jinput:jinput-platform:jar:natives-windows}"/>
+    <copy tofile="${client_dir}/code/jinput-platform-linux.jar"
+          file="${net.java.jinput:jinput-platform:jar:natives-linux}"/>
+    <copy tofile="${client_dir}/code/jinput-platform-osx.jar"
+          file="${net.java.jinput:jinput-platform:jar:natives-osx}"/>
+
+    <copy tofile="${client_dir}/code/commons-beanutils.jar"
+          file="${commons-beanutils:commons-beanutils:jar}"/>
+    <copy tofile="${client_dir}/code/commons-digester.jar"
+          file="${commons-digester:commons-digester:jar}"/>
+    <copy tofile="${client_dir}/code/commons-logging.jar"
+          file="${commons-logging:commons-logging:jar}"/>
     <copy file="${deploy.dir}/getdown/getdown-pro.jar"
           tofile="${client_dir}/code/getdown-pro-new.jar"/>
+
     <delete file="${deploy.dir}/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
       <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
       <fileset dir="rsrc" includes="config/resource/manager.properties"/>
-    </copy>
-    <copy todir="${client_dir}/native">
-      <fileset dir="lib/native/linux" includes="*.so"/>
-      <fileset dir="lib/native/windows" includes="*.dll"/>
-      <fileset dir="lib/native/macosx" includes="*"/>
     </copy>
 
     <!-- generate the getdown digest file -->
     <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask"
              classpathref="tool.classpath"/>
     <property file="${cert_dir}/certificate.properties"/>
+
+    <!-- TODO: create private Github repo which contains prod config & keystore;
+         find things relative thereto -->
+    <!--
     <digest appdir="${client_dir}" keystore="${sign.keystore}" alias="${sign.alias}"
             storepass="${sign.storepass}"/>
+      -->
+    <digest appdir="${client_dir}"/>
   </target>
 
   <!-- builds the development client getdown distribution -->
   <target name="devclient" depends="prepare">
     <!-- for consistency with the prod client, we'll set the version, which is always 0 -->
     <property name="clientVersion" value="0"/>
-    <tstamp><format property="pkgVersion" pattern="yyyyMMddHHmmss"/></tstamp>
 
     <!-- be extra safe and remove any old build.properties -->
     <delete file="${basedir}/${deploy.dir}/build.properties"/>
@@ -676,10 +694,13 @@
     </antcall>
 
     <!-- make our Proguard mapping file accessible to Hemiptera -->
+    <!-- disabled
     <mkdir dir="${deploy.dir}/hemiptera-map"/>
     <move file="etc/proguard/${clientVersion}.map" todir="${deploy.dir}/hemiptera-map"/>
+    -->
 
     <!-- generate some game metadata summary pages -->
+    <!-- disabled
     <property name="pages.out" value="${basedir}/${deploy.dir}/installer/pages"/>
     <mkdir dir="${pages.out}"/>
     <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/units.html"
@@ -703,6 +724,7 @@
     <exec executable="${basedir}/bin/update_board_summary" failonerror="true">
       <arg value="${pages.out}/boards.html"/>
     </exec>
+    -->
   </target>
 
   <!-- builds the development client getdown distribution and copies it into -->
@@ -714,10 +736,7 @@
   </target>
 
   <!-- builds the production client getdown distribution -->
-  <target name="client" depends="prepare">
-    <tstamp><format property="pkgVersion" pattern="yyyyMMddHHmmss"/></tstamp>
-    <property name="clientVersion" value="${pkgVersion}"/>
-
+  <target name="client" depends="prepare,-genversion">
     <!-- be extra safe and remove any old build.properties -->
     <delete file="${basedir}/${deploy.dir}/build.properties"/>
     <propertyfile file="${basedir}/${deploy.dir}/build.properties">
@@ -785,12 +804,11 @@
       </path>
       <sequential>
         <basename property="patch.version" file="@{dir}"/>
-        <if><not><equals arg1="${patch.version}" arg2="${clientVersion}"/></not>
-        <then>
+        <if><not><equals arg1="${patch.version}" arg2="${clientVersion}"/></not><then>
           <java classpathref="tool.classpath" failonerror="true" fork="true"
                 classname="com.threerings.getdown.tools.Differ">
-             <arg value="${client.base}"/>
-             <arg value="@{dir}"/>
+            <arg value="${client.base}"/>
+            <arg value="@{dir}"/>
           </java>
         </then></if>
         <var name="patch.version" unset="true"/>
@@ -818,22 +836,22 @@
 
     <!-- if enabled, upload the client to S3 -->
     <if><istrue value="${client_s3enable}"/><then>
-        <property name="s3upload" value="${deploy.dir}/tmp/s3upload"/>
-        <delete dir="${s3upload}"/>
-        <copy todir="${s3upload}">
-          <fileset dir="${deploy.dir}/client/pages" includes="bang/client/${clientVersion}/**"/>
-        </copy>
-        <echo>Uploading the client to S3</echo>
-        <artifact:dependencies pathId="s3upload.classpath">
-          <remoteRepository refid="ooo.maven.depends.repo"/>
-          <dependency groupId="com.threerings.s3upload" artifactId="s3upload" version="1.0"/>
-        </artifact:dependencies>
-        <taskdef name="s3upload" classname="com.threerings.ant.S3Upload"
-                 classpathref="s3upload.classpath"/>
-        <s3upload awsAuthId="${client_s3id}" awsAuthKey="${client_s3key}"
-                  awsBucket="${client_s3bucket}" accessPolicy="public_read">
-            <fileset dir="${s3upload}" includes="bang/**"/>
-        </s3upload>
+      <property name="s3upload" value="${deploy.dir}/tmp/s3upload"/>
+      <delete dir="${s3upload}"/>
+      <copy todir="${s3upload}">
+        <fileset dir="${deploy.dir}/client/pages" includes="bang/client/${clientVersion}/**"/>
+      </copy>
+      <echo>Uploading the client to S3</echo>
+      <artifact:dependencies pathId="s3upload.classpath">
+        <remoteRepository refid="ooo.maven.depends.repo"/>
+        <dependency groupId="com.threerings.s3upload" artifactId="s3upload" version="1.0"/>
+      </artifact:dependencies>
+      <taskdef name="s3upload" classname="com.threerings.ant.S3Upload"
+               classpathref="s3upload.classpath"/>
+      <s3upload awsAuthId="${client_s3id}" awsAuthKey="${client_s3key}"
+                awsBucket="${client_s3bucket}" accessPolicy="public_read">
+        <fileset dir="${s3upload}" includes="bang/**"/>
+      </s3upload>
     </then></if>
   </target>
 
@@ -960,14 +978,7 @@
   </target>
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="dist,mdist">
-    <!-- copy native LWJGL libraries into ${deploy.dir}/lib -->
-    <copy todir="${deploy.dir}/lib">
-      <fileset dir="lib/native" includes="**/*.so"/>
-      <fileset dir="lib/native" includes="**/*.jnilib"/>
-      <fileset dir="lib/native" includes="**/*.dylib"/>
-    </copy>
-  </target>
+  <target name="distall" depends="dist,mdist"/>
 
   <!-- cleans out the application and all subprojects -->
   <target name="cleanall" depends="clean"/>
@@ -979,29 +990,49 @@
   <target name="buildclient" depends="prepare">
     <antcallback target="${client_build_target}" return="clientVersion,pkgVersion"/>
     <ant dir="projects/installers" target="${client_build_target}"/>
-    <antcall target="applet"/>
-
-    <!-- build the pseditor if desired -->
-    <if><istrue value="${build_pseditor}"/><then>
-      <ant dir="projects/pseditor" target="proguard" inheritAll="false"/>
-    </then></if>
+    <!-- disabled: <antcall target="applet"/> -->
   </target>
 
   <!-- rebuilds everything and extra bits for packaging -->
-  <target name="package" depends="distall,buildclient,server-package,
-          pages-extra-package,hemiptera-map-package,client-package">
+  <target name="package" depends="distall,buildclient,server-package,client-package">
+    <!-- define the root of the pages-extra package -->
+    <property name="pkgroot.pages-extra" value="${pkgroot.root}/${app.name}-pages-extra"/>
+    <property name="approot.pages-extra" value="${pkgroot.pages-extra}/export/${app.name}"/>
+    <mkdir dir="${approot.pages-extra}"/>
+
+    <!-- copy a whole heap of client stuff into the package -->
+    <copy todir="${approot.pages-extra}">
+      <fileset dir="${deploy.dir}/installer" includes="**"/>
+      <!-- disabled: <fileset dir="${deploy.dir}/applet" includes="**"/> -->
+    </copy>
+
+    <!-- build the actual Debian package -->
+    <dpkg output="${pkgroot.root}" prefix="export/${app.name}" distribution="local">
+      <package destroot="${pkgroot.pages-extra}">
+        <info>
+          <name>${app.name}-pages-extra</name>
+          <version>${pkgVersion}</version>
+          <arch>all</arch>
+          <description>Bang Installer and Bits</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+      </package>
+    </dpkg>
+
     <!-- define the root of our meta-packages -->
     <property name="pkgroot.meta" value="${pkgroot.root}/${app.name}-meta"/>
     <mkdir dir="${pkgroot.meta}"/>
 
     <!-- create the web server meta-package -->
-    <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
-          distribution="${ooo.distribution}">
+    <dpkg output="${pkgroot.root}" prefix="export/download" distribution="local">
       <package destroot="${pkgroot.meta}">
         <info>
           <name>bang-web-server</name>
           <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
+          <arch>all</arch>
           <description>Bang Web Server Meta-package</description>
           <maintainer>
             <name>${bang.maintainer.name}</name>
@@ -1012,30 +1043,17 @@
           <require package="bang-pages"/>
           <require package="bang-pages-extra"><equalTo>${pkgVersion}</equalTo></require>
           <require package="bang-client-current"><equalTo>${pkgVersion}</equalTo></require>
-          <require package="bangoffice"><equalTo>${pkgVersion}</equalTo></require>
-          <require package="bangsupport"><equalTo>${pkgVersion}</equalTo></require>
-          <require package="bang-hemiptera-map"><equalTo>${pkgVersion}</equalTo></require>
-          <!-- TEMP: remove this when we've updated web1/2 -->
-          <conflict package="bang-installer"/>
-          <replacement package="bang-installer"/>
-          <conflict package="bang-applet"/>
-          <replacement package="bang-applet"/>
-          <conflict package="office-webapp"/>
-          <replacement package="office-webapp"/>
-          <conflict package="bang-pseditor"/>
-          <replacement package="bang-pseditor"/>
         </dependencies>
       </package>
     </dpkg>
 
     <!-- create the game server meta-package -->
-    <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
-          distribution="${ooo.distribution}">
+    <dpkg output="${pkgroot.root}" prefix="export/download" distribution="local">
       <package destroot="${pkgroot.meta}">
         <info>
           <name>bang-game-server</name>
           <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
+          <arch>all</arch>
           <description>Bang Game Server Meta-package</description>
           <maintainer>
             <name>${bang.maintainer.name}</name>
@@ -1051,26 +1069,23 @@
   </target>
 
   <!-- defines properties needed by the individual foo-package targets -->
-  <target name="prepare-package">
+  <target name="prepare-package" depends="-genversion">
     <!-- define the directory from which we're going to build our packages -->
     <property name="pkgroot.root" value="${deploy.dir}/packages"/>
     <mkdir dir="${pkgroot.root}"/>
-    <!-- TEMP: define where our .dpkg files will be written -->
-    <propertycopy name="package.output" from="ooo.deprecated.package.deploy"/>
   </target>
 
   <!-- builds the bang-server package -->
   <target name="server-package" depends="prepare-package">
     <!-- define the root of the bang-server package -->
     <property name="pkgroot.server" value="${pkgroot.root}/${app.name}-server"/>
-    <property name="approot.server" value="${pkgroot.server}/${ooo.prefix}/${app.name}"/>
+    <property name="approot.server" value="${pkgroot.server}/export/${app.name}"/>
     <mkdir dir="${approot.server}"/>
 
-    <!-- copy the external jars and native libraries needed by the server -->
+    <!-- copy the external jars needed by the server -->
     <copy todir="${approot.server}/${deploy.dir}/lib">
       <fileset dir="${deploy.dir}/lib">
         <include name="*.jar"/>
-        <include name="**/*.so"/>
       </fileset>
     </copy>
 
@@ -1084,9 +1099,6 @@
       </fileset>
     </copy>
 
-    <!-- TODO -->
-    <!-- <antcall target="prepare-crontab"/> -->
-
     <!-- copy various bang media needed by the server -->
     <copy todir="${approot.server}/${deploy.dir}/rsrc">
       <fileset dir="${deploy.dir}/rsrc" includes="avatars/**/*.jar"/>
@@ -1099,7 +1111,6 @@
 
     <!-- copy some things the server needs at runtime on the production server -->
     <copy file="etc/build-boards.xml" todir="${approot.server}/etc"/>
-    <copy file="tools/lib/perl/GrindUtil.pm" todir="${approot.server}/tools/lib/perl"/>
 
     <!-- copy various scripts needed by the server -->
     <copyfilelist dest="${approot.server}/bin">
@@ -1107,21 +1118,9 @@
         <file name="bangjava"/>
         <file name="bangserver"/>
         <file name="bangtool"/>
-        <file name="process_stats"/>
-        <file name="roll_logs"/>
         <file name="runbang"/>
-        <file name="summarize_perf"/>
-        <file name="summarize_stats"/>
-        <file name="grind_bounties"/>
         <file name="bang"/>
         <file name="bangrespawn"/>
-      </filelist>
-    </copyfilelist>
-    <copyfilelist dest="${approot.server}/tools/bin">
-      <filelist dir="tools/bin">
-        <file name="lfilter"/>
-        <file name="filter_interesting"/>
-        <file name="sum_invokers"/>
       </filelist>
     </copyfilelist>
 
@@ -1140,13 +1139,12 @@
     </copy>
 
     <!-- build the actual Debian package -->
-    <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
-          distribution="${ooo.distribution}">
+    <dpkg output="${pkgroot.root}" prefix="export/${app.name}" distribution="local">
       <package destroot="${pkgroot.server}">
         <info>
           <name>${app.name}-server</name>
           <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
+          <arch>all</arch>
           <description>Bang Game Server</description>
           <maintainer>
             <name>${bang.maintainer.name}</name>
@@ -1166,7 +1164,6 @@
           </permission>
           <permission mode="555" recursive="true">
             <path>bin/</path>
-            <path>etc/rc.d/</path>
             <path>tools/bin/</path>
           </permission>
           <permission user="${bang.user}" group="${bang.user}" mode="440">
@@ -1182,25 +1179,24 @@
       <propertyregex property="pnode" input="@{node}" regexp="_" replace="-"/>
       <!-- define the root of the bang-server package -->
       <var name="pkgroot.node" value="${pkgroot.root}/${app.name}-server-${pnode}"/>
-      <var name="approot.node" value="${pkgroot.node}/${ooo.prefix}/${app.name}"/>
+      <var name="approot.node" value="${pkgroot.node}/export/${app.name}"/>
       <mkdir dir="${approot.node}"/>
-      <mkdir dir="${approot.node}/etc/rc.d"/>
+      <mkdir dir="${approot.node}/etc/init.d"/>
 
-      <startupscript name="bang_server_@{node}" runas="${bang.user}"
-                     output="${approot.node}/etc/rc.d/${app.name}-server-${pnode}.sh">
-        <commands>
-          <start cmdline="${ooo.prefix}/${app.name}/bin/bang start @{node}"/>
-          <stop cmdline="${ooo.prefix}/${app.name}/bin/bang stop @{node}"/>
-        </commands>
-      </startupscript>
+      <!-- copy in our (Linux) server startup script -->
+      <copy file="${basedir}/etc/init.d/${app.name}-server"
+            tofile="${approot.node}/etc/init.d/${app.name}-server-${pnode}">
+        <filterset>
+          <filter token="node" value="@{node}"/>
+        </filterset>
+      </copy>
 
-      <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
-            distribution="${ooo.distribution}">
+      <dpkg output="${pkgroot.root}" prefix="export/${app.name}" distribution="local">
         <package destroot="${pkgroot.node}">
           <info>
             <name>${app.name}-server-${pnode}</name>
             <version>${pkgVersion}</version>
-            <arch>${ooo.architecture}</arch>
+            <arch>all</arch>
             <description>Bang Game Server Node: @{node}</description>
             <maintainer>
               <name>${bang.maintainer.name}</name>
@@ -1212,7 +1208,7 @@
           </dependencies>
           <permissions>
             <permission mode="555">
-              <path>etc/rc.d/${app.name}-server-${pnode}.sh</path>
+              <path>etc/init.d/${app.name}-server-${pnode}</path>
             </permission>
           </permissions>
         </package>
@@ -1223,72 +1219,11 @@
     </sequential></for>
   </target>
 
-  <!-- builds the bang-pages-extra package -->
-  <target name="pages-extra-package" depends="prepare-package">
-    <!-- define the root of the package -->
-    <property name="pkgroot.pages-extra" value="${pkgroot.root}/${app.name}-pages-extra"/>
-    <property name="approot.pages-extra" value="${pkgroot.pages-extra}/${ooo.prefix}/${app.name}"/>
-    <mkdir dir="${approot.pages-extra}"/>
-
-    <!-- copy a whole heap of client stuff into the package -->
-    <copy todir="${approot.pages-extra}">
-      <fileset dir="${deploy.dir}/installer" includes="**"/>
-      <fileset dir="${deploy.dir}/applet" includes="**"/>
-    </copy>
-
-    <!-- build the actual Debian package -->
-    <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
-          distribution="${ooo.distribution}">
-      <package destroot="${pkgroot.pages-extra}">
-        <info>
-          <name>${app.name}-pages-extra</name>
-          <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
-          <description>Bang Installer and Bits</description>
-          <maintainer>
-            <name>${bang.maintainer.name}</name>
-            <email>${bang.maintainer.email}</email>
-          </maintainer>
-        </info>
-      </package>
-    </dpkg>
-  </target>
-
-  <!-- builds the bang-hemiptera-map package -->
-  <target name="hemiptera-map-package" depends="prepare-package">
-    <!-- define the root of the package -->
-    <property name="pkgroot.hemiptera-map" value="${pkgroot.root}/${app.name}-hemiptera-map"/>
-    <property name="approot.hemiptera-map"
-              value="${pkgroot.hemiptera-map}/${ooo.prefix}/threerings"/>
-    <mkdir dir="${approot.hemiptera-map}"/>
-
-    <copy todir="${approot.hemiptera-map}">
-      <fileset dir="${deploy.dir}/hemiptera-map" includes="**"/>
-    </copy>
-
-    <!-- build the actual Debian package -->
-    <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
-          distribution="${ooo.distribution}">
-      <package destroot="${pkgroot.hemiptera-map}">
-        <info>
-          <name>${app.name}-hemiptera-map</name>
-          <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
-          <description>Bang Hemiptera Map Files</description>
-          <maintainer>
-            <name>${bang.maintainer.name}</name>
-            <email>${bang.maintainer.email}</email>
-          </maintainer>
-        </info>
-      </package>
-    </dpkg>
-  </target>
-
   <!-- builds the bang-client package -->
   <target name="client-package" depends="prepare-package">
     <!-- define the root of the client package -->
     <property name="pkgroot.client" value="${pkgroot.root}/${app.name}-client"/>
-    <property name="approot.client" value="${pkgroot.client}/${ooo.prefix}/download"/>
+    <property name="approot.client" value="${pkgroot.client}/export/download"/>
     <mkdir dir="${approot.client}"/>
 
     <!-- make sure our versions are properly set -->
@@ -1300,33 +1235,20 @@
       <fileset dir="${deploy.dir}/client" includes="**"/>
     </copy>
 
-    <!-- package the pseditor if desired -->
-    <if><istrue value="${build_pseditor}"/><then>
-      <copy todir="${approot.client}">
-        <fileset dir="${deploy.dir}/pseditor" includes="**"/>
-      </copy>
-    </then></if>
-
     <!-- build the actual Debian packages -->
     <property name="client_package_name" value="bang-client-${clientVersion}"/>
-    <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
-          distribution="${ooo.distribution}">
+    <dpkg output="${pkgroot.root}" prefix="export/download" distribution="local">
       <package destroot="${pkgroot.client}">
         <info>
           <name>${client_package_name}</name>
           <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
+          <arch>all</arch>
           <description>Bang Game Client ${clientVersion}</description>
           <maintainer>
             <name>${bang.maintainer.name}</name>
             <email>${bang.maintainer.email}</email>
           </maintainer>
         </info>
-        <dependencies>
-          <require package="bang-hemiptera-map">
-            <equalOrGreaterThan>${pkgVersion}</equalOrGreaterThan>
-          </require>
-        </dependencies>
       </package>
     </dpkg>
 
@@ -1334,13 +1256,12 @@
     <property name="pkgroot.client-current" value="${pkgroot.root}/${app.name}-client-current"/>
     <mkdir dir="${pkgroot.client-current}"/>
 
-    <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
-          distribution="${ooo.distribution}">
+    <dpkg output="${pkgroot.root}" prefix="export/download" distribution="local">
       <package destroot="${pkgroot.client-current}">
         <info>
           <name>bang-client-current</name>
           <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
+          <arch>all</arch>
           <description>Bang Game Client (newest)</description>
           <maintainer>
             <name>${bang.maintainer.name}</name>
@@ -1348,8 +1269,8 @@
           </maintainer>
         </info>
         <scripts>
-          <postinst command="ln -sf ${clientVersion}/getdown.txt ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
-          <prerm command="rm ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
+          <postinst command="ln -sf ${clientVersion}/getdown.txt export/download/pages/bang/client/getdown.txt"/>
+          <prerm command="rm export/download/pages/bang/client/getdown.txt"/>
         </scripts>
         <dependencies>
           <require package="${client_package_name}"><equalTo>${pkgVersion}</equalTo></require>

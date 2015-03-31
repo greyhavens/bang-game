@@ -30,33 +30,22 @@ code = code/bang-config.jar
 code = code/bang-pcode.jar
 code = code/lwjgl.jar
 code = code/lwjgl_util.jar
+code = code/jinput.jar
+code = code/jutils.jar
 code = code/commons-beanutils.jar
 code = code/commons-digester.jar
 code = code/commons-logging.jar
 
+# Native library bits
+code = [linux] code/lwjgl-platform-linux.jar
+code = [linux] code/jinput-platform-linux.jar
+code = [windows] code/lwjgl-platform-windows.jar
+code = [windows] code/jinput-platform-windows.jar
+code = [mac os x] code/lwjgl-platform-osx.jar
+code = [mac os x] code/jinput-platform-osx.jar
+
 # Getdown doesn't go in the classpath; this is just for auto-upgrade
 resource = code/getdown-pro-new.jar
-
-# Native library bits
-resource = [linux] native/liblwjgl.so
-resource = [linux] native/libopenal.so
-
-resource = [linux] native/liblwjgl64.so
-resource = [linux] native/libopenal64.so
-
-resource = [windows] native/lwjgl.dll
-resource = [windows] native/jinput-dx8.dll
-resource = [windows] native/jinput-raw.dll
-resource = [windows] native/OpenAL32.dll
-
-resource = [windows] native/lwjgl64.dll
-resource = [windows] native/jinput-dx8_64.dll
-resource = [windows] native/jinput-raw_64.dll
-resource = [windows] native/OpenAL64.dll
-
-resource = [mac os x] native/liblwjgl.jnilib
-resource = [mac os x] native/libjinput-osx.jnilib
-resource = [mac os x] native/openal.dylib
 
 # Our media resources
 resource = background.png
