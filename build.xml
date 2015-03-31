@@ -53,12 +53,6 @@
       <dependency groupId="junit" artifactId="junit" version="4.8.1"/>
     </artifact:dependencies>
 
-    <!-- declare dependencies needed by the client Proguard build -->
-    <artifact:dependencies filesetId="client.fileset">
-      <remoteRepository id="ooo.maven.ext" url="http://ooo-maven.googlecode.com/hg/repository"/>
-      <dependency groupId="com.jcraft" artifactId="jorbis" version="0.0.15"/>
-    </artifact:dependencies>
-
     <!-- declare a fileset for getdown which we need for various client bits -->
     <artifact:dependencies filesetId="getdown-pro.fileset">
       <dependency groupId="com.threerings" artifactId="getdown" version="1.4"/>
@@ -77,12 +71,10 @@
     <echo>${line.separator}Build-only depends:</echo>
     <exec executable="sort" inputstring="${ext.build.deps}"/>
 
-    <pathconvert property="client.deps" pathsep="${line.separator}"
-                 refid="client.fileset"/>
     <pathconvert property="getdown.deps" pathsep="${line.separator}"
                  refid="getdown-pro.fileset"/>
     <echo>${line.separator}Additional client depends:</echo>
-    <exec executable="sort" inputstring="${client.deps}${line.separator}${getdown.deps}"/>
+    <exec executable="sort" inputstring="${getdown.deps}"/>
   </target>
 
   <!-- prepares the application directories -->
@@ -177,10 +169,6 @@
     </copy>
 
     <mkdir dir="${deploy.dir}/client"/>
-    <copy todir="${deploy.dir}/client">
-      <fileset refid="client.fileset"/>
-      <mapper type="flatten"/>
-    </copy>
     <mkdir dir="${deploy.dir}/getdown"/>
     <copy tofile="${deploy.dir}/getdown/getdown-pro.jar">
       <fileset refid="getdown-pro.fileset"/>
@@ -526,7 +514,7 @@
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
       <compilerarg value="-Xlint:-path"/>
-      <compilerarg value="-Xlint:-override"/>
+      <compilerarg value="-Xlint:-overrides"/>
     </javac>
   </target>
 
@@ -541,9 +529,8 @@
       <!-- Third party libraries -->
       <injar path="${deploy.dir}/lib/jl1.0.jar" filter="!META-INF/*"/>
       <injar path="${commons-io:commons-io:jar}" filter="!META-INF/*"/>
-      <injar path="${commons-codec:commons-codec:jar}" filter="!META-INF/*"/>
-      <injar path="${com.jcraft:jorbis:jar}" filter="!META-INF/*"/>
-      <injar path="${com.jcraft:jogg:jar}" filter="!META-INF/*"/>
+      <!--<injar path="${commons-codec:commons-codec:jar}" filter="!META-INF/*"/>-->
+      <injar path="${org.jcraft:jorbis:jar}" filter="!META-INF/*"/>
       <injar path="${com.jme:jme-awt:jar}" filter="!META-INF/*"/>
       <injar path="${com.jme:jme-effects:jar}" filter="!META-INF/*"/>
       <injar path="${com.jme:jme-gamestates:jar}" filter="!META-INF/*"/>
