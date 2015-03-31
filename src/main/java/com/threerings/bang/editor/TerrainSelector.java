@@ -36,7 +36,7 @@ public class TerrainSelector extends JPanel
             choices[ii++] = new TerrainSelection(config);
         }
         QuickSort.sort(choices);
-        add(_selector = new JComboBox(choices));
+        add(_selector = new JComboBox<TerrainSelection>(choices));
     }
 
     public TerrainConfig getSelectedTerrain ()
@@ -67,7 +67,7 @@ public class TerrainSelector extends JPanel
             return _ctx.getMessageManager().getBundle("editor").exists(msg) ?
                 _ctx.xlate("editor", msg) : terrain.type;
         }
-        
+
         public int compareTo (TerrainSelection other)
         {
             return terrain.type.compareTo(other.terrain.type);
@@ -75,5 +75,5 @@ public class TerrainSelector extends JPanel
     }
 
     protected BasicContext _ctx;
-    protected JComboBox _selector;
+    protected JComboBox<TerrainSelection> _selector;
 }

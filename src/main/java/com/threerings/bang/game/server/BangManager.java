@@ -1704,7 +1704,7 @@ public class BangManager extends GameManager
         // until all advance orders for this tick have been completed.
         int executed = 0;
         @SuppressWarnings("unchecked") ArrayList<AdvanceOrder>[] aos = 
-            new ArrayList[getPlayerSlots()];
+            (ArrayList<AdvanceOrder>[])new ArrayList<?>[getPlayerSlots()];
         ArrayIntSet hasOrders = new ArrayIntSet();
         for (AdvanceOrder order : _orders) {
             if (order.unit.ticksUntilMovable(tick) <= 0) {
