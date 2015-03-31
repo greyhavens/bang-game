@@ -8,39 +8,41 @@
   <property name="build.optimize" value="on"/>
 
   <!-- define various packaging properties -->
-  <property name="bang.user"             value="_bang"/>
-  <property name="bang.maintainer.name"  value="Three Rings Design"/>
-  <property name="bang.maintainer.email" value="bang-dev@threerings.net"/>
+  <property name="bang.user"             value="ubuntu"/>
+  <property name="bang.maintainer.name"  value="Michael Bayne"/>
+  <property name="bang.maintainer.email" value="mdb+bang@samskivert.com"/>
 
-  <!-- define our subprojects and include the standard build system -->
-  <property name="webapps" value="office,bangsupport"/>
-  <import file="package/etc/build-support.xml"/>
+  <!-- include the standard build system -->
+  <import file="build/etc/build-support.xml"/>
 
   <!-- the location that build artifiacts can be stored on the build server -->
   <property name="build.data"     value="${ooo.build.data}/bang_client"/>
 
   <!-- Gets our various properties files and sticks them in dist -->
-  <target name="config" depends="-init-gather">
+  <target name="config">
     <mkdir dir="${deploy.dir}"/>
 
-    <!-- Grab the deployment et al properties from the configuration location. -->
-    <gatherconfiguration app="${app.name}" distribution="${ooo.distribution}" dest="${deploy.dir}">
-      <sources refid="ooo.bangconfig.source"/>
-      <sources><directory path="${basedir}/etc"/></sources>
-      <files>
-        <file name="deployment.properties"/>
-        <file name="server.properties"/>
-        <file name="server.conf"/>
-        <file name="build_settings.properties"/>
-      </files>
-    </gatherconfiguration>
+    <!-- determine which deployment we're building -->
+    <if><not><isset property="deployment"/></not><then>
+      <property name="deployment" value="test"/>
+    </then></if>
+
+    <!-- grab the deployment et al properties from the configuration location. -->
+    <copy todir="${deploy.dir}">
+      <fileset dir="${basedir}/etc/${deployment}">
+        <include name="deployment.properties"/>
+        <include name="server.properties"/>
+        <include name="server.conf"/>
+        <include name="build_settings.properties"/>
+      </fileset>
+    </copy>
 
     <!-- Read in all the deployment & build configuration bits. -->
     <property file="${deploy.dir}/deployment.properties"/>
     <property file="${deploy.dir}/build_settings.properties"/>
   </target>
 
-  <target name="-declare-maven" depends="-init-ooo">
+  <target name="-declare-maven">
     <!-- declare our runtime dependencies -->
     <artifact:pom id="pom" file="pom.xml"/>
     <artifact:dependencies filesetId="runtime.fileset" pomRefId="pom" useScope="compile"/>
@@ -59,8 +61,7 @@
 
     <!-- declare a fileset for getdown which we need for various client bits -->
     <artifact:dependencies filesetId="getdown-pro.fileset">
-      <remoteRepository refid="ooo.maven.depends.repo"/>
-      <dependency groupId="com.threerings" artifactId="getdown-pro" version="1.1"/>
+      <dependency groupId="com.threerings" artifactId="getdown" version="1.4"/>
     </artifact:dependencies>
   </target>
 
@@ -85,7 +86,7 @@
   </target>
 
   <!-- prepares the application directories -->
-  <target name="prepare" depends="-declare-maven,-init-copy,config,lists">
+  <target name="prepare" depends="-declare-maven,config,lists">
     <mkdir dir="${deploy.dir}/tmp"/>
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
@@ -504,7 +505,7 @@
   <target name="distclean" depends="config,clean">
     <delete dir="${deploy.dir}"/>
     <ant dir="projects/installers" target="clean" inheritAll="false"/>
-    <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
+    <!--<ant dir="projects/pseditor" target="clean" inheritAll="false"/>-->
 
     <!-- revert generated build artifacts in case the build broke before we could -->
     <!-- commit them, but only for builds that were expecting to auto commit the files  -->
@@ -524,12 +525,10 @@
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
+      <compilerarg value="-Xlint:-path"/>
+      <compilerarg value="-Xlint:-override"/>
     </javac>
   </target>
-
-  <!-- build the javadoc documentation -->
-  <property name="javadoc.title"  value="Bang! Howdy API"/>
-  <target name="javadoc" depends="prepare,common-javadoc"/>
 
   <!-- helper target for client and devclient -->
   <target name="baseclient" depends="prepare">
@@ -680,7 +679,7 @@
         <filter token="appbase_line" value="appbase = ${root_url}/client/${clientVersion}"/>
         <filter token="version_line" value=""/>
         <filter token="tracking_url" value="${root_url}/tracking/"/>
-        <filter token="auxgroups_line" value="auxgroups = indian_post, boom_town"/>
+        <filter token="auxgroups_line" value="auxgroups = indian_post"/>
       </filterset>
     </copy>
 
@@ -876,7 +875,7 @@
   </target>
 
   <!-- a target for rebuilding everything -->
-  <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
+  <target name="all" depends="clean,prepare,compile,dist"/>
 
   <!-- rebuild all the niggling bits -->
   <target name="bits" depends="colorpos,tutorials"/>
@@ -973,7 +972,7 @@
   </target>
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="dist,distwebapps,mdist">
+  <target name="distall" depends="dist,mdist">
     <!-- copy native LWJGL libraries into ${deploy.dir}/lib -->
     <copy todir="${deploy.dir}/lib">
       <fileset dir="lib/native" includes="**/*.so"/>
@@ -983,10 +982,10 @@
   </target>
 
   <!-- cleans out the application and all subprojects -->
-  <target name="cleanall" depends="cleanwebapps,clean"/>
+  <target name="cleanall" depends="clean"/>
 
   <!-- fully cleans out the application and all subprojects -->
-  <target name="distcleanall" depends="distcleanwebapps,distclean"/>
+  <target name="distcleanall" depends="distclean"/>
 
   <!-- proguards up the client, applet, installers and some other ephemera -->
   <target name="buildclient" depends="prepare">
@@ -1001,7 +1000,7 @@
   </target>
 
   <!-- rebuilds everything and extra bits for packaging -->
-  <target name="package" depends="distall,buildclient,server-package,webapps-package,
+  <target name="package" depends="distall,buildclient,server-package,
           pages-extra-package,hemiptera-map-package,client-package">
     <!-- define the root of our meta-packages -->
     <property name="pkgroot.meta" value="${pkgroot.root}/${app.name}-meta"/>
@@ -1236,99 +1235,6 @@
     </sequential></for>
   </target>
 
-  <!-- builds the bangoffice and bangsupport packages -->
-  <target name="webapps-package" depends="prepare-package">
-    <!-- define the root of the bangoffice package -->
-    <property name="pkgroot.office" value="${pkgroot.root}/${app.name}office"/>
-    <property name="approot.office" value="${pkgroot.office}/${ooo.prefix}/${app.name}"/>
-    <mkdir dir="${approot.office}"/>
-
-    <!-- create webapp jetty scripts and copy in the war file -->
-    <jettystartup webapp="${app.name}office" base="${ooo.prefix}/${app.name}" runas="${bang.user}"
-                  outputdir="${approot.office}" port="${bangoffice.jetty.port}" context="/office"/>
-    <copy file="webapps/office/${deploy.dir}/bangoffice.war"
-      todir="${approot.office}/webapps/bangoffice"/>
-
-    <!-- define the root of the bangsupport package -->
-    <property name="pkgroot.support" value="${pkgroot.root}/${app.name}support"/>
-    <property name="approot.support" value="${pkgroot.support}/${ooo.prefix}/${app.name}"/>
-    <mkdir dir="${approot.support}"/>
-
-    <!-- create webapp jetty scripts and copy in the war file -->
-    <jettystartup webapp="${app.name}support" base="${ooo.prefix}/${app.name}" runas="${bang.user}"
-                  outputdir="${approot.support}" port="${bangsupport.jetty.port}"/>
-    <copy file="webapps/bangsupport/${deploy.dir}/bangsupport.war"
-          todir="${approot.support}/webapps/${app.name}support"/>
-
-    <!-- copy our support GWT pages into bangsupport pages directory -->
-    <mkdir dir="${approot.support}/pages/support"/>
-    <copy todir="${approot.support}/pages/support">
-      <fileset dir="webapps/bangsupport/dist/www/bang_user" includes="**"/>
-      <fileset dir="webapps/bangsupport/dist/www/bang_admin" includes="**"/>
-    </copy>
-
-    <!-- build the actual Debian packages -->
-    <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
-          distribution="${ooo.distribution}">
-      <package destroot="${pkgroot.office}">
-        <info>
-          <name>bangoffice</name>
-          <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
-          <description>Bang Admin Webapp</description>
-          <maintainer>
-            <name>${bang.maintainer.name}</name>
-            <email>${bang.maintainer.email}</email>
-          </maintainer>
-        </info>
-        <permissions>
-          <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="false">
-            <path>log/</path>
-            <path>run/</path>
-          </permission>
-          <permission mode="555">
-            <path>etc/rc.d/jetty-bangoffice.sh</path>
-          </permission>
-        </permissions>
-        <!-- restart webapp on package install/upgrade and stop on package removal. -->
-        <scripts>
-          <rcrestart script="${ooo.prefix}/${app.name}/etc/rc.d/jetty-bangoffice.sh"/>
-        </scripts>
-      </package>
-
-      <package destroot="${pkgroot.support}">
-        <info>
-          <name>bangsupport</name>
-          <version>${pkgVersion}</version>
-          <arch>${ooo.architecture}</arch>
-          <description>Bang Support Webapp</description>
-          <maintainer>
-            <name>${bang.maintainer.name}</name>
-            <email>${bang.maintainer.email}</email>
-          </maintainer>
-        </info>
-        <permissions>
-          <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="false">
-            <path>log/</path>
-            <path>run/</path>
-          </permission>
-          <permission mode="555">
-            <path>etc/rc.d/jetty-bangsupport.sh</path>
-          </permission>
-        </permissions>
-        <!-- restart webapp on package install/upgrade and stop on package removal. -->
-        <scripts>
-          <rcrestart script="${ooo.prefix}/${app.name}/etc/rc.d/jetty-bangsupport.sh"/>
-        </scripts>
-        <dependencies>
-          <!-- TEMP: remove this when we've updated web1/2 -->
-          <conflict package="bang-underwire-pages"/>
-          <replacement package="bang-underwire-pages"/>
-        </dependencies>
-      </package>
-    </dpkg>
-  </target>
-
   <!-- builds the bang-pages-extra package -->
   <target name="pages-extra-package" depends="prepare-package">
     <!-- define the root of the package -->
@@ -1463,37 +1369,4 @@
       </package>
     </dpkg>
   </target>
-
-  <!-- builds our javadocs and packages them up -->
-  <target name="package-docs" depends="distall,javadoc,prepare-package">
-    <property name="pkgroot.docs" value="${pkgroot.root}/bang-docs"/>
-    <property name="approot.docs" value="${pkgroot.docs}/${ooo.docs.prefix}"/>
-    <mkdir dir="${approot.docs}"/>
-
-    <copy todir="${approot.docs}/bang">
-      <fileset dir="${deploy.dir}/docs"/>
-    </copy>
-
-    <!-- Set up a version number to use for docs package. -->
-    <tstamp><format property="version" pattern="yyyyMMddHHmmss"/></tstamp>
-
-    <dpkg output="${package.output}" prefix="${ooo.docs.prefix}" distribution="${ooo.distribution}">
-      <package destroot="${pkgroot.docs}">
-        <info>
-          <name>bang-docs</name>
-          <version>${version}</version>
-          <arch>${ooo.architecture}</arch>
-          <description>Bang Development Docs</description>
-          <maintainer>
-            <name>${bang.maintainer.name}</name>
-            <email>${bang.maintainer.email}</email>
-          </maintainer>
-        </info>
-      </package>
-    </dpkg>
-  </target>
-
-  <!-- targets for the auto-build system -->
-  <target name="bamboo" depends="package,aptupdate,distcleanall,checkclean"/>
-  <target name="bamboo-docs" depends="package-docs,aptupdate,distcleanall,checkclean"/>
 </project>
