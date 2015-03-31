@@ -1,7 +1,7 @@
-etc/server.conf
-etc/server.properties
-etc/deployment.properties
-etc/build_settings.properties
-etc/blosxom.conf
 etc/bang-client.pro
+etc/blosxom.conf
+etc/prod/*.conf
+etc/prod/*.properties
+etc/test/*.conf
+etc/test/*.properties
 log/*.log
