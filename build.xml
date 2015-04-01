@@ -833,26 +833,6 @@
         <arg value="etc/proguard/${clientVersion}.map"/>
       </exec>
     </then></if>
-
-    <!-- if enabled, upload the client to S3 -->
-    <if><istrue value="${client_s3enable}"/><then>
-      <property name="s3upload" value="${deploy.dir}/tmp/s3upload"/>
-      <delete dir="${s3upload}"/>
-      <copy todir="${s3upload}">
-        <fileset dir="${deploy.dir}/client/pages" includes="bang/client/${clientVersion}/**"/>
-      </copy>
-      <echo>Uploading the client to S3</echo>
-      <artifact:dependencies pathId="s3upload.classpath">
-        <remoteRepository refid="ooo.maven.depends.repo"/>
-        <dependency groupId="com.threerings.s3upload" artifactId="s3upload" version="1.0"/>
-      </artifact:dependencies>
-      <taskdef name="s3upload" classname="com.threerings.ant.S3Upload"
-               classpathref="s3upload.classpath"/>
-      <s3upload awsAuthId="${client_s3id}" awsAuthKey="${client_s3key}"
-                awsBucket="${client_s3bucket}" accessPolicy="public_read">
-        <fileset dir="${s3upload}" includes="bang/**"/>
-      </s3upload>
-    </then></if>
   </target>
 
   <!-- signs and install the Getdown applet jar file -->
