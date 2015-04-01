@@ -974,7 +974,7 @@
   </target>
 
   <!-- rebuilds everything and extra bits for packaging -->
-  <target name="package" depends="distall,buildclient,server-package,client-package">
+  <target name="package" depends="-genversion,distall,buildclient,server-package,client-package">
     <!-- define the root of the pages-extra package -->
     <property name="pkgroot.pages-extra" value="${pkgroot.root}/${app.name}-pages-extra"/>
     <property name="approot.pages-extra" value="${pkgroot.pages-extra}/export/${app.name}"/>
@@ -1049,7 +1049,7 @@
   </target>
 
   <!-- defines properties needed by the individual foo-package targets -->
-  <target name="prepare-package" depends="-genversion">
+  <target name="prepare-package" depends="-genversion,config">
     <!-- define the directory from which we're going to build our packages -->
     <property name="pkgroot.root" value="${deploy.dir}/packages"/>
     <mkdir dir="${pkgroot.root}"/>
