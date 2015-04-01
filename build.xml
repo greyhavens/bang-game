@@ -828,6 +828,7 @@
       <fileset dir="etc/proguard" includes="??????????.map"/>
     </copy>
     <!-- commit the proguard map file -->
+    <!--
     <if><istrue value="${should_commit_proguard_maps}"/><then>
       <exec executable="svn" failonerror="true">
         <arg value="add"/>
@@ -840,6 +841,7 @@
         <arg value="etc/proguard/${clientVersion}.map"/>
       </exec>
     </then></if>
+    -->
   </target>
 
   <!-- signs and install the Getdown applet jar file -->
