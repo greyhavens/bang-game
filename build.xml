@@ -573,7 +573,7 @@
       <injar path="${deploy.dir}/bang-code.jar" filter="!**/jme/tools/*Task.class,
         **/jme/tools/**"/>
 
-      <libraryjar name="${java.home}/lib/plugin.jar"/>
+      <libraryjar name="lib/plugin.jar"/>
       <libraryjar name="${org.lwjgl.lwjgl:lwjgl:jar}"/>
       <libraryjar name="${org.lwjgl.lwjgl:lwjgl_util:jar}"/>
 
