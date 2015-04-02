@@ -1092,6 +1092,7 @@
       <fileset dir="${deploy.dir}">
         <include name="*.jar"/>
         <include name="*.properties"/>
+        <include name="*.conf"/>
         <!-- We skip build_settings.properties since it's only needed at build time. -->
         <exclude name="build_settings.properties"/>
       </fileset>
@@ -1165,7 +1166,7 @@
             <path>tools/bin/</path>
           </permission>
           <permission user="${bang.user}" group="${bang.user}" mode="440">
-            <path>dist/server.properties</path>
+            <path>${deploy.dir}/server.properties</path>
           </permission>
         </permissions>
       </package>
