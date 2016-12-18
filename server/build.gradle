@@ -1,7 +1,7 @@
 dependencies {
   compile project(":client/shared")
   compile "com.samskivert:depot:1.7"
-  compile "com.threerings:ooo-user:1.4.3"
+  compile "com.threerings:ooo-user:1.4.5"
   compile "net.sf.ehcache:ehcache:1.6.0"
   compile "mysql:mysql-connector-java:5.1.6"
   compile "commons-digester:commons-digester:1.8"
@@ -14,6 +14,13 @@ task copyConfig (type: Copy) {
   include "server.properties"
 }
 processResources.dependsOn "copyConfig"
+
+task createTestUser(type:JavaExec) {
+  systemProperty "ooo.propfile", "server"
+  args(["create", "test", "yeehaw", "test@test.com"])
+  main = "com.threerings.user.tools.UserTool"
+  classpath = sourceSets.main.runtimeClasspath
+}
 
 task deploy (type: Sync) {
   from jar

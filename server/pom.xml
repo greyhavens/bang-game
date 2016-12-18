@@ -27,7 +27,7 @@
     <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>ooo-user</artifactId>
-      <version>1.4.3</version>
+      <version>1.4.5</version>
     </dependency>
 
     <dependency>
