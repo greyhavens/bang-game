@@ -33,18 +33,18 @@ public class ToolPanel extends JPanel
     implements ItemListener
 {
     public CameraDolly cameraDolly;
-
+    
     public ToolPanel (EditorContext ctx, EditorPanel panel)
     {
         VGroupLayout gl = new VGroupLayout(VGroupLayout.STRETCH);
         gl.setOffAxisPolicy(VGroupLayout.STRETCH);
         setLayout(gl);
-
+        
         // add the chooser panel on top
         JPanel cpanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
         cpanel.add(new JLabel(ctx.xlate("editor", "m.tool")),
             HGroupLayout.FIXED);
-        _tools = new JComboBox<EditorTool>();
+        _tools = new JComboBox();
         cameraDolly = new CameraDolly(ctx, panel);
         _tools.addItem(cameraDolly);
         _tools.addItem(new PiecePlacer(ctx, panel));
@@ -55,7 +55,7 @@ public class ToolPanel extends JPanel
         _tools.addItemListener(this);
         cpanel.add(_tools);
         add(cpanel, VGroupLayout.FIXED);
-
+        
         // add actions to select tools using ctrl-1+
         addSelectAction(panel, KeyEvent.VK_1, 0);
         addSelectAction(panel, KeyEvent.VK_2, 1);
@@ -63,7 +63,7 @@ public class ToolPanel extends JPanel
         addSelectAction(panel, KeyEvent.VK_4, 3);
         addSelectAction(panel, KeyEvent.VK_5, 4);
         addSelectAction(panel, KeyEvent.VK_6, 5);
-
+        
         // and the tool options below
         add(_scroll = new JScrollPane(cameraDolly.getOptions(),
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -75,7 +75,7 @@ public class ToolPanel extends JPanel
         // add our event dispatcher
         panel.view.addListener(_dispatcher);
     }
-
+    
     /**
      * Returns a reference to the active tool.
      */
@@ -83,21 +83,21 @@ public class ToolPanel extends JPanel
     {
         return (EditorTool)_tools.getSelectedItem();
     }
-
+    
     /**
      * Selects a tool by name.
      */
     public void selectTool (String name)
     {
         for (int i = 0, c = _tools.getItemCount(); i < c; i++) {
-            EditorTool tool = _tools.getItemAt(i);
+            EditorTool tool = (EditorTool)_tools.getItemAt(i);
             if (tool.getName().equals(name)) {
                 _tools.setSelectedIndex(i);
                 return;
             }
         }
     }
-
+    
     // inherited from interface ItemListener
     public void itemStateChanged (ItemEvent ie)
     {
@@ -106,12 +106,12 @@ public class ToolPanel extends JPanel
             _scroll.setViewportView(tool.getOptions());
             SwingUtil.refresh(this);
             tool.activate();
-
+            
         } else if (ie.getStateChange() == ItemEvent.DESELECTED) {
             tool.deactivate();
         }
     }
-
+    
     /**
      * Adds a binding to ctrl-keyCode that selected the tool at the given
      * index.
@@ -163,7 +163,7 @@ public class ToolPanel extends JPanel
         }
     }
 
-    protected JComboBox<EditorTool> _tools;
+    protected JComboBox _tools;
     protected JScrollPane _scroll;
     protected EventDispatcher _dispatcher = new EventDispatcher();
 }

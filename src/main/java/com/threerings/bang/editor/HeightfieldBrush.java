@@ -120,7 +120,7 @@ public class HeightfieldBrush extends EditorTool
         implements ActionListener, ChangeListener
     {
         public JSlider sizer;
-        public JComboBox<String> mode;
+        public JComboBox mode;
         public JFormattedTextField value;
         public JButton noise, smooth, generate;
         
@@ -131,7 +131,7 @@ public class HeightfieldBrush extends EditorTool
             
             JPanel mpanel = new JPanel();
             mpanel.add(new JLabel(_msgs.get("m.mode")));
-            mpanel.add(mode = new JComboBox<String>(new String[] {
+            mpanel.add(mode = new JComboBox(new Object[] {
                 _msgs.get("m.add_value"), _msgs.get("m.set_value") }));
             add(mpanel);
             

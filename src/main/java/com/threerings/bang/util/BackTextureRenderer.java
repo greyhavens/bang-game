@@ -127,7 +127,6 @@ public class BackTextureRenderer
     }
 
     // documentation inherited from interface TextureRenderer
-    @SuppressWarnings("rawtypes")
     public void render (ArrayList spats, Texture... texs)
     {
         // render to back buffer

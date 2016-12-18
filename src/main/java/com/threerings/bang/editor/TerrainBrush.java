@@ -32,34 +32,34 @@ public class TerrainBrush extends EditorTool
 {
     /** The name of this tool. */
     public static final String NAME = "terrain_brush";
-
+    
     public TerrainBrush (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
         _cursor = panel.view.getTerrainNode().createCursor();
         _cursor.radius = DEFAULT_CURSOR_RADIUS;
     }
-
+    
     // documentation inherited
     public String getName ()
     {
         return NAME;
     }
-
+    
     @Override // documentation inherited
     public void activate ()
     {
         super.activate();
         _panel.view.getNode().attachChild(_cursor);
     }
-
+    
     @Override // documentation inherited
     public void deactivate ()
     {
         super.deactivate();
         _panel.view.getNode().detachChild(_cursor);
     }
-
+    
     @Override // documentation inherited
     public void mousePressed (MouseEvent e)
     {
@@ -67,20 +67,20 @@ public class TerrainBrush extends EditorTool
             _tbopts.selector.getSelectedTerrain(),
             _tbopts.mode.getSelectedIndex() == FILL);
     }
-
+    
     @Override // documentation inherited
     public void mouseReleased (MouseEvent e)
     {
         _panel.view.commitTerrainEdit();
     }
-
+    
     @Override // documentation inherited
     public void mouseMoved (MouseEvent e)
     {
         Vector3f ground = _panel.view.getGroundIntersect(e, false, null);
         _cursor.setPosition(ground.x, ground.y);
     }
-
+    
     @Override // documentation inherited
     public void mouseDragged (MouseEvent e)
     {
@@ -89,7 +89,7 @@ public class TerrainBrush extends EditorTool
             _tbopts.selector.getSelectedTerrain(),
             _tbopts.mode.getSelectedIndex() == FILL);
     }
-
+    
     @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {
@@ -97,13 +97,13 @@ public class TerrainBrush extends EditorTool
             MIN_CURSOR_RADIUS, MAX_CURSOR_RADIUS));
         _tbopts.sizer.setValue((int)_cursor.radius);
     }
-
+    
     // documentation inherited
     protected JPanel createOptions ()
     {
         return (_tbopts = new TerrainBrushOptions());
     }
-
+    
     /**
      * Clamps v between a and b.
      */
@@ -111,29 +111,29 @@ public class TerrainBrush extends EditorTool
     {
         return Math.min(Math.max(v, a), b);
     }
-
+    
     /** The options for this panel. */
     protected class TerrainBrushOptions extends JPanel
         implements ActionListener, ChangeListener
     {
         public TerrainSelector selector;
-        public JComboBox<String> mode;
+        public JComboBox mode;
         public JSlider sizer;
         public JButton clear;
-
+        
         public TerrainBrushOptions ()
         {
             super(new VGroupLayout(VGroupLayout.NONE, VGroupLayout.TOP));
             setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-
+            
             add(selector = new TerrainSelector(_ctx));
-
+            
             JPanel mpanel = new JPanel();
             mpanel.add(new JLabel(_msgs.get("m.mode")));
-            mpanel.add(mode = new JComboBox<String>(new String[] {
+            mpanel.add(mode = new JComboBox(new Object[] {
                 _msgs.get("m.paint"), _msgs.get("m.fill") }));
             add(mpanel);
-
+            
             JPanel spanel = new JPanel();
             spanel.add(new JLabel(_msgs.get("m.brush_size")));
             spanel.add(sizer = new JSlider(MIN_CURSOR_RADIUS,
@@ -142,17 +142,17 @@ public class TerrainBrush extends EditorTool
             sizer.setPreferredSize(new Dimension(70,
                 sizer.getPreferredSize().height));
             add(spanel);
-
+            
             clear = new JButton(_msgs.get("b.clear"));
             clear.addActionListener(this);
             add(clear);
         }
-
+        
         public void stateChanged (ChangeEvent e)
         {
             _cursor.setRadius(sizer.getValue());
         }
-
+        
         public void actionPerformed (ActionEvent e)
         {
             if (e.getSource() == clear) {
@@ -160,25 +160,25 @@ public class TerrainBrush extends EditorTool
             }
         }
     }
-
+    
     /** The terrain cursor. */
     protected TerrainNode.Cursor _cursor;
-
+    
     /** The casted options panel. */
     protected TerrainBrushOptions _tbopts;
-
+    
     /** The paint terrain mode. */
     protected static final int PAINT = 0;
-
+    
     /** The fill terrain mode. */
     protected static final int FILL = 1;
-
+    
     /** The minimum cursor radius. */
     protected static final int MIN_CURSOR_RADIUS = 1;
-
+    
     /** The default cursor radius. */
     protected static final int DEFAULT_CURSOR_RADIUS = 5;
-
+    
     /** The maximum cursor radius. */
     protected static final int MAX_CURSOR_RADIUS = 50;
 }

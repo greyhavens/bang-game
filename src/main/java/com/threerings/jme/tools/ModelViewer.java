@@ -314,7 +314,7 @@ public class ModelViewer extends JmeCanvasApp
         _animctrls.setBorder(BorderFactory.createEtchedBorder());
         bpanel.add(_animctrls, BorderLayout.NORTH);
         _animctrls.add(new JLabel(_msg.get("m.anim_select")));
-        _animctrls.add(_animbox = new JComboBox<String>());
+        _animctrls.add(_animbox = new JComboBox());
         _animctrls.add(new JButton(
             new AbstractAction(_msg.get("m.anim_start")) {
                 public void actionPerformed (ActionEvent e) {
@@ -683,7 +683,7 @@ public class ModelViewer extends JmeCanvasApp
         }
         _model.addAnimationObserver(_animobs);
         _animctrls.setVisible(true);
-        DefaultComboBoxModel<String> abmodel = new DefaultComboBoxModel<String>(anims);
+        DefaultComboBoxModel abmodel = new DefaultComboBoxModel(anims);
         _animbox.setModel(abmodel);
         updateAnimationSpeed();
 
@@ -839,7 +839,7 @@ public class ModelViewer extends JmeCanvasApp
     protected JPanel _animctrls;
 
     /** The animation selector. */
-    protected JComboBox<String> _animbox;
+    protected JComboBox _animbox;
 
     /** The "stop animation" button. */
     protected JButton _animstop;

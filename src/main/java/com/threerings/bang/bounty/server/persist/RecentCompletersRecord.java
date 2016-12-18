@@ -74,7 +74,7 @@ public class RecentCompletersRecord extends PersistentRecord
         return new Key<RecentCompletersRecord>(
                 RecentCompletersRecord.class,
                 new ColumnExp[] { BOUNTY_ID },
-                new Comparable<?>[] { bountyId });
+                new Comparable[] { bountyId });
     }
     // AUTO-GENERATED: METHODS END
 }
