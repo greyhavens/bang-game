@@ -746,21 +746,17 @@
       <entry key="version" value="${clientVersion}"/>
       <entry key="config_version" value="${clientVersion}"/>
     </propertyfile>
-    <!--
     <exec executable="${basedir}/bin/getversion" outputproperty="latestVersion"
           failonerror="true">
       <arg line="client"/>
       <arg line="${download_root_url}"/>
     </exec>
-    -->
     <!-- be sure a proguard map file does not already exist for this version -->
     <available file="etc/proguard/${clientVersion}.map" property="map.exists"/>
     <fail message="A map file for this version already exists. Wait 15 minutes to build again.">
       <condition><istrue value="${map.exists}"/></condition>
     </fail>
-    <!--
     <echo message="Previous version used for renaming: ${latestVersion}"/>
-    -->
     <echo message="Generating Proguard config file for ${clientVersion}..."/>
     <copy file="etc/bang-client.pro.in" tofile="${deploy.dir}/bang-client.pro"
           overwrite="true" encoding="UTF-8">
