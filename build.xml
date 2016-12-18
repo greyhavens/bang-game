@@ -680,7 +680,7 @@
     </copy>
 
     <!-- copy the getdown.txt file into the right place -->
-    <property name="client.base" value="${deploy.dir}/client/pages/client/${clientVersion}"/>
+    <property name="client.base" value="${deploy.dir}/client/pages/bang/client/${clientVersion}"/>
     <mkdir dir="${client.base}"/>
     <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt"
           overwrite="true" encoding="UTF-8">
@@ -774,7 +774,7 @@
     </copy>
 
     <!-- copy the getdown.txt file into the right place -->
-    <property name="client.base" value="${deploy.dir}/client/pages/client/${clientVersion}"/>
+    <property name="client.base" value="${deploy.dir}/client/pages/bang/client/${clientVersion}"/>
     <mkdir dir="${client.base}"/>
     <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt.tmp"
           overwrite="true" encoding="UTF-8">
@@ -801,7 +801,7 @@
          for future diffing -->
     <mkdir dir="${build.data}"/>
     <copy todir="${build.data}">
-      <fileset dir="${deploy.dir}/client/pages/client" includes="${clientVersion}/**"/>
+      <fileset dir="${deploy.dir}/client/pages/bang/client" includes="${clientVersion}/**"/>
     </copy>
 
     <!-- create the getdown diff files -->
@@ -1025,7 +1025,7 @@
     <mkdir dir="${pkgroot.meta}"/>
 
     <!-- create the web server meta-package -->
-    <dpkg output="${pkgroot.root}" prefix="export/bang" distribution="local">
+    <dpkg output="${pkgroot.root}" prefix="export/download" distribution="local">
       <package destroot="${pkgroot.meta}">
         <info>
           <name>bang-web-server</name>
@@ -1046,7 +1046,7 @@
     </dpkg>
 
     <!-- create the game server meta-package -->
-    <dpkg output="${pkgroot.root}" prefix="export/bang" distribution="local">
+    <dpkg output="${pkgroot.root}" prefix="export/download" distribution="local">
       <package destroot="${pkgroot.meta}">
         <info>
           <name>bang-game-server</name>
@@ -1222,7 +1222,7 @@
   <target name="client-package" depends="prepare-package">
     <!-- define the root of the client package -->
     <property name="pkgroot.client" value="${pkgroot.root}/${app.name}-client"/>
-    <property name="approot.client" value="${pkgroot.client}/export/bang"/>
+    <property name="approot.client" value="${pkgroot.client}/export/download"/>
     <mkdir dir="${approot.client}"/>
 
     <!-- make sure our versions are properly set -->
@@ -1236,7 +1236,7 @@
 
     <!-- build the actual Debian packages -->
     <property name="client_package_name" value="bang-client-${clientVersion}"/>
-    <dpkg output="${pkgroot.root}" prefix="export/bang" distribution="local">
+    <dpkg output="${pkgroot.root}" prefix="export/download" distribution="local">
       <package destroot="${pkgroot.client}">
         <info>
           <name>${client_package_name}</name>
@@ -1255,7 +1255,7 @@
     <property name="pkgroot.client-current" value="${pkgroot.root}/${app.name}-client-current"/>
     <mkdir dir="${pkgroot.client-current}"/>
 
-    <dpkg output="${pkgroot.root}" prefix="export/bang" distribution="local">
+    <dpkg output="${pkgroot.root}" prefix="export/download" distribution="local">
       <package destroot="${pkgroot.client-current}">
         <info>
           <name>bang-client-current</name>
@@ -1268,8 +1268,8 @@
           </maintainer>
         </info>
         <scripts>
-          <postinst command="ln -sf ${clientVersion}/getdown.txt export/bang/pages/client/getdown.txt"/>
-          <prerm command="rm -f export/bang/pages/client/getdown.txt"/>
+          <postinst command="ln -sf ${clientVersion}/getdown.txt export/download/pages/bang/client/getdown.txt"/>
+          <prerm command="rm -f export/download/pages/bang/client/getdown.txt"/>
         </scripts>
         <dependencies>
           <require package="${client_package_name}"><equalTo>${pkgVersion}</equalTo></require>
