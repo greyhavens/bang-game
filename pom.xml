@@ -14,6 +14,20 @@
     <url>http://www.banghowdy.com/hemiptera/</url>
   </issueManagement>
 
+  <scm>
+    <connection>scm:svn:svn+ssh://src.earth.threerings.net/bang/trunk/</connection>
+    <developerConnection>
+      scm:svn:svn+ssh://src.earth.threerings.net/bang/trunk/
+    </developerConnection>
+  </scm>
+
+  <repositories>
+    <repository>
+      <id>ooo-repo</id>
+      <url>https://build.earth.threerings.net/maven-repository</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>commons-io</groupId>
@@ -35,53 +49,16 @@
       <artifactId>commons-digester</artifactId>
       <version>1.8</version>
     </dependency>
-
     <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-awt</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-effects</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-gamestates</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-model</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-scene</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-sound</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jme</groupId>
-      <artifactId>jme-terrain</artifactId>
-      <version>1.1</version>
+      <groupId>com.threerings</groupId>
+      <artifactId>jme-gdx</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.samskivert</groupId>
       <artifactId>jme-bui</artifactId>
       <version>1.1-SNAPSHOT</version>
     </dependency>
-
     <dependency>
       <groupId>com.samskivert</groupId>
       <artifactId>samskivert</artifactId>
@@ -98,11 +75,20 @@
       <version>1.0</version>
     </dependency>
     <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jogg</artifactId>
+      <version>0.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jorbis</artifactId>
+      <version>0.0.15</version>
+    </dependency>
+    <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>vilya</artifactId>
       <version>1.0</version>
     </dependency>
-
     <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>threerings</artifactId>
@@ -121,44 +107,7 @@
     <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>getdown</artifactId>
-      <version>1.4</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jcraft</groupId>
-      <artifactId>jorbis</artifactId>
-      <version>0.0.17</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.ant</groupId>
-      <artifactId>ant</artifactId>
-      <version>1.7.1</version>
-      <scope>provided</scope>
+      <version>1.1</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <outputDirectory>dist</outputDirectory>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-          <fork>true</fork>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-          <compilerArgs>
-            <arg>-Xlint</arg>
-            <arg>-Xlint:-serial</arg>
-            <arg>-Xlint:-path</arg>
-            <arg>-Xlint:-overrides</arg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
