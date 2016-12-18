@@ -75,5 +75,5 @@ fi
 export CLASSPATH
 
 # do the deed
-# echo java $JAVA_ARGS $ARGS
+echo java $JAVA_ARGS $ARGS
 exec java $JAVA_ARGS $ARGS
