@@ -1268,7 +1268,7 @@
         </info>
         <scripts>
           <postinst command="ln -sf ${clientVersion}/getdown.txt export/download/pages/bang/client/getdown.txt"/>
-          <prerm command="rm -f export/download/pages/bang/client/getdown.txt"/>
+          <prerm command="rm export/download/pages/bang/client/getdown.txt"/>
         </scripts>
         <dependencies>
           <require package="${client_package_name}"><equalTo>${pkgVersion}</equalTo></require>
