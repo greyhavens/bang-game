@@ -16,10 +16,7 @@
   <import file="build/etc/build-support.xml"/>
 
   <!-- the location that build artifiacts can be stored on the build server -->
-  <property name="build.data" value="build_data/bang_client"/>
-
-  <!-- import any local build configuration -->
-  <property file="build.properties"/>
+  <property name="build.data"     value="${ooo.build.data}/bang_client"/>
 
   <!-- Gets our various properties files and sticks them in dist -->
   <target name="config">
@@ -976,17 +973,8 @@
     <!-- disabled: <antcall target="applet"/> -->
   </target>
 
-  <!-- warns if calling package with non-production deployment -->
-  <target name="check-package" depends="-genversion">
-    <property name="deployment" value="prod"/>
-    <if><not><equals arg1="${deployment}" arg2="prod"/></not><then>
-      <echo>WARNING: Building package for ${deployment} deployment.</echo>
-      <echo>WARNING: Usually one only packages the 'prod' deployment.</echo>
-    </then></if>
-  </target>
-
   <!-- rebuilds everything and extra bits for packaging -->
-  <target name="package" depends="check-package,distall,buildclient,server-package,client-package">
+  <target name="package" depends="-genversion,distall,buildclient,server-package,client-package">
     <!-- define the root of the pages-extra package -->
     <property name="pkgroot.pages-extra" value="${pkgroot.root}/${app.name}-pages-extra"/>
     <property name="approot.pages-extra" value="${pkgroot.pages-extra}/export/${app.name}"/>
