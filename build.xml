@@ -522,7 +522,7 @@
   <target name="baseclient" depends="prepare">
     <!-- generate the all-in-wonder jar file -->
     <artifact:dependencies pathId="proguard.classpath">
-      <dependency groupId="net.sf.proguard" artifactId="proguard-anttask" version="5.2.1"/>
+      <dependency groupId="net.sf.proguard" artifactId="proguard" version="4.4"/>
     </artifact:dependencies>
     <taskdef resource="proguard/ant/task.properties" classpathref="proguard.classpath"/>
     <proguard configuration="${deploy.dir}/bang-client.pro">
@@ -568,7 +568,6 @@
       <injar path="${deploy.dir}/bang-code.jar" filter="!**/jme/tools/*Task.class,
         **/jme/tools/**"/>
 
-      <libraryjar name="${java.home}/lib/plugin.jar"/>
       <libraryjar name="${deploy.dir}/lib/lwjgl.jar"/>
       <libraryjar name="${deploy.dir}/lib/lwjgl_util.jar"/>
 
