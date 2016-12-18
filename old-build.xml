@@ -1,0 +1,1500 @@
+<!-- build configuration -->
+<project name="bang" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+
+  <!-- define various build properties -->
+  <property name="src.dir"        value="src/main/java"/>
+  <property name="deploy.dir"     value="dist"/>
+  <property name="app.name"       value="bang"/>
+  <property name="build.optimize" value="on"/>
+
+  <!-- define various packaging properties -->
+  <property name="bang.user"             value="_bang"/>
+  <property name="bang.maintainer.name"  value="Three Rings Design"/>
+  <property name="bang.maintainer.email" value="bang-dev@threerings.net"/>
+
+  <!-- define our subprojects and include the standard build system -->
+  <property name="webapps" value="office,bangsupport"/>
+  <import file="package/etc/build-support.xml"/>
+
+  <!-- the location that build artifiacts can be stored on the build server -->
+  <property name="build.data"     value="${ooo.build.data}/bang_client"/>
+
+  <!-- Gets our various properties files and sticks them in dist -->
+  <target name="config" depends="-init-gather">
+    <mkdir dir="${deploy.dir}"/>
+
+    <!-- Grab the deployment et al properties from the configuration location. -->
+    <gatherconfiguration app="${app.name}" distribution="${ooo.distribution}" dest="${deploy.dir}">
+      <sources refid="ooo.bangconfig.source"/>
+      <sources><directory path="${basedir}/etc"/></sources>
+      <files>
+        <file name="deployment.properties"/>
+        <file name="server.properties"/>
+        <file name="server.conf"/>
+        <file name="build_settings.properties"/>
+      </files>
+    </gatherconfiguration>
+
+    <!-- Read in all the deployment & build configuration bits. -->
+    <property file="${deploy.dir}/deployment.properties"/>
+    <property file="${deploy.dir}/build_settings.properties"/>
+  </target>
+
+  <target name="-declare-maven" depends="-init-ooo">
+    <!-- declare our runtime dependencies -->
+    <artifact:pom id="pom" file="pom.xml"/>
+    <artifact:dependencies filesetId="runtime.fileset" pomRefId="pom" useScope="compile"/>
+
+    <!-- set up a classpath for the non-runtime dependencies -->
+    <artifact:dependencies pathId="build.classpath">
+      <dependency groupId="org.apache.ant" artifactId="ant" version="1.7.1"/>
+      <dependency groupId="junit" artifactId="junit" version="4.8.1"/>
+    </artifact:dependencies>
+
+    <!-- declare dependencies needed by the client Proguard build -->
+    <artifact:dependencies filesetId="client.fileset">
+      <remoteRepository id="ooo.maven.ext" url="http://ooo-maven.googlecode.com/hg/repository"/>
+      <dependency groupId="com.jcraft" artifactId="jorbis" version="0.0.15"/>
+    </artifact:dependencies>
+
+    <!-- declare a fileset for getdown which we need for various client bits -->
+    <artifact:dependencies filesetId="getdown-pro.fileset">
+      <remoteRepository refid="ooo.maven.depends.repo"/>
+      <dependency groupId="com.threerings" artifactId="getdown-pro" version="1.1"/>
+    </artifact:dependencies>
+  </target>
+
+  <target name="showdeps" depends="-declare-maven"
+          description="Displays the versions of dependencies obtained from Maven.">
+    <pathconvert property="runtime.deps" pathsep="${line.separator}"
+                 refid="runtime.fileset"/>
+    <echo>Runtime depends:</echo>
+    <exec executable="sort" inputstring="${runtime.deps}"/>
+
+    <pathconvert property="ext.build.deps" pathsep="${line.separator}"
+                 refid="build.classpath"/>
+    <echo>${line.separator}Build-only depends:</echo>
+    <exec executable="sort" inputstring="${ext.build.deps}"/>
+
+    <pathconvert property="client.deps" pathsep="${line.separator}"
+                 refid="client.fileset"/>
+    <pathconvert property="getdown.deps" pathsep="${line.separator}"
+                 refid="getdown-pro.fileset"/>
+    <echo>${line.separator}Additional client depends:</echo>
+    <exec executable="sort" inputstring="${client.deps}${line.separator}${getdown.deps}"/>
+  </target>
+
+  <!-- prepares the application directories -->
+  <target name="prepare" depends="-declare-maven,-init-copy,config,lists">
+    <mkdir dir="${deploy.dir}/tmp"/>
+    <mkdir dir="${deploy.dir}/lib"/>
+    <mkdir dir="${deploy.dir}/classes"/>
+    <mkdir dir="${deploy.dir}/rsrc"/>
+
+    <!-- Copy some libs we depend on. -->
+    <filelist dir="." id="dist.libs">
+      <file name="lib/lwjgl.jar"/>
+      <file name="lib/lwjgl_util.jar"/>
+      <file name="lib/jl1.0.jar"/>
+      <file name="lib/en-us.wordlist.jar"/>
+    </filelist>
+    <copyfilelist dest="${deploy.dir}/lib">
+      <filelist refid="dist.libs"/>
+    </copyfilelist>
+
+    <!-- copy global static resources -->
+    <copy todir="${deploy.dir}/rsrc">
+      <fileset dir="rsrc">
+       <include name="**/*"/>
+       <exclude name="avatars/**"/>
+       <exclude name="boards/**"/>
+       <exclude name="bonuses/**"/>
+       <exclude name="bounties/**"/>
+       <exclude name="cards/**"/>
+       <exclude name="config/**/*.xml"/>
+       <exclude name="effects/**"/>
+       <exclude name="extras/**"/>
+       <exclude name="goods/**"/>
+       <exclude name="props/**"/>
+       <exclude name="sounds/**"/>
+       <exclude name="tutorials/**/*.xml"/>
+       <exclude name="units/**"/>
+       <exclude name="**/*.wav"/>
+       <exclude name="**/source/**"/>
+      </fileset>
+    </copy>
+
+    <!-- copy global static resources -->
+    <copy todir="${deploy.dir}/rsrc/goods">
+      <fileset dir="rsrc/goods">
+        <include name="cards/**/*.png"/>
+        <include name="gold/**/*.png"/>
+        <include name="passes/**/*.png"/>
+        <include name="purses/**/*.png"/>
+        <include name="tickets/**/*.png"/>
+        <include name="upgrades/**/*.png"/>
+        <include name="*.png"/>
+        <exclude name="**/source/**"/>
+      </fileset>
+    </copy>
+
+    <!-- copy some per-town static resources -->
+    <for list="${towns}" param="town" trim="true"><sequential>
+      <mkdir dir="${deploy.dir}/rsrc/goods/@{town}"/>
+      <copy todir="${deploy.dir}/rsrc/goods/@{town}">
+        <fileset dir="rsrc/goods/@{town}">
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+
+      <copy todir="${deploy.dir}/rsrc/cards/@{town}">
+        <fileset dir="rsrc/cards/@{town}">
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+
+      <copy todir="${deploy.dir}/rsrc/bounties/@{town}">
+        <fileset dir="rsrc/bounties/@{town}">
+          <include name="**/bounties.txt"/>
+          <include name="**/*.png"/>
+          <include name="**/*.game"/>
+          <include name="**/*.properties"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+    </sequential></for>
+
+    <copy file="rsrc/config/resource/manager.properties"
+          tofile="${deploy.dir}/rsrc/config/resource/manager.properties"/>
+
+    <!-- copy our runtime dependencies from Maven -->
+    <copy todir="${deploy.dir}/lib">
+      <fileset refid="runtime.fileset"/>
+      <mapper type="flatten"/>
+    </copy>
+
+    <mkdir dir="${deploy.dir}/client"/>
+    <copy todir="${deploy.dir}/client">
+      <fileset refid="client.fileset"/>
+      <mapper type="flatten"/>
+    </copy>
+    <mkdir dir="${deploy.dir}/getdown"/>
+    <copy tofile="${deploy.dir}/getdown/getdown-pro.jar">
+      <fileset refid="getdown-pro.fileset"/>
+    </copy>
+
+    <!-- declare our classpath -->
+    <path id="classpath">
+      <pathelement location="${deploy.dir}/classes"/>
+      <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+      <path refid="build.classpath"/>
+    </path>
+
+    <!-- declare a classpath for non-bang tasks -->
+    <path id="tool.classpath">
+      <pathelement location="${deploy.dir}"/>
+      <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+      <path refid="build.classpath"/>
+    </path>
+
+    <!-- declare a classpath for bang tasks -->
+    <path id="btool.classpath">
+      <pathelement location="${deploy.dir}"/>
+      <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+      <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
+      <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
+      <path refid="build.classpath"/>
+    </path>
+  </target>
+
+  <!-- generates fields for persistent record classes -->
+  <target name="genrecord" depends="prepare">
+    <taskdef name="grecord" classname="com.samskivert.depot.tools.GenRecordTask"
+             classpathref="classpath"/>
+    <!-- make sure the record class files are all compiled -->
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           debug="on" optimize="${build.optimize}" deprecation="on">
+      <classpath refid="classpath"/>
+      <include name="**/*Record.java"/>
+    </javac>
+    <!-- now update the source files -->
+    <grecord classpathref="classpath">
+      <fileset dir="${src.dir}" includes="**/*Record.java"/>
+    </grecord>
+  </target>
+
+  <!-- generates additional methods for distributed object classes -->
+  <target name="gendobj" depends="prepare">
+    <!-- make sure the dobject class files are all compiled -->
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           includeAntRuntime="false" debug="on" optimize="${build.optimize}" deprecation="on">
+      <classpath refid="classpath"/>
+      <include name="**/*Object.java"/>
+    </javac>
+    <!-- now generate the associated files -->
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tool.classpath"/>
+    <gendobj classpathref="classpath">
+      <fileset dir="${src.dir}" includes="**/*Object.java"/>
+    </gendobj>
+  </target>
+
+  <!-- generates marshaller and dispatcher classes for all invocation service declarations -->
+  <target name="genservice" depends="prepare">
+    <!-- make sure the service class files are all compiled -->
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           includeAntRuntime="false" debug="on" optimize="${build.optimize}" deprecation="on">
+      <classpath refid="classpath"/>
+      <include name="**/*Service.java"/>
+    </javac>
+    <!-- now generate the associated files -->
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tool.classpath"/>
+    <genservice header="lib/SOURCE_HEADER" classpathref="classpath">
+      <fileset dir="${src.dir}" includes="**/*Service.java"/>
+    </genservice>
+  </target>
+
+  <!-- generates sender and decoder classes for all invocation receiver declarations -->
+  <target name="genreceiver" depends="prepare">
+    <!-- make sure the receiver class files are all compiled -->
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           includeAntRuntime="false" debug="on" optimize="${build.optimize}" deprecation="on">
+      <classpath refid="classpath"/>
+      <include name="**/*Receiver.java"/>
+      <exclude name="**/InvocationReceiver.java"/>
+    </javac>
+    <!-- now generate the associated files -->
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tool.classpath"/>
+    <genreceiver header="lib/SOURCE_HEADER" classpathref="classpath">
+      <fileset dir="${src.dir}" includes="**/*Receiver.java" excludes="**/InvocationReceiver.java"/>
+    </genreceiver>
+  </target>
+
+  <!-- encodes our sounds to ogg and enumerates them into a master list -->
+  <target name="sounds">
+    <copy todir="${deploy.dir}/rsrc">
+      <fileset dir="rsrc" includes="**/*.ogg"/>
+    </copy>
+    <exec executable="find" dir="${deploy.dir}" output="${deploy.dir}/rsrc/sounds.txt"
+          failonerror="true">
+      <arg value="rsrc"/>
+      <arg value="-name"/>
+      <arg value="*.ogg"/>
+    </exec>
+    <mkdir dir="${deploy.dir}/rsrc/sounds/effects"/>
+    <jar file="${deploy.dir}/rsrc/sounds/effects/bundle.jar"
+         basedir="${deploy.dir}/rsrc/sounds/effects">
+      <include name="**/*.ogg"/>
+    </jar>
+    <jar file="${deploy.dir}/rsrc/sounds/feedback/bundle.jar"
+         basedir="${deploy.dir}/rsrc/sounds/feedback">
+      <include name="**/*.ogg"/>
+    </jar>
+  </target>
+
+  <!-- enumerates all of our units, props, etc. into master lists -->
+  <target name="lists">
+    <exec executable="${basedir}/bin/update_lists" failonerror="true">
+        <arg value="${deploy.dir}"/>
+        <arg value="${towns}"/>
+    </exec>
+  </target>
+
+  <!-- builds bundles for a specific town -->
+  <target name="town_bundles">
+    <for list="units,props,bonuses,cards,effects,extras,goods,bounties" param="type">
+    <sequential>
+      <!-- Card and Unit icons were included in the general resource bundle -->
+      <if><equals arg1="@{type}" arg2="cards"/><then>
+        <var name="excluding" value="**/card.png"/>
+      </then><elseif><equals arg1="@{type}" arg2="units"/><then>
+        <var name="excluding" value="**/icon.png"/>
+      </then></elseif><else>
+        <var name="excluding" value=""/>
+      </else></if>
+      <jar file="${deploy.dir}/rsrc/@{type}/${town}/bundle.jar">
+        <fileset dir="${deploy.dir}/rsrc/@{type}/${town}" excludes="${excluding}">
+          <include name="*.txt"/>
+          <include name="**/*"/>
+          <exclude name="**/*.jar"/>
+        </fileset>
+      </jar>
+    </sequential></for>
+
+    <mkdir dir="${deploy.dir}/rsrc/sounds/music/${town}"/>
+    <jar file="${deploy.dir}/rsrc/sounds/music/${town}/bundle.jar"
+         basedir="${deploy.dir}/rsrc/sounds/music/${town}">
+      <include name="**/*.ogg"/>
+    </jar>
+  </target>
+
+  <!-- compiles our models -->
+  <target name="models">
+    <taskdef name="compile" classpathref="btool.classpath"
+             classname="com.threerings.jme.tools.CompileModelTask"/>
+    <compile dest="${deploy.dir}">
+      <fileset dir="rsrc" includes="**/model.properties"/>
+    </compile>
+    <taskdef name="updatepropheight" classpathref="btool.classpath"
+             classname="com.threerings.bang.tools.UpdatePropHeightTask"/>
+    <updatepropheight>
+      <fileset dir="rsrc" includes="**/prop.properties"/>
+    </updatepropheight>
+
+    <copy todir="${deploy.dir}/rsrc/units/wreckage">
+        <fileset dir="rsrc/units/wreckage">
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+    </copy>
+
+    <for list="${towns}" param="town" trim="true"><sequential>
+      <copy todir="${deploy.dir}/rsrc/units/@{town}">
+        <fileset dir="rsrc/units/@{town}">
+          <include name="**/unit.properties"/>
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+      <copy todir="${deploy.dir}/rsrc/props/@{town}">
+        <fileset dir="rsrc/props/@{town}">
+          <include name="**/prop.properties"/>
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+      <copy todir="${deploy.dir}/rsrc/bonuses/@{town}">
+        <fileset dir="rsrc/bonuses/@{town}">
+          <include name="**/bonus.properties"/>
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+      <copy todir="${deploy.dir}/rsrc/effects/@{town}">
+        <fileset dir="rsrc/effects/@{town}">
+          <include name="**/particles.txt"/>
+          <include name="**/particles.properties"/>
+          <include name="**/particles.jme"/>
+          <include name="**/icons.txt"/>
+          <include name="**/icon.properties"/>
+          <include name="**/*.png"/>
+        </fileset>
+      </copy>
+      <mkdir dir="${deploy.dir}/rsrc/extras/@{town}"/>
+      <copy todir="${deploy.dir}/rsrc/extras/@{town}">
+        <fileset dir="rsrc/extras/@{town}">
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+    </sequential></for>
+  </target>
+
+  <!-- loads our boards into the database -->
+  <target name="boards">
+    <ant antfile="etc/build-boards.xml" inheritAll="false"/>
+  </target>
+
+  <!-- compiles our tutorial XML definitions -->
+  <target name="tutorials">
+    <taskdef name="confcomp" classpathref="btool.classpath"
+             classname="com.threerings.tools.CompiledConfigTask"/>
+    <confcomp dest="${deploy.dir}" parser="com.threerings.bang.game.tools.xml.TutorialConfigParser">
+      <fileset dir="rsrc/tutorials" includes="**/*.xml"/>
+    </confcomp>
+  </target>
+
+  <!-- creates the serialized color repository config -->
+  <target name="colorpos">
+    <taskdef name="confcomp" classpathref="tool.classpath"
+      classname="com.threerings.tools.CompiledConfigTask"/>
+    <confcomp dest="${deploy.dir}" parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
+              configdef="rsrc/config/media/colordefs.xml"/>
+  </target>
+
+  <!-- creates the serialized article and aspect catalogs -->
+  <target name="catalogs">
+    <taskdef name="confcomp" classpathref="btool.classpath"
+             classname="com.threerings.tools.CompiledConfigTask"/>
+    <confcomp dest="${deploy.dir}" configdef="rsrc/avatars/articles.xml"
+              parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"/>
+    <confcomp dest="${deploy.dir}" configdef="rsrc/avatars/aspects.xml"
+              parser="com.threerings.bang.avatar.tools.xml.AspectCatalogParser"/>
+    <confcomp dest="${deploy.dir}" configdef="rsrc/avatars/buckle_parts.xml"
+              parser="com.threerings.bang.avatar.tools.xml.BucklePartCatalogParser"/>
+  </target>
+
+  <!-- builds the avatar component bundles -->
+  <target name="avatars" depends="prepare,catalogs">
+    <taskdef name="metabundle" classpathref="tool.classpath"
+             classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
+    <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
+                classdef="${basedir}/rsrc/avatars/classes.xml"
+                target="${deploy.dir}/rsrc/avatars/metadata.jar"/>
+
+    <taskdef name="cbundle" classpathref="tool.classpath"
+      classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
+    <for list="${towns}" param="town" trim="true"><sequential>
+      <for list="male,female" param="gender"><sequential>
+        <antcall target="-avatar-comps">
+          <param name="comp.bundle" value="@{town}/@{gender}"/>
+          <param name="comp.root" value="@{town}"/>
+        </antcall>
+      </sequential></for>
+    </sequential></for>
+
+    <antcall target="-avatar-comps">
+      <param name="comp.bundle" value="buckle"/>
+      <param name="comp.root" value=""/>
+    </antcall>
+  </target>
+
+  <!-- helper task for 'avatars' -->
+  <target name="-avatar-comps">
+    <mkdir dir="${deploy.dir}/rsrc/avatars/${comp.bundle}"/>
+    <cbundle actiondef="rsrc/avatars/actions.xml" mapfile="rsrc/avatars/compmap.txt"
+             root="rsrc/avatars/${comp.root}"
+             target="${deploy.dir}/rsrc/avatars/${comp.bundle}/components.jar">
+      <fileset dir="rsrc/avatars/${comp.bundle}">
+        <include name="**/*.png"/>
+        <exclude name="**/*_shadow.png"/>
+        <exclude name="**/*_crop.png"/>
+        <exclude name="components/**"/>
+      </fileset>
+    </cbundle>
+
+    <!-- if desired, commit any changes to compmap.txt -->
+    <if><istrue value="${should_commit_build_artifacts}"/><then>
+      <property name="comp.map" value="${basedir}/rsrc/avatars/compmap.txt"/>
+      <exec executable="svn" outputproperty="compStatus">
+        <arg value="status"/>
+        <arg value="${comp.map}"/>
+      </exec>
+      <if><not><equals arg1="${compStatus}" arg2=""/></not><then>
+        <exec executable="svn" failonerror="true">
+          <arg value="commit"/>
+          <arg value="-m"/>
+          <arg value="New component mappings."/>
+          <arg value="${comp.map}"/>
+        </exec>
+      </then></if>
+    </then></if>
+  </target>
+
+  <!-- run the unit tests -->
+  <target name="tests" depends="compile" description="Runs unit tests.">
+    <taskdef name="unit" classpathref="tool.classpath"
+             classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+    <unit printsummary="no" haltonfailure="yes" fork="true">
+      <classpath refid="classpath"/>
+      <formatter type="brief" usefile="false"/>
+      <batchtest>
+        <fileset dir="${src.dir}" includes="**/*UnitTest.java"/>
+      </batchtest>
+    </unit>
+  </target>
+
+  <!-- cleans out the compiled code -->
+  <target name="clean">
+    <delete dir="${deploy.dir}/classes/com"/>
+    <delete><fileset dir="." includes="debug.txt*"/></delete>
+  </target>
+
+  <!-- fully cleans out all build results -->
+  <target name="distclean" depends="config,clean">
+    <delete dir="${deploy.dir}"/>
+    <ant dir="projects/installers" target="clean" inheritAll="false"/>
+    <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
+
+    <!-- revert generated build artifacts in case the build broke before we could -->
+    <!-- commit them, but only for builds that were expecting to auto commit the files  -->
+    <if><istrue value="${should_commit_build_artifacts}"/><then>
+      <exec executable="svn">
+        <arg value="revert"/>
+        <arg value="-R"/>
+        <arg value="rsrc"/>
+      </exec>
+    </then></if>
+  </target>
+
+  <!-- build the java class files -->
+  <target name="compile" depends="prepare">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" source="1.6" target="1.6"
+           includeAntRuntime="false" debug="on" optimize="${build.optimize}" deprecation="on">
+      <classpath refid="classpath"/>
+      <compilerarg value="-Xlint"/>
+      <compilerarg value="-Xlint:-serial"/>
+    </javac>
+  </target>
+
+  <!-- build the javadoc documentation -->
+  <property name="javadoc.title"  value="Bang! Howdy API"/>
+  <target name="javadoc" depends="prepare,common-javadoc"/>
+
+  <!-- helper target for client and devclient -->
+  <target name="baseclient" depends="prepare">
+    <!-- generate the all-in-wonder jar file -->
+    <artifact:dependencies pathId="proguard.classpath">
+      <dependency groupId="net.sf.proguard" artifactId="proguard" version="4.4"/>
+    </artifact:dependencies>
+    <taskdef resource="proguard/ant/task.properties" classpathref="proguard.classpath"/>
+    <proguard configuration="${deploy.dir}/bang-client.pro">
+      <!-- Third party libraries -->
+      <injar path="${deploy.dir}/lib/jl1.0.jar" filter="!META-INF/*"/>
+      <injar path="${commons-io:commons-io:jar}" filter="!META-INF/*"/>
+      <injar path="${commons-codec:commons-codec:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jcraft:jorbis:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jcraft:jogg:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-awt:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-effects:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-gamestates:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-model:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-scene:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme-sound:jar}" filter="!META-INF/*,!**/fmod/**"/>
+      <injar path="${com.jme:jme-terrain:jar}" filter="!META-INF/*"/>
+      <injar path="${com.jme:jme:jar}" filter="!META-INF/*"/>
+      <injar path="${com.samskivert:jme-bui:jar}" filter="!META-INF/*,!**/tests/**"/>
+      <injar path="${com.google.guava:guava:jar}" filter="!META-INF/*"/>
+      <injar path="${com.google.inject:guice:jar}" filter="!META-INF/*,
+        !com/google/inject/ProviderMethodsTest*,
+        !com/google/inject/InterceptorStackCallback*,!com/google/inject/tools/**"/>
+
+      <!-- OOO shared libraries -->
+      <injar path="${com.samskivert:samskivert:jar}" filter="com/samskivert/Log.class,
+        **/io/**,**/net/**,**/swing/**,**/text/**,**/samskivert/util/**,**/xml/**,
+        **/servlet/user/Password.class,**/servlet/user/UserUtil.class,
+        **/servlet/user/User.class,**/servlet/user/Username.class,
+        **/servlet/user/InvalidUsernameException.class"/>
+      <injar path="${com.threerings:getdown:jar}" filter="!META-INF/*,!**/tools/**"/>
+      <injar path="${com.threerings:narya:jar}" filter="!META-INF/*,!**/admin/server/**,
+        !**/web/**,!**/persist/**,!**/tools/**,!**/EHCachePeerCoordinator*"/>
+      <injar path="${com.threerings:nenya:jar}" filter="!META-INF/*,!**/tools/**"/>
+      <injar path="${com.threerings:vilya:jar}" filter="!META-INF/*,
+        !**/persist/**,!**/tools/**,!**/ezgame/**,!**/micasa/**"/>
+      <injar path="${com.threerings:threerings:jar}" filter="**/Log.class,
+        **/coin/data/**,**/IdentUtil*.class,**/TrackingUtil.class,**/NameUtil.class"/>
+      <injar path="${com.threerings:hemiptera:jar}" filter="**/hemiptera/Log.class,
+        **/hemiptera/data/Report.class,**/hemiptera/data/Constant.class,
+        **/hemiptera/data/LogMessage.class,!**/LegacyReportImport.class,**/hemiptera/util/**"/>
+      <!-- The main Bang! code -->
+      <injar path="${deploy.dir}/bang-code.jar" filter="!META-INF/*,
+        !**/tools/**,!**/tests/**,!**/server/**,"/>
+      <injar path="${deploy.dir}/bang-code.jar" filter="!**/jme/tools/*Task.class,
+        **/jme/tools/**"/>
+
+      <libraryjar name="${deploy.dir}/lib/lwjgl.jar"/>
+      <libraryjar name="${deploy.dir}/lib/lwjgl_util.jar"/>
+
+      <!-- these are just for the model viewer, sigh -->
+      <libraryjar name="${commons-digester:commons-digester:jar}"/>
+      <libraryjar name="${commons-beanutils:commons-beanutils:jar}"/>
+      <libraryjar name="${commons-logging:commons-logging:jar}"/>
+
+      <outjar name="${deploy.dir}/bang-pcode.jar"/>
+    </proguard>
+
+    <!-- create our directories if necessary -->
+    <mkdir dir="${client_dir}/code"/>
+    <mkdir dir="${client_dir}/rsrc"/>
+    <mkdir dir="${client_dir}/native"/>
+
+    <!-- create our configuration jar file -->
+    <jar destfile="${client_dir}/code/config.jar">
+      <fileset dir="${deploy.dir}">
+        <include name="deployment.properties"/>
+        <include name="build.properties"/>
+      </fileset>
+    </jar>
+
+    <!-- copy our various bits into the deployment directory -->
+    <copy todir="${client_dir}">
+      <fileset dir="projects/installers/${default_locale}">
+        <include name="background.png"/>
+        <include name="progress.png"/>
+      </fileset>
+    </copy>
+    <copy todir="${client_dir}/code">
+      <fileset dir="dist" includes="bang-pcode.jar"/>
+      <fileset dir="dist" includes="bang-config.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="lwjgl.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="lwjgl_util.jar"/>
+    </copy>
+    <copy tofile="${client_dir}/code/commons-beanutils.jar">
+      <fileset dir="${deploy.dir}/lib" includes="commons-beanutils*.jar"/>
+    </copy>
+    <copy tofile="${client_dir}/code/commons-digester.jar">
+      <fileset dir="${deploy.dir}/lib" includes="commons-digester*.jar"/>
+    </copy>
+    <copy tofile="${client_dir}/code/commons-logging.jar">
+      <fileset dir="${deploy.dir}/lib" includes="commons-logging*.jar"/>
+    </copy>
+    <copy file="${deploy.dir}/getdown/getdown-pro.jar"
+          tofile="${client_dir}/code/getdown-pro-new.jar"/>
+    <delete file="${deploy.dir}/bang-pcode.jar"/>
+    <copy todir="${client_dir}/rsrc">
+      <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
+      <fileset dir="rsrc" includes="config/resource/manager.properties"/>
+    </copy>
+    <copy todir="${client_dir}/native">
+      <fileset dir="lib/native/linux" includes="*.so"/>
+      <fileset dir="lib/native/windows" includes="*.dll"/>
+      <fileset dir="lib/native/macosx" includes="*"/>
+    </copy>
+
+    <!-- generate the getdown digest file -->
+    <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask"
+             classpathref="tool.classpath"/>
+    <property file="${cert_dir}/certificate.properties"/>
+    <digest appdir="${client_dir}" keystore="${sign.keystore}" alias="${sign.alias}"
+            storepass="${sign.storepass}"/>
+  </target>
+
+  <!-- builds the development client getdown distribution -->
+  <target name="devclient" depends="prepare">
+    <!-- for consistency with the prod client, we'll set the version, which is always 0 -->
+    <property name="clientVersion" value="0"/>
+    <tstamp><format property="pkgVersion" pattern="yyyyMMddHHmmss"/></tstamp>
+
+    <!-- be extra safe and remove any old build.properties -->
+    <delete file="${basedir}/${deploy.dir}/build.properties"/>
+    <propertyfile file="${basedir}/${deploy.dir}/build.properties">
+      <entry key="version" value="${clientVersion}"/>
+      <entry key="config_version" value="${clientVersion}"/>
+    </propertyfile>
+    <echo message="Generating Proguard config file for devclient..."/>
+    <copy file="etc/bang-client.pro.in" tofile="${deploy.dir}/bang-client.pro"
+          overwrite="true" encoding="UTF-8">
+      <filterset>
+        <filter token="version" value="${clientVersion}"/>
+        <filter token="apply_mapping" value="#"/>
+        <filter token="apply_file" value="#"/>
+      </filterset>
+    </copy>
+
+    <!-- copy the getdown.txt file into the right place -->
+    <property name="client.base" value="${deploy.dir}/client/pages/bang/client/${clientVersion}"/>
+    <mkdir dir="${client.base}"/>
+    <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt"
+          overwrite="true" encoding="UTF-8">
+      <filterset>
+        <filter token="appbase_line" value="appbase = ${root_url}/client/${clientVersion}"/>
+        <filter token="version_line" value=""/>
+        <filter token="tracking_url" value="${root_url}/tracking/"/>
+        <filter token="auxgroups_line" value="auxgroups = indian_post, boom_town"/>
+      </filterset>
+    </copy>
+
+    <antcall target="baseclient">
+      <param name="client_dir" value="${client.base}"/>
+    </antcall>
+
+    <!-- make our Proguard mapping file accessible to Hemiptera -->
+    <mkdir dir="${deploy.dir}/hemiptera-map"/>
+    <move file="etc/proguard/${clientVersion}.map" todir="${deploy.dir}/hemiptera-map"/>
+
+    <!-- generate some game metadata summary pages -->
+    <property name="pages.out" value="${basedir}/${deploy.dir}/installer/pages"/>
+    <mkdir dir="${pages.out}"/>
+    <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/units.html"
+          fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
+      <arg value="boom_town"/>
+    </java>
+    <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/aspects.html"
+          fork="true" classname="com.threerings.bang.avatar.tools.SummarizeAspects">
+       <sysproperty key="no_unpack_resources" value="true"/>
+       <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
+    </java>
+    <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/aspects.html"
+          fork="true" classname="com.threerings.bang.avatar.tools.SummarizeArticles">
+       <sysproperty key="no_unpack_resources" value="true"/>
+       <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
+    </java>
+    <java classpathref="btool.classpath" failonerror="true" output="${pages.out}/ft_bounties.html"
+          fork="true" classname="com.threerings.bang.bounty.tools.SummarizeBounties">
+       <arg value="frontier_town"/>
+    </java>
+    <exec executable="${basedir}/bin/update_board_summary" failonerror="true">
+      <arg value="${pages.out}/boards.html"/>
+    </exec>
+  </target>
+
+  <!-- builds the development client getdown distribution and copies it into -->
+  <!-- the local document tree for developer testing -->
+  <target name="localclient" depends="devclient">
+    <copy todir="pages">
+      <fileset dir="${deploy.dir}/client/pages" includes="client/**"/>
+    </copy>
+  </target>
+
+  <!-- builds the production client getdown distribution -->
+  <target name="client" depends="prepare">
+    <tstamp><format property="pkgVersion" pattern="yyyyMMddHHmmss"/></tstamp>
+    <property name="clientVersion" value="${pkgVersion}"/>
+
+    <!-- be extra safe and remove any old build.properties -->
+    <delete file="${basedir}/${deploy.dir}/build.properties"/>
+    <propertyfile file="${basedir}/${deploy.dir}/build.properties">
+      <entry key="version" value="${clientVersion}"/>
+      <entry key="config_version" value="${clientVersion}"/>
+    </propertyfile>
+    <exec executable="${basedir}/bin/getversion" outputproperty="latestVersion"
+          failonerror="true">
+      <arg line="client"/>
+      <arg line="${download_root_url}"/>
+    </exec>
+    <!-- be sure a proguard map file does not already exist for this version -->
+    <available file="etc/proguard/${clientVersion}.map" property="map.exists"/>
+    <fail message="A map file for this version already exists. Wait 15 minutes to build again.">
+      <condition><istrue value="${map.exists}"/></condition>
+    </fail>
+    <echo message="Previous version used for renaming: ${latestVersion}"/>
+    <echo message="Generating Proguard config file for ${clientVersion}..."/>
+    <copy file="etc/bang-client.pro.in" tofile="${deploy.dir}/bang-client.pro"
+          overwrite="true" encoding="UTF-8">
+      <filterset>
+        <filter token="version" value="${clientVersion}"/>
+        <filter token="apply_mapping" value="#"/>
+        <filter token="apply_file" value="#"/>
+        <!-- <filter token="apply_mapping" value="-applymapping"/>
+        <filter token="apply_file" value="proguard/${latestVersion}.map"/> -->
+      </filterset>
+    </copy>
+
+    <!-- copy the getdown.txt file into the right place -->
+    <property name="client.base" value="${deploy.dir}/client/pages/bang/client/${clientVersion}"/>
+    <mkdir dir="${client.base}"/>
+    <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt.tmp"
+          overwrite="true" encoding="UTF-8">
+      <filterset>
+        <filter token="appbase_line" value="appbase = ${download_root_url}/client/%VERSION%"/>
+        <filter token="version_line" value="version = ${clientVersion}"/>
+        <filter token="auxgroups_line" value="auxgroups = indian_post"/>
+      </filterset>
+    </copy>
+    <!-- do some temporary fiddling to nix boom_town from production -->
+    <exec executable="egrep" output="${client.base}/getdown.txt" failonerror="true">
+      <arg line="-v"/>
+      <arg line="boom_town"/>
+      <arg line="${client.base}/getdown.txt.tmp"/>
+    </exec>
+    <!-- delete the temporary file -->
+    <delete file="${client.base}/getdown.txt.tmp"/>
+
+    <antcall target="baseclient">
+      <param name="client_dir" value="${client.base}"/>
+    </antcall>
+
+    <!-- copy the just built client into the global build data directory where it can be used
+         for future diffing -->
+    <mkdir dir="${build.data}"/>
+    <copy todir="${build.data}">
+      <fileset dir="${deploy.dir}/client/pages/bang/client" includes="${clientVersion}/**"/>
+    </copy>
+
+    <!-- create the getdown diff files -->
+    <for param="dir">
+      <path>
+        <dirset dir="${build.data}" includes="*"/>
+      </path>
+      <sequential>
+        <basename property="patch.version" file="@{dir}"/>
+        <if><not><equals arg1="${patch.version}" arg2="${clientVersion}"/></not>
+        <then>
+          <java classpathref="tool.classpath" failonerror="true" fork="true"
+                classname="com.threerings.getdown.tools.Differ">
+             <arg value="${client.base}"/>
+             <arg value="@{dir}"/>
+          </java>
+        </then></if>
+        <var name="patch.version" unset="true"/>
+      </sequential>
+    </for>
+
+    <!-- make all our Proguard mapping file accessible to Hemiptera -->
+    <mkdir dir="${deploy.dir}/hemiptera-map"/>
+    <copy todir="${deploy.dir}/hemiptera-map">
+      <fileset dir="etc/proguard" includes="??????????.map"/>
+    </copy>
+    <!-- commit the proguard map file -->
+    <if><istrue value="${should_commit_proguard_maps}"/><then>
+      <exec executable="svn" failonerror="true">
+        <arg value="add"/>
+        <arg value="etc/proguard/${clientVersion}.map"/>
+      </exec>
+      <exec executable="svn" failonerror="true">
+        <arg value="commit"/>
+        <arg value="-m"/>
+        <arg value="New proguard mapping file for version ${clientVersion}."/>
+        <arg value="etc/proguard/${clientVersion}.map"/>
+      </exec>
+    </then></if>
+
+    <!-- if enabled, upload the client to S3 -->
+    <if><istrue value="${client_s3enable}"/><then>
+        <property name="s3upload" value="${deploy.dir}/tmp/s3upload"/>
+        <delete dir="${s3upload}"/>
+        <copy todir="${s3upload}">
+          <fileset dir="${deploy.dir}/client/pages" includes="bang/client/${clientVersion}/**"/>
+        </copy>
+        <echo>Uploading the client to S3</echo>
+        <artifact:dependencies pathId="s3upload.classpath">
+          <remoteRepository refid="ooo.maven.depends.repo"/>
+          <dependency groupId="com.threerings.s3upload" artifactId="s3upload" version="1.0"/>
+        </artifact:dependencies>
+        <taskdef name="s3upload" classname="com.threerings.ant.S3Upload"
+                 classpathref="s3upload.classpath"/>
+        <s3upload awsAuthId="${client_s3id}" awsAuthKey="${client_s3key}"
+                  awsBucket="${client_s3bucket}" accessPolicy="public_read">
+            <fileset dir="${s3upload}" includes="bang/**"/>
+        </s3upload>
+    </then></if>
+  </target>
+
+  <!-- signs and install the Getdown applet jar file -->
+  <target name="applet" depends="prepare">
+    <property name="applet.base" value="${deploy.dir}/applet/pages"/>
+    <mkdir dir="${applet.base}/incl"/>
+    <mkdir dir="${applet.base}/client"/>
+    <property file="${cert_dir}/certificate.properties"/>
+
+    <!-- copy the applet jar file into place and sign it -->
+    <copy file="${deploy.dir}/getdown/getdown-pro.jar"
+          tofile="${applet.base}/client/getdown-retro-pro.jar"/>
+    <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
+      <fileset dir="${applet.base}/client" includes="getdown-retro-pro.jar"/>
+    </signjar>
+
+    <!-- generate our applet tags -->
+    <copy file="pages/incl/launch_open.html.in" tofile="${applet.base}/incl/launch_open.html"
+          overwrite="true" encoding="UTF-8">
+      <filterset>
+        <filter token="APPBASE" value="${root_url}/client"/>
+        <filter token="APPNAME" value="${client_ident}"/>
+        <filter token="IMGPATH" value="/client/background.png"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <!-- a target for rebuilding everything -->
+  <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
+
+  <!-- rebuild all the niggling bits -->
+  <target name="bits" depends="colorpos,tutorials"/>
+
+  <!-- builds the distribution jar files -->
+  <target name="dist" depends="compile">
+    <!-- create the main jar file with all the code and fiddly bits -->
+    <jar file="${deploy.dir}/bang-code.jar" basedir="${deploy.dir}/classes" includes="com/**"/>
+  </target>
+
+  <!-- builds the avatar, media and sounds jar files -->
+  <target name="mdist" depends="prepare,sounds,bits,avatars,models">
+    <!-- now build our media bundles -->
+    <for list="${towns}" param="town" trim="true"><sequential>
+      <antcall target="town_bundles"><param name="town" value="@{town}"/></antcall>
+    </sequential></for>
+
+    <!-- build our wreckage bundle -->
+    <mkdir dir="${deploy.dir}/rsrc/units/wreckage"/>
+    <jar file="${deploy.dir}/rsrc/units/wreckage/bundle.jar">
+      <fileset dir="rsrc/units/wreckage">
+        <include name="**/*.png"/>
+        <exclude name="**/source/**"/>
+      </fileset>
+      <fileset dir="${deploy.dir}/rsrc/units/wreckage">
+        <include name="**/model.dat"/>
+        <include name="**/*.ogg"/>
+      </fileset>
+    </jar>
+
+    <!-- put our non-town-specific goods resources in a bundle -->
+    <jar file="${deploy.dir}/rsrc/goods/bundle.jar" basedir="${deploy.dir}/rsrc/goods">
+      <include name="**/*"/>
+      <exclude name="**/*.jar"/>
+    </jar>
+
+    <!-- our top-level resources have all been copied into ${deploy.dir}/ -->
+    <jar file="${deploy.dir}/rsrc/bundle.jar" basedir="${deploy.dir}/rsrc">
+      <include name="**/*.png"/>
+      <include name="**/*.jpg"/>
+      <include name="**/*.vert"/>
+      <include name="**/*.frag"/>
+      <include name="**/*.ttf"/>
+      <include name="menu/**/*.board"/>
+      <include name="menu/*.ogg"/>
+      <include name="influences/**/*.ogg"/>
+      <exclude name="bonuses/**"/>
+      <exclude name="bounties/**"/>
+      <exclude name="cards/**"/>
+      <exclude name="effects/**"/>
+      <exclude name="extras/**"/>
+      <exclude name="props/**"/>
+      <exclude name="units/**"/>
+      <fileset dir="${deploy.dir}/rsrc">
+        <include name="cards/**/card.png"/>
+        <include name="units/**/icon.png"/>
+      </fileset>
+    </jar>
+
+    <!-- collect up various configuration bits needed by the client -->
+    <jar destfile="${deploy.dir}/bang-config.jar">
+      <fileset dir="${deploy.dir}">
+        <include name="rsrc/**/*"/>
+        <exclude name="rsrc/**/*.png"/>
+        <exclude name="rsrc/**/*.jpg"/>
+        <exclude name="rsrc/**/*.vert"/>
+        <exclude name="rsrc/**/*.frag"/>
+        <exclude name="rsrc/**/*.board"/>
+        <exclude name="**/*.jar"/>
+        <exclude name="rsrc/bonuses/**"/>
+        <exclude name="rsrc/bounties/**"/>
+        <exclude name="rsrc/cards/**"/>
+        <exclude name="rsrc/effects/**"/>
+        <exclude name="rsrc/extras/**"/>
+        <exclude name="rsrc/props/**"/>
+        <exclude name="rsrc/sounds/**"/>
+        <exclude name="rsrc/units/**"/>
+      </fileset>
+    </jar>
+
+    <!-- the server can't access things in the bundle files, so we make one -->
+    <!-- big file with all of our unit, prop, bonus and other properties -->
+    <jar destfile="${deploy.dir}/bang-server-config.jar">
+      <fileset dir="${deploy.dir}">
+        <include name="rsrc/units/**"/>
+        <include name="rsrc/props/**"/>
+        <include name="rsrc/effects/**"/>
+        <include name="rsrc/bonuses/**"/>
+        <include name="rsrc/bounties/**"/>
+        <include name="rsrc/extras/**"/>
+        <exclude name="**/*.jar"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <!-- rebuilds all subprojects and the whole top-level distribution -->
+  <target name="distall" depends="dist,distwebapps,mdist">
+    <!-- copy native LWJGL libraries into ${deploy.dir}/lib -->
+    <copy todir="${deploy.dir}/lib">
+      <fileset dir="lib/native" includes="**/*.so"/>
+      <fileset dir="lib/native" includes="**/*.jnilib"/>
+      <fileset dir="lib/native" includes="**/*.dylib"/>
+    </copy>
+  </target>
+
+  <!-- cleans out the application and all subprojects -->
+  <target name="cleanall" depends="cleanwebapps,clean"/>
+
+  <!-- fully cleans out the application and all subprojects -->
+  <target name="distcleanall" depends="distcleanwebapps,distclean"/>
+
+  <!-- proguards up the client, applet, installers and some other ephemera -->
+  <target name="buildclient" depends="prepare">
+    <antcallback target="${client_build_target}" return="clientVersion,pkgVersion"/>
+    <ant dir="projects/installers" target="${client_build_target}"/>
+    <antcall target="applet"/>
+
+    <!-- build the pseditor if desired -->
+    <if><istrue value="${build_pseditor}"/><then>
+      <ant dir="projects/pseditor" target="proguard" inheritAll="false"/>
+    </then></if>
+  </target>
+
+  <!-- rebuilds everything and extra bits for packaging -->
+  <target name="package" depends="distall,buildclient,server-package,webapps-package,
+          pages-extra-package,hemiptera-map-package,client-package">
+    <!-- define the root of our meta-packages -->
+    <property name="pkgroot.meta" value="${pkgroot.root}/${app.name}-meta"/>
+    <mkdir dir="${pkgroot.meta}"/>
+
+    <!-- create the web server meta-package -->
+    <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
+          distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.meta}">
+        <info>
+          <name>bang-web-server</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Web Server Meta-package</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+        <dependencies>
+          <require package="bang-pages"/>
+          <require package="bang-pages-extra"><equalTo>${pkgVersion}</equalTo></require>
+          <require package="bang-client-current"><equalTo>${pkgVersion}</equalTo></require>
+          <require package="bangoffice"><equalTo>${pkgVersion}</equalTo></require>
+          <require package="bangsupport"><equalTo>${pkgVersion}</equalTo></require>
+          <require package="bang-hemiptera-map"><equalTo>${pkgVersion}</equalTo></require>
+          <!-- TEMP: remove this when we've updated web1/2 -->
+          <conflict package="bang-installer"/>
+          <replacement package="bang-installer"/>
+          <conflict package="bang-applet"/>
+          <replacement package="bang-applet"/>
+          <conflict package="office-webapp"/>
+          <replacement package="office-webapp"/>
+          <conflict package="bang-pseditor"/>
+          <replacement package="bang-pseditor"/>
+        </dependencies>
+      </package>
+    </dpkg>
+
+    <!-- create the game server meta-package -->
+    <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
+          distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.meta}">
+        <info>
+          <name>bang-game-server</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Game Server Meta-package</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+        <dependencies>
+          <require package="bang-pages"/>
+          <require package="bang-server"><equalTo>${pkgVersion}</equalTo></require>
+        </dependencies>
+      </package>
+    </dpkg>
+  </target>
+
+  <!-- defines properties needed by the individual foo-package targets -->
+  <target name="prepare-package">
+    <!-- define the directory from which we're going to build our packages -->
+    <property name="pkgroot.root" value="${deploy.dir}/packages"/>
+    <mkdir dir="${pkgroot.root}"/>
+    <!-- TEMP: define where our .dpkg files will be written -->
+    <propertycopy name="package.output" from="ooo.deprecated.package.deploy"/>
+  </target>
+
+  <!-- builds the bang-server package -->
+  <target name="server-package" depends="prepare-package">
+    <!-- define the root of the bang-server package -->
+    <property name="pkgroot.server" value="${pkgroot.root}/${app.name}-server"/>
+    <property name="approot.server" value="${pkgroot.server}/${ooo.prefix}/${app.name}"/>
+    <mkdir dir="${approot.server}"/>
+
+    <!-- copy the external jars and native libraries needed by the server -->
+    <copy todir="${approot.server}/${deploy.dir}/lib">
+      <fileset dir="${deploy.dir}/lib">
+        <include name="*.jar"/>
+        <include name="**/*.so"/>
+      </fileset>
+    </copy>
+
+    <!-- copy this project's jar files and configuration -->
+    <copy todir="${approot.server}/${deploy.dir}">
+      <fileset dir="${deploy.dir}">
+        <include name="*.jar"/>
+        <include name="*.properties"/>
+        <!-- We skip build_settings.properties since it's only needed at build time. -->
+        <exclude name="build_settings.properties"/>
+      </fileset>
+    </copy>
+
+    <!-- TODO -->
+    <!-- <antcall target="prepare-crontab"/> -->
+
+    <!-- copy various bang media needed by the server -->
+    <copy todir="${approot.server}/${deploy.dir}/rsrc">
+      <fileset dir="${deploy.dir}/rsrc" includes="avatars/**/*.jar"/>
+    </copy>
+    <copy todir="${approot.server}/rsrc">
+      <fileset dir="rsrc" includes="boards/**/*.board"/>
+    </copy>
+    <copy file="rsrc/config/resource/manager.properties"
+          todir="${approot.server}/${deploy.dir}/rsrc/config/resource/"/>
+
+    <!-- copy some things the server needs at runtime on the production server -->
+    <copy file="etc/build-boards.xml" todir="${approot.server}/etc"/>
+    <copy file="tools/lib/perl/GrindUtil.pm" todir="${approot.server}/tools/lib/perl"/>
+
+    <!-- copy various scripts needed by the server -->
+    <copyfilelist dest="${approot.server}/bin">
+      <filelist dir="bin">
+        <file name="bangjava"/>
+        <file name="bangserver"/>
+        <file name="bangtool"/>
+        <file name="process_stats"/>
+        <file name="roll_logs"/>
+        <file name="runbang"/>
+        <file name="summarize_perf"/>
+        <file name="summarize_stats"/>
+        <file name="grind_bounties"/>
+        <file name="bang"/>
+        <file name="bangrespawn"/>
+      </filelist>
+    </copyfilelist>
+    <copyfilelist dest="${approot.server}/tools/bin">
+      <filelist dir="tools/bin">
+        <file name="lfilter"/>
+        <file name="filter_interesting"/>
+        <file name="sum_invokers"/>
+      </filelist>
+    </copyfilelist>
+
+    <!-- create the various runtime directories needed on the server -->
+    <mkdir dir="${approot.server}/run"/>
+    <mkdir dir="${approot.server}/log"/>
+    <mkdir dir="${approot.server}/logs"/>
+    <mkdir dir="${approot.server}/pages/stats"/>
+    <mkdir dir="${approot.server}/data"/>
+    <mkdir dir="${approot.server}/data/downloads"/>
+
+    <!-- copy our soundtrack mp3s into place where they can be made available -->
+    <!-- for download by the server magically at runtime -->
+    <copy todir="${approot.server}/data">
+      <fileset dir="data" includes="soundtrack/*.mp3"/>
+    </copy>
+
+    <!-- build the actual Debian package -->
+    <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
+          distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.server}">
+        <info>
+          <name>${app.name}-server</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Game Server</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+        <permissions>
+          <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="false">
+            <path>log/</path>
+            <path>logs/</path>
+            <path>run/</path>
+            <path>pages/stats/</path>
+            <path>data/downloads/</path>
+          </permission>
+          <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="true">
+            <path>rsrc/boards/</path>
+          </permission>
+          <permission mode="555" recursive="true">
+            <path>bin/</path>
+            <path>etc/rc.d/</path>
+            <path>tools/bin/</path>
+          </permission>
+          <permission user="${bang.user}" group="${bang.user}" mode="440">
+            <path>dist/server.properties</path>
+          </permission>
+        </permissions>
+      </package>
+    </dpkg>
+
+    <!-- create a package for each node -->
+    <for list="${nodes}" param="node" trim="true"><sequential>
+      <!-- our node names contain _ which we can't use in package names; change to - -->
+      <propertyregex property="pnode" input="@{node}" regexp="_" replace="-"/>
+      <!-- define the root of the bang-server package -->
+      <var name="pkgroot.node" value="${pkgroot.root}/${app.name}-server-${pnode}"/>
+      <var name="approot.node" value="${pkgroot.node}/${ooo.prefix}/${app.name}"/>
+      <mkdir dir="${approot.node}"/>
+      <mkdir dir="${approot.node}/etc/rc.d"/>
+
+      <startupscript name="bang_server_@{node}" runas="${bang.user}"
+                     output="${approot.node}/etc/rc.d/${app.name}-server-${pnode}.sh">
+        <commands>
+          <start cmdline="${ooo.prefix}/${app.name}/bin/bang start @{node}"/>
+          <stop cmdline="${ooo.prefix}/${app.name}/bin/bang stop @{node}"/>
+        </commands>
+      </startupscript>
+
+      <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
+            distribution="${ooo.distribution}">
+        <package destroot="${pkgroot.node}">
+          <info>
+            <name>${app.name}-server-${pnode}</name>
+            <version>${pkgVersion}</version>
+            <arch>${ooo.architecture}</arch>
+            <description>Bang Game Server Node: @{node}</description>
+            <maintainer>
+              <name>${bang.maintainer.name}</name>
+              <email>${bang.maintainer.email}</email>
+            </maintainer>
+          </info>
+          <dependencies>
+            <require package="bang-game-server"/>
+          </dependencies>
+          <permissions>
+            <permission mode="555">
+              <path>etc/rc.d/${app.name}-server-${pnode}.sh</path>
+            </permission>
+          </permissions>
+        </package>
+      </dpkg>
+
+      <!-- unset this so that next time through the loop we can set it anew -->
+      <var name="pnode" unset="true"/>
+    </sequential></for>
+  </target>
+
+  <!-- builds the bangoffice and bangsupport packages -->
+  <target name="webapps-package" depends="prepare-package">
+    <!-- define the root of the bangoffice package -->
+    <property name="pkgroot.office" value="${pkgroot.root}/${app.name}office"/>
+    <property name="approot.office" value="${pkgroot.office}/${ooo.prefix}/${app.name}"/>
+    <mkdir dir="${approot.office}"/>
+
+    <!-- create webapp jetty scripts and copy in the war file -->
+    <jettystartup webapp="${app.name}office" base="${ooo.prefix}/${app.name}" runas="${bang.user}"
+                  outputdir="${approot.office}" port="${bangoffice.jetty.port}" context="/office"/>
+    <copy file="webapps/office/${deploy.dir}/bangoffice.war"
+      todir="${approot.office}/webapps/bangoffice"/>
+
+    <!-- define the root of the bangsupport package -->
+    <property name="pkgroot.support" value="${pkgroot.root}/${app.name}support"/>
+    <property name="approot.support" value="${pkgroot.support}/${ooo.prefix}/${app.name}"/>
+    <mkdir dir="${approot.support}"/>
+
+    <!-- create webapp jetty scripts and copy in the war file -->
+    <jettystartup webapp="${app.name}support" base="${ooo.prefix}/${app.name}" runas="${bang.user}"
+                  outputdir="${approot.support}" port="${bangsupport.jetty.port}"/>
+    <copy file="webapps/bangsupport/${deploy.dir}/bangsupport.war"
+          todir="${approot.support}/webapps/${app.name}support"/>
+
+    <!-- copy our support GWT pages into bangsupport pages directory -->
+    <mkdir dir="${approot.support}/pages/support"/>
+    <copy todir="${approot.support}/pages/support">
+      <fileset dir="webapps/bangsupport/dist/www/bang_user" includes="**"/>
+      <fileset dir="webapps/bangsupport/dist/www/bang_admin" includes="**"/>
+    </copy>
+
+    <!-- build the actual Debian packages -->
+    <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
+          distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.office}">
+        <info>
+          <name>bangoffice</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Admin Webapp</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+        <permissions>
+          <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="false">
+            <path>log/</path>
+            <path>run/</path>
+          </permission>
+          <permission mode="555">
+            <path>etc/rc.d/jetty-bangoffice.sh</path>
+          </permission>
+        </permissions>
+        <!-- restart webapp on package install/upgrade and stop on package removal. -->
+        <scripts>
+          <rcrestart script="${ooo.prefix}/${app.name}/etc/rc.d/jetty-bangoffice.sh"/>
+        </scripts>
+      </package>
+
+      <package destroot="${pkgroot.support}">
+        <info>
+          <name>bangsupport</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Support Webapp</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+        <permissions>
+          <permission user="${bang.user}" group="${bang.user}" mode="755" recursive="false">
+            <path>log/</path>
+            <path>run/</path>
+          </permission>
+          <permission mode="555">
+            <path>etc/rc.d/jetty-bangsupport.sh</path>
+          </permission>
+        </permissions>
+        <!-- restart webapp on package install/upgrade and stop on package removal. -->
+        <scripts>
+          <rcrestart script="${ooo.prefix}/${app.name}/etc/rc.d/jetty-bangsupport.sh"/>
+        </scripts>
+        <dependencies>
+          <!-- TEMP: remove this when we've updated web1/2 -->
+          <conflict package="bang-underwire-pages"/>
+          <replacement package="bang-underwire-pages"/>
+        </dependencies>
+      </package>
+    </dpkg>
+  </target>
+
+  <!-- builds the bang-pages-extra package -->
+  <target name="pages-extra-package" depends="prepare-package">
+    <!-- define the root of the package -->
+    <property name="pkgroot.pages-extra" value="${pkgroot.root}/${app.name}-pages-extra"/>
+    <property name="approot.pages-extra" value="${pkgroot.pages-extra}/${ooo.prefix}/${app.name}"/>
+    <mkdir dir="${approot.pages-extra}"/>
+
+    <!-- copy a whole heap of client stuff into the package -->
+    <copy todir="${approot.pages-extra}">
+      <fileset dir="${deploy.dir}/installer" includes="**"/>
+      <fileset dir="${deploy.dir}/applet" includes="**"/>
+    </copy>
+
+    <!-- build the actual Debian package -->
+    <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
+          distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.pages-extra}">
+        <info>
+          <name>${app.name}-pages-extra</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Installer and Bits</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+      </package>
+    </dpkg>
+  </target>
+
+  <!-- builds the bang-hemiptera-map package -->
+  <target name="hemiptera-map-package" depends="prepare-package">
+    <!-- define the root of the package -->
+    <property name="pkgroot.hemiptera-map" value="${pkgroot.root}/${app.name}-hemiptera-map"/>
+    <property name="approot.hemiptera-map"
+              value="${pkgroot.hemiptera-map}/${ooo.prefix}/threerings"/>
+    <mkdir dir="${approot.hemiptera-map}"/>
+
+    <copy todir="${approot.hemiptera-map}">
+      <fileset dir="${deploy.dir}/hemiptera-map" includes="**"/>
+    </copy>
+
+    <!-- build the actual Debian package -->
+    <dpkg output="${package.output}" prefix="${ooo.prefix}/${app.name}"
+          distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.hemiptera-map}">
+        <info>
+          <name>${app.name}-hemiptera-map</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Hemiptera Map Files</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+      </package>
+    </dpkg>
+  </target>
+
+  <!-- builds the bang-client package -->
+  <target name="client-package" depends="prepare-package">
+    <!-- define the root of the client package -->
+    <property name="pkgroot.client" value="${pkgroot.root}/${app.name}-client"/>
+    <property name="approot.client" value="${pkgroot.client}/${ooo.prefix}/download"/>
+    <mkdir dir="${approot.client}"/>
+
+    <!-- make sure our versions are properly set -->
+    <fail unless="clientVersion" message="clientVersion must be set?!"/>
+    <fail unless="pkgVersion" message="pkgVersion must be set?!"/>
+
+    <!-- copy a whole heap of client stuff into the package -->
+    <copy todir="${approot.client}">
+      <fileset dir="${deploy.dir}/client" includes="**"/>
+    </copy>
+
+    <!-- package the pseditor if desired -->
+    <if><istrue value="${build_pseditor}"/><then>
+      <copy todir="${approot.client}">
+        <fileset dir="${deploy.dir}/pseditor" includes="**"/>
+      </copy>
+    </then></if>
+
+    <!-- build the actual Debian packages -->
+    <property name="client_package_name" value="bang-client-${clientVersion}"/>
+    <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
+          distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.client}">
+        <info>
+          <name>${client_package_name}</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Game Client ${clientVersion}</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+        <dependencies>
+          <require package="bang-hemiptera-map">
+            <equalOrGreaterThan>${pkgVersion}</equalOrGreaterThan>
+          </require>
+        </dependencies>
+      </package>
+    </dpkg>
+
+    <!-- define the root of the client-current package. leave it empty. -->
+    <property name="pkgroot.client-current" value="${pkgroot.root}/${app.name}-client-current"/>
+    <mkdir dir="${pkgroot.client-current}"/>
+
+    <dpkg output="${package.output}" prefix="${ooo.prefix}/download"
+          distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.client-current}">
+        <info>
+          <name>bang-client-current</name>
+          <version>${pkgVersion}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Game Client (newest)</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+        <scripts>
+          <postinst command="ln -sf ${clientVersion}/getdown.txt ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
+          <prerm command="rm ${ooo.prefix}/download/pages/bang/client/getdown.txt"/>
+        </scripts>
+        <dependencies>
+          <require package="${client_package_name}"><equalTo>${pkgVersion}</equalTo></require>
+        </dependencies>
+      </package>
+    </dpkg>
+  </target>
+
+  <!-- builds our javadocs and packages them up -->
+  <target name="package-docs" depends="distall,javadoc,prepare-package">
+    <property name="pkgroot.docs" value="${pkgroot.root}/bang-docs"/>
+    <property name="approot.docs" value="${pkgroot.docs}/${ooo.docs.prefix}"/>
+    <mkdir dir="${approot.docs}"/>
+
+    <copy todir="${approot.docs}/bang">
+      <fileset dir="${deploy.dir}/docs"/>
+    </copy>
+
+    <!-- Set up a version number to use for docs package. -->
+    <tstamp><format property="version" pattern="yyyyMMddHHmmss"/></tstamp>
+
+    <dpkg output="${package.output}" prefix="${ooo.docs.prefix}" distribution="${ooo.distribution}">
+      <package destroot="${pkgroot.docs}">
+        <info>
+          <name>bang-docs</name>
+          <version>${version}</version>
+          <arch>${ooo.architecture}</arch>
+          <description>Bang Development Docs</description>
+          <maintainer>
+            <name>${bang.maintainer.name}</name>
+            <email>${bang.maintainer.email}</email>
+          </maintainer>
+        </info>
+      </package>
+    </dpkg>
+  </target>
+
+  <!-- targets for the auto-build system -->
+  <target name="bamboo" depends="package,aptupdate,distcleanall,checkclean"/>
+  <target name="bamboo-docs" depends="package-docs,aptupdate,distcleanall,checkclean"/>
+</project>

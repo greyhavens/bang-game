@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.threerings</groupId>
+    <artifactId>bang-project</artifactId>
+    <version>1.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>bang-jme</artifactId>
+  <packaging>jar</packaging>
+  <name>jME on GDX</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.badlogicgames.gdx</groupId>
+      <artifactId>gdx</artifactId>
+      <version>${gdx.version}</version>
+    </dependency>
+
+    <!-- TEMP: pull in LWJGL directly until we rewrite everything to use GDX -->
+    <dependency>
+      <groupId>org.lwjgl.lwjgl</groupId>
+      <artifactId>lwjgl</artifactId>
+      <version>2.9.2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.lwjgl.lwjgl</groupId>
+          <artifactId>lwjgl-platform</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>net.java.jinput</groupId>
+          <artifactId>jinput-platform</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl.lwjgl</groupId>
+      <artifactId>lwjgl_util</artifactId>
+      <version>2.9.2</version>
+    </dependency>
+
+    <!-- ant is only for tools, so we don't export it as a depend -->
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.7.1</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -1,0 +1,10 @@
+dependencies {
+  compile project(":bui")
+  compile "com.threerings:narya:${naryaVersion}"
+  compile "com.threerings:nenya:${nenyaVersion}"
+
+  // these are only for tools, so we don't export them as depends
+  provided "com.threerings:nenya-tools:${nenyaVersion}"
+  provided "org.apache.ant:ant:1.7.1"
+  provided "commons-digester:commons-digester:1.8"
+}

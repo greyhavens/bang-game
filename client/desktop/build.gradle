@@ -1,0 +1,19 @@
+dependencies {
+  compile project(":client/shared")
+  compile "com.badlogicgames.gdx:gdx-backend-lwjgl:${gdxVersion}"
+  compile group: "com.badlogicgames.gdx", name: "gdx-platform", version: gdxVersion,
+          classifier: "natives-desktop"
+}
+
+task copyConfig (type: Copy) {
+  from "../../etc/${deployment}"
+  into sourceSets.main.output.classesDir
+  include "deployment.properties"
+}
+processResources.dependsOn "copyConfig"
+
+task deploy (type: Sync) {
+  from jar
+  from configurations.runtime
+  into project.file("../../build/client")
+}

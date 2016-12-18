@@ -1,0 +1,4 @@
+dependencies {
+  compile project(":jme")
+  testCompile "junit:junit:4.11"
+}

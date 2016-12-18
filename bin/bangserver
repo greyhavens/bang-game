@@ -10,10 +10,10 @@ JARGS=""
 NODE="frontier_town"
 
 SERVER_MEMORY=384M
-if [ -f $BANG_HOME/dist/server.conf ]; then
-    . $BANG_HOME/dist/server.conf
+if [ -f $BANG_HOME/etc/test/server.conf ]; then
+    . $BANG_HOME/etc/test/server.conf
 else
-    echo "Can't load $BANG_HOME/server.conf; can't run tool."
+    echo "Missing $BANG_HOME/etc/test/server.conf; can't run server."
     exit 255
 fi
 

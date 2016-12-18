@@ -1,0 +1,24 @@
+dependencies {
+  compile project(":app")
+  compile "com.samskivert:samskivert:1.9"
+  compile "com.threerings:narya:${naryaVersion}"
+  compile "com.threerings:nenya:${nenyaVersion}"
+  compile "com.threerings:vilya:1.6"
+  compile "com.threerings:getdown:1.4"
+  compile "com.threerings:ooo-util:1.4.1"
+  compile "commons-io:commons-io:1.4"
+  compile "org.jcraft:jorbis:0.0.17"
+
+  testCompile "junit:junit:4.8.1"
+}
+
+task genService << {
+  ant.taskdef(classpath: configurations.tools.asPath,
+              resource: "com/threerings/presents/tools.properties")
+
+  ant.path(id: "classpath", location: configurations.compile.asPath)
+  ant.genservice(header: "../../lib/SOURCE_HEADER",
+                 classpathref: "classpath") {
+    fileset(dir: "src/main/java", includes: "**/*Service.java")
+  }
+}

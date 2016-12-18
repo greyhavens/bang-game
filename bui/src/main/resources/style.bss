@@ -1,0 +1,187 @@
+//
+// $Id$
+//
+// Default BUI style sheet
+
+root {
+  color: #FFFFFF;
+  font: "Dialog" plain 16;
+}
+
+root:disabled {
+  color: #BBBBBB;
+}
+
+window {
+  border: 1 solid #FFFFFF;
+}
+
+decoratedwindow {
+  border: 1 solid #FFFFFF;
+}
+
+popupmenu {
+  background: solid #00000088;
+//  padding: 5;
+  border: 2 solid #FFFFFF;
+  font: "Dialog" bold 16;
+}
+
+component {
+}
+
+component:disabled {
+}
+
+tooltip_window {
+  background: solid #FFFFFF;
+  border: 2 solid #000000;
+  padding: 5;
+}
+
+tooltip_label {
+  color: #000000;
+}
+
+label {
+//  border: 1 solid #FFFFFF;
+}
+
+button {
+  background: image "rsrc/textures/button_up.png" framexy;
+  padding: 3 5;
+  font: "Dialog" bold 24;
+  text-align: center;
+  text-effect: outline;
+  effect-color: #442288;
+}
+
+menuitem {
+  padding: 0 2;
+}
+
+menuitem:hover {
+  color: #000000;
+  background: solid #FFFFFF88;
+}
+
+button:hover {
+  color: #FF00FF;
+}
+
+button:disabled {
+  background: image "rsrc/textures/button_disabled.png" framexy;
+}
+
+button:down {
+  background: image "rsrc/textures/button_down.png" framexy;
+  color: #FF00FF;
+  padding: 4 6 2 4;
+}
+
+button:selected {
+  background: image "rsrc/textures/button_down.png" framexy;
+  padding: 4 6 2 4;
+}
+
+combobox {
+  background: image "rsrc/textures/button_up.png" framexy;
+  padding: 3 5;
+}
+
+textfield {
+  background: solid #00000088;
+  padding: 5;
+}
+
+textarea {
+  background: solid #00000088;
+  padding: 5;
+}
+
+checkbox {
+  icon: blank 7 7;
+}
+
+checkbox:selected {
+  icon: image "rsrc/textures/checkbox.png" centery;
+}
+
+checkbox:disselected {
+  icon: image "rsrc/textures/checkbox.png" centery;
+}
+
+scrollbar_hthumb {
+  background: solid #FFFFFF;
+}
+
+scrollbar_vthumb {
+  background: solid #FFFFFF;
+}
+
+scrollbar_hwell {
+  background: image "rsrc/textures/button_up.png" framexy;
+  padding: 3;
+}
+
+scrollbar_vwell {
+  background: image "rsrc/textures/button_up.png" framexy;
+  padding: 3;
+}
+
+scrollbar_hless {
+  icon: image "rsrc/textures/scroll_left.png";
+}
+
+scrollbar_vless {
+  icon: image "rsrc/textures/scroll_up.png";
+}
+
+scrollbar_hmore {
+  icon: image "rsrc/textures/scroll_right.png";
+}
+
+scrollbar_vmore {
+  icon: image "rsrc/textures/scroll_down.png";
+}
+
+hslider {
+  icon: image "rsrc/textures/button_up.png";
+  border: 1 solid #000000;
+}
+
+vslider {
+  icon: image "rsrc/textures/button_up.png";
+  border: 1 solid #000000;
+}
+
+//
+// These are for testing
+
+left {
+  font: "Dialog" bold 16;
+  text-align: left;
+  text-effect: shadow;
+  effect-color: #000000;
+  vertical-align: top;
+  border: 1 solid #FFCC99;
+}
+
+center {
+  font: "Dialog" bold 16;
+  text-align: center;
+  text-effect: glow;
+  effect-color: #99CCFF;
+  effect-size: 3;
+  vertical-align: center;
+  border: 1 solid #FFCC99;
+}
+
+right {
+  font: "Dialog" bold 16;
+  text-align: right;
+  text-effect: outline;
+  effect-color: #000000;
+  vertical-align: bottom;
+  border: 1 solid #FFCC99;
+}

@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# $Id$
+#
+# A script run as part of the build process to update our lists of props,
+# units, etc.
+
+CWD=`dirname $0`
+TARGET=$1
+TOWNS=`echo $2 | sed 's/,/ /g'`
+
+# Update our list of sounds
+find rsrc -name '*.ogg' > $TARGET/rsrc/sounds.txt
+
+# Update our list of props
+for TOWN in $TOWNS; do
+    mkdir -p $TARGET/rsrc/props/$TOWN
+    find rsrc/props/$TOWN -name 'prop.properties' | \
+        sed 's:rsrc/props/::g' | sed 's:/prop.properties::' | sort > \
+        $TARGET/rsrc/props/$TOWN/props.txt
+done
+
+# Update our list of units
+for TOWN in $TOWNS; do
+    mkdir -p $TARGET/rsrc/units/$TOWN
+    find rsrc/units/$TOWN -name 'unit.properties' | \
+        sed 's:rsrc/units/::g' | sed 's:/unit.properties::' | sort > \
+        $TARGET/rsrc/units/$TOWN/units.txt
+done
+
+# Update our list of bonuses
+for TOWN in $TOWNS; do
+    mkdir -p $TARGET/rsrc/bonuses/$TOWN
+    find rsrc/bonuses/$TOWN -name 'bonus.properties' | \
+        sed 's:rsrc/bonuses/::g' | sed 's:/bonus.properties::' | sort > \
+        $TARGET/rsrc/bonuses/$TOWN/bonuses.txt
+done
+
+# Update our lists of particle effects and icons
+for TOWN in $TOWNS; do
+    mkdir -p $TARGET/rsrc/effects/$TOWN
+    find rsrc/effects/$TOWN -name 'particles.properties' | \
+        sed 's:rsrc/effects/::g' | sed 's:/particles.properties::' | sort > \
+        $TARGET/rsrc/effects/$TOWN/particles.txt
+    find rsrc/effects/$TOWN -name 'icon.properties' | \
+        sed 's:rsrc/effects/::g' | sed 's:/icon.properties::' | sort > \
+        $TARGET/rsrc/effects/$TOWN/icons.txt
+done
+
+# Update our list of terrain codes
+find rsrc/terrain -name 'terrain.properties' | \
+  sed 's:rsrc/terrain/::g' | sed 's:/terrain.properties::' | \
+  $CWD/update_terrain_codes
+
+# Update our list of bounties
+for TOWN in $TOWNS; do
+    mkdir -p $TARGET/rsrc/bounties/$TOWN
+    find rsrc/bounties/$TOWN -name 'bounty.properties' | \
+        sed 's:rsrc/bounties/::g' | sed 's:/bounty.properties::' | sort > \
+        $TARGET/rsrc/bounties/$TOWN/bounties.txt
+done

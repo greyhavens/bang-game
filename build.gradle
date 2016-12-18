@@ -1,0 +1,45 @@
+allprojects {
+  group = "com.threerings"
+  version = "1.1-SNAPSHOT"
+
+  ext {
+    gdxVersion = "1.5.4"
+    naryaVersion = "1.15"
+    nenyaVersion = "1.6.1"
+    towns = [ "frontier_town", "indian_post" ]
+    // indicates whether we're building for test or production
+    // when "package" target is invoked the deployment will be set to "prod"
+    deployment = "test"
+  }
+
+  apply plugin: "java"
+  compileJava {
+    options.compilerArgs << '-Xlint:all' << '-Xlint:-serial' << '-Xlint:-path' << '-Xlint:-overrides'
+  }
+
+  configurations {
+    provided
+    tools
+  }
+
+  dependencies {
+    tools "com.threerings:narya-tools:${naryaVersion}"
+    tools project(":tools")
+  }
+
+  sourceSets {
+    main {
+      compileClasspath += configurations.provided
+      runtimeClasspath += configurations.provided
+    }
+    test {
+      compileClasspath += configurations.provided
+      runtimeClasspath += configurations.provided
+    }
+  }
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+}

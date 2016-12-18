@@ -1,0 +1,22 @@
+dependencies {
+  compile project(":client/shared")
+  compile "com.samskivert:depot:1.7"
+  compile "com.threerings:ooo-user:1.4.3"
+  compile "net.sf.ehcache:ehcache:1.6.0"
+  compile "mysql:mysql-connector-java:5.1.6"
+  compile "commons-digester:commons-digester:1.8"
+}
+
+task copyConfig (type: Copy) {
+  from "../etc/${deployment}"
+  into sourceSets.main.output.resourcesDir
+  include "deployment.properties"
+  include "server.properties"
+}
+processResources.dependsOn "copyConfig"
+
+task deploy (type: Sync) {
+  from jar
+  from configurations.runtime
+  into project.file("../build/server")
+}

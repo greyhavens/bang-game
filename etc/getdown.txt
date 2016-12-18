@@ -4,8 +4,8 @@
 # Bang! development client deployment descriptor
 
 # General information
-@version_line@
-@appbase_line@
+${version_line}
+${appbase_line}
 
 # Configure the update UI
 ui.name = Bang! Howdy
@@ -16,13 +16,6 @@ ui.progress_bar = 663333
 ui.progress_text = FFFFFF
 ui.status = 57, 245, 373, 68
 ui.status_text = FFFFFF
-
-# Instrument the download process
-tracking_url = http://www.instadia.net/cgi-bin/gather?0d012BR&Getdown+Progress&http%3A%2F%2Fwww.banghowdy.com%2Fgetdown%2F
-tracking_percents = 5, 25, 50, 75, 99
-tracking_cookie_name=UID
-tracking_cookie_property=app.csid
-tracking_url_suffix=s&http%3A%2F%2Fwww.banghowdy.com%2Fgetdown%2F
 
 # These all go into the classpath
 code = code/config.jar
@@ -36,27 +29,6 @@ code = code/commons-logging.jar
 
 # Getdown doesn't go in the classpath; this is just for auto-upgrade
 resource = code/getdown-pro-new.jar
-
-# Native library bits
-resource = [linux] native/liblwjgl.so
-resource = [linux] native/libopenal.so
-
-resource = [linux] native/liblwjgl64.so
-resource = [linux] native/libopenal64.so
-
-resource = [windows] native/lwjgl.dll
-resource = [windows] native/jinput-dx8.dll
-resource = [windows] native/jinput-raw.dll
-resource = [windows] native/OpenAL32.dll
-
-resource = [windows] native/lwjgl64.dll
-resource = [windows] native/jinput-dx8_64.dll
-resource = [windows] native/jinput-raw_64.dll
-resource = [windows] native/OpenAL64.dll
-
-resource = [mac os x] native/liblwjgl.jnilib
-resource = [mac os x] native/libjinput-osx.jnilib
-resource = [mac os x] native/openal.dylib
 
 # Our media resources
 resource = background.png
@@ -89,7 +61,7 @@ uresource = rsrc/units/frontier_town/bundle.jar
 uresource = rsrc/sounds/music/frontier_town/bundle.jar
 
 # Define our auxiliary resource groups
-@auxgroups_line@
+${auxgroups_line}
 
 # Indian Trading Post game resources
 indian_post.uresource = rsrc/bonuses/indian_post/bundle.jar

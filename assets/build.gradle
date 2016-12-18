@@ -1,0 +1,174 @@
+dependencies {
+  compile project(":client/shared")
+  compile project(":tools")
+}
+
+ext {
+  stagingDir = "build/staging"
+}
+
+task copyResources (type: Copy) {
+  from "."
+  into stagingDir
+  include "rsrc/**"
+  exclude "rsrc/avatars/**"
+  exclude "rsrc/bonuses/**"
+  exclude "rsrc/cards/**"
+  exclude "rsrc/config/**/*.xml"
+  exclude "rsrc/effects/**"
+  exclude "rsrc/extras/**"
+  exclude "rsrc/props/**"
+  exclude "rsrc/sounds/**"
+  exclude "rsrc/tutorials/**/*.xml"
+  exclude "rsrc/units/**"
+  exclude "rsrc/**/*.wav"
+}
+processResources.dependsOn "copyResources"
+
+task copyOggs (type: Copy) {
+  from "."
+  into stagingDir
+  include "rsrc/**/*.ogg"
+}
+processResources.dependsOn "copyOggs"
+
+task copyTownBits (type: Copy) {
+  from "."
+  into stagingDir
+  include "rsrc/bonuses/**/*.png"
+  include "rsrc/bonuses/**/bonus.properties"
+  include "rsrc/cards/**/*.png"
+  include "rsrc/effects/**/*.png"
+  include "rsrc/effects/**/icon.properties"
+  include "rsrc/effects/**/icons.txt"
+  include "rsrc/effects/**/particles.jme"
+  include "rsrc/effects/**/particles.properties"
+  include "rsrc/effects/**/particles.txt"
+  include "rsrc/extras/**/*.png"
+  include "rsrc/props/**/*.png"
+  include "rsrc/props/**/prop.properties"
+  include "rsrc/units/**/*.png"
+  include "rsrc/units/**/unit.properties"
+}
+processResources.dependsOn "copyTownBits"
+
+task genConfigs << {
+  ant.taskdef(classpath: configurations.tools.asPath, name: "confcomp",
+              classname: "com.threerings.tools.CompiledConfigTask")
+
+  // compiles our tutorial XML definitions
+  ant.confcomp(dest: stagingDir,
+               parser: "com.threerings.bang.game.tools.xml.TutorialConfigParser") {
+    fileset(dir: "rsrc/tutorials", includes: "**/*.xml")
+  }
+
+  // creates the serialized color repository config
+  ant.confcomp(dest: stagingDir,
+               parser: "com.threerings.media.image.tools.xml.ColorPositoryParser",
+               configdef: "rsrc/config/media/colordefs.xml")
+  // creates the serialized article and aspect catalogs
+  ant.confcomp(dest: stagingDir,
+               parser: "com.threerings.bang.avatar.tools.xml.ArticleCatalogParser",
+               configdef: "rsrc/avatars/articles.xml")
+  ant.confcomp(dest: stagingDir,
+               parser: "com.threerings.bang.avatar.tools.xml.AspectCatalogParser",
+               configdef: "rsrc/avatars/aspects.xml")
+  ant.confcomp(dest: stagingDir,
+               parser: "com.threerings.bang.avatar.tools.xml.BucklePartCatalogParser",
+               configdef: "rsrc/avatars/buckle_parts.xml")
+}
+processResources.dependsOn "genConfigs"
+
+// builds the avatar component bundles
+task genBundles << {
+  ant.taskdef(classpath: configurations.tools.asPath, name: "metabundle",
+              classname: "com.threerings.cast.bundle.tools.MetadataBundlerTask")
+
+  def avatarDir = project.file(stagingDir + "/rsrc/avatars")
+  avatarDir.mkdirs()
+
+  ant.metabundle(actiondef: "rsrc/avatars/actions.xml", classdef: "rsrc/avatars/classes.xml",
+                 target: "${avatarDir}/metadata.jar")
+
+  ant.taskdef(classpath: configurations.tools.asPath, name: "cbundle",
+              classname: "com.threerings.cast.bundle.tools.ComponentBundlerTask")
+
+  towns.each { town ->
+    [ "male", "female" ].each { sex ->
+      def townDir = "rsrc/avatars/${town}"
+      // <mkdir dir="${deploy.dir}/rsrc/avatars/${comp.bundle}"/>
+      ant.cbundle(actiondef: "rsrc/avatars/actions.xml", mapfile: "rsrc/avatars/compmap.txt",
+                  root: townDir,
+                  target: "${stagingDir}/${townDir}/${sex}/components.jar") {
+        fileset(dir: "${townDir}/${sex}") {
+          include(name: "**/*.png")
+          exclude(name: "**/*_shadow.png")
+          exclude(name: "**/*_crop.png")
+          exclude(name: "components/**")
+        }
+      }
+    }
+  }
+
+  ant.cbundle(actiondef: "rsrc/avatars/actions.xml", mapfile: "rsrc/avatars/compmap.txt",
+              root: "rsrc/avatars/",
+              target: "${avatarDir}/buckle/components.jar") {
+    fileset(dir: "rsrc/avatars/buckle") {
+      include(name: "**/*.png")
+      exclude(name: "**/*_crop.png")
+      exclude(name: "components/**")
+    }
+  }
+}
+processResources.dependsOn "genBundles"
+
+// compiles our model XML into binary form
+task compileModels << {
+  ant.taskdef(classpath: configurations.tools.asPath, name: "compile",
+              classname: "com.threerings.jme.tools.CompileModelTask")
+  ant.compile(dest: stagingDir) {
+    fileset(dir: "rsrc",  includes: "**/model.properties")
+  }
+
+  ant.taskdef(classpath: configurations.tools.asPath, name: "updatepropheight",
+              classname: "com.threerings.bang.tools.UpdatePropHeightTask")
+  ant.updatepropheight() {
+    fileset(dir: "rsrc", includes: "**/prop.properties")
+  }
+}
+processResources.dependsOn "compileModels"
+
+// generates lists of props, units, etc.
+task updateLists (type: Exec) {
+  commandLine "./update_lists", stagingDir, towns.join(",")
+}
+processResources.dependsOn "updateLists"
+
+// package our assets into a bunch of jar files
+task generalJar (type: Jar) {
+  from stagingDir
+  include "rsrc/**"
+  exclude "**/frontier_town/**"
+  exclude "**/indian_post/**"
+  exclude "**/boom_town/**"
+  exclude "**/*.jar"
+  baseName = "general"
+}
+jar.dependsOn "generalJar"
+towns.each { town ->
+  tasks.create(name: "${town}_jar", type: Jar) {
+    from stagingDir
+    include "rsrc/**/$town/**"
+    exclude "**/*.jar"
+    baseName = "$town"
+  }
+  jar.dependsOn "${town}_jar"
+}
+
+task deploy (type: Sync) {
+  from("build/libs", stagingDir)
+  include "**/*.jar"
+  into "../build/assets"
+  includeEmptyDirs = false
+}
+deploy.dependsOn "build"

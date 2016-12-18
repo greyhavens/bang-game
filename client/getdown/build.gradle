@@ -1,0 +1,21 @@
+dependencies {
+  compile project(":client/desktop")
+  compile project(":assets")
+}
+
+// TODO: copy jar files from client/*.jar, stripping version/snapshot
+// TODO: copy getdown.jar to getdown-new.jar in the process
+// TODO: subst client/*.jar as code resources
+// TODO: copy assets/*.jar, stripping version/snapshot
+// TODO: subst assets/*.jar as resource/uresource resources
+
+task copyAssets (type :Copy) {
+  from("../../build/assets") {
+    rename "(.*)-$version\\.jar", '$1.jar'
+  }
+  into project.file("../../build/getdown")
+}
+
+task deploy << {
+}
+deploy.dependsOn "copyAssets"
