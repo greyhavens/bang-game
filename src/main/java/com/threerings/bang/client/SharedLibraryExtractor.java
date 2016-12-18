@@ -58,7 +58,7 @@ public class SharedLibraryExtractor {
       if (dirName == null)
         dirName = sourceCrc;
 
-      File extractedDir = new File(System.getProperty("java.io.tmpdir") + "/bang" +
+      File extractedDir = new File(System.getProperty("java.io.tmpdir") + "/playn" +
                                    System.getProperty("user.name") + "/" + dirName);
       File extractedFile = new File(extractedDir, new File(sourcePath).getName());
       String extractedCrc = null;
