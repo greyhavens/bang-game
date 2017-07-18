@@ -104,5 +104,12 @@ And now you can log into your local server with username `test` and password `ye
 That's about it. You can now hack on your own private Bang! Howdy instance and implement all those
 features you always wanted. Good luck!
 
+## License
+
+The Bang! Howdy source code is released under a BSD license. The Bang! Howdy media, 3D models,
+texture images, UI images, sound files, everything other than the code, is released under the
+Creative Commons [Attribution-NonCommercial 3.0] license.
+
 [libGDX]: https://libgdx.badlogicgames.com/
 [Gradle]: https://gradle.org/
+[Attribution-NonCommercial 3.0]: https://creativecommons.org/licenses/by-nc/3.0/us/
