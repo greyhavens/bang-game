@@ -13,7 +13,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gdx.version>1.5.4</gdx.version>
     <narya.version>1.15</narya.version>
-    <nenya.version>1.6.1</nenya.version>
+    <nenya.version>1.7-SNAPSHOT</nenya.version>
   </properties>
 
   <modules>

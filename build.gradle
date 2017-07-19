@@ -5,7 +5,7 @@ allprojects {
   ext {
     gdxVersion = "1.5.4"
     naryaVersion = "1.15"
-    nenyaVersion = "1.6.1"
+    nenyaVersion = "1.7-SNAPSHOT"
     towns = [ "frontier_town", "indian_post" ]
     // indicates whether we're building for test or production
     // when "package" target is invoked the deployment will be set to "prod"
