@@ -4,4 +4,4 @@
 #
 # Command line launcher for the Bang! editor
 
-`dirname $0`/bangtest -mx128M com.threerings.bang.editor.EditorApp "$@"
+`dirname $0`/bangjava -client -Dno_log_redir=true -mx128M com.threerings.bang.editor.EditorDesktop "$@"
