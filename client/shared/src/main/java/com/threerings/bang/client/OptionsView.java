@@ -326,12 +326,9 @@ public class OptionsView extends BDecoratedWindow
 
     protected void updateDisplayMode (DisplayMode mode, boolean confirm)
     {
-        if (_fullscreen.isSelected() != BangPrefs.isFullscreen()) {
-            BangPrefs.updateFullscreen(_fullscreen.isSelected());
-            fullscreenRestart();
-            return;
-        }
-        if (mode == null || (_mode != null && _mode.equals(mode))) {
+        boolean wantFullscreen = _fullscreen.isSelected();
+        if (mode == null || (_mode != null && _mode.equals(mode) &&
+                             wantFullscreen == BangPrefs.isFullscreen())) {
             return;
         }
 
@@ -345,8 +342,7 @@ public class OptionsView extends BDecoratedWindow
         int bpp = Math.max(16, _mode.getBitsPerPixel());
         int width = _mode.getWidth(), height = _mode.getHeight();
         DisplaySystem ds = _ctx.getDisplay();
-        ds.recreateWindow(
-            width, height, bpp, _mode.getFrequency(), ds.isFullScreen());
+        ds.recreateWindow(width, height, bpp, _mode.getFrequency(), wantFullscreen);
 
         // reconfigure the camera frustum in case the aspect ratio changed
         _ctx.getCameraHandler().getCamera().setFrustumPerspective(
