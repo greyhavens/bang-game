@@ -15,7 +15,7 @@ public class BangDesktop
         cfg.width = BangPrefs.getDisplayWidth();
         cfg.height = BangPrefs.getDisplayHeight();
         cfg.depth = BangPrefs.getDisplayBPP();
-        cfg.fullscreen = BangPrefs.isFullscreenSet();
+        cfg.fullscreen = BangPrefs.isFullscreen();
         // cfg.resizble = false;
         new LwjglApplication(new BangApp(), cfg);
     }

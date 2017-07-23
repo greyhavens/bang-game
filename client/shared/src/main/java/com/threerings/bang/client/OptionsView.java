@@ -370,6 +370,7 @@ public class OptionsView extends BDecoratedWindow
                 case OptionDialog.OK_BUTTON:
                     // store these settings for later
                     BangPrefs.updateDisplayMode(_mode);
+                    BangPrefs.updateFullscreen(_fullscreen.isSelected());
                     break;
 
                 default:
