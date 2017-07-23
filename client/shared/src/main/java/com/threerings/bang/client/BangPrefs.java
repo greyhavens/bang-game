@@ -108,6 +108,19 @@ public class BangPrefs
                  "(current: " + Display.getDisplayMode() + ").");
     }
 
+    public static int getDisplayWidth () {
+        return config.getValue("display_width", BangUI.MIN_WIDTH);
+    }
+    public static int getDisplayHeight () {
+        return config.getValue("display_height", BangUI.MIN_HEIGHT);
+    }
+    public static int getDisplayBPP () {
+        return config.getValue("display_bpp", 32);
+    }
+    public static int getDisplayFreq () {
+        return config.getValue("display_freq", 60);
+    }
+
     /**
      * Returns whether or not we prefer fullscreen mode.
      */

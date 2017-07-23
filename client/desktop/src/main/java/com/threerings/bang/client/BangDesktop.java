@@ -5,16 +5,18 @@ package com.threerings.bang.client;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.threerings.bang.client.BangPrefs;
 
 public class BangDesktop
 {
     public static void main (String[] args) {
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Bang! Howdy";
-        cfg.width = 1024;
-        cfg.height = 768;
+        cfg.width = BangPrefs.getDisplayWidth();
+        cfg.height = BangPrefs.getDisplayHeight();
+        cfg.depth = BangPrefs.getDisplayBPP();
+        cfg.fullscreen = BangPrefs.isFullscreenSet();
         // cfg.resizble = false;
-        // TODO: cfg.setFromDisplayMode when in fullscreen mode
         new LwjglApplication(new BangApp(), cfg);
     }
 }
