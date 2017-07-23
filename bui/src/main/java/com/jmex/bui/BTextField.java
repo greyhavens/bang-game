@@ -211,16 +211,25 @@ public class BTextField extends BTextComponent
                     emitEvent(new ActionEvent(this, kev.getWhen(), kev.getModifiers(), ""));
                     break;
 
-                case RELEASE_FOCUS:
-                    getWindow().requestFocus(null);
+                case RELEASE_FOCUS: {
+                    BWindow window = getWindow();
+                    if (window != null) {
+                        getWindow().requestFocus(null);
+                    }
                     break;
+                }
 
                 case CLEAR:
                     _text.setText("");
                     break;
 
                 default:
-                    return super.dispatchEvent(event);
+                    super.dispatchEvent(event);
+                    // NOTE: we claim to handle all key_pressed events because otherwise they might
+                    // get dispatched to a default event handler; this is not desirable because we
+                    // are effectively handling all key events, we just handle many of them on
+                    // key_typed not key_pressed
+                    return true;
                 }
 
                 return true; // we've consumed these events
