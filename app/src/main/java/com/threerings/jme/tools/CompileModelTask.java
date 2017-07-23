@@ -68,7 +68,7 @@ public class CompileModelTask extends Task
             for (String file : ds.getIncludedFiles()) {
                 File source = new File(fromDir, file);
                 File destDir = (_dest == null) ? source.getParentFile() :
-                    new File(source.getParent().replaceAll(baseDir, _dest.getPath()));
+                    new File(source.getParent().replace(baseDir, _dest.getPath()));
                 try {
                     CompileModel.compile(source, destDir);
                 } catch (Exception e) {
