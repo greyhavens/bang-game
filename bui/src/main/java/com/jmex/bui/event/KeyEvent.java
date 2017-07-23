@@ -103,7 +103,7 @@ public class KeyEvent extends InputEvent
     protected void toString (StringBuffer buf)
     {
         super.toString(buf);
-        buf.append(", type=").append(_type);
+        buf.append(", type=").append(TYPES[_type]);
         buf.append(", char=").append(_keyChar);
         buf.append(", code=").append(_keyCode);
     }
@@ -111,4 +111,6 @@ public class KeyEvent extends InputEvent
     protected int _type;
     protected char _keyChar;
     protected int _keyCode;
+
+    protected static String[] TYPES = { "pressed", "typed", "released" };
 }
