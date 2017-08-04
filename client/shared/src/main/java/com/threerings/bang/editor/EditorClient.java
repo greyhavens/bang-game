@@ -60,7 +60,6 @@ public class EditorClient extends BasicClient
     public void init (EditorApp app, JFrame frame)
     {
         // create our context
-        _ctx = new EditorContextImpl();
         _frame = frame;
         _frame.setJMenuBar(new JMenuBar());
         JPanel statusPanel = GroupLayout.makeHBox(GroupLayout.STRETCH);
@@ -207,13 +206,13 @@ public class EditorClient extends BasicClient
         public void displayCoords (int x, int y) {
             _coords.setText("x:" + x + ", y:" + y);
         }
-        
+
         public JFrame getFrame () {
             return _frame;
         }
     }
 
-    protected EditorContextImpl _ctx;
+    protected EditorContextImpl _ctx = new EditorContextImpl();
     protected Config _config = new Config("editor");
 
     protected JFrame _frame;

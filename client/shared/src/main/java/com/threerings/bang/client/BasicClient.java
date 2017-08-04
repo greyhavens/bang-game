@@ -123,7 +123,7 @@ public class BasicClient
     protected void createContextServices (RunQueue rqueue)
     {
         // create the handles on our various services
-        _client = new Client(null, rqueue);
+        _client.setRunQueue(rqueue);
 
         // these manage local client resources
         _rsrcmgr = new ResourceManager("rsrc");
@@ -362,6 +362,17 @@ public class BasicClient
         }
     }
 
+    // we need our client to be around at construction/injection time, but we don't have our
+    // runqueue until initialization time, so we have to do this hackery
+    protected static class HackedClient extends Client {
+        public HackedClient() {
+            super(null, null);
+        }
+        public void setRunQueue(RunQueue rqueue) {
+            _runQueue = rqueue;
+        }
+    }
+
     protected JmeApp _app;
     protected BasicContextImpl _ctx;
     protected GlobalKeyManager _keymgr = new GlobalKeyManager();
@@ -380,7 +391,7 @@ public class BasicClient
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
 
-    protected Client _client;
+    protected HackedClient _client = new HackedClient();
     protected LocationDirector _locdir;
     protected OccupantDirector _occdir;
     protected ParlorDirector _pardir;

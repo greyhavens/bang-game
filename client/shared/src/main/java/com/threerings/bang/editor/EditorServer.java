@@ -5,7 +5,10 @@ package com.threerings.bang.editor;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 
+import com.threerings.presents.client.Client;
+import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.LocalDObjectMgr;
 import com.threerings.presents.server.PresentsDObjectMgr;
 
@@ -25,7 +28,18 @@ public class EditorServer extends CrowdServer
         @Override protected void configure () {
             super.configure();
             bind(PresentsDObjectMgr.class).to(LocalDObjectMgr.class);
+            bind(Client.class).toProvider(EditorClientProvider.class);
         }
+    }
+
+    private static class EditorClientProvider implements Provider<Client> {
+        @Inject public EditorClientProvider (EditorClient client) {
+            _client = client;
+        }
+        public Client get () {
+            return _client.getContext().getClient();
+        }
+        private final EditorClient _client;
     }
 
     @Override // from CrowdServer

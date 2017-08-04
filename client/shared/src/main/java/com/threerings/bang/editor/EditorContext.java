@@ -25,7 +25,7 @@ public interface EditorContext extends BasicContext, ParlorContext
 
     /** Displays a set of coordinates. */
     public void displayCoords (int x, int y);
-    
+
     /** Provides access to the main editor window. */
     public JFrame getFrame ();
 }

@@ -309,7 +309,6 @@ public class BangClient extends BasicClient
      */
     public void init (BangApp app, boolean failureMode)
     {
-        _ctx = new BangContextImpl();
         initClient(_ctx, app, app);
 
         // if we're recovering from a failure, stop here
@@ -1527,7 +1526,7 @@ public class BangClient extends BasicClient
         }
     };
 
-    protected BangContextImpl _ctx;
+    protected BangContextImpl _ctx = new BangContextImpl();
     protected String _pendingTownId;
 
     protected BangChatDirector _chatdir;
