@@ -45,10 +45,15 @@ import com.jme3.texture.Texture;
  * <p>The fork's per-instance deep-copy in the pre-cutover {@code ParticleCache} is the de-facto
  * spec of which params matter; this converter mirrors it:
  * <ul>
- *   <li>{@code numParticles} &rarr; {@code setNumParticles}; {@code releaseRate} (particles/sec,
- *       only honoured when the controller's {@code controlFlow} is set) &rarr;
- *       {@code setParticlesPerSec} (else a steady refill at count/mean-lifetime so a continuously
- *       cloned ambient effect keeps a full, looping population).</li>
+ *   <li>{@code numParticles} &rarr; {@code setNumParticles}. Emission mode is keyed on the fork
+ *       controller's <b>repeat type</b> (the one-shot-vs-loop signal): {@code RT_CLAMP} &rarr; a
+ *       <em>one-shot burst</em> baked with {@code setParticlesPerSec(0)} (the runtime spawn path
+ *       fires the single pool-sized burst via {@code emitAllParticles()}, then it fades and is
+ *       detached); {@code RT_WRAP}/{@code RT_CYCLE} &rarr; a <em>continuous/ambient</em> emitter
+ *       with a steady {@code setParticlesPerSec} (the fork {@code releaseRate} when {@code
+ *       controlFlow} is set, else a refill at count/mean-lifetime), clamped to count/mean-lifetime
+ *       so even an ambient effect can't blow out. Baking a positive rate on a one-shot emitter is
+ *       what produced the runaway additive bloom the live acceptance caught.</li>
  *   <li>{@code startSize}/{@code endSize} &rarr; {@code setStartSize}/{@code setEndSize}.</li>
  *   <li>{@code startColor}/{@code endColor} &rarr; {@code setStartColor}/{@code setEndColor}.</li>
  *   <li>{@code minimumLifeTime}/{@code maximumLifeTime} (fork ms) &rarr;
@@ -160,19 +165,37 @@ public class ParticleConverter
         emitter.setLowLife(low);
         emitter.setHighLife(high);
 
-        // ---- count / flow ----
+        // ---- count / emission mode (burst vs ambient) ----
+        // The fork controller's repeat type is the one-shot-vs-loop signal (ParticleController:
+        // RT_CLAMP makes a dead particle stay dead and the controller go inactive once all particles
+        // have died -> a single burst that fades; RT_WRAP/RT_CYCLE recreate particles forever -> a
+        // continuous, looping/ambient population). Baking a non-zero particles-per-sec on a CLAMP
+        // (one-shot) emitter is wrong: the runtime spawn path (ParticlePool.getParticles ->
+        // ParticleUtil.forceRespawn -> emitAllParticles, then a ParticleRemover that detaches once
+        // the emitter is idle) fires the burst itself, so a baked positive rate makes the emitter
+        // emit forever, the remover never detaches it, and a dense additive burst accumulates into a
+        // runaway bloom (the live-acceptance white/orange explosion swallowing the screen).
         emitter.setNumParticles(count);
         ParticleController ctrl = geom.getParticleController();
-        boolean controlFlow = ctrl != null && ctrl.isControlFlow();
-        if (controlFlow && geom.getReleaseRate() > 0) {
-            emitter.setParticlesPerSec(geom.getReleaseRate());
+        int repeatType = (ctrl != null) ? ctrl.getRepeatType() : ParticleController.RT_WRAP;
+        boolean oneShot = (repeatType == ParticleController.RT_CLAMP);
+        if (oneShot) {
+            // one-shot / burst: do NOT auto-emit. The spawn code's emitAllParticles() fires the
+            // single pool-sized burst; it then fades over its lifetime and is detached.
+            emitter.setParticlesPerSec(0f);
         } else {
-            // no controlled flow: emit the whole pool steadily over the mean lifetime so a
-            // continuously-cloned ambient effect keeps a full, looping population (a true one-shot
-            // burst would empty after one mean lifetime; ParticleCache clones a fresh instance per
-            // spawn, so a steady refill matches the fork's wrap/cycle behaviour best).
+            // ambient / continuous (RT_WRAP / RT_CYCLE): keep a sane steady emission so a looping
+            // effect stays populated. Prefer the fork's regulated releaseRate when controlFlow is
+            // set; otherwise refill the pool once per mean lifetime. Clamp the result so a stored
+            // rate (or a dense pool over a short life) can't blow out -- the fork's controller only
+            // ever recreates dead particles, so the effective rate is bounded by count/mean-life.
             float mean = (low + high) * 0.5f;
-            emitter.setParticlesPerSec(mean > 0 ? count / mean : count);
+            float refill = (mean > 0f) ? count / mean : count;
+            boolean controlFlow = ctrl != null && ctrl.isControlFlow();
+            float rate = (controlFlow && geom.getReleaseRate() > 0) ? geom.getReleaseRate() : refill;
+            // never emit faster than the pool can sustain (count particles per mean lifetime): a
+            // higher rate just churns the fixed-size pool and reads as an over-bright blob.
+            emitter.setParticlesPerSec(Math.min(rate, refill));
         }
 
         // ---- emission cone (direction * velocity, spread from min/max angle) ----

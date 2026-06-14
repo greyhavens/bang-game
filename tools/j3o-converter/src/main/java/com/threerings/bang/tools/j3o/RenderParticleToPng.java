@@ -99,6 +99,19 @@ public class RenderParticleToPng extends OffscreenRenderApp
         // regression goldens diff a particle render against a committed PNG without flaking.
         FastMath.rand.setSeed(PARTICLE_SEED);
         scene.updateGeometricState();
+        // Mirror the live spawn path (ParticlePool.getParticles -> ParticleUtil.forceRespawn ->
+        // emitAllParticles): fire each emitter's pool-sized burst once. Continuous/ambient emitters
+        // (positive particles-per-sec) keep refilling as the scene steps; one-shot/burst emitters
+        // (baked particles-per-sec == 0 for an RT_CLAMP effect) fire exactly this single burst and
+        // then fade -- so the harness shows the same fire-and-fade the live game does, instead of an
+        // empty cloud for a one-shot or (the old bug) a runaway continuously-emitting bloom.
+        scene.depthFirstTraversal(new com.jme3.scene.SceneGraphVisitorAdapter() {
+            @Override public void visit (com.jme3.scene.Geometry g) {
+                if (g instanceof com.jme3.effect.ParticleEmitter emitter) {
+                    emitter.emitAllParticles();
+                }
+            }
+        });
         float tpf = 1f / 30f;
         for (int ii = 0; ii < _frames; ii++) {
             scene.updateLogicalState(tpf);
