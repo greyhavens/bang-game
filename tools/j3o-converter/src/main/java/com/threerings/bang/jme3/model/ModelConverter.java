@@ -460,16 +460,39 @@ public class ModelConverter
         }
 
         // create a Joint per skeleton node, carrying the fork local transform (so the joint
-        // model transform, accumulated through the true hierarchy, equals the fork node's)
+        // model transform, accumulated through the true hierarchy, equals the fork node's).
+        //
+        // CRITICAL reference-space rule: the fork measures all bone model transforms (and the skin
+        // mesh's _invRefTransform used to bake the vertices into model space) in a frame where the
+        // *model root's own local transform is dropped*. ModelNode.updateWorldVectors() sets the
+        // model transform to parentModelTransform * localTransform only when the parent is itself a
+        // ModelNode; for the topmost ModelNode (the Model root, whose parent is the scene/null) it
+        // loads IDENTITY — discarding that node's local TRS. So Bref/Bcur and the baked skin
+        // vertices both live in "root-as-identity" model space. jME3 accumulates a joint's model
+        // transform from the armature root down, INCLUDING the root joint's own local transform, so
+        // giving the root joint the Model's local TRS would conjugate every off-bind deformation by
+        // that transform (jointModel(t) * inverse(jointModel(bind)) = R*X(t)*inverse(X_bind)*inv(R))
+        // — coherent only at bind (offset == identity there), shattering as a clip advances.
+        // Fix: a model-root skeleton node (parent not a ModelNode) gets an IDENTITY joint local
+        // transform, exactly mirroring the fork. Then jME3's joint model transforms equal the fork
+        // node model transforms at every joint, so jointModel*inverseBind == fork Bcur*inverse(Bref)
+        // and the baked model-space vertices (root-as-identity) are deformed in the same frame.
         for (ModelNode node : skeletonNodes.keySet()) {
             Joint joint = new Joint(uniqueJointName(node.getName()));
-            com.jme.math.Vector3f t = node.getLocalTranslation();
-            com.jme.math.Quaternion r = node.getLocalRotation();
-            com.jme.math.Vector3f s = node.getLocalScale();
-            joint.setLocalTransform(new com.jme3.math.Transform(
-                new Vector3f(t.x, t.y, t.z),
-                new Quaternion(r.x, r.y, r.z, r.w),
-                new Vector3f(s.x, s.y, s.z)));
+            boolean isModelRoot = !(node.getParent() instanceof ModelNode);
+            if (isModelRoot) {
+                // fork: getModelTransform() == IDENTITY for the root ModelNode (local TRS dropped)
+                joint.setLocalTransform(new com.jme3.math.Transform());
+                _rootJoint = joint;
+            } else {
+                com.jme.math.Vector3f t = node.getLocalTranslation();
+                com.jme.math.Quaternion r = node.getLocalRotation();
+                com.jme.math.Vector3f s = node.getLocalScale();
+                joint.setLocalTransform(new com.jme3.math.Transform(
+                    new Vector3f(t.x, t.y, t.z),
+                    new Quaternion(r.x, r.y, r.z, r.w),
+                    new Vector3f(s.x, s.y, s.z)));
+            }
             _joints.put(node, joint);
         }
         // parent each joint under its actual parent skeleton node (the true fork hierarchy)
@@ -623,10 +646,22 @@ public class ModelConverter
             if (target == null) {
                 continue; // target wasn't converted (e.g. under a skipped ParticleMesh)
             }
+            // The model-root joint is pinned to identity (see buildArmature: the fork's
+            // getModelTransform() always returns IDENTITY for the root ModelNode, dropping its
+            // TRS — for the bind pose AND every animated frame). If a clip animates the root,
+            // honouring those keyframes would re-introduce the dropped transform on the joint and
+            // re-contort the skin off-bind, so force the root-joint track to identity to match.
+            boolean rootJoint = (target == _rootJoint);
             Vector3f[] trans = new Vector3f[frames];
             Quaternion[] rots = new Quaternion[frames];
             Vector3f[] scales = new Vector3f[frames];
             for (int ff = 0; ff < frames; ff++) {
+                if (rootJoint) {
+                    trans[ff] = new Vector3f();
+                    rots[ff] = new Quaternion();
+                    scales[ff] = new Vector3f(1f, 1f, 1f);
+                    continue;
+                }
                 Model.Transform xf = anim.transforms[ff][tt];
                 com.jme.math.Vector3f t = ModelAnimAccess.translation(xf);
                 com.jme.math.Quaternion r = ModelAnimAccess.rotation(xf);
@@ -755,4 +790,8 @@ public class ModelConverter
 
     protected Armature _armature;
     protected SkinningControl _skinningControl;
+
+    /** The armature's model-root joint (parent not a ModelNode). Pinned to identity to mirror the
+     * fork's root model transform; its animation track (if any) is forced to identity too. */
+    protected Joint _rootJoint;
 }
