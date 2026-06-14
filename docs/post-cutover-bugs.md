@@ -29,6 +29,30 @@ game-start camera move isn't invoked. **Fix area:** find where the fork kicked o
 camera path (likely a `BangController`/`GameInputHandler` intro hook fired on board-ready / fight
 start) and confirm it runs on the jME3 `CameraHandler`. Cross-ref `StartGameAndZoomOut.mp4`.
 
+## BUG-4 — Claim/counter numbers render horizontally MIRRORED (backwards)  [OPEN]
+*Reported 2026-06-14 (screenshot: a "2" shows reversed/≈"S"; a "3" looked ok at some angles).* The
+6b fix corrected the 90° **rotation** (text is upright) but a **left-right mirror** remains, and it's
+**camera-angle dependent**. NOTE: the offscreen `createTextTexture` replica renders fine — so the
+mirror is in the **live billboard**, not the texture generation.
+
+**Likely cause.** `GenericCounterNode.java:54` / `CounterSprite.java:107` add a default-alignment
+`BillboardControl` (`Alignment.Screen`) on the **Z-up** board. Screen alignment assumes **Y-up**, so
+on the Z-up scene the billboard's computed right-axis can invert depending on camera **azimuth** →
+mirrored glyphs (angle-dependent, matching "2 backwards / 3 ok"). This is the left-right half of the
+migration-map `BillboardNode → BillboardControl` alignment risk the 6b notes flagged. **Fix:** orient
+the billboard for Z-up (try `Alignment.Camera` and/or set the billboard up-vector / pre-orient the
+quad) so text reads correctly from any azimuth; audit `PieceTarget`/`OneArmedBanditSprite`/`IconViz`
+family for the same. Cross-ref `docs/fidelity-reference/claimNumbers.png`.
+
+## BUG-5 — WASD camera pan is far too slow (a few pixels)  [OPEN]
+*Reported 2026-06-14.* WASD panning works (6b wired `GodViewHandler`) but moves only a few pixels per
+press — pan speed is way too low.
+
+**Likely cause.** `GodViewHandler`'s analog pan applies the per-frame analog `value` (tpf-weighted,
+~0.016) with too small a movement constant, so each step is tiny. **Fix:** scale up the pan speed
+(the FORWARD/BACKWARD/LEFT/RIGHT pan magnitude per analog unit) in `app/.../camera/GodViewHandler.java`
+to match the fork's pan rate. (Likely a small constant tweak.)
+
 ## BUG-2 — Esc immediately quits the game  [FIXED]
 *Reported 2026-06-14.* Pressing **Esc** instantly aborts/exits the client. Not expected — the original
 game did not quit on Esc.
