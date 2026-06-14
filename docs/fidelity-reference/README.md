@@ -261,6 +261,16 @@ is the thing under review. Please confirm — and tell us whether the *tint* or 
 
 ---
 
+## Video catalog
+
+> **The user filmed motion references.** Ten fork-build gameplay clips are catalogued in
+> **[`video-catalog.md`](video-catalog.md)** — one section per clip with the temporal
+> profile (wind-up → fire → effect → death; flash → debris → smoke fade) and the jME3 fix
+> each validates. The `.mp4`s live in `video/` but are **gitignored** (the catalog is
+> committed; clip links resolve only locally until confirmed public-safe). The catalog
+> answers most of the "video would help" wishlist below; remaining gaps (the Tactician
+> umbrella deflect, a tighter steam-death) are listed in its re-filming notes.
+
 ## Video would help for
 
 Stills lose the temporal shape of animations and particle effects (start → peak →
