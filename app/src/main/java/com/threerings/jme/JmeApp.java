@@ -118,6 +118,11 @@ public class JmeApp extends SimpleApplication
         if (stateManager.getState(com.jme3.app.DebugKeysAppState.class) != null) {
             stateManager.detach(stateManager.getState(com.jme3.app.DebugKeysAppState.class));
         }
+        // SimpleApplication.initialize() registers a default ESCAPE -> stop() exit mapping; drop it
+        // so Esc no longer instantly aborts the game (the game handles Esc itself: back/dismiss).
+        if (inputManager.hasMapping(INPUT_MAPPING_EXIT)) {
+            inputManager.deleteMapping(INPUT_MAPPING_EXIT);
+        }
         inputManager.setCursorVisible(true);
 
         // register an asset locator rooted at the dev resource tree (the staged rsrc dir the
