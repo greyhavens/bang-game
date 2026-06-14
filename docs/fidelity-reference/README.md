@@ -4,6 +4,14 @@ In-game captures the user took to show what units, effects, animations, and UI
 elements **should** look like, to guide the jME3-cutover fidelity work (see
 `docs/jme3-cutover-plan.md` and `docs/epics.md`).
 
+> **PROVENANCE — CONFIRMED 2026-06-14: all six are from the OLD FORK build**
+> (pre-cutover `~/Repos/Github/bang-game` master, LWJGL2/gdx). They are **correct golden
+> references** — the target the jME3 conversion must match — **not** current-jME3 defect
+> evidence. Disregard the per-image "current-jME3 vs fork" guesses below (incl. the
+> "ambiguous" calls on `attackAndDeathAnimation` and `explosionAndDeath`): every one is a fork
+> golden. The fork client is still runnable from `bang-game`/master, so more fork stills/videos
+> can be captured there.
+
 All six are clean single-window grabs (the same crop `bin/shot` produces — game
 content only, no desktop / second monitor / personal content leaked in), **1025 x 786
 px, RGBA**. None required cropping; none were flagged as sensitive.
