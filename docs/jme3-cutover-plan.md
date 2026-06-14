@@ -1099,6 +1099,56 @@ which is the one platform caveat to validate if a Mac build is targeted.
   browsers/terminals on the same `:1` were correctly excluded. Convention documented in CLAUDE.md +
   docs/running-the-game.md.
 - Update CLAUDE.md + docs/engine-notes.md for the new jME3 / LWJGL3 stack.
+- **Epic-1 live-smoke render defects — offscreen triage (2026-06-14).** Three defects flagged on the
+  live board (ref shot `baseline/jme3-phase8/p8-render-defects-tactician-gunslinger-counters.png`,
+  not committed to this worktree) triaged entirely offscreen via `RenderModelToPng` + a standalone
+  `createTextTexture` AWT check (live runs deferred — the human was using the single-bind server).
+  - **Harness bug found + fixed first (it masked the other two).** `Models.poseAnimation`
+    (`tools/j3o-converter/.../tools/j3o/Models.java`) ran a **single** `updateLogicalState(0f)` to
+    apply a posed clip. But the bake attaches the `SkinningControl` **before** the `AnimComposer`, so
+    in one tick the skin deforms from the *previous* (reset) armature pose and only *then* does the
+    composer write the time-t joint transforms — leaving the rendered skin **frozen at the bind pose**
+    for any clip whose tracks are joint-only (no rigid spatial tracks). Symptom: the umbrella
+    tactician rendered byte-identical at `standing@0`, `shooting@mid` and `dying@end` (md5-equal),
+    while the gunslinger *appeared* to animate only because its 4 rigid pistol **spatial** tracks
+    moved. Fix: pin the time and tick **twice** so the `SkinningControl` consumes the posed armature.
+    `verifyVisuals` stays 20/20 (every golden is `standing 0`, where both ticks reproduce the bind
+    pose, so goldens are byte-unchanged) and `verifyCorpus` 310/310.
+  - **Defect 3 — claim/gold counter numbers illegible: OFFSCREEN-CLEAN (likely already fixed).**
+    Distinct from the Phase-6b billboard *orientation* fix. Replicated `RenderUtil.createTextTexture`'s
+    exact AWT image-gen for the counter path (`Old Town` bold 72, gray fill + dark-gray 1px outline,
+    the colours `CounterSprite`/`GenericCounterNode` pass) and rendered "12": **legible, upright,
+    good-contrast digits** (`width=48 height=59 → 64²` POT texture, correct `tcoords` U→X / V→Y from
+    the Phase-6b winding fix). Counter colours (`BangMetrics.JPIECE_COLORS` + `DARKER_COLORS`) are
+    high-contrast. No offscreen defect reproduced — the Phase-6b `createTextTexture` tcoords fix
+    appears to also be what the smoke needed. **Needs live confirmation** on a real gold-rush board
+    (a deterministic in-board counter frame couldn't be captured headlessly).
+  - **Defects 1 & 2 — tactician umbrella + gunslinger: a single posed-skin issue, NEEDS LIVE.** With
+    the harness fix, **`standing@0` and the very first keyframe of every clip render cleanly** for the
+    gunslinger, shotgunner, *and* tactician (coherent armatures; gunslinger's holstered/drawn pistols
+    all correct; tactician's umbrella base joint `bone umb base` — a root-level single-bone weight,
+    which is only positioned *by animation*, its bind pose far from the body — tracks correctly to the
+    right hand, `umb.model≈Rhand.model`). **But every model contorts as a clip advances past frame 0**
+    (e.g. shotgunner `shooting`: frame 0 clean, frame 1 clean, frame 2 the right arm + right leg
+    stretch to spikes; the umbrella likewise distorts off the hand). The distortion **grows with
+    rotation-magnitude-from-bind** and is identical under forced **software** skinning, so it is in the
+    **armature bind / inverse-bind math**, not HW skinning, not the keyframes: every track keyframe is
+    a clean unit quaternion with scale 1, smoothly varying; the posed joint **model** transforms are
+    sane (not exploded); no intermediate joint is missing a track. The signature (identity offset at
+    bind, error growing with rotation) points at the Phase-6b skin bake — most likely a mismatch
+    between the per-mesh reference used to bake skin vertices into model space
+    (`inverse(skin._invRefTransform)`, fix #3) and the joint **inverse-bind** captured by
+    `armature.saveBindPose()` (fix #1) in `ModelConverter` — i.e. the two are consistent only at the
+    bind pose. **This was not caught earlier because the old single-tick harness froze the skin at
+    bind and every golden/`verifyCorpus` case is bind/`standing@0`.** It affects all skinned units, so
+    in-game it would surface most on big, rigid-looking props like the tactician umbrella (defect 1)
+    and on wide-swing clips. **Deferred to live:** confirm against the live board / the fork that the
+    posed-skin contortion is the real in-game tactician+gunslinger defect, then fix the bind/
+    inverse-bind reference mismatch in `ModelConverter` (validate with the now-correct posed harness:
+    `renderModelToPng -Panim=shooting -Ptime=0.1` on shotgunner/gunslinger/tactician must stay
+    coherent), keeping `verifyCorpus`/`verifyVisuals` green and adding a **posed** (non-`standing@0`)
+    golden so it can't regress unseen. No `ModelConverter` change was shipped — fixing it unvalidated
+    (no fork reference render available headless, live off-limits) risked regressing the 310/310 bake.
 
 ## Acceptance
 Client + editor run on jME3 3.9 / LWJGL3 with gameplay and per-town visuals preserved

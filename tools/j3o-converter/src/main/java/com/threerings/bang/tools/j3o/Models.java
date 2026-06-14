@@ -84,8 +84,17 @@ public final class Models
         float length = (float)clip.getLength();
         float t = (time < 0f) ? length * 0.5f : Math.min(time, length);
         composer.setCurrentAction(clipName);
+        // Tick twice (tpf=0). The bake attaches the SkinningControl before the AnimComposer, so
+        // controls run skin-then-pose within a tick: the first tick deforms the skin from the
+        // previous (reset) armature pose, then the composer writes the time-t joint transforms; the
+        // second tick (after re-pinning the time) lets the SkinningControl consume the posed
+        // armature. With a single tick the rendered skin stays frozen at the bind pose for clips
+        // whose tracks are joint-only (no rigid spatial tracks) — e.g. the umbrella tactician —
+        // masking real posed-skin behaviour. (At t=0 both ticks reproduce the bind pose, so the
+        // standing@0 goldens are unaffected.)
         composer.setTime(t);
-        // run one logical update so the SkinningControl applies the posed armature to the mesh
+        model.updateLogicalState(0f);
+        composer.setTime(t);
         model.updateLogicalState(0f);
         model.updateGeometricState();
         System.out.println("  posed animation '" + clipName + "' @ " + t + "s of " + length + "s");
