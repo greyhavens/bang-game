@@ -5,10 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 The source code and media for Bang! Howdy, a western-themed multiplayer tactics MMO created
-by Three Rings Design in 2004. Rendering goes through a forked jMonkeyEngine/LWJGL 2 layer,
-with libGDX supplying window/input/lifecycle glue left over from an abandoned libGDX port —
-the plan is to upgrade the renderer to modern jMonkeyEngine instead (see `UPGRADE_PLAN.md`).
-Code is BSD-licensed; media (everything under `assets/rsrc/`) is CC Attribution-NonCommercial.
+by Three Rings Design in 2004. Rendering runs on **stock jMonkeyEngine 3.9 + LWJGL3** (the
+Epic-1 cutover off the vendored 2005-era jME fork + LWJGL2 + libGDX — see `docs/epics.md` and
+`docs/jme3-cutover-plan.md`). The running client/editor ship and load **zero fork code**; the
+old `jme` fork module survives only as a **build-time** model/particle asset compiler (deleting
+it entirely is deferred to Epic 4). Code is BSD-licensed; media (everything under
+`assets/rsrc/`) is CC Attribution-NonCommercial.
 
 ## Build and run
 
@@ -49,18 +51,26 @@ Dev flags worth knowing:
 
 Gradle modules (see `settings.gradle`), in dependency order:
 
-- `jme` — forked jMonkeyEngine core over LWJGL 2.9, with libGDX pulled in for the in-progress port
-- `app` — `com.threerings.jme.*`: scenegraph/sprite/model/camera framework on top of `jme`
-- `bui` — BUI, the in-game UI toolkit (depends on `jme`)
+- `jme` — the **vendored 2005-era jMonkeyEngine fork** (LWJGL 2.9 + libGDX). **Build-time only**: no
+  longer on any runtime/main classpath — it survives solely as the model/particle asset compiler
+  (`CompileModelTask` + the fork `BinaryImporter` the `.dat`→`.j3o` bake reads). Epic 4 retires it.
+- `app` — `com.threerings.jme.*`: scenegraph/sprite/model/camera framework, now on **jME3** (a thin
+  `Model` facade over baked `.j3o`); its fork-coupled model *compiler* lives in a separate
+  `modeltool` source set (the only `app` code that still sees the `jme` fork).
+- `bui` — BUI, the in-game UI toolkit, on **jME3** (`Jme3RenderBackend`/`Jme3RootNode`; input via the
+  jME3 `InputManager`, keycodes are jME3 `KeyInput` — the old gdx keycode source is gone)
 - `client/shared` — the bulk of all game code (`com.threerings.bang.*`), client AND server logic
-- `client/desktop` — thin LWJGL/libGDX launchers: `BangDesktop` (client), `EditorDesktop`
+- `client/desktop` — thin **jME3/LWJGL3** launchers: `BangDesktop` (client), `EditorDesktop` (editor
+  on a jME3 AWT canvas via `org.lwjglx:lwjgl3-awt`)
 - `client/getdown` — Getdown auto-updater installer stub
 - `server` — `BangServer` entry point plus persistence (`server/persist`, Depot ORM, MySQL)
 - `assets` — all media under `rsrc/`, plus heavyweight resource-processing tasks (model
-  compilation, avatar component bundles, XML config compilation) run as part of `processResources`
-- `tools` — build-time ant tasks
+  compilation → `model.dat`, the `model.dat`/`particles.jme` → `.j3o` bake, avatar component bundles,
+  XML config compilation) run as part of `processResources`
+- `tools` — build-time ant tasks; `tools/j3o-converter` hosts the fork→jME3 asset bake + the
+  offscreen render harnesses (`RenderModelToPng`/`SnapshotDiff`/`verifyVisuals`)
 
-For non-obvious engine internals — the gdx/jME/LWJGL GL-context coupling, threading rules,
+For non-obvious engine internals — the jME3/LWJGL3 GL-context coupling, threading rules,
 model/board pipelines, and narya wire-protocol gotchas — read `docs/engine-notes.md` before
 touching rendering, assets, or streaming code.
 
