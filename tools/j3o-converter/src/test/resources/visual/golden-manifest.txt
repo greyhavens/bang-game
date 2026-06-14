@@ -36,6 +36,14 @@ ft_bldg_bank         | prop     | 0.005 | props/frontier_town/buildings/bank
 ft_prop_tree_oak     | prop     | 0.005 | props/frontier_town/natural/tree_oak
 ft_prop_cactus1      | prop     | 0.005 | props/frontier_town/natural/cactus1
 ft_scene_town        | scene    | 0.005 | units/frontier_town/shotgunner@standing,units/frontier_town/cavalry@standing,props/frontier_town/buildings/saloon
+# POSED skinning regression (Phase 8): non-bind frames must stay coherent, not just standing@0.
+# These capture the skin DEFORMED at t=0.3s of an attack clip — the exact contortion class that
+# the bind-only goldens above could never catch (the skin renders clean at frame 0 / bind even
+# when off-bind frames shatter). shotgunner = a rigid+joint clip; tactician = the umbrella big-shot
+# whose 'shooting' clip is joint-only. A regression in the bind/inverse-bind reference-space bake
+# (see ModelConverter.buildArmature / the model-root joint identity rule) reappears here.
+ft_unit_shotgunner_shooting | model | 0.005 | units/frontier_town/shotgunner shooting 0.3
+ft_unit_tactician_shooting  | model | 0.005 | units/frontier_town/tactician shooting 0.3
 # one-shot burst: capture mid-burst (frame 8) so the golden shows the fireball rather than an
 # empty frame. The fix bakes RT_CLAMP one-shot effects at 0 particles/sec (the spawn path fires the
 # single burst via emitAllParticles), so the explosion has fully faded by frame 40.

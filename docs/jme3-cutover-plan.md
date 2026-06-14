@@ -583,6 +583,12 @@ fidelity + Phase-3 input):
   gold-rush (`-Dscenario=gr`) board rendered with the fix in place (the dev `-mx128M` autoplay heap
   OOMs before a claim counter could be deterministically framed, so the conclusive proof is the
   source-level winding match plus the identical-convention icon path rendering upright live).
+- **[SUPERSEDED — root-caused & fixed]** The mounted/horse big-shot and shotgun-unit model-render
+  defects below were the same **posed skinning reference-space** bug — see the Phase-8 "POSED
+  contortion — the *real* root cause" note in the 6b section above (model-root joint must be
+  identity to match the fork's root-as-identity model frame). Fixed in `ModelConverter`; coherent
+  posed renders verified offscreen for shotgunner/gunslinger/tactician, with new posed goldens.
+  The original triage text is kept below for history.
 - **Mounted/horse big-shot character model renders incorrectly.** The horse (mounted unit big-shot)
   model is wrong on the live board — needs a closer look to classify: skinning/anim (SkinningControl
   / AnimComposer mis-bind from the `.j3o` bake), a wrong variant/clone via the Phase-2 `Model` facade
@@ -640,6 +646,52 @@ fidelity + Phase-3 input):
   mounted cowboy / buffalo + rider) instead of the previous contortion. Repro:
   `./gradlew :assets:compileModels --rerun-tasks` then
   `./gradlew :tools:j3o-converter:renderModelToPng -PmodelType=units/frontier_town/shotgunner -Panim=standing -Ptime=0 -Pout=/tmp/rest.png`.
+
+  **POSED contortion — the *real* root cause (FIXED 2026-06-14, Phase 8).** Phase 6b only fixed the
+  **bind** pose: with the fixed *posed* render harness (`Models.poseAnimation` double-ticks so the
+  skin actually deforms at time t), every skinned unit still rendered **clean at frame 0 (bind) but
+  progressively contorted as a clip advanced** — the error grew with rotation-away-from-bind, was
+  identical under forced software skinning, with clean unit-quaternion keyframes. (Bind-only goldens
+  never caught it.) The bug was a **reference-space mismatch between the baked skin vertices and the
+  joint inverse-bind**, both supposed to live in the *same* model space:
+  - jME3 skins as `v' = Σ wⱼ · jointModelⱼ · inverseBindⱼ · v_bind`. For this to equal the fork's
+    posed result, the baked vertices, `jointModel`, and `inverseBind` must all be in **one** model
+    frame. The fork's model frame is defined by `ModelNode.updateWorldVectors()`, which sets a node's
+    model transform to `parentModel · localTRS` **only when the parent is itself a `ModelNode`**;
+    for the **topmost ModelNode (the `Model` root)** it loads **IDENTITY**, *dropping that node's own
+    local TRS*. So the fork's `Bref`/`Bcur` and the skin's `_invRefTransform` (hence the baked
+    model-space vertices) all live in **"root-as-identity"** model space.
+  - Phase-6b's `buildArmature()` built a `Joint` for the Model root carrying the Model's **local
+    TRS**. jME3 accumulates a joint's model transform from the armature root down, **including** the
+    root joint's local transform — so jME3's `jointModel` was `R · …` where `R` = the Model root's
+    dropped TRS. The skinning offset `jointModel(t) · inverse(jointModel(bind))` then became
+    `R · X(t) · inverse(X_bind) · inverse(R)` — a **conjugation of every deformation by `R`**. At
+    bind, `X(t)=X_bind` so the offset is identity *regardless of `R`* (bind always looked fine);
+    off-bind, the conjugation by `R` shattered the rig, growing with the joint's rotation.
+  - **Fix (`ModelConverter.buildArmature` + `buildClip`):** the model-root skeleton joint (parent not
+    a `ModelNode`) now gets an **IDENTITY** local transform, exactly mirroring the fork's root model
+    transform. Then jME3 `jointModel` equals the fork node model transform at *every* joint, so
+    `jointModel · inverseBind == Bcur · inverse(Bref)` and the baked root-as-identity vertices are
+    deformed in the matching frame. If a clip *animates* the root joint, its `TransformTrack` is
+    forced to identity for all frames too (the fork's root model transform is identity for the bind
+    pose AND every animated frame). Bind-pose output is byte-unchanged (the offset is identity at
+    bind no matter what the root joint carries), so the `standing@0` goldens stay green.
+
+  Verified (all offscreen, fixed posed harness): `shotgunner`/`gunslinger`/`tactician` (the umbrella
+  big-shot, whose `shooting`/`blocking` clips are **joint-only**) render coherent, recognizable
+  figures across `shooting`/`blocking`/`walking_cycle` at t=0.1/0.3/0.4 — upright cowboys/gentleman
+  aiming/holding their weapons, articulation matching the fork golden
+  `docs/fidelity-reference/attackAndDeathAnimation.png` — where before t=0.3 was a shattered ribbon
+  of limbs. `verifyCorpus` stayed **310/310 PASS**; `verifyVisuals` green with the existing bind
+  goldens **byte-unchanged** plus **two new POSED regression goldens** added to
+  `golden-manifest.txt` (`ft_unit_shotgunner_shooting` = `units/frontier_town/shotgunner shooting
+  0.3`; `ft_unit_tactician_shooting` = `units/frontier_town/tactician shooting 0.3`) so this
+  contortion class can never again hide behind a bind-only check. Files changed:
+  `tools/j3o-converter/.../jme3/model/ModelConverter.java` (root-joint identity rule + root-track
+  identity), `golden-manifest.txt` + the two new golden PNGs. **Still needs final live/in-game
+  confirmation** (deferred to parent): the offscreen harness loads through the real runtime
+  `Model`/`ModelTextureResolver`/`createInstance` path, but in-game `UnitSprite`/`ActiveSprite`
+  animation driving on a live board has not been re-checked.
 - **WASD camera panning doesn't work at all** (functional, not cosmetic). **[FIXED 2026-06-14]** The
   original diagnosis (`GodViewHandler.registerWith(InputManager)` never called) was **stale**: the
   Phase-3 host flip commit (`8fdb90453`) already calls `_inputHandler.registerWith(inputManager)` in
