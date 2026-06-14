@@ -933,7 +933,14 @@ which is the one platform caveat to validate if a Mac build is targeted.
   preferred.
 
 ### Phase 8 — Cleanup
-- Delete the `jme` fork module and the remaining cutover scaffolding once nothing references it.
+- **Fork: keep as build-time-only (Option A — decided 2026-06-14).** Do NOT delete the `jme` module
+  in Epic 1. Recon confirmed no runtime/main code references the fork — but it's still the build-time
+  asset compiler (`.mxml` → `model.dat` via the fork `CompileModelTask`, then `model.dat` → `.j3o`
+  via `ModelConverter`'s use of the fork `BinaryImporter`). So instead of deleting it: **confirm the
+  fork is walled off from every runtime/main classpath** (it is — only `app:modeltoolImplementation`
+  + `tools/j3o-converter` reference it, both build-time) and leave it as the isolated build-time
+  model/particle compiler. Full eradication (a native `.mxml`→jME3 importer) is deferred to
+  **[Epic 4](epic4-native-model-toolchain.md)**.
 - Drop the now-unnecessary deps: bare `gdx` (kept only as a transitional keycode-constant source —
   replace with jME3 keycodes) and any lingering LWJGL2 bits.
 - **Revert the dev mute:** `BangPrefs.SILENT` is muted-by-default on this branch (`-Dsound=true` to
