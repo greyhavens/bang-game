@@ -36,6 +36,15 @@ Run via the shell scripts in `bin/`:
 - `./bin/bangserver` — server (creates DB tables on first run, listens on port 47624)
 - `./bin/bangeditor` — board editor
 
+Dev flags worth knowing:
+- **Audio plays by default.** Pass `-Dmute=true` to silence music + effects for a dev session
+  (`BangPrefs.SILENT`; does not persist to the volume prefs).
+- **Screenshots capture only the Bang window** — use `bin/shot <out.png>` (or `bin/devtest --shot`,
+  which calls it), never a full-display grab. This is for privacy (a full-display grab leaks
+  whatever else is on the multi-monitor desktop into shared/committed images) and relevance.
+  `bin/shot` matches the window precisely (title `Bang Editor` or starting with `Bang! Howdy`,
+  excluding browsers/terminals by WM_CLASS) and grabs only that window's pixmap.
+
 ## Module structure
 
 Gradle modules (see `settings.gradle`), in dependency order:

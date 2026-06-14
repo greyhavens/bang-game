@@ -28,11 +28,10 @@ public class BangPrefs
     /** Contains our client-side preferences. */
     public static PrefsConfig config = new PrefsConfig("bang");
 
-    /** Dev convenience during the jME3 cutover: the client starts MUTED by default (music and
-     * effects volumes report 0) so repeated test launches don't blast sound. Pass -Dsound=true
-     * to hear audio. Does not touch the persisted volume prefs. TODO(phase6): restore to
-     * opt-in (default audible) before this branch ships. */
-    public static final boolean SILENT = !Boolean.getBoolean("sound");
+    /** Dev convenience: audio is audible by default; pass <code>-Dmute=true</code> to start the
+     * client MUTED (music and effects volumes report 0) so repeated test launches don't blast
+     * sound. Does not touch the persisted volume prefs. */
+    public static final boolean SILENT = Boolean.getBoolean("mute");
 
     /**
      * Returns true if no logon information is set.
@@ -195,7 +194,7 @@ public class BangPrefs
      */
     public static int getMusicVolume ()
     {
-        // dev convenience: launch with -Dsilent=true to start muted (does not persist)
+        // dev convenience: launch with -Dmute=true to start muted (does not persist)
         return SILENT ? 0 : config.getValue("music_volume", 50);
     }
 
@@ -212,7 +211,7 @@ public class BangPrefs
      */
     public static int getEffectsVolume ()
     {
-        // dev convenience: launch with -Dsilent=true to start muted (does not persist)
+        // dev convenience: launch with -Dmute=true to start muted (does not persist)
         return SILENT ? 0 : config.getValue("effects_volume", 100);
     }
 

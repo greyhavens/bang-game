@@ -5,15 +5,8 @@ package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.export.InputCapsule;
-import com.jme3.export.OutputCapsule;
-import com.jme3.export.Savable;
 
 import com.samskivert.util.StringUtil;
 
@@ -37,7 +30,7 @@ import static com.threerings.bang.Log.log;
  * Does something extraordinary.
  */
 public abstract class Piece
-    implements Streamable, Cloneable, Savable, DSet.Entry, PieceCodes
+    implements Streamable, Cloneable, DSet.Entry, PieceCodes
 {
     /** Used by {@link #willShoot} */
     public static final Effect[] NO_EFFECTS = new Effect[0];
@@ -646,36 +639,6 @@ public abstract class Piece
     public boolean getFenceBlocksGoal ()
     {
         return false;
-    }
-
-    // documentation inherited from interface Savable
-    public Class<?> getClassTag ()
-    {
-        return getClass();
-    }
-
-    // documentation inherited from interface Savable
-    public void read (JmeImporter im)
-        throws IOException
-    {
-        InputCapsule capsule = im.getCapsule(this);
-        pieceId = capsule.readInt("pieceId", 0);
-        x = capsule.readShort("x", (short)0);
-        y = capsule.readShort("y", (short)0);
-        orientation = capsule.readShort("orientation", (short)0);
-        scenId = capsule.readString("scenId", null);
-    }
-
-    // documentation inherited from interface Savable
-    public void write (JmeExporter ex)
-        throws IOException
-    {
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(pieceId, "pieceId", 0);
-        capsule.write(x, "x", (short)0);
-        capsule.write(y, "y", (short)0);
-        capsule.write(orientation, "orientation", (short)0);
-        capsule.write(scenId, "scenId", null);
     }
 
     /**

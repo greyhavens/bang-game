@@ -3,13 +3,7 @@
 
 package com.threerings.bang.bounty.data;
 
-import java.io.IOException;
 import java.util.HashSet;
-
-import com.jme3.export.InputCapsule;
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
 
 import com.threerings.bang.data.StatType;
 
@@ -46,26 +40,6 @@ public class RankCriterion extends Criterion
     public boolean isMet (BangObject bangobj, int rank)
     {
         return this.rank >= rank;
-    }
-
-    // from interface Savable
-    public void write (JmeExporter ex) throws IOException
-    {
-        OutputCapsule out = ex.getCapsule(this);
-        out.write(rank, "rank", 0);
-    }
-
-    // from interface Savable
-    public void read (JmeImporter im) throws IOException
-    {
-        InputCapsule in = im.getCapsule(this);
-        rank = in.readInt("rank", 0);
-    }
-
-    // from interface Savable
-    public Class<?> getClassTag ()
-    {
-        return getClass();
     }
 
     @Override // from Object

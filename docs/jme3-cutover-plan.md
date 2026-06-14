@@ -944,12 +944,31 @@ which is the one platform caveat to validate if a Mac build is targeted.
 - Drop the now-unnecessary deps: bare `gdx` (kept only as a transitional keycode-constant source —
   replace with jME3 keycodes) and any lingering LWJGL2 bits.
 - **Revert the dev mute:** `BangPrefs.SILENT` is muted-by-default on this branch (`-Dsound=true` to
-  hear) — restore to audible-by-default before ship.
+  hear) — restore to audible-by-default before ship. **DONE (Phase 8):** flipped to audible by
+  default with an opt-in mute — `BangPrefs.SILENT = Boolean.getBoolean("mute")` (pass `-Dmute=true`
+  to silence; `getMusicVolume`/`getEffectsVolume` still return 0 when SILENT, non-persisting). Class
+  doc + `bin/devtest` updated (`--sound` → `--mute`, default now audible). The flag is documented in
+  CLAUDE.md (Build/run "dev flags") and docs/running-the-game.md (audio gotcha).
 - Remove the now-vestigial jME3 `Savable` impls left on the board/config data classes (they stream
-  via Narya now; the Savable side is unused).
+  via Narya now; the Savable side is unused). **DONE (Phase 8):** verified unused first — the
+  classes implement `com.jme3.export.Savable`, but the only would-be consumers use the *fork*
+  `com.jme.util.export.binary.BinaryImporter`/`Savable` (a different interface): `BoardConverter`
+  reads legacy `.game` via the fork importer (and no longer even compiles — the fork is build-time-
+  only/off the classpath, Option A), and the `BountyGameSaveUnitTest` likewise referenced the dead
+  fork API and didn't compile. Runtime board/config/piece persistence is pure Narya `Streamable`
+  (`BoardData.toBytes`/`fromBytes`); jME3 `com.jme3.export.binary.BinaryExporter` is used only in
+  `tools/j3o-converter` against scene-graph `Spatial`s, never these data types. Removed the
+  `com.jme3.export.Savable` impl (interface + `read`/`write`/`getClassTag` + imports) from the whole
+  connected hierarchy — `BangBoard`, `BangConfig` (incl. nested `Round`/`Player`), `Criterion`,
+  `Piece` and its overriding subclasses `Prop`/`Marker`/`Viewpoint`/`Track` (which called
+  `super.read/write`), and `IntStatCriterion`/`RankCriterion`. Deleted the dead
+  `BountyGameSaveUnitTest`. `:client:shared:compileJava`/`compileTestJava` green.
 - Remove the Phase-6b WASD-verification log lines in `app/.../camera/GodViewHandler.java` (the
   one-shot `registerWith` + first-`onAnalog` logging added to prove the input fix — harmless but
-  host-code noise once the fix is trusted).
+  host-code noise once the fix is trusted). **DONE (Phase 8):** removed the `registerWith` "mappings
+  registered" log, the first-`onAnalog` "received camera input" log + its `_loggedFirstAnalog`
+  guard, and the now-unused `com.threerings.jme.Log.log` import. Input wiring (mappings + listener)
+  left intact; `:app:compileJava` green.
 - **Verify the Phase-6a particle emission-mode mapping in a *live* render** (not just the warmed
   snapshot). `ParticleConverter` maps every non-`controlFlow` fork effect to a continuous
   steady-refill emitter (`setParticlesPerSec(count/mean)`), on the assumption that `ParticleCache`
@@ -961,7 +980,15 @@ which is the one platform caveat to validate if a Mac build is targeted.
   RNG (`FastMath.rand`), but the committed `golden/*_fx_*.png` were captured pre-seed and no longer
   match. Run `./gradlew :tools:j3o-converter:captureGoldens`, commit the refreshed PNGs, then tighten
   the loose 0.030 particle tolerances in `golden-manifest.txt` now that the renders are deterministic
-  — do this before `verifyVisuals` is wired into CI (Epic 3 Phase 3).
+  — do this before `verifyVisuals` is wired into CI (Epic 3 Phase 3). **DONE (Phase 8):** ran
+  `:assets:processResources` then `:tools:j3o-converter:captureGoldens` — all 4 `*_fx_*.png`
+  (`ft_fx_explosion`, `ft_fx_dust`, `ip_fx_fireflies`, `ip_fx_rain`) re-captured against the seeded
+  RNG and committed. Tightened the three loose `0.030` particle tolerances
+  (`ft_fx_explosion`/`ft_fx_dust`/`ip_fx_rain`) to `0.005`, matching the model/prop/scene tolerance
+  (and the already-tight `ip_fx_fireflies`). `:tools:j3o-converter:verifyVisuals` is green — all 20
+  goldens PASS with `meanDiff=0.000000` (the seeded particle renders are bit-exact), and
+  `:tools:j3o-converter:verifyCorpus` is still 310/310 parity. Updated the manifest header comment
+  (dropped the STALE-goldens warning).
 - **Add a `bin/shot` window-capture helper + a screenshot convention.** Live verification grabs the
   whole `DISPLAY=:1` (`PIL ImageGrab`), which captures the entire multi-monitor desktop — leaking
   whatever else is on screen (Discord, the other monitor) into shared/committed images, and needing a
@@ -975,6 +1002,17 @@ which is the one platform caveat to validate if a Mac build is targeted.
   full-display grab, and add the convention to CLAUDE.md / docs/running-the-game.md: **screenshots
   capture only the Bang window, never a full-display grab** (privacy + relevance). Prefer the
   offscreen render harness where a live window isn't needed (it's already window-only/deterministic).
+  **DONE (Phase 8):** added `bin/shot <out.png> [DISPLAY]` — grabs only the window pixmap via
+  python-xlib `window.get_image` (PNG encoded inline), with an ImageMagick `import -window <id>`
+  fallback. Match logic: title `== "Bang Editor"` OR `startswith("Bang! Howdy")`, AND WM_CLASS not on
+  a browser/terminal/editor denylist (firefox/chrome/edge/discord/wezterm/code/...), preferring a
+  WM_CLASS that positively looks like the jME/Java/LWJGL app (java/jvm/lwjgl/glfw/bang/...). Pointed
+  `bin/devtest --shot` at `bin/shot` (replacing the full-display `PIL ImageGrab`). Verified live:
+  launched `bin/bangeditor`, ran `bin/shot /tmp/shot-test.png` → a 1224x731 PNG that is exactly the
+  editor window (menu bar, "Bang! Editor" header, board/scenario panel, grid, camera tools) — no
+  desktop, no other windows; the WM_CLASS was `com-threerings-bang-editor-EditorDesktop` and the
+  browsers/terminals on the same `:1` were correctly excluded. Convention documented in CLAUDE.md +
+  docs/running-the-game.md.
 - Update CLAUDE.md + docs/engine-notes.md for the new jME3 / LWJGL3 stack.
 
 ## Acceptance

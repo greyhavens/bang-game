@@ -1,0 +1,188 @@
+#!/bin/sh
+#
+# $Id$
+#
+# bin/shot <out.png> [DISPLAY]
+#
+# Captures ONLY the Bang! Howdy / Bang Editor window's pixmap to <out.png> -- never a
+# full-display grab. This is the screenshot convention for this repo (see CLAUDE.md /
+# docs/running-the-game.md): grabbing just the game window is required for privacy (a
+# full-display grab leaks whatever else is on the multi-monitor desktop into shared/committed
+# images) and relevance (no lossy AI crop afterward).
+#
+# Window match is PRECISE, to avoid the false-positive that bit us before (a loose
+# "'bang! howdy' in title" substring once grabbed a Firefox tab titled with the repo
+# description). A window qualifies only if:
+#   (title == "Bang Editor"  OR  title starts with "Bang! Howdy")
+#   AND its WM_CLASS is NOT a browser/terminal/editor (explicit denylist)
+#   AND (its WM_CLASS looks like the jME/Java/LWJGL app, OR no other candidate exists)
+#
+# Grabs the window pixmap directly via python-xlib (window.get_image), so it is pixel-exact
+# and independent of stacking/occlusion. Falls back to ImageMagick `import -window <id>` if
+# python-xlib's PNG encode is unavailable.
+
+OUT="${1:?usage: bin/shot <out.png> [DISPLAY]}"
+DISP="${2:-${DISPLAY:-:1}}"
+
+python3 - "$OUT" "$DISP" <<'PY'
+import sys, struct, zlib
+
+out, disp = sys.argv[1], sys.argv[2]
+try:
+    import Xlib.display, Xlib.X
+except Exception as e:
+    sys.stderr.write("bin/shot: python-xlib unavailable (%s)\n" % e); sys.exit(2)
+
+d = Xlib.display.Display(disp)
+root = d.screen().root
+NCL = d.intern_atom('_NET_CLIENT_LIST')
+NWN = d.intern_atom('_NET_WM_NAME'); WN = d.intern_atom('WM_NAME')
+
+# WM_CLASSes that must NEVER be captured even if a title happens to match.
+DENY = ('firefox', 'mozilla', 'navigator', 'chrome', 'chromium', 'google-chrome',
+        'brave', 'opera', 'epiphany', 'webkit', 'safari',
+        'gnome-terminal', 'konsole', 'xterm', 'rxvt', 'alacritty', 'kitty',
+        'terminator', 'tilix', 'st-256color', 'urxvt',
+        'code', 'vscodium', 'sublime_text', 'jetbrains', 'idea', 'emacs', 'gedit')
+# WM_CLASSes that positively identify the jME/Java/LWJGL3-GLFW app.
+ALLOW = ('java', 'jvm', 'openjdk', 'lwjgl', 'glfw', 'bang', 'threerings', 'desktop')
+
+def wname(w):
+    for a in (NWN, WN):
+        try:
+            p = w.get_full_property(a, 0)
+            if p and p.value:
+                v = p.value
+                return v.decode('utf-8', 'ignore') if isinstance(v, (bytes, bytearray)) else str(v)
+        except Exception:
+            pass
+    return ''
+
+def wclass(w):
+    try:
+        c = w.get_wm_class()  # (instance, class)
+        if c:
+            return ' '.join(x for x in c if x).lower()
+    except Exception:
+        pass
+    return ''
+
+def title_ok(n):
+    return n == 'Bang Editor' or n.startswith('Bang! Howdy')
+
+# gather candidates: title matches AND class is not on the denylist
+cands = []
+cl = root.get_full_property(NCL, Xlib.X.AnyPropertyType)
+if cl:
+    for wid in cl.value:
+        w = d.create_resource_object('window', wid)
+        try:
+            if w.get_attributes().map_state != Xlib.X.IsViewable:
+                continue
+        except Exception:
+            continue
+        n, c = wname(w), wclass(w)
+        if not title_ok(n):
+            continue
+        if any(bad in c for bad in DENY):
+            sys.stderr.write("bin/shot: skipping non-game window title=%r class=%r (denylisted)\n" % (n, c))
+            continue
+        cands.append((w, n, c))
+
+if not cands:
+    sys.stderr.write("bin/shot: no Bang window found on %s "
+                     "(title 'Bang Editor' or 'Bang! Howdy ...', non-browser/terminal WM_CLASS)\n" % disp)
+    sys.exit(1)
+
+# prefer a candidate whose WM_CLASS positively looks like the jME/Java app
+preferred = [t for t in cands if any(ok in t[2] for ok in ALLOW)]
+chosen = (preferred or cands)
+if len(chosen) > 1:
+    sys.stderr.write("bin/shot: %d candidate windows; using the first: %r\n"
+                     % (len(chosen), [(n, c) for _, n, c in chosen]))
+w, n, c = chosen[0]
+g = w.get_geometry()
+sys.stderr.write("bin/shot: capturing window title=%r class=%r %dx%d -> %s\n"
+                 % (n, c, g.width, g.height, out))
+
+# pull the window pixmap (ZPixmap) and write a PNG
+try:
+    raw = w.get_image(0, 0, g.width, g.height, Xlib.X.ZPixmap, 0xFFFFFFFF)
+    data = raw.data
+    if isinstance(data, str):
+        data = data.encode('latin-1')
+    bpp = len(data) // (g.width * g.height) if g.width and g.height else 4
+    # X ZPixmap on a TrueColor 24/32-bit visual is little-endian BGRX; convert rows to RGB
+    rows = bytearray()
+    stride = g.width * bpp
+    for y in range(g.height):
+        rows.append(0)  # PNG filter type 0 (None)
+        row = data[y * stride:(y + 1) * stride]
+        for x in range(g.width):
+            px = row[x * bpp:x * bpp + bpp]
+            if bpp >= 3:
+                b, gr, r = px[0], px[1], px[2]
+            else:
+                r = gr = b = px[0]
+            rows += bytes((r, gr, b))
+
+    def chunk(typ, payload):
+        return (struct.pack('>I', len(payload)) + typ + payload
+                + struct.pack('>I', zlib.crc32(typ + payload) & 0xFFFFFFFF))
+
+    png = b'\x89PNG\r\n\x1a\n'
+    png += chunk(b'IHDR', struct.pack('>IIBBBBB', g.width, g.height, 8, 2, 0, 0, 0))
+    png += chunk(b'IDAT', zlib.compress(bytes(rows), 9))
+    png += chunk(b'IEND', b'')
+    with open(out, 'wb') as f:
+        f.write(png)
+    print(out)
+    sys.exit(0)
+except Exception as e:
+    sys.stderr.write("bin/shot: xlib pixmap capture failed (%s); trying ImageMagick import\n" % e)
+    sys.exit(3)   # signal the shell to try the `import` fallback
+PY
+rc=$?
+
+if [ "$rc" = "3" ]; then
+    # Fallback: ImageMagick `import -window <id>` grabs a single window's pixmap (still
+    # window-only, never the whole display). Resolve the window id the same precise way.
+    WID=$(DISPLAY="$DISP" python3 - "$DISP" <<'PY'
+import sys
+import Xlib.display, Xlib.X
+disp = sys.argv[1]
+d = Xlib.display.Display(disp); root = d.screen().root
+NCL = d.intern_atom('_NET_CLIENT_LIST'); NWN = d.intern_atom('_NET_WM_NAME'); WN = d.intern_atom('WM_NAME')
+DENY = ('firefox','mozilla','navigator','chrome','chromium','brave','opera','webkit','safari',
+        'gnome-terminal','konsole','xterm','alacritty','kitty','terminator','tilix','urxvt',
+        'code','jetbrains','idea','emacs','gedit')
+def name(w):
+    for a in (NWN, WN):
+        try:
+            p = w.get_full_property(a, 0)
+            if p and p.value:
+                v = p.value; return v.decode('utf-8','ignore') if isinstance(v,(bytes,bytearray)) else str(v)
+        except Exception: pass
+    return ''
+def cls(w):
+    try:
+        c = w.get_wm_class()
+        return ' '.join(x for x in c if x).lower() if c else ''
+    except Exception: return ''
+cl = root.get_full_property(NCL, Xlib.X.AnyPropertyType)
+for wid in (cl.value if cl else []):
+    w = d.create_resource_object('window', wid)
+    n, c = name(w), cls(w)
+    if (n == 'Bang Editor' or n.startswith('Bang! Howdy')) and not any(b in c for b in DENY):
+        print(hex(wid)); break
+PY
+)
+    if [ -n "$WID" ] && command -v import >/dev/null 2>&1; then
+        DISPLAY="$DISP" import -window "$WID" "$OUT" && { echo "$OUT"; rc=0; } || rc=4
+    else
+        echo "bin/shot: ImageMagick 'import' not available and no window id resolved" >&2
+        rc=4
+    fi
+fi
+
+exit "$rc"

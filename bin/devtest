@@ -8,8 +8,8 @@
 #   2. verify MySQL is up and the bang/yeehaw account connects
 #   3. ./gradlew deploy (unless --no-deploy) and abort on failure
 #   4. start the server and WAIT until it logs "Server listening" (never launch the client early)
-#   5. launch the client with the standard test flags (muted by default; -test/-autoplay; creds)
-#   6. optionally hold N seconds and capture a screenshot (--shot)
+#   5. launch the client with the standard test flags (-test/-autoplay; creds; --mute to silence)
+#   6. optionally hold N seconds and capture the Bang window only (--shot, via bin/shot)
 #   7. ALWAYS tear everything down on exit (trap), leaving port 47624 free for the next run
 #
 # Agents: use --shot mode (it auto-tears-down and exits, so it is deterministic and never hangs).
@@ -26,7 +26,7 @@ PORT=47624
 SERVER_LOG=/tmp/devtest-server.log
 CLIENT_LOG=/tmp/devtest-client.log
 
-BOARD=""; NODE="frontier_town"; SHOT=""; HOLD=40; DEPLOY=1; SOUND=0; CLIENT=1; CLICK=1
+BOARD=""; NODE="frontier_town"; SHOT=""; HOLD=40; DEPLOY=1; MUTE=0; CLIENT=1; CLICK=1
 
 usage () {
   cat <<EOF
@@ -34,10 +34,10 @@ Usage: bin/devtest [options]
   --board "<name>"   load a specific board (e.g. --board "Thunderbird Rock"); default: random test board
   --node <town>      server node: frontier_town (default) or indian_post
                      (indian_post needs 'indian_post.town_id = indian_post' in etc/test/server.properties)
-  --shot <path>      hold --hold seconds, capture a screenshot of \$DISPLAY to <path>, then tear down
+  --shot <path>      hold --hold seconds, capture ONLY the Bang window (bin/shot) to <path>, then tear down
   --hold <secs>      seconds to wait before the screenshot (default ${HOLD})
   --no-deploy        skip './gradlew deploy' (use the existing build)
-  --sound            unmute (pass -Dsound=true; client is muted by default on this branch)
+  --mute             silence audio for this run (pass -Dmute=true; audio plays by default)
   --no-client        start only the server (Ctrl-C to stop)
   --no-click         skip the auto click-to-activate (autoplay needs a click into the window!)
   -h, --help         this help
@@ -55,7 +55,7 @@ while [ $# -gt 0 ]; do
     --shot) SHOT="${2:-}"; shift 2;;
     --hold) HOLD="${2:-}"; shift 2;;
     --no-deploy) DEPLOY=0; shift;;
-    --sound) SOUND=1; shift;;
+    --mute) MUTE=1; shift;;
     --no-client) CLIENT=0; shift;;
     --no-click) CLICK=0; shift;;
     -h|--help) usage; exit 0;;
@@ -210,10 +210,10 @@ if [ "$CLIENT" = 0 ]; then
   wait "$SERVER_PID"; exit 0
 fi
 
-# 5. launch client with standard flags (muted by default on this branch)
+# 5. launch client with standard flags (audio plays by default; --mute to silence)
 FLAGS="-autoplay -Dusername=test -Dpassword=yeehaw"
 if [ -n "$BOARD" ]; then FLAGS="-Dboard=\"$BOARD\" -Dtest=true $FLAGS"; else FLAGS="-test $FLAGS"; fi
-[ "$SOUND" = 1 ] && FLAGS="$FLAGS -Dsound=true"
+[ "$MUTE" = 1 ] && FLAGS="$FLAGS -Dmute=true"
 echo "[devtest] launching client: bangclient $FLAGS (log: $CLIENT_LOG)"
 ( cd "$HERE" && eval exec ./bin/bangclient $FLAGS ) >"$CLIENT_LOG" 2>&1 &
 CLIENT_PID=$!
@@ -229,10 +229,12 @@ fi
 if [ -n "$SHOT" ]; then
   echo "[devtest] holding ${HOLD}s for the board to load, then capturing $SHOT ..."
   sleep "$HOLD"
-  if python3 -c "from PIL import ImageGrab; ImageGrab.grab(xdisplay='$DISPLAY').save('$SHOT')" 2>/dev/null; then
+  # Capture ONLY the Bang window (bin/shot), never a full-display grab -- privacy + relevance.
+  # (See CLAUDE.md / docs/running-the-game.md "screenshot convention".)
+  if DISPLAY="$DISPLAY" "$HERE/bin/shot" "$SHOT" "$DISPLAY"; then
     echo "[devtest] saved $SHOT"
   else
-    echo "[devtest] WARN: screenshot failed (PIL/Xlib on $DISPLAY?). Client log tail:"; tail -15 "$CLIENT_LOG"
+    echo "[devtest] WARN: window screenshot failed (bin/shot on $DISPLAY?). Client log tail:"; tail -15 "$CLIENT_LOG"
   fi
   exit 0   # trap tears everything down
 else
