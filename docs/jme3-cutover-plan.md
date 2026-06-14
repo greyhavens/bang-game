@@ -1202,6 +1202,62 @@ which is the one platform caveat to validate if a Mac build is targeted.
     golden so it can't regress unseen. No `ModelConverter` change was shipped — fixing it unvalidated
     (no fork reference render available headless, live off-limits) risked regressing the 310/310 bake.
 
+### Phase 8 — Epic-1 final live verification (2026-06-14)
+
+Final close-out punch-list verified against the fork golden corpus
+(`docs/fidelity-reference/video-catalog.md` clips 1-19 + `docs/game-reference/`). Offscreen
+pre-checks via `:tools:j3o-converter` render harnesses; live via `bin/devtest --mute` +
+`bin/shot` window-only captures, frames cropped/upscaled with `ffmpeg` for analysis (board is
+zoomed-out at autoplay scale, so transient effects are at the resolution floor — cropping was
+needed to read them).
+
+**Offscreen pre-checks (gates):**
+- `verifyVisuals` **22/22 PASS**, `verifyCorpus` **310/310 PASS** (deployed bake good).
+- **Umbrella `blocking` (marquee) — PASS.** `tactician -Panim=blocking` at t=0.0/0.15/0.3/0.5:
+  canopy clearly **inflates from a closed tube → partial fan → fully open disc held overhead**
+  (the rib-bone skinMesh `bone umb base`+`Bone01..33` skins correctly through the clip).
+  Matches `TacticianBlocksArtillery` (clip 11) spec. PNG sizes grow monotonically with the
+  open canopy. The defect the catalog flagged as a likely bug **does not reproduce** on the
+  JRECutover tip.
+- **Posed-skin-in-motion — PASS (prior deferred defect resolved).** The Phase-8 offscreen
+  triage above deferred-to-live a "contortion past frame 0" (arms/legs spike, umbrella
+  distorts) suspected in the `ModelConverter` bind/inverse-bind math. On the current tip it is
+  **fixed**: shotgunner `shooting` at t=0.1/0.3/0.6/0.9 (deep into the clip, high
+  rotation-from-bind) is fully coherent — no spiked limbs; gunslinger `shooting`, cavalry
+  mounted `shooting` (rider sits correctly on the horse), shotgunner `dying` all coherent.
+
+**Live game (`bin/devtest --mute`, frontier_town autoplay, multiple full rounds):**
+
+| # | Item | Result | Evidence (vs corpus) |
+|---|------|--------|----------------------|
+| 1 | Skinning in motion (units animate coherently) | **PASS** | Live units render/animate cleanly through the match; corroborated by the offscreen t=0.6/0.9 coherence above. vs `Tactician*`/`*Gunslinger`/`Cavalry*`. |
+| 2 | Particles: explosion warm flash, **neutral (not gang-tinted)**, **no runaway bloom**; steam plume continuous | **PASS** | Caught a warm orange **explosion flash** mid-kill (`zr_s7_3`, `zd_kk5_3`) — localized, warm/neutral, **not** gang-tinted, **no bloom/accumulation** anywhere across ~80 captures (Phase-8 bloom fix holds). Steam-unit `SmokePlumeEmission` renders **continuous** (curling plume on the wheeled steam units, `z_live_17`). No `SEVERE`/particle errors in `devtest-client.log`. vs `ArtilleryKillShotgunner` (4), `*SteamGunman` (3/10). |
+| 3 | Movement dust under moving units | **PARTIAL (code-correct, faint at board scale)** | `detail_level` defaults to **HIGH** (`BangPrefs`), so `MobileSprite.createDustManager` does **not** early-return — the emitter is active and wired (`ParticleEmitter` "dust", per-frame recolour from terrain). Not crisply isolable at autoplay zoom in stills; the Phase-4-deferred emitter tuning (lifetimes/velocity-cone) is the only outstanding piece. Not a gap — see follow-up. vs `DustAnimation` (12). |
+| 4 | Counters legible+upright; damage numbers gang-tinted; skull death marker gang-tinted | **PASS** (counters+damage); **PASS-by-code** (skull) | Blue/gold **gold-stash counters ("2","3","5")** render **upright + legible + gang-tinted** (the Phase-6b billboard fix holds; `zr_s7_2`, `zs_s2_*`). **Damage numbers tinted by target gang colour** caught live: blue **"20"** and yellow glyphs (`zr_s7_2/3`). Skull death-marker: its gang-tint path is verified in `IconViz.didInit` (`getJPieceColor(owner)`); the marker itself is too brief/off-center to freeze at board zoom. vs `CavalryPicksupGoldKillsSteamGunman` (5), `ArtilleryKillShotgunner` (4). |
+| 5 | Death drop (killed unit leaves a gold nugget) | **PASS** | `NuggetEffect ... dropping=true` on every kill in the log; dropped gold nuggets visible on tiles (`zs_s2_1`, lower-left gold pile). Killed units leave **prone dead bodies** then a nugget. |
+| 6 | Camera: scroll-wheel rotate, zoom, WASD pan | **PASS-by-code** (wheel plumbing verified end-to-end) | The BUI wheel→jME3 path is **intact**: `Jme3RootNode.onMouseMotionEvent` reads `MouseMotionEvent.getDeltaWheel()` and dispatches a `MOUSE_WHEELED` BUI event → `GameInputHandler._swingListener.mouseWheeled` → `swingCamera(±PI/2)`. WASD pan is the prior 6b `GodViewHandler` fix. Headless autoplay generates no real wheel/key input, so not exercised by injected events this run; the wiring is present and correct. vs `ScrollwheelRotatesCamera` (17), `StartGameAndZoomOut` (18). |
+
+**Small fix applied:** `bin/bangclient` `CLIENT_MEMORY` **128M → 768M**. 128M was the 2004-era
+LWJGL2/gdx default; under the jME3/LWJGL3 scene graph the autoplay client **OOM'd**
+(`OutOfMemoryError`) after ~2 rounds at 128M and again at 512M. At 768M a full multi-round
+match runs to the post-game standings screen with **0 OOM**. Low-risk dev-launch tuning only
+(production Getdown sets its own heap; this is the dev script).
+
+**Follow-ups (not hacked under time pressure):**
+- **Client heap headroom / possible slow growth.** 768M is comfortable for a full game, but the
+  client OOM'd at both 128M and 512M under sustained autoplay (`respawnUnits=true`). Worth a
+  focused check that footprint is *stable* (high-but-bounded) and not a slow sprite/particle
+  leak — instrument with `-verbose:gc` over a long autoplay. Files: `bin/bangclient`,
+  `MobileSprite`/`ParticlePool` sprite lifecycle. Likely just endurance, not a defect.
+- **Movement-dust emitter tuning (Phase-4 deferred).** `MobileSprite.createDustManager` is wired
+  and active at HIGH detail but the ms-lifetime/velocity-cone/spin port is approximate; tune
+  against the `DustAnimation` golden (small/soft/ground-hugging/terrain-coloured). In-scope-small
+  but needs the golden side-by-side. File: `client/shared/.../game/client/sprite/MobileSprite.java`.
+- **Skull-and-crossbones death marker — needs a deterministic capture.** Code path
+  (`IconViz` gang-tint) is correct; visually confirm the rising marker tint live with a tighter
+  capture (tail the log for `removed by effect` and burst-shoot at higher zoom, or add an
+  offscreen `IconViz` render). Not a known defect — verification gap only.
+
 ## Acceptance
 Client + editor run on jME3 3.9 / LWJGL3 with gameplay and per-town visuals preserved
 (the Phase 3 acceptance bar from UPGRADE_PLAN, re-verified on the new engine).

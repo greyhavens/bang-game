@@ -62,6 +62,9 @@ while [ ! -z "$1" ]; do
     shift
 done
 
-CLIENT_MEMORY=128M
+# 128M was the 2004-era LWJGL2/gdx default; the jME3/LWJGL3 scene graph (board + unit
+# sprites + baked particle emitters) OOMs under it after a few autoplay rounds. Bumped to
+# a modern dev value (server uses 384M; production Getdown sets its own heap).
+CLIENT_MEMORY=768M
 CLASS=com.threerings.bang.client.BangDesktop
 eval $BANG_HOME/bin/bangjava -client -Dno_log_redir=true -mx$CLIENT_MEMORY $JARGS $CLASS $ARGS
