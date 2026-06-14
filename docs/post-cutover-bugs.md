@@ -53,6 +53,17 @@ press — pan speed is way too low.
 (the FORWARD/BACKWARD/LEFT/RIGHT pan magnitude per analog unit) in `app/.../camera/GodViewHandler.java`
 to match the fork's pan rate. (Likely a small constant tweak.)
 
+## BUG-6 — Scroll wheel does not rotate the camera  [OPEN]
+*Reported 2026-06-14 — confirms the live risk the final-verification agent flagged.* The rotate
+handler exists (`GameInputHandler._swingListener.mouseWheeled → swingCamera(±90°)`), but the
+mouse-wheel event never reaches it.
+
+**Likely cause.** jME3→BUI wheel-event **delivery**: `Jme3RootNode`'s `RawInputListener`
+(`onMouseMotionEvent`'s `getDeltaWheel()`) isn't forwarding wheel deltas into the BUI event path, so
+`_swingListener` never fires. **Fix area:** `bui/.../Jme3RootNode.java` wheel forwarding +
+`GameInputHandler` swing-listener wiring. Cross-ref `docs/fidelity-reference/video/ScrollwheelRotatesCamera.mp4`.
+(Camera cluster with BUG-3 + BUG-5 — likely one fix agent.)
+
 ## BUG-2 — Esc immediately quits the game  [FIXED]
 *Reported 2026-06-14.* Pressing **Esc** instantly aborts/exits the client. Not expected — the original
 game did not quit on Esc.
