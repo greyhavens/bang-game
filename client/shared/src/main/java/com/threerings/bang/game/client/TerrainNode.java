@@ -829,6 +829,12 @@ public class TerrainNode extends Node
      */
     public boolean calculatePick (Ray ray, Vector3f result)
     {
+        // a pick can arrive before the terrain heightfield is built (e.g. an early click on
+        // game entry); _diags is allocated only when the heightfield is generated, so report
+        // no intersection until then rather than NPE deep in getHeightfieldHeight.
+        if (_diags == null) {
+            return false;
+        }
         if (getWorldBound() == null || getWorldBound().intersects(ray)) {
             // bounding box test passed or unavailable; continue
         } else {
@@ -888,7 +894,7 @@ public class TerrainNode extends Node
             cc = getHeightfieldValue(cx, cy),
             ax = x - fx, ay = y - fy;
 
-        if (dx >= 0 && dy >= 0 && dy < _diags.length &&
+        if (_diags != null && dx >= 0 && dy >= 0 && dy < _diags.length &&
             dx < _diags[dy].length && _diags[dy][dx]) {
             if ((1f - ax) < ay) {
                 return FastMath.interpolateLinear(ax, FastMath.interpolateLinear(ay, fc + cf - cc, fc),
