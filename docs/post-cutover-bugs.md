@@ -66,6 +66,18 @@ mouse-wheel event never reaches it.
 `GameInputHandler` swing-listener wiring. Cross-ref `docs/fidelity-reference/video/ScrollwheelRotatesCamera.mp4`.
 (Camera cluster with BUG-3 + BUG-5 — likely one fix agent.)
 
+## BUG-7 — Artillery explosion is massively oversized  [OPEN]
+*Reported 2026-06-14.* When artillery fires, the explosion is far too large. **Defect capture
+(CURRENT jME3 build, not a fork golden):** `docs/fidelity-reference/video/ArtilleryOversizeExplosion.mp4`
+— compare to the correct fork explosion scale in `ArtilleryKillShotgunner.mp4`.
+
+**Likely cause.** Particle **size/scale** in the explosion bake — separate from the emission-mode fix.
+The `RepeatType` fix corrected one-shot-vs-continuous (no runaway accumulation), but the explosion's
+per-particle **size** (`ParticleConverter` `setStartSize`/`setEndSize`) and/or the effect node **scale**
+(`particles.properties` `scale`, or a fork→jME3 size-unit mismatch) is too big. **Fix area:**
+`ParticleConverter` size mapping + `ParticleCache`/`particles.properties` scale for the `explosion`
+effect; validate the rendered size against the `ArtilleryKillShotgunner` golden.
+
 ## BUG-2 — Esc immediately quits the game  [FIXED]
 *Reported 2026-06-14.* Pressing **Esc** instantly aborts/exits the client. Not expected — the original
 game did not quit on Esc.
