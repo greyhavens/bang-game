@@ -187,9 +187,12 @@ human death + dropped-item behaviour.
 `ParticleConverter`/`ParticleEffectViz`:
 - **Shape:** bright additive *core flash* → **horizontal radial debris streaks** → a
   *vertical* smoke/spark **column** (three distinct sub-phases, not one puff).
-- **Colour:** warm orange/yellow core; the **smoke/spark tail is tinted by the victim's
-  gang colour** (green). Confirm whether that tint is gameplay-driven or a coincidental
-  overlay — it is consistent with clips 2 & 4 (both green victims tint green).
+- **Colour:** warm orange/yellow core; the smoke/spark **is NOT gang-tinted** — keep the
+  baked `explosion` particle colour neutral. RESOLVED 2026-06-14 (Tim): the "green tint" seen
+  near the death in this and clips 2 & 4 is the **gang-coloured skull-and-crossbones death
+  marker** that rises off the dying unit, *not* the explosion smoke. Separate fidelity item:
+  confirm our jME3 build renders that rising **skull-and-crossbones death icon tinted by the
+  owning gang colour** (a death-viz billboard, same family as the counter/damage text).
 - **Lifetime:** core ~0.2 s, debris ~0.5 s, column/wisp lingers ~1.5 s after the flash.
 - **Death:** humanoid → holds last `dying` frame as a prone shape, then is removed; a
   **dropped nugget** remains on the tile.
