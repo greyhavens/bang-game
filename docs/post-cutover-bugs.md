@@ -18,6 +18,17 @@ handling — fullscreen toggle + resolution picker in `OptionsView`, and `BangPr
 fullscreen). **Fix area:** `BangDesktop`/`BangApp` `AppSettings` (resizable + window hints) and
 `OptionsView` fullscreen/resolution → an LWJGL3 context mode switch/restart.
 
+## BUG-3 — Game-start camera intro (sweep / 360 rotate / zoom-out) doesn't play  [OPEN]
+*Reported 2026-06-14 — documented in `docs/fidelity-reference/video/StartGameAndZoomOut.mp4`.* At
+game start the camera should do the scripted sweep/rotate + zoom-out to the board overview; it doesn't.
+
+**Likely cause.** The scripted camera-path intro isn't triggered/wired post-cutover. The path
+machinery all exists — `app/.../camera/{CameraHandler,SwingPath,SplinePath,PanPath,CameraPath}` and
+`GameInputHandler.swingCamera` — and *manual* scroll-wheel rotate works (verified), but the **auto**
+game-start camera move isn't invoked. **Fix area:** find where the fork kicked off the start-of-game
+camera path (likely a `BangController`/`GameInputHandler` intro hook fired on board-ready / fight
+start) and confirm it runs on the jME3 `CameraHandler`. Cross-ref `StartGameAndZoomOut.mp4`.
+
 ## BUG-2 — Esc immediately quits the game  [FIXED]
 *Reported 2026-06-14.* Pressing **Esc** instantly aborts/exits the client. Not expected — the original
 game did not quit on Esc.
