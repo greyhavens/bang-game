@@ -44,6 +44,8 @@ the billboard for Z-up (try `Alignment.Camera` and/or set the billboard up-vecto
 quad) so text reads correctly from any azimuth; audit `PieceTarget`/`OneArmedBanditSprite`/`IconViz`
 family for the same. Cross-ref `docs/fidelity-reference/claimNumbers.png`.
 
+**Second facet — glyph clipped at the bottom** *(2026-06-14, ref `baseline/jme3-phase8/bug4-counter-3-bottom-clipped.png`)*: even when correctly oriented (a "3" at a good azimuth reads upright, confirming the mirror is azimuth-dependent), the digit's **bottom is cut off**. Cause is in the text-texture sizing — `RenderUtil.createTextTexture` / the quad height (`qrat = TILE_SIZE*0.8f / tcoords[2].y`) isn't capturing the full glyph bounds (font ascent+**descent**/baseline), so the bottom is cropped. Same `createTextTexture` sizing issue family as the `DamageIconViz` Phase-4 per-glyph-sizing TODO. Fix: size the text texture/tcoords to the full glyph metrics so nothing clips.
+
 ## BUG-5 — WASD camera pan is far too slow (a few pixels)  [OPEN]
 *Reported 2026-06-14.* WASD panning works (6b wired `GodViewHandler`) but moves only a few pixels per
 press — pan speed is way too low.
