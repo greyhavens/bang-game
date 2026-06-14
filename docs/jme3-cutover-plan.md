@@ -941,8 +941,45 @@ which is the one platform caveat to validate if a Mac build is targeted.
   + `tools/j3o-converter` reference it, both build-time) and leave it as the isolated build-time
   model/particle compiler. Full eradication (a native `.mxml`→jME3 importer) is deferred to
   **[Epic 4](epic4-native-model-toolchain.md)**.
-- Drop the now-unnecessary deps: bare `gdx` (kept only as a transitional keycode-constant source —
-  replace with jME3 keycodes) and any lingering LWJGL2 bits.
+- **Bare `gdx` dropped — DONE (2026-06-14).** libGDX (`com.badlogicgames.gdx:gdx:1.5.4`) was kept
+  through the cutover *only* as a GL-free source of keyboard keycode constants
+  (`com.badlogic.gdx.Input.Keys.*`) for BUI. It is now gone from every runtime/main classpath; the
+  BUI keycode space is **jME3 `com.jme3.input.KeyInput.KEY_*` end-to-end**.
+  - **Keycode-VALUE consistency (the crux, not a symbol sed):** `Jme3RootNode` previously received
+    jME3 `KeyInput` codes from the `InputManager` and *translated* them to gdx `Input.Keys` codes via
+    a 256-entry `KEYMAP` table (gdx and jME3 use **different integer values** for the same physical
+    key), then the rest of BUI compared `event.getKeyCode()` against gdx `Keys.*`. That whole
+    translation layer was **removed** rather than re-symboled: `Jme3RootNode.onKeyEvent` now forwards
+    the raw jME3 `KeyInput` code unchanged (`toBuiKeyCode`/`KEYMAP`/the `m()` helper deleted), and
+    every consumer compares against `KeyInput.KEY_*`. Producer and consumer now share one constant
+    space, so a value mismatch is impossible by construction.
+  - **Files migrated `Keys.*` → `KeyInput.KEY_*`:** bui `Jme3RootNode` (translation removed;
+    `KEY_MODIFIER_MAP` retyped to `KEY_LSHIFT/RSHIFT/LCONTROL/RCONTROL/LMENU/RMENU`), `BComponent`
+    (`KEY_TAB`), `event/KeyEvent` (numpad char hack → `KEY_NUMPAD0..9`), `text/DefaultKeyMap` (text
+    editing map); client `StatusView`, `FKeyPopups` (F-key popups), `bui/IconPalette` (arrow nav),
+    `BangClient` (`KEY_ESCAPE`), `game/client/BangController` (in-game hotkeys), editor `CameraDolly`,
+    `PiecePlacer`, `ViewpointEditor`. **Dead gdx-canvas class `bui/CanvasRootNode` deleted** (the
+    abandoned gdx `LwjglCanvas`-editor root node; nothing instantiates it — the editor uses
+    `Jme3RootNode` since Phase 7b).
+  - **Non-obvious name differences applied:** gdx `Keys.NUM_0..9` (top-row digits) → jME3 `KEY_0..9`;
+    `Keys.NUMPAD_N` → `KEY_NUMPADN`; `Keys.ENTER` → `KEY_RETURN`; `Keys.BACKSPACE` → `KEY_BACK`;
+    `Keys.FORWARD_DEL` → `KEY_DELETE`; `Keys.PAGE_UP/PAGE_DOWN` → `KEY_PRIOR/KEY_NEXT`;
+    `Keys.SHIFT_LEFT/CONTROL_LEFT/ALT_LEFT` → `KEY_LSHIFT/KEY_LCONTROL/KEY_LMENU` (and the right-hand
+    variants); `Keys.LEFT_BRACKET/RIGHT_BRACKET` → `KEY_LBRACKET/KEY_RBRACKET`. Letters, F-keys,
+    arrows, `ESCAPE/TAB/SPACE/HOME/END/INSERT` and most punctuation are same-name. (Edge: numpad-Enter
+    used to be folded onto `Keys.ENTER` by the table; with the table gone it now flows as its own
+    `KEY_NUMPADENTER` code — `DefaultKeyMap` gained an explicit `KEY_NUMPADENTER → ACTION` mapping so
+    text-field submit on numpad-Enter is preserved.)
+  - **Dependency:** removed `api "com.badlogicgames.gdx:gdx"` from `bui/build.gradle` (the only
+    runtime declaration). The `jme` fork module keeps its own `gdx`/LWJGL2 deps (`jme/build.gradle`,
+    untouched per Option A) — it is build-time-only (model/particle compile) and walled off every
+    runtime/main classpath. Proof: `./gradlew :client:desktop:dependencies --configuration
+    runtimeClasspath | grep -i gdx` → empty. Builds green: `:bui:`/`:client:shared:`/`:client:desktop:`
+    /`:app:`/`:server:`/`:jme:`/`:tools:j3o-converter: compileJava` all SUCCESSFUL. (The unrelated,
+    pre-existing `:tools:board-converter:compileJava` break — stale fork `com.jme.util.export.*`
+    refs in a run-once-then-delete converter — predates this work and is out of scope.)
+- Any lingering LWJGL2 bits: still owned by the (retained) `jme` fork module only; not on a runtime
+  classpath.
 - **Revert the dev mute:** `BangPrefs.SILENT` is muted-by-default on this branch (`-Dsound=true` to
   hear) — restore to audible-by-default before ship.
 - Remove the now-vestigial jME3 `Savable` impls left on the board/config data classes (they stream

@@ -8,7 +8,7 @@ package com.jmex.bui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.badlogic.gdx.Input.Keys;
+import com.jme3.input.KeyInput;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
@@ -655,7 +655,7 @@ public class BComponent
             KeyEvent kev = (KeyEvent)event;
             if (kev.getType() == KeyEvent.KEY_PRESSED) {
                 int modifiers = kev.getModifiers(), keyCode = kev.getKeyCode();
-                if (keyCode == Keys.TAB) {
+                if (keyCode == KeyInput.KEY_TAB) {
                     if (modifiers == 0) {
                         getWindow().requestFocus(getNextFocus());
                         processed = true;
