@@ -40,3 +40,16 @@ both fork stages, then removes the module. Plan + phases:
 Strictly after Epic 1 (which keeps the fork as a walled-off build-time compiler — "Option A"). Its
 verification leans on the Epic-1 render harness (`RenderModelToPng` + `SnapshotDiff`): the
 current fork-wrapper `.j3o` are a verified-correct oracle to diff a native importer against.
+
+## Epic 5 — Mobile platforms (Android port; iOS feasibility)  *(speculative — not planned)*
+Take the game to mobile. The desktop trio (Linux/Windows/macOS) is one easy tier only because it
+shares the `jme3-lwjgl3` desktop backend; mobile is not free. **Android** is a real but well-trodden
+port (swap to the maintained `jme3-android` GLES backend, touch input, activity lifecycle, no Swing,
+APK packaging + asset bundling). **iOS** is the genuinely hard one and Epic 1 makes it *harder* (it
+removes libGDX, the one component with a first-class iOS story): no JVM (AOT via MobiVM), no
+maintained jME3 iOS renderer, Guice/Narya reflection-vs-AOT friction, and a **licensing blocker**
+(the CC *NonCommercial* media vs. a commercial App Store). Plan + Android phases + iOS feasibility +
+licensing: [`epic5-mobile-platforms.md`](epic5-mobile-platforms.md).
+
+Strictly after Epic 1 (the backend swap presupposes the jME3 cutover). Captured for the record; not
+on the active roadmap.
