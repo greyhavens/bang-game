@@ -16,15 +16,12 @@
 # tolerance is the SnapshotDiff mean per-channel threshold (0..1). Model/prop/
 # scene renders are bit-exact in this harness, so they use a tight tolerance
 # (a hair of slack absorbs driver float noise). jME3 ParticleEmitters draw from a
-# process-wide RNG; RenderParticleToPng now SEEDS it (FastMath.rand) to a fixed
-# value, so particle renders are reproducible run-to-run too. The loose particle
-# tolerances (0.030) below predate that seeding and can be tightened once the
-# particle goldens are re-captured against the seeded render.
-#
-# !! STALE PARTICLE GOLDENS: the committed golden/*_fx_*.png were captured with the
-# !! OLD unseeded RNG, so they will NOT match the seeded render. Re-capture them
-# !! (captureGoldens) before wiring verifyVisuals into CI; until then the particle
-# !! entries may diff against pre-seed baselines. Tracked in jme3-cutover-plan Phase 8.
+# process-wide RNG; RenderParticleToPng SEEDS it (FastMath.rand) to a fixed value,
+# so particle renders are reproducible run-to-run too. With the goldens re-captured
+# against the seeded render (Phase 8), the particle entries are now bit-exact
+# (verifyVisuals reports meanDiff=0.000000) and use the same tight 0.005 tolerance
+# as the model/prop/scene renders. (The old 0.030 particle tolerances predated the
+# RNG seeding and the re-capture; they have been tightened.)
 #
 # To add a golden: add a line here, then `./gradlew :tools:j3o-converter:captureGoldens`
 # (writes golden/<name>.png). To refresh after an INTENDED render change: rerun
@@ -39,8 +36,8 @@ ft_bldg_bank         | prop     | 0.005 | props/frontier_town/buildings/bank
 ft_prop_tree_oak     | prop     | 0.005 | props/frontier_town/natural/tree_oak
 ft_prop_cactus1      | prop     | 0.005 | props/frontier_town/natural/cactus1
 ft_scene_town        | scene    | 0.005 | units/frontier_town/shotgunner@standing,units/frontier_town/cavalry@standing,props/frontier_town/buildings/saloon
-ft_fx_explosion      | particle | 0.030 | frontier_town/explosion 40
-ft_fx_dust           | particle | 0.030 | frontier_town/dust 40
+ft_fx_explosion      | particle | 0.005 | frontier_town/explosion 40
+ft_fx_dust           | particle | 0.005 | frontier_town/dust 40
 
 # ---- indian_post ---------------------------------------------------------
 ip_unit_dogsoldier   | model    | 0.005 | units/indian_post/dogsoldier standing 0
@@ -52,4 +49,4 @@ ip_prop_pine         | prop     | 0.005 | props/indian_post/natural/tree_pine_gr
 ip_prop_totem        | prop     | 0.005 | props/indian_post/natural/tree_totem_brown
 ip_scene_town        | scene    | 0.005 | units/indian_post/dogsoldier@standing,units/indian_post/revolutionary@standing,props/indian_post/buildings/sheriff
 ip_fx_fireflies      | particle | 0.005 | indian_post/fireflies 40
-ip_fx_rain           | particle | 0.030 | indian_post/rain 40
+ip_fx_rain           | particle | 0.005 | indian_post/rain 40

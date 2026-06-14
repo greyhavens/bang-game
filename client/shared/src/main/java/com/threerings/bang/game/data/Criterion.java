@@ -5,8 +5,6 @@ package com.threerings.bang.game.data;
 
 import java.util.HashSet;
 
-import com.jme3.export.Savable;
-
 import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.bang.data.StatType;
@@ -15,7 +13,6 @@ import com.threerings.bang.data.StatType;
  * Defines a particular additional criterion for "winning" a bounty game.
  */
 public abstract class Criterion extends SimpleStreamableObject
-    implements Savable
 {
     /** Used to report criteria state during a game. */
     public enum State { NOT_MET, MET, COMPLETE, FAILED };

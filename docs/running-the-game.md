@@ -9,14 +9,15 @@ order and always tears down.
 
 ```sh
 bin/devtest [--board "<name>"] [--node frontier_town|indian_post] \
-            [--shot <path>] [--hold <secs>] [--no-deploy] [--sound] [--no-client]
+            [--shot <path>] [--hold <secs>] [--no-deploy] [--mute] [--no-client]
 ```
 
 What it does, in order: **(1)** kills stale Bang processes and frees port `47624`; **(2)** verifies
 MySQL is up and `bang`/`yeehaw` connects; **(3)** `./gradlew deploy` (skip with `--no-deploy`),
 aborting on failure; **(4)** starts the server and **waits until it logs `Server listening`** before
-going on; **(5)** launches the client with the standard flags (`-test`/`-autoplay`, creds, muted —
-see below); **(6)** with `--shot`, holds `--hold` seconds then screenshots `$DISPLAY` to the path;
+going on; **(5)** launches the client with the standard flags (`-test`/`-autoplay`, creds; audio
+plays by default, `--mute` to silence — see below); **(6)** with `--shot`, holds `--hold` seconds
+then captures **only the Bang window** (via `bin/shot`) to the path — never a full-display grab;
 **(7)** always tears everything down on exit (even Ctrl-C), leaving `47624` free.
 
 Examples:
@@ -34,9 +35,8 @@ bin/devtest --no-client                                            # server only
 
 ## Gotchas the script handles for you (and a couple it can't)
 
-- **Audio is muted by default on this branch** (dev convenience — `BangPrefs.SILENT`). Pass
-  `--sound` (→ `-Dsound=true`) to hear it. *(Phase-6 reminder: revert to audible-by-default before
-  ship.)*
+- **Audio plays by default.** Pass `--mute` (→ `-Dmute=true`, sets `BangPrefs.SILENT`) to silence
+  music + effects for a dev session. It does not persist to the stored volume prefs.
 - **MySQL must be running** (`bang`/`ooouser` DBs, `bang`/`yeehaw` user — see README). The script
   verifies and aborts with instructions if not; it does **not** `sudo systemctl start mysql` for you
   (that's interactive).
@@ -46,6 +46,27 @@ bin/devtest --no-client                                            # server only
   (gitignored); set this if you use `--node indian_post`.
 - **Don't launch the client before the server is listening** — the script polls the log so you
   can't; doing it by hand races into `BindException`/"connection refused".
+
+## Screenshot convention — `bin/shot` (window-only, never full-display)
+
+**Screenshots capture only the Bang window, never a full-display grab.** This is for privacy (a
+full-display grab leaks whatever else is on the multi-monitor desktop — other apps, the other
+monitor — into shared/committed images) and relevance (no lossy AI crop afterward; the PNG is
+exactly the window).
+
+```sh
+bin/shot /tmp/shot.png            # captures the live Bang client OR editor window to the PNG
+bin/shot /tmp/shot.png :1         # explicit DISPLAY (defaults to $DISPLAY, else :1)
+```
+
+`bin/devtest --shot` calls `bin/shot` for you. `bin/shot` matches the window **precisely** to avoid
+false positives (a loose `'bang! howdy' in title` substring once grabbed a *Firefox* tab titled
+with the repo description): it requires the title to be exactly `Bang Editor` or to start with
+`Bang! Howdy`, **and** the window's WM_CLASS to not be a browser/terminal/editor (explicit
+denylist), preferring a WM_CLASS that looks like the jME/Java/LWJGL3-GLFW app. It then grabs only
+that window's pixmap (python-xlib `get_image`, with an ImageMagick `import -window <id>` fallback) —
+pixel-exact and independent of stacking/occlusion. Where a live window isn't needed, prefer the
+offscreen render harnesses below (already window-only and deterministic).
 
 ## Deterministic alternatives (no live client needed)
 

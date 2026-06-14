@@ -27,8 +27,6 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.FastMath;
 
-import static com.threerings.jme.Log.log;
-
 /**
  * Sets up camera controls for moving around from a top-down perspective, suitable for strategy
  * games and their ilk. The "ground" is assumed to be the XY plane.
@@ -91,8 +89,6 @@ public class GodViewHandler
         inputManager.addMapping(TILT_BACK, new KeyTrigger(KeyInput.KEY_END));
         inputManager.addListener(this, FORWARD, BACKWARD, LEFT, RIGHT,
             ZOOM_IN, ZOOM_OUT, TURN_RIGHT, TURN_LEFT, TILT_FORWARD, TILT_BACK);
-        log.info("GodViewHandler camera input mappings registered.",
-            "handler", getClass().getSimpleName());
     }
 
     /**
@@ -118,10 +114,6 @@ public class GodViewHandler
     {
         if (!_enabled) {
             return;
-        }
-        if (!_loggedFirstAnalog) {
-            _loggedFirstAnalog = true;
-            log.info("GodViewHandler received camera input.", "action", name, "value", value);
         }
         // value already incorporates tpf for analog key triggers
         switch (name) {
@@ -162,7 +154,4 @@ public class GodViewHandler
 
     /** Whether this handler processes input (Phase-3 input wiring honours this flag). */
     protected boolean _enabled = true;
-
-    /** One-shot guard so we log the first camera input event (verification of the input seam). */
-    protected boolean _loggedFirstAnalog = false;
 }
