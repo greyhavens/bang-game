@@ -16,7 +16,7 @@ import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.input.event.MouseMotionEvent;
 import com.jme3.input.event.TouchEvent;
 
-import com.badlogic.gdx.Input.Keys;
+import com.jme3.input.KeyInput;
 
 import com.jmex.bui.event.InputEvent;
 import com.jmex.bui.event.KeyEvent;
@@ -28,10 +28,11 @@ import com.jmex.bui.event.MouseEvent;
  * {@link InputManager} (via {@link #registerWith}), and BUI input flows from jME3 input events
  * through {@link BRootNode#dispatchEvent}.
  *
- * <p>BUI's component model compares key codes against libGDX {@code Input.Keys} constants
- * (woven through {@code BComponent}/{@code KeyEvent}/{@code DefaultKeyMap}); this node maps the
- * jME3 raw key codes onto those gdx constants in {@link #toBuiKeyCode} so the rest of BUI is
- * untouched. The mouse y-axis is flipped from jME3's bottom-left origin... actually jME3 mouse
+ * <p>BUI's component model compares key codes directly against jME3 {@code KeyInput.KEY_*}
+ * constants (woven through {@code BComponent}/{@code KeyEvent}/{@code DefaultKeyMap}); the jME3
+ * raw key code flows through unchanged (the former gdx {@code Input.Keys} keycode space and its
+ * translation table were removed in the Phase-8 cutover). The mouse y-axis is flipped from jME3's
+ * bottom-left origin... actually jME3 mouse
  * events already use a bottom-left origin (y up), which matches BUI, so no flip is needed.
  */
 public class Jme3RootNode extends BRootNode
@@ -113,7 +114,7 @@ public class Jme3RootNode extends BRootNode
     // from interface RawInputListener
     public void onKeyEvent (KeyInputEvent kie)
     {
-        int code = toBuiKeyCode(kie.getKeyCode());
+        int code = kie.getKeyCode();
         char ch = kie.getKeyChar();
         if (kie.isRepeating()) {
             return; // we synthesize our own repeats
@@ -228,18 +229,6 @@ public class Jme3RootNode extends BRootNode
         return -1;
     }
 
-    /**
-     * Maps a jME3 {@code com.jme3.input.KeyInput.KEY_*} code to the libGDX {@code Input.Keys}
-     * constant BUI compares against.
-     */
-    protected static int toBuiKeyCode (int jmeCode)
-    {
-        if (jmeCode >= 0 && jmeCode < KEYMAP.length && KEYMAP[jmeCode] != 0) {
-            return KEYMAP[jmeCode];
-        }
-        return Keys.UNKNOWN;
-    }
-
     protected InputManager _inputManager;
     protected long _tickStamp;
     protected ArrayList<BComponent> _invalidRoots = new ArrayList<BComponent>();
@@ -254,14 +243,14 @@ public class Jme3RootNode extends BRootNode
      * focus change mid-hold (see {@link #onKeyEvent}). */
     protected final java.util.Set<Integer> _consumedPresses = new java.util.HashSet<>();
 
-    /** Maps (BUI) key codes to modifier flags. */
+    /** Maps (jME3 {@code KeyInput}) key codes to modifier flags. */
     protected static final int[] KEY_MODIFIER_MAP = {
-        Keys.SHIFT_LEFT, InputEvent.SHIFT_DOWN_MASK,
-        Keys.SHIFT_RIGHT, InputEvent.SHIFT_DOWN_MASK,
-        Keys.CONTROL_LEFT, InputEvent.CTRL_DOWN_MASK,
-        Keys.CONTROL_RIGHT, InputEvent.CTRL_DOWN_MASK,
-        Keys.ALT_LEFT, InputEvent.ALT_DOWN_MASK,
-        Keys.ALT_RIGHT, InputEvent.ALT_DOWN_MASK,
+        KeyInput.KEY_LSHIFT, InputEvent.SHIFT_DOWN_MASK,
+        KeyInput.KEY_RSHIFT, InputEvent.SHIFT_DOWN_MASK,
+        KeyInput.KEY_LCONTROL, InputEvent.CTRL_DOWN_MASK,
+        KeyInput.KEY_RCONTROL, InputEvent.CTRL_DOWN_MASK,
+        KeyInput.KEY_LMENU, InputEvent.ALT_DOWN_MASK,
+        KeyInput.KEY_RMENU, InputEvent.ALT_DOWN_MASK,
     };
 
     protected static final int[] MOUSE_MODIFIER_MAP = {
@@ -275,114 +264,4 @@ public class Jme3RootNode extends BRootNode
 
     protected static final long INITIAL_REPEAT_DELAY = 300L;
     protected static final long SUBSEQ_REPEAT_DELAY = 50L;
-
-    /** jME3 KEY_* code -> gdx Input.Keys code. Indexed by the jME3 code (0..255). Built lazily
-     * below from name-paired constants. */
-    protected static final int[] KEYMAP = new int[256];
-    static {
-        // letters
-        m(com.jme3.input.KeyInput.KEY_A, Keys.A);
-        m(com.jme3.input.KeyInput.KEY_B, Keys.B);
-        m(com.jme3.input.KeyInput.KEY_C, Keys.C);
-        m(com.jme3.input.KeyInput.KEY_D, Keys.D);
-        m(com.jme3.input.KeyInput.KEY_E, Keys.E);
-        m(com.jme3.input.KeyInput.KEY_F, Keys.F);
-        m(com.jme3.input.KeyInput.KEY_G, Keys.G);
-        m(com.jme3.input.KeyInput.KEY_H, Keys.H);
-        m(com.jme3.input.KeyInput.KEY_I, Keys.I);
-        m(com.jme3.input.KeyInput.KEY_J, Keys.J);
-        m(com.jme3.input.KeyInput.KEY_K, Keys.K);
-        m(com.jme3.input.KeyInput.KEY_L, Keys.L);
-        m(com.jme3.input.KeyInput.KEY_M, Keys.M);
-        m(com.jme3.input.KeyInput.KEY_N, Keys.N);
-        m(com.jme3.input.KeyInput.KEY_O, Keys.O);
-        m(com.jme3.input.KeyInput.KEY_P, Keys.P);
-        m(com.jme3.input.KeyInput.KEY_Q, Keys.Q);
-        m(com.jme3.input.KeyInput.KEY_R, Keys.R);
-        m(com.jme3.input.KeyInput.KEY_S, Keys.S);
-        m(com.jme3.input.KeyInput.KEY_T, Keys.T);
-        m(com.jme3.input.KeyInput.KEY_U, Keys.U);
-        m(com.jme3.input.KeyInput.KEY_V, Keys.V);
-        m(com.jme3.input.KeyInput.KEY_W, Keys.W);
-        m(com.jme3.input.KeyInput.KEY_X, Keys.X);
-        m(com.jme3.input.KeyInput.KEY_Y, Keys.Y);
-        m(com.jme3.input.KeyInput.KEY_Z, Keys.Z);
-        // digits (top row)
-        m(com.jme3.input.KeyInput.KEY_0, Keys.NUM_0);
-        m(com.jme3.input.KeyInput.KEY_1, Keys.NUM_1);
-        m(com.jme3.input.KeyInput.KEY_2, Keys.NUM_2);
-        m(com.jme3.input.KeyInput.KEY_3, Keys.NUM_3);
-        m(com.jme3.input.KeyInput.KEY_4, Keys.NUM_4);
-        m(com.jme3.input.KeyInput.KEY_5, Keys.NUM_5);
-        m(com.jme3.input.KeyInput.KEY_6, Keys.NUM_6);
-        m(com.jme3.input.KeyInput.KEY_7, Keys.NUM_7);
-        m(com.jme3.input.KeyInput.KEY_8, Keys.NUM_8);
-        m(com.jme3.input.KeyInput.KEY_9, Keys.NUM_9);
-        // numpad
-        m(com.jme3.input.KeyInput.KEY_NUMPAD0, Keys.NUMPAD_0);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD1, Keys.NUMPAD_1);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD2, Keys.NUMPAD_2);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD3, Keys.NUMPAD_3);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD4, Keys.NUMPAD_4);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD5, Keys.NUMPAD_5);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD6, Keys.NUMPAD_6);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD7, Keys.NUMPAD_7);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD8, Keys.NUMPAD_8);
-        m(com.jme3.input.KeyInput.KEY_NUMPAD9, Keys.NUMPAD_9);
-        // function keys
-        m(com.jme3.input.KeyInput.KEY_F1, Keys.F1);
-        m(com.jme3.input.KeyInput.KEY_F2, Keys.F2);
-        m(com.jme3.input.KeyInput.KEY_F3, Keys.F3);
-        m(com.jme3.input.KeyInput.KEY_F4, Keys.F4);
-        m(com.jme3.input.KeyInput.KEY_F5, Keys.F5);
-        m(com.jme3.input.KeyInput.KEY_F6, Keys.F6);
-        m(com.jme3.input.KeyInput.KEY_F7, Keys.F7);
-        m(com.jme3.input.KeyInput.KEY_F8, Keys.F8);
-        m(com.jme3.input.KeyInput.KEY_F9, Keys.F9);
-        m(com.jme3.input.KeyInput.KEY_F10, Keys.F10);
-        m(com.jme3.input.KeyInput.KEY_F11, Keys.F11);
-        m(com.jme3.input.KeyInput.KEY_F12, Keys.F12);
-        // editing / navigation
-        m(com.jme3.input.KeyInput.KEY_ESCAPE, Keys.ESCAPE);
-        m(com.jme3.input.KeyInput.KEY_RETURN, Keys.ENTER);
-        m(com.jme3.input.KeyInput.KEY_NUMPADENTER, Keys.ENTER);
-        m(com.jme3.input.KeyInput.KEY_TAB, Keys.TAB);
-        m(com.jme3.input.KeyInput.KEY_BACK, Keys.BACKSPACE);
-        m(com.jme3.input.KeyInput.KEY_DELETE, Keys.FORWARD_DEL);
-        m(com.jme3.input.KeyInput.KEY_INSERT, Keys.INSERT);
-        m(com.jme3.input.KeyInput.KEY_SPACE, Keys.SPACE);
-        m(com.jme3.input.KeyInput.KEY_HOME, Keys.HOME);
-        m(com.jme3.input.KeyInput.KEY_END, Keys.END);
-        m(com.jme3.input.KeyInput.KEY_PRIOR, Keys.PAGE_UP);
-        m(com.jme3.input.KeyInput.KEY_NEXT, Keys.PAGE_DOWN);
-        m(com.jme3.input.KeyInput.KEY_LEFT, Keys.LEFT);
-        m(com.jme3.input.KeyInput.KEY_RIGHT, Keys.RIGHT);
-        m(com.jme3.input.KeyInput.KEY_UP, Keys.UP);
-        m(com.jme3.input.KeyInput.KEY_DOWN, Keys.DOWN);
-        // modifiers
-        m(com.jme3.input.KeyInput.KEY_LSHIFT, Keys.SHIFT_LEFT);
-        m(com.jme3.input.KeyInput.KEY_RSHIFT, Keys.SHIFT_RIGHT);
-        m(com.jme3.input.KeyInput.KEY_LCONTROL, Keys.CONTROL_LEFT);
-        m(com.jme3.input.KeyInput.KEY_RCONTROL, Keys.CONTROL_RIGHT);
-        m(com.jme3.input.KeyInput.KEY_LMENU, Keys.ALT_LEFT);
-        m(com.jme3.input.KeyInput.KEY_RMENU, Keys.ALT_RIGHT);
-        // punctuation
-        m(com.jme3.input.KeyInput.KEY_MINUS, Keys.MINUS);
-        m(com.jme3.input.KeyInput.KEY_EQUALS, Keys.EQUALS);
-        m(com.jme3.input.KeyInput.KEY_LBRACKET, Keys.LEFT_BRACKET);
-        m(com.jme3.input.KeyInput.KEY_RBRACKET, Keys.RIGHT_BRACKET);
-        m(com.jme3.input.KeyInput.KEY_SEMICOLON, Keys.SEMICOLON);
-        m(com.jme3.input.KeyInput.KEY_APOSTROPHE, Keys.APOSTROPHE);
-        m(com.jme3.input.KeyInput.KEY_GRAVE, Keys.GRAVE);
-        m(com.jme3.input.KeyInput.KEY_BACKSLASH, Keys.BACKSLASH);
-        m(com.jme3.input.KeyInput.KEY_COMMA, Keys.COMMA);
-        m(com.jme3.input.KeyInput.KEY_PERIOD, Keys.PERIOD);
-        m(com.jme3.input.KeyInput.KEY_SLASH, Keys.SLASH);
-    }
-
-    private static void m (int jmeCode, int gdxCode) {
-        if (jmeCode >= 0 && jmeCode < KEYMAP.length) {
-            KEYMAP[jmeCode] = gdxCode;
-        }
-    }
 }

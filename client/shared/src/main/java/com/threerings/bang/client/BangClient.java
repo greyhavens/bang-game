@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.badlogic.gdx.Input.Keys;
+import com.jme3.input.KeyInput;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -1256,7 +1256,7 @@ public class BangClient extends BasicClient
 
             // also re-wire up our options view whenever the main view changes as the BangView
             // overrides the escape mapping during the game
-            _ctx.getKeyManager().registerCommand(Keys.ESCAPE, _clearPopup);
+            _ctx.getKeyManager().registerCommand(KeyInput.KEY_ESCAPE, _clearPopup);
         }
 
         // don't fade in the game or town views, they'll handle that themselves when they're ready

@@ -5,8 +5,7 @@ package com.threerings.bang.editor;
 
 import javax.swing.JPanel;
 
-import com.badlogic.gdx.Input.Keys;
-
+import com.jme3.input.KeyInput;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -125,16 +124,16 @@ public class CameraDolly extends EditorTool
         int code = e.getKeyCode();
         CameraHandler camhand = _ctx.getCameraHandler();
         switch (code) {
-            case Keys.Q: camhand.zoomCamera(+5f); break;
-            case Keys.W: camhand.panCamera(0f, +5f); break;
-            case Keys.E: camhand.zoomCamera(-5f); break;
-            case Keys.A: camhand.panCamera(-5f, 0f); break;
-            case Keys.S: camhand.panCamera(0f, -5f); break;
-            case Keys.D: camhand.panCamera(+5f, 0f); break;
-            case Keys.UP: camhand.tiltCamera(FastMath.PI * 0.01f); break;
-            case Keys.DOWN: camhand.tiltCamera(-FastMath.PI * 0.01f); break;
-            case Keys.LEFT: camhand.orbitCamera(-FastMath.PI * 0.01f); break;
-            case Keys.RIGHT: camhand.orbitCamera(+FastMath.PI * 0.01f); break;
+            case KeyInput.KEY_Q: camhand.zoomCamera(+5f); break;
+            case KeyInput.KEY_W: camhand.panCamera(0f, +5f); break;
+            case KeyInput.KEY_E: camhand.zoomCamera(-5f); break;
+            case KeyInput.KEY_A: camhand.panCamera(-5f, 0f); break;
+            case KeyInput.KEY_S: camhand.panCamera(0f, -5f); break;
+            case KeyInput.KEY_D: camhand.panCamera(+5f, 0f); break;
+            case KeyInput.KEY_UP: camhand.tiltCamera(FastMath.PI * 0.01f); break;
+            case KeyInput.KEY_DOWN: camhand.tiltCamera(-FastMath.PI * 0.01f); break;
+            case KeyInput.KEY_LEFT: camhand.orbitCamera(-FastMath.PI * 0.01f); break;
+            case KeyInput.KEY_RIGHT: camhand.orbitCamera(+FastMath.PI * 0.01f); break;
         }
     }
 
