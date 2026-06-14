@@ -514,9 +514,14 @@ What landed:
   `./gradlew deploy` / `:assets:compileModels --rerun-tasks` bakes all 60 into
   `assets/build/staging/rsrc`.
 
-Param mapping (fork → `ParticleEmitter`): count→`setNumParticles`; `releaseRate` (when the
-controller's `controlFlow` is set) →`setParticlesPerSec`, else a steady refill at count/mean-life so
-cloned ambient effects stay populated; start/end size→`setStartSize`/`setEndSize`; start/end
+Param mapping (fork → `ParticleEmitter`): count→`setNumParticles`. **Emission mode is keyed on the
+fork controller's repeat type** (`RT_CLAMP` = one-shot burst → `setParticlesPerSec(0)`, the spawn
+path fires the single burst; `RT_WRAP`/`RT_CYCLE` = ambient → continuous `setParticlesPerSec`: the
+fork `releaseRate` when `controlFlow` is set, else a refill at count/mean-life, clamped to
+count/mean-life so it can't blow out). _(Corrected in Phase 8 — the original "every non-controlFlow
+effect → continuous count/mean refill" mapping made one-shot bursts emit forever, producing a
+runaway additive bloom in the live game; see the Phase 8 emission-mode bullet for the full
+root-cause/fix.)_ start/end size→`setStartSize`/`setEndSize`; start/end
 color→`setStartColor`/`setEndColor`; min/max lifetime (fork ms) →`setLowLife`/`setHighLife` (÷1000);
 `emissionDirection`×`initialVelocity` →`influencer.setInitialVelocity`, `maximumAngle`
 cone→`setVelocityVariation` (1.0 at PI/2); `particleSpinSpeed`→`setRotateSpeed`+`setRandomAngle`;
@@ -1007,12 +1012,51 @@ which is the one platform caveat to validate if a Mac build is targeted.
   guard, and the now-unused `com.threerings.jme.Log.log` import. Input wiring (mappings + listener)
   left intact; `:app:compileJava` green.
 - **Verify the Phase-6a particle emission-mode mapping in a *live* render** (not just the warmed
-  snapshot). `ParticleConverter` maps every non-`controlFlow` fork effect to a continuous
-  steady-refill emitter (`setParticlesPerSec(count/mean)`), on the assumption that `ParticleCache`
-  clones a fresh instance per spawn and despawns it. One-shot bursts (explosions/impacts) will keep
-  emitting forever if that despawn assumption is wrong — confirm a burst effect (e.g.
-  `boom_town/barrel_explosion`) fires once and stops in the running client, and if not, distinguish
-  burst vs ambient effects at bake time (one-shot → emit the pool once, don't refill).
+  snapshot). **DONE (Phase 8, 2026-06-14) — this was a real defect; fixed.** The live Epic-1
+  acceptance smoke showed a **giant blown-out white/orange particle bloom** swallowing a large area
+  of the screen and *persisting* (not firing and fading); the rest of the game rendered fine. The
+  offscreen single-frame render hid it because `RenderParticleToPng` never fired the spawn-path
+  burst.
+  - **Root cause (confirmed):** `ParticleConverter` baked, for every non-`controlFlow` fork effect,
+    `setParticlesPerSec(count / mean-lifetime)` — turning the baked `.j3o` prototype into a
+    *continuous* emitter. That is right for genuinely ambient effects but **wrong for one-shot
+    bursts** (explosion/impact/death-puff): the runtime spawn path
+    (`ParticleEffectViz.displayEffect` → `ParticlePool.getParticles` → `ParticleUtil.forceRespawn`
+    → `emitAllParticles`, with a `ParticleUtil.ParticleRemover` that detaches the effect once it is
+    idle) *itself* fires the single burst, so a baked positive rate makes the emitter emit forever,
+    the remover's `getParticlesPerSec() > 0` guard never trips, and a dense additive burst
+    accumulates into the runaway bloom (e.g. `frontier_town/explosion` emitter[1]: 75 particles over
+    a ~0.44 s mean life → ~170 particles/sec *forever*).
+  - **Burst-vs-ambient signal:** the fork **controller's repeat type** (`ParticleController` /
+    `Controller.RT_*`, read via `geom.getParticleController().getRepeatType()`). `RT_CLAMP` = a dead
+    particle stays dead and the controller goes inactive once all particles have died → a single
+    burst that fades; `RT_WRAP`/`RT_CYCLE` recreate particles forever → a continuous/ambient
+    population. A corpus dump confirmed the split matches intent: CLAMP = explosion,
+    barrel_explosion, hit_flash, mushroom_cloud, resurrection, fireworks_explosion, hero_death,
+    storm_caller attacks, teleporter activates, etc.; WRAP = dust, fire, fireflies, rain, ambient_*,
+    sea_spray, teleporter ambient, dust_trail, etc. (`controlFlow` is *not* the signal — many CLAMP
+    bursts have `controlFlow=true` with a `releaseRate`, but they must still fire once and stop.)
+  - **Fix (in `ParticleConverter.convertEmitter`):** classify on repeat type. **One-shot (CLAMP)** →
+    `setParticlesPerSec(0)` + `setNumParticles(count)`; the spawn code's `emitAllParticles()` fires
+    the single pool-sized burst, it fades over its lifetime, and the `ParticleRemover` detaches it.
+    **Ambient (WRAP/CYCLE)** → keep a sane continuous rate: the fork `releaseRate` when `controlFlow`
+    is set, else a refill at `count/mean-life`, **clamped** to `count/mean-life` so even an ambient
+    effect can't blow out. No spawn-path change was needed — the lifecycle was already correct once
+    the prototype stopped carrying a runaway rate. (Verified Wreck/Repair/HealHero use the
+    code-built pooled emitters with their own explicit rates, not the baked `.j3o` prototypes, so
+    they were unaffected.)
+  - **Also fixed the offscreen harness** (`RenderParticleToPng`) to mirror the live spawn path: it
+    now fires `emitAllParticles()` on every emitter before stepping, so a one-shot effect actually
+    renders its burst (and then fades) offscreen instead of showing an empty cloud — this is the
+    thing whose absence let the defect ship.
+  - **Verified — live + offscreen.** Offscreen: `frontier_town/explosion` renders a contained
+    fireball at frame ~6 and is **fully faded by frame 90** (fire-and-fade); `boom_town/barrel_explosion`
+    same; ambient `fire`/`dust`/`fireflies` still emit continuously at frame 40 (continuous emission
+    not killed). **Live** (`bin/devtest --mute --no-deploy --shot` + a sequence of `bin/shot` grabs
+    over ~60 s of an autoplay game): the board, units, fences and HUD render cleanly with **no
+    runaway bloom**; combat bursts (muzzle flashes / explosions) appear *contained and localized* and
+    *differ frame-to-frame* (they fire and fade, they do not accumulate or persist). `verifyVisuals`
+    20/20 PASS, `verifyCorpus` 310/310.
 - **Re-capture the stale Phase-7d particle goldens.** `RenderParticleToPng` now seeds the particle
   RNG (`FastMath.rand`), but the committed `golden/*_fx_*.png` were captured pre-seed and no longer
   match. Run `./gradlew :tools:j3o-converter:captureGoldens`, commit the refreshed PNGs, then tighten
@@ -1025,7 +1069,11 @@ which is the one platform caveat to validate if a Mac build is targeted.
   (and the already-tight `ip_fx_fireflies`). `:tools:j3o-converter:verifyVisuals` is green — all 20
   goldens PASS with `meanDiff=0.000000` (the seeded particle renders are bit-exact), and
   `:tools:j3o-converter:verifyCorpus` is still 310/310 parity. Updated the manifest header comment
-  (dropped the STALE-goldens warning).
+  (dropped the STALE-goldens warning). **Re-refreshed (2026-06-14)** after the emission-mode fix
+  above: the harness now fires `emitAllParticles()` and one-shot effects bake at 0 particles/sec, so
+  the `ft_fx_explosion` golden was moved to **frame 8** (mid-burst) — at the old frame 40 the
+  one-shot has fully faded and would golden an empty frame — and all `*_fx_*.png` re-captured; both
+  gates green again (20/20 PASS, 310/310).
 - **Add a `bin/shot` window-capture helper + a screenshot convention.** Live verification grabs the
   whole `DISPLAY=:1` (`PIL ImageGrab`), which captures the entire multi-monitor desktop — leaking
   whatever else is on screen (Discord, the other monitor) into shared/committed images, and needing a
