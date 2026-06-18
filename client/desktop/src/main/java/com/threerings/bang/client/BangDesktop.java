@@ -21,11 +21,23 @@ public class BangDesktop
 
         AppSettings settings = new AppSettings(true);
         settings.setTitle("Bang! Howdy");
-        settings.setResolution(BangPrefs.getDisplayWidth(), BangPrefs.getDisplayHeight());
-        settings.setFullscreen(BangPrefs.isFullscreen());
+        // seed width/height/bpp/freq/fullscreen from stored preferences (clamped to the minimum
+        // playable size); -Dsafemode=true forces the minimum windowed mode for recovery.
+        BangPrefs.configureDisplayMode(settings, Boolean.getBoolean("safemode"));
         settings.setVSync(true);
         // request a depth buffer for the 3D scene.
         settings.setDepthBits(24);
+
+        // BUG-1: create the GLFW window resizable (so the OS gives it a maximize button and lets
+        // the user drag-resize / maximize) and centered. Without this the LWJGL3 context defaults
+        // to a fixed, non-resizable window. jME3's RenderManager.notifyReshape (driven by the GLFW
+        // framebuffer-size callback) re-fits every viewport camera on resize, and our BUI
+        // SceneProcessor reads the GUI viewport size each frame, so resizing "just works" visually.
+        settings.setResizable(true);
+        settings.setCenterWindow(true);
+        // hint a minimum playable size (advisory on LWJGL3; the resolution chooser enforces it).
+        settings.setMinResolution(BangUI.MIN_WIDTH, BangUI.MIN_HEIGHT);
+
         app.setSettings(settings);
         app.setShowSettings(false);
         app.setPauseOnLostFocus(false);

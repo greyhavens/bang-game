@@ -37,9 +37,16 @@ public class IconInfluenceViz extends InfluenceViz
         Geometry iconQuad = IconConfig.createIcon(
                     ctx, "influences/icons/" + _name + ".png",
                     ICON_SIZE, ICON_SIZE);
-        iconQuad.setLocalTranslation(new Vector3f(0f, TILE_SIZE/4, 0f));
+        // jME3 Quad is corner-origin (0,0)-(w,h); the fork Quad was centered on its origin. Recenter
+        // the quad on the billboard pivot (then lift it by TILE_SIZE/4) so it reads as a small upright
+        // icon floating beside the unit's head rather than an off-pivot quad.
+        iconQuad.setLocalTranslation(new Vector3f(
+                    -ICON_SIZE/2f, TILE_SIZE/4 - ICON_SIZE/2f, 0f));
         _billboard.attachChild(iconQuad);
         target.attachChild(_billboard);
+        // force the billboard's transforms/bounds to refresh so the BillboardControl orients it
+        // (screen-facing/upright) on the first render instead of lying flat in the board plane.
+        _billboard.updateGeometricState();
     }
 
     @Override // documentation inherited

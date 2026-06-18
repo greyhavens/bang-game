@@ -29,6 +29,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
+import com.jme3.texture.Texture2D;
 
 /**
  * Build-time re-authoring bridge: converts a fork
@@ -101,8 +102,26 @@ public class ParticleConverter
 
     public ParticleConverter (AssetManager assetManager, String typePath)
     {
+        this(assetManager, typePath, 1f);
+    }
+
+    /**
+     * @param effectScale the effect node's {@code particles.properties} {@code scale} (the value the
+     * runtime {@code ParticleCache} applies as the loaded prototype's {@code localScale}). The fork
+     * particle systems author per-particle sizes in <em>pre-scale</em> world units (e.g. the
+     * frontier_town explosion's 22.5/66 etc.) and rely on the scaled effect node to shrink the
+     * rendered billboards. jME3's {@code ParticleEmitter}, however, draws world-space (non-following)
+     * particles with {@code setIgnoreTransform(true)} — so the node {@code localScale} never reaches
+     * the quad size (jME3's {@code emitParticle} comment: "TODO: Make scale relevant somehow??"). To
+     * preserve the fork's apparent size we bake the scale into {@code start/endSize} here. (Spawn
+     * <em>positions</em> are still scaled correctly at runtime: world-space emit transforms the
+     * particle position by the node's world transform, which does include the scale.)
+     */
+    public ParticleConverter (AssetManager assetManager, String typePath, float effectScale)
+    {
         _assets = assetManager;
         _typePath = typePath;
+        _effectScale = (effectScale > 0f) ? effectScale : 1f;
     }
 
     /**
@@ -153,9 +172,23 @@ public class ParticleConverter
         ParticleEmitter emitter =
             new ParticleEmitter(name(geom, "emitter"), Type.Triangle, count);
 
+        // The fork authors per-particle sizes/velocities in PRE-scale world units and relies on the
+        // scaled effect node (particles.properties scale) to shrink the whole rendered geometry. A
+        // jME3 world-space (non-following) emitter is drawn with ignoreTransform == true, so the
+        // node localScale never reaches the quad size NOR the per-step velocity integration (jME3's
+        // emitParticle even comments "TODO: Make scale relevant somehow??"); we therefore bake the
+        // effect scale into size/velocity/gravity for those emitters so the rendered size matches
+        // the fork (BUG-7: the explosion's world-space emitters otherwise rendered ~1/scale = ~20x
+        // too large). An emitter-local (transformParticles == true) emitter instead keeps
+        // ignoreTransform == false, so the node scale DOES apply and we must NOT pre-bake it (that
+        // would double-scale). Spawn positions/shape offsets are always transformed by the node at
+        // emit time, so only size/velocity/gravity need the pre-bake.
+        boolean worldSpace = !geom.isTransformParticles();
+        float sizeScale = worldSpace ? _effectScale : 1f;
+
         // ---- appearance ----
-        emitter.setStartSize(geom.getStartSize());
-        emitter.setEndSize(geom.getEndSize());
+        emitter.setStartSize(geom.getStartSize() * sizeScale);
+        emitter.setEndSize(geom.getEndSize() * sizeScale);
         emitter.setStartColor(color(geom.getStartColor()));
         emitter.setEndColor(color(geom.getEndColor()));
 
@@ -205,7 +238,11 @@ public class ParticleConverter
         if (initial.lengthSquared() < 1e-8f) {
             initial.set(0, 1, 0);
         }
-        initial.normalizeLocal().multLocal(vel);
+        // Scale the velocity by the same factor as the sizes (only for world-space emitters): jME3
+        // integrates a world-space emitter's position by velocity*tpf in unscaled world space (the
+        // node localScale is ignored), whereas the fork scaled the whole rendered geometry — so an
+        // unscaled velocity would blow the cloud spread out by ~1/scale (BUG-7).
+        initial.normalizeLocal().multLocal(vel * sizeScale);
         emitter.getParticleInfluencer().setInitialVelocity(initial);
         // map the fork emission cone [minAngle, maxAngle] (radians off the direction) to jME3's
         // single 0..1 velocity variation: full hemisphere (maxAngle >= PI/2) -> 1.0.
@@ -227,7 +264,7 @@ public class ParticleConverter
         emitter.setShape(shapeFor(geom, result));
 
         // ---- influences (gravity / wind) ----
-        applyInfluences(geom, emitter, result);
+        applyInfluences(geom, emitter, result, sizeScale);
 
         // ---- material (texture + blend) ----
         applyMaterial(geom, emitter, result);
@@ -296,7 +333,8 @@ public class ParticleConverter
                              : new EmitterPointShape(new Vector3f(off.x, off.y, off.z));
     }
 
-    protected void applyInfluences (ParticleGeometry geom, ParticleEmitter emitter, Result result)
+    protected void applyInfluences (
+        ParticleGeometry geom, ParticleEmitter emitter, Result result, float sizeScale)
     {
         List<ParticleInfluence> infs = geom.getInfluences();
         if (infs == null) {
@@ -325,7 +363,9 @@ public class ParticleConverter
             }
         }
         if (haveGravity) {
-            emitter.setGravity(gravity);
+            // scale gravity by the same factor as velocity/size (world-space emitters only; same
+            // ignoreTransform reason): jME3 integrates gravity in unscaled world space (BUG-7).
+            emitter.setGravity(gravity.multLocal(sizeScale));
         } else {
             // the fork applies no gravity unless a BasicGravity influence is present; jME3's default
             // gravity is (0,0.1,0), so zero it to match a no-gravity fork effect.
@@ -343,7 +383,7 @@ public class ParticleConverter
         if (texPath != null) {
             String assetPath = resolveTexturePath(texPath);
             try {
-                Texture tex = _assets.loadTexture(new TextureKey(assetPath, false));
+                Texture tex = loadParticleTexture(assetPath, result, geom);
                 mat.setTexture("Texture", tex);
             } catch (Exception e) {
                 result.texturesResolved = false;
@@ -367,6 +407,125 @@ public class ParticleConverter
         emitter.setImagesX(1);
         emitter.setImagesY(1);
         emitter.setMaterial(mat);
+    }
+
+    /**
+     * Loads a particle sprite texture, expanding a <em>palette PNG whose transparency lives only in
+     * a {@code tRNS} chunk</em> (PNG colortype&nbsp;3 + {@code tRNS}; e.g.
+     * {@code effects/frontier_town/lasso/tiny_star.png}, the star sprite the {@code
+     * frontier_town/get_bonus} burst uses) into an explicit, <b>keyless</b> RGBA8 texture baked into
+     * the {@code .j3o} (BUG-12 / audit M1).
+     *
+     * <p><b>Why:</b> these sprites are drawn with {@code Blend Additive} ({@code glBlendFunc(ONE,
+     * ONE)}), which adds the source RGB to the framebuffer <em>ignoring</em> the fragment alpha — so
+     * a background pixel only stays invisible if its RGB is black. A palette PNG's transparent
+     * background carries a palette <em>color</em> (often white/gold) under its {@code tRNS} alpha,
+     * and whether that survives as alpha=0 depends entirely on how the loading {@code AssetManager}'s
+     * PNG decoder treats colortype-3 + {@code tRNS}: jME3's stock {@code AWTLoader} routes an indexed
+     * {@code BufferedImage} through a {@code getTransparency()}-keyed branch that drops to opaque
+     * RGB8 (no alpha) whenever the platform {@code ImageIO} reports the indexed image OPAQUE — and
+     * the additive shader then ADDS the palette background color, painting the opaque white/gold
+     * block the audit caught under the unit. (Effects with a BLACK palette background, e.g.
+     * {@code explosion.png}, add nothing and looked fine, which is why the regression slipped
+     * through.)
+     *
+     * <p><b>Fix:</b> when the source is palette+{@code tRNS}, decode it ourselves via {@code ImageIO}
+     * into a {@code TYPE_INT_ARGB} image (which faithfully expands the {@code tRNS} palette alpha to
+     * a real alpha channel, with the transparent background forced to RGB(0,0,0)/alpha=0 so it adds
+     * nothing under additive), hand that ARGB image to {@code AWTLoader} (its non-opaque branch
+     * deterministically produces RGBA8), and wrap it in a {@code Texture2D} with <b>no
+     * {@code TextureKey}</b>. {@code Texture.read} re-loads from the {@code AssetManager} when a key
+     * is present and only falls back to the embedded image when the key is null — so a keyless
+     * texture bakes the normalized RGBA pixels straight into the {@code .j3o}, making the result
+     * independent of the runtime's PNG decoder. Keeping {@code Additive} preserves the faithful
+     * glowing-star look (bright stars glow; transparent background contributes nothing). All other
+     * textures keep the cheap key-based path (the runtime loads them straight from the shared PNG).
+     */
+    protected Texture loadParticleTexture (String assetPath, Result result, ParticleGeometry geom)
+        throws java.io.IOException
+    {
+        // Read the raw bytes once (small sprite PNGs) so we can both sniff the PNG header and decode
+        // it without depending on the locator type (file vs classpath).
+        byte[] png = readAsset(assetPath);
+        if (png != null && isPaletteWithTrns(png)) {
+            java.awt.image.BufferedImage src =
+                javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(png));
+            if (src != null) {
+                int w = src.getWidth(), h = src.getHeight();
+                java.awt.image.BufferedImage argb =
+                    new java.awt.image.BufferedImage(w, h, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+                // copy with the palette's tRNS alpha expanded; force fully-transparent texels to
+                // pure transparent black so additive blend adds nothing regardless of the palette
+                // entry's (often white) RGB.
+                for (int y = 0; y < h; y++) {
+                    for (int x = 0; x < w; x++) {
+                        int p = src.getRGB(x, y); // ARGB; ImageIO honours the tRNS palette alpha
+                        argb.setRGB(x, y, ((p >>> 24) == 0) ? 0 : p);
+                    }
+                }
+                com.jme3.texture.Image img =
+                    new com.jme3.texture.plugins.AWTLoader().load(argb, false);
+                Texture2D tex = new Texture2D(img);
+                // keyless: Texture.read uses the embedded RGBA image (a non-null key would make the
+                // runtime re-load the raw palette PNG and reintroduce the decoder-dependent bug).
+                tex.setKey(null);
+                result.notes.add(name(geom, "?") + ": expanded palette+tRNS texture " + assetPath +
+                    " to baked RGBA8 (additive-safe)");
+                return tex;
+            }
+        }
+        // non-palette (or palette without tRNS): keep the cheap key-based load; the runtime resolves
+        // the shared PNG itself.
+        return _assets.loadTexture(new TextureKey(assetPath, false));
+    }
+
+    /** Reads an AssetManager-relative asset's raw bytes (locator-agnostic), or null if absent. */
+    protected byte[] readAsset (String assetPath)
+    {
+        com.jme3.asset.AssetInfo info = _assets.locateAsset(new com.jme3.asset.AssetKey<>(assetPath));
+        if (info == null) {
+            return null;
+        }
+        try (java.io.InputStream in = info.openStream()) {
+            return in.readAllBytes();
+        } catch (java.io.IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * True if {@code png} is a PNG with colortype&nbsp;3 (palette) AND carries a {@code tRNS} chunk
+     * (palette-index transparency). Reads the IHDR colortype byte and scans the chunk stream for
+     * {@code tRNS} — no image decode needed.
+     */
+    protected static boolean isPaletteWithTrns (byte[] png)
+    {
+        // 8-byte signature + IHDR length(4)+type(4); IHDR data starts at 16, colortype is data[9].
+        if (png.length < 26) {
+            return false;
+        }
+        if ((png[0] & 0xFF) != 0x89 || png[1] != 'P' || png[2] != 'N' || png[3] != 'G') {
+            return false;
+        }
+        boolean palette = (png[25] & 0xFF) == 3; // IHDR colortype byte (offset 8+8+9 == 25)
+        if (!palette) {
+            return false;
+        }
+        // walk chunks looking for tRNS before the pixel data (tRNS, if present, precedes IDAT).
+        int i = 8;
+        while (i + 8 <= png.length) {
+            int len = ((png[i] & 0xFF) << 24) | ((png[i + 1] & 0xFF) << 16) |
+                      ((png[i + 2] & 0xFF) << 8) | (png[i + 3] & 0xFF);
+            String type = new String(png, i + 4, 4, java.nio.charset.StandardCharsets.US_ASCII);
+            if ("tRNS".equals(type)) {
+                return true;
+            }
+            if ("IDAT".equals(type) || "IEND".equals(type)) {
+                return false;
+            }
+            i += 12 + len; // length(4) + type(4) + data(len) + CRC(4)
+        }
+        return false;
     }
 
     protected String textureLocation (ParticleGeometry geom)
@@ -443,6 +602,10 @@ public class ParticleConverter
 
     protected final AssetManager _assets;
     protected final String _typePath;
+
+    /** The effect node's particles.properties scale, baked into per-particle size/velocity/gravity
+     * because jME3 ignores the node transform for world-space (non-following) emitters (BUG-7). */
+    protected final float _effectScale;
 
     /** jME3 rejects a zero/near-zero low life. */
     protected static final float MIN_LIFE_SEC = 0.01f;

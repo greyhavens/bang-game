@@ -170,10 +170,17 @@ public class Jme3RootNode extends BRootNode
         _mouseX = x;
         _mouseY = y;
 
-        // mouse wheel
+        // jME3 folds wheel scrolling into the mouse-motion event (MouseMotionEvent.getDeltaWheel);
+        // a pure scroll arrives with dx==dy==0 and only deltaWheel set. The fork delivered wheel via
+        // a dedicated onWheel() that recomputed the hover component for the wheel's coords and then
+        // dispatched MOUSE_WHEELED to it; do the same here so the event lands on whatever component
+        // the cursor is over (e.g. BangBoardView's swing-camera listener) even when the wheel turns
+        // without a preceding mouse move (otherwise the wheel dispatches against a stale/null hover
+        // target and GameInputHandler._swingListener never fires -> camera never rotates).
         int wheelDelta = mme.getDeltaWheel();
         if (wheelDelta != 0) {
-            // jME3 reports positive deltaWheel for scroll up; BUI expects positive for up too
+            updateHoverComponent(x, y);
+            // jME3 reports positive deltaWheel for scroll up; BUI expects positive for up too.
             dispatchMouse(new MouseEvent(
                 this, _tickStamp, _modifiers, MouseEvent.MOUSE_WHEELED, -1, x, y,
                 wheelDelta > 0 ? 1 : -1));

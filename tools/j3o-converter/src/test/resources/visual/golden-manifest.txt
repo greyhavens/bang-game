@@ -49,6 +49,12 @@ ft_unit_tactician_shooting  | model | 0.005 | units/frontier_town/tactician shoo
 # single burst via emitAllParticles), so the explosion has fully faded by frame 40.
 ft_fx_explosion      | particle | 0.005 | frontier_town/explosion 8
 ft_fx_dust           | particle | 0.005 | frontier_town/dust 40
+# bonus-pickup star burst (BUG-12 / audit M1): its sprite (lasso/tiny_star.png) is a palette PNG
+# whose transparency lives only in a tRNS chunk; under the additive blend the converter now bakes a
+# normalized RGBA8 image into the .j3o (keyless), so the transparent background adds nothing instead
+# of painting an opaque block. This effect was never golden-tested, which is how the regression
+# slipped through; capture mid-burst (frame 8, one-shot RT_CLAMP).
+ft_fx_get_bonus      | particle | 0.005 | frontier_town/get_bonus 8
 
 # ---- indian_post ---------------------------------------------------------
 ip_unit_dogsoldier   | model    | 0.005 | units/indian_post/dogsoldier standing 0

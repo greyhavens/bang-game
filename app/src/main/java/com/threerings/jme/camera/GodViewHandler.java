@@ -54,8 +54,24 @@ public class GodViewHandler
     public static final String TILT_FORWARD = "tiltForward";
     public static final String TILT_BACK = "tiltBack";
 
-    /** Pan/zoom speed multiplier (formerly the fork InputAction speed). */
+    /** Zoom/orbit/tilt speed multiplier (formerly the fork InputAction speed). */
     public static final float SPEED = 0.5f;
+
+    /**
+     * WASD/arrow pan speed in world units per second (BUG-5).
+     *
+     * <p>The analog {@code value} for a held {@link KeyTrigger} is already tpf-weighted
+     * (jME3 {@code InputManager} passes {@code value == tpf}, ~0.016 at 60fps), so
+     * {@code PAN_SPEED * value} integrates to {@code PAN_SPEED} world units per second.
+     * The fork's pan {@code InputAction} used {@code setSpeed(0.5f)} against
+     * {@code evt.getTime()} (also seconds) — i.e. only 0.5 units/sec. With
+     * {@code BangMetrics.TILE_SIZE == 10}, that is 0.05 tiles/sec: a board is tens of
+     * tiles across, so a held key crawled "a few pixels" (BUG-5). A comfortable RTS pan
+     * is on the order of a few tiles/sec; live tuning settled on 40 units/sec (= 4 tiles/sec),
+     * letting a held key sweep a ~20-tile board in ~5s. (Kept separate from {@link #SPEED}
+     * so the zoom/orbit/tilt rate is unchanged.)
+     */
+    public static final float PAN_SPEED = 40f;
 
     /**
      * Creates the handler.
@@ -118,16 +134,16 @@ public class GodViewHandler
         // value already incorporates tpf for analog key triggers
         switch (name) {
         case FORWARD:
-            _camhand.panCamera(0, SPEED * value);
+            _camhand.panCamera(0, PAN_SPEED * value);
             break;
         case BACKWARD:
-            _camhand.panCamera(0, -SPEED * value);
+            _camhand.panCamera(0, -PAN_SPEED * value);
             break;
         case LEFT:
-            _camhand.panCamera(-SPEED * value, 0);
+            _camhand.panCamera(-PAN_SPEED * value, 0);
             break;
         case RIGHT:
-            _camhand.panCamera(SPEED * value, 0);
+            _camhand.panCamera(PAN_SPEED * value, 0);
             break;
         case ZOOM_IN:
             _camhand.zoomCamera(-SPEED * value);

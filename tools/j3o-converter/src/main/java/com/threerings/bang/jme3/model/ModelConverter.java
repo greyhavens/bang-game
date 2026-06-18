@@ -142,6 +142,12 @@ public class ModelConverter
         /** Total TransformTracks across all converted AnimClips. */
         public int animTracks;
 
+        /** Names of nodes that are BOTH an armature Joint AND a converted Node carrying rigid
+         * geometry descendants (the homestead-float at-risk pattern: such a node needs its
+         * keyframes to drive both targets, which {@link #resolveTrackTargets} now does). Reported
+         * for the cross-model audit. */
+        public final List<String> dualTargetGeoNodes = new ArrayList<>();
+
         public boolean isAnimated () { return !animations.isEmpty(); }
         public boolean isSkinned () { return skinnedMeshes > 0; }
     }
@@ -199,6 +205,15 @@ public class ModelConverter
         result.root.setUserData("bang.properties", buf.toString());
         result.root.setUserData("bang.animations", String.join(",", model.getAnimationNames()));
         result.root.setUserData("bang.type", _typePath);
+
+        // audit: flag nodes that are BOTH a Joint AND a converted Node with rigid geometry
+        // descendants (the homestead-float at-risk pattern).
+        for (ModelNode bn : _joints.keySet()) {
+            Spatial node = _nodeMap.get(bn);
+            if (node != null && hasGeometryDescendant(node)) {
+                result.dualTargetGeoNodes.add(bn.getName());
+            }
+        }
 
         return result;
     }
@@ -642,35 +657,43 @@ public class ModelConverter
         List<AnimTrack<?>> tracks = new ArrayList<>();
         com.jme.scene.Spatial[] targets = anim.transformTargets;
         for (int tt = 0; tt < targets.length; tt++) {
-            HasLocalTransform target = resolveTrackTarget(targets[tt]);
-            if (target == null) {
-                continue; // target wasn't converted (e.g. under a skipped ParticleMesh)
-            }
-            // The model-root joint is pinned to identity (see buildArmature: the fork's
-            // getModelTransform() always returns IDENTITY for the root ModelNode, dropping its
-            // TRS — for the bind pose AND every animated frame). If a clip animates the root,
-            // honouring those keyframes would re-introduce the dropped transform on the joint and
-            // re-contort the skin off-bind, so force the root-joint track to identity to match.
-            boolean rootJoint = (target == _rootJoint);
-            Vector3f[] trans = new Vector3f[frames];
-            Quaternion[] rots = new Quaternion[frames];
-            Vector3f[] scales = new Vector3f[frames];
-            for (int ff = 0; ff < frames; ff++) {
-                if (rootJoint) {
-                    trans[ff] = new Vector3f();
-                    rots[ff] = new Quaternion();
-                    scales[ff] = new Vector3f(1f, 1f, 1f);
-                    continue;
+            // A fork node may map to MORE THAN ONE jME3 track target: it is always converted to
+            // a Node (carrying its rigid mesh/child descendants), and if it is also a skinning
+            // bone (or a bone ancestor) it ALSO has an armature Joint. The fork drives the single
+            // ModelNode and both its rigid children and the skin follow; jME3 splits these, so the
+            // SAME keyframes must drive BOTH the converted Node and the Joint. Animating only the
+            // Joint (the earlier behaviour) froze the rigid children at the bind pose — e.g. the
+            // homestead's "Homestead" node is a flag-bone ancestor that also carries the house
+            // mesh, so the house floated at its bind Z while the flag rig posed correctly.
+            for (HasLocalTransform target : resolveTrackTargets(targets[tt])) {
+                // The model-root joint is pinned to identity (see buildArmature: the fork's
+                // getModelTransform() always returns IDENTITY for the root ModelNode, dropping its
+                // TRS — for the bind pose AND every animated frame). If a clip animates the root,
+                // honouring those keyframes would re-introduce the dropped transform on the joint
+                // and re-contort the skin off-bind, so force the root-joint track to identity to
+                // match. (This only applies to the Joint target; the converted Node, if any, still
+                // gets the real keyframes so its rigid descendants animate.)
+                boolean rootJoint = (target == _rootJoint);
+                Vector3f[] trans = new Vector3f[frames];
+                Quaternion[] rots = new Quaternion[frames];
+                Vector3f[] scales = new Vector3f[frames];
+                for (int ff = 0; ff < frames; ff++) {
+                    if (rootJoint) {
+                        trans[ff] = new Vector3f();
+                        rots[ff] = new Quaternion();
+                        scales[ff] = new Vector3f(1f, 1f, 1f);
+                        continue;
+                    }
+                    Model.Transform xf = anim.transforms[ff][tt];
+                    com.jme.math.Vector3f t = ModelAnimAccess.translation(xf);
+                    com.jme.math.Quaternion r = ModelAnimAccess.rotation(xf);
+                    com.jme.math.Vector3f s = ModelAnimAccess.scale(xf);
+                    trans[ff] = new Vector3f(t.x, t.y, t.z);
+                    rots[ff] = new Quaternion(r.x, r.y, r.z, r.w);
+                    scales[ff] = new Vector3f(s.x, s.y, s.z);
                 }
-                Model.Transform xf = anim.transforms[ff][tt];
-                com.jme.math.Vector3f t = ModelAnimAccess.translation(xf);
-                com.jme.math.Quaternion r = ModelAnimAccess.rotation(xf);
-                com.jme.math.Vector3f s = ModelAnimAccess.scale(xf);
-                trans[ff] = new Vector3f(t.x, t.y, t.z);
-                rots[ff] = new Quaternion(r.x, r.y, r.z, r.w);
-                scales[ff] = new Vector3f(s.x, s.y, s.z);
+                tracks.add(new TransformTrack(target, times, trans, rots, scales));
             }
-            tracks.add(new TransformTrack(target, times, trans, rots, scales));
         }
         if (tracks.isEmpty()) {
             return null;
@@ -681,15 +704,51 @@ public class ModelConverter
     }
 
     /**
-     * Resolves an animation target (a fork Spatial) to its jME3 track target: a {@link Joint}
-     * if the node is a skinning bone, otherwise the converted {@link Node} (rigid animation).
+     * Resolves an animation target (a fork Spatial) to every jME3 track target it drives.
+     *
+     * <p>A fork {@link ModelNode} is always converted to a jME3 {@link Node} (carrying its rigid
+     * mesh/child descendants); if it is also a skinning bone or a bone ancestor it ALSO has an
+     * armature {@link Joint}. The fork drives the single ModelNode and both its rigid children and
+     * the skin follow. jME3 splits these into a Node (positions the rigid descendants) and a Joint
+     * (deforms the skin), so the SAME keyframes must drive BOTH — otherwise a node that is a bone
+     * ancestor yet also carries geometry (e.g. the homestead's "Homestead" node: a flag-bone
+     * ancestor that holds the house mesh) leaves its rigid descendants frozen at the bind pose
+     * while only the skin poses, floating the geometry.
+     *
+     * <p>Returns at most two targets (Node and/or Joint), the Joint first. A non-{@link ModelNode}
+     * target (e.g. a rigid {@link com.jme.scene.TriMesh} converted to a {@link Geometry}) yields
+     * its single converted spatial.
      */
-    protected HasLocalTransform resolveTrackTarget (com.jme.scene.Spatial forkTarget)
+    protected List<HasLocalTransform> resolveTrackTargets (com.jme.scene.Spatial forkTarget)
     {
-        if (forkTarget instanceof ModelNode mn && _joints.containsKey(mn)) {
-            return _joints.get(mn);
+        List<HasLocalTransform> out = new ArrayList<>(2);
+        if (forkTarget instanceof ModelNode mn) {
+            Joint joint = _joints.get(mn);
+            if (joint != null) {
+                out.add(joint);
+            }
         }
-        return _nodeMap.get(forkTarget);
+        Spatial node = _nodeMap.get(forkTarget);
+        if (node instanceof HasLocalTransform hlt) {
+            out.add(hlt);
+        }
+        return out;
+    }
+
+    /** True if the converted spatial is, or contains, a {@link Geometry} (rigid mesh). */
+    protected static boolean hasGeometryDescendant (Spatial sp)
+    {
+        if (sp instanceof Geometry) {
+            return true;
+        }
+        if (sp instanceof Node n) {
+            for (Spatial child : n.getChildren()) {
+                if (hasGeometryDescendant(child)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     protected String uniqueJointName (String base)

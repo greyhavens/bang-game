@@ -202,8 +202,12 @@ public class PieceTarget extends Node
         bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
         attachChild(bbn);
 
-        // this icon is displayed when we're highlighted as a potential target
+        // this icon is displayed when we're highlighted as a potential target.
+        // jME3's Quad is corner-anchored (spans (0,0)-(w,h)) whereas the fork's
+        // jME1 Quad was center-anchored, so shift each quad by (-w/2,-h/2) to
+        // re-center it on its intended anchor point (matching the fork's layout).
         _tgtquad = IconConfig.createIcon(crossMaterial(_ctx, 0));
+        _tgtquad.setLocalTranslation(new Vector3f(-TILE_SIZE/2f, -TILE_SIZE/2f, 0));
         bbn.attachChild(_tgtquad);
         _tgtquad.setCullHint(CullHint.Always);
 
@@ -212,14 +216,15 @@ public class PieceTarget extends Node
         for (int ii = 0; ii < _modquad.length; ii++) {
             _modquad[ii] = IconConfig.createIcon(
                     modMaterial(_ctx, 0), TILE_SIZE/4f, TILE_SIZE/4f);
-            _modquad[ii].setLocalTranslation(MOD_COORDS[ii]);
+            _modquad[ii].setLocalTranslation(MOD_COORDS[ii].add(
+                    -TILE_SIZE/8f, -TILE_SIZE/8f, 0));
             bbn.attachChild(_modquad[ii]);
             _modquad[ii].setCullHint(CullHint.Always);
         }
 
         // this icon is displayed when we have pending shots aimed at us
         _ptquad = IconConfig.createIcon(crossMaterial(_ctx, 2));
-        _ptquad.setLocalTranslation(new Vector3f(0, TILE_SIZE/2, 0));
+        _ptquad.setLocalTranslation(new Vector3f(-TILE_SIZE/2f, 0, 0));
         _ptquad.getMesh().setBuffer(VertexBuffer.Type.TexCoord, 2,
                 BufferUtils.createFloatBuffer(PTARG_COORDS));
         bbn.attachChild(_ptquad);

@@ -49,13 +49,11 @@ public class BangPrefs
      * <p>jME3 cutover: the fork wrote into a {@code com.jme.system.PropertiesIO} and queried the
      * LWJGL2 {@code org.lwjgl.opengl.Display} to discover/sanitize the current mode (throwing the
      * fork {@code JmeException}). Mode <em>enumeration/validation</em> against the live display is
-     * a host concern handled by the jME3/LWJGL3 context at Phase 3; here we only seed the
-     * AppSettings from stored preferences. The actual fullscreen-mode resolution that used the
-     * LWJGL2 display is deferred.
-     *
-     * TODO(phase3-host): validate the requested mode against the GLFW monitor modes the LWJGL3
-     * context exposes (the fork's getClosest()/Display.getDisplayMode() sanitization), and force
-     * fullscreen / minimum-size fallbacks there.
+     * a host concern: at launch the GLFW context/window does not exist yet, so there is nothing to
+     * query — we only seed the AppSettings from stored preferences (clamped to the minimum playable
+     * size). The live monitor-mode resolution (a sane fullscreen target, the nearest-mode picker)
+     * happens at runtime against the LWJGL3 context in {@link OptionsView} / {@link
+     * com.threerings.jme.JmeApp#getPrimaryMonitorMode}, where the context is up.
      */
     public static void configureDisplayMode (AppSettings settings, boolean safeMode)
     {
@@ -65,17 +63,21 @@ public class BangPrefs
                 config.getValue("display_height", BangUI.MIN_HEIGHT);
         int bpp = safeMode ? 16 : config.getValue("display_bpp", 16);
         int freq = safeMode ? 60 : config.getValue("display_freq", 60);
-        boolean fullscreen = safeMode ? true : isFullscreen();
+        // safe mode recovers to the minimum windowed size (fullscreen off) so a bad stored
+        // fullscreen/resolution can't lock the user out.
+        boolean fullscreen = safeMode ? false : isFullscreen();
 
-        settings.setWidth(Math.max(width, BangUI.MIN_WIDTH));
-        settings.setHeight(Math.max(height, BangUI.MIN_HEIGHT));
+        int w = Math.max(width, BangUI.MIN_WIDTH);
+        int h = Math.max(height, BangUI.MIN_HEIGHT);
+        settings.setResolution(w, h);
+        settings.setWindowSize(w, h);
         settings.setBitsPerPixel(bpp);
         settings.setFrequency(freq);
         settings.setFullscreen(fullscreen);
 
         log.info("Display " + (safeMode ? "in safe mode: " : "mode: ") +
                  settings.getWidth() + "x" + settings.getHeight() +
-                 "x" + bpp + " " + freq + "Hz.");
+                 "x" + bpp + " " + freq + "Hz" + (fullscreen ? " fullscreen" : "") + ".");
     }
 
     public static int getDisplayWidth () {
@@ -394,8 +396,9 @@ public class BangPrefs
         config.setValue(username + ".town_id", townId);
     }
 
-    // TODO(phase3-host): the fork's getClosest()/closer() picked the nearest available LWJGL2
-    // DisplayMode from Display.getAvailableDisplayModes(). Mode enumeration is a host concern; the
-    // LWJGL3/GLFW context exposes monitor modes at Phase 3, where this nearest-mode picker is
-    // re-implemented for the fullscreen resolution chooser (OptionsView).
+    // jME3 cutover: the fork's getClosest()/closer() picked the nearest available LWJGL2
+    // DisplayMode from Display.getAvailableDisplayModes(). Mode enumeration is a host concern: the
+    // LWJGL3/GLFW context exposes the primary-monitor native mode via JmeApp.getPrimaryMonitorMode
+    // (a fork-free jME3 Displays read), and OptionsView offers a curated windowed-resolution list
+    // clamped to MIN_WIDTH/MIN_HEIGHT for the resolution chooser.
 }

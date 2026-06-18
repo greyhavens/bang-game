@@ -127,6 +127,20 @@ tasks.register("renderWaterToPng", JavaExec) {
   args = [ rsrc, out, frame ]
 }
 
+// BUG-4 verification (counter billboard mirror + bottom-clip). Renders the counter-text billboard
+// the way CounterSprite does, from 8 azimuths around the Z-up board, with a chosen alignment.
+//   ./gradlew :tools:j3o-converter:renderCounterToPng \
+//       -Ptext=2 -Palign=Screen -Pout=/tmp/counter
+tasks.register("renderCounterToPng", JavaExec) {
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderCounterToPng"
+  def font = rootProject.file("assets/rsrc/ui/fonts/oldtown.ttf").absolutePath
+  def text = project.hasProperty("text") ? project.property("text").toString() : "2"
+  def align = project.hasProperty("align") ? project.property("align").toString() : "Screen"
+  def out = project.hasProperty("out") ? project.property("out").toString() : "/tmp/counter"
+  args = [ font, text, align, out ]
+}
+
 // Phase 5 (harness #1, deliverable #1): render a unit / big-shot CHARACTER model with its skin and
 // a posed animation frame applied, framed and lit like the board (Z-up). This is the mode that
 // unblocks the Phase-6 sprite defects (shotgun-dude unit, mounted/horse big-shot). Same isolated

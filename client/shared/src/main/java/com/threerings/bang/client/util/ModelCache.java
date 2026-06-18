@@ -40,8 +40,10 @@ import com.threerings.bang.util.BasicContext;
  * <p><b>Phase boundary.</b> The {@code .j3o} bake + loader registration
  * ({@code BangModelLoader} on the client {@code AssetManager}) is wired at the Phase-3 host flip;
  * until then {@link #loadPrototype} resolves against the live {@code AssetManager} the host
- * supplies. The colorization recolour behind {@link ModelTextureResolver#colorize} is the
- * colorization port's job (designed; identity hook today).
+ * supplies. Per-owner colorization recolour is applied at instance time by
+ * {@link ModelTextureProvider#getTexture}, routing colorized model-texture loads through the
+ * zation-aware {@code TextureCache} (the fork's approach); the bake-time
+ * {@link ModelTextureResolver#colorize} hook stays identity (goldens render without zations).
  */
 public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
 {
@@ -218,9 +220,19 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
         public Texture getTexture (Geometry geom, String name)
         {
             String path = _resolver.textureAssetPath(_key.type, name);
-            // colorization recolour is applied behind ModelTextureResolver.colorize (designed;
-            // identity today). Variant/detail selection rides the resolver's own state.
-            return _ctx.getAssetManager().loadTexture(path);
+            // Reproduce the fork ModelCache.ModelTextureProvider: with no colorizations, bind the
+            // texture exactly as baked (stock AssetManager.loadTexture, identical to the bake-time
+            // ModelTextureResolver path that produces the goldens). With colorizations (team/owner
+            // tinting from PieceSprite.updateColorizations, colorLookup[owner+1]), route through the
+            // zation-aware TextureCache so the texture's paletted pixels are recoloured per the
+            // owner's zations -- the fork did exactly this:
+            //   tstate.setTexture(_zations == null ?
+            //       cache.getTexture(path, scale) : cache.getTexture(path, _zations, scale));
+            if (_zations == null) {
+                return _ctx.getAssetManager().loadTexture(path);
+            }
+            float scale = BangPrefs.isMediumDetail() ? 1f : 0.5f;
+            return _ctx.getTextureCache().getTexture(path, _zations, scale);
         }
 
         /** The model key. */

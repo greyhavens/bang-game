@@ -429,9 +429,18 @@ public class ActiveSprite extends PieceSprite
             _model.fastForwardAnimation(time);
         }
         
-        // if we are in low detail mode, stop the idle animation at the first frame; jME3 advances
-        // geometric state in the update loop, so we just stop the animation (it rests on frame 0).
+        // if we are in low detail mode, stop the idle animation at the first frame. The fork posed
+        // the mesh here via _model.updateGeometricState(0f, false) BEFORE stopping; on jME3 the
+        // SkinningControl only deforms the skin when its controls actually run a tick while the
+        // action is current. If we just call stopAnimation() (which removes the composer action)
+        // the SkinningControl never consumes the posed armature and the skinned mesh renders as an
+        // unposed/exploded mass (BUG-9: the neutral homestead). So drive the controls with two
+        // tpf=0 ticks (the bake documents this skin-then-pose ordering in Models.poseAnimation),
+        // update geometric state to bake the frame-0 pose, and only then stop the animation.
         if (!BangPrefs.isMediumDetail() && _idle != null) {
+            _model.updateLogicalState(0f);
+            _model.updateLogicalState(0f);
+            _model.updateGeometricState();
             _model.stopAnimation();
             _nextIdle = Float.MAX_VALUE;
         }

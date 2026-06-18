@@ -236,11 +236,28 @@ public class Jme3RenderBackend implements BRenderBackend
         }
     }
 
-    /** Builds a transient quad geometry sized to the supplied dimensions. */
+    /**
+     * Returns a reusable quad geometry sized to the supplied dimensions.
+     *
+     * <p>BUI repaints in immediate mode every frame, so this is called many times per frame. A
+     * fresh {@code new Geometry(new Quad(...))} each call would allocate four {@link
+     * com.jme3.scene.VertexBuffer}s whose GL upload registers them with jME3's {@code
+     * NativeObjectManager}; those registrations are only released once the buffers are GC'd and
+     * their GL handles deleted, which never happens for throwaway geometry, so the manager's ref
+     * map grows without bound (a severe per-frame native-buffer leak). Instead we keep one cached
+     * quad and resize it in place via {@link Quad#updateGeometry} -- {@code Mesh.setBuffer} reuses
+     * the existing VertexBuffer objects (updateData), so no new native objects are ever registered
+     * after the first frame.</p>
+     */
     protected Geometry quad (float width, float height)
     {
-        Geometry geom = new Geometry("bui-quad", new Quad(width, height));
-        return geom;
+        if (_quadMesh == null) {
+            _quadMesh = new Quad(width, height);
+            _quadGeom = new Geometry("bui-quad", _quadMesh);
+        } else {
+            _quadMesh.updateGeometry(width, height);
+        }
+        return _quadGeom;
     }
 
     /** Renders a geometry at the supplied BUI-space coordinates (translate stack applied). */
@@ -253,6 +270,11 @@ public class Jme3RenderBackend implements BRenderBackend
 
     protected AssetManager _assets;
     protected Material _solid;
+
+    /** Reused per-frame primitive quad (see {@link #quad}); resized in place to avoid leaking a
+     * fresh mesh's VertexBuffers into jME3's NativeObjectManager every frame. */
+    protected Quad _quadMesh;
+    protected Geometry _quadGeom;
 
     protected RenderManager _rm;
     protected int _displayWidth, _displayHeight;

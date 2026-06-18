@@ -95,7 +95,19 @@ public class Jme3ImageBacking implements BImageBacking
         if (_backend.getRenderManager() == null) {
             return;
         }
-        Quad quad = new Quad(twidth, theight);
+        // BUI repaints in immediate mode every frame, so this runs many times per frame. Allocating
+        // a fresh Quad+Geometry each call would leak the quad's VertexBuffers into jME3's
+        // NativeObjectManager on GL upload (the registrations are never released for throwaway
+        // geometry), growing the manager's ref map without bound. Reuse one cached quad/geometry and
+        // resize it in place; Quad.updateGeometry / Mesh.setBuffer reuse the existing VertexBuffers.
+        if (_quad == null) {
+            _quad = new Quad(twidth, theight);
+            _geom = new Geometry("bui-image", _quad);
+            _geom.setMaterial(_material);
+        } else {
+            _quad.updateGeometry(twidth, theight);
+        }
+        Quad quad = _quad;
         // jME3's Quad lays out tex coords (0,0)-(1,1); rewrite to our sub-rect. Quad winds
         // bottom-left, bottom-right, top-right, top-left.
         VertexBuffer tc = quad.getBuffer(VertexBuffer.Type.TexCoord);
@@ -107,8 +119,7 @@ public class Jme3ImageBacking implements BImageBacking
 
         _material.setColor("Color", new ColorRGBA(1f, 1f, 1f, alpha));
 
-        Geometry geom = new Geometry("bui-image", quad);
-        geom.setMaterial(_material);
+        Geometry geom = _geom;
         geom.setLocalTranslation(_backend.getTranslateX() + tx,
                                  _backend.getTranslateY() + ty, 0);
         geom.updateGeometricState();
@@ -130,6 +141,11 @@ public class Jme3ImageBacking implements BImageBacking
     protected Jme3RenderBackend _backend;
     protected BImage _image;
     protected Material _material;
+
+    /** Reused quad/geometry for this backing (see {@link #render}); resized in place to avoid
+     * leaking a fresh mesh's VertexBuffers into jME3's NativeObjectManager every frame. */
+    protected Quad _quad;
+    protected Geometry _geom;
     protected int _twidth, _theight;
     protected float _lx, _ly, _ux = 1f, _uy = 1f;
 }

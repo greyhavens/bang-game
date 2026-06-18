@@ -444,7 +444,7 @@ public class UnitSprite extends MobileSprite
         // this composite of icons combines to display our status
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, true, true);
-        attachHighlight(_status = new UnitStatus(_ctx, _tlight));
+        attachHighlight(_status = new UnitStatus(_ctx, _tlight, this));
         _ustatus = (UnitStatus)_status;
         _ustatus.update(
                 _piece, _piece.ticksUntilMovable(_tick), _pendo, false, _pidx);

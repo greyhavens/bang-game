@@ -40,6 +40,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
+import com.jme3.system.AppSettings;
 import com.jme3.texture.FrameBuffer;
 
 import com.jmex.bui.BRootNode;
@@ -190,6 +191,13 @@ public class JmeApp extends SimpleApplication
         // drain runnables posted from other threads (Presents run queue) on the render thread.
         executeRunnables();
 
+        // advance the active camera path (game-start board tour, swing/roll, pans). The fork's
+        // main loop ticked this every frame; SimpleApplication.simpleUpdate must do the same or
+        // scripted camera moves (CameraHandler.moveCamera) are set but never animate.
+        if (_camhand != null) {
+            _camhand.update(tpf);
+        }
+
         // drive per-frame BUI logic (tooltips, geom views, key repeat).
         if (_rnode != null) {
             _rnode.updateRootState(tpf);
@@ -269,6 +277,103 @@ public class JmeApp extends SimpleApplication
         if (ctx != null) {
             ctx.setTitle(title);
         }
+    }
+
+    /**
+     * Returns true if the live LWJGL3/GLFW context is currently in fullscreen mode (reads the
+     * settings the context applied, not a stored preference). Replaces the fork's
+     * {@code DisplaySystem.isFullScreen()}.
+     */
+    public boolean isFullscreen ()
+    {
+        AppSettings s = (settings != null) ? settings : getContext().getSettings();
+        return s != null && s.isFullscreen();
+    }
+
+    /**
+     * Returns the current window width (logical pixels) of the live context, or 0 if unavailable.
+     */
+    public int getDisplayWidth ()
+    {
+        return (_camera != null) ? _camera.getWidth() : 0;
+    }
+
+    /**
+     * Returns the current window height (logical pixels) of the live context, or 0 if unavailable.
+     */
+    public int getDisplayHeight ()
+    {
+        return (_camera != null) ? _camera.getHeight() : 0;
+    }
+
+    /**
+     * Returns the native (desktop) resolution of the primary monitor as <code>{width, height,
+     * refreshHz}</code>, read from the LWJGL3/GLFW context's monitor list. Returns
+     * <code>null</code> if the context cannot supply it (e.g. headless). This replaces the fork's
+     * LWJGL2 {@code Display.getDisplayMode()} for picking a sane fullscreen target — the jME3
+     * {@code DisplayInfo} exposes only the monitor's current mode, which is exactly the mode we
+     * want for desktop fullscreen.
+     */
+    public int[] getPrimaryMonitorMode ()
+    {
+        try {
+            com.jme3.system.JmeContext ctx = getContext();
+            if (ctx == null) {
+                return null;
+            }
+            com.jme3.system.Displays displays = ctx.getDisplays();
+            if (displays == null || displays.size() == 0) {
+                return null;
+            }
+            com.jme3.system.DisplayInfo info = displays.get(ctx.getPrimaryDisplay());
+            if (info == null) {
+                return null;
+            }
+            return new int[] { info.getWidth(), info.getHeight(), info.getRate() };
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    /**
+     * Switches the live LWJGL3/GLFW window to the requested display mode by mutating our
+     * {@link AppSettings} and restarting the context (the jME3 way; the fork called
+     * {@code DisplaySystem.recreateWindow}). Safe to call from any thread — the work is posted to
+     * the render thread. A windowed switch resizes the existing window; a fullscreen switch
+     * recreates it against the primary monitor.
+     *
+     * @param width  desired window/framebuffer width.
+     * @param height desired window/framebuffer height.
+     * @param bpp    bits per pixel (16/24/32); &lt;= 0 leaves the current value.
+     * @param freq   refresh rate in Hz; &lt;= 0 leaves the current value.
+     * @param fullscreen whether to go fullscreen.
+     */
+    public void switchDisplayMode (
+        final int width, final int height, final int bpp, final int freq, final boolean fullscreen)
+    {
+        postRunnable(new Runnable() {
+            public void run () {
+                AppSettings s = settings;
+                if (s == null) {
+                    return;
+                }
+                s.setResizable(true);
+                s.setFullscreen(fullscreen);
+                if (bpp > 0) {
+                    s.setBitsPerPixel(bpp);
+                }
+                if (freq > 0) {
+                    s.setFrequency(freq);
+                }
+                // setResolution/setWindowSize keep the framebuffer and the logical window size in
+                // step (matters for HiDPI); both set so the GLFW window comes up at the size.
+                s.setWindowSize(width, height);
+                s.setResolution(width, height);
+                // applies the mutated settings to the context and triggers a GLFW window
+                // recreate; the framebuffer-resize callback re-fits the viewport cameras.
+                restart();
+            }
+        });
     }
 
     /**

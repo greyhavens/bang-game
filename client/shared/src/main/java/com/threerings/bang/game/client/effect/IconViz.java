@@ -77,10 +77,12 @@ public class IconViz extends EffectViz
         createBillboard();
         if (_ipath != null) {
             if (_card) {
-                _billboard.attachChild(IconConfig.createIcon(_ctx,
-                    "textures/effects/cardback.png", ICON_SIZE, ICON_SIZE));
-                _billboard.attachChild(IconConfig.createIcon(_ctx,
-                    _ipath, CARD_SIZE, CARD_SIZE));
+                // jME3 Quad is corner-anchored (the fork's was centered), so center each icon
+                // on the billboard origin or it floats up-and-to-the-side by half its size.
+                attachCentered(IconConfig.createIcon(_ctx,
+                    "textures/effects/cardback.png", ICON_SIZE, ICON_SIZE), ICON_SIZE, ICON_SIZE);
+                attachCentered(IconConfig.createIcon(_ctx,
+                    _ipath, CARD_SIZE, CARD_SIZE), CARD_SIZE, CARD_SIZE);
 
             } else {
                 ColorRGBA color = ColorRGBA.White;
@@ -89,10 +91,20 @@ public class IconViz extends EffectViz
                 } else if (_sprite != null) {
                     color = getJPieceColor(_sprite.getPiece().owner);
                 }
-                _billboard.attachChild(IconConfig.createIcon(_ctx,
-                    _ipath, ICON_SIZE, ICON_SIZE, color));
+                attachCentered(IconConfig.createIcon(_ctx,
+                    _ipath, ICON_SIZE, ICON_SIZE, color), ICON_SIZE, ICON_SIZE);
             }
         }
+    }
+
+    /**
+     * Centers a corner-anchored icon quad on the billboard origin and attaches it. jME3's
+     * {@code Quad} spans (0,0)-(w,h), so without this shift the icon hangs off the pivot.
+     */
+    protected void attachCentered (Geometry icon, float width, float height)
+    {
+        icon.setLocalTranslation(-width / 2f, -height / 2f, 0f);
+        _billboard.attachChild(icon);
     }
 
     @Override // documentation inherited

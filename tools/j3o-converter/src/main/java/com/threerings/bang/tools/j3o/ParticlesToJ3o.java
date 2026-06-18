@@ -151,7 +151,12 @@ public class ParticlesToJ3o
         } finally {
             TextureKey.setLocationOverride(null);
         }
-        ParticleConverter converter = new ParticleConverter(am, key);
+        // the runtime ParticleCache applies the particles.properties `scale` as the effect node's
+        // localScale, but jME3 ignores the node transform for world-space (non-following) emitters
+        // (BUG-7) — so bake that scale into those emitters' per-particle size/velocity/gravity at
+        // convert time. Read the same sidecar/ default (0.025) the runtime uses.
+        float scale = readEffectScale(parent);
+        ParticleConverter converter = new ParticleConverter(am, key, scale);
         ParticleConverter.Result result = converter.convert(forkRoot);
         Spatial root = result.root;
         if (root == null) {
@@ -159,6 +164,26 @@ public class ParticlesToJ3o
         }
         exporter.save(root, outFile);
         return result;
+    }
+
+    /**
+     * Reads the effect's {@code particles.properties} {@code scale} (the value the runtime
+     * {@code ParticleCache} applies as the effect node's localScale), defaulting to the same
+     * {@code 0.025} the runtime uses when the sidecar is missing or unreadable.
+     */
+    protected static float readEffectScale (File effectDir)
+    {
+        File props = new File(effectDir, "particles.properties");
+        if (props.isFile()) {
+            try (FileInputStream in = new FileInputStream(props)) {
+                java.util.Properties p = new java.util.Properties();
+                p.load(in);
+                return Float.parseFloat(p.getProperty("scale", "0.025"));
+            } catch (Exception e) {
+                System.err.println("  (could not read " + props + ": " + e + "; using 0.025)");
+            }
+        }
+        return 0.025f;
     }
 
     protected static DesktopAssetManager createAssetManager (File rsrcRoot)

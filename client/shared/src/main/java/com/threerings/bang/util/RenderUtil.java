@@ -362,12 +362,27 @@ public class RenderUtil
             gfx.dispose();
         }
 
-        // determine the size of our rendered text
-        Rectangle2D bounds = (oacolor == null) ? layout.getBounds() :
-            layout.getOutline(null).getBounds();
-        int width = (int)(Math.max(bounds.getX(), 0) + bounds.getWidth());
-        int height = (int)(layout.getLeading() + layout.getAscent() +
-                           layout.getDescent());
+        // BUG-4 (bottom-clip facet): size the texture to the FULL glyph-outline bounds, not the
+        // ascent/descent line metrics. The outline (and, for the outlined path, its stroke) can
+        // extend a pixel or two ABOVE the cap line (outline bounds y < -ascent) and below the
+        // baseline; the old code anchored the draw at (0, ascent) and sized height to
+        // leading+ascent+descent, so any part of the outline above row 0 was cropped at the image's
+        // top edge. ImageCache.convertImage does NOT flip Y, so jME maps image row 0 -> texcoord
+        // V=0 (the quad's bottom) — that cropped top edge therefore surfaces as a clipped GLYPH
+        // BOTTOM live. We measure the real ink box and pad it so nothing touches an edge.
+        Rectangle2D ob = layout.getOutline(null).getBounds2D();
+        // outline path is in baseline space (y grows downward, baseline at y=0); the stroke widens
+        // the ink box by ~half the stroke on every side.
+        int pad = Math.max(2, (outline + 1) / 2 + 1);
+        // glyph ink extents relative to the drawing origin we will use (top-left of the ink box).
+        int gw = (int)Math.ceil(ob.getWidth());
+        int gh = (int)Math.ceil(ob.getHeight());
+        int width = gw + 2 * pad;
+        int height = gh + 2 * pad;
+        // where to place the pen so the ink box lands at (pad, pad): the outline's top-left is at
+        // (ob.getX(), ob.getY()) relative to the pen origin, so shift the pen by -ob.x, -ob.y + pad.
+        float penX = (float)(-ob.getX() + pad);
+        float penY = (float)(-ob.getY() + pad);
 
         if (size != null) {
             size.width = width;
@@ -384,8 +399,19 @@ public class RenderUtil
             gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                  RenderingHints.VALUE_ANTIALIAS_ON);
             gfx.setColor(acolor);
+            // BUG-4 (mirror facet): pre-flip the glyph vertically within its [0,height] band. Every
+            // other texture path runs through ImageCache.createImage(.., flip=true), which mirrors
+            // the AWT image into OpenGL's bottom-up row order before convertImage. createTextTexture
+            // historically called convertImage DIRECTLY (no flip) and relied on tcoords for
+            // orientation, so the glyph ended up upside-down in GL — invisible on near-symmetric
+            // digits like "3" but reading as a reversed/"S"-shaped "2" (the camera-azimuth-dependent
+            // "mirror"). Mirroring here matches the standard flip while leaving the tcoords (and the
+            // qrat sizing that reads tcoords[2].y) untouched: the band [0,height] flip composes with
+            // the no-flip convert + GL's row0->V0 to a net-upright glyph.
+            gfx.translate(0, height);
+            gfx.scale(1, -1);
             if (oacolor != null) {
-                gfx.translate(0, layout.getAscent());
+                gfx.translate(penX, penY);
                 if (outline > 1) {
                     gfx.setColor(oacolor);
                     Stroke oldstroke = gfx.getStroke();
@@ -401,7 +427,7 @@ public class RenderUtil
                 }
             } else {
                 gfx.setComposite(AlphaComposite.SrcOut);
-                layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());
+                layout.draw(gfx, penX, penY);
             }
         } finally {
             gfx.dispose();
@@ -412,6 +438,8 @@ public class RenderUtil
         // quad's local +X. The fork's Quad used a different winding, so the ported coords (which
         // assigned the texture's U to the quad's +Y) rotated every glyph 90 deg -> the sideways
         // claim/counter/level numbers. Map U->local X and V->local Y so the text reads upright.
+        // The glyph is pre-flipped vertically above (BUG-4 mirror fix), so these tcoords stay as the
+        // 6b winding and the qrat sizing (which reads tcoords[2].y) is unaffected.
         float tsf = tsize;
         tcoords[0] = new Vector2f(0, 0);             // v0 bottom-left
         tcoords[1] = new Vector2f(width/tsf, 0);     // v1 bottom-right
