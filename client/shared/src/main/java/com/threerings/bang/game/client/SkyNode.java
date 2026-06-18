@@ -8,6 +8,7 @@ import java.nio.FloatBuffer;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.FaceCullMode;
 import com.jme3.material.RenderState.TestFunction;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -71,7 +72,18 @@ public class SkyNode extends Node
         _dmat = new Material(ctx.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         _dmat.getAdditionalRenderState().setDepthTest(true);
         _dmat.getAdditionalRenderState().setDepthWrite(false);
-        _dmat.getAdditionalRenderState().setDepthFunc(TestFunction.Always);
+        // Depth func LessOrEqual (NOT Always): jME3 renders the Sky bucket AFTER the Opaque bucket
+        // (RenderManager.renderViewPortQueues: Opaque then Sky), so a depth-func of Always made the
+        // dome paint OVER the already-drawn buildings, slicing their tops off at the dome's horizon.
+        // The fork used CF_ALWAYS, but jME1 drew the sky FIRST so it sat behind geometry; under
+        // jME3's reversed order we instead let the closer opaque geometry occlude the sky (LEQUAL),
+        // which is the same visual result (sky fills only the empty background).
+        _dmat.getAdditionalRenderState().setDepthFunc(TestFunction.LessOrEqual);
+        // The fork dome carried no CullState, so both faces drew; jME3's Unshaded material
+        // defaults to back-face culling, which (combined with the inside-view winding/rotation)
+        // culled the dome away and left the viewport clear-colour filling the upper view. Match
+        // the fork by drawing both faces.
+        _dmat.getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
         _dome.setMaterial(_dmat);
         _dome.setModelBound(new BoundingBox());
         attachChild(_dome);
@@ -84,6 +96,8 @@ public class SkyNode extends Node
         _cmat.setBoolean("VertexColor", true);
         RenderUtil.applyBlendAlpha(_cmat);
         RenderUtil.applyOverlayZBuf(_cmat);
+        // fork cloud Disk carried no CullState; draw both faces so the plane shows from below
+        _cmat.getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
         Texture2D ctex = (Texture2D)_cmat.getTextureParam("ColorMap").getTextureValue();
         ctex.setWrap(WrapMode.Repeat);
         _clouds.setMaterial(_cmat);

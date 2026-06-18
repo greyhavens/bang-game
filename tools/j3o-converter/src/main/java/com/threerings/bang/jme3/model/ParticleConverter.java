@@ -186,6 +186,23 @@ public class ParticleConverter
         boolean worldSpace = !geom.isTransformParticles();
         float sizeScale = worldSpace ? _effectScale : 1f;
 
+        // The fork integrates a particle's position in MILLISECONDS, not seconds:
+        // {@code Particle.updateAndCheck} does {@code position.scaleAdd(secondsPassed * 1000f,
+        // velocity, position)} — i.e. each step advances position by {@code velocity * (dt_seconds *
+        // 1000)}. jME3's ParticleEmitter integrates {@code position += velocity * tpf_seconds}
+        // (no x1000). So to reproduce the fork's per-second world travel the baked velocity must be
+        // multiplied by 1000 on top of the node-scale factor. (Total burst spread over a particle's
+        // life is {@code forkVel * lifeSpan_ms * nodeScale}; jME3 travel is {@code bakedVel *
+        // life_sec = bakedVel * lifeSpan_ms/1000}; equating gives {@code bakedVel = forkVel * 1000 *
+        // nodeScale}.) Without the x1000 the converter baked velocities ~1000x too small, so every
+        // world-space burst (get_bonus star-burst, explosion) collapsed to a motionless clump at the
+        // origin instead of radiating outward (BUG-12). The same ms factor applies to gravity (the
+        // fork accumulates gravity into velocity, which then drives position through the same ms
+        // integration). emitter-local (transformParticles==true) emitters keep the node transform at
+        // runtime, but the ms-vs-seconds integration mismatch is independent of that, so the x1000
+        // applies to them too (their node-scale is applied at render, not baked, hence no sizeScale).
+        float motionScale = (worldSpace ? _effectScale : 1f) * MS_PER_SEC;
+
         // ---- appearance ----
         emitter.setStartSize(geom.getStartSize() * sizeScale);
         emitter.setEndSize(geom.getEndSize() * sizeScale);
@@ -238,11 +255,11 @@ public class ParticleConverter
         if (initial.lengthSquared() < 1e-8f) {
             initial.set(0, 1, 0);
         }
-        // Scale the velocity by the same factor as the sizes (only for world-space emitters): jME3
-        // integrates a world-space emitter's position by velocity*tpf in unscaled world space (the
-        // node localScale is ignored), whereas the fork scaled the whole rendered geometry — so an
-        // unscaled velocity would blow the cloud spread out by ~1/scale (BUG-7).
-        initial.normalizeLocal().multLocal(vel * sizeScale);
+        // Bake the fork's per-second world-space velocity: forkVelocity * 1000 (the fork integrates
+        // position in milliseconds) * the node scale (world-space emitters ignore the node transform
+        // at runtime, so the scale must be pre-baked). See the motionScale comment above — without
+        // the x1000 the burst collapsed to a clump at the origin (BUG-12).
+        initial.normalizeLocal().multLocal(vel * motionScale);
         emitter.getParticleInfluencer().setInitialVelocity(initial);
         // map the fork emission cone [minAngle, maxAngle] (radians off the direction) to jME3's
         // single 0..1 velocity variation: full hemisphere (maxAngle >= PI/2) -> 1.0.
@@ -264,7 +281,9 @@ public class ParticleConverter
         emitter.setShape(shapeFor(geom, result));
 
         // ---- influences (gravity / wind) ----
-        applyInfluences(geom, emitter, result, sizeScale);
+        // gravity/wind drive the same ms-integrated position, so they take the motion scale, not the
+        // size scale.
+        applyInfluences(geom, emitter, result, motionScale);
 
         // ---- material (texture + blend) ----
         applyMaterial(geom, emitter, result);
@@ -334,7 +353,7 @@ public class ParticleConverter
     }
 
     protected void applyInfluences (
-        ParticleGeometry geom, ParticleEmitter emitter, Result result, float sizeScale)
+        ParticleGeometry geom, ParticleEmitter emitter, Result result, float motionScale)
     {
         List<ParticleInfluence> infs = geom.getInfluences();
         if (infs == null) {
@@ -363,9 +382,10 @@ public class ParticleConverter
             }
         }
         if (haveGravity) {
-            // scale gravity by the same factor as velocity/size (world-space emitters only; same
-            // ignoreTransform reason): jME3 integrates gravity in unscaled world space (BUG-7).
-            emitter.setGravity(gravity.multLocal(sizeScale));
+            // scale gravity by the same per-second-world motion factor as velocity (1000 * nodeScale
+            // for world-space emitters): the fork accumulates gravity into velocity and then drives
+            // position through its millisecond integration, so gravity inherits the same x1000.
+            emitter.setGravity(gravity.multLocal(motionScale));
         } else {
             // the fork applies no gravity unless a BasicGravity influence is present; jME3's default
             // gravity is (0,0.1,0), so zero it to match a no-gravity fork effect.
@@ -609,4 +629,9 @@ public class ParticleConverter
 
     /** jME3 rejects a zero/near-zero low life. */
     protected static final float MIN_LIFE_SEC = 0.01f;
+
+    /** The fork integrates particle position in milliseconds ({@code position += velocity *
+     * secondsPassed * 1000}); jME3 integrates in seconds. So baked world-space velocity/gravity carry
+     * this extra factor to reproduce the fork's per-second travel. */
+    protected static final float MS_PER_SEC = 1000f;
 }

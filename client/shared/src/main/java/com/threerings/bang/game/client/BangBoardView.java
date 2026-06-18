@@ -1778,12 +1778,18 @@ public class BangBoardView extends BoardView
 
     protected void centerCameraOnPiece (Piece piece)
     {
-        PieceSprite sprite = getPieceSprite(piece);
-        if (sprite != null) {
-            // jME3 Phase-3 input seam: the global getInputHandler() is gone and GameInputHandler's
-            // aimCamera() is re-wired through the jME3 InputManager at the Phase-3 host. Camera
-            // centring on a piece is restored there. Flagged no-op for Phase 2.
+        if (piece == null) {
+            return;
         }
+        // Pan the camera so the piece's tile centre sits under the current ground point. This uses
+        // the same working GameCameraHandler.panCameraAbs path that WASD pan / the board tour use
+        // (the old getInputHandler()/aimCamera seam was a Phase-2 no-op stub; this restores piece
+        // centring on jME3 without needing the removed global input handler).
+        GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
+        Vector3f gpoint = camhand.getGroundPoint();
+        float dx = (piece.x + 0.5f) * TILE_SIZE - gpoint.x,
+              dy = (piece.y + 0.5f) * TILE_SIZE - gpoint.y;
+        camhand.panCameraAbs(dx, dy);
     }
 
     protected void executeAction ()

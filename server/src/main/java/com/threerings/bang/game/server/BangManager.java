@@ -1452,11 +1452,160 @@ public class BangManager extends GameManager
     {
         return new SpeakHandler(plobj, this) {
             @Override public void speak (ClientObject caller, String message, byte mode) {
+                // Deterministic effect-test sandbox (docs/effect-test-harness.md option B): an
+                // admin-gated, double-flag-guarded "/"-command that exercises one pickup/effect on
+                // one unit on demand, removing all autoplay/scenario randomness. It NEVER touches
+                // normal gameplay -- it only fires when the system property is set AND the caller
+                // holds the admin token AND the message starts with the debug prefix.
+                if (DEBUG_EFFECTS && message != null && message.startsWith(DEBUG_CMD_PREFIX) &&
+                    caller instanceof PlayerObject pobj && pobj.tokens.isAdmin()) {
+                    handleDebugEffectCommand(pobj, message.substring(DEBUG_CMD_PREFIX.length()).trim());
+                    return; // swallow the command; do not broadcast it as chat
+                }
                 if (_chatmgr.validateChat(caller, message)) {
                     super.speak(caller, message, mode);
                 }
             }
         };
+    }
+
+    /**
+     * Deterministic pickup/effect sandbox dispatcher (admin + {@code -Dbang.debug.effects=true}
+     * gated; see {@link #createSpeakHandler}). Lets a tester reproduce a single effect on a single
+     * unit on command, in isolation, instead of waiting for a random autoplay pickup:
+     *
+     * <ul>
+     *   <li>{@code /fx bonus [type]} &mdash; spawn a board bonus of {@code type} (default {@code
+     *       repair}) ON the caller's first unit's tile and immediately ACTIVATE it through the
+     *       normal {@link Bonus#affect} &rarr; {@link #deployEffect} path, so the full pickup runs
+     *       end-to-end (the shared {@code frontier_town/get_bonus} star-burst plus the bonus's own
+     *       viz). This is the lever for verifying BUG-12.</li>
+     *   <li>{@code /fx effect <name>} &mdash; report a raw effect string (e.g. {@code
+     *       frontier_town/get_bonus}) on the caller's first unit, to inspect ONE particle effect in
+     *       complete isolation with no bonus side-effects.</li>
+     *   <li>{@code /fx help} &mdash; usage.</li>
+     * </ul>
+     */
+    /**
+     * Effect-test sandbox auto-demo (only when {@code -Dbang.debug.effects=true} on the SERVER): once
+     * the round is in play, repeatedly force ONE chosen live unit to consume a {@code
+     * frontier_town/get_bonus} board bonus on a fixed cadence. This removes ALL randomness from
+     * observing the BUG-12 star-burst &mdash; no waiting on AI pathing, no chat, no need for the
+     * observer to be a player. Paired with the client-side {@code -Dbang.debug.effects} camera-lock
+     * (see {@link EffectHandler}), every burst is guaranteed on-screen for a screenshot. Inert in
+     * normal play (the flag defaults off).
+     */
+    protected void maybeStartEffectDemo ()
+    {
+        if (!DEBUG_EFFECTS || _fxDemo != null) {
+            return;
+        }
+        _fxDemo = new Interval(_omgr) {
+            public void expired () {
+                if (_bangobj == null || _bangobj.state != BangObject.IN_PLAY) {
+                    return;
+                }
+                // pick the first live unit on the board to host the burst (deterministic order).
+                Unit unit = null;
+                for (Piece p : _bangobj.getPieceArray()) {
+                    if (p instanceof Unit u && u.isAlive()) {
+                        unit = u;
+                        break;
+                    }
+                }
+                if (unit == null) {
+                    return;
+                }
+                // spawn a bonus on the unit's tile, give it board presence, and activate it through
+                // the normal Bonus.affect -> deployEffect path (the real pickup, which reports the
+                // shared get_bonus star-burst on the bonus piece as it is removed).
+                Bonus bonus = Bonus.createBonus(DEBUG_DEMO_BONUS);
+                if (bonus == null) {
+                    return;
+                }
+                bonus.position(unit.x, unit.y);
+                bonus.assignPieceId(_bangobj);
+                addPiece(bonus);
+                BonusEffect effect = bonus.affect(_bangobj, unit);
+                if (effect != null) {
+                    effect.bonusId = bonus.pieceId;
+                    deployEffect(unit.owner, effect);
+                    log.info("FX demo: forced bonus pickup", "bonus", DEBUG_DEMO_BONUS,
+                             "unit", unit.pieceId, "at", unit.x + "," + unit.y);
+                }
+            }
+        };
+        _fxDemo.schedule(DEBUG_DEMO_INTERVAL, DEBUG_DEMO_INTERVAL);
+        log.info("FX demo armed (-Dbang.debug.effects): forcing a " + DEBUG_DEMO_BONUS +
+                 " pickup every " + DEBUG_DEMO_INTERVAL + "ms");
+    }
+
+    protected void handleDebugEffectCommand (PlayerObject pobj, String cmd)
+    {
+        int pidx = _bangobj.getPlayerIndex(pobj.handle);
+        String[] parts = cmd.split("\\s+");
+        String verb = (parts.length > 0) ? parts[0] : "help";
+
+        // find the caller's first live unit to host the effect.
+        Unit unit = null;
+        for (Piece p : _bangobj.getPieceArray()) {
+            if (p instanceof Unit u && u.owner == pidx && u.isAlive()) {
+                unit = u;
+                break;
+            }
+        }
+        if (!"help".equals(verb) && unit == null) {
+            SpeakUtil.sendInfo(pobj, GAME_MSGS, MessageBundle.taint("[fx] you have no live unit to host the effect"));
+            return;
+        }
+
+        switch (verb) {
+        case "bonus": {
+            String type = (parts.length > 1) ? parts[1] : "frontier_town/repair";
+            Bonus bonus = Bonus.createBonus(type);
+            if (bonus == null) {
+                SpeakUtil.sendInfo(pobj, GAME_MSGS, MessageBundle.taint("[fx] unknown bonus type"));
+                return;
+            }
+            // place the bonus on the unit's tile, give it a real piece id + board presence, then
+            // run the normal activation path (exactly what happens when a unit walks onto a bonus).
+            bonus.position(unit.x, unit.y);
+            bonus.assignPieceId(_bangobj);
+            addPiece(bonus);
+            BonusEffect effect = bonus.affect(_bangobj, unit);
+            if (effect == null) {
+                SpeakUtil.sendInfo(pobj, GAME_MSGS, MessageBundle.taint("[fx] bonus had no effect on that unit"));
+                return;
+            }
+            effect.bonusId = bonus.pieceId;
+            deployEffect(unit.owner, effect);
+            log.info("Debug sandbox: activated bonus", "type", type, "unit", unit.pieceId);
+            break;
+        }
+        case "effect": {
+            if (parts.length < 2) {
+                SpeakUtil.sendInfo(pobj, GAME_MSGS, MessageBundle.taint("[fx] usage: /fx effect <name>"));
+                return;
+            }
+            // report the raw effect string on the unit, mirroring Effect.reportEffect: this is what
+            // BonusEffect.apply does for ACTIVATED_BONUS, so it isolates the pure particle viz.
+            final String fx = parts[1];
+            final Unit funit = unit;
+            deployEffect(unit.owner, new Effect() {
+                public int[] getAffectedPieces () { return new int[] { funit.pieceId }; }
+                public void prepare (BangObject bangobj, IntIntMap dammap) {}
+                public boolean apply (BangObject bangobj, Observer obs) {
+                    reportEffect(obs, funit, fx);
+                    return true;
+                }
+            });
+            log.info("Debug sandbox: reported raw effect", "fx", fx, "unit", unit.pieceId);
+            break;
+        }
+        default:
+            SpeakUtil.sendInfo(pobj, GAME_MSGS, MessageBundle.taint("[fx] /fx bonus [type] | /fx effect <name> | /fx help"));
+            break;
+        }
     }
 
     /**
@@ -1496,6 +1645,7 @@ public class BangManager extends GameManager
                 // let the players know we're ready to go with the first tick
                 _bangobj.tick((short)0);
             }
+            maybeStartEffectDemo();
             break;
 
         default:
@@ -1738,6 +1888,10 @@ public class BangManager extends GameManager
 
             // cancel the board tick
             _ticker.cancel();
+            if (_fxDemo != null) {
+                _fxDemo.cancel();
+                _fxDemo = null;
+            }
             return;
         }
 
@@ -3256,6 +3410,9 @@ public class BangManager extends GameManager
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker;
 
+    /** Effect-test sandbox auto-demo timer ({@code -Dbang.debug.effects}); null in normal play. */
+    protected Interval _fxDemo;
+
     /** Handles post-processing when effects are applied. */
     protected Effect.Observer _effector = new Effect.Observer() {
         public void pieceAdded (Piece piece) {
@@ -3529,4 +3686,20 @@ public class BangManager extends GameManager
 
     /** The buckle print for unaffiliated cowpokes. */
     protected static final String UNAFFIL_BUCKLE = "ui/status/unaffiliated_buckle.png";
+
+    /** Master switch for the deterministic effect-test sandbox (see
+     * {@link #handleDebugEffectCommand}). Off unless {@code -Dbang.debug.effects=true} is passed to
+     * the SERVER JVM; even then every command is additionally gated on the caller's admin token, so
+     * normal gameplay is never affected. */
+    protected static final boolean DEBUG_EFFECTS =
+        Boolean.getBoolean("bang.debug.effects");
+
+    /** Chat prefix that routes a message to the effect-test sandbox instead of broadcasting it. */
+    protected static final String DEBUG_CMD_PREFIX = "/fx";
+
+    /** The effect-test auto-demo's bonus type and cadence (see {@link #maybeStartEffectDemo}). */
+    protected static final String DEBUG_DEMO_BONUS =
+        System.getProperty("bang.debug.bonus", "frontier_town/repair");
+    protected static final long DEBUG_DEMO_INTERVAL =
+        Long.getLong("bang.debug.interval", 5000L);
 }

@@ -31,6 +31,8 @@ import com.threerings.util.Name;
 
 import com.threerings.crowd.chat.client.CurseFilter;
 
+import com.threerings.jme.camera.GodViewHandler;
+
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.data.BangCodes;
@@ -78,6 +80,37 @@ public class OptionsView extends BDecoratedWindow
                     break;
                 }
                 vallbl.setText(model.getValue() + "%");
+            }
+        });
+
+        // create a wrapper to hold them both
+        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
+        wrapper.add(slider);
+        wrapper.add(vallbl, GroupLayout.FIXED);
+        return wrapper;
+    }
+
+    /**
+     * Creates a slider for adjusting the WASD/arrow camera pan speed (BUG-5). The change takes
+     * effect immediately (via {@link GodViewHandler#setPanSpeed}) and is persisted in
+     * {@link BangPrefs}. The slider runs over the comfortable
+     * {@link GodViewHandler#MIN_PAN_SPEED}..{@link GodViewHandler#MAX_PAN_SPEED} range.
+     */
+    public static BContainer createPanSpeedSlider (final BangContext ctx)
+    {
+        final int min = Math.round(GodViewHandler.MIN_PAN_SPEED);
+        final int max = Math.round(GodViewHandler.MAX_PAN_SPEED);
+        int value = Math.max(min, Math.min(max, BangPrefs.getCameraPanSpeed()));
+
+        BSlider slider = new BSlider(BSlider.HORIZONTAL, min, max, value);
+        final BLabel vallbl = new BLabel(String.valueOf(value));
+        vallbl.setPreferredSize(new Dimension(50, 10));
+        slider.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged (ChangeEvent event) {
+                int val = ((BoundedRangeModel)event.getSource()).getValue();
+                BangPrefs.updateCameraPanSpeed(val);
+                GodViewHandler.setPanSpeed(val);
+                vallbl.setText(String.valueOf(val));
             }
         });
 

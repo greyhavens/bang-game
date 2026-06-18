@@ -58,20 +58,54 @@ public class GodViewHandler
     public static final float SPEED = 0.5f;
 
     /**
-     * WASD/arrow pan speed in world units per second (BUG-5).
+     * Default WASD/arrow pan speed in world units per second (BUG-5).
      *
      * <p>The analog {@code value} for a held {@link KeyTrigger} is already tpf-weighted
      * (jME3 {@code InputManager} passes {@code value == tpf}, ~0.016 at 60fps), so
-     * {@code PAN_SPEED * value} integrates to {@code PAN_SPEED} world units per second.
+     * {@code _panSpeed * value} integrates to {@code _panSpeed} world units per second.
      * The fork's pan {@code InputAction} used {@code setSpeed(0.5f)} against
      * {@code evt.getTime()} (also seconds) — i.e. only 0.5 units/sec. With
      * {@code BangMetrics.TILE_SIZE == 10}, that is 0.05 tiles/sec: a board is tens of
      * tiles across, so a held key crawled "a few pixels" (BUG-5). A comfortable RTS pan
-     * is on the order of a few tiles/sec; live tuning settled on 40 units/sec (= 4 tiles/sec),
-     * letting a held key sweep a ~20-tile board in ~5s. (Kept separate from {@link #SPEED}
-     * so the zoom/orbit/tilt rate is unchanged.)
+     * is on the order of a few tiles/sec. Live tuning first settled on 40 units/sec; BUG-5
+     * follow-up ("still a bit slow") bumps the default to {@value} units/sec (= 6 tiles/sec),
+     * near the upper-comfortable end of the in-game slider range
+     * ({@link #MIN_PAN_SPEED}..{@link #MAX_PAN_SPEED}). The live value is user-adjustable on
+     * the Esc options screen (persisted in BangPrefs) and applied via {@link #setPanSpeed}.
+     * (Kept separate from {@link #SPEED} so the zoom/orbit/tilt rate is unchanged.)
      */
-    public static final float PAN_SPEED = 40f;
+    public static final float DEFAULT_PAN_SPEED = 80f;
+
+    /** Lower bound of the in-game pan-speed slider (still slow but usable). */
+    public static final float MIN_PAN_SPEED = 20f;
+
+    /** Upper bound of the in-game pan-speed slider (fast, before it feels janky). */
+    public static final float MAX_PAN_SPEED = 100f;
+
+    /**
+     * The live WASD/arrow pan speed (world units/sec), shared across all handler instances so the
+     * options slider can adjust it on the fly without rebuilding the (Phase-3) input wiring. Read
+     * at startup from {@code BangPrefs} and updated by the Esc options slider. See {@link
+     * #DEFAULT_PAN_SPEED}.
+     */
+    protected static volatile float _panSpeed = DEFAULT_PAN_SPEED;
+
+    /**
+     * Returns the current WASD/arrow pan speed in world units per second.
+     */
+    public static float getPanSpeed ()
+    {
+        return _panSpeed;
+    }
+
+    /**
+     * Sets the live WASD/arrow pan speed (world units/sec). Takes effect immediately for all
+     * subsequent pan input; persistence is handled separately by the caller (BangPrefs).
+     */
+    public static void setPanSpeed (float speed)
+    {
+        _panSpeed = speed;
+    }
 
     /**
      * Creates the handler.
@@ -134,16 +168,16 @@ public class GodViewHandler
         // value already incorporates tpf for analog key triggers
         switch (name) {
         case FORWARD:
-            _camhand.panCamera(0, PAN_SPEED * value);
+            _camhand.panCamera(0, _panSpeed * value);
             break;
         case BACKWARD:
-            _camhand.panCamera(0, -PAN_SPEED * value);
+            _camhand.panCamera(0, -_panSpeed * value);
             break;
         case LEFT:
-            _camhand.panCamera(-PAN_SPEED * value, 0);
+            _camhand.panCamera(-_panSpeed * value, 0);
             break;
         case RIGHT:
-            _camhand.panCamera(PAN_SPEED * value, 0);
+            _camhand.panCamera(_panSpeed * value, 0);
             break;
         case ZOOM_IN:
             _camhand.zoomCamera(-SPEED * value);

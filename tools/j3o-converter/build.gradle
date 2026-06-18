@@ -167,6 +167,38 @@ tasks.register("renderModelToPng", JavaExec) {
   args = cmd
 }
 
+// BUG-11 verification (floating effect-icon vs unit head, azimuth-dependent drift). Renders a REAL
+// baked unit model with a floating icon billboarded above it the way IconViz/DamageIconViz place it,
+// from 8 azimuths around the Z-up board, so the icon-vs-head offset and its azimuth swing can be
+// measured by bin/qa and diffed against the fork — WITHOUT a server/client boot. Render both anchor
+// modes and compare: -Panchor=origin (the live anchor: sprite origin + getHeight()*TILE_SIZE, the
+// bug as observed) vs -Panchor=top (BUG-11 option (a): the model bbox top-centre, azimuth-stable).
+//   ./gradlew :tools:j3o-converter:renderEffectToPng \
+//       -PmodelType=units/frontier_town/shotgunner -Picon=textures/effects/killed.png \
+//       -Panchor=origin -Panim=standing -Ptime=0 -Pout=/tmp/bug11-origin
+// Then re-run with -Panchor=top -Pout=/tmp/bug11-top and diff matched azimuths with bin/qa.
+tasks.register("renderEffectToPng", JavaExec) {
+  group = "verification"
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderEffectToPng"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def modelType = project.hasProperty("modelType") ?
+      project.property("modelType").toString() : "units/frontier_town/shotgunner"
+  def icon = project.hasProperty("icon") ?
+      project.property("icon").toString() : "textures/effects/killed.png"
+  def out = project.hasProperty("out") ? project.property("out").toString() :
+      "/tmp/effect_${modelType.replaceAll('/', '_')}"
+  def anchor = project.hasProperty("anchor") ? project.property("anchor").toString() : "origin"
+  def cmd = [ rsrc, modelType, icon, out, anchor ]
+  if (project.hasProperty("anim")) {
+    cmd += project.property("anim").toString()
+    if (project.hasProperty("time")) {
+      cmd += project.property("time").toString()
+    }
+  }
+  args = cmd
+}
+
 // Phase 5 (harness #1, deliverable #2): pose N models on a ground grid and render them together, so
 // a small composed scene (a couple of units + a building) can be snapshotted, not just one isolated
 // model. Each -Pspecs entry is modelType[@anim[:time]], comma-separated.
@@ -249,3 +281,4 @@ tasks.register("captureGoldens", JavaExec) {
   doFirst { systemProperty "visual.forkClasspath", visualForkCp() }
   args = [ "capture", rsrc, visualGoldenDir.absolutePath, visualManifest.absolutePath, tmp ]
 }
+

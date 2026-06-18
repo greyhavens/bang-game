@@ -226,6 +226,24 @@ public class BangPrefs
     }
 
     /**
+     * Returns the WASD/arrow camera pan speed in world units per second. Defaults to
+     * {@link com.threerings.jme.camera.GodViewHandler#DEFAULT_PAN_SPEED} (BUG-5).
+     */
+    public static int getCameraPanSpeed ()
+    {
+        return config.getValue("camera_pan_speed",
+            Math.round(com.threerings.jme.camera.GodViewHandler.DEFAULT_PAN_SPEED));
+    }
+
+    /**
+     * Updates the WASD/arrow camera pan speed (world units per second).
+     */
+    public static void updateCameraPanSpeed (int speed)
+    {
+        config.setValue("camera_pan_speed", speed);
+    }
+
+    /**
      * Returns the current chat filter mode.
      */
     public static CurseFilter.Mode getChatFilterMode ()

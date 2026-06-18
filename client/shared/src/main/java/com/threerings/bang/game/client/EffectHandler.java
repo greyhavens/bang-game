@@ -341,6 +341,13 @@ public class EffectHandler extends BoardView.BoardAction
             if (_ctx.getParticleCache().haveParticles(effect)) {
                 boolean center = (!LevelEffect.LEVEL_UP.equals(effect));
                 sprite.displayParticles(effect, center);
+                // Effect-test sandbox aid (-Dbang.debug.effects=true on the CLIENT JVM): lock the
+                // camera onto the affected piece whenever a particle effect plays, so a transient
+                // burst (e.g. the get_bonus star-burst, BUG-12) is always framed for a screenshot
+                // instead of happening off-screen. No effect on normal play unless the flag is set.
+                if (DEBUG_EFFECTS) {
+                    _view.centerCameraOnPiece(piece);
+                }
             }
         }
 
@@ -978,4 +985,9 @@ public class EffectHandler extends BoardView.BoardAction
      * units that do not have a custom landing sound. */
     protected static final String DEFAULT_LAND_SOUND =
         "rsrc/extras/frontier_town/barricade/land.ogg";
+
+    /** Effect-test sandbox: when {@code -Dbang.debug.effects=true} on the client JVM, the camera
+     * locks onto a piece as its particle effect plays so transient bursts are always framed. Off
+     * (and inert) in normal play. */
+    protected static final boolean DEBUG_EFFECTS = Boolean.getBoolean("bang.debug.effects");
 }

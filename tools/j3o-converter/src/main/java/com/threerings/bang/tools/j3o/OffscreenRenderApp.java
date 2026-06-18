@@ -194,8 +194,17 @@ public abstract class OffscreenRenderApp extends SimpleApplication
                 for (int x = 0; x < WIDTH; x++) {
                     int i = ((HEIGHT - 1 - y) * WIDTH + x) * 4;
                     int r = buf.get(i) & 0xFF, g = buf.get(i+1) & 0xFF;
-                    int b = buf.get(i+2) & 0xFF, a = buf.get(i+3) & 0xFF;
-                    img.setRGB(x, y, (a << 24) | (r << 16) | (g << 8) | b);
+                    int b = buf.get(i+2) & 0xFF;
+                    // Force the captured frame OPAQUE. The backdrop is always cleared opaque and the
+                    // RGB channels already hold the fully-composited result; but ADDITIVE-blended
+                    // particle quads (e.g. the get_bonus star-burst, explosion) write their texture's
+                    // alpha=0 transparent texels straight into the framebuffer ALPHA, punching
+                    // alpha=0 "holes" wherever a particle quad's transparent border drew. The live
+                    // game renders to an opaque backbuffer with no alpha export, so those holes are an
+                    // OFFSCREEN-ONLY artifact (they show as white/checkerboard in a PNG viewer and
+                    // made the BUG-12 golden look like a "white box"). Writing alpha=255 makes the PNG
+                    // match what the player sees and keeps the RGB bit-exact for the golden diff.
+                    img.setRGB(x, y, (0xFF << 24) | (r << 16) | (g << 8) | b);
                 }
             }
             try {

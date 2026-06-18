@@ -153,6 +153,10 @@ public class BasicClient
         _soundmgr = SoundManager.createSoundManager(rqueue);
         _soundmgr.setBaseGain(BangPrefs.getEffectsVolume()/100f);
 
+        // seed the live camera pan speed from the persisted preference (BUG-5); the Esc options
+        // slider updates it on the fly thereafter
+        GodViewHandler.setPanSpeed(BangPrefs.getCameraPanSpeed());
+
         // initialize our user interface bits
         _keymgr.init(_ctx);
         BangUI.init(_ctx);
