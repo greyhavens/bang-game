@@ -47,6 +47,26 @@ Dev flags worth knowing:
   `bin/shot` matches the window precisely (title `Bang Editor` or starting with `Bang! Howdy`,
   excluding browsers/terminals by WM_CLASS) and grabs only that window's pixmap.
 
+### Running the game (esp. from sub-agents) — singleton + memory constraints
+
+The live game is a **singleton**: one server (port 47624), one client on `DISPLAY=:1`, one gradle
+build, one working tree. **Only one sub-agent may touch the running game / build / shared source files
+at a time.** Two agents editing the same files race and corrupt the tree; two game clients (each a
+~768M heap) plus concurrent builds exhaust RAM+swap and crash the server/client. Parallelize only
+read-only or compile-only work (e.g. the migration-audit fan-out) — never two game-touching agents.
+
+**A `TaskStop` does NOT reliably kill an agent that is running the game/build.** These agents spawn
+long-running background children (`nohup ./bin/bangserver &`, the client, `./gradlew deploy`); an agent
+with a live child only "comes to rest" on stop and then RESUMES when the child reports — it keeps
+billing tokens even after a "killed" notification. **Before launching a replacement agent, confirm the
+old one is actually gone** (check the `/tasks` agents panel — is it still counting time/tokens?). If it
+is, stop it again, or use "stop all agents" (ctrl+x ctrl+k). (Mistake made 2026-06-19: a stop didn't
+stick, a second agent was launched on the same files, and the two ran concurrently — wasted tokens,
+raced edits, OOM'd the server.)
+
+Process order still applies: `./gradlew deploy` must FULLY finish before starting the server, and the
+server must be (re)started AFTER a deploy (a stale server throws `NoClassDefFoundError`/`ClassNotFound`).
+
 ## Module structure
 
 Gradle modules (see `settings.gradle`), in dependency order:
