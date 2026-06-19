@@ -34,7 +34,9 @@ void main() {
     #endif
 
     #ifdef HAS_ALPHAMAP
-        color.a = texture2D(m_AlphaMap, alphaCoord).r;
+        // the splat coverage is an Alpha8 texture: jME3 exposes its single channel
+        // in the alpha component (.r reads 0 for an alpha-only format), so sample .a.
+        color.a = texture2D(m_AlphaMap, alphaCoord).a;
     #endif
 
     #ifdef USE_FOG
