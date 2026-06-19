@@ -80,11 +80,17 @@ public class CounterSprite extends PropSprite
                 tcoords, null);
             // resize our quad to accommodate the text and set its UVs
             float qrat = TILE_SIZE * 0.8f / tcoords[2].y;
-            Quad mesh = new Quad(qrat * tcoords[2].x, qrat * tcoords[2].y);
+            float qw = qrat * tcoords[2].x, qh = qrat * tcoords[2].y;
+            Quad mesh = new Quad(qw, qh);
             mesh.setBuffer(VertexBuffer.Type.TexCoord, 2,
                 BufferUtils.createFloatBuffer(tcoords));
             mesh.updateBound();
             _counter.setMesh(mesh);
+            // jME3 Quad is corner-anchored ((0,0)..(w,h)); the fork Quad was
+            // center-anchored (-w/2..+w/2). Recenter on the billboard pivot so
+            // the number floats centered above the claim rather than off-pivot
+            // (up-and-right) and sunk into the claim rock mesh (BUG-22).
+            _counter.setLocalTranslation(-qw / 2f, -qh / 2f, 0f);
             _mat.setTexture("ColorMap", tex);
             _dcount = counter.count;
             _counter.setCullHint(CullHint.Dynamic);
@@ -98,6 +104,7 @@ public class CounterSprite extends PropSprite
 
         // create a billboard to display this mine's current count
         _counter = new Geometry("counter", new Quad(25, 25));
+        _counter.setLocalTranslation(-25 / 2f, -25 / 2f, 0f);
         _mat = RenderUtil.createTextureMaterial(_ctx, (Texture2D)null);
         RenderUtil.applyBlendAlpha(_mat);
         RenderUtil.applyOverlayZBuf(_mat);

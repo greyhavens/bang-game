@@ -344,11 +344,17 @@ public class PieceTarget extends Node
     protected static final String[] CROSS_TEXS = {
         "", "_q", "_1", "_2", "_n", "_skull" };
 
+    // jME3 cutover (BUG-20): jME3's com.jme3.scene.shape.Quad winds its vertices
+    // bottom-left, bottom-right, top-right, top-left with the texture's U axis running
+    // along the quad's local +X (same winding RenderUtil.createTextTexture maps to for the
+    // BUG-4 sideways-numbers fix). The fork's literal {(0,2),(0,0),(2,0),(2,2)} assigned U to
+    // the quad's local +Y, rotating the attacker-count number 90 deg onto its side. Map
+    // U->local X and V->local Y (v0 BL -> (0,0) ... v3 TL -> (0,2)) so the number reads upright.
     protected static final Vector2f[] PTARG_COORDS = {
-        new Vector2f(0, 2),
-        new Vector2f(0, 0),
-        new Vector2f(2, 0),
-        new Vector2f(2, 2),
+        new Vector2f(0, 0),  // v0 bottom-left
+        new Vector2f(2, 0),  // v1 bottom-right
+        new Vector2f(2, 2),  // v2 top-right
+        new Vector2f(0, 2),  // v3 top-left
     };
 
     protected static final float MOD_OFFSET = 3f * TILE_SIZE / 8f;

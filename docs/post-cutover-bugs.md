@@ -140,7 +140,8 @@ not this. **FIXED:** `JmeApp.simpleInitApp` now deletes `INPUT_MAPPING_EXIT`, so
 (Routing Esc to a game back/dismiss handler, if the fork did that, is a separate nicety — TODO if
 wanted.)
 
-## BUG-20 — Attack-target predicted-damage number is rotated 90° on its side  [OPEN]
+## BUG-20 — Attack-target predicted-damage number is rotated 90° on its side  [FIXED — live confirmed 2026-06-19]
+**FIXED:** `PieceTarget.PTARG_COORDS` (the `_ptquad` UV array) still used the fork's jME1 Quad winding `{(0,2),(0,0),(2,0),(2,2)}`, which on jME3's differently-wound Quad mapped U→local +Y → 90° rotation. Reordered to jME3 winding `{(0,0),(2,0),(2,2),(0,2)}` (matching the BUG-4 `RenderUtil.createTextTexture` fix). `_tgtquad`/`_modquad` use stock-UV icons (unaffected); BUG-17 centering untouched. Live: upright "2" over a targeted enemy.
 *Reported 2026-06-18 (screenshot: `baseline/incorrect/attacktarget/SelectedForAttackNumberOffBy90Degrees.png`).*
 When you select one of your units and target an enemy unit, the small predicted-damage number that
 appears inside the attack reticle over the enemy is **rotated 90°** (lying on its side) instead of

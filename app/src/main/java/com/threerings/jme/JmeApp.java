@@ -150,6 +150,13 @@ public class JmeApp extends SimpleApplication
         // install our services + build the scene graph + UI root.
         init(assetManager, renderManager, cam);
 
+        // Establish our standard board perspective frustum on the main 3D camera (the jME3 default
+        // camera ships a near:far that far-clips the full-size sky cloud disk -- see FRUSTUM_FAR).
+        // The GLFW framebuffer-resize path (RenderManager.notifyReshape -> Camera.resize) preserves
+        // near/far, so this far plane survives window resizes; OptionsView re-applies the same
+        // FRUSTUM_NEAR/FRUSTUM_FAR on an explicit display-mode change.
+        setPerspectiveFrustum(cam.getWidth(), cam.getHeight());
+
         // attach our scene-graph root to the main viewport's scene.
         rootNode.attachChild(_root);
 
@@ -245,7 +252,7 @@ public class JmeApp extends SimpleApplication
     public void setPerspectiveFrustum (int width, int height)
     {
         if (_camera != null && width > 0 && height > 0) {
-            _camera.setFrustumPerspective(45.0f, width / (float)height, 1, 10000);
+            _camera.setFrustumPerspective(45.0f, width / (float)height, FRUSTUM_NEAR, FRUSTUM_FAR);
         }
     }
 
@@ -594,6 +601,19 @@ public class JmeApp extends SimpleApplication
         protected RenderManager _rm;
         protected boolean _initialized;
     }
+
+    /** Near plane of the standard board perspective frustum. */
+    public static final float FRUSTUM_NEAR = 1f;
+
+    /**
+     * Far plane of the standard board perspective frustum. The fork's jME1 sky queue did not clip
+     * the full-size cloud disk (SkyNode CLOUD_RADIUS=10000, CLOUD_HEIGHT=500) against the camera
+     * far plane, but jME3 does; with a 10000 far the disk's visible rim (slant ~10012) was clipped
+     * and the clouds disappeared. Push the far plane out so the full-size disk renders unclipped,
+     * matching the fork look. Board geometry (terrain/units/props) lives within ~a few hundred
+     * units, so the wider near:far ratio (1:100000) does not introduce visible depth z-fighting.
+     */
+    public static final float FRUSTUM_FAR = 100000f;
 
     protected Thread _dispatchThread;
     protected float _frameTime;

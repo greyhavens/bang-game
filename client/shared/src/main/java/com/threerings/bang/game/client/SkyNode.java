@@ -102,6 +102,16 @@ public class SkyNode extends Node
         ctex.setWrap(WrapMode.Repeat);
         _clouds.setMaterial(_cmat);
         _clouds.setModelBound(new BoundingBox());
+        _clouds.setCullHint(CullHint.Never);
+        // The cloud fan is a translucent (per-vertex alpha + alpha-blended texture) overlay; it must
+        // composite OVER the gradient dome. The node sits in Bucket.Sky so the opaque dome is drawn
+        // after the Opaque bucket and is occluded by buildings (BUG-21 fix). jME3's Sky bucket,
+        // however, does no transparency sorting/compositing and draws sky geometry in scene order
+        // with no guarantee the alpha-blended clouds land on top of the dome -- in practice the
+        // clouds were lost. Override the cloud Geometry's bucket to Transparent so it is drawn in
+        // the alpha-composited transparent pass (after Opaque and Sky), painting the clouds over the
+        // dome exactly as the fork's alpha-blended cloud Disk did. The dome stays in Bucket.Sky.
+        _clouds.setQueueBucket(Bucket.Transparent);
         attachChild(_clouds);
     }
 
@@ -312,10 +322,19 @@ public class SkyNode extends Node
     /** The number of radial samples in the cloud plane. */
     protected static final int CLOUD_RADIAL_SAMPLES = 16;
 
-    /** The radius of the cloud plane. */
+    /**
+     * The radius of the cloud plane. Matches the fork exactly (10000, with a 500 cloud height).
+     * <p>Under the jME3 board camera the cloud disk's visible low-elevation rim sits at slant
+     * distance &radic;(10000&sup2;+500&sup2;) &asymp; 10012, just beyond a 10000 far-clip, so the
+     * on-screen portion of the disk was being clipped away and NO clouds drew. The fix is NOT to
+     * shrink the disk (its screen position relative to the fixed-radius gradient dome changes when
+     * scaled, which visibly regressed the look) but to push the board camera far plane out far
+     * enough that the full-size disk is never far-clipped (see {@code JmeApp.FRUSTUM_FAR}); that is
+     * the look-correct, fork-matching result.
+     */
     protected static final float CLOUD_RADIUS = 10000f;
 
-    /** The height of the cloud plane. */
+    /** The height of the cloud plane (matches the fork). */
     protected static final float CLOUD_HEIGHT = 500f;
 
     /** The texture scale (tiling factor) of the cloud texture. */

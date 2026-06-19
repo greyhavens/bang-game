@@ -15,11 +15,12 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 
+import com.jme3.material.MatParam;
 import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector3f;
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Geometry;
 import com.jme3.texture.Texture;
 
 import com.jmex.bui.BButton;
@@ -46,6 +47,7 @@ import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.util.ImageCache;
+import com.threerings.jme.util.SpatialVisitor;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -318,18 +320,6 @@ public class TownView extends BWindow
                 }
             });
 
-            // jME3 cutover: the fork built a MaterialState (white ambient/diffuse/emissive) and
-            // applied it to the hovered prop sprite to brighten it. jME3 highlights through a
-            // Material override; we build a white-emissive Unshaded material.
-            // TODO(sprite-cluster reconcile): applying/clearing this via setMaterial overrides the
-            // sprite's textured model material wholesale. The *Sprite framework (cluster 1) should
-            // expose a highlight/colour-modulation seam; reconcile to it (so the prop texture is
-            // preserved and the clear path restores the original material).
-            _hstate = new Material(_ctx.getAssetManager(),
-                "Common/MatDefs/Misc/Unshaded.j3md");
-            _hstate.setColor("Color", new ColorRGBA(ColorRGBA.White));
-            _hstate.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-
             // load up our hover cursor
             try {
                 _hcursor = BangUI.loadCursor("hand");
@@ -523,16 +513,9 @@ public class TownView extends BWindow
         {
             super.hoverSpritesChanged(hover, thover);
 
-            // clear our previous highlight
+            // clear our previous highlight (restore each building geometry's saved material colour)
             if (_hsprite != null) {
-                // jME3 cutover: the fork cleared the highlight by removing the hover MaterialState
-                // (clearRenderState(RS_MATERIAL) + updateRenderState). A jME3 Material override has
-                // no per-state clear and we have no handle to the sprite's original textured
-                // material here, so the visible un-highlight is deferred to the sprite framework.
-                // TODO(sprite-cluster reconcile): the *Sprite framework (cluster 1) owns the
-                // highlight seam; clear it through that (restoring the model material) once its
-                // render-state->Material port lands.
-                _hsprite = null;
+                clearHighlight(_hsprite);
             }
             _hsprite = null;
 
@@ -550,11 +533,76 @@ public class TownView extends BWindow
 
             // highlight the sprite
             _hsprite = (PieceSprite)hover;
-            // jME3 cutover: fork setRenderState(_hstate)+updateRenderState -> jME3 material
-            // override. See the reconcile TODO above (sprite-cluster highlight seam).
-            _hsprite.setMaterial(_hstate);
+            applyHighlight(_hsprite);
 
             updateCursor(_hcursor);
+        }
+
+        /**
+         * Brightens every geometry beneath the hovered building sprite with a subtle white wash,
+         * preserving its texture and lighting (the master client used a fork {@code MaterialState}
+         * with white ambient/diffuse/emissive applied over the lit, textured model — NOT a flat
+         * white material).
+         *
+         * <p>jME3 cutover: the broken port called {@code setMaterial(Unshaded white)}, replacing the
+         * whole textured model material with an opaque white one (the building rendered as a solid
+         * white silhouette) and never restored it. The faithful equivalent here is the same lever
+         * the sprite framework already uses for shadow/fade tints ({@link SpriteMaterialState}):
+         * push white material colours onto the model's {@code Lighting.j3md} geometries. We enable
+         * {@code UseMaterialColors} and set {@code Ambient}/{@code Diffuse} above white so the lit
+         * result brightens toward white while the {@code DiffuseMap} texture still shows through.
+         * Each geometry's original material colours are saved as user data so the clear path can
+         * restore them exactly.
+         */
+        protected void applyHighlight (Sprite sprite)
+        {
+            new SpatialVisitor<Geometry>(Geometry.class) {
+                protected void visit (Geometry geom) {
+                    Material mat = geom.getMaterial();
+                    if (mat == null ||
+                        mat.getMaterialDef().getMaterialParam("UseMaterialColors") == null) {
+                        return;
+                    }
+                    // remember the original material-colour state so we can restore it on un-hover
+                    MatParam umc = mat.getParam("UseMaterialColors");
+                    MatParam amb = mat.getParam("Ambient");
+                    MatParam dif = mat.getParam("Diffuse");
+                    geom.setUserData(HL_SAVED_UMC,
+                        Boolean.valueOf(umc != null && Boolean.TRUE.equals(umc.getValue())));
+                    geom.setUserData(HL_SAVED_AMBIENT, amb == null ? null : amb.getValue());
+                    geom.setUserData(HL_SAVED_DIFFUSE, dif == null ? null : dif.getValue());
+
+                    mat.setBoolean("UseMaterialColors", true);
+                    mat.setColor("Ambient", new ColorRGBA(HL_LEVEL, HL_LEVEL, HL_LEVEL, 1f));
+                    mat.setColor("Diffuse", new ColorRGBA(HL_LEVEL, HL_LEVEL, HL_LEVEL, 1f));
+                }
+            }.traverse(sprite);
+        }
+
+        /** Restores the material colours saved by {@link #applyHighlight}. */
+        protected void clearHighlight (Sprite sprite)
+        {
+            new SpatialVisitor<Geometry>(Geometry.class) {
+                protected void visit (Geometry geom) {
+                    Material mat = geom.getMaterial();
+                    if (mat == null || geom.getUserData(HL_SAVED_UMC) == null) {
+                        return;
+                    }
+                    boolean umc = (Boolean)geom.getUserData(HL_SAVED_UMC);
+                    ColorRGBA amb = geom.getUserData(HL_SAVED_AMBIENT);
+                    ColorRGBA dif = geom.getUserData(HL_SAVED_DIFFUSE);
+                    mat.setBoolean("UseMaterialColors", umc);
+                    if (amb != null) {
+                        mat.setColor("Ambient", amb);
+                    }
+                    if (dif != null) {
+                        mat.setColor("Diffuse", dif);
+                    }
+                    geom.setUserData(HL_SAVED_UMC, null);
+                    geom.setUserData(HL_SAVED_AMBIENT, null);
+                    geom.setUserData(HL_SAVED_DIFFUSE, null);
+                }
+            }.traverse(sprite);
         }
 
         protected Viewpoint getViewpoint (String name)
@@ -664,7 +712,6 @@ public class TownView extends BWindow
 
         protected BangContext _bctx;
 
-        protected Material _hstate;
         protected PieceSprite _hsprite;
         protected ViewpointSprite _vpsprite;
         protected Vector3f _pos = new Vector3f();
@@ -749,4 +796,15 @@ public class TownView extends BWindow
     // the number of bounties and ranked games needed to cause the tip to go away
     protected static final int OFFICE_TIP = 4;
     protected static final int SALOON_TIP = 4;
+
+    /** Building hover-highlight brightness: the white material-colour level (>1 brightens the lit
+     * result toward white while the texture still shows through). Matches the fork's subtle
+     * white MaterialState wash. */
+    protected static final float HL_LEVEL = 1.8f;
+
+    /** Geometry user-data keys for saving/restoring the original material colours under a hover
+     * highlight (so the un-hover path restores the building's textured material exactly). */
+    protected static final String HL_SAVED_UMC = "bang.hl.umc";
+    protected static final String HL_SAVED_AMBIENT = "bang.hl.ambient";
+    protected static final String HL_SAVED_DIFFUSE = "bang.hl.diffuse";
 }

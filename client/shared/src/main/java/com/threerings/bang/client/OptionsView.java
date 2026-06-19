@@ -383,7 +383,8 @@ public class OptionsView extends BDecoratedWindow
         // reconfigure the camera frustum in case the aspect ratio changed (the context restart
         // also does this via notifyReshape, but the popup relayout below reads it immediately).
         _ctx.getCameraHandler().getCamera().setFrustumPerspective(
-            45.0f, width/(float)height, 1, 10000);
+            45.0f, width/(float)height,
+            com.threerings.jme.JmeApp.FRUSTUM_NEAR, com.threerings.jme.JmeApp.FRUSTUM_FAR);
 
         // recenter and invalidate the main view and options window
         if (_parent != null) {
