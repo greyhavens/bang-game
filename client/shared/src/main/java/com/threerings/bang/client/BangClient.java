@@ -1329,6 +1329,43 @@ public class BangClient extends BasicClient
         return true;
     }
 
+    /**
+     * Restarts the Bang session in-process: re-establishes the client connection using the
+     * server and credentials configured at the original logon and returns the player to the town
+     * hub. This is the dev-build equivalent of {@link #relaunchGetdown}: in a production install
+     * Getdown relaunches the whole process (which re-runs the auto-logon); in a dev build there is
+     * no Getdown, so instead of exiting we simply log back on within the same process.
+     *
+     * <p>Called when the user clicks "Restart" on the {@link LogOffView} that pops up after an idle
+     * logoff (or other logoff with message). By the time that view is shown the client has already
+     * fully logged off ({@link #clientDidLogoff} is what displays the view), so the communicator is
+     * torn down and a fresh {@link Client#logon} will reconnect with the previously configured
+     * server/credentials. A successful logon eventually fires {@link #clientDidLogon} which calls
+     * {@link #showTownView}, replacing the LogOffView with the town hub.
+     *
+     * @return true if a logon attempt was initiated, false if we could not restart (e.g. we have
+     * no credentials configured or are somehow still logged on).
+     */
+    public boolean restartBang ()
+    {
+        Client client = _ctx.getClient();
+        if (client.isLoggedOn() || client.isActive()) {
+            // we're already (re)connecting/connected; nothing to do
+            log.info("Ignoring restart request; client already active.");
+            return false;
+        }
+        if (client.getCredentials() == null) {
+            // without credentials we can't reconnect in-process (would need the logon view)
+            log.warning("Cannot restart Bang in-process; no credentials configured.");
+            return false;
+        }
+        // clear the stale logoff message so a successful reconnect doesn't immediately re-pop the
+        // LogOffView if something goes wrong, and so a fresh connection failure is reported cleanly
+        _logOffMsg = null;
+        log.info("Restarting Bang session in-process.");
+        return client.logon();
+    }
+
     /** Tracks user idleness and lets the server know when we're idle and eventually logs us
      * off. */
     protected class IdleTracker extends Interval

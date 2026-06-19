@@ -46,7 +46,11 @@ public class LogOffView extends BDecoratedWindow
     {
         if ("restart".equals(event.getAction())) {
             _restart.setEnabled(false);
-            if (!BangClient.relaunchGetdown(_ctx, 500L)) {
+            // in a production install Getdown relaunches the whole process; in a dev build there
+            // is no Getdown, so fall back to an in-process reconnect that returns us to the town
+            // hub rather than exiting (BUG-18: Restart used to quit the game in dev)
+            if (!BangClient.relaunchGetdown(_ctx, 500L) &&
+                !_ctx.getBangClient().restartBang()) {
                 log.info("Failed to restart Bang, exiting");
                 _ctx.getApp().stop();
             }
