@@ -36,7 +36,15 @@ public class WendigoPath extends CubicSplinePath
     {
         super.update(time);
 
-        adjustRotation();
+        // super.update() may have completed the path -- advancing _current to
+        // _durations.length and calling pathCompleted() -- in which case interpolate()
+        // would index _durations[_current] out of bounds (ArrayIndexOutOfBounds on the
+        // jME3 render thread, which kills the client). jME1 stopped ticking the path once
+        // it completed; jME3 still runs the rest of this override, so only adjust the
+        // rotation while the path is still active.
+        if (_current < _durations.length) {
+            adjustRotation();
+        }
 
         _elapsed += time;
         if (_elapsed > _outFadeTime) {
