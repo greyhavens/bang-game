@@ -263,7 +263,15 @@ public class Model extends Node
         _paused = false;
         AnimComposer composer = getComposer();
         if (composer != null && composer.getAnimClip(name) != null) {
-            composer.setCurrentAction(name);
+            // The fork carried a per-animation repeat type (RT_CLAMP one-shot vs. RT_WRAP/RT_CYCLE
+            // loop); the converter preserves it as the bang.loopModes user data. jME3's
+            // AnimComposer.setCurrentAction(name) defaults to LoopMode.Loop, so without honouring
+            // this every action (including the death/"dying" one-shot) loops forever (BUG-28: the
+            // death animation replays until the sprite's _nextAction timer swaps in the dead model).
+            // Map DontLoop -> non-looping (the AnimLayer clamps on the final frame and clears the
+            // action after one cycle, matching RT_CLAMP); Loop/Cycle stay looping.
+            boolean loop = !"DontLoop".equals(_loopModes.get(name));
+            composer.setCurrentAction(name, AnimComposer.DEFAULT_LAYER, loop);
         }
         _animObservers.apply(new AnimStartedOp(name));
         return anim.getDuration() / _animSpeed;
@@ -472,6 +480,16 @@ public class Model extends Node
         }
 
         Map<String, Integer> frameRates = parsePairs(content.getUserData("bang.frameRates"));
+        _loopModes = new HashMap<String, String>();
+        Object loopModes = content.getUserData("bang.loopModes");
+        if (loopModes != null) {
+            for (String pair : loopModes.toString().split(",")) {
+                int eq = pair.indexOf('=');
+                if (eq > 0) {
+                    _loopModes.put(pair.substring(0, eq), pair.substring(eq + 1));
+                }
+            }
+        }
         _anims = new HashMap<String, Animation>();
         AnimComposer composer = getComposer(content);
         Object names = content.getUserData("bang.animations");
@@ -528,6 +546,10 @@ public class Model extends Node
 
     /** The model animations by name (from {@code bang.animations} + the content's clips). */
     protected Map<String, Animation> _anims = new HashMap<String, Animation>();
+
+    /** Per-animation jME3 loop-mode names (from {@code bang.loopModes}: {@code Loop}, {@code Cycle},
+     * or {@code DontLoop}). A {@code DontLoop} entry makes its playback action one-shot. */
+    protected Map<String, String> _loopModes = new HashMap<String, String>();
 
     /** The currently running animation, or {@code null} for none. */
     protected Animation _anim;
