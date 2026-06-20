@@ -11,6 +11,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.CSS;
@@ -58,6 +60,7 @@ import com.threerings.bang.client.util.TexturePool;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.SoundUtil;
 
@@ -245,14 +248,32 @@ public class BangUI
     /**
      * Configures our application icons (shown in the corner of the window and in the task bar,
      * etc.).
+     *
+     * <p>jME3 cutover (Phase 3): the fork loaded each icon PNG into a fork {@code com.jme.image.Image}
+     * and handed its raw RGBA {@code ByteBuffer} to LWJGL2 {@code Display.setIcon(ByteBuffer[])}.
+     * Here we load the same icon PNGs straight from the unpacked resource tree (the resource manager
+     * and image cache are not yet set up when this runs -- it is called from {@link BangApp#create})
+     * and hand the {@link BufferedImage}s to the host, which installs them on the live LWJGL3/GLFW
+     * window via {@code glfwSetWindowIcon} (see {@code JmeApp.setWindowIcons}).
      */
-    public static void configIcons ()
+    public static void configIcons (com.threerings.jme.JmeApp app)
     {
-        // TODO(phase3-host): the fork set the application/window icon via the LWJGL2
-        // org.lwjgl.opengl.Display.setIcon(ByteBuffer[]) call, loading each PNG into a fork
-        // com.jme.image.Image and handing its raw ByteBuffer to LWJGL2. The window icon is a host
-        // concern owned by the LWJGL3/jME3 context (AppSettings.setIcons(BufferedImage[]) or the
-        // GLFW window icon); wire it in at the host flip. No-op until then.
+        BufferedImage[] icons = new BufferedImage[ICON_SIZES.length];
+        for (int ii = 0; ii < ICON_SIZES.length; ii++) {
+            String path = "rsrc/ui/icons/" + ICON_SIZES[ii] + "_icon.png";
+            try {
+                // getdown has already unpacked our resources, so we can load these images straight
+                // from the filesystem (this method gets called before the resource manager and
+                // image cache are set up, otherwise we'd use them)
+                icons[ii] = ImageIO.read(BangUtil.getResourceFile(path));
+            } catch (Exception e) {
+                log.warning("Failed to load icon", "path", path, e);
+                return;
+            }
+        }
+        if (app != null) {
+            app.setWindowIcons(icons);
+        }
     }
 
     /**

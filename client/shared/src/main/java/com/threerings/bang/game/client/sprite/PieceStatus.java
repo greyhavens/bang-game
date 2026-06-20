@@ -19,6 +19,10 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.texture.Texture2D;
 
+import com.jme3.scene.Spatial.CullHint;
+
+import com.jmex.bui.backend.BackendProvider;
+import com.jmex.bui.backend.Jme3RenderBackend;
 import com.jmex.bui.background.BBackground;
 
 import com.threerings.bang.util.BasicContext;
@@ -40,12 +44,21 @@ import static com.threerings.bang.client.BangMetrics.*;
  * set of {@code Quad}s for the iconic UI status. Each layer now carries its own {@link Material}
  * (textured + colour-param tinted) instead of a fork {@code TextureState} + batch default colour.
  *
- * <p><b>Deferred to Phase 3/4:</b> the fork rotated each status texture to follow the camera via
- * {@code Texture.setRotation/setTranslation} ({@link #rotateWithCamera}); jME3 {@code Texture2D}
- * carries no transform, so the camera-aligned spin is a UV / billboard concern left for the board
- * renderer pass. The iconic {@link BBackground} drew the quads in immediate mode
- * ({@code Quad.draw(Renderer)}); jME3 has no immediate draw, so the icon background is a Phase-3
- * BUI render-path concern and renders nothing for now.
+ * <p>The iconic {@link BBackground} drew the quads in immediate mode ({@code Quad.draw(Renderer)});
+ * jME3 has no immediate draw, but the icon layers are already textured/owner-tinted {@link Geometry}
+ * objects, so {@link #getIconBackground} now renders those geometries through the BUI jME3
+ * {@link RenderManager} (positioned via the backend translate stack) -- reproducing the fork's
+ * iconic plate.
+ *
+ * <p><b>Still deferred:</b> the fork rotated each on-ground status texture to follow the camera via
+ * {@code Texture.setRotation/setTranslation} ({@link #rotateWithCamera}) so the flat ground-highlight
+ * status icons read upright as the camera orbited. jME3 {@code Texture2D} carries no transform, and
+ * the {@code _info} layers share the highlight's mesh ({@link TerrainNode.SharedHighlight}), so the
+ * UVs cannot be rotated in place without corrupting the shared highlight. A faithful fix needs a
+ * per-layer UV-transform material (custom shader param); see {@link #rotateWithCamera}. The one
+ * layer that genuinely needed to stay upright -- the influence icon -- was already migrated to a
+ * screen-facing {@code BillboardControl} in {@link UnitStatus}, so the remaining gap is only the
+ * cosmetic spin of the flat damage/tick ground indicators.
  */
 public class PieceStatus extends Node
 {
@@ -111,18 +124,36 @@ public class PieceStatus extends Node
     }
 
     /**
-     * Called to keep our textures rotated in line with the camera. jME3 {@code Texture2D} has no
-     * transform; the camera-aligned spin is deferred to the board-renderer/billboard pass.
+     * Called to keep our on-ground status textures rotated in line with the camera.
+     *
+     * <p>The fork applied {@code camrot}/{@code camtrans} as a per-texture matrix transform on each
+     * {@code _info} ground-highlight layer, spinning the texture about its centre to counter the
+     * camera azimuth so the flat status icons stayed upright on screen as the camera orbited. jME3
+     * {@code Texture2D} has no transform matrix, and the {@code _info} layers share the highlight's
+     * mesh ({@link TerrainNode.SharedHighlight}), so the UVs cannot be rotated in place without
+     * corrupting the shared highlight. Reproducing this requires a per-layer material whose shader
+     * rotates the texture coordinates (the stock {@code Unshaded.j3md} exposes no such param), which
+     * is left as a follow-up. The one layer that had to read upright -- the influence icon -- is
+     * already handled as a screen-facing {@code BillboardControl} in {@link UnitStatus}; the
+     * remaining gap is only the cosmetic spin of the flat damage/tick/order ground indicators.
      */
     public void rotateWithCamera (Quaternion camrot, Vector3f camtrans)
     {
-        // no-op on jME3 (texture transform deferred to Phase 4)
+        // see Javadoc: a faithful texture-matrix spin needs a custom UV-transform material; the
+        // upright influence icon is already a billboard, so this stays a no-op for the flat layers.
     }
 
     /**
      * Returns a background that can be used to render this unit's status in iconic form in the unit
-     * status user interface. jME3: the fork drew the icon quads in immediate mode; that draw path
-     * is a Phase-3 BUI concern, so this background renders nothing for now.
+     * status user interface.
+     *
+     * <p>The fork drew each iconic status {@code Quad} in BUI's immediate-mode painter via
+     * {@code _icon[ii].draw(renderer)}. jME3 has no immediate draw, but the icon layers are already
+     * full {@link Geometry} objects carrying their own textured/owner-tinted {@link Material}
+     * (composed in {@link #update}); we render those same geometries through the BUI jME3
+     * {@link RenderManager}, positioning each at the component's GUI-space origin (the BUI translate
+     * stack offset plus the supplied {@code x,y}). This reproduces the fork's iconic plate exactly:
+     * same textures, same per-layer tint, same {@code ICON_SIZE} quad, same centered placement.
      */
     public BBackground getIconBackground ()
     {
@@ -135,7 +166,27 @@ public class PieceStatus extends Node
             }
             public void render (RenderManager renderer, int x, int y,
                                 int width, int height, float alpha) {
-                // jME3: immediate-mode quad draw is gone; the icon UI render is Phase-3 BUI work.
+                if (renderer == null) {
+                    return;
+                }
+                // honor the BUI translate stack so the icons land at the component's screen origin
+                int tx = x, ty = y;
+                if (BackendProvider.get() instanceof Jme3RenderBackend) {
+                    Jme3RenderBackend backend = (Jme3RenderBackend)BackendProvider.get();
+                    tx += backend.getTranslateX();
+                    ty += backend.getTranslateY();
+                }
+                for (int ii = 0; ii < _icon.length; ii++) {
+                    // the fork skipped CULL_ALWAYS layers; mirror that (layer 4 etc. are culled)
+                    if (_icon[ii].getCullHint() == CullHint.Always) {
+                        continue;
+                    }
+                    // jME3 Quad is corner-origin (spans [0,ICON_SIZE]); place its lower-left at the
+                    // component origin so it fills the ICON_SIZE x ICON_SIZE background rect
+                    _icon[ii].setLocalTranslation(tx, ty, 0f);
+                    _icon[ii].updateGeometricState();
+                    renderer.renderGeometry(_icon[ii]);
+                }
             }
         };
     }

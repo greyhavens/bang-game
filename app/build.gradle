@@ -47,6 +47,10 @@ dependencies {
   // render thread by JmeApp.getGLRendererString). compileOnly — the natives reach runtime via the
   // client/desktop jme3-lwjgl3 dependency.
   compileOnly "org.lwjgl:lwjgl-opengl:3.3.6"
+  // jME3 cutover (Phase 3): glfwSetWindowIcon for the application/window+taskbar icon, installed
+  // on the render thread by JmeApp.setWindowIcons (replaces the fork's LWJGL2 Display.setIcon).
+  // compileOnly — the lwjgl-glfw classes + natives reach runtime via client/desktop's jme3-lwjgl3.
+  compileOnly "org.lwjgl:lwjgl-glfw:3.3.6"
 
   // these are only for tools, so we don't export them as depends
   compileOnly "com.threerings:nenya-tools:${nenyaVersion}"

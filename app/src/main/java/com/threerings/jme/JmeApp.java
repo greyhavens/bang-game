@@ -175,10 +175,17 @@ public class JmeApp extends SimpleApplication
             _inputHandler.registerWith(inputManager);
         }
 
-        // wire BUI input: attach the Jme3RootNode's RawInputListener to the InputManager.
+        // wire BUI input: attach the Jme3RootNode's RawInputListener to the InputManager, and hand
+        // it the RenderManager so embedded-3D widgets (BGeomView) can create per-component
+        // viewports.
         if (_rnode instanceof Jme3RootNode) {
             ((Jme3RootNode)_rnode).registerWith(inputManager);
+            ((Jme3RootNode)_rnode).setRenderManager(renderManager);
         }
+
+        // hand BCursor the live InputManager so hardware cursors (BCursor.show) can install
+        // through jME3/GLFW. Mirrors the fork's static org.lwjgl.input.Mouse.setNativeCursor seam.
+        com.jmex.bui.BCursor.setInputManager(inputManager);
 
         // render BUI through a SceneProcessor on the GUI viewport (the tools/jme3-host pattern):
         // postQueue runs with the GUI viewport active; we switch into the 2D ortho overlay and
@@ -283,6 +290,59 @@ public class JmeApp extends SimpleApplication
         com.jme3.system.JmeContext ctx = getContext();
         if (ctx != null) {
             ctx.setTitle(title);
+        }
+    }
+
+    /**
+     * Installs the application/window icon(s) on the live LWJGL3/GLFW window (shown in the window
+     * corner and the OS task bar). Replaces the fork's LWJGL2 {@code Display.setIcon(ByteBuffer[])}:
+     * the fork handed each icon's raw RGBA bytes to LWJGL2; here we convert each {@link BufferedImage}
+     * to a {@link org.lwjgl.glfw.GLFWImage} (tightly-packed RGBA, top-left origin -- the layout GLFW
+     * wants, mirroring jME3's own {@code LwjglWindow.setWindowIcon}) and call
+     * {@code glfwSetWindowIcon}. GLFW copies the pixels internally, so the native buffers are freed
+     * (try-with-resources) once the call returns.
+     *
+     * <p>Must be called on the render thread once the GLFW window exists (i.e. from {@link #create}
+     * onward); {@code glfwGetCurrentContext} returns this app's window handle there. A no-op (logged
+     * only) if no icons are supplied or the window handle is unavailable.
+     */
+    public void setWindowIcons (java.awt.image.BufferedImage[] icons)
+    {
+        if (icons == null || icons.length == 0) {
+            return;
+        }
+        long window = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
+        if (window == 0L) {
+            System.err.println("JmeApp.setWindowIcons: no current GLFW window; icons not set.");
+            return;
+        }
+        try (org.lwjgl.glfw.GLFWImage.Buffer iconSet =
+                 org.lwjgl.glfw.GLFWImage.malloc(icons.length)) {
+            // keep references to the per-image pixel buffers alive until the glfw call returns.
+            java.nio.ByteBuffer[] pixels = new java.nio.ByteBuffer[icons.length];
+            for (int ii = 0; ii < icons.length; ii++) {
+                java.awt.image.BufferedImage img = icons[ii];
+                int w = img.getWidth(), h = img.getHeight();
+                java.nio.ByteBuffer buf = org.lwjgl.BufferUtils.createByteBuffer(w * h * 4);
+                for (int y = 0; y < h; y++) {
+                    for (int x = 0; x < w; x++) {
+                        int argb = img.getRGB(x, y);
+                        buf.put((byte)((argb >> 16) & 0xFF)); // R
+                        buf.put((byte)((argb >> 8) & 0xFF));  // G
+                        buf.put((byte)(argb & 0xFF));         // B
+                        buf.put((byte)((argb >> 24) & 0xFF)); // A
+                    }
+                }
+                buf.flip();
+                pixels[ii] = buf;
+                org.lwjgl.glfw.GLFWImage gimg = org.lwjgl.glfw.GLFWImage.malloc();
+                gimg.set(w, h, buf);
+                iconSet.put(ii, gimg);
+                gimg.free();
+            }
+            org.lwjgl.glfw.GLFW.glfwSetWindowIcon(window, iconSet);
+        } catch (Throwable t) {
+            System.err.println("JmeApp.setWindowIcons: failed to set window icon: " + t);
         }
     }
 

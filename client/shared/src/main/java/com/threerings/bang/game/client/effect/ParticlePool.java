@@ -64,6 +64,14 @@ public class ParticlePool
         _dustmat = RenderUtil.createTextureMaterial(ctx, "textures/effects/dust.png");
         RenderUtil.applyBlendAlpha(_dustmat);
         RenderUtil.applyOverlayZBuf(_dustmat);
+
+        // The fork gave the streamer + sparkle emitters an ADDITIVE blend (RenderUtil.addAlpha:
+        // SRC_ALPHA / ONE) for emissive glow accumulation, while dustRing + steamCloud used the
+        // plain alpha blendAlpha. Replicate that split with a second additive dust material (same
+        // texture + overlay depth: less-or-equal test, no depth write).
+        _dustaddmat = RenderUtil.createTextureMaterial(ctx, "textures/effects/dust.png");
+        RenderUtil.applyAddAlpha(_dustaddmat);
+        RenderUtil.applyOverlayZBuf(_dustaddmat);
     }
 
     public static void clear ()
@@ -192,8 +200,13 @@ public class ParticlePool
 
     protected static ParticleEmitter newEmitter (String name, int count)
     {
+        return newEmitter(name, count, _dustmat);
+    }
+
+    protected static ParticleEmitter newEmitter (String name, int count, Material material)
+    {
         ParticleEmitter emitter = new ParticleEmitter(name, ParticleMesh.Type.Triangle, count);
-        emitter.setMaterial(_dustmat);
+        emitter.setMaterial(material);
         emitter.setQueueBucket(Bucket.Transparent);
         emitter.setShadowMode(com.jme3.renderer.queue.RenderQueue.ShadowMode.Off);
         return emitter;
@@ -224,7 +237,7 @@ public class ParticlePool
 
     protected static ParticleEmitter createStreamer ()
     {
-        ParticleEmitter particles = newEmitter("streamer", 64);
+        ParticleEmitter particles = newEmitter("streamer", 64, _dustaddmat);
         particles.setLowLife(0.25f);
         particles.setHighLife(0.75f);
         particles.getParticleInfluencer().setInitialVelocity(Vector3f.ZERO.clone());
@@ -239,7 +252,7 @@ public class ParticlePool
 
     protected static ParticleEmitter createSparkles ()
     {
-        ParticleEmitter particles = newEmitter("sparkles", 64);
+        ParticleEmitter particles = newEmitter("sparkles", 64, _dustaddmat);
         particles.setLowLife(0.25f);
         particles.setHighLife(0.75f);
         particles.getParticleInfluencer().setInitialVelocity(Vector3f.ZERO.clone());
@@ -282,8 +295,13 @@ public class ParticlePool
     protected static ArrayList<ParticleEmitter> _steamClouds =
         new ArrayList<ParticleEmitter>();
 
-    /** The shared dust-texture material used by the pooled emitters (Phase-4 re-author target). */
+    /** The shared alpha-blended dust-texture material used by the dustRing + steamCloud emitters
+     * (fork {@code blendAlpha}; Phase-4 re-author target). */
     protected static Material _dustmat;
+
+    /** The shared additive dust-texture material used by the streamer + sparkle emitters for
+     * emissive glow accumulation (fork {@code addAlpha}: SRC_ALPHA / ONE). */
+    protected static Material _dustaddmat;
 
     /** Each pooled emitter's nominal release rate, restored by {@link #setActive}. */
     protected static HashMap<ParticleEmitter, Float> _rates =

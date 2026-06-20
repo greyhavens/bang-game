@@ -41,6 +41,33 @@ public abstract class BRootNode
     public abstract long getTickStamp ();
 
     /**
+     * Returns the host's jME3 {@link RenderManager}, or null if this root node has no live render
+     * host (e.g. a headless/test node). {@link BGeomView} uses this to create the per-component
+     * {@code ViewPort} that renders embedded 3D geometry. The default returns null; the concrete
+     * jME3 root node ({@code Jme3RootNode}) overrides it.
+     */
+    public RenderManager getRenderManager ()
+    {
+        return null;
+    }
+
+    /**
+     * Returns the current display (framebuffer) width in pixels, read from the installed backend.
+     */
+    public int getDisplayWidth ()
+    {
+        return BackendProvider.get().getDisplayWidth();
+    }
+
+    /**
+     * Returns the current display (framebuffer) height in pixels, read from the installed backend.
+     */
+    public int getDisplayHeight ()
+    {
+        return BackendProvider.get().getDisplayHeight();
+    }
+
+    /**
      * Registers a top-level window with the input system.
      */
     public void addWindow (BWindow window)

@@ -19,6 +19,7 @@ import java.util.Map;
 
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.effect.ParticleEmitter;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
@@ -39,7 +40,6 @@ import com.jme3.scene.control.AbstractControl;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BRootNode;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
@@ -81,7 +81,9 @@ import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.util.PointSet;
+import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ParticleInfluenceControl;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -548,8 +550,21 @@ public class BoardView extends BComponent
      */
     public void addWindInfluence (Spatial spatial)
     {
-        // jME3: ParticleEmitter has a single ParticleInfluencer with no built-in wind; the fork's
-        // shared BasicWind influence is a Phase-4 custom influencer. No-op for now (flagged).
+        // jME3: the fork shared a single mutable BasicWind influence (board wind, refreshed from the
+        // board's wind direction/speed) added to every runtime-spawned effect's particle systems so
+        // they drift with the wind. jME3's ParticleEmitter has only a spawn-time ParticleInfluencer
+        // and a constant per-frame gravity -- no per-frame wind hook -- so reproduce the fork's
+        // per-frame BasicWind.apply via a ParticleInfluenceControl(WIND) attached to each emitter.
+        // The control adds _windAccel (the board wind already folded into the converter's baked
+        // world-velocity units; see refreshWindInfluence) to each live particle's velocity each
+        // frame. We attach one control per emitter and leave it; refreshWindInfluence rewrites the
+        // shared _windAccel in place, and each control reads the live value, mirroring the fork's
+        // single shared mutable influence.
+        new SpatialVisitor<ParticleEmitter>(ParticleEmitter.class) {
+            protected void visit (ParticleEmitter emitter) {
+                emitter.addControl(ParticleInfluenceControl.wind(_windAccel, true));
+            }
+        }.traverse(spatial);
     }
 
     /**
@@ -944,10 +959,10 @@ public class BoardView extends BComponent
             _ctx.getInterface().detachChild(_fadein);
             _fadein = null;
         }
-        if (_mroot != null) {
-            // TODO(phase3-host): the marquee overlay root is rendered by the BUI host,
-            // not attached to the scene graph (BRootNode is no longer a Spatial).
-            _mroot = null;
+        if (_mwindow != null) {
+            // detach any lingering marquee overlay window from the live in-game BUI root
+            _ctx.getRootNode().removeWindow(_mwindow);
+            _mwindow = null;
         }
 
         // clear out the particle pool
@@ -1152,8 +1167,25 @@ public class BoardView extends BComponent
      */
     protected void refreshWindInfluence ()
     {
-        // jME3: the shared particle wind influence is a Phase-4 custom ParticleInfluencer; no-op
-        // until then (board wind still drives the sky cloud scroll in SkyNode).
+        // jME3: recompute the shared board-wind acceleration that addWindInfluence bakes into each
+        // runtime-spawned effect's ParticleInfluenceControl(WIND). The fork's BasicWind blew in the
+        // board XY plane at (-cos(wdir), -sin(wdir), 0) with strength windSpeed * 0.0005 (see the
+        // pre-cutover BoardView), applied per frame to particle velocities. The baked effect emitters
+        // are WORLD-space and run at the converter's baked world-velocity units (the fork's per-ms
+        // velocities multiplied by MS_PER_SEC * the effect node scale) AND are rendered through
+        // ParticleCache.Z_UP_ROTATION (y-up author space -> z-up board space). So scale the fork
+        // wind by the same MS_PER_SEC * scale motion factor and pre-rotate it into z-up, exactly as
+        // ParticleConverter does for baked gravity/wind on world-space emitters (E15-16): authored
+        // board-plane wind then drifts the particles along the board, not off into +Y. (The fork
+        // board wind used rotateWithScene == false, so it applied in world axes; the runtime emitter
+        // velocities already live in the Z_UP-rotated world, hence the same pre-rotation here.)
+        float wdir = _board.getWindDirection();
+        float strength = _board.getWindSpeed() * 0.0005f;
+        Vector3f accel = new Vector3f(
+            -FastMath.cos(wdir) * strength, -FastMath.sin(wdir) * strength, 0f);
+        accel.multLocal(PARTICLE_MOTION_SCALE);
+        ParticleCache.Z_UP_ROTATION.mult(accel, accel);
+        _windAccel.set(accel);
     }
 
     /**
@@ -1384,19 +1416,7 @@ public class BoardView extends BComponent
      */
     protected void addMarquee (BComponent marquee, int x, int y)
     {
-        if (_mroot == null) {
-            // create a bare bones root node above the normal one
-            // TODO(phase3-host): this overlay root is rendered by the BUI host; with
-            // BRootNode no longer a Spatial it is not attached to the scene graph or z-ordered here.
-            _mroot = new BRootNode() {
-                public long getTickStamp () {
-                    return System.currentTimeMillis();
-                }
-                public void rootInvalidated (BComponent root) {
-                    root.validate();
-                }
-            };
-
+        if (_mwindow == null) {
             // the layout centers its components about their positions
             AbsoluteLayout layout = new AbsoluteLayout() {
                 public void layoutContainer (BContainer target) {
@@ -1423,7 +1443,13 @@ public class BoardView extends BComponent
                     return null;
                 }
             };
-            _mroot.addWindow(_mwindow);
+            // route the marquee overlay through the host's live in-game BUI root (the same
+            // BRootNode the rest of BangView's in-game windows render through) so it composites
+            // on top of the board. In the jME1 fork this was a separate overlay BRootNode
+            // attached to _ctx.getInterface() (a Spatial); in jME3 BRootNode is no longer a
+            // Spatial, so we instead add the window to the live root on a high overlay layer.
+            _mwindow.setLayer(MARQUEE_LAYER);
+            _ctx.getRootNode().addWindow(_mwindow);
             _mwindow.setBounds(0, 0, _ctx.getCamera().getWidth(),
                 _ctx.getCamera().getHeight());
         }
@@ -1437,10 +1463,8 @@ public class BoardView extends BComponent
     {
         _mwindow.remove(marquee);
         if (_mwindow.getComponentCount() == 0) {
-            _mroot.removeWindow(_mwindow);
-            // TODO(phase3-host): overlay root is host-rendered, not scene-graph attached.
+            _ctx.getRootNode().removeWindow(_mwindow);
             _mwindow = null;
-            _mroot = null;
         }
     }
 
@@ -2116,7 +2140,11 @@ public class BoardView extends BComponent
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected BRootNode _mroot;
+    /** The shared board-wind acceleration baked into every runtime-spawned effect's
+     * {@link ParticleInfluenceControl}(WIND) by {@link #addWindInfluence}; recomputed from the
+     * board's wind direction/speed by {@link #refreshWindInfluence}. */
+    protected Vector3f _windAccel = new Vector3f();
+
     protected BWindow _mwindow;
     protected BLabel _marquee, _loading;
     protected int _toLoad, _loaded, _curpct = -1;
@@ -2208,6 +2236,12 @@ public class BoardView extends BComponent
     /** Used when intersecting the ground. */
     protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
 
+    /** The factor the ParticleConverter bakes into world-space emitter velocities: the fork's
+     * millisecond position-integration (x1000) times the default effect node scale (0.025, the
+     * particles.properties default ParticleCache applies). The board-wind acceleration must carry
+     * the same factor to drift the baked particles at the fork's apparent rate (E15-17). */
+    protected static final float PARTICLE_MOTION_SCALE = 1000f * 0.025f;
+
     protected static final ColorRGBA DARK =
         new ColorRGBA(0.3f, 0.3f, 0.3f, 1.0f);
     protected static final ColorRGBA LIGHT =
@@ -2229,6 +2263,11 @@ public class BoardView extends BComponent
 
     /** The time in milliseconds that it takes to complete one throb cycle. */
     protected static final long THROB_PERIOD = 1000L;
+
+    /** Layer for the marquee overlay window: above the in-game HUD windows (layers 1-2) so it
+     * composites on top of the board, but well below the tooltip layer. Mirrors the fork's
+     * separate overlay BRootNode (drawn on top of the main root). */
+    protected static final int MARQUEE_LAYER = 1000;
 
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;

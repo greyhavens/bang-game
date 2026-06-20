@@ -57,8 +57,8 @@ public class UnitView extends BGeomView
 
     /**
      * Returns the portrait camera, positioned for the current model (or null until the model and
-     * a target size are available). The Phase-3 viewport/RTT path renders {@link #getGeometry}
-     * through this camera into the component rect.
+     * a target size are available). The per-component viewport path ({@link BGeomView}) renders
+     * {@link #getGeometry} through this camera into the component rect.
      */
     public Camera getPortraitCamera ()
     {
@@ -100,16 +100,25 @@ public class UnitView extends BGeomView
     @Override // documentation inherited
     protected void wasAdded ()
     {
-        super.wasAdded();
-        _frame.reference();
-
-        // lazily build the portrait camera now that we have a target size
+        // build the portrait camera BEFORE super.wasAdded() so BGeomView.createViewport() (invoked
+        // from super) picks it up via getViewCamera(); the frame gives us the target pixel size.
         if (_camera == null) {
             _camera = new Camera(_frame.getWidth(), _frame.getHeight());
             if (_model != null) {
                 positionCamera(_camera, _model);
             }
         }
+
+        super.wasAdded();
+        _frame.reference();
+    }
+
+    @Override // documentation inherited
+    protected Camera getViewCamera ()
+    {
+        // hand BGeomView's per-component viewport our model-framing portrait camera (BGeomView
+        // manages its screen-rect viewport and frustum aspect).
+        return (_camera != null) ? _camera : super.getViewCamera();
     }
 
     @Override // documentation inherited

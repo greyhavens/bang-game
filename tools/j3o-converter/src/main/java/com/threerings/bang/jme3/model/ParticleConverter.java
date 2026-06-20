@@ -13,6 +13,9 @@ import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleController;
 import com.jmex.effects.particles.ParticleInfluence;
 import com.jmex.effects.particles.SimpleParticleInfluenceFactory;
+import com.jmex.effects.particles.WanderInfluence;
+
+import com.threerings.bang.util.ParticleInfluenceControl;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.TextureKey;
@@ -71,8 +74,11 @@ import com.jme3.texture.Texture2D;
  *       {@link EmitterBoxShape}.</li>
  *   <li>{@link SimpleParticleInfluenceFactory.BasicGravity} &rarr; {@code setGravity(...)};
  *       {@link SimpleParticleInfluenceFactory.BasicWind} folded into the gravity vector
- *       (jME3 has no separate wind force); {@code BasicDrag}/{@code SwarmInfluence}/
- *       {@code WanderInfluence} have <b>no jME3 equivalent</b> and are recorded as dropped.</li>
+ *       (jME3 has no separate wind force); {@code BasicDrag} and {@code WanderInfluence} &rarr; a
+ *       runtime {@link ParticleInfluenceControl} (an {@code AbstractControl} baked into the
+ *       {@code .j3o} that re-applies the fork per-frame velocity math — jME3 has no per-frame
+ *       influencer hook); {@code BasicVortex}/{@code SwarmInfluence} (position/world-axis dependent)
+ *       remain recorded as dropped (E15-17 bounded remainder).</li>
  *   <li>texture (the fork {@code TextureState}'s first texture's image location) &rarr; a
  *       {@code Common/MatDefs/Misc/Particle.j3md} material with that texture, {@code ImagesX=1}/
  *       {@code ImagesY=1} (the fork particle system carries no sprite sub-image grid); blend mode
@@ -282,8 +288,11 @@ public class ParticleConverter
 
         // ---- influences (gravity / wind) ----
         // gravity/wind drive the same ms-integrated position, so they take the motion scale, not the
-        // size scale.
-        applyInfluences(geom, emitter, result, motionScale);
+        // size scale. World-space (non-following) emitters also need the y-up->z-up pre-rotation
+        // (see applyInfluences): the fork rotated gravity/wind into board space every frame, but jME3
+        // applies gravity in UNROTATED world axes, so we must pre-rotate at bake time. Emitter-local
+        // (transformParticles==true) emitters did NOT rotate gravity in the fork, so we don't either.
+        applyInfluences(geom, emitter, result, motionScale, worldSpace);
 
         // ---- material (texture + blend) ----
         applyMaterial(geom, emitter, result);
@@ -353,7 +362,8 @@ public class ParticleConverter
     }
 
     protected void applyInfluences (
-        ParticleGeometry geom, ParticleEmitter emitter, Result result, float motionScale)
+        ParticleGeometry geom, ParticleEmitter emitter, Result result, float motionScale,
+        boolean worldSpace)
     {
         List<ParticleInfluence> infs = geom.getInfluences();
         if (infs == null) {
@@ -377,7 +387,37 @@ public class ParticleConverter
                 gravity.addLocal(-wd.x * s, -wd.y * s, -wd.z * s);
                 haveGravity = true;
                 result.notes.add(name(geom, "?") + ": BasicWind folded into gravity (no jME3 wind)");
+            } else if (inf instanceof SimpleParticleInfluenceFactory.BasicDrag d) {
+                // E15-17: the fork's BasicDrag applies a per-frame viscous deceleration
+                // (velocity += velocity * -dragCoefficient * dt * invMass) that jME3's stock
+                // ParticleEmitter has no analogue for (it only integrates a constant gravity each
+                // frame and never re-runs the influencer after spawn). Attach the runtime
+                // ParticleInfluenceControl (an AbstractControl baked into the .j3o and re-applied
+                // every frame; it lives in client/shared so it is on the client runtime classpath
+                // and deserializes from the baked asset). Drag is a pure per-step scaling of the
+                // velocity vector, so it is scale-invariant: it reproduces the fork deceleration on
+                // the already-baked (x1000 * nodeScale) velocity with NO extra scaling.
+                emitter.addControl(ParticleInfluenceControl.drag(d.getDragCoefficient()));
+                result.notes.add(name(geom, "?") + ": BasicDrag -> ParticleInfluenceControl(DRAG)");
+            } else if (inf instanceof WanderInfluence wa) {
+                // E15-17: the fork's WanderInfluence re-points each particle's velocity along a
+                // jittered random-walk target every frame while PRESERVING the velocity's length.
+                // Like drag it only rotates/renormalizes the (baked) velocity, so it is
+                // scale-invariant; reproduce it via the runtime ParticleInfluenceControl. Seed the
+                // per-particle wander targets from the emitter's emission direction, exactly as the
+                // fork's WanderInfluence.prepare() did.
+                com.jme.math.Vector3f ed = geom.getEmissionDirection();
+                Vector3f dir = (ed == null) ? new Vector3f(0, 1, 0) : new Vector3f(ed.x, ed.y, ed.z);
+                emitter.addControl(ParticleInfluenceControl.wander(
+                    wa.getWanderRadius(), wa.getWanderDistance(), wa.getWanderJitter(), dir));
+                result.notes.add(name(geom, "?") + ": WanderInfluence -> ParticleInfluenceControl(WANDER)");
             } else {
+                // E15-17 bounded remainder: BasicVortex and SwarmInfluence are position-dependent
+                // (they read the particle's world position relative to a world-space axis/swarm
+                // point the fork prepared from the emitter transform, and add velocity in fork
+                // per-ms units that would need the same x1000/nodeScale bake as the initial
+                // velocity). Not yet reproduced; recorded as dropped so the bake report tallies the
+                // exact per-effect remainder.
                 result.droppedInfluences.add(inf.getClass().getName());
             }
         }
@@ -385,7 +425,30 @@ public class ParticleConverter
             // scale gravity by the same per-second-world motion factor as velocity (1000 * nodeScale
             // for world-space emitters): the fork accumulates gravity into velocity and then drives
             // position through its millisecond integration, so gravity inherits the same x1000.
-            emitter.setGravity(gravity.multLocal(motionScale));
+            gravity.multLocal(motionScale);
+            // E15-16: pre-rotate gravity/wind into board space for world-space (non-following)
+            // emitters. The fork's BasicGravity/BasicWind.prepare() did, every frame:
+            //   if (rotateWithScene && !transformParticles)
+            //       particleGeom.getEmitterTransform().multNormal(vector);
+            // where ParticleCache.createInstance always sets rotateWithScene(true) and the emitter
+            // transform's rotation is the prototype's world rotation == Z_UP_ROTATION (HALF_PI about
+            // X, the same y-up->z-up board convention this converter bakes at runtime via
+            // ParticleCache.Z_UP_ROTATION). So the fork applied gravity in BOARD axes (authored -Y
+            // "down" became board -Z "down"). jME3 instead applies emitter.getGravity() in UNROTATED
+            // world axes and never rotates it by the prototype's localRotation (it only rotates spawn
+            // position and initial velocity). Pre-rotating the baked vector by the same y-up->z-up
+            // quaternion here reproduces the fork's net world-space acceleration: authored-down
+            // gravity falls down (-Z) on the board instead of drifting sideways (+Y). This matches
+            // the velocity, which jME3 DOES rotate by the prototype rotation at spawn, keeping
+            // gravity consistent with the already-rotated velocity. Emitter-local
+            // (transformParticles==true) emitters fell outside the fork's !transformParticles guard,
+            // so their gravity stays unrotated here too.
+            if (worldSpace) {
+                Quaternion zUp = new Quaternion().fromAngleNormalAxis(
+                    com.jme3.math.FastMath.HALF_PI, Vector3f.UNIT_X);
+                zUp.multLocal(gravity);
+            }
+            emitter.setGravity(gravity);
         } else {
             // the fork applies no gravity unless a BasicGravity influence is present; jME3's default
             // gravity is (0,0.1,0), so zero it to match a no-gravity fork effect.

@@ -421,11 +421,10 @@ public class BangBoardView extends BoardView
             _sounds.preloadClip(clip);
         }
 
-        // start with the camera controls disabled; the controller will reenable them when we are
-        // completely ready to play (starting units moved into place and everything).
-        // jME3 Phase-3 input seam: the fork's global getInputHandler() is gone; camera-input
-        // enable/disable moves to the GameInputHandler registered with the jME3 InputManager at
-        // the Phase-3 host. Flagged no-op until then.
+        // start with the camera controls disabled; the controller will
+        // reenable them when we are completely ready to play (starting units
+        // moved into place and everything)
+        _ctx.getInputHandler().setEnabled(false);
     }
 
     /**

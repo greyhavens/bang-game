@@ -3,7 +3,9 @@
 
 package com.threerings.bang.game.client.effect;
 
+import com.jme3.material.MatParam;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
@@ -28,14 +30,19 @@ import com.threerings.bang.util.BasicContext;
  * {@code com.jme.scene.Controller}. jME3 has no fixed-function render-state overlay stack: a
  * sphere-mapped metallic pass is a re-authored {@code Material}/{@code MatDef} effect.
  *
- * <p><b>Phase-4 fidelity deferral + needed shared seam:</b> the spheremap metallic <em>overlay</em>
- * (a second additive pass over the lit unit) has no jME3 equivalent yet and depends on a
- * sprite-cluster-owned overlay-applier seam (a way to attach/detach an extra material pass to the
- * model geometries) plus a re-authored spheremap MatDef — both Phase 4. To keep the gameplay hook
- * intact and compile cleanly, this port preserves the activation/timing (the reacting-action flash)
- * and drives an {@link AbstractControl} ramp, applying a white emissive-ish brighten to the model
- * geometries' materials where they expose a {@code Color} param, and flagging the spheremap pass as
- * a Phase-4 visual item.
+ * <p>The metallic sheen is now reproduced two ways, ramped together by the reacting-action flash:
+ * <ul>
+ *   <li><b>Sphere-map additive overlay</b> ({@link SphereMapOverlay}) — the re-authored
+ *   {@code shaders/SphereMapOverlay.j3md} additive pass over the unit's non-skinned geometries,
+ *   sampling {@code textures/environ/spheremap.png} with GL_SPHERE_MAP texgen (the fork's
+ *   {@code EM_SPHERE} look); its {@code Intensity} is ramped by this viz's controller.</li>
+ *   <li><b>In-place white brighten</b> — the unit's own {@code Lighting.j3md} materials are pushed
+ *   above white via {@code UseMaterialColors} + {@code Ambient}/{@code Diffuse} (the same lever the
+ *   {@code TownView} hover-highlight uses). This rides the GPU skinning correctly and, crucially, is
+ *   <em>visible on the baked, {@code DiffuseMap}-textured unit materials that carry no {@code Color}
+ *   param</em> — removing the previous total no-op. It is also the standalone metallic stand-in for
+ *   skinned meshes, which the overlay pass does not yet cover (see {@link SphereMapOverlay}).</li>
+ * </ul>
  */
 public class IronPlateViz extends InfluenceViz
 {
@@ -44,6 +51,10 @@ public class IronPlateViz extends InfluenceViz
     {
         super.init(ctx, target);
         collectMaterials();
+        // attach the additive sphere-map metallic overlay (non-skinned geometries); skinned meshes
+        // rely on the in-place brighten below.
+        _overlay = new SphereMapOverlay(ctx, target, new ColorRGBA(ColorRGBA.White));
+        _overlay.attach(target);
         ((MobileSprite)_target).addActionHandler(_handler);
         flashOverlay(0.5f);
     }
@@ -53,6 +64,10 @@ public class IronPlateViz extends InfluenceViz
     {
         ((MobileSprite)_target).removeActionHandler(_handler);
         setBrighten(0f);
+        if (_overlay != null) {
+            _overlay.detach();
+            _overlay = null;
+        }
     }
 
     /** Gathers the materials of the target's model geometries. */
@@ -71,16 +86,64 @@ public class IronPlateViz extends InfluenceViz
     }
 
     /**
-     * Applies a metallic-brighten amount to the gathered materials. Phase-4 will replace this with
-     * the re-authored spheremap overlay pass.
+     * Applies a metallic-brighten amount to the gathered materials and ramps the sphere-map overlay.
+     *
+     * <p>Brighten pushes each material above white via {@code UseMaterialColors} +
+     * {@code Ambient}/{@code Diffuse} (the {@code TownView} hover-highlight lever) so the lit,
+     * baked {@code DiffuseMap} units actually brighten — the old {@code Color}-param multiply was a
+     * no-op on those. {@code Color}-param materials (unlit) are still handled for completeness.
      */
     protected void setBrighten (float amount)
     {
-        float v = 1f + amount; // > 1 brightens the Color tint as a stand-in for the metallic pass
+        float v = 1f + amount; // > 1 brightens toward an over-white metallic sheen
+        ColorRGBA col = new ColorRGBA(v, v, v, 1f);
         for (Material mat : _mats) {
-            if (mat.getParam("Color") != null) {
-                mat.setColor("Color", new com.jme3.math.ColorRGBA(v, v, v, 1f));
+            if (mat.getMaterialDef().getMaterialParam("Color") != null) {
+                mat.setColor("Color", col.clone());
+            } else if (mat.getMaterialDef().getMaterialParam("UseMaterialColors") != null) {
+                if (amount <= 0f) {
+                    restoreLit(mat);
+                } else {
+                    saveLit(mat);
+                    mat.setBoolean("UseMaterialColors", true);
+                    mat.setColor("Ambient", col.clone());
+                    mat.setColor("Diffuse", col.clone());
+                }
             }
+        }
+        if (_overlay != null) {
+            _overlay.setIntensity(amount);
+        }
+    }
+
+    /** Saves a lit material's original colour state once, so brighten can restore it. */
+    protected void saveLit (Material mat)
+    {
+        if (_saved.containsKey(mat)) {
+            return;
+        }
+        MatParam umc = mat.getParam("UseMaterialColors");
+        MatParam amb = mat.getParam("Ambient");
+        MatParam dif = mat.getParam("Diffuse");
+        _saved.put(mat, new Object[] {
+            Boolean.valueOf(umc != null && Boolean.TRUE.equals(umc.getValue())),
+            amb == null ? null : ((ColorRGBA)amb.getValue()).clone(),
+            dif == null ? null : ((ColorRGBA)dif.getValue()).clone() });
+    }
+
+    /** Restores a lit material's saved colour state. */
+    protected void restoreLit (Material mat)
+    {
+        Object[] s = _saved.get(mat);
+        if (s == null) {
+            return;
+        }
+        mat.setBoolean("UseMaterialColors", ((Boolean)s[0]).booleanValue());
+        if (s[1] != null) {
+            mat.setColor("Ambient", (ColorRGBA)s[1]);
+        }
+        if (s[2] != null) {
+            mat.setColor("Diffuse", (ColorRGBA)s[2]);
         }
     }
 
@@ -128,6 +191,13 @@ public class IronPlateViz extends InfluenceViz
 
     /** The materials of the target's model geometries (brightened by this effect). */
     protected java.util.ArrayList<Material> _mats = new java.util.ArrayList<Material>();
+
+    /** The additive sphere-map metallic overlay (non-skinned geometries). */
+    protected SphereMapOverlay _overlay;
+
+    /** Per-material saved lit colour state: {UseMaterialColors, Ambient, Diffuse}. */
+    protected java.util.IdentityHashMap<Material, Object[]> _saved =
+        new java.util.IdentityHashMap<Material, Object[]>();
 
     /** The time to take fading in and out of the overlay. */
     protected static final float FADE_DURATION = 0.1f;

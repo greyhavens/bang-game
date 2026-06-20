@@ -71,7 +71,7 @@ public class OneArmedBanditSprite extends UnitSprite
                 if (_billboard == null) {
                      _cardIcon = IconConfig.createIcon(_cardIconMaterials[cardIndex],
                          CARD_SIZE, CARD_SIZE);
-                     _cardIcon.setLocalTranslation(new Vector3f(0f, TILE_SIZE/4, 0f));
+                     _cardIcon.setLocalTranslation(new Vector3f(-CARD_SIZE/2f, TILE_SIZE/4 - CARD_SIZE/2f, 0f));
                      _billboard = new Node("billboard");
                      _billboard.addControl(new BillboardControl());
                      _billboard.attachChild(_cardIcon);

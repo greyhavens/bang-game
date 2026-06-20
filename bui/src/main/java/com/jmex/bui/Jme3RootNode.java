@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import com.jme3.input.InputManager;
 import com.jme3.input.RawInputListener;
+import com.jme3.renderer.RenderManager;
 import com.jme3.input.event.JoyAxisEvent;
 import com.jme3.input.event.JoyButtonEvent;
 import com.jme3.input.event.KeyInputEvent;
@@ -58,10 +59,25 @@ public class Jme3RootNode extends BRootNode
         inputManager.addRawInputListener(this);
     }
 
+    /**
+     * Records the host's jME3 {@link RenderManager} so {@link BGeomView} can create per-component
+     * viewports for embedded 3D geometry. Called by the host ({@code JmeApp}) at init.
+     */
+    public void setRenderManager (RenderManager renderManager)
+    {
+        _renderManager = renderManager;
+    }
+
     // documentation inherited
     public long getTickStamp ()
     {
         return _tickStamp;
+    }
+
+    @Override // documentation inherited
+    public RenderManager getRenderManager ()
+    {
+        return _renderManager;
     }
 
     // documentation inherited
@@ -237,6 +253,7 @@ public class Jme3RootNode extends BRootNode
     }
 
     protected InputManager _inputManager;
+    protected RenderManager _renderManager;
     protected long _tickStamp;
     protected ArrayList<BComponent> _invalidRoots = new ArrayList<BComponent>();
 
