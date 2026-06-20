@@ -14,6 +14,7 @@ import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.Log;
 import com.jmex.bui.backend.BackendProvider;
+import com.jmex.bui.backend.Jme3RenderBackend;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.EventListener;
 import com.jmex.bui.event.FocusEvent;
@@ -441,11 +442,39 @@ public abstract class BRootNode
                 if (win == modalWin) {
                     renderModalShade();
                 }
-                win.render(renderer);
+                // If this window carries a render scale, install it in the backend around its
+                // render, pivoting on the window's on-screen top-left (getX/getY) so the scaled
+                // pixels grow down-right from that origin. The window's own render begins with a
+                // translate(getX,getY), so every primitive ends up scaled about that pivot. At
+                // scale 1f this branch is skipped entirely -- non-scaled windows are unaffected.
+                float sx = win.getRenderScaleX(), sy = win.getRenderScaleY();
+                boolean scaled = (sx != 1f || sy != 1f);
+                Jme3RenderBackend backend = scaled ? asJme3Backend() : null;
+                if (backend != null) {
+                    backend.setRenderScale(sx, sy, win.getX(), win.getY());
+                }
+                try {
+                    win.render(renderer);
+                } finally {
+                    if (backend != null) {
+                        backend.clearRenderScale();
+                    }
+                }
             } catch (Throwable t) {
                 Log.log.log(Level.WARNING, win + " failed in render()", t);
             }
         }
+    }
+
+    /**
+     * Returns the installed backend as a {@link Jme3RenderBackend} if it is one (the only backend
+     * that supports per-window render scaling), else null. Lets {@link #renderWindows} apply a
+     * window's scale without coupling BUI's generic render path to the jME3 backend.
+     */
+    protected Jme3RenderBackend asJme3Backend ()
+    {
+        com.jmex.bui.backend.BRenderBackend be = BackendProvider.get();
+        return (be instanceof Jme3RenderBackend) ? (Jme3RenderBackend)be : null;
     }
 
     /**
@@ -466,6 +495,13 @@ public abstract class BRootNode
      */
     protected boolean dispatchEvent (BComponent target, BEvent event)
     {
+        // If this is a mouse event headed for a component in a scaled window, rewrite its coords
+        // from screen space into that window's UNscaled logical space so the component (and its
+        // listeners -- drag tracking, slider thumbs, etc.) see coordinates consistent with their
+        // own logical bounds. Non-scaled windows (scale 1) leave the event untouched: maybeRemap
+        // returns the same instance, so the legacy path is byte-identical.
+        event = maybeRemapMouseEvent(target, event);
+
         // notify our global listeners if we have any
         for (int ii = 0, ll = _globals.size(); ii < ll; ii++) {
             try {
@@ -583,7 +619,12 @@ public abstract class BRootNode
         BComponent nhcomponent = null;
         for (int ii = _windows.size()-1; ii >= 0; ii--) {
             BWindow comp = _windows.get(ii);
-            nhcomponent = comp.getHitComponent(mx, my);
+            // A scaled window occupies getWidth()*scale x getHeight()*scale screen pixels at its
+            // (getX,getY) origin; map the screen coords back into the window's UNscaled logical
+            // space before hit-testing so its children (laid out at scale 1) are hit correctly.
+            // For unscaled windows mapScaledX/Y is the identity, so this is unchanged.
+            int lmx = mapScaledX(comp, mx), lmy = mapScaledY(comp, my);
+            nhcomponent = comp.getHitComponent(lmx, lmy);
             if (nhcomponent != null && nhcomponent.getWindow() != _tipwin) {
                 break;
             }
@@ -595,15 +636,18 @@ public abstract class BRootNode
 
         // generate any necessary mouse entry or exit events
         if (_hcomponent != nhcomponent) {
-            // inform the previous component that the mouse has exited
+            // inform the previous component that the mouse has exited. The event carries the mouse
+            // coords in the component's window's logical space (identity for unscaled windows).
             if (_hcomponent != null) {
+                BWindow w = _hcomponent.getWindow();
                 _hcomponent.dispatchEvent(new MouseEvent(this, getTickStamp(), _modifiers,
-                                                         MouseEvent.MOUSE_EXITED, mx, my));
+                    MouseEvent.MOUSE_EXITED, mapScaledX(w, mx), mapScaledY(w, my)));
             }
             // inform the new component that the mouse has entered
             if (nhcomponent != null) {
+                BWindow w = nhcomponent.getWindow();
                 nhcomponent.dispatchEvent(new MouseEvent(this, getTickStamp(), _modifiers,
-                                                         MouseEvent.MOUSE_ENTERED, mx, my));
+                    MouseEvent.MOUSE_ENTERED, mapScaledX(w, mx), mapScaledY(w, my)));
             }
             _hcomponent = nhcomponent;
 
@@ -613,6 +657,62 @@ public abstract class BRootNode
                 clearTipWindow();
             }
         }
+    }
+
+    /**
+     * If {@code event} is a {@link MouseEvent} whose target lives in a scaled window, returns an
+     * equivalent MouseEvent with its coordinates remapped from screen space into that window's
+     * logical space; otherwise returns {@code event} unchanged. Returning the same instance for
+     * unscaled targets keeps the legacy dispatch path allocation-free and byte-identical.
+     */
+    protected BEvent maybeRemapMouseEvent (BComponent target, BEvent event)
+    {
+        if (target == null || !(event instanceof MouseEvent)) {
+            return event;
+        }
+        BWindow win = target.getWindow();
+        if (win == null || (win.getRenderScaleX() == 1f && win.getRenderScaleY() == 1f)) {
+            return event;
+        }
+        MouseEvent me = (MouseEvent)event;
+        int lx = mapScaledX(win, me.getX()), ly = mapScaledY(win, me.getY());
+        if (lx == me.getX() && ly == me.getY()) {
+            return event;
+        }
+        return new MouseEvent(me.getSource(), me.getWhen(), me.getModifiers(),
+                              me.getType(), me.getButton(), lx, ly, me.getDelta());
+    }
+
+    /**
+     * Maps a screen-space mouse x into the supplied window's UNscaled logical space. A scaled
+     * window renders about its (getX,getY) pivot, so its logical x is
+     * {@code getX() + (mx - getX())/scale}. For an unscaled window (scale 1, or null) this returns
+     * {@code mx} unchanged, so the legacy input path is byte-identical.
+     */
+    protected int mapScaledX (BWindow win, int mx)
+    {
+        if (win == null) {
+            return mx;
+        }
+        float scale = win.getRenderScaleX();
+        if (scale == 1f) {
+            return mx;
+        }
+        return Math.round(win.getX() + (mx - win.getX()) / scale);
+    }
+
+    /** Maps a screen-space mouse y into the supplied window's UNscaled logical space (see
+     * {@link #mapScaledX}). Identity for unscaled (or null) windows. */
+    protected int mapScaledY (BWindow win, int my)
+    {
+        if (win == null) {
+            return my;
+        }
+        float scale = win.getRenderScaleY();
+        if (scale == 1f) {
+            return my;
+        }
+        return Math.round(win.getY() + (my - win.getY()) / scale);
     }
 
     protected void clearTipWindow ()

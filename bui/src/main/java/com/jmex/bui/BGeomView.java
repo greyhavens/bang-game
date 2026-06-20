@@ -247,26 +247,44 @@ public class BGeomView extends BComponent
             return;
         }
 
+        // Apply the SAME transform the BUI backend applies to our ancestor window's render. Inside a
+        // scaled shop (e.g. Ranch UnitView) the window's pixels are scaled about its (getX,getY)
+        // origin; our logical rect (ax,ay,width,height) is in unscaled BUI space, so map it through
+        // the window scale to land on the correct on-screen (scaled) pane. For an unscaled window
+        // (sx=sy=1) this reduces to exactly the previous values.
+        BWindow win = getWindow();
+        float sx = (win != null) ? win.getRenderScaleX() : 1f;
+        float sy = (win != null) ? win.getRenderScaleY() : 1f;
+        int winX = (win != null) ? win.getX() : 0;
+        int winY = (win != null) ? win.getY() : 0;
+        float vax = winX + (ax - winX) * sx;      // visual screen-space rect (BUI bottom-left origin)
+        float vay = winY + (ay - winY) * sy;
+        float vwidth = width * sx;
+        float vheight = height * sy;
+
         if (ax == _cx && ay == _cy && width == _cwidth && height == _cheight &&
-            swidth == _swidth && sheight == _sheight) {
+            swidth == _swidth && sheight == _sheight && sx == _cscaleX && sy == _cscaleY &&
+            winX == _cwinX && winY == _cwinY) {
             return; // nothing changed
         }
         _cx = ax; _cy = ay; _cwidth = width; _cheight = height;
         _swidth = swidth; _sheight = sheight;
+        _cscaleX = sx; _cscaleY = sy; _cwinX = winX; _cwinY = winY;
 
         // jME3 camera viewport is expressed as left/right/bottom/top fractions of the framebuffer
-        // (origin bottom-left, matching BUI's coordinate space).
-        float left = ax / (float)swidth, right = (ax + width) / (float)swidth;
-        float bottom = ay / (float)sheight, top = (ay + height) / (float)sheight;
+        // (origin bottom-left, matching BUI's coordinate space). Build the fractions from the
+        // window-scaled visual rect so the viewport tracks the scaled pane.
+        float left = vax / (float)swidth, right = (vax + vwidth) / (float)swidth;
+        float bottom = vay / (float)sheight, top = (vay + vheight) / (float)sheight;
         // The camera's resolution MUST be the full framebuffer, not the component size: jME3 derives
         // the actual GL viewport from the fractional rect as fraction * camera.getWidth()/getHeight().
         // Sizing the camera to the component shrank the fractions onto a tiny bottom-left box. Resize
         // to the framebuffer first so the fractions below land on the correct on-screen region; the
-        // perspective frustum then uses the component content rect's aspect (width/height) so the
-        // model isn't distorted within that rect.
+        // perspective frustum then uses the (possibly stretched) visual rect's aspect (vwidth/vheight)
+        // so the model stays undistorted and sits proportional/centered within that rect.
         _camera.resize(swidth, sheight, false);
         _camera.setViewPort(left, right, bottom, top);
-        _camera.setFrustumPerspective(45.0f, width / (float)height, 1f, 1000f);
+        _camera.setFrustumPerspective(45.0f, vwidth / vheight, 1f, 1000f);
     }
 
     /**
@@ -322,6 +340,11 @@ public class BGeomView extends BComponent
 
     /** Cached screen rect / framebuffer size so refitViewport only reconfigures on change. */
     protected int _cx, _cy, _cwidth, _cheight, _swidth, _sheight;
+
+    /** Cached ancestor-window render scale + origin, so a fullscreen toggle (which changes the
+     * window's scale/position without changing our logical rect) also re-fits the viewport. */
+    protected float _cscaleX = 1f, _cscaleY = 1f;
+    protected int _cwinX, _cwinY;
 
     protected Rectangle _srect = new Rectangle();
 }

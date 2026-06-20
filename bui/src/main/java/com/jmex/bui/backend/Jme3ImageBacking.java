@@ -100,12 +100,16 @@ public class Jme3ImageBacking implements BImageBacking
         // NativeObjectManager on GL upload (the registrations are never released for throwaway
         // geometry), growing the manager's ref map without bound. Reuse one cached quad/geometry and
         // resize it in place; Quad.updateGeometry / Mesh.setBuffer reuse the existing VertexBuffers.
+        // Multiply the quad extent by the active (non-uniform) render scale (1f for non-scaled
+        // windows, so the legacy path is unchanged); position is scaled below via toScreenX/Y about
+        // the pivot.
+        float qw = twidth * _backend.getRenderScaleX(), qh = theight * _backend.getRenderScaleY();
         if (_quad == null) {
-            _quad = new Quad(twidth, theight);
+            _quad = new Quad(qw, qh);
             _geom = new Geometry("bui-image", _quad);
             _geom.setMaterial(_material);
         } else {
-            _quad.updateGeometry(twidth, theight);
+            _quad.updateGeometry(qw, qh);
         }
         Quad quad = _quad;
         // jME3's Quad lays out tex coords (0,0)-(1,1); rewrite to our sub-rect. Quad winds
@@ -120,8 +124,8 @@ public class Jme3ImageBacking implements BImageBacking
         _material.setColor("Color", new ColorRGBA(1f, 1f, 1f, alpha));
 
         Geometry geom = _geom;
-        geom.setLocalTranslation(_backend.getTranslateX() + tx,
-                                 _backend.getTranslateY() + ty, 0);
+        geom.setLocalTranslation(_backend.toScreenX(_backend.getTranslateX() + tx),
+                                 _backend.toScreenY(_backend.getTranslateY() + ty), 0);
         geom.updateGeometricState();
         _backend.getRenderManager().renderGeometry(geom);
     }

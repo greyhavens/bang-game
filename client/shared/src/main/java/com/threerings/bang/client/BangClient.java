@@ -1231,10 +1231,79 @@ public class BangClient extends BasicClient
         if (_mview == null || !_mview.isAdded()) {
             return;
         }
-        if (_mview instanceof ShopView || _mview instanceof LogonView) {
+        if (_mview instanceof ShopView) {
+            // shops keep their 1024x768 logical layout but scale up to fill the (re-fit) display
+            scaleShopView((ShopView)_mview, width, height);
+        } else if (_mview instanceof LogonView) {
             _mview.center();
         } else {
             _mview.setBounds(0, 0, width, height);
+        }
+    }
+
+    /**
+     * Shop scale policy. Shop views are authored against a fixed 1024x768 logical canvas (the
+     * shopkeeper art, the {@code to_town} button at 1012,756, etc. are hard-coded pixels). To fill
+     * a larger fullscreen display we keep that logical size and apply a uniform BUI render+input
+     * scale to the window (see {@link BWindow#setRenderScale}).
+     *
+     * <p>Two policies are available; flip {@link #SHOP_STRETCH_FILL} to switch:
+     * <ul>
+     *   <li><b>full-stretch</b> (current, {@code true}): a NON-UNIFORM render scale {@code
+     *       (w/1024, h/768)} pivoted at the origin (0,0) -- the art fills the whole display
+     *       edge-to-edge with no bars and no crop, at the cost of a mild aspect stretch (e.g. a
+     *       16:9 display stretches the 4:3 art horizontally). See {@link #scaleShopView}.</li>
+     *   <li><b>uniform-fit</b> ({@code false}): {@code scale = min(w/1024, h/768)} applied to both
+     *       axes -- the art scales without aspect distortion and nothing is cropped; a 16:9 display
+     *       gets modest side bars. The window's scaled footprint is centered in the display.</li>
+     * </ul>
+     * At exactly 1024x768 either policy yields scale 1.0 and location (0,0), i.e. identical to
+     * today's legacy {@code setSize(1024,768); center()}.
+     */
+    protected static final boolean SHOP_STRETCH_FILL = true;
+
+    /**
+     * Computes the uniform shop render scale (the {@link #SHOP_STRETCH_FILL}{@code == false}
+     * branch) for the given display size: {@code min(w/1024, h/768)}, i.e. the largest uniform
+     * scale that fits the 1024x768 art within the display without cropping.
+     */
+    protected static float computeShopScale (int width, int height)
+    {
+        float sx = width / 1024f, sy = height / 768f;
+        return Math.min(sx, sy);
+    }
+
+    /**
+     * Applies the shop render scale to the (logically 1024x768) shop window. The window's logical
+     * bounds stay 1024x768 so its children lay out exactly as before; only its render and mouse
+     * input are scaled. Two policies (see {@link #SHOP_STRETCH_FILL}):
+     *
+     * <ul>
+     *   <li><b>full-stretch</b>: a NON-UNIFORM scale {@code (w/1024, h/768)} pivoted at the origin,
+     *       window located at (0,0) -- fills the entire display edge-to-edge (no bars, no crop) with
+     *       a mild aspect stretch.</li>
+     *   <li><b>uniform-fit</b>: a single {@code min} scale applied to both axes, with the scaled
+     *       1024*scale x 768*scale footprint centered in the display.</li>
+     * </ul>
+     *
+     * At 1024x768 both policies yield scale 1.0 and location (0,0), matching the legacy
+     * {@code setSize(1024,768); center()}.
+     */
+    protected void scaleShopView (ShopView shop, int width, int height)
+    {
+        shop.setSize(1024, 768);
+        if (SHOP_STRETCH_FILL) {
+            // non-uniform stretch from the origin: fill the whole display, pivot at (0,0).
+            shop.setRenderScale(width / 1024f, height / 768f);
+            shop.setLocation(0, 0);
+        } else {
+            // uniform-fit: scale both axes by min() and center the scaled footprint.
+            float scale = computeShopScale(width, height);
+            shop.setRenderScale(scale);
+            // the window's (x,y) origin is the render/input pivot, so the scaled art grows
+            // down-right from there.
+            int sw = Math.round(1024 * scale), sh = Math.round(768 * scale);
+            shop.setLocation((width - sw) / 2, (height - sh) / 2);
         }
     }
 
@@ -1497,11 +1566,13 @@ public class BangClient extends BasicClient
             // clear any lingering popups
             clearPopups(false);
 
-            // shop views are hard-coded to 1024x768
+            // shop views are authored at a fixed 1024x768 logical canvas; scale that canvas up to
+            // fill the display (uniform-fit, see scaleShopView / SHOP_STRETCH_FILL). At 1024x768
+            // the scale resolves to 1.0, i.e. identical to the legacy setSize(1024,768)+center().
             BWindow pview = (BWindow)view;
             if (pview instanceof ShopView) {
-                pview.setSize(1024, 768);
-                pview.center();
+                scaleShopView((ShopView)pview,
+                              _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight());
             } else {
                 // size the view to fill the display
                 pview.setBounds(0, 0, _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight());

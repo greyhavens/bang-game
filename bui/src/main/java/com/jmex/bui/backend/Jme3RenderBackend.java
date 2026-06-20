@@ -68,6 +68,7 @@ public class Jme3RenderBackend implements BRenderBackend
         _displayHeight = displayHeight;
         _tx = 0;
         _ty = 0;
+        clearRenderScale();
     }
 
     /** Tears down the per-frame render context and clears any active scissor. */
@@ -101,6 +102,77 @@ public class Jme3RenderBackend implements BRenderBackend
     public int getTranslateY ()
     {
         return _ty;
+    }
+
+    /**
+     * Installs a NON-UNIFORM render scale about a fixed screen-space pivot, in effect until
+     * {@link #clearRenderScale} is called. While active, every BUI primitive's position AND
+     * extent is multiplied by {@code scaleX} (x) / {@code scaleY} (y) about {@code (pivotX,
+     * pivotY)} (the pivot is a screen-pixel anchor, normally the scaled window's on-screen
+     * top-left), and clip rects are mapped into the same screen space.
+     * {@link BRootNode#renderWindows} brackets a scaled window's {@code render} with this call
+     * (and {@link #clearRenderScale} afterward).
+     *
+     * <p>This is a no-op convenience for {@code scaleX == scaleY == 1f, pivot == (0,0)}: the scale
+     * path collapses to the identity arithmetic that existed before, so non-scaled windows render
+     * byte-identically. The translate stack continues to accumulate unscaled BUI-space offsets;
+     * scaling is applied at quad emit / clip time in {@link #toScreenX}/{@link #toScreenY}.
+     */
+    public void setRenderScale (float scaleX, float scaleY, float pivotX, float pivotY)
+    {
+        _scaleX = scaleX;
+        _scaleY = scaleY;
+        _pivotX = pivotX;
+        _pivotY = pivotY;
+    }
+
+    /**
+     * Uniform convenience overload of {@link #setRenderScale(float,float,float,float)} that sets
+     * both X and Y scales to {@code scale}.
+     */
+    public void setRenderScale (float scale, float pivotX, float pivotY)
+    {
+        setRenderScale(scale, scale, pivotX, pivotY);
+    }
+
+    /** Restores the identity render scale (scale 1,1, pivot 0,0). */
+    public void clearRenderScale ()
+    {
+        _scaleX = 1f;
+        _scaleY = 1f;
+        _pivotX = 0f;
+        _pivotY = 0f;
+    }
+
+    /** Returns the active render scale (X axis); 1f when no window scale is installed. Kept as
+     * {@link #getRenderScale} returning X for any stragglers that predate the non-uniform split. */
+    public float getRenderScale ()
+    {
+        return _scaleX;
+    }
+
+    /** Returns the active X render scale (1f when no window scale is installed). */
+    public float getRenderScaleX ()
+    {
+        return _scaleX;
+    }
+
+    /** Returns the active Y render scale (1f when no window scale is installed). */
+    public float getRenderScaleY ()
+    {
+        return _scaleY;
+    }
+
+    /** Maps a BUI-space x (translate stack applied) into screen space under the active X scale. */
+    public float toScreenX (float x)
+    {
+        return _pivotX + (x - _pivotX) * _scaleX;
+    }
+
+    /** Maps a BUI-space y (translate stack applied) into screen space under the active Y scale. */
+    public float toScreenY (float y)
+    {
+        return _pivotY + (y - _pivotY) * _scaleY;
     }
 
     /**
@@ -163,7 +235,7 @@ public class Jme3RenderBackend implements BRenderBackend
         if (_rm == null) {
             return;
         }
-        Geometry geom = quad(width, height);
+        Geometry geom = quad(width * _scaleX, height * _scaleY);
         _solid.setColor("Color", new ColorRGBA(r, g, b, a));
         geom.setMaterial(_solid);
         drawAt(geom, x, y);
@@ -245,9 +317,15 @@ public class Jme3RenderBackend implements BRenderBackend
     protected void setClip (int x, int y, int width, int height)
     {
         _scissored = true;
+        // Store the clip in BUI space so intersectScissorBox/restoreScissorState round-trip
+        // unscaled (their intersection math stays in BUI space). Map to screen space only for the
+        // actual GL clip rect, so a scaled window clips its scaled pixels. At scale 1 this is the
+        // identity (x,y,width,height), preserving the legacy behavior exactly.
         _sx = x; _sy = y; _sw = width; _sh = height;
         if (_rm != null) {
-            _rm.getRenderer().setClipRect(x, y, width, height);
+            int gx = Math.round(toScreenX(x)), gy = Math.round(toScreenY(y));
+            int gw = Math.round(width * _scaleX), gh = Math.round(height * _scaleY);
+            _rm.getRenderer().setClipRect(gx, gy, gw, gh);
         }
     }
 
@@ -278,7 +356,9 @@ public class Jme3RenderBackend implements BRenderBackend
     /** Renders a geometry at the supplied BUI-space coordinates (translate stack applied). */
     protected void drawAt (Geometry geom, float x, float y)
     {
-        geom.setLocalTranslation(_tx + x, _ty + y, 0);
+        // _tx+x / _ty+y is the primitive's lower-left in BUI screen space; map through the active
+        // render scale (no-op at scale 1) before placing the (already scale-sized) quad.
+        geom.setLocalTranslation(toScreenX(_tx + x), toScreenY(_ty + y), 0);
         geom.updateGeometricState();
         _rm.renderGeometry(geom);
     }
@@ -294,6 +374,10 @@ public class Jme3RenderBackend implements BRenderBackend
     protected RenderManager _rm;
     protected int _displayWidth, _displayHeight;
     protected int _tx, _ty;
+
+    /** Active non-uniform render scale (X, Y) and its screen-space pivot; identity (1f, 1f, 0, 0)
+     * unless a scaled window is being rendered (see {@link #setRenderScale}). */
+    protected float _scaleX = 1f, _scaleY = 1f, _pivotX = 0f, _pivotY = 0f;
 
     protected boolean _scissored;
     protected int _sx, _sy, _sw, _sh;
