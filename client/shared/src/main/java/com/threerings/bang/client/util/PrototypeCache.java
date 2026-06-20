@@ -3,7 +3,7 @@
 
 package com.threerings.bang.client.util;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 
 import java.util.HashMap;
 
@@ -49,12 +49,12 @@ public abstract class PrototypeCache<S, T>
      */
     protected void getPrototype (S key, final ResultListener<T> rl)
     {
-        ResultHandler<WeakReference<T>> handler = _prototypes.get(key);
+        ResultHandler<SoftReference<T>> handler = _prototypes.get(key);
         if (handler != null) {
             // take a peek at the result.  if it's available and non-null, we can provide the
             // prototype immediately.  if it's available and null, the prototype has been
             // collected, so we must reload it
-            WeakReference<T> ref = handler.peekResult();
+            SoftReference<T> ref = handler.peekResult();
             if (ref != null) {
                 T result = ref.get();
                 if (result == null) {
@@ -68,16 +68,17 @@ public abstract class PrototypeCache<S, T>
             }
         }
         if (handler == null) {
-            _prototypes.put(key, handler = new ResultHandler<WeakReference<T>>());
+            _prototypes.put(key, handler = new ResultHandler<SoftReference<T>>());
             postPrototypeLoader(key, handler);
         }
         if (rl == null) {
             return;
         }
-        handler.getResult(new ResultListener<WeakReference<T>>() {
-            public void requestCompleted (WeakReference<T> result) {
-                // this will be called just after the reference is created, so it should
-                // never be null
+        handler.getResult(new ResultListener<SoftReference<T>>() {
+            public void requestCompleted (SoftReference<T> result) {
+                // called just after the reference is created; the prototype is held softly
+                // (cleared only under memory pressure), so unlike a weak ref it won't be
+                // GC'd out from under a burst of concurrent instance requests
                 rl.requestCompleted(result.get());
             }
             public void requestFailed (Exception cause) {
@@ -89,7 +90,7 @@ public abstract class PrototypeCache<S, T>
     /**
      * Queues up a prototype loader for the identified object.
      */
-    protected void postPrototypeLoader (final S key, final ResultHandler<WeakReference<T>> handler)
+    protected void postPrototypeLoader (final S key, final ResultHandler<SoftReference<T>> handler)
     {
         _ctx.getInvoker().postUnit(new Invoker.Unit() {
             public boolean invoke () {
@@ -119,11 +120,16 @@ public abstract class PrototypeCache<S, T>
     }
 
     /**
-     * Creates a soft reference to the supplied prototype.
+     * Creates a soft reference to the supplied prototype. Soft (not weak) so a cached prototype
+     * survives ordinary GC and is reclaimed only under memory pressure -- this avoids a race
+     * where a prototype was collected between loading and instance creation during a burst of
+     * concurrent requests (e.g. all units at board start), which surfaced as a null prototype
+     * NPE and a stalled load. (The fork used a weak reference here despite this javadoc; this is
+     * a deliberate divergence to fix that intermittent hang.)
      */
-    protected WeakReference<T> createPrototypeReference (T prototype)
+    protected SoftReference<T> createPrototypeReference (T prototype)
     {
-        return new WeakReference<T>(prototype);
+        return new SoftReference<T>(prototype);
     }
 
     /**
@@ -194,8 +200,8 @@ public abstract class PrototypeCache<S, T>
     protected BasicContext _ctx;
 
     /** Maps keys to prototype handlers. */
-    protected HashMap<S, ResultHandler<WeakReference<T>>> _prototypes =
-        new HashMap<S, ResultHandler<WeakReference<T>>>();
+    protected HashMap<S, ResultHandler<SoftReference<T>>> _prototypes =
+        new HashMap<S, ResultHandler<SoftReference<T>>>();
 
     /** Used to normalize relative paths. */
     protected static final String PATH_DOTDOT = "[^/.]+/\\.\\./";

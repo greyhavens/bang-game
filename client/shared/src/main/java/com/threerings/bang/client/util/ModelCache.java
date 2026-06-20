@@ -5,7 +5,7 @@ package com.threerings.bang.client.util;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
@@ -106,7 +106,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
 
     @Override // documentation inherited
     protected void postPrototypeLoader (
-        final ModelKey key, final ResultHandler<WeakReference<Model>> handler)
+        final ModelKey key, final ResultHandler<SoftReference<Model>> handler)
     {
         // variants are loaded by loading and configuring the default prototype
         if (key.variant != null) {
@@ -132,7 +132,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     }
 
     @Override // documentation inherited
-    protected WeakReference<Model> createPrototypeReference (Model prototype)
+    protected SoftReference<Model> createPrototypeReference (Model prototype)
     {
         return new PrototypeReference(prototype);
     }
@@ -174,7 +174,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
     }
 
     /** Identifies the resources that must be released when the prototype is cleared. */
-    protected class PrototypeReference extends WeakReference<Model>
+    protected class PrototypeReference extends SoftReference<Model>
     {
         public PrototypeReference (Model prototype)
         {
