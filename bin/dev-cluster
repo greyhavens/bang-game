@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# DEV-ONLY helper: run a local two-node Bang cluster on this machine so the Station
+# train can actually travel between towns in development.
+#
+#   frontier_town  ->  localhost:47624   (the default node; same as plain bin/bangserver)
+#   indian_post    ->  localhost:47625   (second node; port from deployment.properties)
+#
+# This is purely a localhost convenience. A PRODUCTION cluster runs ONE node per host
+# (bin/bangserver <node> on each box, with real hostnames in etc/<deploy>/*.properties);
+# it is NOT launched with this script. Node->town mapping lives in server.properties,
+# port assignment in deployment.properties -- both flagged "DEV LOCALHOST TWO-NODE".
+#
+# Usage: bin/dev-cluster {start|stop|status}
+
+BANG_HOME=`dirname $0`/..
+BANG_HOME=`cd $BANG_HOME ; pwd`
+
+FT_LOG=/tmp/bang_frontier_town.log
+IP_LOG=/tmp/bang_indian_post.log
+
+wait_listen () { # $1=logfile $2=label
+    i=0
+    while [ $i -lt 60 ]; do
+        if grep -qi "Server listening" "$1" 2>/dev/null; then
+            echo "  $2: listening"; return 0
+        fi
+        i=`expr $i + 1`; sleep 2
+    done
+    echo "  $2: TIMED OUT waiting to listen (see $1)"; return 1
+}
+
+case "$1" in
+  start)
+    if [ -z "`jps -l 2>/dev/null | grep BangServer`" ]; then :; else
+        echo "BangServer node(s) already running; run 'bin/dev-cluster stop' first."
+        jps -l | grep BangServer; exit 1
+    fi
+    rm -f "$FT_LOG" "$IP_LOG"
+    echo "Starting frontier_town node (localhost:47624)..."
+    nohup "$BANG_HOME/bin/bangserver" frontier_town > "$FT_LOG" 2>&1 &
+    wait_listen "$FT_LOG" "frontier_town"
+    echo "Starting indian_post node (localhost:47625)..."
+    nohup "$BANG_HOME/bin/bangserver" indian_post > "$IP_LOG" 2>&1 &
+    wait_listen "$IP_LOG" "indian_post"
+    echo "Dev cluster up. Logs: $FT_LOG  $IP_LOG"
+    ;;
+  stop)
+    PIDS=`jps -l 2>/dev/null | awk '/BangServer/{print $1}'`
+    if [ -z "$PIDS" ]; then echo "no BangServer nodes running"; else
+        for p in $PIDS; do kill -9 $p 2>/dev/null; done
+        echo "stopped BangServer nodes: $PIDS"
+    fi
+    ;;
+  status)
+    jps -l 2>/dev/null | grep BangServer || echo "no BangServer nodes running"
+    ;;
+  *)
+    echo "usage: $0 {start|stop|status}"; exit 1 ;;
+esac

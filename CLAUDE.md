@@ -66,6 +66,37 @@ raced edits, OOM'd the server.)
 
 Process order still applies: `./gradlew deploy` must FULLY finish before starting the server, and the
 server must be (re)started AFTER a deploy (a stale server throws `NoClassDefFoundError`/`ClassNotFound`).
+This applies to **client-only** changes too: `client/shared` is a shared client+server jar that the
+server lazy-loads game classes from, so *any* deploy invalidates the running server(s) — always cycle
+them. (Symptom of a stale node: in-game `NoClassDefFoundError` for sprite/handler classes, AI units not
+spawning / `liveUnits=0`.)
+
+### Running Indian Post (and any specific scenario) in dev — two-node cluster
+
+A Bang server node serves exactly **one** town (`-Dnode=<name>`, town from `server.properties`'s
+`<node>.town_id`). To use **Indian Post** in dev (the Station train to it, the Wendigo Attack scenario,
+etc.) you must run a **second node**, because a single node can't serve two towns and the client picks
+the town's node by port. The dev-localhost cluster (segregated from production, which runs one node per
+host via `.dist` config):
+
+- **`bin/dev-cluster {start|stop|status}`** (committed) launches both local nodes: `frontier_town` →
+  `localhost:47624`, `indian_post` → `localhost:47625`. **Restart it after every `./gradlew deploy`**
+  (`bin/dev-cluster stop && bin/dev-cluster start`).
+- Local config (these live in the **gitignored** `etc/test/`, so they're per-dev, not committed):
+  `server.properties` needs `indian_post.town_id = indian_post`, `indian_post.server_host = localhost`,
+  and a `server_secret` (so the two nodes peer); `deployment.properties` needs
+  `indian_post.server_host = localhost` and `indian_post.server_ports = 47625` (read by BOTH the client,
+  for the train target, AND the indian_post node, as its listen port via `getServerPorts(townId)`).
+- The client logs into a town by `lastTownId`; once you've traveled to Indian Post it stays there on
+  relaunch (so `-go=ranch`/in-game launches land on the indian_post node). Known dev caveat: the peer
+  layer logs `refreshPeers failed` / a `NodeRecord` LocalDateTime↔Timestamp warning (Connector/J 8) —
+  harmless for travel, only degrades cross-node presence.
+
+**Auto-start a specific scenario** (no menu clicking): `startTestGame` honors `-Dscenario=<ident>`, else
+random-picks from the *current town's* scenario set. So from Indian Post,
+`./bin/bangclient -test -autoplay -Dscenario=wa ...` drops straight into a **Wendigo Attack** game; the
+same `-Dscenario=<ident>` works for any scenario on whichever town's node you're logged into. (`-Dboard=`
+and `-Dplayers=` are also honored.) This is the deterministic way to self-verify ITP/wendigo visuals.
 
 ## Module structure
 
