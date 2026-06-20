@@ -196,6 +196,69 @@ public class JmeApp extends SimpleApplication
         create();
     }
 
+    @Override // from com.jme3.app.LegacyApplication
+    public void reshape (int width, int height)
+    {
+        // jME3 calls this on the render thread whenever the framebuffer changes size: a windowed
+        // resize (dragging the window edge), a fullscreen toggle, or an AppSettings restart()
+        // (OptionsView.switchDisplayMode). super.reshape -> RenderManager.notifyReshape re-fits
+        // every viewport camera (the 3D board camera AND the guiViewPort/BUI camera) to the new
+        // size; do that first so the cameras and the perspective frustum below are correct.
+        super.reshape(width, height);
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+
+        // re-apply our standard board perspective frustum for the new aspect ratio (mirrors the
+        // fork's JmeApp.resize, which called setPerspectiveFrustum after the renderer reinit;
+        // Camera.resize already preserves near/far, but this keeps the 45-degree fov + FRUSTUM_NEAR/
+        // FRUSTUM_FAR authoritative and matches OptionsView's explicit re-fit on a mode change).
+        setPerspectiveFrustum(width, height);
+
+        // propagate the new size to BUI: the fork relied on the DisplaySystem recording a single
+        // display size that BUI windows/popups/tooltips lay out from. Our backend records that size
+        // per-frame from the GUI camera in beginFrame; push the new size in now so layout that runs
+        // synchronously below (and on this tick) reads the new size rather than the previous frame's.
+        if (_backend != null) {
+            _backend.setDisplaySize(width, height);
+        }
+        // tell the BUI root the display resized (invalidates existing windows so they re-layout /
+        // re-anchor against the new size on the next tick).
+        if (_rnode != null) {
+            _rnode.displayResized(width, height);
+        }
+        // notify any host resize listeners (BangClient re-bounds the active full-screen place view
+        // -- TownView/BangView fill the screen; ShopView/LogonView re-center -- the way the fork's
+        // OptionsView re-bounded its _parent after recreateWindow).
+        for (ResizeListener l : _resizeListeners) {
+            try {
+                l.displayResized(width, height);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Registers a listener notified (on the render thread) whenever the host display is resized,
+     * after the viewport cameras and the BUI backend size have been updated. The active view
+     * controller uses this to re-bound full-screen views to the new size.
+     */
+    public void addResizeListener (ResizeListener listener)
+    {
+        if (!_resizeListeners.contains(listener)) {
+            _resizeListeners.add(listener);
+        }
+    }
+
+    /**
+     * Removes a previously registered resize listener.
+     */
+    public void removeResizeListener (ResizeListener listener)
+    {
+        _resizeListeners.remove(listener);
+    }
+
     @Override // from SimpleApplication
     public void simpleUpdate (float tpf)
     {
@@ -591,6 +654,18 @@ public class JmeApp extends SimpleApplication
         return cfgdir + File.separator + file;
     }
 
+    /**
+     * Notified when the host display (framebuffer) is resized. Replaces the fork's implicit
+     * reliance on {@code DisplaySystem} recording the size plus {@code OptionsView} re-bounding the
+     * active view: registered listeners (the game client) re-bound their full-screen views.
+     */
+    public interface ResizeListener
+    {
+        /** Called on the render thread once the viewport cameras and BUI backend size have been
+         * updated to the new {@code width}x{@code height} (pixels). */
+        void displayResized (int width, int height);
+    }
+
     /** Our {@link JmeContext} implementation, reading the host's services. */
     protected class ContextImpl implements JmeContext
     {
@@ -696,4 +771,8 @@ public class JmeApp extends SimpleApplication
 
     /** Runnables posted from other threads, drained on the render thread. */
     protected final ConcurrentLinkedQueue<Runnable> _runnables = new ConcurrentLinkedQueue<>();
+
+    /** Host display-resize listeners (notified on the render thread from {@link #reshape}). */
+    protected final java.util.List<ResizeListener> _resizeListeners =
+        new java.util.concurrent.CopyOnWriteArrayList<>();
 }

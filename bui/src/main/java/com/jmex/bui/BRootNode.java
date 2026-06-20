@@ -68,6 +68,29 @@ public abstract class BRootNode
     }
 
     /**
+     * Notifies the root that the host display (framebuffer) has been resized to the supplied
+     * pixel dimensions. The host ({@code JmeApp.reshape}) calls this on the render thread once the
+     * jME3 viewport cameras have been re-fit to the new size, having already updated the backend's
+     * recorded display size (so {@code BackendProvider.get().getDisplayWidth/Height} reports the
+     * new size synchronously here).
+     *
+     * <p>The fork drove this from a single {@code DisplaySystem}-recorded size: new windows,
+     * popups and tooltips lay out from that size (so they pick the new size up automatically), and
+     * the fork's {@code OptionsView} re-bounded the active full-screen view explicitly. Here we
+     * mirror that: tooltips/popups already read the (now-updated) backend size, and every existing
+     * top-level window is invalidated so its layout re-runs against the new size on the next tick
+     * (re-anchoring e.g. a bottom-right-anchored button inside a window that is itself re-bounded
+     * to the new size by the host). Re-binding the full-screen views to the new bounds is left to
+     * the host's resize listener (which knows which views fill the screen vs. which are centered).
+     */
+    public void displayResized (int width, int height)
+    {
+        for (int ii = 0, ll = _windows.size(); ii < ll; ii++) {
+            _windows.get(ii).invalidate();
+        }
+    }
+
+    /**
      * Registers a top-level window with the input system.
      */
     public void addWindow (BWindow window)

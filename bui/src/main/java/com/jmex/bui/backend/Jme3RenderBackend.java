@@ -103,6 +103,21 @@ public class Jme3RenderBackend implements BRenderBackend
         return _ty;
     }
 
+    /**
+     * Records the current display (framebuffer) size. The per-frame {@link #beginFrame} also sets
+     * this from the live GUI camera, but a resize handler running between frames (on the render
+     * thread, after the cameras have been re-fit) calls this so that BUI layout reading
+     * {@code getDisplayWidth/Height} synchronously -- window {@code center()}, tooltip placement,
+     * place-view re-bound -- sees the new size immediately rather than the previous frame's value.
+     */
+    public void setDisplaySize (int width, int height)
+    {
+        if (width > 0 && height > 0) {
+            _displayWidth = width;
+            _displayHeight = height;
+        }
+    }
+
     // documentation inherited from interface BRenderBackend
     public int getDisplayWidth ()
     {

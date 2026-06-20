@@ -31,6 +31,7 @@ import com.threerings.util.Name;
 
 import com.threerings.crowd.chat.client.CurseFilter;
 
+import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.GodViewHandler;
 
 import com.threerings.bang.client.bui.OptionDialog;
@@ -236,6 +237,20 @@ public class OptionsView extends BDecoratedWindow
         _modes.addListener(_modelist);
     }
 
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _ctx.getApp().addResizeListener(_resizer);
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _ctx.getApp().removeResizeListener(_resizer);
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
@@ -386,15 +401,13 @@ public class OptionsView extends BDecoratedWindow
             45.0f, width/(float)height,
             com.threerings.jme.JmeApp.FRUSTUM_NEAR, com.threerings.jme.JmeApp.FRUSTUM_FAR);
 
-        // recenter and invalidate the main view and options window
-        if (_parent != null) {
-            if (_parent instanceof ShopView || _parent instanceof LogonView) {
-                _parent.center();
-            } else {
-                _parent.setBounds(0, 0, _ctx.getCamera().getWidth(),
-                                  _ctx.getCamera().getHeight());
-            }
-        }
+        // Re-fitting the main view (_parent) to the new size is now driven by the host resize
+        // listener (BangClient.refitMainView), which fires once the jME3 restart() above has
+        // actually recreated the GLFW window and re-fit the cameras. Doing it synchronously here --
+        // as the fork did after its synchronous recreateWindow -- would read the still-old camera
+        // size, because jME3's restart() is asynchronous (posted to the next render frame). This
+        // popup re-centers itself off the same host resize event (see _resizer), which the host
+        // fires after the backend display size is updated, so center() reads the new size.
         center();
 
         // if we don't need to confirm, stop here
@@ -477,6 +490,16 @@ public class OptionsView extends BDecoratedWindow
     protected ActionListener _modelist = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             updateDisplayMode((ModeItem)_modes.getSelectedItem(), true);
+        }
+    };
+
+    /** Re-centers this popup once the host display has actually resized (after the asynchronous
+     * jME3 restart()), so it lands centered in the new resolution rather than the old one. */
+    protected JmeApp.ResizeListener _resizer = new JmeApp.ResizeListener() {
+        public void displayResized (int width, int height) {
+            if (isAdded()) {
+                center();
+            }
         }
     };
 

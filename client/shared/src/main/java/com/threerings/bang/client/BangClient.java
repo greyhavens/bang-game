@@ -45,6 +45,7 @@ import com.threerings.getdown.util.LaunchUtil;
 // import com.threerings.hemiptera.data.Report;
 // import com.threerings.hemiptera.util.SendReportUtil;
 
+import com.threerings.jme.JmeApp;
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.effect.WindowSlider;
 
@@ -339,6 +340,16 @@ public class BangClient extends BasicClient
 
         // setup our modal shade color
         _ctx.getRootNode().setModalShade(BangUI.MODAL_SHADE);
+
+        // re-fit the active main view when the display is resized (fullscreen toggle / mode change /
+        // window drag). The fork's OptionsView re-bounded its _parent after recreateWindow; here the
+        // host fires this once the GLFW window has actually been recreated and the cameras re-fit
+        // (OptionsView's synchronous re-bound could not, because the jME3 restart() is asynchronous).
+        _ctx.getApp().addResizeListener(new JmeApp.ResizeListener() {
+            public void displayResized (int width, int height) {
+                refitMainView(width, height);
+            }
+        });
 
         // configure our guest handle name
         GuestHandle.setDefaultName(_ctx.xlate(BangCodes.BANG_MSGS, "m.you"));
@@ -1205,6 +1216,26 @@ public class BangClient extends BasicClient
             }
         });
         return true;
+    }
+
+    /**
+     * Re-fits the active main view to a new display size after a resolution / fullscreen change.
+     * Mirrors the re-fit the fork's {@code OptionsView} did on its {@code _parent}: full-screen
+     * views (TownView, BangView) re-bound to fill the new size -- which re-runs their layout, so the
+     * bottom/lower-right-anchored menu, Exit and admin buttons re-anchor to the new corners -- while
+     * centered views (ShopView, LogonView) re-center. Runs on the render thread (from the host
+     * {@link JmeApp.ResizeListener}) once the GLFW window has actually been recreated.
+     */
+    protected void refitMainView (int width, int height)
+    {
+        if (_mview == null || !_mview.isAdded()) {
+            return;
+        }
+        if (_mview instanceof ShopView || _mview instanceof LogonView) {
+            _mview.center();
+        } else {
+            _mview.setBounds(0, 0, width, height);
+        }
     }
 
     protected void setMainView (final BWindow view)
