@@ -157,6 +157,31 @@ public class OptionsView extends BDecoratedWindow
         return wrapper;
     }
 
+    /**
+     * Creates the "Sepia tone" slider (0..100%), which drives the world-viewport sepia post-process
+     * tint (the fork's aged-photo look). Persists in {@link BangPrefs} and applies live to the
+     * active board view (full in the town/menu, reduced during gameplay).
+     */
+    public static BContainer createSepiaSlider (final BangContext ctx)
+    {
+        int value = BangPrefs.getSepia();
+        BSlider slider = new BSlider(BSlider.HORIZONTAL, 0, 100, value);
+        final BLabel vallbl = new BLabel(value + "%");
+        vallbl.setPreferredSize(new Dimension(50, 10));
+        slider.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged (ChangeEvent event) {
+                int val = ((BoundedRangeModel)event.getSource()).getValue();
+                BangPrefs.updateSepia(val);
+                com.threerings.bang.game.client.BoardView.applySepiaPref();
+                vallbl.setText(val + "%");
+            }
+        });
+        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
+        wrapper.add(slider);
+        wrapper.add(vallbl, GroupLayout.FIXED);
+        return wrapper;
+    }
+
     public OptionsView (BangContext ctx, BWindow parent)
     {
         super(ctx.getStyleSheet(), ctx.xlate(BangCodes.OPTS_MSGS, "m.title"));
@@ -169,8 +194,8 @@ public class OptionsView extends BDecoratedWindow
         _msgs = ctx.getMessageManager().getBundle(BangCodes.OPTS_MSGS);
 
         TabbedPane tabs = new TabbedPane(false);
-        // taller than the original 275 to fit the added lighting-tuning sliders without clipping
-        tabs.setPreferredSize(new Dimension(375, 360));
+        // taller than the original 275 to fit the added lighting + sepia tuning sliders w/o clipping
+        tabs.setPreferredSize(new Dimension(375, 410));
 
         // create the General tab
         TableLayout layout = new TableLayout(2, 10, 10);
@@ -204,6 +229,8 @@ public class OptionsView extends BDecoratedWindow
         cont.add(createLightSlider(_ctx, "ambient"));
         cont.add(new BLabel("Shadow darkness", "right_label"));
         cont.add(createLightSlider(_ctx, "shadow"));
+        cont.add(new BLabel("Sepia tone", "right_label"));
+        cont.add(createSepiaSlider(_ctx));
 
         // create the Chat tab if we're logged on
         if (ctx.getMuteDirector() != null) {

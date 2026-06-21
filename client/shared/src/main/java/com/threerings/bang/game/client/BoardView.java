@@ -303,6 +303,8 @@ public class BoardView extends BComponent
     {
         // mark this as the active board view so the Esc-options lighting sliders apply here live
         _activeView = this;
+        // apply the sepia tint at this view's context strength (full in town/menu, reduced in game)
+        applySepiaPref();
 
         // remove any old sprites
         removePieceSprites();
@@ -506,6 +508,28 @@ public class BoardView extends BComponent
 
     /** The most-recently-shown board view (for live lighting-pref application). */
     protected static BoardView _activeView;
+
+    /** Per-view context scale for the sepia post-process tint: full (1.0) in the town/menu, reduced
+     * during actual gameplay (BangBoardView overrides) so the game board stays readable -- "not so
+     * much inside the actual gameplay". */
+    protected float sepiaContextScale ()
+    {
+        return 1f;
+    }
+
+    /**
+     * Pushes the current sepia-tone pref to the world-viewport post-process filter, scaled by the
+     * active view's context (full in the town/menu, reduced during gameplay). Called when the
+     * Esc-options sepia slider changes and whenever a board view is (re)shown.
+     */
+    public static void applySepiaPref ()
+    {
+        BoardView v = _activeView;
+        if (v != null) {
+            v._ctx.getApp().setSepiaIntensity(
+                BangPrefs.getSepia() / 100f * v.sepiaContextScale());
+        }
+    }
 
     /**
      * Returns the intensity of the dynamic shadows on the board, which depends

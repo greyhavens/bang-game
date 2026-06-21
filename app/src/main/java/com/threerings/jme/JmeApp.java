@@ -33,6 +33,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.SceneProcessor;
 import com.jme3.profile.AppProfiler;
 import com.jme3.renderer.Camera;
@@ -152,6 +153,15 @@ public class JmeApp extends SimpleApplication
             viewPort.getQueue().setGeometryComparator(
                 RenderQueue.Bucket.Transparent, new com.threerings.jme.util.RenderOrderComparator());
         }
+
+        // install a post-process sepia tint on the main 3D viewport (driven by the Esc-options
+        // "Sepia tone" slider). It runs on the composited world image, so it tints the ground, sky
+        // dome, buildings and town backdrop uniformly while leaving the BUI overlay (rendered on the
+        // separate GUI viewport) untouched. Intensity 0 (the default) is a pure pass-through.
+        _sepiaPost = new FilterPostProcessor(assetManager);
+        _sepiaFilter = new com.threerings.jme.post.SepiaFilter();
+        _sepiaPost.addFilter(_sepiaFilter);
+        viewPort.addProcessor(_sepiaPost);
 
         // install the BUI render backend BEFORE building any widget (BImage chooses its backing
         // from BackendProvider.get() at construction time).
@@ -353,6 +363,17 @@ public class JmeApp extends SimpleApplication
     {
         if (viewPort != null) {
             viewPort.setBackgroundColor(color);
+        }
+    }
+
+    /**
+     * Sets the strength of the world-viewport sepia post-process tint, 0 (off) .. 1 (full sepia).
+     * Driven live from the Esc-options "Sepia tone" slider via {@code BoardView.applySepiaPref}.
+     */
+    public void setSepiaIntensity (float intensity)
+    {
+        if (_sepiaFilter != null) {
+            _sepiaFilter.setIntensity(intensity);
         }
     }
 
@@ -774,6 +795,10 @@ public class JmeApp extends SimpleApplication
     protected BRootNode _rnode;
     protected Jme3RenderBackend _backend;
     protected final JmeContext _context = new ContextImpl();
+
+    /** The main-viewport post-process chain and its sepia tint filter (Esc-options "Sepia tone"). */
+    protected FilterPostProcessor _sepiaPost;
+    protected com.threerings.jme.post.SepiaFilter _sepiaFilter;
 
     protected boolean _updateEnabled = true, _renderEnabled = true;
     protected boolean _finished;

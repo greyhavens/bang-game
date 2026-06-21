@@ -48,8 +48,8 @@ public class InGameOptionsView extends BDecoratedWindow
         add(_title = new BLabel("", "window_title"), GroupLayout.FIXED);
 
         TabbedPane tabs = new TabbedPane(false);
-        // taller than the original 275 to fit the added lighting-tuning sliders without clipping
-        tabs.setPreferredSize(new Dimension(375, 360));
+        // taller than the original 275 to fit the added lighting + sepia tuning sliders w/o clipping
+        tabs.setPreferredSize(new Dimension(375, 410));
         add(tabs, GroupLayout.FIXED);
 
         // create the Help tab
@@ -81,6 +81,8 @@ public class InGameOptionsView extends BDecoratedWindow
         cont.add(OptionsView.createLightSlider(ctx, "ambient"));
         cont.add(new BLabel("Shadow darkness", "right_label"));
         cont.add(OptionsView.createLightSlider(ctx, "shadow"));
+        cont.add(new BLabel("Sepia tone", "right_label"));
+        cont.add(OptionsView.createSepiaSlider(ctx));
 
         tabs.addTab(msgs.get("t.general"), cont);
 
