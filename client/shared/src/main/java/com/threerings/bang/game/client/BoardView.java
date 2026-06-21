@@ -301,6 +301,9 @@ public class BoardView extends BComponent
      */
     public void refreshBoard ()
     {
+        // mark this as the active board view so the Esc-options lighting sliders apply here live
+        _activeView = this;
+
         // remove any old sprites
         removePieceSprites();
 
@@ -467,8 +470,37 @@ public class BoardView extends BComponent
      */
     public float getShadowIntensity ()
     {
-        return _board.getShadowIntensity();
+        return _board.getShadowIntensity() * shadowScale();
     }
+
+    /** Live look-tuning scales, persisted in {@link BangPrefs} and adjustable from the in-game Esc
+     * options sliders. The jME3 lighting pipeline renders the board's light values with more
+     * contrast than the fork's FFP (lit faces near-clip, shadows too dark), so these dial the
+     * directional diffuse (building brightness), summed ambient fill, and shadow darkening toward
+     * the fork's flatter look. Stored as percent (100 = 1.0x). */
+    protected static float diffuseScale () { return BangPrefs.getLightDiffuse() / 100f; }
+    protected static float ambientScale () { return BangPrefs.getLightAmbient() / 100f; }
+    protected static float shadowScale () { return BangPrefs.getLightShadow() / 100f; }
+
+    /**
+     * Re-applies the current lighting prefs to the active board view (called when an Esc-options
+     * lighting slider changes, for live feedback): re-runs the light setup and re-darkens every
+     * sprite by the new shadow scale.
+     */
+    public static void applyLightingPrefs ()
+    {
+        BoardView v = _activeView;
+        if (v == null) {
+            return;
+        }
+        v.refreshLights();
+        for (PieceSprite ps : v._pieces.values()) {
+            ps.updateShadowValue();
+        }
+    }
+
+    /** The most-recently-shown board view (for live lighting-pref application). */
+    protected static BoardView _activeView;
 
     /**
      * Returns the intensity of the dynamic shadows on the board, which depends
@@ -1112,8 +1144,9 @@ public class BoardView extends BComponent
             _ambient = new com.jme3.light.AmbientLight();
             _node.addLight(_ambient);
         }
+        float as = ambientScale();
         _ambient.setColor(new ColorRGBA(
-            Math.min(1f, ar), Math.min(1f, ag), Math.min(1f, ab), 1f));
+            Math.min(1f, ar * as), Math.min(1f, ag * as), Math.min(1f, ab * as), 1f));
     }
 
     /**
@@ -1143,7 +1176,8 @@ public class BoardView extends BComponent
         // every light's ambient as flat fill -- using only light 0's ambient left shadowed sprites
         // and terrain too dark). Specular is folded into diffuse and refined at the material pass.
         float[] drgb = new Color(dcolor).getRGBColorComponents(null);
-        _lights[idx].setColor(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
+        float ds = diffuseScale();
+        _lights[idx].setColor(new ColorRGBA(drgb[0] * ds, drgb[1] * ds, drgb[2] * ds, 1f));
     }
 
     /**

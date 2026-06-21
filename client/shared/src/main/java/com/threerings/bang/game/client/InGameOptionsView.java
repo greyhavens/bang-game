@@ -48,7 +48,8 @@ public class InGameOptionsView extends BDecoratedWindow
         add(_title = new BLabel("", "window_title"), GroupLayout.FIXED);
 
         TabbedPane tabs = new TabbedPane(false);
-        tabs.setPreferredSize(new Dimension(375, 275));
+        // taller than the original 275 to fit the added lighting-tuning sliders without clipping
+        tabs.setPreferredSize(new Dimension(375, 360));
         add(tabs, GroupLayout.FIXED);
 
         // create the Help tab
@@ -72,6 +73,14 @@ public class InGameOptionsView extends BDecoratedWindow
                      ctx, OptionsView.SoundType.EFFECTS));
         cont.add(new BLabel(msgs.get("m.pan_speed"), "right_label"));
         cont.add(OptionsView.createPanSpeedSlider(ctx));
+
+        // board-lighting tuning knobs (dial jME3 lighting toward the fork's flatter look)
+        cont.add(new BLabel("Building light", "right_label"));
+        cont.add(OptionsView.createLightSlider(ctx, "diffuse"));
+        cont.add(new BLabel("Ambient fill", "right_label"));
+        cont.add(OptionsView.createLightSlider(ctx, "ambient"));
+        cont.add(new BLabel("Shadow darkness", "right_label"));
+        cont.add(OptionsView.createLightSlider(ctx, "shadow"));
 
         tabs.addTab(msgs.get("t.general"), cont);
 

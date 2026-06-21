@@ -243,6 +243,16 @@ public class BangPrefs
         config.setValue("camera_pan_speed", speed);
     }
 
+    /** Board-lighting tuning sliders (Esc options), as percent of the board's authored values
+     * (100 = 1.0x). Let the player dial the jME3 lighting toward the fork's flatter look:
+     * directional diffuse = building brightness, ambient = flat fill, shadow = shadow darkening. */
+    public static int getLightDiffuse () { return config.getValue("light_diffuse", 100); }
+    public static void updateLightDiffuse (int v) { config.setValue("light_diffuse", v); }
+    public static int getLightAmbient () { return config.getValue("light_ambient", 100); }
+    public static void updateLightAmbient (int v) { config.setValue("light_ambient", v); }
+    public static int getLightShadow () { return config.getValue("light_shadow", 100); }
+    public static void updateLightShadow (int v) { config.setValue("light_shadow", v); }
+
     /**
      * Returns the current chat filter mode.
      */
