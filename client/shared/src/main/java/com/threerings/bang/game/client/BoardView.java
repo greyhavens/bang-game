@@ -494,6 +494,11 @@ public class BoardView extends BComponent
             return;
         }
         v.refreshLights();
+        // re-bake the terrain shadow vertex colors (they carry the bulk of the visible shadowing,
+        // and are scaled by the shadow-darkness slider in TerrainNode.getShadowValue)
+        if (v._tnode != null) {
+            v._tnode.refreshShadows();
+        }
         for (PieceSprite ps : v._pieces.values()) {
             ps.updateShadowValue();
         }
@@ -517,7 +522,9 @@ public class BoardView extends BComponent
             Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
             total += hsb[2];
         }
-        return 0.7f * _board.getShadowIntensity() * Math.max(0f, 1f - total);
+        // also honor the shadow-darkness slider (this feeds the per-unit dynamic shadow blob, which
+        // is baked into a texture at sprite creation, so it tracks the slider for newly built sprites)
+        return 0.7f * _board.getShadowIntensity() * shadowScale() * Math.max(0f, 1f - total);
     }
 
     /**
