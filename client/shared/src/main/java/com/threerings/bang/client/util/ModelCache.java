@@ -220,19 +220,35 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
         public Texture getTexture (Geometry geom, String name)
         {
             String path = _resolver.textureAssetPath(_key.type, name);
-            // Reproduce the fork ModelCache.ModelTextureProvider: with no colorizations, bind the
-            // texture exactly as baked (stock AssetManager.loadTexture, identical to the bake-time
-            // ModelTextureResolver path that produces the goldens). With colorizations (team/owner
-            // tinting from PieceSprite.updateColorizations, colorLookup[owner+1]), route through the
-            // zation-aware TextureCache so the texture's paletted pixels are recoloured per the
-            // owner's zations -- the fork did exactly this:
+            // Reproduce the fork ModelCache.ModelTextureProvider exactly: route BOTH the
+            // uncolorized and the colorized bind through the zation-aware TextureCache --
             //   tstate.setTexture(_zations == null ?
             //       cache.getTexture(path, scale) : cache.getTexture(path, _zations, scale));
-            if (_zations == null) {
-                return _ctx.getAssetManager().loadTexture(path);
-            }
+            //
+            // The prior cutover divergence here -- using stock AssetManager.loadTexture(path) for
+            // the _zations == null case -- is the root of the intermittent white-bonus bug. jME3's
+            // AssetManager hands every loadTexture caller a *shallow Texture clone that shares one
+            // cached Image* (TextureProcessor/WeakRefAssetCache: "the texture stored in the cache
+            // will be collected when all clones become unreachable"), and the Image owns the GL
+            // texture id. A model instance is a Spatial.clone(); Material.clone()/MatParam.clone()
+            // are shallow, so the cloned DiffuseMap MatParamTexture keeps pointing at that same
+            // shared Image. When the last loadTexture clone of a baseline texture is GC'd under
+            // churn, jME3's NativeObjectManager runs Renderer.deleteImage() -> glDeleteTextures +
+            // Image.resetObject() (id = -1) on the shared Image, blanking every still-live material
+            // that shares it until a *render-thread* re-bind re-uploads it -- hence per-instance,
+            // intermittent, churn/late-spawn dependent, and pure white (no DiffuseMap == unlit).
+            // (And resolveTextures only rebinds when the provider returns non-null, so any geometry
+            // left on the baseline texture rides that freed Image straight to white.)
+            //
+            // The TextureCache instead builds a dedicated Image per cache key and hands back a
+            // single strongly-cached Texture2D that every live material references directly, so the
+            // Image's GL id lives exactly as long as the cached texture -- the invariant the fork
+            // preserved via its CachedTexture shared-id / clone->prototype strong refs. Colorized
+            // bonuses already used this path; uncolorized geometry now shares the same guarantee.
             float scale = BangPrefs.isMediumDetail() ? 1f : 0.5f;
-            return _ctx.getTextureCache().getTexture(path, _zations, scale);
+            return (_zations == null) ?
+                _ctx.getTextureCache().getTexture(path, scale) :
+                _ctx.getTextureCache().getTexture(path, _zations, scale);
         }
 
         /** The model key. */

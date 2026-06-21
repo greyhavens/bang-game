@@ -38,6 +38,8 @@ import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interator;
 import com.samskivert.util.Invoker;
 
+import com.threerings.jme.util.RenderOrderComparator;
+
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.data.TerrainConfig;
@@ -1551,6 +1553,11 @@ public class TerrainNode extends Node
 
                 splat.setMaterial(smat);
                 splat.setQueueBucket(Bucket.Transparent);
+                // tag so the main viewport's RenderOrderComparator draws this transparent splat
+                // overlay before the (default-order) move/attack highlights, instead of
+                // interleaving with them by centroid distance (BUG-31).
+                splat.setUserData(RenderOrderComparator.RENDER_ORDER,
+                    RenderOrderComparator.TERRAIN_ORDER);
                 node.attachChild(splat);
             }
         }

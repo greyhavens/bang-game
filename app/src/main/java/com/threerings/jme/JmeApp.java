@@ -142,6 +142,17 @@ public class JmeApp extends SimpleApplication
         // make the main viewport clear to black (host owns the viewport background).
         viewPort.setBackgroundColor(ColorRGBA.Black);
 
+        // Order the main viewport's transparent bucket by an explicit per-geometry render-order key
+        // (then back-to-front as usual). The terrain renderer tags its alpha-blended splat overlay
+        // layers so the whole terrain surface draws before the transparent move/attack highlights,
+        // restoring the fork's "terrain before highlights" invariant (BUG-31); untagged transparent
+        // geometry (water, particles, effects, UI) keeps its stock relative ordering.
+        // (-Dbang.debug.noRenderOrder=true disables it, for A/B diagnosis of transparent-sort issues)
+        if (!Boolean.getBoolean("bang.debug.noRenderOrder")) {
+            viewPort.getQueue().setGeometryComparator(
+                RenderQueue.Bucket.Transparent, new com.threerings.jme.util.RenderOrderComparator());
+        }
+
         // install the BUI render backend BEFORE building any widget (BImage chooses its backing
         // from BackendProvider.get() at construction time).
         _backend = new Jme3RenderBackend(assetManager);

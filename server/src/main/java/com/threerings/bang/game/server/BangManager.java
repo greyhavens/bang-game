@@ -103,6 +103,7 @@ import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.TeleportEffect;
 import com.threerings.bang.game.data.piece.BigPiece;
+import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
@@ -1540,6 +1541,59 @@ public class BangManager extends GameManager
                  " pickup every " + DEBUG_DEMO_INTERVAL + "ms");
     }
 
+    /**
+     * DEBUG bonus gallery (-Dbang.debug.bonusgallery on the server JVM): a few seconds AFTER play
+     * starts, spawn one of every bonus type (this town's set + the shared frontier_town set) on free
+     * tiles near the action and leave them un-activated, so every bonus model can be inspected
+     * deterministically in one frame. The delay makes these "late" spawns -- the case where bonuses
+     * were observed rendering white -- rather than the round-start spawns that render fine.
+     */
+    protected void maybeSpawnBonusGallery ()
+    {
+        if (!DEBUG_BONUS_GALLERY || _gallerySpawned) {
+            return;
+        }
+        _gallerySpawned = true;
+        new Interval(_omgr) {
+            public void expired () {
+                if (_bangobj == null || _bangobj.state != BangObject.IN_PLAY) {
+                    return;
+                }
+                java.util.LinkedHashSet<String> types = new java.util.LinkedHashSet<String>();
+                for (BonusConfig bc : BonusConfig.getTownBonuses(ServerConfig.townId)) {
+                    types.add(bc.type);
+                }
+                for (BonusConfig bc : BonusConfig.getTownBonuses("frontier_town")) {
+                    types.add(bc.type);
+                }
+                // anchor the grid near the first live unit (a known-valid board region)
+                int cx = _bangobj.board.getWidth() / 2, cy = _bangobj.board.getHeight() / 2;
+                for (Piece p : _bangobj.getPieceArray()) {
+                    if (p instanceof Unit u && u.isAlive()) {
+                        cx = u.x; cy = u.y; break;
+                    }
+                }
+                int placed = 0;
+                for (String type : types) {
+                    Bonus bonus = Bonus.createBonus(type);
+                    if (bonus == null) {
+                        continue;
+                    }
+                    Point spot = _bangobj.board.getOccupiableSpot(cx, cy, 12);
+                    if (spot == null) {
+                        continue;
+                    }
+                    bonus.position(spot.x, spot.y);
+                    bonus.assignPieceId(_bangobj);
+                    addPiece(bonus);
+                    placed++;
+                }
+                log.info("Bonus gallery spawned (-Dbang.debug.bonusgallery)",
+                         "types", types.size(), "placed", placed, "town", ServerConfig.townId);
+            }
+        }.schedule(4000L);
+    }
+
     protected void handleDebugEffectCommand (PlayerObject pobj, String cmd)
     {
         int pidx = _bangobj.getPlayerIndex(pobj.handle);
@@ -1646,6 +1700,7 @@ public class BangManager extends GameManager
                 _bangobj.tick((short)0);
             }
             maybeStartEffectDemo();
+            maybeSpawnBonusGallery();
             break;
 
         default:
@@ -3413,6 +3468,9 @@ public class BangManager extends GameManager
     /** Effect-test sandbox auto-demo timer ({@code -Dbang.debug.effects}); null in normal play. */
     protected Interval _fxDemo;
 
+    /** Whether the debug bonus gallery (-Dbang.debug.bonusgallery) has already been spawned. */
+    protected boolean _gallerySpawned;
+
     /** Handles post-processing when effects are applied. */
     protected Effect.Observer _effector = new Effect.Observer() {
         public void pieceAdded (Piece piece) {
@@ -3702,4 +3760,8 @@ public class BangManager extends GameManager
         System.getProperty("bang.debug.bonus", "frontier_town/repair");
     protected static final long DEBUG_DEMO_INTERVAL =
         Long.getLong("bang.debug.interval", 5000L);
+
+    /** Master switch for the debug bonus gallery (see {@link #maybeSpawnBonusGallery}). */
+    protected static final boolean DEBUG_BONUS_GALLERY =
+        Boolean.getBoolean("bang.debug.bonusgallery");
 }
