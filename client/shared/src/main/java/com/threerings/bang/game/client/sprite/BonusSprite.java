@@ -88,8 +88,18 @@ public class BonusSprite extends ActiveSprite
                         return;
                     }
                     Image img = t.getImage();
-                    sb.append("[").append(t.getName()).append(" img=")
-                      .append(img == null ? "null" : ("id" + img.getId())).append("]");
+                    // also dump the Diffuse/Color material colour (SpriteMaterialState rides fade
+                    // alpha + shadow darkening here) and whether the Image still has CPU data, to
+                    // distinguish a grey-from-material-colour case from a recycled/blank GL texture.
+                    com.jme3.material.MatParam col = m.getParam("Diffuse");
+                    if (col == null) { col = m.getParam("Color"); }
+                    boolean hasData = img != null && img.getData() != null && !img.getData().isEmpty()
+                        && img.getData(0) != null && img.getData(0).capacity() > 0;
+                    sb.append("[").append(t.getName())
+                      .append(" img=").append(img == null ? "null" : ("id" + img.getId()))
+                      .append(" data=").append(hasData)
+                      .append(" col=").append(col == null ? "-" : String.valueOf(col.getValue()))
+                      .append("]");
                 }
             });
             log.info("BONUSDIAG", "type", _name, "at", _piece.x + "," + _piece.y,

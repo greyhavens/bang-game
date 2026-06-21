@@ -1094,6 +1094,26 @@ public class BoardView extends BComponent
         for (int i = 0; i < _lights.length; i++) {
             refreshLight(i);
         }
+        // jME3 has a single shared AmbientLight, but the fork's fixed-function pipeline accumulated
+        // the ambient term of EVERY active directional light as flat fill. Sum them all here;
+        // keeping only light 0's ambient (the prior cutover behaviour) dropped the fill from the
+        // secondary fill light(s), so shadowed sprites/terrain rendered too dark vs the fork.
+        float ar = 0f, ag = 0f, ab = 0f;
+        for (int i = 0; i < _lights.length; i++) {
+            int dcolor = _board.getLightDiffuseColor(i),
+                acolor = _board.getLightAmbientColor(i);
+            if (dcolor == 0 && acolor == 0) {
+                continue; // disabled light contributes nothing
+            }
+            float[] argb = new Color(acolor).getRGBColorComponents(null);
+            ar += argb[0]; ag += argb[1]; ab += argb[2];
+        }
+        if (_ambient == null) {
+            _ambient = new com.jme3.light.AmbientLight();
+            _node.addLight(_ambient);
+        }
+        _ambient.setColor(new ColorRGBA(
+            Math.min(1f, ar), Math.min(1f, ag), Math.min(1f, ab), 1f));
     }
 
     /**
@@ -1118,19 +1138,12 @@ public class BoardView extends BComponent
         _lights[idx].setDirection(dir);
 
         // jME3 directional lights carry a single color (the fork carried separate diffuse/specular/
-        // ambient). Use the diffuse color for the directional light; the ambient term becomes a
-        // shared AmbientLight on the node (driven by light 0). Specular is folded into diffuse and
-        // refined at the Phase-4 material pass.
-        float[] drgb = new Color(dcolor).getRGBColorComponents(null),
-            argb = new Color(acolor).getRGBColorComponents(null);
+        // ambient). Use the diffuse color for the directional light; the ambient terms of ALL lights
+        // are accumulated into one shared AmbientLight in refreshLights() (the fork's FFP summed
+        // every light's ambient as flat fill -- using only light 0's ambient left shadowed sprites
+        // and terrain too dark). Specular is folded into diffuse and refined at the material pass.
+        float[] drgb = new Color(dcolor).getRGBColorComponents(null);
         _lights[idx].setColor(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
-        if (idx == 0) {
-            if (_ambient == null) {
-                _ambient = new com.jme3.light.AmbientLight();
-                _node.addLight(_ambient);
-            }
-            _ambient.setColor(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
-        }
     }
 
     /**
