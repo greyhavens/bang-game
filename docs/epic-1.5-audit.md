@@ -2,8 +2,8 @@
 
 Output of the 2026-06-19 multi-agent audit (`wf_31aa4472-5c4`): 5 parallel read-only lenses
 (render-state defaults · coordinate conventions · bake pipelines · no-op stubs/deferred markers ·
-texture/material features) diffing the jME3 cutover (`/home/tim/Repos/bang-JRECutover`) against the
-known-good master fork (`/home/tim/Repos/bang-game`). 38 raw findings → deduped/ranked below.
+texture/material features) diffing the jME3 cutover (`/path/to/bang-JRECutover`) against the
+known-good master fork (`/path/to/bang-game`). 38 raw findings → deduped/ranked below.
 
 **Verdict:** the cutover is a *phased* port, not a lazy one — fidelity was deliberately deferred and the
 holes are self-labeled (`// Flagged no-op for Phase 2/3`, `TODO(phase3-host)`, `// Phase-4 fidelity`).

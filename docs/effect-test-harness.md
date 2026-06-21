@@ -13,7 +13,7 @@ slow live loop: kill stale JVMs → `./gradlew deploy` → boot `BangServer` →
 situation that shows a bug can take several relaunches, and the client idles out (BUG-18) mid-session.
 
 We want a fast, repeatable, ideally automated way to exercise one effect on one unit on demand,
-measure it, and compare it against the known-good fork at `/home/tim/Repos/bang-game`.
+measure it, and compare it against the known-good fork at `/path/to/bang-game`.
 
 ## Recommended approach
 
