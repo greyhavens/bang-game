@@ -27,6 +27,12 @@ public class BangDesktop
         settings.setVSync(true);
         // request a depth buffer for the 3D scene.
         settings.setDepthBits(24);
+        // Render gamma-naive to match the original fork. jME3 defaults gamma correction ON (sRGB
+        // pipeline: linearize sRGB textures, light in linear space, sRGB-encode on output), which
+        // shifts every colour vs the fixed-function LWJGL2 fork (no sRGB). The fork is our fidelity
+        // reference (warm sky horizon, terrain/shadow tone, art-authored colours), so disable gamma
+        // correction to reproduce its look. (BUG-26 + the broader shadow/ambient/colour fidelity.)
+        settings.setGammaCorrection(false);
 
         // BUG-1: create the GLFW window resizable (so the OS gives it a maximize button and lets
         // the user drag-resize / maximize) and centered. Without this the LWJGL3 context defaults
