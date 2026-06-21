@@ -5,7 +5,7 @@
 
 package com.jmex.bui.border;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.util.Insets;
 
 /**
@@ -22,7 +22,7 @@ public abstract class BBorder
     public abstract Insets adjustInsets (Insets insets);
 
     /** Renders this border. */
-    public void render (Renderer renderer, int x, int y, int width, int height,
+    public void render (RenderManager renderer, int x, int y, int width, int height,
         float alpha)
     {
     }

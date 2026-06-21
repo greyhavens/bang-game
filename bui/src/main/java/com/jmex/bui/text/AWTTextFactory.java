@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BConstants;
 import com.jmex.bui.BImage;
@@ -64,7 +64,7 @@ public class AWTTextFactory extends BTextFactory
         _stub = new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
 
         // compute the height of our font by creating a sample text and storing its height
-        _height = createText("J", ColorRGBA.black).getSize().height;
+        _height = createText("J", ColorRGBA.Black).getSize().height;
     }
 
     // documentation inherited
@@ -324,10 +324,10 @@ public class AWTTextFactory extends BTextFactory
             public void wasRemoved () {
                 bimage.release();
             }
-            public void render (Renderer renderer, int x, int y, float alpha) {
+            public void render (RenderManager renderer, int x, int y, float alpha) {
                 bimage.render(renderer, x, y, alpha);
             }
-            public void render (Renderer renderer, int x, int y, int w, int h, float alpha) {
+            public void render (RenderManager renderer, int x, int y, int w, int h, float alpha) {
                 bimage.render(renderer, x, y, w, h, alpha);
             }
 //             public void release () {

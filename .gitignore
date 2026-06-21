@@ -8,3 +8,9 @@ etc/proguard/*.map
 log/*.log
 .gradle
 build/
+baseline/
+
+# fidelity-reference videos — gitignored until confirmed safe for public (large binaries)
+docs/fidelity-reference/video/
+docs/fidelity-reference/video-frames/
+log/*.log.*

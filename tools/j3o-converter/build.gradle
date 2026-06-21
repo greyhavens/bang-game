@@ -7,9 +7,16 @@ plugins {
 }
 
 dependencies {
-  // the fork loader (app) plus the game-sprite emission controller classes that 61
-  // model.dat files reference by class name during deserialization
+  // the fork-free app facade (ModelTextureResolver) + the game-sprite emission controller
+  // classes that 61 model.dat files reference by class name during deserialization
   implementation project(":client:shared")
+
+  // the fork-coupled build-time model classes (com.threerings.jme.tools.model.{Model,ModelMesh,
+  // SkinMesh,ModelNode,...}) live in app's `modeltool` source set; the converter READS fork
+  // model.dat through them via the fork BinaryImporter. Pull the modeltool runtime classpath
+  // (which transitively carries the fork `jme` module + the fork model.dat format).
+  implementation project(":app").sourceSets.modeltool.output
+  implementation project(":app").sourceSets.modeltool.runtimeClasspath
 
   implementation "org.jmonkeyengine:jme3-core:${jme3Version}"
   // AWTLoader, for loading the .png textures referenced by converted materials
@@ -29,3 +36,249 @@ tasks.register("verifyCorpus", JavaExec) {
   mainClass = "com.threerings.bang.tools.j3o.VerifyCorpus"
   args = [ rootProject.file("assets/build/staging/rsrc").absolutePath ]
 }
+
+// Phase 3: bake every staged model.dat to a sibling model.j3o that the runtime client loads
+// natively through the jME3 AssetManager (ModelCache). The assets module invokes this after
+// compileModels (see assets/build.gradle).
+tasks.register("bakeModels", JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = "com.threerings.bang.tools.j3o.BakeModels"
+  args = [ rootProject.file("assets/build/staging/rsrc").absolutePath ]
+}
+
+// Phase 6a: bake each staged fork-format effects/<key>/particles.jme into a sibling
+// particles.j3o (a jME3 ParticleEmitter tree) that the runtime client loads natively through the
+// jME3 AssetManager (ParticleCache). The baker (ParticlesToJ3o) reads the fork particles.jme via
+// the retained fork BinaryImporter and writes pure-jME3 .j3o, so no fork dependency reaches the
+// runtime. It must run after compileModels has staged the rsrc tree (the .jme + textures).
+//   ./gradlew :tools:j3o-converter:bakeParticles
+// Pass -Peffect=<town>/<effect> to bake (and verbosely report) a single effect.
+tasks.register("bakeParticles", JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = "com.threerings.bang.tools.j3o.ParticlesToJ3o"
+  def cmd = [ rootProject.file("assets/build/staging/rsrc").absolutePath ]
+  if (project.hasProperty("effect")) {
+    cmd += project.property("effect").toString()
+  }
+  args = cmd
+}
+
+// Phase 6a: render a baked particles.j3o to a PNG offscreen, stepping the emitter a few frames so
+// particles are alive before the snapshot (ParticleEmitters are time-based). Stays on the isolated
+// jME3 + LWJGL3 classpath (no fork/gdx), so no org.lwjgl sealing clash.
+//   ./gradlew :tools:j3o-converter:renderParticleToPng \
+//       -Peffect=boom_town/barrel_explosion -Pframes=40 -Pout=/tmp/barrel.png
+tasks.register("renderParticleToPng", JavaExec) {
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderParticleToPng"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def effect = project.hasProperty("effect") ?
+      project.property("effect").toString() : "boom_town/barrel_explosion"
+  def out = project.hasProperty("out") ? project.property("out").toString() :
+      "/tmp/particle_${effect.replaceAll('/', '_')}.png"
+  def frames = project.hasProperty("frames") ? project.property("frames").toString() : "40"
+  args = [ rsrc, effect, out, frames ]
+}
+
+// Phase 7 seed: render a single baked model.j3o to a PNG offscreen (no window), through the real
+// runtime load/resolve/clone path and lit like the board, so a model's textures/materials/lighting
+// can be inspected in isolation (used to confirm the building models render fully textured).
+//   ./gradlew :tools:j3o-converter:renderToPng \
+//       -PmodelType=props/frontier_town/buildings/saloon -Pout=/tmp/saloon.png
+//
+// RenderToPng loads a baked .j3o through stock jME3 + the fork-free app-side Model facade, on a
+// real LWJGL3 GL context; it does NOT use the fork model.dat reader. So it runs on an isolated
+// classpath of jME3 + LWJGL3 + app main only, deliberately excluding the modeltool/fork/gdx deps
+// (which drag in LWJGL2 and seal the org.lwjgl package, clashing with LWJGL3 —
+// "sealing violation: can't seal package org.lwjgl").
+configurations {
+  renderToPngRuntime
+}
+dependencies {
+  renderToPngRuntime "org.jmonkeyengine:jme3-core:${jme3Version}"
+  renderToPngRuntime "org.jmonkeyengine:jme3-desktop:${jme3Version}"
+  renderToPngRuntime "org.jmonkeyengine:jme3-lwjgl3:${jme3Version}"
+  // the fork-free app-side Model facade + ModelTextureResolver (com.threerings.jme.model.*), so
+  // RenderToPng reproduces the live ModelCache load/resolve/clone path headlessly. app main is
+  // jme3-only (no fork/gdx/LWJGL2), so it does not reintroduce the org.lwjgl sealing clash.
+  renderToPngRuntime project(":app")
+}
+tasks.register("renderToPng", JavaExec) {
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderToPng"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def modelType = project.hasProperty("modelType") ?
+      project.property("modelType").toString() : "props/frontier_town/buildings/saloon"
+  def out = project.hasProperty("out") ? project.property("out").toString() :
+      "/tmp/${modelType.replaceAll('/', '_')}.png"
+  args = [ rsrc, modelType, out ]
+}
+
+// Phase 4c: render the Bang! water surface (BangWater.j3md) headlessly, reproducing WaterNode's
+// material + Fresnel sphere map + a wave-displaced surface, so the sphere-map reflection can be
+// inspected/verified without a live server or a fork-format .board. Pass -Pframe=<float> to
+// advance the waves (compare two frames to confirm animation).
+tasks.register("renderWaterToPng", JavaExec) {
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderWaterToPng"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def out = project.hasProperty("out") ? project.property("out").toString() : "/tmp/p4c-water.png"
+  def frame = project.hasProperty("frame") ? project.property("frame").toString() : "0"
+  args = [ rsrc, out, frame ]
+}
+
+// BUG-4 verification (counter billboard mirror + bottom-clip). Renders the counter-text billboard
+// the way CounterSprite does, from 8 azimuths around the Z-up board, with a chosen alignment.
+//   ./gradlew :tools:j3o-converter:renderCounterToPng \
+//       -Ptext=2 -Palign=Screen -Pout=/tmp/counter
+tasks.register("renderCounterToPng", JavaExec) {
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderCounterToPng"
+  def font = rootProject.file("assets/rsrc/ui/fonts/oldtown.ttf").absolutePath
+  def text = project.hasProperty("text") ? project.property("text").toString() : "2"
+  def align = project.hasProperty("align") ? project.property("align").toString() : "Screen"
+  def out = project.hasProperty("out") ? project.property("out").toString() : "/tmp/counter"
+  args = [ font, text, align, out ]
+}
+
+// Phase 5 (harness #1, deliverable #1): render a unit / big-shot CHARACTER model with its skin and
+// a posed animation frame applied, framed and lit like the board (Z-up). This is the mode that
+// unblocks the Phase-6 sprite defects (shotgun-dude unit, mounted/horse big-shot). Same isolated
+// jME3 + LWJGL3 + app classpath as renderToPng.
+//   ./gradlew :tools:j3o-converter:renderModelToPng \
+//       -PmodelType=units/frontier_town/shotgunner -Panim=standing -Ptime=0 -Pout=/tmp/shotgunner.png
+// Pass -Panim=list to print the model's animation names (renders the bind pose); a negative -Ptime
+// poses the clip midpoint.
+tasks.register("renderModelToPng", JavaExec) {
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderModelToPng"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def modelType = project.hasProperty("modelType") ?
+      project.property("modelType").toString() : "units/frontier_town/shotgunner"
+  def out = project.hasProperty("out") ? project.property("out").toString() :
+      "/tmp/${modelType.replaceAll('/', '_')}.png"
+  def cmd = [ rsrc, modelType, out ]
+  if (project.hasProperty("anim")) {
+    cmd += project.property("anim").toString()
+    if (project.hasProperty("time")) {
+      cmd += project.property("time").toString()
+    }
+  }
+  args = cmd
+}
+
+// BUG-11 verification (floating effect-icon vs unit head, azimuth-dependent drift). Renders a REAL
+// baked unit model with a floating icon billboarded above it the way IconViz/DamageIconViz place it,
+// from 8 azimuths around the Z-up board, so the icon-vs-head offset and its azimuth swing can be
+// measured by bin/qa and diffed against the fork — WITHOUT a server/client boot. Render both anchor
+// modes and compare: -Panchor=origin (the live anchor: sprite origin + getHeight()*TILE_SIZE, the
+// bug as observed) vs -Panchor=top (BUG-11 option (a): the model bbox top-centre, azimuth-stable).
+//   ./gradlew :tools:j3o-converter:renderEffectToPng \
+//       -PmodelType=units/frontier_town/shotgunner -Picon=textures/effects/killed.png \
+//       -Panchor=origin -Panim=standing -Ptime=0 -Pout=/tmp/bug11-origin
+// Then re-run with -Panchor=top -Pout=/tmp/bug11-top and diff matched azimuths with bin/qa.
+tasks.register("renderEffectToPng", JavaExec) {
+  group = "verification"
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderEffectToPng"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def modelType = project.hasProperty("modelType") ?
+      project.property("modelType").toString() : "units/frontier_town/shotgunner"
+  def icon = project.hasProperty("icon") ?
+      project.property("icon").toString() : "textures/effects/killed.png"
+  def out = project.hasProperty("out") ? project.property("out").toString() :
+      "/tmp/effect_${modelType.replaceAll('/', '_')}"
+  def anchor = project.hasProperty("anchor") ? project.property("anchor").toString() : "origin"
+  def cmd = [ rsrc, modelType, icon, out, anchor ]
+  if (project.hasProperty("anim")) {
+    cmd += project.property("anim").toString()
+    if (project.hasProperty("time")) {
+      cmd += project.property("time").toString()
+    }
+  }
+  args = cmd
+}
+
+// Phase 5 (harness #1, deliverable #2): pose N models on a ground grid and render them together, so
+// a small composed scene (a couple of units + a building) can be snapshotted, not just one isolated
+// model. Each -Pspecs entry is modelType[@anim[:time]], comma-separated.
+//   ./gradlew :tools:j3o-converter:renderSceneToPng -Pout=/tmp/scene.png \
+//       -Pspecs=units/frontier_town/shotgunner@standing,units/frontier_town/cavalry@standing,props/frontier_town/buildings/saloon
+tasks.register("renderSceneToPng", JavaExec) {
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.RenderSceneToPng"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def out = project.hasProperty("out") ? project.property("out").toString() : "/tmp/scene.png"
+  def specs = project.hasProperty("specs") ? project.property("specs").toString() :
+      "units/frontier_town/shotgunner,units/frontier_town/cavalry,props/frontier_town/buildings/saloon"
+  args = [ rsrc, out, specs ]
+}
+
+// Phase 5 (harness #1, deliverable #3): the regression gate. Diff a rendered PNG against a baseline
+// PNG (e.g. baseline/fork-before/...), write a heat-map diff image, and exit non-zero when the mean
+// per-channel difference exceeds -Ptolerance (default 0.015). No GL context needed.
+//   ./gradlew :tools:j3o-converter:snapshotDiff \
+//       -Prendered=/tmp/shotgunner.png -Pbaseline=baseline/fork-before/shotgunner.png \
+//       -Pdiff=/tmp/shotgunner-diff.png -Ptolerance=0.02
+tasks.register("snapshotDiff", JavaExec) {
+  group = "verification"
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.SnapshotDiff"
+  def rendered = project.hasProperty("rendered") ? project.property("rendered").toString() : null
+  def baseline = project.hasProperty("baseline") ? project.property("baseline").toString() : null
+  def cmd = []
+  if (rendered != null && baseline != null) {
+    cmd += [ rendered, baseline ]
+    if (project.hasProperty("diff")) {
+      cmd += project.property("diff").toString()
+    }
+    if (project.hasProperty("tolerance")) {
+      if (!project.hasProperty("diff")) cmd += "/tmp/snapshot-diff.png"
+      cmd += project.property("tolerance").toString()
+    }
+  }
+  args = cmd
+}
+
+// Phase 7d: the per-town visual-regression GATE. VerifyVisuals reads the golden manifest
+// (src/test/resources/visual/golden-manifest.txt), re-renders each declared model/scene/particle
+// through the existing offscreen harness mains (RenderModelToPng/RenderSceneToPng/
+// RenderParticleToPng, each in a forked JVM on this isolated classpath), and diffs the result
+// against the committed golden PNG in src/test/resources/visual/golden/. It exits non-zero on any
+// regression (over the per-entry tolerance) or missing golden, so it slots straight into CI.
+//   ./gradlew :tools:j3o-converter:verifyVisuals
+// Goldens are deterministic offscreen renders, so this needs no live server/editor; it does need
+// the baked staging tree (./gradlew :assets:processResources populates assets/build/staging/rsrc).
+def visualGoldenDir = file("src/test/resources/visual/golden")
+def visualManifest = file("src/test/resources/visual/golden-manifest.txt")
+def visualForkCp = { (sourceSets.main.output + configurations.renderToPngRuntime).asPath }
+tasks.register("verifyVisuals", JavaExec) {
+  group = "verification"
+  description = "Per-town visual-regression gate: re-render goldens and diff (fails on regression)."
+  // the goldens render from the baked staging tree, so make the gate self-contained: a fresh
+  // checkout / CI run would otherwise RENDER-FAIL every entry on a missing assets/build/staging/rsrc
+  dependsOn ":assets:processResources"
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.VerifyVisuals"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def tmp = project.hasProperty("visualTmp") ? project.property("visualTmp").toString() :
+      "${project.layout.buildDirectory.get().asFile}/visual-tmp"
+  doFirst { systemProperty "visual.forkClasspath", visualForkCp() }
+  args = [ "verify", rsrc, visualGoldenDir.absolutePath, visualManifest.absolutePath, tmp ]
+}
+
+// Phase 7d: (re)capture the golden PNGs declared in the manifest. Run this to seed a new golden or
+// to refresh goldens after an INTENDED render change, then commit src/test/resources/visual/golden/.
+//   ./gradlew :tools:j3o-converter:captureGoldens
+tasks.register("captureGoldens", JavaExec) {
+  group = "verification"
+  description = "(Re)render every golden in the manifest into src/test/resources/visual/golden/."
+  dependsOn ":assets:processResources"
+  classpath = sourceSets.main.output + configurations.renderToPngRuntime
+  mainClass = "com.threerings.bang.tools.j3o.VerifyVisuals"
+  def rsrc = rootProject.file("assets/build/staging/rsrc").absolutePath
+  def tmp = "${project.layout.buildDirectory.get().asFile}/visual-tmp"
+  doFirst { systemProperty "visual.forkClasspath", visualForkCp() }
+  args = [ "capture", rsrc, visualGoldenDir.absolutePath, visualManifest.absolutePath, tmp ]
+}
+

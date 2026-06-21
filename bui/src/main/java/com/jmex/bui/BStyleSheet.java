@@ -22,7 +22,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.ColorRGBA;
 
 import com.jmex.bui.background.BBackground;
 import com.jmex.bui.background.BlankBackground;

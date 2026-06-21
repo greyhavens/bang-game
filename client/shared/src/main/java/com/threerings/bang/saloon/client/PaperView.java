@@ -7,9 +7,6 @@ import java.net.URL;
 
 import java.util.HashMap;
 
-import com.badlogic.gdx.Input.Keys;
-
-import com.jme.input.KeyInput;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BToggleButton;
@@ -130,9 +127,12 @@ public class PaperView extends BContainer
             CachedDocument news = _news.get(_ctx.getUserObject().townId);
             if (news == null) {
                 refreshNews(false);
-            } else if (KeyInput.get().isKeyDown(Keys.CONTROL_LEFT)) {
-                refreshNews(true);
             } else {
+                // jME3 cutover (Phase 2): the fork polled the live keyboard
+                // (KeyInput.get().isKeyDown(CONTROL_LEFT)) to force a news re-fetch when ctrl was
+                // held. jME3 routes keyboard through the InputManager (no synchronous poll), so the
+                // dev-only force-refresh shortcut is dropped here pending the Phase-3 input path;
+                // we always serve the cached document.
                 setContents(news.getDocument());
             }
             break;

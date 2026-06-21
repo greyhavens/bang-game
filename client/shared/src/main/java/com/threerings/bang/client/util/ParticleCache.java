@@ -3,46 +3,45 @@
 
 package com.threerings.bang.client.util;
 
-import java.io.File;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
-import com.jme.bounding.BoundingVolume;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.FogState;
-import com.jme.scene.state.RenderState;
-import com.jme.util.TextureKey;
-import com.jme.util.export.binary.BinaryImporter;
-import com.jmex.effects.particles.ParticleInfluence;
-import com.jmex.effects.particles.ParticleFactory;
-import com.jmex.effects.particles.ParticleGeometry;
+import com.jme3.asset.ModelKey;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 import com.samskivert.util.ResultListener;
 
-import com.threerings.jme.util.SpatialVisitor;
 import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 
 /**
  * Maintains a cache of particle system effects.
+ *
+ * <h3>jME3 cutover (Phase 2, cluster 6 — particle load path)</h3>
+ *
+ * The fork loaded each effect's {@code particles.jme} (a fork {@code BinaryExporter}
+ * {@code ParticleGeometry} graph) through the fork {@code BinaryImporter}, then deep-copied every
+ * field of the prototype {@code ParticleGeometry} to build an instance. jME3 cannot read the
+ * fork-format {@code .jme} binaries (migration map §5.2: the 60 effect definitions are an
+ * <b>offline re-authoring</b> to jME3 {@code ParticleEmitter} params, scheduled for Phase 4).
+ *
+ * <p>So the load path is retargeted at the jME3-native converted asset
+ * ({@code effects/<key>/particles.j3o}, produced by the Phase-4 converter) loaded through the
+ * {@code AssetManager}, and instancing becomes a structural {@code clone()} rather than a
+ * field-by-field copy. The {@code particles.properties} sidecar (scale, bounds) is still honoured.
+ * Until the Phase-4 converter has produced the {@code .j3o} corpus, {@link #loadPrototype} returns
+ * an empty placeholder node and logs a warning rather than failing the build/run; the
+ * effect-spawn call sites degrade to "no visible effect", which is the agreed Phase-2 behaviour
+ * (visual fidelity is Phase 4).
  */
 public class ParticleCache extends PrototypeCache<String, Spatial>
 {
@@ -81,51 +80,34 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
     protected Spatial loadPrototype (final String key)
         throws Exception
     {
-        final File parent = _ctx.getResourceManager().getResourceFile(
-            "effects/" + key);
-        TextureKey.setLocationOverride(new TextureKey.LocationOverride() {
-            public URL getLocation (String file)
-                throws MalformedURLException {
-                return new URL(parent.toURI().toURL(), file);
-            }
-        });
-        Spatial particles = (Spatial)BinaryImporter.getInstance().load(
-            _ctx.getResourceManager().getResource(
-                "effects/" + key + "/particles.jme"));
-        if (particles instanceof ParticleGeometry) {
-            // wrap geometry in container to preserve relative transforms
+        // jME3: load the converted, jME3-native particle asset rather than the fork .jme binary.
+        Spatial particles;
+        String assetPath = "effects/" + key + "/particles.j3o";
+        try {
+            particles = _ctx.getAssetManager().loadModel(new ModelKey(assetPath));
+        } catch (Exception e) {
+            // Phase-4 gate: the converted .j3o corpus is not yet produced; degrade gracefully.
+            log.warning("Particle effect not yet converted to jME3 format; " +
+                "showing nothing (Phase 4 will re-author the effect)", "effect", key);
+            return new Node("effect:" + key);
+        }
+        if (!(particles instanceof Node)) {
+            // wrap in container to preserve relative transforms
             Node container = new Node("effect");
             container.attachChild(particles);
             particles = container;
         }
-        TextureKey.setLocationOverride(null);
+
         Properties props = new Properties();
         props.load(_ctx.getResourceManager().getResource(
             "effects/" + key + "/particles.properties"));
         particles.setLocalScale(Float.parseFloat(
             props.getProperty("scale", "0.025")));
-        particles.getLocalRotation().set(Z_UP_ROTATION);
+        particles.setLocalRotation(Z_UP_ROTATION.clone());
 
-        String bounds = props.getProperty("bounds", "box");
-        BoundingVolume bproto = null;
-        if ("box".equals(bounds)) {
-            bproto = new BoundingBox();
-        } else if ("sphere".equals(bounds)) {
-            bproto = new BoundingSphere();
-        } else if (!"none".equals(bounds)) {
-            log.warning("Unknown bounding type for effect", "effect", key, "bounds", bounds);
-        }
-        if (bproto != null) {
-            final BoundingVolume fproto = bproto;
-            new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
-                protected void visit (ParticleGeometry geom) {
-                    if (!geom.isTransformParticles()) {
-                        geom.getBatch(0).setModelBound(fproto.clone(null));
-                    }
-                }
-            }.traverse(particles);
-        }
-
+        // jME3 computes geometry bounds automatically; the fork's explicit box/sphere model-bound
+        // prototype is no longer needed. The "bounds" property is preserved for the Phase-4
+        // converter (which can bake the desired bound type onto each emitter's mesh if needed).
         return particles;
     }
 
@@ -138,121 +120,13 @@ public class ParticleCache extends PrototypeCache<String, Spatial>
     protected Spatial createInstance (
         String key, Spatial prototype, Colorization[] zations)
     {
-        Spatial instance;
-        if (prototype instanceof Node) {
-            Node pnode = (Node)prototype,
-                inode = new Node(prototype.getName());
-            for (int ii = 0, nn = pnode.getQuantity(); ii < nn; ii++) {
-                inode.attachChild(createInstance(
-                    (ParticleGeometry)pnode.getChild(ii)));
-            }
-            inode.getLocalTranslation().set(pnode.getLocalTranslation());
-            inode.getLocalRotation().set(pnode.getLocalRotation());
-            inode.getLocalScale().set(pnode.getLocalScale());
-            instance = inode;
-        } else {
-            instance = createInstance((ParticleGeometry)prototype);
-        }
-        instance.setRenderState(RenderUtil.overlayZBuf);
-        instance.setIsCollidable(false);
-        return instance;
-    }
-
-    protected ParticleGeometry createInstance (ParticleGeometry prototype)
-    {
-        // build an instance of the same type
-        ParticleGeometry instance;
-        int ptype = prototype.getParticleType();
-        if (ptype == ParticleGeometry.PT_LINE) {
-            instance = ParticleFactory.buildLineParticles(prototype.getName(),
-                prototype.getNumParticles());
-        } else if (ptype == ParticleGeometry.PT_POINT) {
-            instance = ParticleFactory.buildPointParticles(prototype.getName(),
-                prototype.getNumParticles());
-        } else {
-            instance = ParticleFactory.buildParticles(prototype.getName(),
-                prototype.getNumParticles(), ptype);
-        }
-
-        // copy appearance parameters
-        instance.setVelocityAligned(prototype.isVelocityAligned());
-        instance.setStartColor(prototype.getStartColor());
-        instance.setEndColor(prototype.getEndColor());
-        instance.setStartSize(prototype.getStartSize());
-        instance.setEndSize(prototype.getEndSize());
-        instance.setAlphaFalloff(prototype.getAlphaFalloff());
-
-        // copy origin parameters
-        instance.getLocalTranslation().set(prototype.getLocalTranslation());
-        instance.getLocalRotation().set(prototype.getLocalRotation());
-        instance.getLocalScale().set(prototype.getLocalScale());
-        instance.setOriginOffset(prototype.getOriginOffset());
-        instance.setGeometry(prototype.getLine());
-        instance.setGeometry(prototype.getRectangle());
-        instance.setGeometry(prototype.getRing());
-        instance.setGeometry(prototype.getFrustum());
-        instance.setEmitType(prototype.getEmitType());
-
-        // copy emission parameters
-        instance.setRotateWithScene(true);
-        instance.setTransformParticles(prototype.isTransformParticles());
-        instance.setEmissionDirection(prototype.getEmissionDirection());
-        instance.setMinimumAngle(prototype.getMinimumAngle());
-        instance.setMaximumAngle(prototype.getMaximumAngle());
-        instance.setInitialVelocity(prototype.getInitialVelocity());
-        instance.setParticleSpinSpeed(prototype.getParticleSpinSpeed());
-
-        // copy flow parameters
-        instance.setControlFlow(prototype.getParticleController().isControlFlow());
-        instance.setReleaseRate(prototype.getReleaseRate());
-        instance.setReleaseVariance(prototype.getReleaseVariance());
-        instance.setRepeatType(prototype.getParticleController().getRepeatType());
-
-        // copy world parameters
-        instance.setSpeed(prototype.getParticleController().getSpeed());
-        instance.getParticleController().setPrecision(
-            prototype.getParticleController().getPrecision());
-        instance.setParticleMass(prototype.getParticle(0).getMass());
-        instance.setMinimumLifeTime(prototype.getMinimumLifeTime());
-        instance.setMaximumLifeTime(prototype.getMaximumLifeTime());
-
-        // copy influence parameters
-        List<ParticleInfluence> infs = prototype.getInfluences();
-        if (infs != null) {
-            for (ParticleInfluence inf : infs) {
-                instance.addInfluence(inf);
-            }
-        }
-
-        // copy render states
-        for (int ii = 0; ii < RenderState.RS_MAX_STATE; ii++) {
-            RenderState rs = prototype.getRenderState(ii);
-            if (rs != null) {
-                instance.setRenderState(rs);
-            }
-        }
-
-        // if the particle system is emissive, disable fog
-        AlphaState astate = (AlphaState)prototype.getRenderState(
-            RenderState.RS_ALPHA);
-        if (astate != null && astate.getDstFunction() == AlphaState.DB_ONE) {
-            FogState fstate = _ctx.getRenderer().createFogState();
-            fstate.setEnabled(false);
-            instance.setRenderState(fstate);
-        }
-
-        // recreate the particles with new parameters and do any warmup
-        // required
-        instance.updateGeometricState(0f, false);
-        instance.forceRespawn();
-        instance.warmUp(instance.getParticleController().getIterations());
-
-        // clone model bounds, if present
-        BoundingVolume bounds = prototype.getBatch(0).getModelBound();
-        if (bounds != null) {
-            instance.getBatch(0).setModelBound(bounds.clone(null));
-        }
-
+        // jME3: a structural clone reproduces the emitter graph and its parameters (the fork copied
+        // every ParticleGeometry field by hand; ParticleEmitter.clone() does this for us).
+        Spatial instance = prototype.clone();
+        // Emitters carry their own materials from the converted asset; the overlay depth preset is
+        // baked into the effect's MatDef during conversion (Phase 4). Here we only ensure the
+        // effect renders in the transparent bucket (the fork applied RenderUtil.overlayZBuf).
+        instance.setQueueBucket(com.jme3.renderer.queue.RenderQueue.Bucket.Transparent);
         return instance;
     }
 

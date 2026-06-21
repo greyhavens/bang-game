@@ -6,10 +6,10 @@ package com.threerings.bang.util;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import com.jme.math.FastMath;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
-import com.jme.util.geom.BufferUtils;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.util.BufferUtils;
 
 /**
  * Contains utility methods related to generating animated surface waves.

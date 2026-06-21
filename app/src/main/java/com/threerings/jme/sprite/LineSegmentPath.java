@@ -21,8 +21,8 @@
 
 package com.threerings.jme.sprite;
 
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
 /**
  * Moves a sprite along a series of straight lines.
@@ -73,7 +73,7 @@ public class LineSegmentPath extends Path
         }
 
         // move the sprite to the appropriate position between points
-        _temp.interpolate(_points[_current], _points[_current+1],
+        _temp.interpolateLocal(_points[_current], _points[_current+1],
                           _accum / _durations[_current]);
         _sprite.setLocalTranslation(_temp);
     }

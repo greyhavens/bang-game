@@ -9,10 +9,9 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
-import com.badlogic.gdx.Input.Keys;
-
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
+import com.jme3.input.KeyInput;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
 
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.MouseEvent;
@@ -213,22 +212,22 @@ public class PiecePlacer extends EditorTool
         int code = e.getKeyCode(), lr = -1, ud = 0;
         byte ws = 0, ad = 0;
         switch (code) {
-             case Keys.LEFT: lr = -1; break;
-             case Keys.RIGHT: lr = +1; break;
-             case Keys.UP: ud = +1; break;
-             case Keys.DOWN: ud = -1; break;
-             case Keys.W: ws = +1; break;
-             case Keys.A: ad = -1; break;
-             case Keys.S: ws = -1; break;
-             case Keys.D: ad = +1; break;
-             case Keys.Z: _scaleMode = _scaleMode | SCALE_ALL; break;
-             case Keys.X: _scaleMode = _scaleMode | SCALE_X; break;
-             case Keys.C: _scaleMode = _scaleMode | SCALE_Y; break;
-             case Keys.V: _scaleMode = _scaleMode | SCALE_Z; break;
-             case Keys.NUM_1: _placeRot = _placeRot | ROT_NORTH; break;
-             case Keys.NUM_2: _placeRot = _placeRot | ROT_EAST; break;
-             case Keys.NUM_3: _placeRot = _placeRot | ROT_SOUTH; break;
-             case Keys.NUM_4: _placeRot = _placeRot | ROT_WEST; break;
+             case KeyInput.KEY_LEFT: lr = -1; break;
+             case KeyInput.KEY_RIGHT: lr = +1; break;
+             case KeyInput.KEY_UP: ud = +1; break;
+             case KeyInput.KEY_DOWN: ud = -1; break;
+             case KeyInput.KEY_W: ws = +1; break;
+             case KeyInput.KEY_A: ad = -1; break;
+             case KeyInput.KEY_S: ws = -1; break;
+             case KeyInput.KEY_D: ad = +1; break;
+             case KeyInput.KEY_Z: _scaleMode = _scaleMode | SCALE_ALL; break;
+             case KeyInput.KEY_X: _scaleMode = _scaleMode | SCALE_X; break;
+             case KeyInput.KEY_C: _scaleMode = _scaleMode | SCALE_Y; break;
+             case KeyInput.KEY_V: _scaleMode = _scaleMode | SCALE_Z; break;
+             case KeyInput.KEY_1: _placeRot = _placeRot | ROT_NORTH; break;
+             case KeyInput.KEY_2: _placeRot = _placeRot | ROT_EAST; break;
+             case KeyInput.KEY_3: _placeRot = _placeRot | ROT_SOUTH; break;
+             case KeyInput.KEY_4: _placeRot = _placeRot | ROT_WEST; break;
              default: return;
         }
         Piece piece = _panel.view.getHoverPiece();
@@ -273,14 +272,14 @@ public class PiecePlacer extends EditorTool
     public void keyReleased (KeyEvent e)
     {
         switch (e.getKeyCode()) {
-             case Keys.Z: _scaleMode = _scaleMode & ~SCALE_ALL; break;
-             case Keys.X: _scaleMode = _scaleMode & ~SCALE_X; break;
-             case Keys.C: _scaleMode = _scaleMode & ~SCALE_Y; break;
-             case Keys.V: _scaleMode = _scaleMode & ~SCALE_Z; break;
-             case Keys.NUM_1: _placeRot = _placeRot & ~ROT_NORTH; break;
-             case Keys.NUM_2: _placeRot = _placeRot & ~ROT_EAST; break;
-             case Keys.NUM_3: _placeRot = _placeRot & ~ROT_SOUTH; break;
-             case Keys.NUM_4: _placeRot = _placeRot & ~ROT_WEST; break;
+             case KeyInput.KEY_Z: _scaleMode = _scaleMode & ~SCALE_ALL; break;
+             case KeyInput.KEY_X: _scaleMode = _scaleMode & ~SCALE_X; break;
+             case KeyInput.KEY_C: _scaleMode = _scaleMode & ~SCALE_Y; break;
+             case KeyInput.KEY_V: _scaleMode = _scaleMode & ~SCALE_Z; break;
+             case KeyInput.KEY_1: _placeRot = _placeRot & ~ROT_NORTH; break;
+             case KeyInput.KEY_2: _placeRot = _placeRot & ~ROT_EAST; break;
+             case KeyInput.KEY_3: _placeRot = _placeRot & ~ROT_SOUTH; break;
+             case KeyInput.KEY_4: _placeRot = _placeRot & ~ROT_WEST; break;
              default:
                 _ctrl.maybeCommitPieceEdit();
         }

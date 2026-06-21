@@ -21,7 +21,7 @@
 
 package com.threerings.jme.sprite;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 /**
  * Moves a sprite along an interpolated spline based on a series of control

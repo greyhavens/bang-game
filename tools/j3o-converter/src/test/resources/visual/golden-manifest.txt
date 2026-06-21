@@ -1,0 +1,69 @@
+# Phase 7d per-town visual-regression golden manifest.
+#
+# Each non-comment line declares one deterministic offscreen render that the
+# `verifyVisuals` Gradle task re-renders and diffs (SnapshotDiff) against a
+# committed golden PNG in golden/<name>.png, failing the build on regression.
+#
+# Format (pipe-separated, leading/trailing space trimmed per field):
+#   <name> | <kind> | <tolerance> | <args...>
+#
+# kinds + their args (these mirror the existing render harness mains):
+#   model    | <modelType> <anim> <time>      -> RenderModelToPng (posed character)
+#   prop     | <modelType>                    -> RenderModelToPng (static, bind pose)
+#   scene    | <spec[,spec...]>               -> RenderSceneToPng (modelType[@anim[:time]])
+#   particle | <effectKey> <frames>           -> RenderParticleToPng
+#
+# tolerance is the SnapshotDiff mean per-channel threshold (0..1). Model/prop/
+# scene renders are bit-exact in this harness, so they use a tight tolerance
+# (a hair of slack absorbs driver float noise). jME3 ParticleEmitters draw from a
+# process-wide RNG; RenderParticleToPng SEEDS it (FastMath.rand) to a fixed value,
+# so particle renders are reproducible run-to-run too. With the goldens re-captured
+# against the seeded render (Phase 8), the particle entries are now bit-exact
+# (verifyVisuals reports meanDiff=0.000000) and use the same tight 0.005 tolerance
+# as the model/prop/scene renders. (The old 0.030 particle tolerances predated the
+# RNG seeding and the re-capture; they have been tightened.)
+#
+# To add a golden: add a line here, then `./gradlew :tools:j3o-converter:captureGoldens`
+# (writes golden/<name>.png). To refresh after an INTENDED render change: rerun
+# captureGoldens and commit the updated PNGs. See docs/jme3-cutover-plan.md (7d).
+
+# ---- frontier_town -------------------------------------------------------
+ft_unit_shotgunner   | model    | 0.005 | units/frontier_town/shotgunner standing 0
+ft_unit_cavalry      | model    | 0.005 | units/frontier_town/cavalry standing 0
+ft_unit_gunslinger   | model    | 0.005 | units/frontier_town/gunslinger standing 0
+ft_bldg_saloon       | prop     | 0.005 | props/frontier_town/buildings/saloon
+ft_bldg_bank         | prop     | 0.005 | props/frontier_town/buildings/bank
+ft_prop_tree_oak     | prop     | 0.005 | props/frontier_town/natural/tree_oak
+ft_prop_cactus1      | prop     | 0.005 | props/frontier_town/natural/cactus1
+ft_scene_town        | scene    | 0.005 | units/frontier_town/shotgunner@standing,units/frontier_town/cavalry@standing,props/frontier_town/buildings/saloon
+# POSED skinning regression (Phase 8): non-bind frames must stay coherent, not just standing@0.
+# These capture the skin DEFORMED at t=0.3s of an attack clip — the exact contortion class that
+# the bind-only goldens above could never catch (the skin renders clean at frame 0 / bind even
+# when off-bind frames shatter). shotgunner = a rigid+joint clip; tactician = the umbrella big-shot
+# whose 'shooting' clip is joint-only. A regression in the bind/inverse-bind reference-space bake
+# (see ModelConverter.buildArmature / the model-root joint identity rule) reappears here.
+ft_unit_shotgunner_shooting | model | 0.005 | units/frontier_town/shotgunner shooting 0.3
+ft_unit_tactician_shooting  | model | 0.005 | units/frontier_town/tactician shooting 0.3
+# one-shot burst: capture mid-burst (frame 8) so the golden shows the fireball rather than an
+# empty frame. The fix bakes RT_CLAMP one-shot effects at 0 particles/sec (the spawn path fires the
+# single burst via emitAllParticles), so the explosion has fully faded by frame 40.
+ft_fx_explosion      | particle | 0.005 | frontier_town/explosion 8
+ft_fx_dust           | particle | 0.005 | frontier_town/dust 40
+# bonus-pickup star burst (BUG-12 / audit M1): its sprite (lasso/tiny_star.png) is a palette PNG
+# whose transparency lives only in a tRNS chunk; under the additive blend the converter now bakes a
+# normalized RGBA8 image into the .j3o (keyless), so the transparent background adds nothing instead
+# of painting an opaque block. This effect was never golden-tested, which is how the regression
+# slipped through; capture mid-burst (frame 8, one-shot RT_CLAMP).
+ft_fx_get_bonus      | particle | 0.005 | frontier_town/get_bonus 8
+
+# ---- indian_post ---------------------------------------------------------
+ip_unit_dogsoldier   | model    | 0.005 | units/indian_post/dogsoldier standing 0
+ip_unit_revolutionary| model    | 0.005 | units/indian_post/revolutionary standing 0
+ip_unit_stormcaller  | model    | 0.005 | units/indian_post/stormcaller standing 0
+ip_bldg_saloon       | prop     | 0.005 | props/indian_post/buildings/saloon
+ip_bldg_sheriff      | prop     | 0.005 | props/indian_post/buildings/sheriff
+ip_prop_pine         | prop     | 0.005 | props/indian_post/natural/tree_pine_green_tall
+ip_prop_totem        | prop     | 0.005 | props/indian_post/natural/tree_totem_brown
+ip_scene_town        | scene    | 0.005 | units/indian_post/dogsoldier@standing,units/indian_post/revolutionary@standing,props/indian_post/buildings/sheriff
+ip_fx_fireflies      | particle | 0.005 | indian_post/fireflies 40
+ip_fx_rain           | particle | 0.005 | indian_post/rain 40

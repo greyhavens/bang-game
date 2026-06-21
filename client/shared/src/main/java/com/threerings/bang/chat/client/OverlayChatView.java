@@ -10,8 +10,8 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 
 import com.samskivert.util.Interval;
 import com.threerings.util.MessageBundle;
@@ -55,7 +55,7 @@ public class OverlayChatView extends BWindow
             add(_history[ii] = new MessageLabel());
         }
         add(_input = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH) {
-            public void render (Renderer renderer) {
+            public void render (RenderManager renderer) {
                 if (hasFocus()) {
                     super.render(renderer);
                 }
@@ -157,7 +157,7 @@ public class OverlayChatView extends BWindow
             return true;
 
         } else if (msg instanceof SystemMessage) {
-            appendMessage(msg.message, ColorRGBA.white);
+            appendMessage(msg.message, ColorRGBA.White);
             return true;
 
         } else {
@@ -175,12 +175,12 @@ public class OverlayChatView extends BWindow
 
     protected void displayError (String message)
     {
-        appendMessage(message, ColorRGBA.red);
+        appendMessage(message, ColorRGBA.Red);
     }
 
     protected void appendTellFeedback (Name speaker, String message)
     {
-        ColorRGBA color = ColorRGBA.white;
+        ColorRGBA color = ColorRGBA.White;
         int pidx;
         if ((pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().handle)) != -1) {
             color = JPIECE_COLORS[colorLookup[pidx + 1]];
@@ -191,14 +191,14 @@ public class OverlayChatView extends BWindow
 
     protected void appendBroadcast (Name speaker, String message)
     {
-        ColorRGBA color = ColorRGBA.white;
+        ColorRGBA color = ColorRGBA.White;
         appendMessage(
             _msgs.xlate(MessageBundle.tcompose("m.broadcast_format", speaker, message)), color);
     }
 
     protected void appendMessage (Name speaker, String message, boolean tell)
     {
-        ColorRGBA color = ColorRGBA.white;
+        ColorRGBA color = ColorRGBA.White;
         int pidx;
         if ((pidx = _bangobj.getPlayerIndex(speaker)) != -1) {
             color = JPIECE_COLORS[colorLookup[pidx + 1]];
@@ -279,7 +279,7 @@ public class OverlayChatView extends BWindow
             return _color;
         }
 
-        protected ColorRGBA _color = ColorRGBA.white;
+        protected ColorRGBA _color = ColorRGBA.White;
     }
 
     protected BangContext _ctx;

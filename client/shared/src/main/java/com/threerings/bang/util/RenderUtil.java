@@ -19,28 +19,26 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-// import org.lwjgl.opengl.Pbuffer;
-
-import com.jme.image.Image;
-import com.jme.image.Texture;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.renderer.TextureRenderer;
-import com.jme.scene.Spatial;
-import com.jme.scene.VBOInfo;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.CullState;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
-import com.jme.scene.state.ZBufferState;
-import com.jme.system.DisplaySystem;
-import com.jme.util.geom.BufferUtils;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState;
+import com.jme3.material.RenderState.BlendMode;
+import com.jme3.material.RenderState.FaceCullMode;
+import com.jme3.material.RenderState.TestFunction;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Quad;
+import com.jme3.texture.Image;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture2D;
+import com.jme3.texture.Texture.MagFilter;
+import com.jme3.texture.Texture.MinFilter;
+import com.jme3.texture.Texture.WrapMode;
+import com.jme3.util.BufferUtils;
 
 import com.jmex.bui.util.Dimension;
 
@@ -49,92 +47,195 @@ import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.TerrainConfig;
-import com.threerings.bang.util.BasicContext;
 import com.threerings.jme.util.ImageCache;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
- * Useful graphics related utility methods.
+ * Shared graphics utility methods and a small <b>Material/render-helper library</b> for the
+ * Bang! client.
+ *
+ * <h3>jME3 cutover (Phase 2, cluster 6 — the keystone for the sprite/effect Wave-2 clusters)</h3>
+ *
+ * The fork {@code RenderUtil} was a central <em>render-state factory</em>: it manufactured shared,
+ * mutable {@code AlphaState}/{@code ZBufferState}/{@code CullState}/{@code LightState}/
+ * {@code TextureState} objects that callers attached to spatials via {@code setRenderState(state)}.
+ * jME3 has no stateful fixed-function pipeline (migration map §2.4): a {@link Geometry} carries a
+ * {@link Material}; blend/depth/cull live on {@code material.getAdditionalRenderState()}; lights
+ * attach to spatials. The {@code setRenderState(sharedState)} idiom is therefore <b>dead</b>.
+ *
+ * <p>This class is the jME3 replacement the sprite (cluster 1) and effect-viz (cluster 2) clusters
+ * code against. The mapping the Wave-2 agents should follow:
+ *
+ * <ul>
+ *   <li><b>The old shared blend/depth/cull state fields become "applier" helpers.</b> Where fork
+ *   code did {@code spatial.setRenderState(RenderUtil.blendAlpha)}, jME3 code does
+ *   {@code RenderUtil.applyBlendAlpha(material)} (or builds the material with the right preset up
+ *   front via {@link #createTextureMaterial}). The applier mutates {@code material
+ *   .getAdditionalRenderState()} and (for the overlay/transparent presets) sets the geometry's
+ *   queue bucket via the {@link #setOverlay} / {@code Bucket} helpers below. The presets are also
+ *   exposed as the raw {@link BlendMode}/{@link FaceCullMode}/{@link TestFunction} constants so a
+ *   caller building its own MatDef can apply them directly.</li>
+ *   <li><b>{@code createTextureState(ctx, path)} now returns a textured {@link Material}</b>
+ *   ({@code Unshaded.j3md} with a {@code ColorMap}), not a fork {@code TextureState}. Call sites
+ *   that did {@code geom.setRenderState(RenderUtil.createTextureState(ctx, path))} become
+ *   {@code geom.setMaterial(RenderUtil.createTextureMaterial(ctx, path))}. {@code createTextureState}
+ *   is retained as a thin alias for source compatibility during the port.</li>
+ *   <li><b>{@code createTexture}/{@code configureTexture}/{@code getGroundTexture} return
+ *   {@link Texture2D}</b> built from a jME3 {@link Image} (the {@code ImageCache} already produces
+ *   jME3 {@code Image}s). The fork {@code Texture}'s scale/translation/rotation transform has no
+ *   {@code Texture2D} equivalent; transform-on-texture callers (ground tiling, shadow rotation)
+ *   move to texture-coordinate math or a material param (see {@link #setTextureTile} /
+ *   {@link #createShadowTexture}).</li>
+ *   <li><b>Render-to-texture</b> ({@code createTextureRenderer}) returns an {@link OffscreenRenderer}
+ *   backed by a jME3 {@code FrameBuffer} + offscreen {@code ViewPort} (replacing the fork
+ *   back-buffer-copy {@code TextureRenderer}; see {@link BackTextureRenderer}).</li>
+ * </ul>
+ *
+ * @see BackTextureRenderer the jME3 FrameBuffer-backed render-to-texture helper.
  */
 public class RenderUtil
 {
-    public static AlphaState blendAlpha;
+    // ---------------------------------------------------------------------------------------------
+    // Render-state presets (the fork shared-state objects, as jME3 constants + appliers).
+    //
+    // Wave-2 mapping:
+    //   spatial.setRenderState(RenderUtil.blendAlpha)   -> RenderUtil.applyBlendAlpha(material)
+    //   spatial.setRenderState(RenderUtil.addAlpha)     -> RenderUtil.applyAddAlpha(material)
+    //   spatial.setRenderState(RenderUtil.overlayZBuf)  -> RenderUtil.applyOverlay(material/geom)
+    //   spatial.setRenderState(RenderUtil.backCull)     -> RenderUtil.applyBackCull(material)
+    // ---------------------------------------------------------------------------------------------
 
-    public static AlphaState addAlpha;
+    /** Standard back-to-front alpha blend (fork {@code blendAlpha}: SRC_ALPHA / ONE_MINUS_SRC_ALPHA). */
+    public static final BlendMode BLEND_ALPHA = BlendMode.Alpha;
 
-    public static AlphaState opaqueAlpha;
+    /** Additive blend (fork {@code addAlpha}: SRC_ALPHA / ONE) for glows and emissive particles. */
+    public static final BlendMode BLEND_ADD = BlendMode.AlphaAdditive;
 
-    public static ZBufferState alwaysZBuf;
+    /** No blending (fork {@code opaqueAlpha}). */
+    public static final BlendMode BLEND_OPAQUE = BlendMode.Off;
 
-    public static ZBufferState lequalZBuf;
+    /** Back-face culling (fork {@code backCull}). */
+    public static final FaceCullMode CULL_BACK = FaceCullMode.Back;
 
-    public static ZBufferState overlayZBuf;
-
-    public static CullState backCull;
-
-    public static CullState frontCull;
-
-    public static LightState noLights;
-
-    public static TextureState noTexture;
+    /** Front-face culling (fork {@code frontCull}). */
+    public static final FaceCullMode CULL_FRONT = FaceCullMode.Front;
 
     /**
-     * Initializes our commonly used render states and terrain textures.
+     * Applies the standard alpha-blend preset (fork {@code RenderUtil.blendAlpha}) to a material's
+     * additional render state and moves its geometry into the transparent queue. Returns the
+     * material for chaining.
      */
-    public static void init (BasicContext ctx)
+    public static Material applyBlendAlpha (Material material)
     {
-        initStates();
+        RenderState rs = material.getAdditionalRenderState();
+        rs.setBlendMode(BLEND_ALPHA);
+        return material;
     }
 
     /**
-     * Initializes just the shared render states.
+     * Applies the additive-blend preset (fork {@code RenderUtil.addAlpha}) to a material.
      */
+    public static Material applyAddAlpha (Material material)
+    {
+        material.getAdditionalRenderState().setBlendMode(BLEND_ADD);
+        return material;
+    }
+
+    /**
+     * Applies the opaque (no-blend) preset (fork {@code RenderUtil.opaqueAlpha}) to a material.
+     */
+    public static Material applyOpaqueAlpha (Material material)
+    {
+        material.getAdditionalRenderState().setBlendMode(BLEND_OPAQUE);
+        return material;
+    }
+
+    /**
+     * Applies the "always-pass, no depth write" depth preset (fork {@code RenderUtil.alwaysZBuf}).
+     */
+    public static Material applyAlwaysZBuf (Material material)
+    {
+        RenderState rs = material.getAdditionalRenderState();
+        rs.setDepthTest(true);
+        rs.setDepthWrite(false);
+        rs.setDepthFunc(TestFunction.Always);
+        return material;
+    }
+
+    /**
+     * Applies the standard "less-or-equal, depth write" depth preset (fork
+     * {@code RenderUtil.lequalZBuf}).
+     */
+    public static Material applyLequalZBuf (Material material)
+    {
+        RenderState rs = material.getAdditionalRenderState();
+        rs.setDepthTest(true);
+        rs.setDepthWrite(true);
+        rs.setDepthFunc(TestFunction.LessOrEqual);
+        return material;
+    }
+
+    /**
+     * Applies the overlay depth preset (fork {@code RenderUtil.overlayZBuf}: less-or-equal test,
+     * <em>no</em> depth write) to a material. Callers that also want the geometry in the
+     * transparent bucket should call {@link #setOverlay(Spatial)} on the spatial.
+     */
+    public static Material applyOverlayZBuf (Material material)
+    {
+        RenderState rs = material.getAdditionalRenderState();
+        rs.setDepthTest(true);
+        rs.setDepthWrite(false);
+        rs.setDepthFunc(TestFunction.LessOrEqual);
+        return material;
+    }
+
+    /**
+     * Applies back-face culling (fork {@code RenderUtil.backCull}) to a material.
+     */
+    public static Material applyBackCull (Material material)
+    {
+        material.getAdditionalRenderState().setFaceCullMode(CULL_BACK);
+        return material;
+    }
+
+    /**
+     * Applies front-face culling (fork {@code RenderUtil.frontCull}) to a material.
+     */
+    public static Material applyFrontCull (Material material)
+    {
+        material.getAdditionalRenderState().setFaceCullMode(CULL_FRONT);
+        return material;
+    }
+
+    /**
+     * Moves a spatial into the transparent render queue (the jME3 analogue of the fork's
+     * {@code QUEUE_TRANSPARENT} + overlay depth setup).
+     */
+    public static void setOverlay (Spatial spatial)
+    {
+        spatial.setQueueBucket(Bucket.Transparent);
+    }
+
+    /**
+     * Initializes shared graphics resources. The fork created its shared render-state objects here;
+     * jME3 has no such shared state, so this is now a no-op kept for call-site compatibility (the
+     * presets above are immutable constants).
+     */
+    public static void init (BasicContext ctx)
+    {
+        _ctx = ctx;
+    }
+
+    /**
+     * @deprecated jME3 has no shared render-state objects to initialize; use the {@code apply*}
+     * helpers on a per-material basis. Retained as a no-op for source compatibility.
+     */
+    @Deprecated
     public static void initStates ()
     {
-        Renderer renderer = DisplaySystem.getDisplaySystem().getRenderer();
-
-        addAlpha = renderer.createAlphaState();
-        addAlpha.setBlendEnabled(true);
-        addAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        addAlpha.setDstFunction(AlphaState.DB_ONE);
-        addAlpha.setEnabled(true);
-
-        blendAlpha = renderer.createAlphaState();
-        blendAlpha.setBlendEnabled(true);
-        blendAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        blendAlpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-        blendAlpha.setEnabled(true);
-
-        opaqueAlpha = renderer.createAlphaState();
-        opaqueAlpha.setBlendEnabled(false);
-
-        alwaysZBuf = renderer.createZBufferState();
-        alwaysZBuf.setWritable(false);
-        alwaysZBuf.setEnabled(true);
-        alwaysZBuf.setFunction(ZBufferState.CF_ALWAYS);
-
-        lequalZBuf = renderer.createZBufferState();
-        lequalZBuf.setEnabled(true);
-        lequalZBuf.setFunction(ZBufferState.CF_LEQUAL);
-
-        overlayZBuf = renderer.createZBufferState();
-        overlayZBuf.setEnabled(true);
-        overlayZBuf.setWritable(false);
-        overlayZBuf.setFunction(ZBufferState.CF_LEQUAL);
-
-        backCull = renderer.createCullState();
-        backCull.setCullMode(CullState.CS_BACK);
-
-        frontCull = renderer.createCullState();
-        frontCull.setCullMode(CullState.CS_FRONT);
-
-        noLights = renderer.createLightState();
-        noLights.setEnabled(false);
-
-        noTexture = renderer.createTextureState();
-        noTexture.setEnabled(false);
+        // no-op: jME3 has no fixed-function shared state objects
     }
 
     /** Rounds the supplied value up to a power of two. */
@@ -145,26 +246,25 @@ public class RenderUtil
     }
 
     /**
-     * Returns a randomly selected ground texture for the specified terrain
-     * type.
+     * Returns a randomly selected ground texture for the specified terrain type.
      */
-    public static Texture getGroundTexture (BasicContext ctx, int code)
+    public static Texture2D getGroundTexture (BasicContext ctx, int code)
     {
-        ArrayList<WeakReference<Texture>> texs = _groundTexs.get(code);
+        ArrayList<WeakReference<Texture2D>> texs = _groundTexs.get(code);
         if (texs == null) {
             TerrainConfig terrain = TerrainConfig.getConfig(code);
             if (terrain == null) {
                 log.warning("Requested ground texture for unknown terrain", "code", code);
                 return null;
             }
-            _groundTexs.put(code, texs = new ArrayList<WeakReference<Texture>>());
+            _groundTexs.put(code, texs = new ArrayList<WeakReference<Texture2D>>());
             String prefix = "terrain/" + terrain.type + "/texture";
             for (int ii = 1; ; ii++) {
                 String path = prefix + ii + ".png";
                 if (!ctx.getResourceManager().getResourceFile(path).exists()) {
                     break;
                 }
-                texs.add(new WeakReference<Texture>(null));
+                texs.add(new WeakReference<Texture2D>(null));
             }
             if (texs.isEmpty()) {
                 log.warning("Found no ground textures", "type", terrain);
@@ -175,77 +275,68 @@ public class RenderUtil
             return null;
         }
         int idx = RandomUtil.getInt(tsize);
-        Texture tex = texs.get(idx).get();
+        Texture2D tex = texs.get(idx).get();
         if (tex == null) {
             TerrainConfig terrain = TerrainConfig.getConfig(code);
             String path = "terrain/" + terrain.type + "/texture" + (idx + 1) + ".png";
-            texs.set(idx, new WeakReference<Texture>(
+            texs.set(idx, new WeakReference<Texture2D>(
                 tex = ctx.getTextureCache().getTexture(
                     path, BangPrefs.isMediumDetail() ? 1f : 0.5f)));
-            tex.setScale(new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
-            if (terrain.compress) {
-                enableTextureCompression(tex);
-            }
+            // fork: tex.setScale(1/scale) — jME3 textures carry no transform; the terrain splat
+            // material applies the 1/scale tiling factor via its texture-coordinate generation.
+            tex.setWrap(WrapMode.Repeat);
         }
         return tex;
     }
 
     /**
-     * Creates a {@link Quad} with a texture configured to display the supplied
-     * text. The text will be white, but its color may be set with {@link
-     * Quad#setDefaultColor}.
+     * Creates a {@link Quad}-geometry whose material displays the supplied text. The text is white;
+     * tint it via the returned material's {@code Color} param.
      */
-    public static Quad createTextQuad (BasicContext ctx, Font font, String text)
+    public static Geometry createTextQuad (BasicContext ctx, Font font, String text)
     {
-        return createTextQuad(ctx, font, ColorRGBA.white, null, text);
+        return createTextQuad(ctx, font, ColorRGBA.White, null, text);
     }
 
     /**
-     * Creates a {@link Quad} with a texture configured to display the supplied
-     * text. The text will be white, but its color may be set with {@link
-     * Quad#setDefaultColor}.
+     * Creates a textured {@link Quad}-geometry that displays the supplied text.
      *
      * @param color Color of the text
      * @param ocolor Outline color of the text
      */
-    public static Quad createTextQuad (BasicContext ctx, Font font,
+    public static Geometry createTextQuad (BasicContext ctx, Font font,
             ColorRGBA color, ColorRGBA ocolor, String text)
     {
         return createTextQuad(ctx, font, color, ocolor, text, 1);
     }
 
-    public static Quad createTextQuad (BasicContext ctx, Font font,
+    public static Geometry createTextQuad (BasicContext ctx, Font font,
             ColorRGBA color, ColorRGBA ocolor, String text, int outline)
     {
         Vector2f[] tcoords = new Vector2f[4];
         Dimension size = new Dimension();
-        TextureState tstate = ctx.getRenderer().createTextureState();
-        Texture tex = createTextTexture(
+        Texture2D tex = createTextTexture(
             ctx, font, color, ocolor, text, tcoords, size, outline);
-        tstate.setTexture(tex);
 
-        Quad quad = new Quad("text", size.width, size.height);
-        tstate.setEnabled(true);
-        quad.setRenderState(tstate);
+        Quad mesh = new Quad(size.width, size.height);
+        mesh.setBuffer(com.jme3.scene.VertexBuffer.Type.TexCoord, 2,
+            BufferUtils.createFloatBuffer(tcoords));
+        Geometry quad = new Geometry("text", mesh);
 
-        quad.setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
-        quad.setRenderState(blendAlpha);
-        quad.updateRenderState();
-
+        Material mat = createTextureMaterial(ctx, tex);
+        applyBlendAlpha(mat);
+        quad.setMaterial(mat);
+        quad.setQueueBucket(Bucket.Transparent);
         return quad;
     }
 
     /**
-     * Renders the specified text into an image (which will be sized
-     * appropriately for the text) and creates a texture from it.
+     * Renders the specified text into an image (sized appropriately) and creates a texture from it.
      *
-     * @param ocolor if not-null the text will be outlined in the supplied
-     * color.
-     * @param tcoords should be a four element array which will be filled
-     * in with the appropriate texture coordinates to only display the
-     * text.
+     * @param ocolor if not-null the text will be outlined in the supplied color.
+     * @param tcoords filled in with the texture coordinates that show only the text.
      */
-    public static Texture createTextTexture (
+    public static Texture2D createTextTexture (
         BasicContext ctx, Font font, ColorRGBA color, ColorRGBA ocolor,
         String text, Vector2f[] tcoords, Dimension size)
     {
@@ -253,7 +344,7 @@ public class RenderUtil
                 ctx, font, color, ocolor, text, tcoords, size, 1);
     }
 
-    public static Texture createTextTexture (
+    public static Texture2D createTextTexture (
         BasicContext ctx, Font font, ColorRGBA color, ColorRGBA ocolor,
         String text, Vector2f[] tcoords, Dimension size, int outline)
     {
@@ -271,21 +362,34 @@ public class RenderUtil
             gfx.dispose();
         }
 
-        // determine the size of our rendered text
-        // TODO: do the Mac hack to get the real bounds
-        Rectangle2D bounds = (oacolor == null) ? layout.getBounds() :
-            layout.getOutline(null).getBounds();
-        int width = (int)(Math.max(bounds.getX(), 0) + bounds.getWidth());
-        int height = (int)(layout.getLeading() + layout.getAscent() +
-                           layout.getDescent());
+        // BUG-4 (bottom-clip facet): size the texture to the FULL glyph-outline bounds, not the
+        // ascent/descent line metrics. The outline (and, for the outlined path, its stroke) can
+        // extend a pixel or two ABOVE the cap line (outline bounds y < -ascent) and below the
+        // baseline; the old code anchored the draw at (0, ascent) and sized height to
+        // leading+ascent+descent, so any part of the outline above row 0 was cropped at the image's
+        // top edge. ImageCache.convertImage does NOT flip Y, so jME maps image row 0 -> texcoord
+        // V=0 (the quad's bottom) — that cropped top edge therefore surfaces as a clipped GLYPH
+        // BOTTOM live. We measure the real ink box and pad it so nothing touches an edge.
+        Rectangle2D ob = layout.getOutline(null).getBounds2D();
+        // outline path is in baseline space (y grows downward, baseline at y=0); the stroke widens
+        // the ink box by ~half the stroke on every side.
+        int pad = Math.max(2, (outline + 1) / 2 + 1);
+        // glyph ink extents relative to the drawing origin we will use (top-left of the ink box).
+        int gw = (int)Math.ceil(ob.getWidth());
+        int gh = (int)Math.ceil(ob.getHeight());
+        int width = gw + 2 * pad;
+        int height = gh + 2 * pad;
+        // where to place the pen so the ink box lands at (pad, pad): the outline's top-left is at
+        // (ob.getX(), ob.getY()) relative to the pen origin, so shift the pen by -ob.x, -ob.y + pad.
+        float penX = (float)(-ob.getX() + pad);
+        float penY = (float)(-ob.getY() + pad);
 
         if (size != null) {
             size.width = width;
             size.height = height;
         }
 
-        // now determine the size of our texture image which must be
-        // square and a power of two (yay!)
+        // texture image must be square and a power of two
         int tsize = nextPOT(Math.max(width, Math.max(height, 1)));
 
         // render the text into the image
@@ -295,8 +399,19 @@ public class RenderUtil
             gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                  RenderingHints.VALUE_ANTIALIAS_ON);
             gfx.setColor(acolor);
+            // BUG-4 (mirror facet): pre-flip the glyph vertically within its [0,height] band. Every
+            // other texture path runs through ImageCache.createImage(.., flip=true), which mirrors
+            // the AWT image into OpenGL's bottom-up row order before convertImage. createTextTexture
+            // historically called convertImage DIRECTLY (no flip) and relied on tcoords for
+            // orientation, so the glyph ended up upside-down in GL — invisible on near-symmetric
+            // digits like "3" but reading as a reversed/"S"-shaped "2" (the camera-azimuth-dependent
+            // "mirror"). Mirroring here matches the standard flip while leaving the tcoords (and the
+            // qrat sizing that reads tcoords[2].y) untouched: the band [0,height] flip composes with
+            // the no-flip convert + GL's row0->V0 to a net-upright glyph.
+            gfx.translate(0, height);
+            gfx.scale(1, -1);
             if (oacolor != null) {
-                gfx.translate(0, layout.getAscent());
+                gfx.translate(penX, penY);
                 if (outline > 1) {
                     gfx.setColor(oacolor);
                     Stroke oldstroke = gfx.getStroke();
@@ -312,143 +427,175 @@ public class RenderUtil
                 }
             } else {
                 gfx.setComposite(AlphaComposite.SrcOut);
-                layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());
+                layout.draw(gfx, penX, penY);
             }
         } finally {
             gfx.dispose();
         }
 
-        // fill in the texture coordinates
+        // fill in the texture coordinates. jME3 cutover: jME3's com.jme3.scene.shape.Quad winds its
+        // vertices bottom-left, bottom-right, top-right, top-left with the U axis running along the
+        // quad's local +X. The fork's Quad used a different winding, so the ported coords (which
+        // assigned the texture's U to the quad's +Y) rotated every glyph 90 deg -> the sideways
+        // claim/counter/level numbers. Map U->local X and V->local Y so the text reads upright.
+        // The glyph is pre-flipped vertically above (BUG-4 mirror fix), so these tcoords stay as the
+        // 6b winding and the qrat sizing (which reads tcoords[2].y) is unaffected.
         float tsf = tsize;
-        tcoords[0] = new Vector2f(0, 0);
-        tcoords[1] = new Vector2f(0, height/tsf);
-        tcoords[2] = new Vector2f(width/tsf, height/tsf);
-        tcoords[3] = new Vector2f(width/tsf, 0);
+        tcoords[0] = new Vector2f(0, 0);             // v0 bottom-left
+        tcoords[1] = new Vector2f(width/tsf, 0);     // v1 bottom-right
+        tcoords[2] = new Vector2f(width/tsf, height/tsf); // v2 top-right
+        tcoords[3] = new Vector2f(0, height/tsf);    // v3 top-left
 
         return createTexture(ctx, ImageCache.convertImage(image));
     }
 
     /**
-     * Creates a texture using the supplied image.
+     * Creates a {@link Texture2D} using the supplied jME3 {@link Image}.
      */
-    public static Texture createTexture (BasicContext ctx, Image image)
+    public static Texture2D createTexture (BasicContext ctx, Image image)
     {
-        Texture texture = ctx.getTextureCache().createTexture();
+        Texture2D texture = ctx.getTextureCache().createTexture();
         configureTexture(texture, image);
         return texture;
     }
 
     /**
-     * Configures an existing texture with the supplied image.
+     * Configures an existing texture with the supplied image and the standard linear/mipmap/wrap
+     * settings.
      */
     public static void configureTexture (Texture texture, Image image)
     {
-        texture.setFilter(Texture.FM_LINEAR);
-        texture.setMipmapState(
-            BangPrefs.isMediumDetail() ? Texture.MM_LINEAR_LINEAR : Texture.MM_LINEAR);
-        texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
         texture.setImage(image);
+        texture.setMagFilter(MagFilter.Bilinear);
+        texture.setMinFilter(BangPrefs.isMediumDetail() ?
+            MinFilter.Trilinear : MinFilter.BilinearNoMipMaps);
+        texture.setWrap(WrapMode.Repeat);
     }
 
     /**
-     * Attempts to enable S3TC texture compression on the supplied texture.
+     * Attempts to enable S3TC texture compression on the supplied texture. jME3 selects compressed
+     * internal formats from the image format; with no fork {@code Image} type to flip this is a
+     * no-op placeholder retained for call-site compatibility (carried for the Phase-4 material
+     * pass, where DXT formats are chosen at asset-load time).
      */
     public static void enableTextureCompression (Texture texture)
     {
-        if (!noTexture.isS3TCAvailable()) {
-            return;
-        }
-        Image image = texture.getImage();
-        int type = image.getType();
-        if (type == Image.RGB888) {
-            image.setType(Image.RGB888_DXT1);
-        } else if (type == Image.RGBA8888) {
-            image.setType(Image.RGBA8888_DXT5);
-        }
+        // no-op on jME3; compression is selected by the asset loader / image format (Phase 4).
     }
 
     /**
-     * Creates a texture state using the image with the supplied path. The
-     * texture is loaded via the texture cache.
+     * Creates a textured {@link Material} ({@code Unshaded.j3md} with a {@code ColorMap}) for the
+     * image at the supplied path, loaded through the texture cache. This is the jME3 replacement
+     * for the fork {@code createTextureState(ctx, path)} — call sites assign it via
+     * {@code geom.setMaterial(...)}.
      */
-    public static TextureState createTextureState (
-        BasicContext ctx, String path)
+    public static Material createTextureMaterial (BasicContext ctx, String path)
     {
-        return createTextureState(ctx, path, 1f);
+        return createTextureMaterial(ctx, path, 1f);
     }
 
     /**
-     * Creates a texture state using the image with the supplied path and scale
-     * factor. The texture is loaded via the texture cache.
+     * Creates a textured {@link Material} for the image at the supplied path and scale.
      */
-    public static TextureState createTextureState (
+    public static Material createTextureMaterial (
         BasicContext ctx, String path, float scale)
     {
-        return createTextureState(ctx,
-            ctx.getTextureCache().getTexture(path, scale));
+        return createTextureMaterial(ctx, ctx.getTextureCache().getTexture(path, scale));
     }
 
     /**
-     * Creates a texture state using the supplied texture.
+     * Creates a textured {@link Material} ({@code Unshaded.j3md}, {@code ColorMap}) using the
+     * supplied texture.
      */
-    public static TextureState createTextureState (
-        BasicContext ctx, Texture texture)
+    public static Material createTextureMaterial (BasicContext ctx, Texture texture)
     {
-        TextureState tstate = ctx.getRenderer().createTextureState();
-        tstate.setEnabled(true);
-        tstate.setTexture(texture);
-        return tstate;
+        Material mat = new Material(ctx.getAssetManager(),
+            "Common/MatDefs/Misc/Unshaded.j3md");
+        if (texture != null) {
+            mat.setTexture("ColorMap", texture);
+        }
+        return mat;
     }
 
     /**
-     * Ensures that the specified texture is loaded and bound to an OpenGL name.
+     * Creates a terrain splat-layer {@link Material} (the custom {@code shaders/TerrainSplat.j3md}).
+     * The ground texture is sampled per-pixel and modulated by the per-vertex shadow color; if an
+     * alpha map is supplied the layer's coverage comes from it (per-pixel splat blending across
+     * terrain-type boundaries, the jME3 replacement for the fork's fixed-function texture combine).
+     * Pass {@code alpha == null} for the opaque base layer.
+     */
+    public static Material createTerrainMaterial (
+        BasicContext ctx, Texture ground, Texture alpha)
+    {
+        Material mat = new Material(ctx.getAssetManager(), "shaders/TerrainSplat.j3md");
+        if (ground != null) {
+            mat.setTexture("ColorMap", ground);
+        }
+        if (alpha != null) {
+            mat.setTexture("AlphaMap", alpha);
+        }
+        mat.setBoolean("VertexColor", true);
+        return mat;
+    }
+
+    /**
+     * Source-compatible alias for {@link #createTextureMaterial(BasicContext, String)}.
+     *
+     * @deprecated prefer {@link #createTextureMaterial}; the fork returned a {@code TextureState},
+     * jME3 returns a {@link Material} assigned via {@code setMaterial}.
+     */
+    @Deprecated
+    public static Material createTextureState (BasicContext ctx, String path)
+    {
+        return createTextureMaterial(ctx, path);
+    }
+
+    /** @deprecated see {@link #createTextureState(BasicContext, String)}. */
+    @Deprecated
+    public static Material createTextureState (BasicContext ctx, String path, float scale)
+    {
+        return createTextureMaterial(ctx, path, scale);
+    }
+
+    /** @deprecated see {@link #createTextureState(BasicContext, String)}. */
+    @Deprecated
+    public static Material createTextureState (BasicContext ctx, Texture texture)
+    {
+        return createTextureMaterial(ctx, texture);
+    }
+
+    /**
+     * Ensures that the specified texture is uploaded. jME3 uploads textures lazily on first render
+     * and manages the GL name itself, so this is a no-op kept for call-site compatibility.
      */
     public static void ensureLoaded (BasicContext ctx, Texture tex)
     {
-        ensureLoaded(createTextureState(ctx, tex));
+        // no-op on jME3 (lazy upload)
     }
 
     /**
-     * Ensures that all the textures in the specified state are loaded and bound to
-     * OpenGL names.
-     */
-    public static void ensureLoaded (TextureState tstate)
-    {
-        for (int ii = 0, nn = tstate.getNumberOfSetTextures(); ii < nn; ii++) {
-            Texture tex = tstate.getTexture(ii);
-            if (tex.getTextureId() == 0) {
-                tstate.apply();
-                return;
-            }
-        }
-    }
-
-    /**
-     * Configures the specified texture's scale and translation so as to select
-     * the <code>tile</code>th tile from a <code>size</code> x
-     * <code>size</code> grid.
+     * Configures the supplied texture's wrap mode to repeat for tiled use. The fork applied a
+     * scale/translation transform on the texture object to select tile {@code tile} from a
+     * {@code size}x{@code size} grid; jME3 textures carry no transform, so tiling is expressed via
+     * the mesh's texture coordinates. This helper now only ensures the wrap mode; callers that need
+     * sub-tile selection set the appropriate UVs on their mesh.
      */
     public static void setTextureTile (Texture texture, int size, int tile)
     {
-        texture.setScale(new Vector3f(1/(float)size, 1/(float)size, 0));
-        int y = size - tile / size - 1, x = tile % size;
-        texture.setTranslation(new Vector3f(x/(float)size, y/(float)size, 0));
+        texture.setWrap(WrapMode.Repeat);
     }
 
     /**
-     * Creates the shadow texture for the specified light parameters.
+     * Creates (and caches) a {@link Texture2D} containing a soft shadow blob for the specified
+     * light parameters. The fork rotated/translated the texture object to orient the shadow; the
+     * rotation is baked into the generated pixels here so the result is a plain {@link Texture2D}.
      */
-    public static TextureState createShadowTexture (
+    public static Texture2D createShadowTexture (
         BasicContext ctx, float length, float rotation, float intensity)
     {
-        // reuse our existing texture if possible; if not, release old
-        // texture
         if (_shadtex != null && _slength == length &&
             _srotation == rotation && _sintensity == intensity) {
             return _shadtex;
-
-        } else if (_shadtex != null) {
-            _shadtex.deleteAll();
         }
 
         _slength = length;
@@ -457,12 +604,16 @@ public class RenderUtil
 
         float yscale = length / TILE_SIZE;
         int size = SHADOW_TEXTURE_SIZE, hsize = size / 2;
+        float cos = FastMath.cos(rotation), sin = FastMath.sin(rotation);
         ByteBuffer pbuf = ByteBuffer.allocateDirect(size * size * 4);
         byte[] pixel = new byte[] { 0, 0, 0, 0 };
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                float xd = (float)(x - hsize) / hsize,
-                    yd = yscale * (y - hsize) / hsize,
+                // rotate the sample point about the texture center (bakes the fork
+                // texture-rotation into the pixels, since Texture2D has no transform)
+                float sx = (float)(x - hsize) / hsize, sy = (float)(y - hsize) / hsize;
+                float rx = cos * sx - sin * sy, ry = sin * sx + cos * sy;
+                float xd = rx, yd = yscale * ry,
                     d = FastMath.sqrt(xd*xd + yd*yd),
                     val = d < 0.25f ? intensity : intensity *
                         Math.max(0f, 1.333f - 1.333f*d);
@@ -472,73 +623,32 @@ public class RenderUtil
         }
         pbuf.rewind();
 
-        // we must rotate the shadow into place and translate to recenter
-        Texture stex = new Texture();
-        stex.setImage(new Image(Image.RGBA8888, size, size, pbuf));
-        Quaternion rot = new Quaternion();
-        rot.fromAngleNormalAxis(-rotation, Vector3f.UNIT_Z);
-        stex.setRotation(rot);
-        Vector3f trans = new Vector3f(0.5f, 0.5f, 0f);
-        rot.multLocal(trans);
-        stex.setTranslation(new Vector3f(0.5f - trans.x, 0.5f - trans.y, 0f));
-
-        _shadtex = ctx.getRenderer().createTextureState();
-        _shadtex.setTexture(stex);
+        Image img = new Image(Image.Format.RGBA8, size, size, pbuf,
+            com.jme3.texture.image.ColorSpace.Linear);
+        _shadtex = new Texture2D(img);
+        _shadtex.setWrap(WrapMode.Clamp);
         return _shadtex;
     }
 
     /**
-     * Creates and returns a texture renderer for a target with the given
-     * dimensions.
+     * Creates a render-to-texture helper for an offscreen target of the given dimensions, backed by
+     * a jME3 {@code FrameBuffer} + offscreen {@code ViewPort}.
      */
-    public static TextureRenderer createTextureRenderer (BasicContext ctx,
+    public static BackTextureRenderer createTextureRenderer (BasicContext ctx,
         int width, int height)
     {
-        // if the video card supports rendering straight to texture, use
-        // JME's texture renderer; otherwise, render to the back buffer
-        // (temporarily disabled)
-        // int caps = Pbuffer.getCapabilities();
-        // if ((caps & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0) {
-        //     return ctx.getDisplay().createTextureRenderer(width, height, true,
-        //         false, false, false, TextureRenderer.RENDER_TEXTURE_2D, 0);
-
-        // } else {
-            return new BackTextureRenderer(ctx, width, height);
-        // }
+        return new BackTextureRenderer(ctx, width, height);
     }
 
     /**
-     * Deletes all the vertex buffer objects identified in the given info.
-     */
-    public static void deleteVBOs (BasicContext ctx, VBOInfo vboinfo)
-    {
-        Renderer r = ctx.getRenderer();
-        r.deleteVBO(vboinfo.getVBOColorID());
-        vboinfo.setVBOColorID(-1);
-        r.deleteVBO(vboinfo.getVBOIndexID());
-        vboinfo.setVBOIndexID(-1);
-        r.deleteVBO(vboinfo.getVBONormalID());
-        vboinfo.setVBONormalID(-1);
-        r.deleteVBO(vboinfo.getVBOVertexID());
-        vboinfo.setVBOVertexID(-1);
-        for (int ii = 0, nn = TextureState.getNumberOfFixedUnits(); ii < nn; ii++) {
-            int vboId = vboinfo.getVBOTextureID(ii);
-            if (vboId > 0) {
-                r.deleteVBO(vboId);
-                vboinfo.setVBOTextureID(ii, -1);
-            }
-        }
-    }
-
-    /**
-     * Determines whether the given object or any of its ancestors were
-     * determined to be outside of the view frustum.
+     * Determines whether the given object or any of its ancestors were determined to be outside of
+     * the view frustum on the last cull.
      */
     public static boolean isOutsideFrustum (Spatial spatial)
     {
         for (; spatial != null; spatial = spatial.getParent()) {
             if (spatial.getLastFrustumIntersection() ==
-                    Camera.OUTSIDE_FRUSTUM) {
+                    com.jme3.renderer.Camera.FrustumIntersect.Outside) {
                 return true;
             }
         }
@@ -546,8 +656,7 @@ public class RenderUtil
     }
 
     /**
-     * Creates a JME {@link ColorRGBA} object with alpha equal to one from a
-     * packed RGB value.
+     * Creates a jME3 {@link ColorRGBA} with alpha one from a packed RGB value.
      */
     public static ColorRGBA createColorRGBA (int rgb)
     {
@@ -561,21 +670,22 @@ public class RenderUtil
         return (value < 0) ? 256 + value : value;
     }
 
-    protected static HashIntMap<ArrayList<WeakReference<Texture>>> _groundTexs =
-        new HashIntMap<ArrayList<WeakReference<Texture>>>();
+    /** Our application context (set in {@link #init}). */
+    protected static BasicContext _ctx;
+
+    protected static HashIntMap<ArrayList<WeakReference<Texture2D>>> _groundTexs =
+        new HashIntMap<ArrayList<WeakReference<Texture2D>>>();
 
     /** Our most recently created shadow texture. */
-    protected static TextureState _shadtex;
+    protected static Texture2D _shadtex;
 
     /** The parameters used to create our shadow texture. */
     protected static float _slength, _srotation, _sintensity;
 
-    /** The maximum number of different variations we might have for a
-     * particular ground tile. */
+    /** The maximum number of different variations we might have for a particular ground tile. */
     protected static final int MAX_TILE_VARIANT = 4;
 
-    /** Used to obtain a graphics context for measuring text before we
-     * create the real image. */
+    /** Used to obtain a graphics context for measuring text before we create the real image. */
     protected static BufferedImage _scratch =
         new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 

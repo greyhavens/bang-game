@@ -5,7 +5,7 @@
 
 package com.jmex.bui.icon;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BImage;
 import com.jmex.bui.util.Rectangle;
@@ -52,7 +52,7 @@ public class SubimageIcon extends BIcon
     }
 
     // documentation inherited
-    public void render (Renderer renderer, int x, int y, float alpha)
+    public void render (RenderManager renderer, int x, int y, float alpha)
     {
         super.render(renderer, x, y, alpha);
         _image.render(renderer, _region.x, _region.y,

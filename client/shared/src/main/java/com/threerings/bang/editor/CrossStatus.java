@@ -7,14 +7,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-import com.jme.image.Texture;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
-import com.jme.scene.Spatial;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.TextureState;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.texture.Texture;
 
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
@@ -25,6 +24,22 @@ import com.threerings.jme.util.ImageCache;
 
 /**
  * A helper class that highlights which sides of a tile can be crossed.
+ *
+ * <p>jME3 cutover (Phase 2): the fork built one {@code com.jme.scene.SharedMesh} per direction
+ * sharing the highlight's geometry, each carrying a fork {@code TextureState} (built through
+ * {@code Renderer.createTextureState} and placed in {@code QUEUE_TRANSPARENT}). jME3 shares a
+ * {@code Mesh} natively, so each direction is a {@link Geometry} over the highlight's shared mesh
+ * with its own {@link Material} (an {@code Unshaded.j3md} ColorMap material, alpha-blended, in
+ * {@link Bucket#Transparent}).
+ *
+ * <p>Editor-only; this is Phase-5 work and is reconciled then. It is migrated fork-import-free now
+ * so the single client/shared compile unit builds.
+ *
+ * <p>TODO(render-core reconcile): codes against {@code RenderUtil.createTexture/ensureLoaded}
+ * returning jME3 {@code com.jme3.texture.Texture} and {@code TerrainNode.Highlight} being a jME3
+ * geometry that {@code new Geometry(name, highlight.getMesh())} can share; both are owned by other
+ * clusters (render-core / board-renderer) and not yet landed. The per-direction material is built
+ * inline because RenderUtil's shared-Material library is not yet defined.
  */
 public class CrossStatus extends Node
     implements PieceCodes
@@ -39,15 +54,17 @@ public class CrossStatus extends Node
         loadTextures();
         this.highlight = highlight;
 
-        _info = new SharedMesh[DIRECTIONS.length];
+        _info = new Geometry[DIRECTIONS.length];
+        _materials = new Material[DIRECTIONS.length];
         for (int ii = 0; ii < _info.length; ii++) {
-            _info[ii] = new SharedMesh("info" + ii, highlight);
-            _info[ii].setIsCollidable(false);
-            _info[ii].setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-            _info[ii].setRenderState(ctx.getRenderer().createTextureState());
-            _info[ii].updateRenderState();
-            getTextureState(_info[ii]).setTexture(
-                    _sidetexs[ii].createSimpleClone());
+            _info[ii] = new Geometry("info" + ii, highlight.getMesh());
+            Material mat = new Material(ctx.getAssetManager(),
+                "Common/MatDefs/Misc/Unshaded.j3md");
+            mat.setTexture("ColorMap", _sidetexs[ii]);
+            mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+            _info[ii].setMaterial(mat);
+            _info[ii].setQueueBucket(Bucket.Transparent);
+            _materials[ii] = mat;
         }
     }
 
@@ -83,8 +100,8 @@ public class CrossStatus extends Node
      */
     public void setDefaultColor(ColorRGBA color)
     {
-        for (int ii = 0; ii < _info.length; ii++) {
-            _info[ii].setDefaultColor(color);
+        for (int ii = 0; ii < _materials.length; ii++) {
+            _materials[ii].setColor("Color", new ColorRGBA(color));
         }
     }
 
@@ -110,13 +127,9 @@ public class CrossStatus extends Node
         }
     }
 
-    protected final TextureState getTextureState (Spatial spatial)
-    {
-        return (TextureState)spatial.getRenderState(RenderState.RS_TEXTURE);
-    }
-
     protected BasicContext _ctx;
-    protected SharedMesh[] _info;
+    protected Geometry[] _info;
+    protected Material[] _materials;
 
     protected static Texture[] _sidetexs;
 

@@ -131,15 +131,30 @@ processResources.dependsOn "genBundles"
 // compiles our model XML into binary form
 tasks.register("compileModels") {
   dependsOn configurations.tools
+  // jME3 cutover (Phase 1): the fork-format model compiler (CompileModelTask + the fork
+  // Model/ModelMesh/SkinMesh classes) moved out of app's fork-free `main` source set into app's
+  // `modeltool` source set (package com.threerings.jme.tools.*), which still depends on the fork
+  // `jme` module. It is NOT on `configurations.tools` (that resolves app's main output), so the
+  // taskdef classpath is app's modeltool runtime classpath plus the tools config. The fork-format
+  // model.dat this produces is baked to jME3 .j3o by tools/j3o-converter (Phase 3).
+  def modelCompilerCp = project(":app").sourceSets.modeltool.runtimeClasspath
+  dependsOn modelCompilerCp
   doLast {
-    ant.taskdef(classpath: configurations.tools.asPath, name: "compile",
+    // modelCompilerCp (app's fork-coupled modeltool) MUST precede configurations.tools: both
+    // carry a com.threerings.jme.util.JmeUtil (modeltool's is fork-typed, app main's is jME3-typed)
+    // and the fork model compiler calls the fork signature — the fork copy has to win the classpath.
+    def compilerPath = (modelCompilerCp + configurations.tools).asPath
+    ant.taskdef(classpath: compilerPath, name: "compile",
                 classname: "com.threerings.jme.tools.CompileModelTask")
     ant.compile(dest: stagingDir) {
       fileset(dir: "rsrc",  includes: "**/model.properties")
     }
 
-    ant.taskdef(classpath: configurations.tools.asPath, name: "updatepropheight",
-                classname: "com.threerings.bang.tools.UpdatePropHeightTask")
+    // jME3 cutover (Phase 2): UpdatePropHeightTask reads the fork-format model.dat just produced
+    // by CompileModelTask, so it lives in app's fork-coupled modeltool source set (it needs the
+    // fork Model reader, gone from the fork-free :tools module). Use the modeltool classpath.
+    ant.taskdef(classpath: compilerPath, name: "updatepropheight",
+                classname: "com.threerings.jme.tools.UpdatePropHeightTask")
     ant.updatepropheight() {
       fileset(dir: "rsrc", includes: "**/prop.properties")
     }
@@ -160,6 +175,27 @@ tasks.register("compileModels") {
   }
 }
 processResources.dependsOn "compileModels"
+
+// Phase 3: bake each staged model.dat into a sibling model.j3o that the runtime client loads
+// natively through the jME3 AssetManager (ModelCache). The baker (tools:j3o-converter:bakeModels)
+// reads the fork model.dat via the retained fork reader and writes pure-jME3 .j3o, so no fork
+// dependency reaches the runtime. It must run after compileModels has staged the .dat files.
+evaluationDependsOn(":tools:j3o-converter")
+def bakeModelsTask = project(":tools:j3o-converter").tasks.named("bakeModels")
+bakeModelsTask.configure { mustRunAfter ":assets:compileModels" }
+tasks.named("compileModels").configure { finalizedBy bakeModelsTask }
+processResources.dependsOn bakeModelsTask
+
+// Phase 6a: re-author each staged fork-format effects/<key>/particles.jme into a sibling
+// particles.j3o (a jME3 ParticleEmitter tree) that the runtime client loads natively through the
+// jME3 AssetManager (ParticleCache). The baker (tools:j3o-converter:bakeParticles) reads the fork
+// particles.jme via the retained fork BinaryImporter and writes pure-jME3 .j3o, so no fork
+// dependency reaches the runtime. It must run after copyTownBits has staged the effects tree
+// (the .jme + textures the converter reads).
+def bakeParticlesTask = project(":tools:j3o-converter").tasks.named("bakeParticles")
+bakeParticlesTask.configure { mustRunAfter ":assets:copyTownBits" }
+tasks.named("copyTownBits").configure { finalizedBy bakeParticlesTask }
+processResources.dependsOn bakeParticlesTask
 
 // generates lists of props, units, etc.
 tasks.register("updateLists", Exec) {

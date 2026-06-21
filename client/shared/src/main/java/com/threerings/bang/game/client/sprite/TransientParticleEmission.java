@@ -3,16 +3,11 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.io.IOException;
-
 import java.util.Properties;
 
-import com.jme.scene.Controller;
-import com.jme.scene.Spatial;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
 
 import com.threerings.jme.model.Model;
 
@@ -36,8 +31,8 @@ public class TransientParticleEmission extends FrameEmission
     }
     
     @Override // documentation inherited
-    public Controller putClone (
-        Controller store, Model.CloneCreator properties)
+    public Control putClone (
+        Control store, Model.CloneCreator properties)
     {
         TransientParticleEmission tstore;
         if (store == null) {
@@ -50,27 +45,7 @@ public class TransientParticleEmission extends FrameEmission
         tstore._rotate = _rotate;
         return tstore;
     }
-    
-    @Override // documentation inherited
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        _effect = capsule.readString("effect", null);
-        _rotate = capsule.readBoolean("rotate", false);
-    }
-    
-    @Override // documentation inherited
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        super.write(ex);
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(_effect, "effect", null);
-        capsule.write(_rotate, "rotate", false);
-    }
-    
+
     // documentation inherited
     protected void fireEmission ()
     {
@@ -81,22 +56,19 @@ public class TransientParticleEmission extends FrameEmission
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
-                result.getLocalTranslation().set(
-                    _target.getWorldTranslation());
+                result.setLocalTranslation(new Vector3f(
+                    _target.getWorldTranslation()));
                 if (_rotate) {
-                    _target.getWorldRotation().mult(
-                        ParticleCache.Z_UP_ROTATION,
-                        result.getLocalRotation());
+                    result.setLocalRotation(_target.getWorldRotation().mult(
+                        ParticleCache.Z_UP_ROTATION));
                 }
             }
         });
     }
-    
+
     /** The name of the effect to generate. */
     protected String _effect;
-    
+
     /** Whether to rotate as well as translate the effect. */
     protected boolean _rotate;
-    
-    private static final long serialVersionUID = 1;
 }

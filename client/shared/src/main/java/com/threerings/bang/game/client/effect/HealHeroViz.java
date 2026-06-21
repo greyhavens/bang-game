@@ -3,10 +3,12 @@
 
 package com.threerings.bang.game.client.effect;
 
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.scene.Controller;
-import com.jmex.effects.particles.ParticleMesh;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.control.AbstractControl;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -32,20 +34,21 @@ public class HealHeroViz extends ParticleEffectViz
     /** The swirl of sparkles effect. */
     protected class Swirl
     {
-        /** The particle system for the swirl. */
-        public ParticleMesh particles;
+        /** The particle emitter for the swirl. */
+        public ParticleEmitter particles;
 
         public Swirl (final float a0)
         {
             particles = ParticlePool.getSparkles();
-            particles.setReleaseRate(512);
-            particles.setOriginOffset(new Vector3f());
+            particles.setParticlesPerSec(512f);
+            particles.setLocalTranslation(new Vector3f());
 
-            particles.addController(new Controller() {
-                public void update (float time) {
+            // jME3: the per-frame fork Controller becomes an AbstractControl on the emitter.
+            particles.addControl(new AbstractControl() {
+                @Override protected void controlUpdate (float time) {
                     // remove swirl if its lifespan has elapsed
                     if ((_elapsed += time) > TOTAL_DURATION) {
-                        particles.removeController(this);
+                        particles.removeControl(this);
                         removeParticles(particles);
                         if (!_displayed) { // report completion
                             effectDisplayed();
@@ -54,16 +57,18 @@ public class HealHeroViz extends ParticleEffectViz
                         return;
 
                     } else if (_elapsed > SWIRL_DURATION) {
-                        particles.setReleaseRate(0);
+                        particles.setParticlesPerSec(0f);
                         return;
                     }
                     float t = _elapsed / SWIRL_DURATION,
                         radius = TILE_SIZE / 3,
                         angle = a0 + t * FastMath.TWO_PI * SWIRL_REVOLUTIONS;
-                    particles.getOriginOffset().set(
+                    particles.setLocalTranslation(
                         radius * FastMath.cos(angle),
                         radius * FastMath.sin(angle),
                         TILE_SIZE * t - radius);
+                }
+                @Override protected void controlRender (RenderManager rm, ViewPort vp) {
                 }
                 protected float _elapsed;
             });

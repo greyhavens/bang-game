@@ -21,9 +21,9 @@
 
 package com.threerings.jme.camera;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
 import static com.threerings.jme.Log.log;
 

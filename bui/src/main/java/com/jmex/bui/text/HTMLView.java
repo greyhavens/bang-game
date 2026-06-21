@@ -27,7 +27,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BImage;
@@ -203,7 +203,7 @@ public class HTMLView extends BComponent
     }
 
     // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
 

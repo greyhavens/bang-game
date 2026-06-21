@@ -3,20 +3,19 @@
 
 package com.threerings.bang.game.util;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.io.OutputStream;
 import java.util.List;
 
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
-import com.jme.util.export.binary.BinaryExporter;
-import com.jme.util.export.binary.BinaryImporter;
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BoardData;
@@ -26,9 +25,13 @@ import com.threerings.bang.util.BangUtil;
 
 /**
  * Contains all the data stored for a board when stored on the file system.
+ *
+ * <p>jME3 cutover (Phase 3): the on-disk {@code .board} format is now pure Narya streaming (header
+ * + a {@link BoardData} graph), produced by the one-time tools/board-converter and read here with
+ * no fork/jME3 {@code Savable} dependency (see docs/jme3-board-conversion.md §5). The on-disk
+ * extension is unchanged ({@code .board}); only the bytes inside changed.
  */
 public class BoardFile
-    implements Savable
 {
     /** The human readable name of this board. */
     public String name;
@@ -68,7 +71,7 @@ public class BoardFile
     public static BoardFile loadFrom (byte[] data)
         throws IOException
     {
-        return (BoardFile)BinaryImporter.getInstance().load(data);
+        return loadFrom(new ByteArrayInputStream(data));
     }
 
     /**
@@ -77,25 +80,54 @@ public class BoardFile
     public static BoardFile loadFrom (File target)
         throws IOException
     {
-        return (BoardFile)BinaryImporter.getInstance().load(target);
+        try (InputStream in = new BufferedInputStream(new FileInputStream(target))) {
+            return loadFrom(in);
+        }
     }
 
     /**
-     * Loads a board file from the supplied input stream target.
+     * Loads a board file from the supplied input stream target. Reads the Narya {@code .nboard}
+     * layout: {@code UTF name · UTF creator · int players · boolean private · object scenarios ·
+     * object BoardData}. {@code dataHash} is derived on read (not stored).
      */
     public static BoardFile loadFrom (InputStream target)
         throws IOException
     {
-        return (BoardFile)BinaryImporter.getInstance().load(target);
+        try {
+            ObjectInputStream oin = new ObjectInputStream(target);
+            BoardFile bf = new BoardFile();
+            bf.name = oin.readUTF();
+            bf.creator = oin.readUTF();
+            bf.players = oin.readInt();
+            bf.privateBoard = oin.readBoolean();
+            bf.scenarios = (String[])oin.readObject();
+            BoardData bd = (BoardData)oin.readObject();
+            bf.board = bd.board;
+            bf.pieces = bd.pieces;
+            bf.dataHash = BoardData.getDataHash(bf.toData().toBytes());
+            return bf;
+        } catch (ClassNotFoundException cnfe) {
+            throw new IOException(cnfe);
+        }
     }
 
     /**
-     * Saves a board file to the supplied file target.
+     * Saves a board file to the supplied file target (the editor save path), in the Narya
+     * {@code .nboard} layout that {@link #loadFrom} reads.
      */
     public static void saveTo (BoardFile file, File target)
         throws IOException
     {
-        BinaryExporter.getInstance().save(file, new FileOutputStream(target));
+        try (OutputStream out = new FileOutputStream(target)) {
+            ObjectOutputStream oout = new ObjectOutputStream(out);
+            oout.writeUTF(file.name == null ? "" : file.name);
+            oout.writeUTF(file.creator == null ? "" : file.creator);
+            oout.writeInt(file.players);
+            oout.writeBoolean(file.privateBoard);
+            oout.writeObject(file.scenarios == null ? DEF_SCENARIOS : file.scenarios);
+            oout.writeObject(new BoardData(file.board, file.pieces));
+            oout.flush();
+        }
     }
 
     /**
@@ -113,41 +145,5 @@ public class BoardFile
         return minTownIdx;
     }
 
-    // from interface Savable
-    public Class<?> getClassTag ()
-    {
-        return BoardFile.class;
-    }
-
-    // from interface Savable
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        InputCapsule capsule = im.getCapsule(this);
-        name = capsule.readString("name", "");
-        creator = capsule.readString("creator", "");
-        scenarios = capsule.readStringArray("scenarios", DEF_SCENARIOS);
-        players = capsule.readInt("players", 2);
-        board = (BangBoard)capsule.readSavable("board", null);
-        pieces = capsule.readSavableArrayList("pieces", NO_PIECES);
-        privateBoard = capsule.readBoolean("private", false);
-        dataHash = BoardData.getDataHash(toData().toBytes());
-    }
-
-    // from interface Savable
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(name, "name", "");
-        capsule.write(creator, "creator", "");
-        capsule.write(scenarios, "scenarios", DEF_SCENARIOS);
-        capsule.write(players, "players", 2);
-        capsule.write(board, "board", null);
-        capsule.writeSavableArrayList(pieces, "pieces", NO_PIECES);
-        capsule.write(privateBoard, "private", false);
-    }
-
     protected static final String[] DEF_SCENARIOS = {};
-    protected static final ArrayList<Piece> NO_PIECES = new ArrayList<Piece>();
 }

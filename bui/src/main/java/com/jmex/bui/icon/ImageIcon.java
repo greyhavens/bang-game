@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.swing.Icon;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BImage;
 
 /**
@@ -68,7 +68,7 @@ public class ImageIcon extends BIcon
     }
 
     // documentation inherited
-    public void render (Renderer renderer, int x, int y, float alpha)
+    public void render (RenderManager renderer, int x, int y, float alpha)
     {
         super.render(renderer, x, y, alpha);
         _image.render(renderer, x, y, alpha);

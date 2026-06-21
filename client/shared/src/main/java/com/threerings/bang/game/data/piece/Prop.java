@@ -7,11 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 
-import com.jme.math.Vector3f;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
+import com.jme3.math.Vector3f;
 
 import com.samskivert.util.StringUtil;
 
@@ -107,48 +103,6 @@ public class Prop extends BigPiece
         piece._sbounds = (Rectangle)_sbounds.clone();
         piece._vscale = (Vector3f)_vscale.clone();
         return piece;
-    }
-
-    @Override // documentation inherited
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        if (isOwnerConfigurable()) {
-            owner = capsule.readInt("owner", -1);
-        }
-        fx = capsule.readByte("fx", (byte)0);
-        fy = capsule.readByte("fy", (byte)0);
-        forient = capsule.readByte("forient", (byte)0);
-        felev = capsule.readByte("felev", (byte)0);
-        pitch = capsule.readByte("pitch", (byte)0);
-        roll = capsule.readByte("roll", (byte)0);
-        scalex = capsule.readShort("scalex", (short)0);
-        scaley = capsule.readShort("scaley", (short)0);
-        scalez = capsule.readShort("scalez", (short)0);
-        init(PropConfig.getConfig(capsule.readString("type", null)));
-    }
-
-    @Override // documentation inherited
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        super.write(ex);
-        OutputCapsule capsule = ex.getCapsule(this);
-        if (isOwnerConfigurable()) {
-            capsule.write(owner, "owner", -1);
-        }
-        capsule.write(fx, "fx", (byte)0);
-        capsule.write(fy, "fy", (byte)0);
-        capsule.write(forient, "forient", (byte)0);
-        capsule.write(felev, "felev", (byte)0);
-        capsule.write(pitch, "pitch", (byte)0);
-        capsule.write(roll, "roll", (byte)0);
-        capsule.write(scalex, "scalex", (short)0);
-        capsule.write(scaley, "scaley", (short)0);
-        capsule.write(scalez, "scalez", (short)0);
-        capsule.write(_type, "type", null);
     }
 
     @Override // documentation inherited

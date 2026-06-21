@@ -6,8 +6,8 @@ package com.threerings.bang.game.client;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BComponent;
@@ -71,7 +71,7 @@ public class UnitStatusView extends BWindow
     {
         if (isAdded()) {
             pack();
-            setLocation(0, _ctx.getDisplay().getHeight()- getHeight());
+            setLocation(0, _ctx.getCamera().getHeight()- getHeight());
         }
     }
 
@@ -310,7 +310,7 @@ public class UnitStatusView extends BWindow
         }
 
         @Override // documentation inherited
-        public void renderComponent (Renderer renderer)
+        public void renderComponent (RenderManager renderer)
         {
             if (_sprite.isSelected()) {
                 if (_opened.getParent() == this) {
@@ -541,8 +541,8 @@ public class UnitStatusView extends BWindow
                 setInfluence(null);
                 // clear out our background when our unit dies
                 _bground = null;
-                // and draw our icon at 50% alpha
-                _unit.getBatch(0).getDefaultColor().set(ColorRGBA.white);
+                // and draw our icon at 50% alpha (BImage is no longer a fork Quad, so the tint is
+                // carried by setAlpha; the explicit white default-color reset is no longer needed)
                 setAlpha(0.5f);
                 _isInvalid = false;
             } else {
@@ -562,7 +562,7 @@ public class UnitStatusView extends BWindow
                 // tint the unit icon red if it has a visible hindrance
                 /*
                 if (unit.getHindrance() == null || !unit.getHindrance().isVisible()) {
-                    _unit.getBatch(0).getDefaultColor().set(ColorRGBA.white);
+                    _unit.getBatch(0).getDefaultColor().set(ColorRGBA.White);
                 } else {
                     _unit.getBatch(0).getDefaultColor().set(1f, 0.5f, 0.5f, 0.8f);
                 }
@@ -601,7 +601,7 @@ public class UnitStatusView extends BWindow
         }
 
         @Override // documentation inherited
-        protected void renderComponent (Renderer renderer)
+        protected void renderComponent (RenderManager renderer)
         {
             super.renderComponent(renderer);
 

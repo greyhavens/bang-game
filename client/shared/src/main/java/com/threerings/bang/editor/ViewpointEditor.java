@@ -17,9 +17,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.badlogic.gdx.Input.Keys;
-
-import com.jme.math.Vector3f;
+import com.jme3.input.KeyInput;
+import com.jme3.math.Vector3f;
 
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.MouseEvent;
@@ -128,12 +127,12 @@ public class ViewpointEditor extends EditorTool
         _ctrl.maybeStartPieceEdit(piece);
         Viewpoint vp = (Viewpoint)piece.clone();
         switch (e.getKeyCode()) {
-            case Keys.W: moveViewpoint(vp, 5, 0); break;
-            case Keys.A: moveViewpoint(vp, 0, -5); break;
-            case Keys.S: moveViewpoint(vp, -5, 0); break;
-            case Keys.D: moveViewpoint(vp, 0, 5); break;
-            case Keys.Q: vp.elevation += 1; break;
-            case Keys.E: vp.elevation -= 1; break;
+            case KeyInput.KEY_W: moveViewpoint(vp, 5, 0); break;
+            case KeyInput.KEY_A: moveViewpoint(vp, 0, -5); break;
+            case KeyInput.KEY_S: moveViewpoint(vp, -5, 0); break;
+            case KeyInput.KEY_D: moveViewpoint(vp, 0, 5); break;
+            case KeyInput.KEY_Q: vp.elevation += 1; break;
+            case KeyInput.KEY_E: vp.elevation -= 1; break;
             default: return;
         }
         getBangObject().updatePieces(vp);

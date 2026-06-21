@@ -8,18 +8,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-
-import com.jme.scene.Controller;
-import com.jme.scene.state.MaterialState;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.control.AbstractControl;
 
 import com.threerings.jme.sprite.Path;
 
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.WendigoHandler;
@@ -50,14 +48,13 @@ public class WendigoSprite extends MobileSprite
             SoundGroup sounds, Piece piece, short tick)
     {
         super.init(ctx, view, board, sounds, piece, tick);
-        setRenderState(RenderUtil.blendAlpha);
-        setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        MaterialState mstate = _ctx.getRenderer().createMaterialState();
-        mstate.getAmbient().set(ColorRGBA.white);
-        mstate.getDiffuse().set(ColorRGBA.white);
-        mstate.getDiffuse().a = 0f;
-        setRenderState(mstate);
-        updateRenderState();
+        // start fully transparent; the fade controller ramps the diffuse alpha. jME3: the tint
+        // rides the SpriteMaterialState (no fixed-function alpha/material state on the node).
+        _fadeState = new SpriteMaterialState();
+        _fadeState.getAmbient().set(ColorRGBA.White);
+        _fadeState.getDiffuse().set(ColorRGBA.White);
+        _fadeState.getDiffuse().a = 0f;
+        _fadeState.apply(this);
     }
 
     @Override // documentation inherited
@@ -207,25 +204,25 @@ public class WendigoSprite extends MobileSprite
      */
     public void fade (final boolean in, final float duration)
     {
-        final MaterialState mstate = _ctx.getRenderer().createMaterialState();
-        mstate.getAmbient().set(ColorRGBA.white);
-        mstate.getDiffuse().set(ColorRGBA.white);
+        final SpriteMaterialState mstate = _fadeState;
+        mstate.getAmbient().set(ColorRGBA.White);
+        mstate.getDiffuse().set(ColorRGBA.White);
         mstate.getDiffuse().a = (in ? 0f : 1f);
-        setRenderState(mstate);
-        _view.getNode().addController(new Controller() {
-            public void update (float time) {
+        mstate.apply(this);
+        _view.getNode().addControl(new AbstractControl() {
+            protected void controlUpdate (float time) {
                 _elapsed = Math.min(_elapsed + time, duration);
                 float alpha = _elapsed / duration;
                 if (!in) {
                     alpha = 1f - alpha;
                 }
-                mstate.getDiffuse().a = 1f * alpha;
-                setRenderState(mstate);
-                updateRenderState();
+                mstate.getDiffuse().a = alpha;
+                mstate.apply(WendigoSprite.this);
                 if (_elapsed >= duration) {
-                    _view.getNode().removeController(this);
+                    _view.getNode().removeControl(this);
                 }
             }
+            protected void controlRender (RenderManager rm, ViewPort vp) {}
             protected float _elapsed;
         });
     }
@@ -233,4 +230,7 @@ public class WendigoSprite extends MobileSprite
     protected WendigoHandler _handler;
 
     protected int _penderId;
+
+    /** Tracks the wendigo's fade tint. */
+    protected SpriteMaterialState _fadeState;
 }

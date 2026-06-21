@@ -21,23 +21,39 @@
 
 package com.threerings.jme.util;
 
-import com.jme.math.Matrix4f;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.scene.Controller;
+import com.jme3.math.Matrix4f;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
 import com.samskivert.util.StringUtil;
 
 import static com.threerings.jme.Log.log;
 
 /**
- * Some static classes and methods of general utility to applications using JME.
+ * Some static classes and methods of general utility to applications using jME3.
+ *
+ * <p>jME3 cutover (Phase 1): retyped from the fork (<code>com.jme.*</code>) onto jME3
+ * (<code>com.jme3.*</code>). The fork's <code>Controller.RT_*</code> repeat-type constants are
+ * no longer available (jME3 uses <code>com.jme3.anim.tween.action.Action.setLoopMode</code> with
+ * <code>LoopMode.DontLoop/Loop/Cycle</code>), so the discrete int repeat-type values used by the
+ * keyframe-stepping {@link FrameState} (and Bang's <code>IconConfig</code>/animation properties)
+ * are redeclared here with their original numeric values. The build-time model compiler keeps a
+ * fork-typed copy of this class in the <code>modeltool</code> source set.
  */
 public class JmeUtil
 {
+    /** Clamp at the final frame (fork <code>Controller.RT_CLAMP</code>). */
+    public static final int RT_CLAMP = 0;
+
+    /** Wrap around to the first frame (fork <code>Controller.RT_WRAP</code>). */
+    public static final int RT_WRAP = 1;
+
+    /** Ping-pong between the endpoints (fork <code>Controller.RT_CYCLE</code>). */
+    public static final int RT_CYCLE = 2;
+
     /**
      * Represents the current position and direction in an animation composed of a fixed number of
-     * discrete frames using one of the repeat types defined in {@link Controller}.
+     * discrete frames using one of the {@code RT_*} repeat types.
      */
     public static class FrameState
     {
@@ -85,12 +101,12 @@ public class JmeUtil
         public void advance (int frameCount, int repeatType)
         {
             if ((idx += dir) >= frameCount) {
-                if (repeatType == Controller.RT_CLAMP) {
+                if (repeatType == RT_CLAMP) {
                     idx = frameCount - 1;
                     dir = 0;
-                } else if (repeatType == Controller.RT_WRAP) {
+                } else if (repeatType == RT_WRAP) {
                     idx = 0;
-                } else { // repeatType == Controller.RT_CYCLE
+                } else { // repeatType == RT_CYCLE
                     idx = frameCount - 2;
                     dir = -1;
                 }
@@ -129,7 +145,7 @@ public class JmeUtil
     /**
      * Attempts to parse a string containing an axis: either "x", "y", or "z", or three
      * comma-delimited values representing an axis vector.  The value returned may be one of
-     * JME's "constant" vectors (for example, {@link Vector3f#UNIT_X}), so don't modify it.
+     * jME3's "constant" vectors (for example, {@link Vector3f#UNIT_X}), so don't modify it.
      */
     public static Vector3f parseAxis (String axis)
     {
@@ -166,18 +182,17 @@ public class JmeUtil
     }
 
     /**
-     * Attempts to parse a string describing one of the repeat types defined in {@link Controller}:
-     * "clamp", "cycle", or "wrap".  Will return the specified default if the type is
-     * <code>null</code> or invalid.
+     * Attempts to parse a string describing one of the repeat types: "clamp", "cycle", or
+     * "wrap".  Will return the specified default if the type is <code>null</code> or invalid.
      */
     public static int parseRepeatType (String type, int defaultType)
     {
         if ("clamp".equals(type)) {
-            return Controller.RT_CLAMP;
+            return RT_CLAMP;
         } else if ("cycle".equals(type)) {
-            return Controller.RT_CYCLE;
+            return RT_CYCLE;
         } else if ("wrap".equals(type)) {
-            return Controller.RT_WRAP;
+            return RT_WRAP;
         } else if (type != null) {
             log.warning("Invalid repeat type [type=" + type + "].");
         }

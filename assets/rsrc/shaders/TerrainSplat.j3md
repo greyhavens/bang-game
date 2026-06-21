@@ -1,0 +1,35 @@
+MaterialDef Bang Terrain Splat {
+
+    MaterialParameters {
+        // the ground (diffuse) texture for this layer, tiled across the block
+        Texture2D ColorMap
+
+        // the per-pixel splat alpha (A8) for this layer, sampled in 0..1 block space;
+        // absent on the opaque base layer (then the layer is fully opaque)
+        Texture2D AlphaMap
+
+        // whether to modulate the result by the per-vertex color (shadow / light bake)
+        Boolean VertexColor
+
+        // fog (board ambience) -- mix toward FogColor by exp(-density * depth)
+        Boolean  UseFog
+        Color    FogColor
+        Float    FogDensity : 0.0
+    }
+
+    Technique {
+        VertexShader   GLSL100 GLSL150 : shaders/TerrainSplat.vert
+        FragmentShader GLSL100 GLSL150 : shaders/TerrainSplat.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+            WorldViewMatrix
+        }
+
+        Defines {
+            HAS_ALPHAMAP    : AlphaMap
+            HAS_VERTEXCOLOR : VertexColor
+            USE_FOG         : UseFog
+        }
+    }
+}

@@ -8,10 +8,10 @@ package com.jmex.bui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.badlogic.gdx.Input.Keys;
+import com.jme3.input.KeyInput;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.backend.BackendProvider;
 import com.jmex.bui.background.BBackground;
@@ -601,7 +601,7 @@ public class BComponent
      * Translates into the component's coordinate space, renders the background and border and then
      * calls {@link #renderComponent} to allow the component to render itself.
      */
-    public void render (Renderer renderer)
+    public void render (RenderManager renderer)
     {
         if (!_visible) {
             return;
@@ -655,7 +655,7 @@ public class BComponent
             KeyEvent kev = (KeyEvent)event;
             if (kev.getType() == KeyEvent.KEY_PRESSED) {
                 int modifiers = kev.getModifiers(), keyCode = kev.getKeyCode();
-                if (keyCode == Keys.TAB) {
+                if (keyCode == KeyInput.KEY_TAB) {
                     if (modifiers == 0) {
                         getWindow().requestFocus(getNextFocus());
                         processed = true;
@@ -813,7 +813,7 @@ public class BComponent
     /**
      * Renders the background for this component.
      */
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         BBackground background = getBackground();
         if (background != null) {
@@ -824,7 +824,7 @@ public class BComponent
     /**
      * Renders the border for this component.
      */
-    protected void renderBorder (Renderer renderer)
+    protected void renderBorder (RenderManager renderer)
     {
         BBorder border = getBorder();
         if (border != null) {
@@ -836,7 +836,7 @@ public class BComponent
      * Renders any custom bits for this component. This is called with the graphics context
      * translated to (0, 0) relative to this component.
      */
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
     }
 

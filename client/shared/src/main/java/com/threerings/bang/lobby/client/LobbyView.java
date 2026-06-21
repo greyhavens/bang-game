@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 
 import org.apache.commons.io.IOUtils;
 
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
@@ -140,7 +140,7 @@ public class LobbyView extends BWindow
         super.wasAdded();
 
         // switch to a gray background
-        _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
+        _ctx.getApp().setViewportBackground(com.jme3.math.ColorRGBA.Gray);
     }
 
     @Override // documentation inherited
@@ -149,7 +149,7 @@ public class LobbyView extends BWindow
         super.wasRemoved();
 
         // restore the black background
-        _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
+        _ctx.getApp().setViewportBackground(com.jme3.math.ColorRGBA.Black);
     }
 
     // documentation inherited from interface PlaceView

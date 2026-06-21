@@ -3,7 +3,7 @@
 
 package com.threerings.bang.ranch.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -109,7 +109,7 @@ public class UnitIcon extends PaletteIcon
     }
 
     @Override // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
 

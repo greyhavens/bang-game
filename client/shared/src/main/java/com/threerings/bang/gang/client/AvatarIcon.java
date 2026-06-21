@@ -3,7 +3,7 @@
 
 package com.threerings.bang.gang.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
@@ -79,7 +79,7 @@ public class AvatarIcon extends ImageIcon
     }
 
     @Override // documentation inherited
-    public void render (Renderer r, int x, int y, float alpha)
+    public void render (RenderManager r, int x, int y, float alpha)
     {
         super.render(r, x, y, alpha);
         if (_aimg != null) {

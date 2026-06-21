@@ -7,7 +7,7 @@ import java.util.List;
 
 import java.awt.Point;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 import com.threerings.jme.sprite.Path;
 import com.threerings.openal.Sound;

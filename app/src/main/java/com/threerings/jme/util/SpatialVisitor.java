@@ -21,8 +21,8 @@
 
 package com.threerings.jme.util;
 
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 /**
  * Performs a depth-first scene graph traversal looking for {@link Spatial}s

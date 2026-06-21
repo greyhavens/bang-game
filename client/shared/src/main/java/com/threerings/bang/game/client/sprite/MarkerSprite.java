@@ -3,12 +3,11 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.shape.Sphere;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
+import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Sphere;
 
 import com.samskivert.util.HashIntMap;
 
@@ -34,14 +33,12 @@ public class MarkerSprite extends PieceSprite
     {
         _modelType = (String)SPRITES[type*2];
         if (_modelType.equals("sphere")) {
-            Sphere sphere = new Sphere("marker", 
-                    new Vector3f(0, 0, TILE_SIZE/2), 10, 10, TILE_SIZE/2);
-            sphere.setSolidColor((ColorRGBA)SPRITES[type*2+1]);
-            sphere.setModelBound(new BoundingBox());
-            sphere.updateModelBound();
-            sphere.setLightCombineMode(LightState.OFF);
-            attachChild(sphere);
-        } else if (!_modelType.equals("highlight") && 
+            Sphere mesh = new Sphere(10, 10, TILE_SIZE/2);
+            _sphere = new Geometry("marker", mesh);
+            _sphere.setLocalTranslation(0, 0, TILE_SIZE/2);
+            _sphereColor = (ColorRGBA)SPRITES[type*2+1];
+            attachChild(_sphere);
+        } else if (!_modelType.equals("highlight") &&
                 !_modelType.equals("terrain")) {
             _type = _modelType;
             _name = (String)SPRITES[type*2+1];
@@ -57,15 +54,16 @@ public class MarkerSprite extends PieceSprite
             return;
         }
         int type = ((Marker)_piece).getType();
-        TextureState tstate = _textureStates.get(type);
-        if (tstate == null) {
-            tstate = RenderUtil.createTextureState(
-                ctx, (String)SPRITES[type*2+1]);
-            _textureStates.put(type, tstate);
+        Material tmat = _markerMaterials.get(type);
+        if (tmat == null) {
+            tmat = RenderUtil.createTextureMaterial(ctx, (String)SPRITES[type*2+1]);
+            RenderUtil.applyBlendAlpha(tmat);
+            RenderUtil.applyOverlayZBuf(tmat);
+            _markerMaterials.put(type, tmat);
         }
         _tlight = view.getTerrainNode().createHighlight(
                 piece.x, piece.y, false, (byte)1);
-        _tlight.setRenderState(tstate);
+        _tlight.setTextures(tmat, tmat);
         attachHighlight(_tlight);
     }
 
@@ -74,17 +72,24 @@ public class MarkerSprite extends PieceSprite
     {
         super.createGeometry();
 
+        // colour the sphere marker now that the context (asset manager) is available
+        if (_sphere != null) {
+            Material mat = new Material(_ctx.getAssetManager(),
+                "Common/MatDefs/Misc/Unshaded.j3md");
+            mat.setColor("Color", new ColorRGBA(_sphereColor));
+            _sphere.setMaterial(mat);
+        }
+
         // load our specialized model if we have one
         if (_type != null) {
             loadModel(_type, _name);
-            setLightCombineMode(LightState.OFF);
         }
     }
 
     protected static final ColorRGBA[] COLORS = {
-        ColorRGBA.blue, // START
-        ColorRGBA.green, // BONUS
-        ColorRGBA.red, // CATTLE
+        ColorRGBA.Blue, // START
+        ColorRGBA.Green, // BONUS
+        ColorRGBA.Red, // CATTLE
         new ColorRGBA(1, 1, 0, 1), // LODE
         new ColorRGBA(0, 1, 1, 1), // TOTEM
         new ColorRGBA(1, 0, 1, 1), // SAFE
@@ -94,8 +99,8 @@ public class MarkerSprite extends PieceSprite
     };
 
     protected static final Object[] SPRITES = {
-        "sphere", ColorRGBA.blue,   // START
-        "sphere", ColorRGBA.green,  // BONUS
+        "sphere", ColorRGBA.Blue,   // START
+        "sphere", ColorRGBA.Green,  // BONUS
         "extras", "frontier_town/cow", // CATTLE
         "bonuses", "frontier_town/nugget", // LODE
         "bonuses", "indian_post/totem_crown", // TOTEM
@@ -109,6 +114,10 @@ public class MarkerSprite extends PieceSprite
 
     protected String _modelType;
 
-    protected static HashIntMap<TextureState> _textureStates =
-        new HashIntMap<TextureState>();
+    /** The sphere marker geometry and its colour (for the "sphere" marker types). */
+    protected Geometry _sphere;
+    protected ColorRGBA _sphereColor;
+
+    protected static HashIntMap<Material> _markerMaterials =
+        new HashIntMap<Material>();
 }

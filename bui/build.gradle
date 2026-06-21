@@ -1,10 +1,15 @@
 dependencies {
-  api project(":jme")
-  testImplementation "junit:junit:4.13.2"
+  // jME3 cutover (Phase 1): BUI's render internals now sit on jME3 only; the vendored fork
+  // (`jme` module) is off BUI's compile path. jme3-core is `api` because BUI's public API
+  // threads jME3 type tokens (RenderManager, ColorRGBA, Image) through its signatures, which
+  // app/client consume.
+  api "org.jmonkeyengine:jme3-core:${jme3Version}"
 
-  // jME3 render backend (Phase 5 step 3 groundwork). compileOnly so it is NEVER on the
-  // game's runtime classpath: jME3 pulls LWJGL3, which must not meet the shipped LWJGL2
-  // natives. The fork backend remains the default; the jME3 backend is only exercised by a
-  // future jME3 host application that supplies the jME3 + LWJGL3 runtime itself.
-  compileOnly "org.jmonkeyengine:jme3-core:${jme3Version}"
+  // jME3 cutover (Phase 8): the transitional libGDX dependency is GONE. BUI's keycode space is
+  // now jME3 KeyInput.KEY_* end-to-end — Jme3RootNode forwards the raw jME3 KeyInput codes
+  // unchanged (the former gdx Input.Keys translation table was removed), and every consumer
+  // (BComponent/KeyEvent/DefaultKeyMap + the client/editor hotkey maps) compares against
+  // KeyInput.KEY_* directly. jme3-core (above) supplies KeyInput.
+
+  testImplementation "junit:junit:4.13.2"
 }

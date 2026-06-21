@@ -21,7 +21,7 @@
 
 package com.threerings.jme.sprite;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 /**
  * Moves a sprite along a straight line.
@@ -49,7 +49,7 @@ public class LinePath extends Path
             _sprite.setLocalTranslation(_finish);
             _sprite.pathCompleted();
         } else {
-            _temp.interpolate(_start, _finish, _accum / _duration);
+            _temp.interpolateLocal(_start, _finish, _accum / _duration);
             _sprite.setLocalTranslation(_temp);
         }
     }

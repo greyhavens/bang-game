@@ -21,22 +21,92 @@
 
 package com.threerings.jme.camera;
 
-import com.badlogic.gdx.Input.Keys;
-
-import com.jme.math.FastMath;
-
-import com.jme.input.InputHandler;
-import com.jme.input.KeyBindingManager;
-import com.jme.input.action.*;
-import com.jme.input.action.InputActionEvent;
+import com.jme3.input.InputManager;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.FastMath;
 
 /**
- * Sets up camera controls for moving around from a top-down perspective,
- * suitable for strategy games and their ilk. The "ground" is assumed to be the
- * XY plane.
+ * Sets up camera controls for moving around from a top-down perspective, suitable for strategy
+ * games and their ilk. The "ground" is assumed to be the XY plane.
+ *
+ * <p>jME3 cutover (Phase 1): the fork's polled <code>InputHandler</code>/<code>InputAction</code>/
+ * <code>KeyBindingManager</code> action-list model has no jME3 equivalent (§2.10 of the migration
+ * map: REBUILD onto <code>InputManager</code> mappings + <code>AnalogListener</code>). This is
+ * now a jME3 {@link AnalogListener} carrying the pan/zoom/orbit/tilt camera logic; the named
+ * mappings are the analog actions it responds to. Binding the mappings to actual keys
+ * ({@link #registerWith}) is wired in Phase 3, when the host flips to a jME3 LWJGL3 context and
+ * the input source switches from libGDX to jME3's {@code InputManager}.
  */
-public class GodViewHandler extends InputHandler
+public class GodViewHandler
+    implements AnalogListener
 {
+    // analog action names (formerly fork KeyBindingManager bindings)
+    public static final String FORWARD = "forward";
+    public static final String BACKWARD = "backward";
+    public static final String LEFT = "left";
+    public static final String RIGHT = "right";
+    public static final String ZOOM_IN = "zoomIn";
+    public static final String ZOOM_OUT = "zoomOut";
+    public static final String TURN_RIGHT = "turnRight";
+    public static final String TURN_LEFT = "turnLeft";
+    public static final String TILT_FORWARD = "tiltForward";
+    public static final String TILT_BACK = "tiltBack";
+
+    /** Zoom/orbit/tilt speed multiplier (formerly the fork InputAction speed). */
+    public static final float SPEED = 0.5f;
+
+    /**
+     * Default WASD/arrow pan speed in world units per second (BUG-5).
+     *
+     * <p>The analog {@code value} for a held {@link KeyTrigger} is already tpf-weighted
+     * (jME3 {@code InputManager} passes {@code value == tpf}, ~0.016 at 60fps), so
+     * {@code _panSpeed * value} integrates to {@code _panSpeed} world units per second.
+     * The fork's pan {@code InputAction} used {@code setSpeed(0.5f)} against
+     * {@code evt.getTime()} (also seconds) — i.e. only 0.5 units/sec. With
+     * {@code BangMetrics.TILE_SIZE == 10}, that is 0.05 tiles/sec: a board is tens of
+     * tiles across, so a held key crawled "a few pixels" (BUG-5). A comfortable RTS pan
+     * is on the order of a few tiles/sec. Live tuning first settled on 40 units/sec; BUG-5
+     * follow-up ("still a bit slow") bumps the default to {@value} units/sec (= 6 tiles/sec),
+     * near the upper-comfortable end of the in-game slider range
+     * ({@link #MIN_PAN_SPEED}..{@link #MAX_PAN_SPEED}). The live value is user-adjustable on
+     * the Esc options screen (persisted in BangPrefs) and applied via {@link #setPanSpeed}.
+     * (Kept separate from {@link #SPEED} so the zoom/orbit/tilt rate is unchanged.)
+     */
+    public static final float DEFAULT_PAN_SPEED = 80f;
+
+    /** Lower bound of the in-game pan-speed slider (still slow but usable). */
+    public static final float MIN_PAN_SPEED = 20f;
+
+    /** Upper bound of the in-game pan-speed slider (fast, before it feels janky). */
+    public static final float MAX_PAN_SPEED = 100f;
+
+    /**
+     * The live WASD/arrow pan speed (world units/sec), shared across all handler instances so the
+     * options slider can adjust it on the fly without rebuilding the (Phase-3) input wiring. Read
+     * at startup from {@code BangPrefs} and updated by the Esc options slider. See {@link
+     * #DEFAULT_PAN_SPEED}.
+     */
+    protected static volatile float _panSpeed = DEFAULT_PAN_SPEED;
+
+    /**
+     * Returns the current WASD/arrow pan speed in world units per second.
+     */
+    public static float getPanSpeed ()
+    {
+        return _panSpeed;
+    }
+
+    /**
+     * Sets the live WASD/arrow pan speed (world units/sec). Takes effect immediately for all
+     * subsequent pan input; persistence is handled separately by the caller (BangPrefs).
+     */
+    public static void setPanSpeed (float speed)
+    {
+        _panSpeed = speed;
+    }
+
     /**
      * Creates the handler.
      *
@@ -45,159 +115,93 @@ public class GodViewHandler extends InputHandler
     public GodViewHandler (CameraHandler camhand)
     {
         _camhand = camhand;
-        setKeyBindings();
-        addActions();
-    }
-
-    protected void setKeyBindings ()
-    {
-        KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
-
-        // the key bindings for the pan actions
-        keyboard.set("forward", Keys.W);
-        keyboard.set("arrow_forward", Keys.UP);
-        keyboard.set("backward", Keys.S);
-        keyboard.set("arrow_backward", Keys.DOWN);
-        keyboard.set("left", Keys.A);
-        keyboard.set("arrow_left", Keys.LEFT);
-        keyboard.set("right", Keys.D);
-        keyboard.set("arrow_right", Keys.RIGHT);
-
-        // the key bindings for the zoom actions
-        keyboard.set("zoomIn", Keys.UP);
-        keyboard.set("zoomOut", Keys.DOWN);
-
-        // the key bindings for the orbit actions
-        keyboard.set("turnRight", Keys.RIGHT);
-        keyboard.set("turnLeft", Keys.LEFT);
-
-        // the key bindings for the tilt actions
-        keyboard.set("tiltForward", Keys.HOME);
-        keyboard.set("tiltBack", Keys.END);
-
-        keyboard.set("screenshot", Keys.F12);
-    }
-
-    protected void addActions ()
-    {
-        addAction(new KeyScreenShotAction(), "screenshot", false);
-        addPanActions();
-        addZoomActions();
-        addOrbitActions();
-        addTiltActions();
     }
 
     /**
-     * Adds actions for panning the camera around the scene.
+     * Registers this handler's key mappings and listeners with the supplied jME3 input manager.
+     * Phase 3 calls this once the jME3 host owns the input manager.
      */
-    protected void addPanActions ()
+    public void registerWith (InputManager inputManager)
     {
-        InputAction forward = new InputAction() {
-            public void performAction (InputActionEvent evt) {
-                _camhand.panCamera(0, speed * evt.getTime());
-            }
-        };
-        forward.setSpeed(0.5f);
-        addAction(forward, "forward", true);
-        addAction(forward, "arrow_forward", true);
-
-        InputAction backward = new InputAction() {
-            public void performAction (InputActionEvent evt) {
-                _camhand.panCamera(0, -speed * evt.getTime());
-            }
-        };
-        backward.setSpeed(0.5f);
-        addAction(backward, "backward", true);
-        addAction(backward, "arrow_backward", true);
-
-        InputAction left = new InputAction() {
-            public void performAction (InputActionEvent evt) {
-                _camhand.panCamera(-speed * evt.getTime(), 0);
-            }
-        };
-        left.setSpeed(0.5f);
-        addAction(left, "left", true);
-        addAction(left, "arrow_left", true);
-
-        InputAction right = new InputAction() {
-            public void performAction (InputActionEvent evt) {
-                _camhand.panCamera(speed * evt.getTime(), 0);
-            }
-        };
-        right.setSpeed(0.5f);
-        addAction(right, "right", true);
-        addAction(right, "arrow_right", true);
+        inputManager.addMapping(FORWARD, new KeyTrigger(KeyInput.KEY_W),
+            new KeyTrigger(KeyInput.KEY_UP));
+        inputManager.addMapping(BACKWARD, new KeyTrigger(KeyInput.KEY_S),
+            new KeyTrigger(KeyInput.KEY_DOWN));
+        inputManager.addMapping(LEFT, new KeyTrigger(KeyInput.KEY_A),
+            new KeyTrigger(KeyInput.KEY_LEFT));
+        inputManager.addMapping(RIGHT, new KeyTrigger(KeyInput.KEY_D),
+            new KeyTrigger(KeyInput.KEY_RIGHT));
+        inputManager.addMapping(ZOOM_IN, new KeyTrigger(KeyInput.KEY_UP));
+        inputManager.addMapping(ZOOM_OUT, new KeyTrigger(KeyInput.KEY_DOWN));
+        inputManager.addMapping(TURN_RIGHT, new KeyTrigger(KeyInput.KEY_RIGHT));
+        inputManager.addMapping(TURN_LEFT, new KeyTrigger(KeyInput.KEY_LEFT));
+        inputManager.addMapping(TILT_FORWARD, new KeyTrigger(KeyInput.KEY_HOME));
+        inputManager.addMapping(TILT_BACK, new KeyTrigger(KeyInput.KEY_END));
+        inputManager.addListener(this, FORWARD, BACKWARD, LEFT, RIGHT,
+            ZOOM_IN, ZOOM_OUT, TURN_RIGHT, TURN_LEFT, TILT_FORWARD, TILT_BACK);
     }
 
     /**
-     * Adds actions for zooming the camaera in and out.
+     * Returns whether this handler currently processes input. The fork
+     * {@code InputHandler} carried this flag; it is preserved here so callers can
+     * gate camera input (the actual jME3 input wiring is Phase 3, {@link #registerWith}).
      */
-    protected void addZoomActions ()
+    public boolean isEnabled ()
     {
-        InputAction zoomIn = new InputAction() {
-            public void performAction (InputActionEvent evt) {
-                _camhand.zoomCamera(-speed * evt.getTime());
-            }
-        };
-        zoomIn.setSpeed(0.5f);
-        addAction(zoomIn, "zoomIn", true);
-
-        InputAction zoomOut = new InputAction() {
-            public void performAction (InputActionEvent evt) {
-                _camhand.zoomCamera(speed * evt.getTime());
-            }
-        };
-        zoomOut.setSpeed(0.5f);
-        addAction(zoomOut, "zoomOut", true);
+        return _enabled;
     }
 
     /**
-     * Adds actions for orbiting the camera around the viewpoint.
+     * Enables or disables input processing for this handler.
      */
-    protected void addOrbitActions ()
+    public void setEnabled (boolean enabled)
     {
-        addAction(new OrbitAction(-FastMath.PI / 2), "turnRight", true);
-        addAction(new OrbitAction(FastMath.PI / 2), "turnLeft", true);
+        _enabled = enabled;
     }
 
-    /**
-     * Adds actions for tilting the camera (rotating around the yaw axis).
-     */
-    protected void addTiltActions ()
+    // from interface AnalogListener
+    public void onAnalog (String name, float value, float tpf)
     {
-        addAction(new TiltAction(-FastMath.PI / 2), "tiltForward", true);
-        addAction(new TiltAction(FastMath.PI / 2), "tiltBack", true);
-    }
-
-    protected class OrbitAction extends InputAction
-    {
-        public OrbitAction (float radPerSec)
-        {
-            _radPerSec = radPerSec;
+        if (!_enabled) {
+            return;
         }
-
-        public void performAction (InputActionEvent evt)
-        {
-            _camhand.orbitCamera(_radPerSec * evt.getTime());
+        // value already incorporates tpf for analog key triggers
+        switch (name) {
+        case FORWARD:
+            _camhand.panCamera(0, _panSpeed * value);
+            break;
+        case BACKWARD:
+            _camhand.panCamera(0, -_panSpeed * value);
+            break;
+        case LEFT:
+            _camhand.panCamera(-_panSpeed * value, 0);
+            break;
+        case RIGHT:
+            _camhand.panCamera(_panSpeed * value, 0);
+            break;
+        case ZOOM_IN:
+            _camhand.zoomCamera(-SPEED * value);
+            break;
+        case ZOOM_OUT:
+            _camhand.zoomCamera(SPEED * value);
+            break;
+        case TURN_RIGHT:
+            _camhand.orbitCamera(-FastMath.PI / 2 * value);
+            break;
+        case TURN_LEFT:
+            _camhand.orbitCamera(FastMath.PI / 2 * value);
+            break;
+        case TILT_FORWARD:
+            _camhand.tiltCamera(-FastMath.PI / 2 * value);
+            break;
+        case TILT_BACK:
+            _camhand.tiltCamera(FastMath.PI / 2 * value);
+            break;
         }
-
-        protected float _radPerSec;
-    }
-
-    protected class TiltAction extends InputAction
-    {
-        public TiltAction (float radPerSec)
-        {
-            _radPerSec = radPerSec;
-        }
-
-        public void performAction (InputActionEvent evt)
-        {
-            _camhand.tiltCamera(_radPerSec * evt.getTime());
-        }
-
-        protected float _radPerSec;
     }
 
     protected CameraHandler _camhand;
+
+    /** Whether this handler processes input (Phase-3 input wiring honours this flag). */
+    protected boolean _enabled = true;
 }

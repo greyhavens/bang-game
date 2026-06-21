@@ -3,22 +3,16 @@
 
 package com.threerings.bang.game.data;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
-import com.jme.util.export.binary.BinaryExporter;
-import com.jme.util.export.binary.BinaryImporter;
-
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.Streamable;
 
 import com.threerings.bang.game.data.BangBoard;
@@ -27,9 +21,14 @@ import com.threerings.bang.game.data.piece.Piece;
 /**
  * Contains the data ({@link BangBoard} and props, markers, etc.) associated
  * with a board stored on the client or server.
+ *
+ * <p>jME3 cutover (Phase 3): the on-disk/byte form is now pure Narya streaming (this class is
+ * already a {@link Streamable}, as are {@link BangBoard} and the {@link Piece} hierarchy). The
+ * fork/jME3 {@code Savable} {@code BinaryExporter}/{@code Importer} path is dropped — no jME3
+ * dependency on the board read path (see docs/jme3-board-conversion.md §5).
  */
 public class BoardData
-    implements Savable, Streamable
+    implements Streamable
 {
     /** The board itself (elevation data, etc.). */
     public BangBoard board;
@@ -43,7 +42,12 @@ public class BoardData
     public static BoardData fromBytes (byte[] data)
         throws IOException
     {
-        return (BoardData)BinaryImporter.getInstance().load(data);
+        try {
+            return (BoardData)new ObjectInputStream(
+                new ByteArrayInputStream(data)).readObject();
+        } catch (ClassNotFoundException cnfe) {
+            throw new IOException(cnfe);
+        }
     }
 
     /**
@@ -82,33 +86,9 @@ public class BoardData
         throws IOException
     {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        BinaryExporter.getInstance().save(this, bout);
+        ObjectOutputStream oout = new ObjectOutputStream(bout);
+        oout.writeObject(this);
+        oout.flush();
         return bout.toByteArray();
     }
-
-    // from interface Savable
-    public Class<?> getClassTag ()
-    {
-        return BoardData.class;
-    }
-
-    // from interface Savable
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        InputCapsule capsule = im.getCapsule(this);
-        board = (BangBoard)capsule.readSavable("board", null);
-        pieces = capsule.readSavableArrayList("pieces", NO_PIECES);
-    }
-
-    // from interface Savable
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(board, "board", null);
-        capsule.writeSavableArrayList(pieces, "pieces", NO_PIECES);
-    }
-
-    protected static final List<Piece> NO_PIECES = new ArrayList<Piece>();
 }

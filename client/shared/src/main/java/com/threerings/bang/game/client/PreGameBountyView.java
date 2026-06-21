@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -131,7 +131,7 @@ public class PreGameBountyView extends SteelWindow
             super.wasRemoved();
             _frame.release();
         }
-        protected void renderBorder (Renderer renderer) {
+        protected void renderBorder (RenderManager renderer) {
             super.renderBorder(renderer);
             _frame.render(renderer, 0, 0, _alpha);
         }

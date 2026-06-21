@@ -1,0 +1,33 @@
+MaterialDef SphereMap Overlay {
+
+    // An additive sphere-map (environment-map) overlay pass. Reproduces the fork's
+    // fixed-function EM_SPHERE metallic/hero sheen: the sphere map is sampled with eye-space
+    // sphere-map coordinates derived from the surface normal (classic GL_SPHERE_MAP texgen),
+    // tinted, and additively blended over the lit unit. The fork pushed this as a second
+    // RenderState[] overlay pass per ModelMesh (IronPlateViz/HeroInfluenceViz); here it is an
+    // additive Material applied to an overlay geometry and ramped via Intensity.
+
+    MaterialParameters {
+        // the sphere map (e.g. textures/environ/spheremap.png), sampled with eye-space
+        // sphere-map coordinates from the (view-space) surface normal.
+        Texture2D SphereMap
+
+        // overlay tint (white for the iron-plate metallic sheen; the player colour for the hero
+        // sheen). Multiplies the sampled sphere-map colour.
+        Color TintColor : 1.0 1.0 1.0 1.0
+
+        // overlay strength, ramped in/out by the influence control (0 = invisible).
+        Float Intensity : 1.0
+    }
+
+    Technique {
+        VertexShader   GLSL100 GLSL150 : shaders/SphereMapOverlay.vert
+        FragmentShader GLSL100 GLSL150 : shaders/SphereMapOverlay.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+            WorldViewMatrix
+            NormalMatrix
+        }
+    }
+}

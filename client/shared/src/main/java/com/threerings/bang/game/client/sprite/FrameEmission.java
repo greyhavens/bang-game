@@ -3,17 +3,11 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.io.IOException;
-
 import java.util.HashMap;
 import java.util.Properties;
 
-import com.jme.scene.Controller;
-import com.jme.scene.Spatial;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
 
 import com.samskivert.util.StringUtil;
 
@@ -46,8 +40,8 @@ public abstract class FrameEmission extends SpriteEmission
     }
     
     @Override // documentation inherited
-    public Controller putClone (
-        Controller store, Model.CloneCreator properties)
+    public Control putClone (
+        Control store, Model.CloneCreator properties)
     {
         if (store == null) {
             return null;
@@ -57,34 +51,8 @@ public abstract class FrameEmission extends SpriteEmission
         fstore._animFrames = _animFrames;
         return fstore;
     }
-    
+
     @Override // documentation inherited
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        String[] keys = capsule.readStringArray("animFramesKeys", null);
-        int[][] values = capsule.readIntArray2D("animFramesValues", null);
-        _animFrames = new HashMap<String, int[]>();
-        for (int ii = 0; ii < keys.length; ii++) {
-            _animFrames.put(keys[ii], values[ii]);
-        }
-    }
-    
-    @Override // documentation inherited
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        super.write(ex);
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(_animFrames.keySet().toArray(
-            new String[_animFrames.size()]), "animFramesKeys", null);
-        capsule.write(_animFrames.values().toArray(
-            new int[_animFrames.size()][]), "animFramesValues", null);
-    }
-    
-    // documentation inherited
     public void update (float time)
     {
         if (!isActive() || !isActiveEmission() || 

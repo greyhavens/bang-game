@@ -5,16 +5,15 @@ package com.threerings.bang.game.client;
 
 import java.awt.Point;
 
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.state.MaterialState;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
 
 import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.Sprite;
-
-import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
@@ -114,12 +113,20 @@ public class HoldHandler extends EffectHandler
         
         ShotSprite sprite = new ShotSprite(
             _ctx, "bonuses/frontier_town/nugget", null);
-        final MaterialState mstate = _ctx.getRenderer().createMaterialState();
-        mstate.getAmbient().set(ColorRGBA.white);
-        mstate.getDiffuse().set(ColorRGBA.white);
-        sprite.setRenderState(mstate);
-        sprite.setRenderState(RenderUtil.blendAlpha);
-        sprite.addController(new Spinner(sprite, FastMath.PI/2));
+        // jME3 cutover: the fork attached a MaterialState (ambient/diffuse white) + blendAlpha
+        // AlphaState to the sprite and animated its diffuse alpha to fade the nugget. jME3 fades
+        // through a Material's Color alpha; we build an alpha-blended Unshaded material and
+        // animate "Color" below.
+        // TODO(sprite-cluster reconcile): this overrides the sprite's whole material via
+        // Spatial.setMaterial; the real per-sprite alpha/colour-modulation seam belongs to the
+        // *Sprite framework (cluster 1) once its render-state->Material port lands. Reconcile to
+        // that seam (e.g. a Sprite.setColorModulation/alpha accessor) instead of overriding.
+        final Material mstate = new Material(_ctx.getAssetManager(),
+            "Common/MatDefs/Misc/Unshaded.j3md");
+        mstate.setColor("Color", new ColorRGBA(ColorRGBA.White));
+        mstate.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+        sprite.setMaterial(mstate);
+        sprite.addControl(new Spinner(sprite, FastMath.PI/2));
         _view.addSprite(sprite);
         
         BallisticShotHandler.PathParams pparams =
@@ -134,7 +141,7 @@ public class HoldHandler extends EffectHandler
                 if (added) {
                     alpha = 1f - alpha;
                 }
-                mstate.getDiffuse().a = alpha;
+                mstate.setColor("Color", new ColorRGBA(1f, 1f, 1f, alpha));
             }
             public void wasRemoved () {
                 super.wasRemoved();
@@ -186,7 +193,7 @@ public class HoldHandler extends EffectHandler
             public void update (float time) {
                 super.update(time);
                 float alpha = Math.min(_accum / _duration, 1f);
-                _sprite.setLocalScale(FastMath.LERP(alpha, 1f, 0.5f));
+                _sprite.setLocalScale(FastMath.interpolateLinear(alpha, 1f, 0.5f));
             }
             public void wasRemoved () {
                 super.wasRemoved();
@@ -228,7 +235,7 @@ public class HoldHandler extends EffectHandler
             public void update (float time) {
                 super.update(time);
                 float alpha = Math.min(_accum / _duration, 1f);
-                _sprite.setLocalScale(FastMath.LERP(alpha, 0.5f, 1f));
+                _sprite.setLocalScale(FastMath.interpolateLinear(alpha, 0.5f, 1f));
             }
             public void wasRemoved () {
                 super.wasRemoved();

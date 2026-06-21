@@ -3,11 +3,11 @@
 
 package com.threerings.bang.game.client.effect;
 
-import com.jme.math.Vector3f;
-import com.jme.math.Quaternion;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jmex.effects.particles.ParticleMesh;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.math.Vector3f;
+import com.jme3.math.Quaternion;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 import com.threerings.bang.client.util.ResultAttacher;
 
@@ -24,7 +24,7 @@ public abstract class ParticleEffectViz extends EffectViz
      * @param position whether or not to place the particle system at the
      * center of the target
      */
-    protected void displayParticles (ParticleMesh particles, boolean position)
+    protected void displayParticles (ParticleEmitter particles, boolean position)
     {
         displayParticles(getPosition(), particles, position);
     }
@@ -36,7 +36,7 @@ public abstract class ParticleEffectViz extends EffectViz
      * center of the target
      */
      protected void displayParticles (
-        final Vector3f pos, ParticleMesh particles, boolean position)
+        final Vector3f pos, ParticleEmitter particles, boolean position)
     {
         // we may be reusing this particle system so remove it from its
         // previous parent
@@ -50,9 +50,10 @@ public abstract class ParticleEffectViz extends EffectViz
             particles.setLocalTranslation(new Vector3f(pos.x, pos.y, pos.z + TILE_SIZE/2));
         }
         _view.getPieceNode().attachChild(particles);
-        particles.updateRenderState();
-        particles.updateGeometricState(0f, true);
-        particles.forceRespawn();
+        // jME3 refreshes material/light state during its update pass; the fork's explicit
+        // updateRenderState() is gone.
+        particles.updateGeometricState();
+        particles.emitAllParticles();
     }
 
     /**
@@ -84,9 +85,9 @@ public abstract class ParticleEffectViz extends EffectViz
     /**
      * Removes a particle system from the view.
      */
-    protected void removeParticles (ParticleMesh particles)
+    protected void removeParticles (ParticleEmitter particles)
     {
         _view.getPieceNode().detachChild(particles);
-        particles.getParticleController().setActive(false);
+        ParticlePool.setActive(particles, false);
     }
 }

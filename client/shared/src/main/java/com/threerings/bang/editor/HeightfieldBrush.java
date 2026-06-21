@@ -25,7 +25,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 import com.jmex.bui.event.MouseEvent;
 

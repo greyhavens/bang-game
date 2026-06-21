@@ -10,9 +10,8 @@ import java.util.Date;
 import java.util.List;
 import javax.imageio.ImageIO;
 
-import com.badlogic.gdx.Input.Keys;
-
-import com.jme.renderer.ColorRGBA;
+import com.jme3.input.KeyInput;
+import com.jme3.math.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -58,17 +57,17 @@ public class FKeyPopups
 {
     /** Enumerates the various types of popups we know about. */
     public static enum Type {
-        HELP(Keys.F1, 0, 0, true),
-        TUTORIALS(Keys.T, 0, 0, true),
-        WHERETO(Keys.W, 0, 0, true),
-        // REPORT_BUG(Keys.F2, 0, 0, false),
-        CLIENT_LOG(Keys.F3, InputEvent.SHIFT_DOWN_MASK, 0, false),
-        CHAT_HISTORY(Keys.F3, 0, 0, false),
-        SERVER_STATUS(Keys.F4, 0, BangTokenRing.SUPPORT, false),
-        SERVER_CONFIG(Keys.F5, 0, BangTokenRing.ADMIN, false),
-        CLIENT_CONFIG(Keys.F6, CTRL_SHIFT, 0, false),
-        AVATAR_SHOT(Keys.F11, CTRL_SHIFT, BangTokenRing.ADMIN, false),
-        SCREEN_SHOT(Keys.F12, 0, 0, false);
+        HELP(KeyInput.KEY_F1, 0, 0, true),
+        TUTORIALS(KeyInput.KEY_T, 0, 0, true),
+        WHERETO(KeyInput.KEY_W, 0, 0, true),
+        // REPORT_BUG(KeyInput.KEY_F2, 0, 0, false),
+        CLIENT_LOG(KeyInput.KEY_F3, InputEvent.SHIFT_DOWN_MASK, 0, false),
+        CHAT_HISTORY(KeyInput.KEY_F3, 0, 0, false),
+        SERVER_STATUS(KeyInput.KEY_F4, 0, BangTokenRing.SUPPORT, false),
+        SERVER_CONFIG(KeyInput.KEY_F5, 0, BangTokenRing.ADMIN, false),
+        CLIENT_CONFIG(KeyInput.KEY_F6, CTRL_SHIFT, 0, false),
+        AVATAR_SHOT(KeyInput.KEY_F11, CTRL_SHIFT, BangTokenRing.ADMIN, false),
+        SCREEN_SHOT(KeyInput.KEY_F12, 0, 0, false);
 
         public int keyCode () {
             return _keyCode;
@@ -190,7 +189,7 @@ public class FKeyPopups
     {
         // // special hackery to handle Ctrl-Shift-F2 which submits an
         // // auto-bug-report and exits the client
-        // if (keyCode == Keys.F2 && modifiers == CTRL_SHIFT) {
+        // if (keyCode == KeyInput.KEY_F2 && modifiers == CTRL_SHIFT) {
         //     if (!_autoBugged) { // avoid repeat pressage
         //         BangClient.submitBugReport(_ctx, "Autobug!", true);
         //     }
@@ -198,9 +197,11 @@ public class FKeyPopups
         // }
 
         // other hackery to handle taking screen shots
-        if (keyCode == Keys.F12) {
+        if (keyCode == KeyInput.KEY_F12) {
             String fname = "bang_screen_" + _sfmt.format(new Date());
-            _ctx.getRenderer().takeScreenShot(fname);
+            // jME3 cutover (Phase 3): screenshots go through a jME3 ScreenshotAppState on the host.
+            _ctx.getApp().takeScreenshot(
+                com.threerings.bang.client.BangClient.localDataDir("screenshots"), fname);
             String msg = MessageBundle.tcompose(
                 "m.screenshot_taken", fname + ".png");
             _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
@@ -212,7 +213,7 @@ public class FKeyPopups
 
         // yet more hackery to handle dumping a copy of your current avatar
         // look to a file (only available to admins currently)
-        if (keyCode == Keys.F11) {
+        if (keyCode == KeyInput.KEY_F11) {
             if (modifiers == CTRL_SHIFT && isAdmin) {
                 createCurrentLookSnapshot();
             }
@@ -323,19 +324,19 @@ public class FKeyPopups
                 ColorRGBA color;
                 if (umsg instanceof TellFeedbackMessage) {
                     who = MessageBundle.tcompose("m.history_tell", umsg.speaker);
-                    color = ColorRGBA.magenta;
+                    color = ColorRGBA.Magenta;
                 } else if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
                     who = MessageBundle.tcompose("m.history_told", umsg.speaker);
-                    color = ColorRGBA.magenta;
+                    color = ColorRGBA.Magenta;
                 } else {
                     who = MessageBundle.tcompose("m.history_speak", umsg.speaker);
-                    color = ColorRGBA.blue;
+                    color = ColorRGBA.Blue;
                 }
                 history.appendText(_cmsgs.xlate(who), color);
                 history.appendText(" " + umsg.message + "\n");
 
             } else if (msg instanceof SystemMessage) {
-                history.appendText(msg.message + "\n", ColorRGBA.red);
+                history.appendText(msg.message + "\n", ColorRGBA.Red);
             }
         }
         window.add(new BScrollPane(history));

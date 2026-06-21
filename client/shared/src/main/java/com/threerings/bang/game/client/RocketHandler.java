@@ -3,8 +3,8 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.math.Vector3f;
-import com.jme.scene.Spatial;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 
 import com.threerings.util.StreamablePoint;
 
@@ -171,14 +171,14 @@ public class RocketHandler extends EffectHandler
 
         final float delay = (usprite != null) ?
             usprite.getRocketDelay() : 0f;
-        ssprite.setCullMode(Spatial.CULL_ALWAYS);
+        ssprite.setCullHint(Spatial.CullHint.Always);
         ssprite.move(new OrientingBallisticPath(ssprite,
             new Vector3f(1, 0, 0), start, pparams.velocity, gravity, pparams.duration) {
             public void update (float time) {
                 if ((_daccum += time) < delay) {
                     return;
                 }
-                ssprite.setCullMode(Spatial.CULL_DYNAMIC);
+                ssprite.setCullHint(Spatial.CullHint.Dynamic);
                 super.update(time);
             }
             protected float _daccum;

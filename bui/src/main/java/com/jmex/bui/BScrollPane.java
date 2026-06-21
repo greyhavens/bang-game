@@ -7,7 +7,7 @@ package com.jmex.bui;
 
 import com.jmex.bui.backend.BackendProvider;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.event.MouseWheelListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.util.Dimension;
@@ -313,7 +313,7 @@ public class BScrollPane extends BContainer
         }
 
         // documentation inherited
-        protected void renderComponent (Renderer renderer)
+        protected void renderComponent (RenderManager renderer)
         {
             // translate by our offset into the viewport
             Insets insets = getInsets();

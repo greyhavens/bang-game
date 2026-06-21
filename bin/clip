@@ -1,0 +1,105 @@
+#!/bin/sh
+#
+# bin/clip <out.mp4> [seconds] [DISPLAY]
+#
+# Records a short screen-capture video of ONLY the Bang! Howdy / Bang Editor window -- never a
+# full-display grab (same privacy + relevance convention as bin/shot; see CLAUDE.md /
+# docs/running-the-game.md). Use this for the motion/temporal bugs (camera intro sweep,
+# scroll-wheel rotate, WASD pan, explosion timing) where a still can't show the defect; the
+# fork goldens in docs/fidelity-reference/video/ are themselves .mp4 clips.
+#
+# How it works: resolves the Bang window id with the SAME precise match as bin/shot
+# (title == "Bang Editor" OR starts with "Bang! Howdy"; WM_CLASS not a browser/terminal/editor;
+# prefer the jME/Java/LWJGL app class), reads its ABSOLUTE geometry via `xwininfo -id`, then
+# captures exactly that rectangle with `ffmpeg -f x11grab` for <seconds> (default 8).
+#
+# Requires: python3-xlib (window match), x11-utils (xwininfo), ffmpeg (capture).
+
+OUT="${1:?usage: bin/clip <out.mp4> [seconds] [DISPLAY]}"
+SECS="${2:-8}"
+DISP="${3:-${DISPLAY:-:1}}"
+
+command -v ffmpeg   >/dev/null 2>&1 || { echo "bin/clip: ffmpeg not installed (sudo apt-get install ffmpeg)" >&2; exit 2; }
+command -v xwininfo >/dev/null 2>&1 || { echo "bin/clip: xwininfo not installed (sudo apt-get install x11-utils)" >&2; exit 2; }
+
+# Resolve the Bang window id precisely (mirrors bin/shot's matching).
+WID=$(DISPLAY="$DISP" python3 - "$DISP" <<'PY'
+import sys
+out = sys.stderr
+disp = sys.argv[1]
+try:
+    import Xlib.display, Xlib.X
+except Exception as e:
+    out.write("bin/clip: python-xlib unavailable (%s)\n" % e); sys.exit(2)
+
+d = Xlib.display.Display(disp); root = d.screen().root
+NCL = d.intern_atom('_NET_CLIENT_LIST')
+NWN = d.intern_atom('_NET_WM_NAME'); WN = d.intern_atom('WM_NAME')
+DENY = ('firefox','mozilla','navigator','chrome','chromium','google-chrome','brave','opera',
+        'epiphany','webkit','safari','gnome-terminal','konsole','xterm','rxvt','alacritty',
+        'kitty','terminator','tilix','st-256color','urxvt','code','vscodium','sublime_text',
+        'jetbrains','idea','emacs','gedit')
+ALLOW = ('java','jvm','openjdk','lwjgl','glfw','bang','threerings','desktop')
+
+def wname(w):
+    for a in (NWN, WN):
+        try:
+            p = w.get_full_property(a, 0)
+            if p and p.value:
+                v = p.value
+                return v.decode('utf-8','ignore') if isinstance(v,(bytes,bytearray)) else str(v)
+        except Exception: pass
+    return ''
+def wclass(w):
+    try:
+        c = w.get_wm_class()
+        return ' '.join(x for x in c if x).lower() if c else ''
+    except Exception: return ''
+def title_ok(n):
+    return n == 'Bang Editor' or n.startswith('Bang! Howdy')
+
+cands = []
+cl = root.get_full_property(NCL, Xlib.X.AnyPropertyType)
+for wid in (cl.value if cl else []):
+    w = d.create_resource_object('window', wid)
+    try:
+        if w.get_attributes().map_state != Xlib.X.IsViewable:
+            continue
+    except Exception:
+        continue
+    n, c = wname(w), wclass(w)
+    if not title_ok(n):
+        continue
+    if any(bad in c for bad in DENY):
+        out.write("bin/clip: skipping denylisted window title=%r class=%r\n" % (n, c)); continue
+    cands.append((wid, n, c))
+
+if not cands:
+    out.write("bin/clip: no Bang window found on %s\n" % disp); sys.exit(1)
+preferred = [t for t in cands if any(ok in t[2] for ok in ALLOW)]
+chosen = (preferred or cands)
+if len(chosen) > 1:
+    out.write("bin/clip: %d candidates; using first: %r\n" % (len(chosen), [(n,c) for _,n,c in chosen]))
+wid, n, c = chosen[0]
+out.write("bin/clip: window title=%r class=%r id=%s\n" % (n, c, hex(wid)))
+print(hex(wid))
+PY
+)
+[ -n "$WID" ] || { echo "bin/clip: could not resolve Bang window id" >&2; exit 1; }
+
+# Absolute geometry from xwininfo (robust on multi-monitor; avoids translate_coords negatives).
+eval "$(DISPLAY="$DISP" xwininfo -id "$WID" | awk '
+  /Absolute upper-left X:/ {print "X="$NF}
+  /Absolute upper-left Y:/ {print "Y="$NF}
+  /Width:/  {print "W="$NF}
+  /Height:/ {print "H="$NF}')"
+[ -n "$W" ] && [ -n "$H" ] || { echo "bin/clip: xwininfo gave no geometry for $WID" >&2; exit 1; }
+
+# yuv420p needs even dimensions; round down.
+W=$((W - W % 2)); H=$((H - H % 2))
+echo "bin/clip: recording ${W}x${H} at +${X},${Y} on ${DISP} for ${SECS}s -> ${OUT}" >&2
+
+ffmpeg -hide_banner -loglevel warning -y \
+    -f x11grab -framerate 30 -video_size "${W}x${H}" -i "${DISP}.0+${X},${Y}" \
+    -t "${SECS}" -c:v libx264 -preset veryfast -pix_fmt yuv420p "${OUT}" \
+  && { echo "${OUT}"; exit 0; } || { echo "bin/clip: ffmpeg capture failed" >&2; exit 4; }

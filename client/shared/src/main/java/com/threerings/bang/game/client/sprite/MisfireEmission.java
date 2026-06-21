@@ -6,25 +6,18 @@ package com.threerings.bang.game.client.sprite;
 import java.util.HashMap;
 import java.util.Properties;
 
-import java.io.IOException;
-
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Texture;
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Controller;
-import com.jme.scene.Spatial;
-import com.jme.scene.state.TextureState;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jmex.effects.particles.ParticleMesh;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh.Type;
+import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.RenderUtil;
-import com.threerings.bang.game.client.effect.ParticlePool;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
@@ -59,46 +52,41 @@ public class MisfireEmission extends SpriteEmission
         if (!BangPrefs.isHighDetail()) {
             return;
         }
-        _smoke = new ParticleMesh("smoke", 16);
-        _smoke.addController(
-                new ParticlePool.TransientParticleController(_smoke));
-        _smoke.setMinimumLifeTime(500f);
-        _smoke.setMaximumLifeTime(1500f);
-        _smoke.setInitialVelocity(0.01f);
-        _smoke.setEmissionDirection(Vector3f.UNIT_Z);
-        _smoke.setMaximumAngle(FastMath.PI / 16);
-        _smoke.getParticleController().setPrecision(FastMath.FLT_EPSILON);
-        _smoke.getParticleController().setControlFlow(false);
+        // jME3: fork ParticleMesh -> ParticleEmitter (Phase-4 tunes the emission cone / lifetime).
+        _smoke = new ParticleEmitter("smoke", Type.Triangle, 16);
+        _smoke.setLowLife(0.5f);
+        _smoke.setHighLife(1.5f);
+        _smoke.getParticleInfluencer().setInitialVelocity(new Vector3f(0f, 0f, 0.01f));
+        _smoke.getParticleInfluencer().setVelocityVariation(0.1f);
         _smoke.setStartSize(0.5f * _size);
         _smoke.setEndSize(5f * _size);
         _smoke.setStartColor(new ColorRGBA(0f, 0f, 0f, 0.8f));
         _smoke.setEndColor(new ColorRGBA(0.15f, 0.15f, 0.15f, 0f));
-        _smoke.getParticleController().setRepeatType(Controller.RT_CLAMP);
-        _smoke.getParticleController().setActive(false);
-        _smoke.setModelBound(new BoundingBox());
-        _smoke.setIsCollidable(false);
-        if (_smoketex != null) {
-            _smoke.setRenderState(_smoketex);
-        }
-        _smoke.setRenderState(RenderUtil.blendAlpha);
-        _smoke.setRenderState(RenderUtil.overlayZBuf);
+        _smoke.setParticlesPerSec(0f);
     }
 
     @Override // documentation inherited
     public void resolveTextures (TextureProvider tprov)
     {
-        if (_smoketex == null) {
-            _smoketex = tprov.getTexture("/textures/effects/dust.png");
-            _smoketex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+        // effect texture loaded by path (not a model texture); load from the cache.
+        if (_smoketex == null && _ctx != null) {
+            _smoketex = _ctx.getTextureCache().getTexture("textures/effects/dust.png");
+            _smoketex.setWrap(WrapMode.Clamp);
         }
-        if (_smoke != null) {
-            _smoke.setRenderState(_smoketex);
+        if (_smoke != null && _smoketex != null) {
+            Material mat = new Material(_ctx.getAssetManager(),
+                "Common/MatDefs/Misc/Particle.j3md");
+            mat.setTexture("Texture", _smoketex);
+            RenderUtil.applyBlendAlpha(mat);
+            RenderUtil.applyOverlayZBuf(mat);
+            _smoke.setMaterial(mat);
+            RenderUtil.setOverlay(_smoke);
         }
     }
 
     @Override // documentation inherited
-    public Controller putClone (
-        Controller store, Model.CloneCreator properties)
+    public Control putClone (
+        Control store, Model.CloneCreator properties)
     {
         MisfireEmission mstore;
         if (store == null) {
@@ -112,39 +100,6 @@ public class MisfireEmission extends SpriteEmission
         return mstore;
     }
 
-    @Override // documentation inherited
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        String[] keys = capsule.readStringArray("animShotFrameKeys", null);
-        int[] values = capsule.readIntArray("animShotFrameValues", null);
-        _animShotFrame = new HashMap<String, Integer>();
-        for (int ii = 0; ii < keys.length; ii++) {
-            _animShotFrame.put(keys[ii], values[ii]);
-        }
-        _size = capsule.readFloat("size", 1f);
-    }
-    
-    @Override // documentation inherited
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        super.write(ex);
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(_animShotFrame.keySet().toArray(
-            new String[_animShotFrame.size()]), "animShotFrameKeys", null);
-        Integer[] values = _animShotFrame.values().toArray(
-            new Integer[_animShotFrame.size()]);
-        int[] ivals = new int[values.length];
-        for (int ii = 0; ii < values.length; ii++) {
-            ivals[ii] = values[ii];
-        }
-        capsule.write(ivals, "animShotFrameValues", null);
-        capsule.write(_size, "size", 1f);
-    }
-    
     // documentation inherited
     public void update (float time)
     {
@@ -210,13 +165,11 @@ public class MisfireEmission extends SpriteEmission
     {
         // black smoke
         if (_smoke != null) {
-            if (!_smoke.isActive()) {
+            if (_smoke.getParent() == null) {
                 _model.getEmissionNode().attachChild(_smoke);
-                _smoke.updateRenderState();
             }
-            _smoke.getLocalTranslation().set(_target.getWorldTranslation());
-            _smoke.updateGeometricState(0f, true);
-            _smoke.forceRespawn();
+            _smoke.setLocalTranslation(new Vector3f(_target.getWorldTranslation()));
+            _smoke.emitAllParticles();
         }
         if (_sprite != null) {
             _sprite.displayParticles("frontier_town/hit_flash", true);
@@ -242,10 +195,8 @@ public class MisfireEmission extends SpriteEmission
     protected Model _model;
 
     /** The misfire smoke particle system. */
-    protected ParticleMesh _smoke;
+    protected ParticleEmitter _smoke;
 
     /** The smoke texture. */
-    protected static TextureState _smoketex;
-
-    private static final long serialVersionUID = 1;
+    protected static Texture _smoketex;
 }

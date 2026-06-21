@@ -3,19 +3,13 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.io.IOException;
-
 import java.util.HashMap;
 import java.util.Properties;
 
-import com.jme.math.Vector3f;
-import com.jme.scene.Controller;
-import com.jme.scene.Spatial;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jmex.effects.particles.ParticleGeometry;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.util.SpatialVisitor;
@@ -86,8 +80,8 @@ public class ParticleEmission extends SpriteEmission
     }
     
     @Override // documentation inherited
-    public Controller putClone (
-        Controller store, Model.CloneCreator properties)
+    public Control putClone (
+        Control store, Model.CloneCreator properties)
     {
         ParticleEmission pstore;
         if (store == null) {
@@ -100,56 +94,37 @@ public class ParticleEmission extends SpriteEmission
         pstore._windInfluenced = _windInfluenced;
         return pstore;
     }
-    
-    @Override // documentation inherited
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        _effect = capsule.readString("effect", null);
-        _windInfluenced = capsule.readBoolean("windInfluenced", false);
-    }
-    
-    @Override // documentation inherited
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        super.write(ex);
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(_effect, "effect", null);
-        capsule.write(_windInfluenced, "windInfluenced", false);
-    }
-    
+
     // documentation inherited
     public void update (float time)
     {
         if (!isActive() || _particles == null) {
             return;
         }
-        _particles.getLocalTranslation().set(_target.getWorldTranslation());
-        _target.getWorldRotation().mult(ParticleCache.Z_UP_ROTATION,
-            _particles.getLocalRotation());
+        _particles.setLocalTranslation(_target.getWorldTranslation());
+        _particles.setLocalRotation(_target.getWorldRotation().mult(
+            ParticleCache.Z_UP_ROTATION));
     }
-    
+
     /**
-     * Recursively sets or clears particle release rates based on whether or
-     * not the emission is active.
+     * Recursively sets or clears particle release rates based on whether or not the emission is
+     * active. jME3: release rate is {@code ParticleEmitter.setParticlesPerSec}; the per-emitter
+     * rate is restored from the value captured on the first call.
      */
     protected void setReleaseRates ()
     {
         // store the release rates the first time they're set
         if (_releaseRates == null) {
-            _releaseRates = new HashMap<ParticleGeometry, Integer>();
-            new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
-                protected void visit (ParticleGeometry geom) {
-                    _releaseRates.put(geom, geom.getReleaseRate());
+            _releaseRates = new HashMap<ParticleEmitter, Float>();
+            new SpatialVisitor<ParticleEmitter>(ParticleEmitter.class) {
+                protected void visit (ParticleEmitter geom) {
+                    _releaseRates.put(geom, geom.getParticlesPerSec());
                 }
             }.traverse(_particles);
         }
-        new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
-            protected void visit (ParticleGeometry geom) {
-                geom.setReleaseRate(isActive() ? _releaseRates.get(geom) : 0);
+        new SpatialVisitor<ParticleEmitter>(ParticleEmitter.class) {
+            protected void visit (ParticleEmitter geom) {
+                geom.setParticlesPerSec(isActive() ? _releaseRates.get(geom) : 0f);
             }
         }.traverse(_particles);
     }
@@ -167,9 +142,7 @@ public class ParticleEmission extends SpriteEmission
     protected Spatial _particles;
     
     /** The original release rates for each particle layer. */
-    protected HashMap<ParticleGeometry, Integer> _releaseRates;
-    
+    protected HashMap<ParticleEmitter, Float> _releaseRates;
+
     protected Vector3f _dir = new Vector3f();
-    
-    private static final long serialVersionUID = 1;
 }

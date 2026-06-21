@@ -8,14 +8,13 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Texture;
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.state.TextureState;
-import com.jmex.effects.particles.ParticleFactory;
-import com.jmex.effects.particles.ParticleMesh;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh.Type;
+import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
 
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
@@ -95,9 +94,11 @@ public class MobileSprite extends ActiveSprite
             // use the vector to the target on the XY plane to determine the
             // heading, then adjust to the terrain slope
             Vector3f dir = _tsprite.getLocalTranslation().subtract(
-                localTranslation).normalizeLocal();
-            localRotation.fromAngleNormalAxis(
+                getLocalTranslation()).normalizeLocal();
+            Quaternion rot = new Quaternion();
+            rot.fromAngleNormalAxis(
                 FastMath.atan2(dir.x, -dir.y), Vector3f.UNIT_Z);
+            setLocalRotation(rot);
             snapToTerrain(false);
         }
     }
@@ -168,7 +169,7 @@ public class MobileSprite extends ActiveSprite
 
         // turn on the dust
         if (_dust != null) {
-            _dust.setReleaseRate(32);
+            _dust.setParticlesPerSec(DUST_RELEASE_RATE);
         }
     }
 
@@ -228,9 +229,9 @@ public class MobileSprite extends ActiveSprite
     }
 
     @Override // documentation inherited
-    public void updateWorldData (float time)
+    public void updateLogicalState (float time)
     {
-        super.updateWorldData(time);
+        super.updateLogicalState(time);
 
         if (!isMoving()) {
             checkMoveSound("not moving");
@@ -305,31 +306,29 @@ public class MobileSprite extends ActiveSprite
             return;
         }
 
-        _dust = ParticleFactory.buildParticles("dust", NUM_DUST_PARTICLES);
-        _dust.setInitialVelocity(0.005f);
-        _dust.setEmissionDirection(Vector3f.UNIT_Z);
-        _dust.setMaximumAngle(FastMath.PI / 2);
-        _dust.setMinimumLifeTime(500f);
-        _dust.setMaximumLifeTime(1500f);
-        _dust.getParticleController().setPrecision(FastMath.FLT_EPSILON);
-        _dust.getParticleController().setControlFlow(true);
-        _dust.setReleaseRate(0);
-        _dust.getParticleController().setReleaseVariance(0f);
-        _dust.setParticleSpinSpeed(0.05f);
+        // jME3: the fork ParticleFactory/ParticleMesh dust manager becomes a ParticleEmitter.
+        // The fork lifetimes were in ms (500-1500); jME3 LowLife/HighLife are in seconds. Fine
+        // tuning (spin, control-flow precision, exact velocity cone) is deferred to the Phase-4
+        // effects pass; this preserves the visible "kick up dust while moving" behaviour.
+        _dust = new ParticleEmitter("dust", Type.Triangle, NUM_DUST_PARTICLES);
+        _dust.getParticleInfluencer().setInitialVelocity(new Vector3f(0f, 0f, 0.005f));
+        _dust.getParticleInfluencer().setVelocityVariation(1f);
+        _dust.setLowLife(0.5f);
+        _dust.setHighLife(1.5f);
+        _dust.setParticlesPerSec(0f);
         _dust.setStartSize(TILE_SIZE / 5);
         _dust.setEndSize(TILE_SIZE / 3);
         _view.addWindInfluence(_dust);
-        _dust.setModelBound(new BoundingBox());
-        _dust.setIsCollidable(false);
-        if (_dusttex == null) {
-            _dusttex = RenderUtil.createTextureState(
-                _ctx, "textures/effects/dust.png");
-            _dusttex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-        }
-        _dust.setRenderState(_dusttex);
-        _dust.setRenderState(RenderUtil.blendAlpha);
-        _dust.setRenderState(RenderUtil.overlayZBuf);
-        _dust.updateRenderState();
+        // a Particle.j3md material textured with the dust sprite; the fork built a TextureState +
+        // RenderUtil blend/overlay presets, applied here on the material's render state.
+        Material dmat = new Material(_ctx.getAssetManager(),
+            "Common/MatDefs/Misc/Particle.j3md");
+        dmat.setTexture("Texture", _ctx.getTextureCache().getTexture(
+            "textures/effects/dust.png"));
+        RenderUtil.applyBlendAlpha(dmat);
+        RenderUtil.applyOverlayZBuf(dmat);
+        _dust.setMaterial(dmat);
+        RenderUtil.setOverlay(_dust);
 
         // put them in the highlight node so that they are positioned relative
         // to the board
@@ -401,7 +400,7 @@ public class MobileSprite extends ActiveSprite
 
         // deactivate the dust
         if (_dust != null) {
-            _dust.setReleaseRate(0);
+            _dust.setParticlesPerSec(0f);
         }
     }
 
@@ -530,24 +529,27 @@ public class MobileSprite extends ActiveSprite
         super.updateHighlight();
 
         if (_dust != null && isMoving()) {
-            _dust.getOriginOffset().set(localTranslation);
-            ColorRGBA start = _dust.getStartColor();
-            _view.getDustColor(localTranslation, start);
-            _dust.getEndColor().set(start.r, start.g, start.b, 0f);
+            Vector3f trans = getLocalTranslation();
+            _dust.setLocalTranslation(trans);
+            ColorRGBA start = new ColorRGBA();
+            _view.getDustColor(trans, start);
+            _dust.setStartColor(start);
+            _dust.setEndColor(new ColorRGBA(start.r, start.g, start.b, 0f));
         }
     }
 
-    protected ParticleMesh _dust;
+    protected ParticleEmitter _dust;
     protected Sound _moveSound;
     protected PieceSprite _tsprite;
 
     protected int _moveAction = MOVE_NORMAL;
     protected String _moveType = MOVE_WALKING;
 
-    protected static TextureState _dusttex;
-
     /** The number of dust particles. */
     protected static final int NUM_DUST_PARTICLES = 32;
+
+    /** Particles per second emitted while moving (fork release rate 32). */
+    protected static final float DUST_RELEASE_RATE = 32f;
 
     /** The number of seconds it takes new pieces to fade in. */
     protected static final float RESPAWN_DURATION = 1f;

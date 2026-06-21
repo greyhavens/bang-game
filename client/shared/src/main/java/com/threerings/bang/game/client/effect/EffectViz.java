@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client.effect;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;

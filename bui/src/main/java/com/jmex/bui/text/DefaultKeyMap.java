@@ -5,7 +5,7 @@
 
 package com.jmex.bui.text;
 
-import com.badlogic.gdx.Input.Keys;
+import com.jme3.input.KeyInput;
 import com.jmex.bui.event.InputEvent;
 
 /**
@@ -15,22 +15,23 @@ public class DefaultKeyMap extends BKeyMap
 {
     public DefaultKeyMap ()
     {
-        addMapping(ANY_MODIFIER, Keys.ENTER, EditCommand.ACTION);
-        addMapping(ANY_MODIFIER, Keys.BACKSPACE, EditCommand.BACKSPACE);
-        addMapping(ANY_MODIFIER, Keys.FORWARD_DEL, EditCommand.DELETE);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_RETURN, EditCommand.ACTION);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_NUMPADENTER, EditCommand.ACTION);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_BACK, EditCommand.BACKSPACE);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_DELETE, EditCommand.DELETE);
 
-        addMapping(ANY_MODIFIER, Keys.LEFT, EditCommand.CURSOR_LEFT);
-        addMapping(ANY_MODIFIER, Keys.RIGHT, EditCommand.CURSOR_RIGHT);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_LEFT, EditCommand.CURSOR_LEFT);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_RIGHT, EditCommand.CURSOR_RIGHT);
 
-        addMapping(ANY_MODIFIER, Keys.HOME, EditCommand.START_OF_LINE);
-        addMapping(ANY_MODIFIER, Keys.END, EditCommand.END_OF_LINE);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_HOME, EditCommand.START_OF_LINE);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_END, EditCommand.END_OF_LINE);
 
-        addMapping(ANY_MODIFIER, Keys.ESCAPE, EditCommand.RELEASE_FOCUS);
+        addMapping(ANY_MODIFIER, KeyInput.KEY_ESCAPE, EditCommand.RELEASE_FOCUS);
 
         // some emacs commands because I love them so
-        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.A, EditCommand.START_OF_LINE);
-        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.E, EditCommand.END_OF_LINE);
-        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.D, EditCommand.DELETE);
-        addMapping(InputEvent.CTRL_DOWN_MASK, Keys.K, EditCommand.CLEAR);
+        addMapping(InputEvent.CTRL_DOWN_MASK, KeyInput.KEY_A, EditCommand.START_OF_LINE);
+        addMapping(InputEvent.CTRL_DOWN_MASK, KeyInput.KEY_E, EditCommand.END_OF_LINE);
+        addMapping(InputEvent.CTRL_DOWN_MASK, KeyInput.KEY_D, EditCommand.DELETE);
+        addMapping(InputEvent.CTRL_DOWN_MASK, KeyInput.KEY_K, EditCommand.CLEAR);
     }
 }

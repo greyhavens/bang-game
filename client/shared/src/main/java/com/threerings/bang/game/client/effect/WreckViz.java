@@ -3,18 +3,25 @@
 
 package com.threerings.bang.game.client.effect;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.scene.state.MaterialState;
-import com.jmex.effects.particles.ParticleMesh;
+import java.util.ArrayList;
+
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.control.AbstractControl;
 
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.jme.model.Model;
+import com.threerings.jme.util.SpatialVisitor;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
@@ -60,7 +67,6 @@ public class WreckViz extends ParticleEffectViz
                 for (int i = 0; i < _wreckage.length; i++) {
                     _wreckage[i].bind(RandomUtil.pickRandom(wtypes));
                     _sprite.attachChild(_wreckage[i]);
-                    _wreckage[i].updateRenderState();
                 }
             }
         }
@@ -92,20 +98,21 @@ public class WreckViz extends ParticleEffectViz
         }
     }
 
-    /** A piece of wreckage thrown from the machine. */
+    /**
+     * A piece of wreckage thrown from the machine.
+     *
+     * <p>jME3 cutover: the fork {@code Node} subclass drove its own flight/spin/bounce/fade via
+     * overridden {@code updateWorldVectors}/{@code updateWorldData} hooks and a shared
+     * {@code MaterialState}. jME3 has no such per-node scene hooks; the motion is an
+     * {@link AbstractControl} and the fade is applied to the loaded model geometries' material
+     * {@code Color} alpha.
+     */
     public class Wreckage extends Node
     {
         public Wreckage ()
         {
             super("wreckage");
-
-            // initialize the render state for transparency control
-            setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-            setRenderState(RenderUtil.blendAlpha);
-            _mstate = _ctx.getRenderer().createMaterialState();
-            _mstate.getDiffuse().set(ColorRGBA.white);
-            _mstate.getAmbient().set(ColorRGBA.white);
-            setRenderState(_mstate);
+            setQueueBucket(Bucket.Transparent);
 
             // fire the piece in a random direction
             float azimuth = RandomUtil.getFloat(FastMath.TWO_PI),
@@ -114,79 +121,88 @@ public class WreckViz extends ParticleEffectViz
                 FastMath.cos(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(elevation));
-            _linear.mult(TILE_SIZE / 2, getLocalTranslation());
+            setLocalTranslation(_linear.mult(TILE_SIZE / 2));
             _linear.multLocal(WRECKAGE_INIT_SPEED);
 
             // pick a random starting rotation using Euler angles
-            getLocalRotation().fromAngles(new float[] {
+            Quaternion rot = new Quaternion();
+            rot.fromAngles(
                 RandomUtil.getFloat(FastMath.TWO_PI),
                 RandomUtil.getFloat(FastMath.TWO_PI),
-                RandomUtil.getFloat(FastMath.TWO_PI) });
+                RandomUtil.getFloat(FastMath.TWO_PI));
+            setLocalRotation(rot);
 
             // initialize the angular velocity as principally around
             // the local up axis but with some wobble
             _angular = new Vector3f(getRandomFloat(FastMath.TWO_PI),
                 getRandomFloat(FastMath.TWO_PI),
                 FastMath.PI*8f + getRandomFloat(FastMath.TWO_PI));
-            getLocalRotation().multLocal(_angular);
+            rot.multLocal(_angular);
+
+            addControl(new AbstractControl() {
+                @Override protected void controlUpdate (float time) {
+                    step(time);
+                }
+                @Override protected void controlRender (RenderManager rm, ViewPort vp) {
+                }
+            });
         }
 
         public void bind (String type)
         {
             _ctx.loadModel("units", "wreckage/" + type,
-                new ResultAttacher<Model>(this));
+                new ResultAttacher<Model>(this) {
+                public void requestCompleted (Model model) {
+                    super.requestCompleted(model);
+                    // gather the loaded geometries' materials so we can fade their alpha; apply the
+                    // alpha-blend preset so the fade is visible.
+                    new SpatialVisitor<Geometry>(Geometry.class) {
+                        protected void visit (Geometry geom) {
+                            if (geom.getMaterial() != null) {
+                                RenderUtil.applyBlendAlpha(geom.getMaterial());
+                                _mats.add(geom.getMaterial());
+                            }
+                        }
+                    }.traverse(model);
+                }
+            });
         }
 
-        public void updateWorldVectors ()
+        /** Advances the wreckage motion + fade by the supplied elapsed time. */
+        protected void step (float time)
         {
-            // the first time we update with the parent, get the relative vecs
-            if (!_wvinit && getParent() != null) {
-                super.updateWorldVectors();
-                localTranslation.set(worldTranslation);
-                localScale.set(worldScale);
-                worldRotation.multLocal(_linear);
-                _wvinit = true;
-
-            } else {
-                worldTranslation.set(localTranslation);
-                worldRotation.set(localRotation);
-                worldScale.set(localScale);
-            }
-        }
-
-        public void updateWorldData (float time)
-        {
-            super.updateWorldData(time);
-
-            // update the position, rotation, and velocity of the wreckage
             Vector3f loc = getLocalTranslation();
             loc.scaleAdd(time, _linear, loc);
             _linear.scaleAdd(time, WRECKAGE_ACCEL, _linear);
+            Quaternion rot = getLocalRotation();
             _spin.set(_angular.x, _angular.y, _angular.z, 0f);
-            _spin.multLocal(getLocalRotation()).multLocal(time * 0.5f);
-            getLocalRotation().addLocal(_spin);
-            getLocalRotation().normalize();
+            _spin.multLocal(rot).multLocal(time * 0.5f);
+            rot.addLocal(_spin);
+            rot.normalizeLocal();
+            setLocalRotation(rot);
 
             // have the wreckage bounce if it reaches the terrain
-            float height = _view.getTerrainNode().getHeightfieldHeight(
-                loc.x, loc.y);
+            float height = _view.getTerrainNode().getHeightfieldHeight(loc.x, loc.y);
             if (loc.z < height) {
                 loc.z = height;
-                Vector3f normal = _view.getTerrainNode().getHeightfieldNormal(
-                    loc.x, loc.y);
+                Vector3f normal = _view.getTerrainNode().getHeightfieldNormal(loc.x, loc.y);
                 _linear.negateLocal();
                 normal.multLocal(_linear.dot(normal) * 2f);
                 normal.subtract(_linear, _linear).multLocal(0.75f);
                 _angular.multLocal(0.75f);
             }
+            setLocalTranslation(loc);
 
             // fade it out over time
             float alpha = 1f - (_age / WRECKAGE_LIFESPAN);
-            _mstate.getDiffuse().a = alpha;
-            _mstate.getAmbient().a = alpha;
+            for (Material mat : _mats) {
+                if (mat.getParam("Color") != null) {
+                    mat.setColor("Color", new ColorRGBA(1f, 1f, 1f, alpha));
+                }
+            }
 
-            // remove streamer if its lifespan has elapsed
-            if ((_age += time) > WRECKAGE_LIFESPAN) {
+            // remove the wreckage once its lifespan has elapsed
+            if ((_age += time) > WRECKAGE_LIFESPAN && getParent() != null) {
                 getParent().detachChild(this);
             }
         }
@@ -199,11 +215,8 @@ public class WreckViz extends ParticleEffectViz
         /** The piece's linear and angular velocities. */
         protected Vector3f _linear, _angular;
 
-        /** The piece's material state, used to control alpha. */
-        protected MaterialState _mstate;
-
-        /** Set when the piece has its initial world vectors. */
-        protected boolean _wvinit;
+        /** The loaded model geometries' materials, faded by alpha. */
+        protected ArrayList<Material> _mats = new ArrayList<Material>();
 
         /** Temporary quaternion representing spin. */
         protected Quaternion _spin = new Quaternion();
@@ -213,7 +226,7 @@ public class WreckViz extends ParticleEffectViz
     }
 
     protected EffectViz _wrapviz;
-    protected ParticleMesh _steamcloud;
+    protected ParticleEmitter _steamcloud;
     protected Wreckage[] _wreckage;
 
     /** The average number of pieces of wreckage to throw. */

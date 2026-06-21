@@ -13,20 +13,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.lwjgl.input.Cursor;
-
-import com.jme.bounding.BoundingBox;
-import com.jme.light.DirectionalLight;
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Controller;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.TextureState;
+import com.jme3.bounding.BoundingBox;
+import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.AbstractControl;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -110,7 +108,7 @@ public class BangBoardView extends BoardView
         _ctrl = ctrl;
 
         // this is used to show a unit's attack range
-        _rngstate = RenderUtil.createTextureState(
+        _rngstate = RenderUtil.createTextureMaterial(
             ctx, "textures/ustatus/crosshairs_shotrange.png");
 
         addListener(this);
@@ -248,7 +246,8 @@ public class BangBoardView extends BoardView
         // ...and fade the whole screen to black
         _ctx.getInterface().attachChild(
             new FadeInOutEffect(
-                ColorRGBA.black, 0f, 1f, 2f, true) {
+                _ctx.getAssetManager(), _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(),
+                ColorRGBA.Black, 0f, 1f, 2f, true) {
                 protected void fadeComplete () {
                     super.fadeComplete();
                     // and prepare to fade the new board in
@@ -540,12 +539,12 @@ public class BangBoardView extends BoardView
         // itself after the duration is up and the particle system has
         // exhausted itself
         Node cnode = new Node("camera") {
-            public void updateWorldData (float time) {
+            public void updateLogicalState (float time) {
                 getLocalTranslation().set(
                     _ctx.getCameraHandler().getCamera().getLocation());
-                super.updateWorldData(time);
+                super.updateLogicalState(time);
                 if ((_accum += time) >= duration &&
-                    getControllers().isEmpty()) {
+                    getNumControls() == 0) {
                     ParticleUtil.stopAndRemove(this);
                 }
             }
@@ -614,7 +613,8 @@ public class BangBoardView extends BoardView
 
         // fade to white before changing lights
         _ctx.getInterface().attachChild(new FadeInOutEffect(
-            ColorRGBA.white, 0f, 1f, NOON_FADE_DURATION, false) {
+                _ctx.getAssetManager(), _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(),
+                ColorRGBA.White, 0f, 1f, NOON_FADE_DURATION, false) {
             protected void fadeComplete () {
                 super.fadeComplete();
                 continueSettingHighNoon();
@@ -651,15 +651,16 @@ public class BangBoardView extends BoardView
 
         // store the new values and transition to them
         final DirectionalLight[] nlights = copyLights();
-        _node.addController(new Controller() {
-            public void update (float time) {
-                _elapsed = Math.min(_elapsed + time, duration);
+        _node.addControl(new AbstractControl() {
+            @Override protected void controlUpdate (float tpf) {
+                _elapsed = Math.min(_elapsed + tpf, duration);
                 float alpha = _elapsed / duration;
                 interpolateLights(olights, nlights, alpha);
                 if (_elapsed >= duration) {
-                    _node.removeController(this);
+                    _node.removeControl(this);
                 }
             }
+            @Override protected void controlRender (RenderManager rm, ViewPort vp) {}
             protected float _elapsed;
         });
     }
@@ -734,7 +735,7 @@ public class BangBoardView extends BoardView
         clearMarquee(0f);
         if (_bangobj.marquee != null) {
             addMarquee(_marquee = createMarqueeLabel(msgs.xlate(_bangobj.marquee)),
-                    _ctx.getRenderer().getWidth()/2, _ctx.getRenderer().getHeight()/2 - 90);
+                    _ctx.getCamera().getWidth()/2, _ctx.getCamera().getHeight()/2 - 90);
         }
 
         _pmarquees = new BWindow(_ctx.getStyleSheet(), new AbsoluteLayout()) {
@@ -803,8 +804,8 @@ public class BangBoardView extends BoardView
                 new Rectangle(0, 224, BangUI.MIN_WIDTH, 30));
 
         // add the marquee window
-        int x = (_ctx.getDisplay().getWidth() - BangUI.MIN_WIDTH) / 2,
-            y = (_ctx.getDisplay().getHeight() - BangUI.MIN_HEIGHT) / 2;
+        int x = (_ctx.getCamera().getWidth() - BangUI.MIN_WIDTH) / 2,
+            y = (_ctx.getCamera().getHeight() - BangUI.MIN_HEIGHT) / 2;
         _pmarquees.setBounds(x, y, BangUI.MIN_WIDTH, BangUI.MIN_HEIGHT);
         _ctx.getRootNode().addWindow(_pmarquees);
     }
@@ -815,11 +816,10 @@ public class BangBoardView extends BoardView
      */
     protected void continueSettingHighNoon ()
     {
-        // switch terrain shadows off for high noon
-        MaterialState mstate = (MaterialState)_tnode.getRenderState(
-            RenderState.RS_MATERIAL);
-        mstate.setColorMaterial(_highNoon ?
-            MaterialState.CM_NONE : MaterialState.CM_DIFFUSE);
+        // jME3: the fork toggled terrain color-material (CM_NONE vs CM_DIFFUSE) to drop vertex
+        // shadow modulation for high noon. The terrain material's vertex-color use is now a
+        // material param; toggling it for high-noon is a Phase-4 material concern (the lighting
+        // change below still applies). Flagged.
 
         // switch to high noon lighting or restore the original
         refreshLights();
@@ -829,7 +829,8 @@ public class BangBoardView extends BoardView
 
         // fade back in
         _ctx.getInterface().attachChild(new FadeInOutEffect(
-            ColorRGBA.white, 1f, 0f, NOON_FADE_DURATION, false));
+                _ctx.getAssetManager(), _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(),
+                ColorRGBA.White, 1f, 0f, NOON_FADE_DURATION, false));
     }
 
     @Override // documentation inherited
@@ -837,23 +838,23 @@ public class BangBoardView extends BoardView
     {
         super.refreshLights();
         if (_highNoon) {
-            _lights[0].getDirection().set(-0.501f, 0.213f, -0.839f);
-            _lights[0].getDiffuse().set(1f, 1f, 0.8f, 1f);
-            _lights[0].getAmbient().set(0.16f, 0.16f, 0.05f, 1f);
-
-            _lights[1].getDirection().set(0.9994f, 0f, 0.035f);
-            _lights[1].getDiffuse().set(1f, 0.8f, 0.2f, 1f);
-            _lights[1].getAmbient().set(0.06f, 0.15f, 0.18f, 1f);
+            // jME3: directional lights carry one color; ambient is the shared AmbientLight (we use
+            // light 0's ambient as the scene ambient, matching the BoardView mapping).
+            _lights[0].setDirection(new Vector3f(-0.501f, 0.213f, -0.839f));
+            _lights[0].setColor(new ColorRGBA(1f, 1f, 0.8f, 1f));
+            if (_ambient != null) {
+                _ambient.setColor(new ColorRGBA(0.16f, 0.16f, 0.05f, 1f));
+            }
+            _lights[1].setDirection(new Vector3f(0.9994f, 0f, 0.035f));
+            _lights[1].setColor(new ColorRGBA(1f, 0.8f, 0.2f, 1f));
         }
         if (_wendigoAmbiance) {
-            // Calculate the darkened diffuse color by converting to YUV,
-            // altering the luminance to 0.3, then converting back, this should
-            // preserve the color
-            ColorRGBA diffuseYUV = RGBtoYUV(_lights[0].getDiffuse());
+            // darken the primary light's color by setting its YUV luminance to 0.3
+            ColorRGBA diffuseYUV = RGBtoYUV(_lights[0].getColor());
             diffuseYUV.r = 0.3f;
-            _lights[0].getDiffuse().set(YUVtoRGB(diffuseYUV));
-            _lights[1].getDiffuse().set(COLOR_CYAN);
-            _lights[1].getDirection().set(0f, 0f, 1f);
+            _lights[0].setColor(YUVtoRGB(diffuseYUV));
+            _lights[1].setColor(new ColorRGBA(COLOR_CYAN));
+            _lights[1].setDirection(new Vector3f(0f, 0f, 1f));
         }
     }
 
@@ -866,21 +867,17 @@ public class BangBoardView extends BoardView
         _cursor = new Node("cursor");
         _ctx.loadModel("bonuses", "frontier_town/bonus_point",
                        new ResultAttacher<Model>(_cursor));
-        _cursor.addController(new Spinner(_cursor, FastMath.PI));
-        _cursor.addController(new Bouncer(_cursor, TILE_SIZE, TILE_SIZE/4));
-        _cursor.setRenderState(RenderUtil.lequalZBuf);
-        _cursor.setIsCollidable(false);
-        _cursor.updateRenderState();
+        _cursor.addControl(new Spinner(_cursor, FastMath.PI));
+        _cursor.addControl(new Bouncer(_cursor, TILE_SIZE, TILE_SIZE/4));
+        // jME3: depth (lequalZBuf) is a per-material concern carried by the model's materials;
+        // collidability is controlled by keeping the cursor out of the pick node.
 
         // create our pointing arrow
         _pointer = new Node("pointer");
         _ctx.loadModel("extras", "frontier_town/arrow",
                        new ResultAttacher<Model>(_pointer));
-        _pointer.addController(new Spinner(_pointer, FastMath.PI));
-        _pointer.addController(new Bouncer(_pointer, TILE_SIZE, TILE_SIZE/4));
-        _pointer.setRenderState(RenderUtil.lequalZBuf);
-        _pointer.setIsCollidable(false);
-        _pointer.updateRenderState();
+        _pointer.addControl(new Spinner(_pointer, FastMath.PI));
+        _pointer.addControl(new Bouncer(_pointer, TILE_SIZE, TILE_SIZE/4));
     }
 
     @Override // documentation inherited
@@ -1172,7 +1169,7 @@ public class BangBoardView extends BoardView
 
         // move all of our loaded models into position
         long delay = 1L;
-        Camera camera = _ctx.getRenderer().getCamera();
+        Camera camera = _ctx.getCamera();
         BoundingBox bbox = new BoundingBox(new Vector3f(),
             TILE_SIZE/2, TILE_SIZE/2, TILE_SIZE/2);
         long pathDelay = 0L, segTime = (long)(1000L / Config.getMovementSpeed());
@@ -1196,9 +1193,9 @@ public class BangBoardView extends BoardView
                         unit.computeElevation(_board, point.x, point.y);
                     startidx = ii;
                     int state = camera.getPlaneState();
-                    int rv = camera.contains(bbox);
+                    Camera.FrustumIntersect rv = camera.contains(bbox);
                     camera.setPlaneState(state);
-                    if (rv == Camera.OUTSIDE_FRUSTUM) {
+                    if (rv == Camera.FrustumIntersect.Outside) {
                         break;
                     }
                 }
@@ -1780,11 +1777,18 @@ public class BangBoardView extends BoardView
 
     protected void centerCameraOnPiece (Piece piece)
     {
-        PieceSprite sprite = getPieceSprite(piece);
-        if (sprite != null) {
-            ((GameInputHandler)_ctx.getInputHandler()).aimCamera(
-                sprite.getWorldTranslation());
+        if (piece == null) {
+            return;
         }
+        // Pan the camera so the piece's tile centre sits under the current ground point. This uses
+        // the same working GameCameraHandler.panCameraAbs path that WASD pan / the board tour use
+        // (the old getInputHandler()/aimCamera seam was a Phase-2 no-op stub; this restores piece
+        // centring on jME3 without needing the removed global input handler).
+        GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
+        Vector3f gpoint = camhand.getGroundPoint();
+        float dx = (piece.x + 0.5f) * TILE_SIZE - gpoint.x,
+              dy = (piece.y + 0.5f) * TILE_SIZE - gpoint.y;
+        camhand.panCameraAbs(dx, dy);
     }
 
     protected void executeAction ()
@@ -2080,39 +2084,43 @@ public class BangBoardView extends BoardView
      */
     protected DirectionalLight[] copyLights ()
     {
+        // jME3: a directional light carries one color + direction (the fork carried separate
+        // diffuse/specular/ambient). We snapshot color+direction; the shared ambient is snapshot
+        // separately for the blend.
         DirectionalLight[] nlights = new DirectionalLight[_lights.length];
         for (int ii = 0; ii < _lights.length; ii++) {
             nlights[ii] = new DirectionalLight();
-            nlights[ii].setAmbient(new ColorRGBA(_lights[ii].getAmbient()));
-            nlights[ii].setDiffuse(new ColorRGBA(_lights[ii].getDiffuse()));
-            nlights[ii].setSpecular(new ColorRGBA(_lights[ii].getSpecular()));
+            nlights[ii].setColor(new ColorRGBA(_lights[ii].getColor()));
             nlights[ii].setDirection(new Vector3f(_lights[ii].getDirection()));
         }
+        _snapAmbient = (_ambient == null) ? new ColorRGBA() :
+            new ColorRGBA(_ambient.getColor());
         return nlights;
     }
 
     /**
-     * Interpolates between two sets of lights and stores the result in the
-     * board lights.
+     * Interpolates between two sets of lights and stores the result in the board lights.
      */
     protected void interpolateLights (
         DirectionalLight[] l1, DirectionalLight[] l2, float alpha)
     {
         for (int ii = 0; ii < _lights.length; ii++) {
-            _lights[ii].getAmbient().interpolate(
-                l1[ii].getAmbient(), l2[ii].getAmbient(), alpha);
-            _lights[ii].getDiffuse().interpolate(
-                l1[ii].getDiffuse(), l2[ii].getDiffuse(), alpha);
-            _lights[ii].getSpecular().interpolate(
-                l1[ii].getSpecular(), l2[ii].getSpecular(), alpha);
+            ColorRGBA c = new ColorRGBA();
+            c.interpolateLocal(l1[ii].getColor(), l2[ii].getColor(), alpha);
+            _lights[ii].setColor(c);
             Vector3f dir1 = l1[ii].getDirection(),
                 dir2 = l2[ii].getDirection();
+            Vector3f dir = new Vector3f();
             getDirectionVector(
-                FastMath.LERP(alpha, getAzimuth(dir1), getAzimuth(dir2)),
-                FastMath.LERP(alpha, getElevation(dir1), getElevation(dir2)),
-                _lights[ii].getDirection());
+                FastMath.interpolateLinear(alpha, getAzimuth(dir1), getAzimuth(dir2)),
+                FastMath.interpolateLinear(alpha, getElevation(dir1), getElevation(dir2)),
+                dir);
+            _lights[ii].setDirection(dir);
         }
     }
+
+    /** Snapshot of the shared ambient color taken by {@link #copyLights}. */
+    protected ColorRGBA _snapAmbient;
 
     /**
      * Converts a RGB value to a YUV value.
@@ -2234,7 +2242,7 @@ public class BangBoardView extends BoardView
         try {
             BCursor defaultCursor = BangUI.loadCursor("default");
             if (_defaultCursor == null) {
-                _defaultCursor = defaultCursor.getCursor();
+                _defaultCursor = defaultCursor.getImage();
             }
             defaultCursor.setCursor(merge, 0, 0);
             defaultCursor.show();
@@ -2252,7 +2260,8 @@ public class BangBoardView extends BoardView
         if (_defaultCursor != null) {
             try {
                 BCursor defaultCursor = BangUI.loadCursor("default");
-                defaultCursor.setCursor(_defaultCursor);
+                defaultCursor.setCursor(_defaultCursor, defaultCursor.getHotspotX(),
+                    defaultCursor.getHotspotY());
                 defaultCursor.show();
             } catch (Exception e) {
                 // this should never happen
@@ -2292,7 +2301,6 @@ public class BangBoardView extends BoardView
             if (mx != Short.MAX_VALUE) {
                 _highlight = _tnode.createHighlight(x, y, true, true);
                 _unit.setPendingNode(_highlight);
-                _highlight.updateRenderState();
                 _pnode.attachChild(_highlight);
             }
 
@@ -2383,13 +2391,13 @@ public class BangBoardView extends BoardView
     protected ArrayList<UnitSprite> _readyUnits = new ArrayList<UnitSprite>();
 
     /** The old default mouse cursor. */
-    protected Cursor _defaultCursor;
+    protected BufferedImage _defaultCursor;
 
     /** Set to true if shift was down during the mouse press. */
     protected boolean _shiftDown = false;
 
     /** Texture used to show a unit's shot range. */
-    protected TextureState _rngstate;
+    protected Material _rngstate;
 
     /** A traversal predicate for units running to their initial positions. */
     protected AStarPathUtil.TraversalPred _tpred =

@@ -5,7 +5,7 @@ package com.threerings.bang.game.client;
 
 import java.util.HashMap;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
@@ -105,7 +105,7 @@ public class InGameBountyView extends BWindow
     }
 
     @Override // from BWindow
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         // render our background at 50% transparency
         getBackground().render(renderer, 0, 0, _width, _height, 0.5f);

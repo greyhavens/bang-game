@@ -1,0 +1,243 @@
+#!/usr/bin/env bash
+#
+# devtest — the standard "run sheet" for launching Bang! Howdy (jME3 / LWJGL3) for testing.
+#
+# It removes the recurring setup friction that has repeatedly broken automated test runs:
+#   1. kill any stale Bang processes and free the server port (47624)
+#   1b. seed any missing etc/test/ local config from etc/*.dist (gitignored; fresh worktrees)
+#   2. verify MySQL is up and the bang/yeehaw account connects
+#   3. ./gradlew deploy (unless --no-deploy) and abort on failure
+#   4. start the server and WAIT until it logs "Server listening" (never launch the client early)
+#   5. launch the client with the standard test flags (-test/-autoplay; creds; --mute to silence)
+#   6. optionally hold N seconds and capture the Bang window only (--shot, via bin/shot)
+#   7. ALWAYS tear everything down on exit (trap), leaving port 47624 free for the next run
+#
+# Agents: use --shot mode (it auto-tears-down and exits, so it is deterministic and never hangs).
+# Humans: run without --shot to keep it up; Ctrl-C tears it down.
+#
+# See docs/running-the-game.md for details, examples, and the deterministic offscreen
+# alternatives (tools/j3o-converter RenderToPng / RenderWaterToPng) for model/water shots.
+
+set -uo pipefail
+
+HERE="$(cd "$(dirname "$0")/.." && pwd)"
+DISPLAY="${DISPLAY:-:1}"; export DISPLAY
+PORT=47624
+SERVER_LOG=/tmp/devtest-server.log
+CLIENT_LOG=/tmp/devtest-client.log
+
+BOARD=""; NODE="frontier_town"; SHOT=""; HOLD=40; DEPLOY=1; MUTE=0; CLIENT=1; CLICK=1
+
+usage () {
+  cat <<EOF
+Usage: bin/devtest [options]
+  --board "<name>"   load a specific board (e.g. --board "Thunderbird Rock"); default: random test board
+  --node <town>      server node: frontier_town (default) or indian_post
+                     (indian_post needs 'indian_post.town_id = indian_post' in etc/test/server.properties)
+  --shot <path>      hold --hold seconds, capture ONLY the Bang window (bin/shot) to <path>, then tear down
+  --hold <secs>      seconds to wait before the screenshot (default ${HOLD})
+  --no-deploy        skip './gradlew deploy' (use the existing build)
+  --mute             silence audio for this run (pass -Dmute=true; audio plays by default)
+  --no-client        start only the server (Ctrl-C to stop)
+  --no-click         skip the auto click-to-activate (autoplay needs a click into the window!)
+  -h, --help         this help
+Examples:
+  bin/devtest --shot /tmp/town.png --hold 35            # smoke test, capture, teardown
+  bin/devtest --board "Thunderbird Rock" --node indian_post --shot /tmp/water.png
+  bin/devtest --no-deploy                               # quick interactive run on the current build
+EOF
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --board) BOARD="${2:-}"; shift 2;;
+    --node) NODE="${2:-}"; shift 2;;
+    --shot) SHOT="${2:-}"; shift 2;;
+    --hold) HOLD="${2:-}"; shift 2;;
+    --no-deploy) DEPLOY=0; shift;;
+    --mute) MUTE=1; shift;;
+    --no-client) CLIENT=0; shift;;
+    --no-click) CLICK=0; shift;;
+    -h|--help) usage; exit 0;;
+    *) echo "[devtest] unknown arg: $1"; usage; exit 2;;
+  esac
+done
+
+SERVER_PID=""; CLIENT_PID=""
+
+# Seed any missing local config: etc/test/ is gitignored, so a fresh checkout/worktree has no
+# local config, which bakes a blank server_auth into the jars and trips the server's fail-fast
+# (see ServerConfig.getAuthenticator). For each etc/*.dist, copy it to etc/test/<name-without-.dist>
+# when the target is absent; NEVER overwrite an existing file. Idempotent and safe to re-run. Must
+# run before deploy, since deploy bakes etc/test/ into the jars. NOTE: this seeds a working *default*
+# config only — the MySQL db.* credentials in etc/test/server.properties must still be correct for
+# the server to fully start (see the MySQL check below / README); seeding just removes the
+# missing-file failure, it does not provision MySQL.
+seed_etc_test () {
+  mkdir -p "$HERE/etc/test"
+  local seeded=0 dist name target
+  for dist in "$HERE"/etc/*.dist; do
+    [ -e "$dist" ] || continue
+    name="$(basename "$dist" .dist)"
+    target="$HERE/etc/test/$name"
+    if [ ! -e "$target" ]; then
+      cp "$dist" "$target"
+      echo "[devtest] seeded etc/test/$name from $(basename "$dist")"
+      seeded=1
+    fi
+  done
+  [ "$seeded" = 1 ] && echo "[devtest] (etc/test seeding done; gitignored — edit db.* in etc/test/server.properties for MySQL)"
+  return 0
+}
+
+free_port () { for _ in $(seq 1 20); do ss -tln 2>/dev/null | grep -q ":$PORT " || return 0; sleep 0.5; done; return 1; }
+bang_running () { pgrep -f "com.threerings.bang.(client.BangDesktop|server.BangServer|editor.EditorDesktop)" >/dev/null 2>&1; }
+kill_bang () {
+  [ -n "$CLIENT_PID" ] && kill "$CLIENT_PID" 2>/dev/null
+  [ -n "$SERVER_PID" ] && kill "$SERVER_PID" 2>/dev/null
+  pkill -f "com.threerings.bang.client.BangDesktop" 2>/dev/null
+  pkill -f "com.threerings.bang.server.BangServer" 2>/dev/null
+  pkill -f "com.threerings.bang.editor.EditorDesktop" 2>/dev/null
+  # wait for the JVMs to actually exit (they take a moment to shut down), then escalate
+  for _ in $(seq 1 20); do bang_running || return 0; sleep 0.5; done
+  pkill -9 -f "com.threerings.bang.(client.BangDesktop|server.BangServer|editor.EditorDesktop)" 2>/dev/null
+  for _ in $(seq 1 10); do bang_running || return 0; sleep 0.5; done
+}
+teardown () { echo "[devtest] tearing down..."; kill_bang; free_port; echo "[devtest] done; port $PORT free."; }
+trap teardown EXIT INT TERM
+
+# Find the Bang window on $DISPLAY, raise/focus it, and click its center. The autoplay game
+# does NOT start until something clicks into the window — without this you only ever capture the
+# static pre-game screen. Uses python-xlib + XTest (xdotool/wmctrl aren't installed here).
+activate_window () {
+  python3 - "$DISPLAY" <<'PY' 2>&1 | sed 's/^/[devtest] activate: /'
+import sys, time
+try:
+    import Xlib.display, Xlib.X
+    from Xlib.ext import xtest
+except Exception as e:
+    print("python-xlib unavailable (%s); click into the window yourself to start autoplay" % e); sys.exit(0)
+d = Xlib.display.Display(sys.argv[1] if len(sys.argv) > 1 else None)
+root = d.screen().root
+NCL = d.intern_atom('_NET_CLIENT_LIST'); NWN = d.intern_atom('_NET_WM_NAME'); WN = d.intern_atom('WM_NAME')
+def wname(w):
+    for a in (NWN, WN):
+        try:
+            p = w.get_full_property(a, 0)
+            if p and p.value:
+                v = p.value
+                return v.decode('utf-8','ignore') if isinstance(v,(bytes,bytearray)) else str(v)
+        except Exception: pass
+    return ''
+def find(timeout=30):
+    # match on "howdy": the game titles itself "Bang! Howdy ..." — a substring match on "bang"
+    # also grabs unrelated windows like a "bang-game" terminal/editor title.
+    end = time.time() + timeout
+    while time.time() < end:
+        cl = root.get_full_property(NCL, Xlib.X.AnyPropertyType)
+        if cl:
+            for wid in cl.value:
+                w = d.create_resource_object('window', wid)
+                if 'howdy' in wname(w).lower():
+                    try:
+                        if w.get_attributes().map_state == Xlib.X.IsViewable:
+                            return w, wname(w)
+                    except Exception: pass
+        time.sleep(0.5)
+    return None, None
+w, n = find()
+if w is None:
+    print("no 'Bang! Howdy' window appeared in 30s; click into the window yourself"); sys.exit(0)
+g = w.get_geometry()
+w.configure(stack_mode=Xlib.X.Above)
+try: w.set_input_focus(Xlib.X.RevertToParent, Xlib.X.CurrentTime)
+except Exception: pass
+d.sync(); time.sleep(2.0)   # let it settle on the pre-game screen
+# warp_pointer is relative to the window, so it lands on the window regardless of where the WM
+# placed it on a multi-monitor root (translate_coords gave bogus negatives here). XTest clicks
+# at the current pointer position.
+for _ in range(2):          # click center twice for robustness
+    w.warp_pointer(g.width // 2, g.height // 2); d.sync(); time.sleep(0.12)
+    xtest.fake_input(d, Xlib.X.ButtonPress, 1); d.sync(); time.sleep(0.08)
+    xtest.fake_input(d, Xlib.X.ButtonRelease, 1); d.sync(); time.sleep(1.5)
+print("clicked '%s' center (%dx%d) to start autoplay" % (n, g.width, g.height))
+PY
+}
+
+# 1. cleanup stale processes + free the port
+echo "[devtest] cleaning up any stale Bang processes..."
+kill_bang; sleep 1
+free_port || echo "[devtest] WARN: port $PORT still occupied after cleanup."
+
+# 1b. seed missing local config (etc/test/ is gitignored) BEFORE deploy bakes it into the jars
+seed_etc_test
+
+# 2. MySQL reachable as bang/yeehaw?
+echo "[devtest] checking MySQL (bang/yeehaw)..."
+if ! mysql -ubang -pyeehaw -e "SELECT 1" bang >/dev/null 2>&1; then
+  echo "[devtest] ERROR: cannot reach MySQL as bang/yeehaw on db 'bang'."
+  echo "          Start it (e.g. 'sudo systemctl start mysql') and ensure the bang + ooouser"
+  echo "          databases and the bang user exist (see README). Aborting."
+  exit 1
+fi
+
+# 3. deploy
+if [ "$DEPLOY" = 1 ]; then
+  echo "[devtest] ./gradlew deploy (this also bakes models; use --no-deploy to skip)..."
+  if ! "$HERE/gradlew" -p "$HERE" deploy -q; then
+    echo "[devtest] ERROR: deploy failed. Aborting."; exit 1
+  fi
+fi
+
+# 4. start server, wait for "Server listening"
+echo "[devtest] starting server (node=$NODE), log: $SERVER_LOG ..."
+( cd "$HERE" && exec ./bin/bangserver "$NODE" ) >"$SERVER_LOG" 2>&1 &
+SERVER_PID=$!
+echo "[devtest] waiting (<=120s) for the server to listen on $PORT..."
+up=0
+for _ in $(seq 1 120); do
+  if grep -q "Server listening" "$SERVER_LOG" 2>/dev/null; then up=1; break; fi
+  if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+    echo "[devtest] ERROR: server exited early. Tail:"; tail -25 "$SERVER_LOG"; exit 1
+  fi
+  sleep 1
+done
+if [ "$up" != 1 ]; then echo "[devtest] ERROR: server not listening within 120s. Tail:"; tail -25 "$SERVER_LOG"; exit 1; fi
+echo "[devtest] server is up."
+
+if [ "$CLIENT" = 0 ]; then
+  echo "[devtest] --no-client: server running (log $SERVER_LOG). Ctrl-C to stop."
+  wait "$SERVER_PID"; exit 0
+fi
+
+# 5. launch client with standard flags (audio plays by default; --mute to silence)
+FLAGS="-autoplay -Dusername=test -Dpassword=yeehaw"
+if [ -n "$BOARD" ]; then FLAGS="-Dboard=\"$BOARD\" -Dtest=true $FLAGS"; else FLAGS="-test $FLAGS"; fi
+[ "$MUTE" = 1 ] && FLAGS="$FLAGS -Dmute=true"
+echo "[devtest] launching client: bangclient $FLAGS (log: $CLIENT_LOG)"
+( cd "$HERE" && eval exec ./bin/bangclient $FLAGS ) >"$CLIENT_LOG" 2>&1 &
+CLIENT_PID=$!
+
+# 5b. click into the window — REQUIRED to start the autoplay game (else you capture the
+# static pre-game screen). Skip with --no-click.
+if [ "$CLICK" = 1 ]; then
+  echo "[devtest] activating window (click-to-start autoplay)..."
+  activate_window
+fi
+
+# 6. screenshot (agent mode) or hold open (interactive)
+if [ -n "$SHOT" ]; then
+  echo "[devtest] holding ${HOLD}s for the board to load, then capturing $SHOT ..."
+  sleep "$HOLD"
+  # Capture ONLY the Bang window (bin/shot), never a full-display grab -- privacy + relevance.
+  # (See CLAUDE.md / docs/running-the-game.md "screenshot convention".)
+  if DISPLAY="$DISPLAY" "$HERE/bin/shot" "$SHOT" "$DISPLAY"; then
+    echo "[devtest] saved $SHOT"
+  else
+    echo "[devtest] WARN: window screenshot failed (bin/shot on $DISPLAY?). Client log tail:"; tail -15 "$CLIENT_LOG"
+  fi
+  exit 0   # trap tears everything down
+else
+  echo "[devtest] client running. Ctrl-C to tear down."
+  wait "$CLIENT_PID"
+fi

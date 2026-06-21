@@ -3,8 +3,11 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.image.Texture;
-import com.jme.scene.state.TextureState;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Spatial.CullHint;
+import com.jme3.texture.Texture.WrapMode;
+import com.jme3.texture.Texture2D;
 
 import com.threerings.jme.sprite.Path;
 
@@ -45,8 +48,10 @@ public class CowSprite extends MobileSprite
         // this is used to indicate who owns us
         _tlight = _view.getTerrainNode().createHighlight(
                 _piece.x, _piece.y, true, true);
-        _tlight.setRenderState(_owntex);
-        _tlight.updateRenderState();
+        Material omat = RenderUtil.createTextureMaterial(_ctx, _owntex);
+        RenderUtil.applyBlendAlpha(omat);
+        RenderUtil.applyOverlayZBuf(omat);
+        _tlight.setTextures(omat, omat);
         attachHighlight(_tlight);
 
         // configure our colors
@@ -76,30 +81,29 @@ public class CowSprite extends MobileSprite
     public void move (Path path)
     {
         super.move(path);
-        _tlight.setCullMode(CULL_ALWAYS);
+        _tlight.setCullHint(CullHint.Always);
     }
 
     /** Sets up our colors according to our owning player. */
     protected void configureOwnerColors ()
     {
         if (_piece.owner < 0 || isMoving()) {
-            _tlight.setCullMode(CULL_ALWAYS);
+            _tlight.setCullHint(CullHint.Always);
         } else {
-            _tlight.getBatch(0).getDefaultColor().set(getJPieceColor(_piece.owner));
-            _tlight.updateRenderState();
-            _tlight.setCullMode(CULL_DYNAMIC);
+            ColorRGBA color = getJPieceColor(_piece.owner);
+            _tlight.setColors(color, color);
+            _tlight.setCullHint(CullHint.Dynamic);
             updateTileHighlight();
         }
     }
 
     protected static void loadTextures (BasicContext ctx)
     {
-        _owntex = RenderUtil.createTextureState(
-            ctx, "textures/ustatus/selected.png");
-        _owntex.getTexture().setWrap(Texture.WM_CLAMP_S_CLAMP_T);
+        _owntex = ctx.getTextureCache().getTexture("textures/ustatus/selected.png");
+        _owntex.setWrap(WrapMode.Clamp);
     }
 
-    protected static TextureState _owntex;
+    protected static Texture2D _owntex;
 
     /** Sounds that we preload for mobile units if they exist. */
     protected static final String[] PRELOAD_SOUNDS = {

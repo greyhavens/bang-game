@@ -5,15 +5,15 @@
 
 package com.jmex.bui.backend;
 
-import com.jme.image.Image;
+import com.jme3.texture.Image;
 
 /**
  * The engine-specific guts of a {@link com.jmex.bui.BImage}: texture creation, texture
  * coordinate management and quad rendering.
  *
- * <p> Note: {@link com.jme.image.Image} appears here because it is a plain, GL-free pixel
+ * <p> Note: {@link com.jme3.texture.Image} appears here because it is a plain, GL-free pixel
  * container (format constant, dimensions and a byte buffer) that is also part of BImage's
- * frozen public constructor API; non-fork backends treat it as a dumb data holder.
+ * public constructor API; the backend treats it as a dumb data holder.
  */
 public interface BImageBacking
 {
@@ -31,8 +31,9 @@ public interface BImageBacking
      * Renders the currently configured texture region at the specified coordinates, scaled
      * to the specified size.
      *
-     * @param renderer the engine renderer handed to BUI's render traversal (the fork's
-     * {@code com.jme.renderer.Renderer}); typed loosely so the interface stays engine-neutral.
+     * @param renderer the engine renderer token handed to BUI's render traversal (jME3's
+     * {@code com.jme3.renderer.RenderManager}); typed loosely so the interface stays
+     * engine-neutral. The jME3 backend ignores it and renders through its own render manager.
      */
     void render (Object renderer, int tx, int ty, int twidth, int theight, float alpha);
 

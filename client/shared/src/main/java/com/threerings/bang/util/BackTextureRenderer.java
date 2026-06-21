@@ -3,272 +3,136 @@
 
 package com.threerings.bang.util;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import java.nio.IntBuffer;
-
-import org.lwjgl.opengl.GL11;
-
-import com.jme.image.Texture;
-import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.RenderContext;
-import com.jme.renderer.Renderer;
-import com.jme.renderer.TextureRenderer;
-import com.jme.scene.Spatial;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.gdx.records.TextureStateRecord;
-import com.jme.system.DisplaySystem;
-import com.jme.util.geom.BufferUtils;
+import com.jme3.material.RenderState.FaceCullMode;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Spatial;
+import com.jme3.texture.FrameBuffer;
+import com.jme3.texture.Image;
+import com.jme3.texture.Texture2D;
 
 /**
- * A texture renderer that renders to and copies from the back buffer (which
- * means you mustn't call the {@link #render} methods during normal rendering).
+ * Renders scene content to an offscreen texture.
+ *
+ * <p>jME3 cutover (Phase 2, cluster 6 — migration map §2.5 {@code TextureRenderer} REBUILD): the
+ * fork implementation rendered into the back buffer and copied the result with raw
+ * {@code GL11.glCopyTexImage2D}, poking the gdx renderer's {@code TextureStateRecord}. jME3
+ * render-to-texture is viewport-based, so this is rebuilt on a {@link FrameBuffer} + offscreen
+ * {@link ViewPort}: {@link #setupTexture} attaches the supplied {@link Texture2D} as the
+ * framebuffer's color target, and {@link #render} renders the given scene content into it through
+ * {@link RenderManager#renderViewPort}.
+ *
+ * <p>The public surface (ctor, {@code setBackgroundColor}, {@code getCamera}/{@code setCamera},
+ * {@code setupTexture}, {@code render}, {@code cleanup}) is preserved so the RTT consumers
+ * (avatar/unit portraits, {@code effect.RepairViz}) port by retargeting their method bodies, not
+ * their call shape. The actual offscreen render must run on the GL thread.
+ *
+ * <p>Phase-4 note (fidelity): the fork variant rendered into whatever back-buffer state was current
+ * and copied a sub-rect; this FBO version renders a clean offscreen pass. Visual parity of the
+ * RTT-based glow/portrait effects is a Phase-4 visual-review item.
  */
 public class BackTextureRenderer
-    implements TextureRenderer
 {
     public BackTextureRenderer (BasicContext ctx, int width, int height)
     {
         _ctx = ctx;
         _width = width;
         _height = height;
-
-        // createCamera updates, so be sure to call the old one
-        _camera = ctx.getRenderer().createCamera(width, height);
-        ctx.getCameraHandler().getCamera().update();
+        _camera = new Camera(width, height);
+        _fbo = new FrameBuffer(width, height, 1);
+        _fbo.setDepthBuffer(Image.Format.Depth);
+        _viewport = new ViewPort("BackTextureRenderer", _camera);
+        _viewport.setClearFlags(true, true, true);
+        _viewport.setOutputFrameBuffer(_fbo);
+        _viewport.setBackgroundColor(_bgcolor);
     }
 
-    // documentation inherited from interface TextureRenderer
-    public boolean isSupported ()
-    {
-        return true;
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public int getPBufferWidth ()
-    {
-        return _width;
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public int getPBufferHeight ()
-    {
-        return _height;
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public ColorRGBA getBackgroundColor ()
-    {
-        return _bgcolor;
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public void setBackgroundColor (ColorRGBA c)
-    {
-        _bgcolor = c;
-    }
-
-    // documentation inherited from interface TextureRenderer
+    /** Returns the offscreen camera used for the RTT pass. */
     public Camera getCamera ()
     {
         return _camera;
     }
 
-    // documentation inherited from interface TextureRenderer
+    /** Sets the offscreen camera used for the RTT pass. */
     public void setCamera (Camera camera)
     {
         _camera = camera;
     }
 
-    // documentation inherited from interface TextureRenderer
-    public void updateCamera ()
+    /** Returns the clear color used for the RTT pass. */
+    public ColorRGBA getBackgroundColor ()
     {
-        _camera.update();
+        return _bgcolor;
     }
 
-    // documentation inherited from interface TextureRenderer
-    public void setupTexture (Texture tex)
+    /** Sets the clear color used for the RTT pass. */
+    public void setBackgroundColor (ColorRGBA c)
     {
-        setupTexture(tex, _width, _height);
+        _bgcolor.set(c);
+        _viewport.setBackgroundColor(_bgcolor);
     }
 
-    // documentation inherited from interface TextureRenderer
-    public void setupTexture (Texture tex, int width, int height)
+    /** Returns the offscreen target dimensions. */
+    public int getWidth ()
     {
-        IntBuffer ibuf = BufferUtils.createIntBuffer(1);
+        return _width;
+    }
 
-        if (tex.getTextureId() != 0) {
-            ibuf.put(tex.getTextureId());
-            GL11.glDeleteTextures(ibuf);
-            ibuf.clear();
+    /** Returns the offscreen target dimensions. */
+    public int getHeight ()
+    {
+        return _height;
+    }
+
+    /**
+     * Binds the supplied texture as the framebuffer's color target. The texture is (re)sized to the
+     * renderer's dimensions and rendered into by subsequent {@link #render} calls.
+     */
+    public void setupTexture (Texture2D tex)
+    {
+        tex.setImage(new Image(Image.Format.RGBA8, _width, _height,
+            (java.nio.ByteBuffer)null, com.jme3.texture.image.ColorSpace.sRGB));
+        _fbo.setColorTexture(tex);
+    }
+
+    /**
+     * Renders the supplied spatial into the offscreen framebuffer (and thus into the bound color
+     * texture). Must be called on the GL thread, outside the normal scene render.
+     */
+    public void render (Spatial scene)
+    {
+        RenderManager rm = _ctx.getRenderManager();
+        _viewport.clearScenes();
+        _viewport.attachScene(scene);
+        scene.updateGeometricState();
+        rm.renderViewPort(_viewport, 0f);
+    }
+
+    /**
+     * Renders the supplied scene content into the offscreen framebuffer.
+     */
+    public void render (List<? extends Spatial> scenes)
+    {
+        RenderManager rm = _ctx.getRenderManager();
+        _viewport.clearScenes();
+        for (Spatial scene : scenes) {
+            _viewport.attachScene(scene);
+            scene.updateGeometricState();
         }
-
-        // Create the texture
-        GL11.glGenTextures(ibuf);
-        tex.setTextureId(ibuf.get(0));
-
-        copyToTexture(tex, width, height);
+        rm.renderViewPort(_viewport, 0f);
     }
 
-    // documentation inherited from interface TextureRenderer
-    public void render (ArrayList<?> spats, Texture tex)
-    {
-        // render to back buffer
-        Renderer parentRenderer = _ctx.getRenderer();
-        preDraw(parentRenderer);
-        for (int ii = 0, nn = spats.size(); ii < nn; ii++) {
-            ((Spatial)spats.get(ii)).onDraw(parentRenderer);
-        }
-        postDraw(parentRenderer);
-
-        // copy back buffer to texture
-        copyToTexture(tex, _width, _height);
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public void render (ArrayList<?> spats, Texture... texs)
-    {
-        // render to back buffer
-        Renderer parentRenderer = _ctx.getRenderer();
-        preDraw(parentRenderer);
-        for (int ii = 0, nn = spats.size(); ii < nn; ii++) {
-            ((Spatial)spats.get(ii)).onDraw(parentRenderer);
-        }
-        postDraw(parentRenderer);
-
-        // copy back buffer to texture(s)
-        for (Texture tex : texs) {
-            copyToTexture(tex, _width, _height);
-        }
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public void render (Spatial spat, Texture... texs)
-    {
-        // render to back buffer
-        Renderer parentRenderer = _ctx.getRenderer();
-        preDraw(parentRenderer);
-        spat.onDraw(parentRenderer);
-        postDraw(parentRenderer);
-
-        // copy back buffer to texture(s)
-        for (Texture tex : texs) {
-            copyToTexture(tex, _width, _height);
-        }
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public void copyToTexture (Texture tex, int width, int height)
-    {
-        TextureStateRecord record =
-            (TextureStateRecord)_ctx.getDisplay().getCurrentContext().getStateRecord(
-                RenderState.RS_TEXTURE);
-
-        int texId = tex.getTextureId();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-        record.units[record.currentUnit].boundTexture = texId;
-        GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0,
-            getInternalFormat(tex.getRTTSource()), 0, 0, width, height, 0);
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public void copyBufferToTexture (
-        Texture tex, int width, int height, int buffer)
-    {
-        GL11.glReadBuffer(GL11.GL_BACK);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureId());
-        GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, tex.getRTTSource(), 0,
-            0, width, height, 0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-    }
-
-    // documentation inherited from interface TextureRenderer
-    public void forceCopy (boolean force)
-    {
-        // no-op
-    }
-
-    // documentation inherited from interface TextureRenderer
+    /**
+     * Releases offscreen resources. jME3 reclaims the framebuffer and its attachments when this
+     * object is no longer referenced; this detaches the scenes so they may be collected.
+     */
     public void cleanup ()
     {
-        // leave it to the caller to unbind textures
-    }
-
-    /**
-     * Sets the renderer up for drawing.
-     */
-    protected void preDraw (Renderer parentRenderer)
-    {
-        // grab non-rtt settings
-        _oldCamera = parentRenderer.getCamera();
-        _oldWidth = parentRenderer.getWidth();
-        _oldHeight = parentRenderer.getHeight();
-        _oldBackgroundColor = parentRenderer.getBackgroundColor();
-
-        // swap to rtt settings
-        parentRenderer.setCamera(_camera);
-        parentRenderer.reinit(_width, _height);
-
-        // Clear the states.
-        applyDefaultStates();
-
-        // do rtt scene render
-        parentRenderer.setBackgroundColor(_bgcolor);
-        parentRenderer.clearBuffers();
-        parentRenderer.getQueue().swapBuckets();
-    }
-
-    /**
-     * Returns the renderer to its normal state.
-     */
-    protected void postDraw (Renderer parentRenderer)
-    {
-        parentRenderer.renderQueue();
-
-        // back to the non rtt settings
-        parentRenderer.getQueue().swapBuckets();
-        parentRenderer.setCamera(_oldCamera);
-        parentRenderer.reinit(_oldWidth, _oldHeight);
-        parentRenderer.setBackgroundColor(_oldBackgroundColor);
-
-        // Clear the states again since we will be moving back to the old
-        // location and don't want the states bleeding over causing things
-        // *not* to be set when they should be.
-        applyDefaultStates();
-    }
-
-    /**
-     * Reverts to the default states.
-     */
-    protected static void applyDefaultStates ()
-    {
-        RenderContext ctx =
-            DisplaySystem.getDisplaySystem().getCurrentContext();
-        for (int ii = 0; ii < Renderer.defaultStateList.length; ii++) {
-            if (Renderer.defaultStateList[ii] != null) {
-                Renderer.defaultStateList[ii].apply();
-            }
-        }
-        ctx.clearCurrentStates();
-    }
-
-    /**
-     * Returns the internal format corresponding to the given render-to-texture
-     * source.
-     */
-    protected static int getInternalFormat (int rttSource)
-    {
-        switch (rttSource) {
-            case Texture.RTT_SOURCE_RGB: return GL11.GL_RGB;
-            case Texture.RTT_SOURCE_ALPHA: return GL11.GL_ALPHA;
-            case Texture.RTT_SOURCE_DEPTH: return GL11.GL_DEPTH_COMPONENT;
-            case Texture.RTT_SOURCE_INTENSITY: return GL11.GL_INTENSITY;
-            case Texture.RTT_SOURCE_LUMINANCE: return GL11.GL_LUMINANCE;
-            case Texture.RTT_SOURCE_LUMINANCE_ALPHA:
-                return GL11.GL_LUMINANCE_ALPHA;
-            default: return GL11.GL_RGBA;
-        }
+        _viewport.clearScenes();
     }
 
     /** The application context. */
@@ -277,17 +141,13 @@ public class BackTextureRenderer
     /** The dimensions of the target texture. */
     protected int _width, _height;
 
-    /** The current background color. */
-    protected ColorRGBA _bgcolor = new ColorRGBA();
+    /** The current clear color. */
+    protected ColorRGBA _bgcolor = new ColorRGBA(0f, 0f, 0f, 0f);
 
-    /** The current camera. */
+    /** The offscreen camera. */
     protected Camera _camera;
 
-    /** The texture to which we shall render. */
-    protected Texture _texture;
-
-    /** State preserved between {@link #preDraw} and {@link #postDraw}. */
-    protected int _oldWidth, _oldHeight;
-    protected Camera _oldCamera;
-    protected ColorRGBA _oldBackgroundColor;
+    /** The offscreen framebuffer and viewport. */
+    protected FrameBuffer _fbo;
+    protected ViewPort _viewport;
 }

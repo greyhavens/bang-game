@@ -5,11 +5,12 @@ package com.threerings.bang.game.client.sprite;
 
 import com.threerings.openal.SoundGroup;
 
-import com.jme.math.Vector3f;
-import com.jme.scene.Spatial;
-import com.jme.scene.BillboardNode;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.TextureState;
+import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial.CullHint;
+import com.jme3.scene.control.BillboardControl;
 
 import com.samskivert.util.ArrayUtil;
 
@@ -51,8 +52,8 @@ public class OneArmedBanditSprite extends UnitSprite
         // load wildcard textures
         for (RandomInfluenceEffect.Kind kind : RandomInfluenceEffect.Kind.values()) {
             String path = _cardIconPaths[kind.ordinal()];
-            _cardIconStates = ArrayUtil.append(_cardIconStates, path != null ?
-                RenderUtil.createTextureState(ctx, "influences/icons/" + path + ".png") : null);
+            _cardIconMaterials = ArrayUtil.append(_cardIconMaterials, path != null ?
+                RenderUtil.createTextureMaterial(ctx, "influences/icons/" + path + ".png") : null);
         }
     }
     
@@ -66,37 +67,38 @@ public class OneArmedBanditSprite extends UnitSprite
             //counter.updateCount((CounterInterface)piece);
             
             int cardIndex = ((OneArmedBandit)piece).card.ordinal();
-            if (_cardIconStates[cardIndex] != null) {
+            if (_cardIconMaterials[cardIndex] != null) {
                 if (_billboard == null) {
-                     _cardIcon = IconConfig.createIcon(_cardIconStates[cardIndex],
+                     _cardIcon = IconConfig.createIcon(_cardIconMaterials[cardIndex],
                          CARD_SIZE, CARD_SIZE);
-                     _cardIcon.setLocalTranslation(new Vector3f(0f, TILE_SIZE/4, 0f));
-                     _billboard = new BillboardNode("billboard");
+                     _cardIcon.setLocalTranslation(new Vector3f(-CARD_SIZE/2f, TILE_SIZE/4 - CARD_SIZE/2f, 0f));
+                     _billboard = new Node("billboard");
+                     _billboard.addControl(new BillboardControl());
                      _billboard.attachChild(_cardIcon);
                      attachChild(_billboard);
                  } else {
-                     IconConfig.configureIcon(_cardIcon, _cardIconStates[cardIndex]);
-                     _billboard.setCullMode(Spatial.CULL_DYNAMIC);
+                     IconConfig.configureIcon(_cardIcon, _cardIconMaterials[cardIndex]);
+                     _billboard.setCullHint(CullHint.Dynamic);
                  }
             } else if (_billboard != null) {
-                _billboard.setCullMode(Spatial.CULL_ALWAYS);
+                _billboard.setCullHint(CullHint.Always);
             }
         } else if (_billboard != null) {
-            _billboard.setCullMode(Spatial.CULL_ALWAYS);
+            _billboard.setCullHint(CullHint.Always);
         }
      }
-     
+
      /** The name of the icons to display. */
      protected String[] _cardIconPaths = new String[] { null, "increase_move_distance", "increase_attack", "increase_defense", "explode"};
-     
-     /** The name of the icons to display. */
-     protected TextureState[] _cardIconStates = new TextureState[0];
-     
+
+     /** The materials for the wildcard icons to display. */
+     protected Material[] _cardIconMaterials = new Material[0];
+
      /** The card icon to be displayed over the unit. */
-     protected Quad _cardIcon;
-     
+     protected Geometry _cardIcon;
+
      /** The billboard to attach the card icon to. */
-     protected BillboardNode _billboard;
+     protected Node _billboard;
      
      /** The size for the wild card. */
      protected static final float CARD_SIZE = TILE_SIZE * 0.3f;     

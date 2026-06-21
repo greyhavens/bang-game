@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import javax.imageio.ImageIO;
 
 import java.awt.Graphics2D;
@@ -18,54 +17,35 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.PixelGrabber;
 
-import com.jme.image.Image;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Spatial;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.TextureState;
+import com.jme3.renderer.RenderManager;
+import com.jme3.texture.Image;
+import com.jme3.texture.image.ColorSpace;
 
 import com.jmex.bui.backend.BImageBacking;
 import com.jmex.bui.backend.BackendProvider;
 
 /**
- * Contains a texture, its dimensions and a texture state.
+ * Contains a texture (as a jME3 pixel {@link Image}), its dimensions and the engine-specific
+ * backing that draws it. Since the jME3 cutover (Phase 1) this is a plain data/render holder
+ * and no longer a scene-graph node.
  */
-public class BImage extends Quad
+public class BImage
 {
-    /** An interface for pooling OpenGL textures. */
+    /** An interface for pooling textures. The jME3 backing does no eager pooling (jME3 uploads
+     * lazily and reclaims GL textures itself); a host may install a pool to manage textures.
+     * The {@code Object} parameter is the backend's texture handle, typed loosely so this
+     * interface stays engine-neutral. */
     public interface TexturePool
     {
-        /**
-         * Acquires textures from the pool for the state.
-         */
-        public void acquireTextures (TextureState tstate);
+        /** Acquires the texture(s) for the supplied backing handle. */
+        public void acquireTextures (Object handle);
 
-        /**
-         * Releases the state's textures back into the pool.
-         */
-        public void releaseTextures (TextureState tstate);
-    }
-
-    /** An alpha state that blends the source plus one minus destination. Created by the
-     * jME fork render backend; null when running on another backend. */
-    public static AlphaState blendState;
-
-    /**
-     * Configures the supplied spatial with transparency in the standard user interface sense which
-     * is that transparent pixels show through to the background but non-transparent pixels are not
-     * blended with what is behind them.
-     */
-    public static void makeTransparent (Spatial target)
-    {
-        target.setRenderState(blendState);
+        /** Releases the texture(s) for the supplied backing handle. */
+        public void releaseTextures (Object handle);
     }
 
     /**
-     * Sets the texture pool from which to acquire and release OpenGL texture objects.
-     * Applications can provide a pool in order to avoid the rapid creation and destruction of
-     * OpenGL textures.  The default pool always creates new textures and deletes released ones.
+     * Sets the texture pool from which to acquire and release texture objects.
      */
     public static void setTexturePool (TexturePool pool)
     {
@@ -111,10 +91,9 @@ public class BImage extends Quad
             theight = nextPOT(theight);
         }
 
-        // render the image into a raster of the proper format
+        // render the image into a standard ARGB raster we can read pixel-exactly
         boolean hasAlpha = hasAlpha(image);
-        int type = hasAlpha ? BufferedImage.TYPE_4BYTE_ABGR : BufferedImage.TYPE_3BYTE_BGR;
-        BufferedImage tex = new BufferedImage(twidth, theight, type);
+        BufferedImage tex = new BufferedImage(twidth, theight, BufferedImage.TYPE_INT_ARGB);
         AffineTransform tx = null;
         if (flip) {
             tx = AffineTransform.getScaleInstance(1, -1);
@@ -124,28 +103,35 @@ public class BImage extends Quad
         gfx.drawImage(image, tx, null);
         gfx.dispose();
 
-        // grab the image memory and stuff it into a direct byte buffer
-        ByteBuffer scratch = ByteBuffer.allocateDirect(
-            (hasAlpha ? 4 : 3) * twidth * theight).order(ByteOrder.nativeOrder());
-        byte data[] = (byte[])tex.getRaster().getDataElements(0, 0, twidth, theight, null);
-        scratch.clear();
-        scratch.put(data);
+        // Build the pixel buffer with explicit R,G,B[,A] byte order and hand it to jME3 as
+        // RGBA8/RGB8. We must NOT use jME3's ABGR8 over an AWT TYPE_4BYTE_ABGR raster: jME3 maps
+        // ABGR8 to GL_RGBA + GL_UNSIGNED_INT_8_8_8_8, whose packing is endianness-sensitive and on
+        // little-endian hardware scrambles the channels (UI rendered with a pink/red cast). RGBA8
+        // and RGB8 map to GL_RGBA/GL_RGB + GL_UNSIGNED_BYTE, which is byte-order independent.
+        int bpp = hasAlpha ? 4 : 3;
+        ByteBuffer scratch = ByteBuffer.allocateDirect(bpp * twidth * theight)
+            .order(ByteOrder.nativeOrder());
+        int[] argb = tex.getRGB(0, 0, twidth, theight, null, 0, twidth);
+        for (int i = 0; i < argb.length; i++) {
+            int p = argb[i];
+            scratch.put((byte)((p >> 16) & 0xFF)); // R
+            scratch.put((byte)((p >> 8) & 0xFF));  // G
+            scratch.put((byte)(p & 0xFF));         // B
+            if (hasAlpha) {
+                scratch.put((byte)((p >> 24) & 0xFF)); // A
+            }
+        }
         scratch.flip();
-        Image textureImage = new Image();
-        textureImage.setType(hasAlpha ? Image.RGBA8888 : Image.RGB888);
-        textureImage.setWidth(twidth);
-        textureImage.setHeight(theight);
-        textureImage.setData(scratch);
+
+        Image.Format format = hasAlpha ? Image.Format.RGBA8 : Image.Format.RGB8;
+        Image textureImage = new Image(format, twidth, theight, scratch, ColorSpace.sRGB);
 
         setImage(textureImage);
-
-        // make sure we have a unique default color object
-        getBatch(0).getDefaultColor().set(ColorRGBA.white);
     }
 
     /**
-     * Creates an image of the specified size, using the supplied JME image data. The image should
-     * be a power of two size if OpenGL requires it.
+     * Creates an image of the specified size, using the supplied jME3 image data. The image
+     * should be a power of two size if OpenGL requires it.
      *
      * @param width the width of the renderable image.
      * @param height the height of the renderable image.
@@ -213,7 +199,7 @@ public class BImage extends Quad
     /**
      * Renders this image at the specified coordinates.
      */
-    public void render (Renderer renderer, int tx, int ty, float alpha)
+    public void render (RenderManager renderer, int tx, int ty, float alpha)
     {
         render(renderer, tx, ty, _width, _height, alpha);
     }
@@ -221,7 +207,7 @@ public class BImage extends Quad
     /**
      * Renders this image at the specified coordinates, scaled to the specified size.
      */
-    public void render (Renderer renderer, int tx, int ty, int twidth, int theight, float alpha)
+    public void render (RenderManager renderer, int tx, int ty, int twidth, int theight, float alpha)
     {
         render(renderer, 0, 0, _width, _height, tx, ty, twidth, theight, alpha);
     }
@@ -229,7 +215,7 @@ public class BImage extends Quad
     /**
      * Renders a region of this image at the specified coordinates.
      */
-    public void render (Renderer renderer, int sx, int sy,
+    public void render (RenderManager renderer, int sx, int sy,
                         int swidth, int sheight, int tx, int ty, float alpha)
     {
         render(renderer, sx, sy, swidth, sheight, tx, ty, swidth, sheight, alpha);
@@ -238,7 +224,7 @@ public class BImage extends Quad
     /**
      * Renders a region of this image at the specified coordinates, scaled to the specified size.
      */
-    public void render (Renderer renderer, int sx, int sy, int swidth, int sheight,
+    public void render (RenderManager renderer, int sx, int sy, int swidth, int sheight,
                         int tx, int ty, int twidth, int theight, float alpha)
     {
         if (_referents == 0) {
@@ -283,7 +269,6 @@ public class BImage extends Quad
      */
     protected BImage (int width, int height)
     {
-        super("name", width, height);
         _width = width;
         _height = height;
         _backing = BackendProvider.get().createImageBacking(this);
@@ -327,12 +312,5 @@ public class BImage extends Quad
     protected int _twidth, _theight;
     protected int _referents;
 
-    protected static TexturePool _texturePool = new TexturePool() {
-        public void acquireTextures (TextureState tstate) {
-            tstate.apply(); // preload
-        }
-        public void releaseTextures (TextureState tstate) {
-            tstate.deleteAll();
-        }
-    };
+    protected static TexturePool _texturePool;
 }

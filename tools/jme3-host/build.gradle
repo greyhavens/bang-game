@@ -27,8 +27,27 @@ dependencies {
   implementation "org.jmonkeyengine:jme3-lwjgl3:${jme3Version}"
   // AWTLoader and desktop asset loaders (and the stock Common/ MatDefs live in jme3-core).
   implementation "org.jmonkeyengine:jme3-desktop:${jme3Version}"
+
+  // Phase 7a keystone spike (CanvasSpike): jME3 3.9's LWJGL3 Canvas context
+  // (com.jme3.system.lwjgl.LwjglCanvas) bridges to org.lwjgl.opengl.awt.AWTGLCanvas, which lives
+  // in lwjgl3-awt. Without this on the runtime classpath, createCanvas() fails to host the GL
+  // canvas in an AWT/Swing component. This is the artifact the editor (7b) will need too.
+  // lwjgl3-awt's POM declares an lwjgl dependency with an unresolved `${lwjgl.natives}` native
+  // classifier (a broken Maven property in their POM) -- exclude its transitives; jme3-lwjgl3
+  // already supplies the matching lwjgl 3.x core + natives. We only need lwjgl3-awt's
+  // org.lwjgl.opengl.awt.AWTGLCanvas classes, which the jar itself carries.
+  implementation("org.lwjglx:lwjgl3-awt:0.2.3") { transitive = false }
 }
 
 application {
   mainClass = "com.threerings.bang.tools.jme3host.BuiHostApp"
+}
+
+// Phase 7a keystone spike: jME3 spinning cube inside a Swing JFrame on the LWJGL3 AWT canvas.
+// Throwaway; run with DISPLAY=:1. See docs/jme3-cutover-plan.md Phase 7.
+tasks.register("runCanvasSpike", JavaExec) {
+  group = "verification"
+  description = "Phase 7a spike: render jME3 into a Swing JFrame via the LWJGL3 AWT canvas."
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = "com.threerings.bang.tools.jme3host.CanvasSpike"
 }

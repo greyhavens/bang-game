@@ -3,7 +3,7 @@
 
 package com.threerings.bang.bounty.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
@@ -105,7 +105,7 @@ public class OfficeView extends ShopView
     }
 
     @Override // from ShopView
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         // hackity hack hack hack
         if (_active == _tabs[1]) {

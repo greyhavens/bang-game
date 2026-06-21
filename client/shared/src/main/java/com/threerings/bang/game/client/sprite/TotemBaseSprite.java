@@ -5,11 +5,11 @@ package com.threerings.bang.game.client.sprite;
 
 import java.util.ArrayList;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
-import com.jme.bounding.BoundingVolume;
-import com.jme.math.Vector3f;
-import com.jme.scene.Node;
+import com.jme3.bounding.BoundingBox;
+import com.jme3.bounding.BoundingSphere;
+import com.jme3.bounding.BoundingVolume;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.model.Model;
@@ -99,14 +99,14 @@ public class TotemBaseSprite extends TargetablePropSprite
                 _ctx.getModelCache().getModel("bonuses", type, zations,
                         new ResultAttacher<Model>(totemPiece) {
                     public void requestCompleted (Model model) {
-                        // calculate the height of the model
-                        model.updateGeometricState(0f, true);
+                        // calculate the height of the model (jME3 refreshes geometric state in the
+                        // scene update loop; the world bound is available once attached)
                         BoundingVolume bound = model.getWorldBound();
                         float height = bound.getCenter().z;
                         if (bound instanceof BoundingBox) {
-                            height += ((BoundingBox)bound).zExtent;
+                            height += ((BoundingBox)bound).getZExtent();
                         } else if (bound instanceof BoundingSphere) {
-                            height += ((BoundingSphere)bound).radius;
+                            height += ((BoundingSphere)bound).getRadius();
                         }
                         // translate the base node to the new height
                         setLocalTranslation(_baseTrans.add(
@@ -118,10 +118,8 @@ public class TotemBaseSprite extends TargetablePropSprite
                     }
                 });
                 attachChild(totemPiece);
-                totemPiece.updateRenderState();
             }
         }
-        updateRenderState();
     }
 
     /**

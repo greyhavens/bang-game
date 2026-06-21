@@ -3,7 +3,7 @@
 
 package com.threerings.bang.avatar.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
@@ -105,7 +105,7 @@ public class BarberView extends ShopView
     }
 
     @Override // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         // hackity hack hack hack
         if (_active == _newlook) {

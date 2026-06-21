@@ -3,7 +3,7 @@
 
 package com.threerings.bang.avatar.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -61,7 +61,7 @@ public class WearClothingView extends BContainer
                 blankbg.release();
                 tabbg.release();
             }
-            protected void renderBackground (Renderer renderer) {
+            protected void renderBackground (RenderManager renderer) {
                 super.renderBackground(renderer);
                 blankbg.render(
                     renderer, -5, _height - blankbg.getHeight() - 5, _alpha);

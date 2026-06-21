@@ -5,7 +5,7 @@ package com.threerings.bang.client;
 
 import java.util.ArrayList;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
@@ -84,7 +84,7 @@ public class TutorialView extends SteelWindow
         }
 
         @Override // from BComponent
-        protected void renderComponent (Renderer renderer)
+        protected void renderComponent (RenderManager renderer)
         {
             super.renderComponent(renderer);
             _images[BACKGROUND].render(renderer, 0, 0, _alpha);

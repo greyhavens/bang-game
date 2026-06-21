@@ -7,8 +7,8 @@ package com.jmex.bui;
 
 import com.jmex.bui.backend.BackendProvider;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.text.BText;
@@ -236,7 +236,7 @@ public class Label
     /**
      * Renders the label text and icon.
      */
-    public void render (Renderer renderer, int x, int y, int contWidth, int contHeight, float alpha)
+    public void render (RenderManager renderer, int x, int y, int contWidth, int contHeight, float alpha)
     {
         BackendProvider.get().translate(x, y);
         try {
@@ -251,7 +251,7 @@ public class Label
         }
     }
 
-    protected void renderText (Renderer renderer, int contWidth, int contHeight, float alpha)
+    protected void renderText (RenderManager renderer, int contWidth, int contHeight, float alpha)
     {
         if (_fit == BLabel.Fit.WRAP) {
             _config.glyphs.render(
@@ -474,7 +474,7 @@ public class Label
         public BText[] lines;
         public Dimension size = new Dimension();
 
-        public void render (Renderer renderer, int tx, int ty, int halign,
+        public void render (RenderManager renderer, int tx, int ty, int halign,
                             float alpha, int spacing) {
             // render the lines from the bottom up
             for (int ii = lines.length-1; ii >= 0; ii--) {
@@ -489,7 +489,7 @@ public class Label
             }
         }
 
-        public void render (Renderer renderer, int tx, int ty,
+        public void render (RenderManager renderer, int tx, int ty,
                 int width, int height, int halign, float alpha) {
             // render only the first line
             float scale = 1f;

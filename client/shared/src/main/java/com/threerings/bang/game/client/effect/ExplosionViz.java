@@ -3,12 +3,14 @@
 
 package com.threerings.bang.game.client.effect;
 
-import com.jme.light.PointLight;
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Controller;
-import com.jmex.effects.particles.ParticleMesh;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.light.PointLight;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.control.AbstractControl;
 
 import com.samskivert.util.RandomUtil;
 
@@ -82,13 +84,13 @@ public class ExplosionViz extends ParticleEffectViz
      */
     protected class Streamer
     {
-        /** The particle manager for the streamer. */
-        public ParticleMesh particles;
+        /** The particle emitter for the streamer. */
+        public ParticleEmitter particles;
 
         public Streamer ()
         {
             particles = ParticlePool.getStreamer();
-            particles.setOriginOffset(new Vector3f());
+            particles.setLocalTranslation(new Vector3f());
 
             // fire the streamer in a random direction
             float azimuth = RandomUtil.getFloat(FastMath.TWO_PI),
@@ -98,21 +100,26 @@ public class ExplosionViz extends ParticleEffectViz
                 FastMath.cos(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(elevation));
-            _velocity.mult(TILE_SIZE / 2, particles.getOriginOffset());
+            // the fork seeded the origin offset to half a tile along the fire direction
+            particles.setLocalTranslation(_velocity.mult(TILE_SIZE / 2));
             _velocity.multLocal(STREAMER_INIT_SPEED);
 
-            particles.addController(new Controller() {
-                public void update (float time) {
-                    // update the position and velocity of the emitter
-                    Vector3f origin = particles.getOriginOffset();
+            // jME3: the per-frame fork Controller becomes an AbstractControl on the emitter that
+            // walks the emission origin (now the emitter's local translation) along the velocity.
+            particles.addControl(new AbstractControl() {
+                @Override protected void controlUpdate (float time) {
+                    Vector3f origin = particles.getLocalTranslation();
                     origin.scaleAdd(time, _velocity, origin);
+                    particles.setLocalTranslation(origin);
                     _velocity.scaleAdd(time, STREAMER_ACCEL, _velocity);
 
                     // remove streamer if its lifespan has elapsed
                     if ((_age += time) > STREAMER_LIFESPAN) {
-                        particles.removeController(this);
+                        particles.removeControl(this);
                         removeParticles(particles);
                     }
+                }
+                @Override protected void controlRender (RenderManager rm, ViewPort vp) {
                 }
             });
         }

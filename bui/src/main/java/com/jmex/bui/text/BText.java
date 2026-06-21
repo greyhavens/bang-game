@@ -5,7 +5,7 @@
 
 package com.jmex.bui.text;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.util.Dimension;
 
 /**
@@ -40,12 +40,12 @@ public abstract class BText
     /**
      * Renders this text to the display.
      */
-    public abstract void render (Renderer render, int x, int y, float alpha);
+    public abstract void render (RenderManager render, int x, int y, float alpha);
 
     /**
      * Optional rendering this text scaled to a certain height/width.
      */
-    public void render (Renderer render, int x, int y, int w, int h, float alpha)
+    public void render (RenderManager render, int x, int y, int w, int h, float alpha)
     {
         render(render, x, y, alpha);
     }

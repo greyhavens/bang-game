@@ -3,12 +3,16 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.shape.Pyramid;
+import com.jme3.material.Material;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial.CullHint;
+import com.jme3.scene.VertexBuffer;
+import com.jme3.util.BufferUtils;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Viewpoint;
@@ -26,12 +30,53 @@ public class ViewpointSprite extends PieceSprite
         if (!_editorMode) {
             return;
         }
+        // fork Pyramid has no jME3 equivalent (migration map §2.3 REBUILD, 1 consumer); build a
+        // simple square-based pyramid Mesh. The grey colour is set on the material in createGeometry
+        // (the asset manager is not available until the context is set).
+        _pyramid = new Geometry("marker", createPyramidMesh(TILE_SIZE/2, TILE_SIZE/2));
+        attachChild(_pyramid);
+    }
 
-        Pyramid pyramid = new Pyramid("marker", TILE_SIZE/2, TILE_SIZE/2);
-        pyramid.setSolidColor(ColorRGBA.gray);
-        pyramid.setModelBound(new BoundingBox());
-        pyramid.updateModelBound();
-        attachChild(pyramid);
+    @Override // documentation inherited
+    protected void createGeometry ()
+    {
+        super.createGeometry();
+        if (_pyramid != null) {
+            Material mat = new Material(_ctx.getAssetManager(),
+                "Common/MatDefs/Misc/Unshaded.j3md");
+            mat.setColor("Color", new ColorRGBA(ColorRGBA.Gray));
+            _pyramid.setMaterial(mat);
+        }
+    }
+
+    /** Builds a square-based pyramid mesh of the given base width and height. */
+    protected static Mesh createPyramidMesh (float width, float height)
+    {
+        float h = width / 2;
+        Vector3f apex = new Vector3f(0, 0, height);
+        Vector3f[] base = new Vector3f[] {
+            new Vector3f(-h, -h, 0), new Vector3f(h, -h, 0),
+            new Vector3f(h, h, 0), new Vector3f(-h, h, 0),
+        };
+        // 4 triangular sides (apex + two base corners) + 2 base triangles
+        Vector3f[] verts = new Vector3f[] {
+            apex, base[0], base[1],
+            apex, base[1], base[2],
+            apex, base[2], base[3],
+            apex, base[3], base[0],
+            base[0], base[1], base[2],
+            base[0], base[2], base[3],
+        };
+        int[] indices = new int[verts.length];
+        for (int ii = 0; ii < indices.length; ii++) {
+            indices[ii] = ii;
+        }
+        Mesh mesh = new Mesh();
+        mesh.setBuffer(VertexBuffer.Type.Position, 3,
+            BufferUtils.createFloatBuffer(verts));
+        mesh.setBuffer(VertexBuffer.Type.Index, 3, BufferUtils.createIntBuffer(indices));
+        mesh.updateBound();
+        return mesh;
     }
 
     /**
@@ -47,8 +92,7 @@ public class ViewpointSprite extends PieceSprite
             unbindCamera();
         }
         _boundcam = camera;
-        setCullMode(CULL_ALWAYS);
-        setIsCollidable(false);
+        setCullHint(CullHint.Always);
         updateBoundCamera();
     }
 
@@ -61,8 +105,7 @@ public class ViewpointSprite extends PieceSprite
             return;
         }
         _boundcam = null;
-        setCullMode(CULL_INHERIT);
-        setIsCollidable(true);
+        setCullHint(CullHint.Inherit);
     }
 
     @Override // documentation inherited
@@ -87,18 +130,20 @@ public class ViewpointSprite extends PieceSprite
         _temp.x += vp.fx * PropSprite.FINE_POSITION_SCALE;
         _temp.y += vp.fy * PropSprite.FINE_POSITION_SCALE;
         _temp.z += TILE_SIZE * 0.5f;
-        getLocalTranslation().set(_temp);
+        setLocalTranslation(new Vector3f(_temp));
     }
 
     @Override // documentation inherited
     public void setOrientation (int orientation)
     {
         Viewpoint vp = (Viewpoint)_piece;
-        getLocalRotation().fromAngleNormalAxis(ROTATIONS[orientation] -
+        Quaternion rot = new Quaternion();
+        rot.fromAngleNormalAxis(ROTATIONS[orientation] -
             vp.forient * PropSprite.FINE_ROTATION_SCALE, UP);
         _rot.fromAngleNormalAxis(vp.pitch * PropSprite.FINE_ROTATION_SCALE,
             LEFT);
-        getLocalRotation().multLocal(_rot);
+        rot.multLocal(_rot);
+        setLocalRotation(rot);
     }
     
     /**
@@ -117,7 +162,7 @@ public class ViewpointSprite extends PieceSprite
         Quaternion lrot = getLocalRotation(),
             vrot = new Quaternion();
         vrot.fromAxes(lrot.mult(LEFT), lrot.mult(UP), lrot.mult(FORWARD));
-        vrot.normalize();
+        vrot.normalizeLocal();
         return vrot;
     }
     
@@ -129,6 +174,9 @@ public class ViewpointSprite extends PieceSprite
     {
         _boundcam.setFrame(getLocalTranslation(), getViewRotation());
     }
+
+    /** The editor pyramid marker geometry, if any. */
+    protected Geometry _pyramid;
 
     /** The camera to which this viewpoint is bound, if any. */
     protected Camera _boundcam;

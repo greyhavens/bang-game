@@ -3,13 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.image.Texture;
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.math.Quaternion;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
+import com.jme3.material.Material;
 
 import com.samskivert.util.HashIntMap;
 
@@ -17,6 +11,7 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BoardView;
+import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
@@ -40,46 +35,34 @@ public class SafeMarkerSprite extends MarkerSprite
     {
         super.init(ctx, view, board, sounds, piece, tick);
         int type = ((Marker)_piece).getType();
-        boolean emissive = (TextureState.getNumberOfFixedUnits() >= 2);
-        TextureState[] texstates = _highlightStates.get(type);
-        if (texstates == null) {
-            texstates = new TextureState[DIRECTIONS.length * HIGHLIGHT_TEXS.length];
+
+        // The fork built DIRECTIONS.length * HIGHLIGHT_TEXS.length (= 8) TextureStates: the on/off
+        // base texture in each of the 4 cardinal facings. The safe markers (concentric squares /
+        // circles) are rotationally symmetric, so the fork's per-facing 90-degree rotation has no
+        // visible effect; we keep the per-facing array (the on/off selection indexes by orientation)
+        // but bind the SAME alpha-correct cached texture for every facing. (An earlier attempt
+        // rotated the source image and rebuilt the texture via ImageCache.createImage, which dropped
+        // the PNG's alpha.) The fork's emissive "glow" overlay (a second additive texture unit) is
+        // NOT reproduced: the _on_emis/_off_emis art is glyph-on-OPAQUE-black and the additive blend
+        // did not survive the Highlight render path, so it painted a black square over the tile. The
+        // base marker alone is the safe-zone indicator.
+        Material[] mats = _highlightMaterials.get(type);
+        if (mats == null) {
+            String root = (String)SPRITES[type*2+1];
+            mats = new Material[DIRECTIONS.length * HIGHLIGHT_TEXS.length];
             for (int ii = 0; ii < HIGHLIGHT_TEXS.length; ii++) {
-                String root = (String)SPRITES[type*2+1];
-                Texture btex = ctx.getTextureCache().getTexture(
-                    root + HIGHLIGHT_TEXS[ii] + ".png");
-                int idx = ii * DIRECTIONS.length;
-                texstates[idx] = ctx.getRenderer().createTextureState();
-                if (emissive) {
-                    Texture etex = ctx.getTextureCache().getTexture(
-                        root + EMISSIVE_TEXS[ii] + ".png");
-                    etex.setApply(Texture.AM_BLEND);
-                    etex.setBlendColor(ColorRGBA.white);
-                    texstates[idx].setTexture(etex, 0);
-                    texstates[idx].setTexture(btex, 1);
-                } else {
-                    texstates[idx].setTexture(btex);
-                }
-                RenderUtil.ensureLoaded(texstates[idx]); // load before cloning
-            }
-            
-            // create the three other rotations of the texture
-            for (int ii = 1; ii < DIRECTIONS.length; ii++) {
-                for (int jj = 0; jj < HIGHLIGHT_TEXS.length; jj++) {
-                    int idx = jj * DIRECTIONS.length + ii;
-                    texstates[idx] = createRotatedState(
-                        texstates[jj * DIRECTIONS.length], ii * FastMath.HALF_PI);
+                Material bmat = RenderUtil.createTextureMaterial(
+                    ctx, ctx.getTextureCache().getTexture(root + HIGHLIGHT_TEXS[ii] + ".png"));
+                RenderUtil.applyBlendAlpha(bmat);
+                RenderUtil.applyOverlayZBuf(bmat);
+                for (int dd = 0; dd < DIRECTIONS.length; dd++) {
+                    mats[ii * DIRECTIONS.length + dd] = bmat;
                 }
             }
-            _highlightStates.put(type, texstates);
+            _highlightMaterials.put(type, mats);
         }
         _tlight = view.getTerrainNode().createHighlight(
                 piece.x, piece.y, false, (byte)1);
-        if (emissive) {
-            _tlight.setLightCombineMode(LightState.REPLACE);
-            _tlight.setTextureBuffer(0, _tlight.getTextureBuffer(0, 0), 1);
-            _tlight.setHasNormals(true);
-        }
         setOrientation(piece.orientation);
         attachHighlight(_tlight);
     }
@@ -98,42 +81,25 @@ public class SafeMarkerSprite extends MarkerSprite
     }
 
     /**
-     * Set the on/off texture for a highlight marker.
+     * Set the on/off texture for a highlight marker, keyed on the piece's orientation, exactly as
+     * the fork indexed its 8 texture states.
      */
     public void setOnOff (int orientation, boolean on)
     {
-        if (_tlight != null) {
-            if (!on) {
-                orientation += DIRECTIONS.length;
-            }
-            _tlight.setRenderState(_highlightStates.get(
-                        ((Marker)_piece).getType())[orientation]);
-            _tlight.updateRenderState();
+        if (_tlight == null) {
+            return;
         }
+        // fork layout: idx = (on ? 0 : 1) * DIRECTIONS.length + orientation
+        int idx = (on ? 0 : DIRECTIONS.length) + orientation;
+        int type = ((Marker)_piece).getType();
+        Material base = _highlightMaterials.get(type)[idx];
+        _tlight.setTextures(base, base);
     }
 
-    /**
-     * Creates and returns a rotated "clone" of the given texture state.
-     */
-    protected TextureState createRotatedState (TextureState ostate, float angle)
-    {
-        TextureState nstate = _ctx.getRenderer().createTextureState();
-        for (int ii = 0, nn = ostate.getNumberOfSetTextures(); ii < nn; ii++) {
-            Texture ntex = ostate.getTexture(ii).createSimpleClone();
-            ntex.setRotation(new Quaternion().fromAngleNormalAxis(angle, Vector3f.UNIT_Z));
-            nstate.setTexture(ntex, ii);
-        }
-        return nstate;
-    }
-    
     protected static final String[] HIGHLIGHT_TEXS = {
         "_on", "_off"
     };
 
-    protected static final String[] EMISSIVE_TEXS = {
-        "_on_emis", "_off_emis"
-    };
-    
-    protected static HashIntMap<TextureState[]> _highlightStates =
-        new HashIntMap<TextureState[]>();
+    protected static HashIntMap<Material[]> _highlightMaterials =
+        new HashIntMap<Material[]>();
 }

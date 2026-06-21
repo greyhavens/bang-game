@@ -66,16 +66,24 @@ public class ServerConfig
     public static Class<? extends Authenticator> getAuthenticator ()
     {
         String aclass = config.getValue("server_auth", "");
-        try {
-            if (!StringUtil.isBlank(aclass)) {
-                @SuppressWarnings("unchecked") Class<? extends Authenticator> clazz =
-                    (Class<? extends Authenticator>)Class.forName(aclass);
-                return clazz;
-            }
-        } catch (Exception e) {
-            log.warning("Failed to instantiate authenticator", "class", aclass, e);
+        if (StringUtil.isBlank(aclass)) {
+            // Fail fast with an actionable message rather than returning null (which would reach
+            // Guice's bind(Authenticator.class).to(null) in BangServer$Module.configure and NPE far
+            // from the cause). A blank value almost always means local config is missing.
+            throw new IllegalStateException(
+                "server_auth is not configured. Copy etc/*.dist to etc/test/ " +
+                "(see README / docs/running-the-game.md), or set server_auth in " +
+                "etc/test/server.properties.");
         }
-        return null;
+        try {
+            @SuppressWarnings("unchecked") Class<? extends Authenticator> clazz =
+                (Class<? extends Authenticator>)Class.forName(aclass);
+            return clazz;
+        } catch (Exception e) {
+            // Don't swallow this and return null; rethrow with the class name and original cause.
+            throw new IllegalStateException(
+                "Failed to load authenticator class '" + aclass + "' (configured as server_auth).", e);
+        }
     }
 
     /**

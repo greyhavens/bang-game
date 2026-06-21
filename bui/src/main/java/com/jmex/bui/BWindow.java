@@ -64,6 +64,60 @@ public class BWindow extends BContainer
     }
 
     /**
+     * Configures a uniform render scale for this window (sets both X and Y to {@code scale}). The
+     * window keeps its LOGICAL bounds (so its children lay out exactly as at scale 1), but its
+     * render is magnified by {@code scale} about its on-screen top-left ({@code getX(),getY()}) and
+     * its mouse input is remapped from screen space back into that logical space (see {@link
+     * BRootNode}). A scaled window therefore visually occupies {@code getWidth()*scale x
+     * getHeight()*scale} screen pixels at its {@code (getX(),getY())} origin. The default is
+     * {@code 1f}, at which the window is byte-identical to a non-scaled window (no render or input
+     * change).
+     *
+     * <p>Used by the shop views (see {@code BangClient.setPlaceView}/{@code refitMainView}) to
+     * fill larger-than-1024x768 screens while keeping their hard-coded 1024x768 art layout.
+     */
+    public void setRenderScale (float scale)
+    {
+        setRenderScale(scale, scale);
+    }
+
+    /**
+     * Configures a NON-UNIFORM render scale for this window (independent X and Y). See
+     * {@link #setRenderScale(float)}; this variant lets the window stretch (different X and Y
+     * factors), used by full-stretch shops to fill a non-4:3 display edge-to-edge.
+     */
+    public void setRenderScale (float scaleX, float scaleY)
+    {
+        _renderScaleX = scaleX;
+        _renderScaleY = scaleY;
+    }
+
+    /**
+     * Returns this window's X render scale (1f if unscaled). See {@link #setRenderScale(float)}.
+     */
+    public float getRenderScaleX ()
+    {
+        return _renderScaleX;
+    }
+
+    /**
+     * Returns this window's Y render scale (1f if unscaled). See {@link #setRenderScale(float)}.
+     */
+    public float getRenderScaleY ()
+    {
+        return _renderScaleY;
+    }
+
+    /**
+     * Returns this window's X render scale, for legacy callers that predate the non-uniform split.
+     * See {@link #getRenderScaleX}.
+     */
+    public float getRenderScale ()
+    {
+        return _renderScaleX;
+    }
+
+    /**
      * Configures this window to be modal which causes it to "steal" all mouse and keyboard input
      * while it is added to the interface hierarchy. Mouse movement and button press events that
      * would normally go to other windows or to the default mouse target will instead be sent to
@@ -274,4 +328,7 @@ public class BWindow extends BContainer
 
     /** Used to associate this window with a parent window. */
     protected BWindow _parentWindow;
+
+    /** Non-uniform render/input scale (X, Y) for this window; 1f (unscaled) by default. */
+    protected float _renderScaleX = 1f, _renderScaleY = 1f;
 }

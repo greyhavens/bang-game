@@ -3,11 +3,8 @@
 
 package com.threerings.bang.client;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
-import com.jme.system.DisplaySystem;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BComboBox;
@@ -27,18 +24,15 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
-import com.samskivert.util.CollectionUtil;
-import com.samskivert.util.RunAnywhere;
 import com.samskivert.util.StringUtil;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.crowd.chat.client.CurseFilter;
+
+import com.threerings.jme.JmeApp;
+import com.threerings.jme.camera.GodViewHandler;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.TabbedPane;
@@ -87,6 +81,37 @@ public class OptionsView extends BDecoratedWindow
                     break;
                 }
                 vallbl.setText(model.getValue() + "%");
+            }
+        });
+
+        // create a wrapper to hold them both
+        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
+        wrapper.add(slider);
+        wrapper.add(vallbl, GroupLayout.FIXED);
+        return wrapper;
+    }
+
+    /**
+     * Creates a slider for adjusting the WASD/arrow camera pan speed (BUG-5). The change takes
+     * effect immediately (via {@link GodViewHandler#setPanSpeed}) and is persisted in
+     * {@link BangPrefs}. The slider runs over the comfortable
+     * {@link GodViewHandler#MIN_PAN_SPEED}..{@link GodViewHandler#MAX_PAN_SPEED} range.
+     */
+    public static BContainer createPanSpeedSlider (final BangContext ctx)
+    {
+        final int min = Math.round(GodViewHandler.MIN_PAN_SPEED);
+        final int max = Math.round(GodViewHandler.MAX_PAN_SPEED);
+        int value = Math.max(min, Math.min(max, BangPrefs.getCameraPanSpeed()));
+
+        BSlider slider = new BSlider(BSlider.HORIZONTAL, min, max, value);
+        final BLabel vallbl = new BLabel(String.valueOf(value));
+        vallbl.setPreferredSize(new Dimension(50, 10));
+        slider.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged (ChangeEvent event) {
+                int val = ((BoundedRangeModel)event.getSource()).getValue();
+                BangPrefs.updateCameraPanSpeed(val);
+                GodViewHandler.setPanSpeed(val);
+                vallbl.setText(String.valueOf(val));
             }
         });
 
@@ -199,9 +224,31 @@ public class OptionsView extends BDecoratedWindow
         bcont.add(new BButton(_msgs.get("m.resume"), this, "dismiss"));
         add(bcont, GroupLayout.FIXED);
 
-        _mode = Display.getDisplayMode();
+        // seed _mode from the live LWJGL3 context size if available (was Display.getDisplayMode()),
+        // falling back to the stored preference for the offscreen/headless case.
+        int liveW = _ctx.getApp().getDisplayWidth(), liveH = _ctx.getApp().getDisplayHeight();
+        int curW = liveW > 0 ? liveW : BangPrefs.getDisplayWidth();
+        int curH = liveH > 0 ? liveH : BangPrefs.getDisplayHeight();
+        _mode = new ModeItem(curW, curH, BangPrefs.getDisplayBPP(), BangPrefs.getDisplayFreq());
+        // reflect the live fullscreen state in the checkbox (not just the stored preference).
+        _wasFullscreen = _ctx.getApp().isFullscreen();
+        _fullscreen.setSelected(_wasFullscreen);
         refreshDisplayModes();
         _modes.addListener(_modelist);
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _ctx.getApp().addResizeListener(_resizer);
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _ctx.getApp().removeResizeListener(_resizer);
     }
 
     // documentation inherited from interface ActionListener
@@ -264,99 +311,103 @@ public class OptionsView extends BDecoratedWindow
         return _msgs.get("m.detail_" + StringUtil.toUSLowerCase(level.name()));
     }
 
+    /** Common windowed resolutions offered in the chooser; filtered to &gt;= the playable minimum
+     * and capped at the monitor's native size. */
+    protected static final int[][] WINDOWED_MODES = {
+        { 1024, 768 }, { 1280, 720 }, { 1280, 800 }, { 1280, 1024 }, { 1366, 768 },
+        { 1440, 900 }, { 1600, 900 }, { 1680, 1050 }, { 1920, 1080 }, { 1920, 1200 },
+        { 2560, 1440 }, { 3840, 2160 },
+    };
+
     protected void refreshDisplayModes ()
     {
-        int maxwidth = 0, maxheight = 0;
-        boolean have1024 = false, have1280 = false;
+        // jME3 cutover: the fork called Display.getAvailableDisplayModes(); the LWJGL3 DisplayInfo
+        // only exposes the monitor's current (native) mode, so we offer a curated windowed list
+        // filtered to >= MIN_WIDTH/MIN_HEIGHT and capped at the monitor's native resolution, plus
+        // the monitor's native mode itself, plus the current mode (so the chooser always contains
+        // the running mode). bpp/freq come from the monitor where known.
+        int[] mon = _ctx.getApp().getPrimaryMonitorMode();
+        int maxW = (mon != null) ? mon[0] : Integer.MAX_VALUE;
+        int maxH = (mon != null) ? mon[1] : Integer.MAX_VALUE;
+        int freq = (mon != null && mon[2] > 0) ? mon[2] : BangPrefs.getDisplayFreq();
 
-        try {
-            ArrayList<DisplayMode> modes = new ArrayList<DisplayMode>();
-            CollectionUtil.addAll(modes, Display.getAvailableDisplayModes());
-            for (Iterator<DisplayMode> iter = modes.iterator();
-                 iter.hasNext(); ) {
-                DisplayMode mode = iter.next();
-                // our minimum display size is 1024x768
-                if (mode.getWidth() < BangUI.MIN_WIDTH ||
-                        mode.getHeight() < BangUI.MIN_HEIGHT) {
-                    iter.remove();
-                }
-
-                // note our maximum available display sizes
-                maxwidth = Math.max(maxwidth, mode.getWidth());
-                maxheight = Math.max(maxheight, mode.getHeight());
-
-                // note whether we have our two basic sizes
-                if (mode.getWidth() == 1024 && mode.getHeight() == 768) {
-                    have1024 = true;
-                }
-                if (mode.getWidth() == 1280 && mode.getHeight() == 1024) {
-                    have1280 = true;
-                }
+        java.util.LinkedHashSet<ModeItem> set = new java.util.LinkedHashSet<ModeItem>();
+        // always include the current running mode so the selection resolves.
+        set.add(_mode);
+        for (int[] wm : WINDOWED_MODES) {
+            if (wm[0] >= BangUI.MIN_WIDTH && wm[1] >= BangUI.MIN_HEIGHT &&
+                wm[0] <= maxW && wm[1] <= maxH) {
+                set.add(new ModeItem(wm[0], wm[1], 0, 0));
             }
-
-            // if we're on Linux and don't have 1024x768 or 1280x1024 but we
-            // have larger modes, it's probably because of Xinerama wackiness,
-            // so we add non-fullscreen versions for those
-            if (RunAnywhere.isLinux()) {
-                if (!have1024 && maxwidth >= 1024 && maxheight >= 768) {
-                    modes.add(new DisplayMode(1024, 768));
-                }
-                if (!have1280 && maxwidth >= 1280 && maxheight >= 1024) {
-                    modes.add(new DisplayMode(1280, 1024));
-                }
-            }
-
-            ModeItem current = null;
-            ModeItem[] items = new ModeItem[modes.size()];
-            for (int ii = 0; ii < items.length; ii++) {
-                DisplayMode mode = modes.get(ii);
-                items[ii] = new ModeItem(mode);
-                if (isCurrent(mode)) {
-                    current = items[ii];
-                }
-            }
-            Arrays.sort(items);
-            _modes.setItems(items);
-            _modes.selectItem(current);
-
-        } catch (LWJGLException e) {
-            log.warning("Failed to obtain display modes", e);
         }
+        // the monitor's native mode (also used as the fullscreen target).
+        if (mon != null && mon[0] >= BangUI.MIN_WIDTH && mon[1] >= BangUI.MIN_HEIGHT) {
+            set.add(new ModeItem(mon[0], mon[1], 0, freq));
+        }
+
+        ModeItem[] items = set.toArray(new ModeItem[set.size()]);
+        Arrays.sort(items);
+        _modes.setItems(items);
+        // select the entry matching the current size (the chooser keys on width/height).
+        ModeItem sel = _mode;
+        for (ModeItem mi : items) {
+            if (mi.width == _mode.width && mi.height == _mode.height) {
+                sel = mi;
+                break;
+            }
+        }
+        _modes.selectItem(sel);
     }
 
-    protected void updateDisplayMode (DisplayMode mode, boolean confirm)
+    protected void updateDisplayMode (ModeItem mode, boolean confirm)
     {
         boolean wantFullscreen = _fullscreen.isSelected();
+        // compare against the currently-applied state (_wasFullscreen), not the persisted pref, so
+        // a fullscreen-only toggle (or its revert) is not swallowed when the size is unchanged.
         if (mode == null || (_mode != null && _mode.equals(mode) &&
-                             wantFullscreen == BangPrefs.isFullscreen())) {
+                             wantFullscreen == _wasFullscreen)) {
             return;
         }
 
-        final DisplayMode omode = _mode;
+        final ModeItem omode = _mode;
+        final boolean owasFullscreen = _wasFullscreen;
         _mode = mode;
-        log.info("Switching to " + _mode + " (from " + omode + ")");
+        _wasFullscreen = wantFullscreen;
+        log.info("Switching to " + _mode + (wantFullscreen ? " fullscreen" : " windowed") +
+                 " (from " + omode + (owasFullscreen ? " fullscreen" : " windowed") + ")");
 
-        // we fake up non-full screen display modes above, but there's no way
-        // to set the bit depth to anything but zero, so we have to adjust that
-        // here so that JME doesn't freak out
-        int bpp = Math.max(16, _mode.getBitsPerPixel());
-        int width = _mode.getWidth(), height = _mode.getHeight();
-        DisplaySystem ds = _ctx.getDisplay();
-        ds.recreateWindow(width, height, bpp, _mode.getFrequency(), wantFullscreen);
-
-        // reconfigure the camera frustum in case the aspect ratio changed
-        _ctx.getCameraHandler().getCamera().setFrustumPerspective(
-            45.0f, width/(float)height, 1, 10000);
-
-        // recenter and invalidate the main view and options window
-        if (_parent != null) {
-            if (_parent instanceof ShopView || _parent instanceof LogonView) {
-                _parent.center();
-            } else {
-                _parent.setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                                  _ctx.getDisplay().getHeight());
+        // we fake up non-full screen display modes above, but there's no way to set the bit depth
+        // to anything but zero, so adjust that here so jME3 doesn't freak out.
+        int bpp = Math.max(16, _mode.bpp);
+        int width = _mode.width, height = _mode.height;
+        // a fullscreen switch targets the monitor's native resolution if known (the LWJGL3 context
+        // creates the window against the primary monitor); otherwise use the chosen windowed size.
+        if (wantFullscreen) {
+            int[] mon = _ctx.getApp().getPrimaryMonitorMode();
+            if (mon != null) {
+                width = mon[0];
+                height = mon[1];
             }
         }
+
+        // recreate the LWJGL3 window at the new mode (jME3 AppSettings restart; the fork called
+        // _ctx.getDisplay().recreateWindow(...)). The GLFW framebuffer-resize callback re-fits the
+        // viewport cameras via RenderManager.notifyReshape; we re-fit the BUI views below.
+        _ctx.getApp().switchDisplayMode(width, height, bpp, _mode.freq, wantFullscreen);
+
+        // reconfigure the camera frustum in case the aspect ratio changed (the context restart
+        // also does this via notifyReshape, but the popup relayout below reads it immediately).
+        _ctx.getCameraHandler().getCamera().setFrustumPerspective(
+            45.0f, width/(float)height,
+            com.threerings.jme.JmeApp.FRUSTUM_NEAR, com.threerings.jme.JmeApp.FRUSTUM_FAR);
+
+        // Re-fitting the main view (_parent) to the new size is now driven by the host resize
+        // listener (BangClient.refitMainView), which fires once the jME3 restart() above has
+        // actually recreated the GLFW window and re-fit the cameras. Doing it synchronously here --
+        // as the fork did after its synchronous recreateWindow -- would read the still-old camera
+        // size, because jME3's restart() is asynchronous (posted to the next render frame). This
+        // popup re-centers itself off the same host resize event (see _resizer), which the host
+        // fires after the backend display size is updated, so center() reads the new size.
         center();
 
         // if we don't need to confirm, stop here
@@ -369,12 +420,14 @@ public class OptionsView extends BDecoratedWindow
                 switch (button) {
                 case OptionDialog.OK_BUTTON:
                     // store these settings for later
-                    BangPrefs.updateDisplayMode(_mode);
-                    BangPrefs.updateFullscreen(_fullscreen.isSelected());
+                    BangPrefs.updateDisplayMode(_mode.width, _mode.height, _mode.bpp,
+                        _mode.freq);
+                    BangPrefs.updateFullscreen(_wasFullscreen);
                     break;
 
                 default:
-                    // revert to the old mode
+                    // revert to the old mode (and restore the fullscreen checkbox state)
+                    _fullscreen.setSelected(owasFullscreen);
                     updateDisplayMode(omode, false);
                     break;
                 }
@@ -385,82 +438,82 @@ public class OptionsView extends BDecoratedWindow
 
     }
 
-    protected void fullscreenRestart ()
-    {
-        if (_ctx.getDisplay().isFullScreen() == BangPrefs.isFullscreen()) {
-            _fullscreen.setText("");
-            return;
-        }
-
-        _fullscreen.setText(_msgs.get("m.restart_required"));
-        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
-            public void resultPosted (int button, Object result) {
-                if (button == OptionDialog.OK_BUTTON) {
-                    if (!BangClient.relaunchGetdown(_ctx, 500L)) {
-                        log.info("Failed to restart Bang, exiting");
-                        _ctx.getApp().stop();
-                    }
-                }
-            }
-        };
-        OptionDialog.showConfirmDialog(_ctx, BangCodes.OPTS_MSGS,
-                "m.fullscreen_changed", "m.restart", "m.resume", rr);
-    }
-
-    protected boolean isCurrent (DisplayMode mode)
-    {
-        return (_mode.getWidth() == mode.getWidth() &&
-                _mode.getHeight() == mode.getHeight() &&
-                (_mode.getFrequency() == 0 ||
-                 _mode.getFrequency() == mode.getFrequency()) &&
-                (_mode.getBitsPerPixel() == 0 ||
-                 _mode.getBitsPerPixel() == mode.getBitsPerPixel()));
-    }
-
+    /**
+     * A host-neutral display-mode descriptor. jME3 cutover: replaces the LWJGL2
+     * {@code org.lwjgl.opengl.DisplayMode} this view used to wrap; the Phase-3 LWJGL3 host
+     * supplies width/height/bpp/freq.
+     */
     protected static class ModeItem implements Comparable<ModeItem>
     {
-        public DisplayMode mode;
+        public int width, height, bpp, freq;
 
-        public ModeItem (DisplayMode mode) {
-            this.mode = mode;
+        public ModeItem (int width, int height, int bpp, int freq) {
+            this.width = width;
+            this.height = height;
+            this.bpp = bpp;
+            this.freq = freq;
         }
 
         public String toString () {
-            String text = mode.getWidth() + "x" + mode.getHeight();
-            if (mode.getBitsPerPixel() > 0) {
-                text += ("x" + mode.getBitsPerPixel() + " " +
-                         mode.getFrequency() + "Hz");
+            String text = width + "x" + height;
+            if (bpp > 0) {
+                text += ("x" + bpp + " " + freq + "Hz");
             }
             return text;
         }
 
+        @Override public boolean equals (Object o) {
+            if (!(o instanceof ModeItem)) {
+                return false;
+            }
+            ModeItem m = (ModeItem)o;
+            return width == m.width && height == m.height && bpp == m.bpp && freq == m.freq;
+        }
+
+        @Override public int hashCode () {
+            return (width * 31 + height) * 31 + bpp * 31 + freq;
+        }
+
         public int compareTo (ModeItem other) {
-            DisplayMode omode = other.mode;
-            if (mode.getWidth() != omode.getWidth()) {
-                return mode.getWidth() - omode.getWidth();
-            } else if (mode.getHeight() != omode.getHeight()) {
-                return mode.getHeight() - omode.getHeight();
-            } else if (mode.getBitsPerPixel() != omode.getBitsPerPixel()) {
-                return mode.getBitsPerPixel() - omode.getBitsPerPixel();
+            if (width != other.width) {
+                return width - other.width;
+            } else if (height != other.height) {
+                return height - other.height;
+            } else if (bpp != other.bpp) {
+                return bpp - other.bpp;
             } else {
-                return mode.getFrequency() - omode.getFrequency();
+                return freq - other.freq;
             }
         }
     }
 
     protected ActionListener _modelist = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
-            updateDisplayMode(((ModeItem)_modes.getSelectedItem()).mode, true);
+            updateDisplayMode((ModeItem)_modes.getSelectedItem(), true);
+        }
+    };
+
+    /** Re-centers this popup once the host display has actually resized (after the asynchronous
+     * jME3 restart()), so it lands centered in the new resolution rather than the old one. */
+    protected JmeApp.ResizeListener _resizer = new JmeApp.ResizeListener() {
+        public void displayResized (int width, int height) {
+            if (isAdded()) {
+                center();
+            }
         }
     };
 
     protected BangContext _ctx;
     protected BWindow _parent;
     protected MessageBundle _msgs;
-    protected DisplayMode _mode;
+    protected ModeItem _mode;
 
     protected BComboBox _modes;
     protected BCheckBox _fullscreen;
+
+    /** The fullscreen state currently applied to the live context (distinct from the persisted
+     * preference): tracks in-place switches so reverting a confirm dialog restores it. */
+    protected boolean _wasFullscreen;
 
     protected BList _muted;
     protected BButton _remove;

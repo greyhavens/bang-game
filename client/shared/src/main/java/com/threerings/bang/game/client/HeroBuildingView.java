@@ -3,8 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.renderer.Renderer;
-import com.jme.system.DisplaySystem;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
@@ -97,13 +96,12 @@ public class HeroBuildingView extends ScenarioHUD
 
         if (isAdded()) {
             pack();
-            DisplaySystem ds = DisplaySystem.getDisplaySystem();
-            setLocation((ds.getWidth() - getWidth())/2, getY());
+            setLocation((_ctx.getCamera().getWidth() - getWidth())/2, getY());
         }
     }
 
     @Override // from BWindow
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         // render our background at 50% transparency
         getBackground().render(renderer, 0, 0, _width, _height, 0.5f);

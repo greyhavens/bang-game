@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Rectangle;
@@ -146,7 +146,7 @@ public class TeamFinalistView extends BContainer
     }
 
     @Override // documentation inherited
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         super.renderBackground(renderer);
         int edge = _winner ? 20 : 17;
@@ -163,7 +163,7 @@ public class TeamFinalistView extends BContainer
     }
 
     @Override // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
         _medal.render(renderer, 0, getHeight()-_medal.getHeight(), _alpha);

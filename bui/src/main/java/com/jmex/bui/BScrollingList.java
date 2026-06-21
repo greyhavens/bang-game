@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.event.MouseWheelListener;
 import com.jmex.bui.event.ChangeListener;
 import com.jmex.bui.event.ChangeEvent;
@@ -283,7 +283,7 @@ public abstract class BScrollingList<V, C extends BComponent> extends BContainer
         }
 
         @Override // from BComponent
-        protected void renderComponent (Renderer renderer)
+        protected void renderComponent (RenderManager renderer)
         {
             Insets insets = getInsets();
             BackendProvider.get().translate(0, _offset);

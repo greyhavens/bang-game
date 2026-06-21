@@ -9,6 +9,14 @@ dependencies {
   api "commons-io:commons-io:1.4"
   api "org.jcraft:jorbis:0.0.17"
 
+  // jME3 cutover (Phase 3 — the atomic host flip): the vendored com.threerings.openal package is
+  // now on LWJGL3 OpenAL (LWJGL2 + lwjgl_util are dropped — they cannot coexist with LWJGL3 on the
+  // classpath: both seal package org.lwjgl). compileOnly because the LWJGL3 openal jar + its
+  // natives reach the runtime transitively through client/desktop's jme3-lwjgl3 dependency.
+  // (LWJGL3 ships no org.lwjgl.util.WaveData, so the package now uses a project-owned WaveData.)
+  compileOnly "org.lwjgl:lwjgl:3.3.6"
+  compileOnly "org.lwjgl:lwjgl-openal:3.3.6"
+
   testImplementation "junit:junit:4.13.2"
 }
 

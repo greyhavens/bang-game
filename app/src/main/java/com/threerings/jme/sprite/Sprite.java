@@ -21,8 +21,11 @@
 
 package com.threerings.jme.sprite;
 
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
+import com.jme3.anim.AnimComposer;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.AbstractControl;
+import com.jme3.scene.control.Control;
 
 import com.samskivert.util.ObserverList;
 
@@ -41,8 +44,13 @@ public class Sprite extends Node
      */
     public static void setAnimationSpeed (Spatial spatial, float speed)
     {
-        for (int ii = 0; ii < spatial.getControllers().size(); ii++) {
-            spatial.getController(ii).setSpeed(speed);
+        for (int ii = 0, nn = spatial.getNumControls(); ii < nn; ii++) {
+            Control ctrl = spatial.getControl(ii);
+            if (ctrl instanceof AnimationController) {
+                ((AnimationController)ctrl).setSpeed(speed);
+            } else if (ctrl instanceof AnimComposer) {
+                ((AnimComposer)ctrl).setGlobalSpeed(speed);
+            }
         }
         if (spatial instanceof Node) {
             Node node = (Node)spatial;
@@ -58,8 +66,13 @@ public class Sprite extends Node
      */
     public static void setAnimationActive (Spatial spatial, boolean active)
     {
-        for (int ii = 0; ii < spatial.getControllers().size(); ii++) {
-            spatial.getController(ii).setActive(active);
+        for (int ii = 0, nn = spatial.getNumControls(); ii < nn; ii++) {
+            Control ctrl = spatial.getControl(ii);
+            if (ctrl instanceof AnimationController) {
+                ((AnimationController)ctrl).setActive(active);
+            } else if (ctrl instanceof AbstractControl) {
+                ((AbstractControl)ctrl).setEnabled(active);
+            }
         }
         if (spatial instanceof Node) {
             Node node = (Node)spatial;
@@ -75,8 +88,11 @@ public class Sprite extends Node
      */
     public static void setAnimationRepeatType (Spatial spatial, int repeatType)
     {
-        for (int ii = 0; ii < spatial.getControllers().size(); ii++) {
-            spatial.getController(ii).setRepeatType(repeatType);
+        for (int ii = 0, nn = spatial.getNumControls(); ii < nn; ii++) {
+            Control ctrl = spatial.getControl(ii);
+            if (ctrl instanceof AnimationController) {
+                ((AnimationController)ctrl).setRepeatType(repeatType);
+            }
         }
         if (spatial instanceof Node) {
             Node node = (Node)spatial;
@@ -133,7 +149,7 @@ public class Sprite extends Node
 
         // save off this path
         _path = path;
-        addController(_path);
+        addControl(_path);
     }
 
     /**
@@ -145,7 +161,7 @@ public class Sprite extends Node
         if (_path != null) {
             Path oldpath = _path;
             _path = null;
-            removeController(oldpath);
+            removeControl(oldpath);
             oldpath.wasRemoved();
             if (_observers != null) {
                 _observers.apply(new CancelledOp(this, oldpath));
@@ -167,7 +183,7 @@ public class Sprite extends Node
 
         Path oldpath = _path;
         _path = null;
-        removeController(oldpath);
+        removeControl(oldpath);
         oldpath.wasRemoved();
         if (_observers != null) {
             _observers.apply(new CompletedOp(this, oldpath));

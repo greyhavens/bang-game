@@ -5,12 +5,11 @@ package com.threerings.bang.ranch.client;
 
 import java.util.Properties;
 
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.system.DisplaySystem;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Node;
 
 import com.jmex.bui.BGeomView;
 import com.jmex.bui.BImage;
@@ -23,13 +22,26 @@ import com.threerings.jme.model.Model;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays a fancy animated version of a particular unit.
+ *
+ * <h3>jME3 cutover (Phase 2, cluster 9)</h3>
+ *
+ * The fork drove its own {@code com.jme.renderer.Camera} (created via {@code createCamera(
+ * DisplaySystem)}) and rendered the unit model 3D into the BUI component through the fork
+ * renderer's ortho dance. {@link BGeomView} is now engine-neutral: it holds a jME3
+ * {@link com.jme3.scene.Spatial} and defers the actual 3D render to a dedicated jME3
+ * {@code ViewPort} (or a {@link com.threerings.bang.util.BackTextureRenderer} RTT pass) installed
+ * at the Phase-3 host cutover. So here we keep the model spatial + the portrait {@link Camera}
+ * (built/positioned exactly as before, on jME3 math), and hand them off via {@link #getGeometry}/
+ * {@link #getPortraitCamera} for the Phase-3 viewport path to consume. The fork
+ * {@code setRenderState(lequalZBuf)} on the container is dropped — the loaded {@code .j3o} model
+ * carries its own per-geometry materials (depth preset baked in by the converter / applied by
+ * {@code RenderUtil} on the sprite/model side).
  */
 public class UnitView extends BGeomView
 {
@@ -40,9 +52,17 @@ public class UnitView extends BGeomView
         setStyleClass(prefix + "unit_view");
 
         _ctx = ctx;
-        _geom.setRenderState(RenderUtil.lequalZBuf);
-        _geom.updateRenderState();
         _frame = ctx.loadImage("ui/frames/" + prefix + "frame.png");
+    }
+
+    /**
+     * Returns the portrait camera, positioned for the current model (or null until the model and
+     * a target size are available). The per-component viewport path ({@link BGeomView}) renders
+     * {@link #getGeometry} through this camera into the component rect.
+     */
+    public Camera getPortraitCamera ()
+    {
+        return _camera;
     }
 
     /**
@@ -51,9 +71,9 @@ public class UnitView extends BGeomView
     public void setUnit (final UnitConfig config)
     {
         _config = config;
-        ((Node)_geom).detachAllChildren();
+        ((Node)getGeometry()).detachAllChildren();
         _ctx.loadModel("units", config.type,
-            new ResultAttacher<Model>((Node)_geom) {
+            new ResultAttacher<Model>((Node)getGeometry()) {
             public void requestCompleted (Model model) {
                 // make sure unit hasn't changed since we started loading
                 if (_config != config) {
@@ -80,8 +100,25 @@ public class UnitView extends BGeomView
     @Override // documentation inherited
     protected void wasAdded ()
     {
+        // build the portrait camera BEFORE super.wasAdded() so BGeomView.createViewport() (invoked
+        // from super) picks it up via getViewCamera(); the frame gives us the target pixel size.
+        if (_camera == null) {
+            _camera = new Camera(_frame.getWidth(), _frame.getHeight());
+            if (_model != null) {
+                positionCamera(_camera, _model);
+            }
+        }
+
         super.wasAdded();
         _frame.reference();
+    }
+
+    @Override // documentation inherited
+    protected Camera getViewCamera ()
+    {
+        // hand BGeomView's per-component viewport our model-framing portrait camera (BGeomView
+        // manages its screen-rect viewport and frustum aspect).
+        return (_camera != null) ? _camera : super.getViewCamera();
     }
 
     @Override // documentation inherited
@@ -91,16 +128,6 @@ public class UnitView extends BGeomView
         _frame.release();
     }
 
-    @Override // documentation inherited
-    protected Camera createCamera (DisplaySystem ds)
-    {
-        Camera camera = super.createCamera(ds);
-        if (_model != null) {
-            positionCamera(camera, _model);
-        }
-        return camera;
-    }
-    
     /**
      * Positions the camera as appropriate for the model.
      */
@@ -131,24 +158,30 @@ public class UnitView extends BGeomView
                             "value", crot);
             }
         }
-        camera.getLocation().set(loc);
+        camera.setLocation(loc);
         float sinh = FastMath.sin(heading), cosh = FastMath.cos(heading),
             sinp = FastMath.sin(pitch), cosp = FastMath.cos(pitch);
-        camera.getLeft().set(-cosh, -sinh, 0f);
-        camera.getUp().set(sinh * sinp, -cosh * sinp, cosp);
-        camera.getDirection().set(-sinh * cosp, cosh * cosp, sinp);
+        // jME3 Camera has no mutable left/up/direction accessors; set the basis atomically.
+        camera.setAxes(
+            new Vector3f(-cosh, -sinh, 0f),
+            new Vector3f(sinh * sinp, -cosh * sinp, cosp),
+            new Vector3f(-sinh * cosp, cosh * cosp, sinp));
     }
-    
+
     @Override // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
+        // the framed background; the 3D portrait render is the Phase-3 viewport/RTT pass
         _frame.render(renderer, 0, 0, _alpha);
         super.renderComponent(renderer);
     }
 
     protected BangContext _ctx;
-    protected Node _unode;
     protected BImage _frame;
     protected UnitConfig _config;
     protected Model _model;
+
+    /** The portrait camera, built lazily once a target size is known; consumed by the Phase-3
+     * viewport/RTT render path. */
+    protected Camera _camera;
 }

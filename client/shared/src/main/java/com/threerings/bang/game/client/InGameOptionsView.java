@@ -70,6 +70,8 @@ public class InGameOptionsView extends BDecoratedWindow
         cont.add(new BLabel(msgs.get("m.effects_vol"), "right_label"));
         cont.add(OptionsView.createSoundSlider(
                      ctx, OptionsView.SoundType.EFFECTS));
+        cont.add(new BLabel(msgs.get("m.pan_speed"), "right_label"));
+        cont.add(OptionsView.createPanSpeedSlider(ctx));
 
         tabs.addTab(msgs.get("t.general"), cont);
 

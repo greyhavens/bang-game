@@ -3,11 +3,12 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.scene.shape.Box;
-import com.jme.scene.state.LightState;
+import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Box;
 
 import com.threerings.openal.SoundGroup;
 
@@ -75,7 +76,7 @@ public class PropSprite extends PieceSprite
         Prop prop = (Prop)_piece;
         _temp.x += prop.fx * FINE_POSITION_SCALE;
         _temp.y += prop.fy * FINE_POSITION_SCALE;
-        if (!_temp.equals(localTranslation)) {
+        if (!_temp.equals(getLocalTranslation())) {
             setLocalTranslation(new Vector3f(_temp));
         }
     }
@@ -84,10 +85,12 @@ public class PropSprite extends PieceSprite
     public void setOrientation (int orientation)
     {
         Prop prop = (Prop)_piece;
-        getLocalRotation().fromAngles(new float[] {
+        Quaternion rot = new Quaternion();
+        rot.fromAngles(
             -prop.pitch * COARSE_ROTATION_SCALE,
             -prop.roll * COARSE_ROTATION_SCALE,
-            ROTATIONS[orientation] - prop.forient * FINE_ROTATION_SCALE });
+            ROTATIONS[orientation] - prop.forient * FINE_ROTATION_SCALE);
+        setLocalRotation(rot);
     }
 
     @Override // documentation inherited
@@ -117,17 +120,18 @@ public class PropSprite extends PieceSprite
         // because we know they won't move
         super.modelLoaded(model);
         if (!_editorMode) {
-            updateWorldVectors();
+            // jME3 has no fork lockMeshes batching; lockInstance is a no-op hook (props stay
+            // static spatials). Geometric state is refreshed by the scene update loop.
             model.lockInstance();
         } else if (Boolean.parseBoolean(
             model.getProperties().getProperty("editor_handle"))) {
-            // the prop requires a handle to manipulate it in the editor
-            Box handle = new Box("handle", new Vector3f(), 0.5f, 0.5f, 0.5f);
-            handle.setModelBound(new BoundingBox());
-            handle.updateModelBound();
-            handle.setLightCombineMode(LightState.OFF);
+            // the prop requires a handle to manipulate it in the editor; Box is now a Mesh
+            // wrapped in a Geometry carrying an unshaded material.
+            Box box = new Box(0.5f, 0.5f, 0.5f);
+            Geometry handle = new Geometry("handle", box);
+            handle.setMaterial(new Material(_ctx.getAssetManager(),
+                "Common/MatDefs/Misc/Unshaded.j3md"));
             attachChild(handle);
-            handle.updateRenderState();
         }
     }
 

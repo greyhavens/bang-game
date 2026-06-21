@@ -1,2 +1,2 @@
 rootProject.name = 'bang'
-include 'app', 'assets', 'bui', 'client:shared', 'client:desktop', 'client:getdown', 'jme', 'server', 'tools', 'tools:j3o-converter', 'tools:board-converter', 'tools:jme3-host'
+include 'app', 'assets', 'bui', 'client:shared', 'client:desktop', 'client:getdown', 'jme', 'server', 'tools', 'tools:j3o-converter', 'tools:board-converter', 'tools:jme3-host', 'tools:bot-client'

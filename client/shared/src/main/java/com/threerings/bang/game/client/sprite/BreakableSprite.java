@@ -5,7 +5,7 @@ package com.threerings.bang.game.client.sprite;
 
 import java.util.List;
 
-import com.jme.scene.Spatial;
+import com.jme3.scene.Spatial;
 
 import com.threerings.openal.SoundGroup;
 
@@ -68,7 +68,7 @@ import com.threerings.bang.client.util.ResultAttacher;
                 for (Spatial child : children) {
                     if (!(child instanceof WreckViz.Wreckage))
                     {
-                        child.setCullMode(Spatial.CULL_ALWAYS);
+                        child.setCullHint(Spatial.CullHint.Always);
                     }
                 }
                 if (_status != null) {

@@ -3,33 +3,51 @@
 
 package com.threerings.bang.client;
 
-import org.lwjgl.openal.AL;
+import com.jme3.system.AppSettings;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.threerings.bang.client.BangPrefs;
 
+/**
+ * The client entry point. jME3 cutover (Phase 3 — the atomic host flip): {@link BangApp} is now a
+ * {@code com.jme3.app.SimpleApplication} on the LWJGL3 context. This launcher configures the
+ * display from {@link BangPrefs} and starts the jME3 main loop (which creates the LWJGL3 window,
+ * GL context and input).
+ */
 public class BangDesktop
 {
-    public static void main (String[] args) {
-        LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-        cfg.title = "Bang! Howdy";
-        cfg.width = BangPrefs.getDisplayWidth();
-        cfg.height = BangPrefs.getDisplayHeight();
-        cfg.depth = BangPrefs.getDisplayBPP();
-        cfg.fullscreen = BangPrefs.isFullscreen();
-        // cfg.resizble = false;
-        final LwjglApplication app = new LwjglApplication(new BangApp(), cfg);
+    public static void main (String[] args)
+    {
+        final BangApp app = new BangApp();
 
-        // if the JVM is terminated externally (SIGTERM/SIGINT) the default handler starts the
-        // shutdown sequence with the render loop still running: the OpenAL device is left open
-        // (openal-soft's atexit cleanup can then segfault against its own mixer thread) and
-        // LWJGL's Display.destroy() blows up trying to deregister its shutdown hook; instead,
-        // route those signals to a clean gdx exit, which tears down the display and the shared
-        // AL device in order on the render thread before the JVM begins shutting down
+        AppSettings settings = new AppSettings(true);
+        settings.setTitle("Bang! Howdy");
+        // seed width/height/bpp/freq/fullscreen from stored preferences (clamped to the minimum
+        // playable size); -Dsafemode=true forces the minimum windowed mode for recovery.
+        BangPrefs.configureDisplayMode(settings, Boolean.getBoolean("safemode"));
+        settings.setVSync(true);
+        // request a depth buffer for the 3D scene.
+        settings.setDepthBits(24);
+
+        // BUG-1: create the GLFW window resizable (so the OS gives it a maximize button and lets
+        // the user drag-resize / maximize) and centered. Without this the LWJGL3 context defaults
+        // to a fixed, non-resizable window. jME3's RenderManager.notifyReshape (driven by the GLFW
+        // framebuffer-size callback) re-fits every viewport camera on resize, and our BUI
+        // SceneProcessor reads the GUI viewport size each frame, so resizing "just works" visually.
+        settings.setResizable(true);
+        settings.setCenterWindow(true);
+        // hint a minimum playable size (advisory on LWJGL3; the resolution chooser enforces it).
+        settings.setMinResolution(BangUI.MIN_WIDTH, BangUI.MIN_HEIGHT);
+
+        app.setSettings(settings);
+        app.setShowSettings(false);
+        app.setPauseOnLostFocus(false);
+
+        // route external termination (SIGTERM/SIGINT) through an ordered jME3 stop so the GL
+        // context and the OpenAL device are torn down on the render thread before the JVM begins
+        // shutting down (openal-soft's atexit cleanup can otherwise segfault against its own mixer
+        // thread).
         sun.misc.SignalHandler exiter = sig -> {
-            app.exit();
-            // if the render loop fails to wind down, force the issue rather than hang
+            app.stop();
             Thread enforcer = new Thread("BangDesktop exit enforcer") {
                 @Override public void run () {
                     try {
@@ -46,23 +64,6 @@ public class BangDesktop
         sun.misc.Signal.handle(new sun.misc.Signal("TERM"), exiter);
         sun.misc.Signal.handle(new sun.misc.Signal("INT"), exiter);
 
-        // last-resort safety net for shutdowns that bypass the signal path (e.g. System.exit
-        // from app code): if the AL device is somehow still open once the render loop has had
-        // a chance to exit, close it so openal-soft's atexit cleanup cannot crash
-        Runtime.getRuntime().addShutdownHook(new Thread("BangDesktop AL cleanup") {
-            @Override public void run () {
-                long deadline = System.currentTimeMillis() + 3000L;
-                while (AL.isCreated() && System.currentTimeMillis() < deadline) {
-                    try {
-                        Thread.sleep(50L);
-                    } catch (InterruptedException ie) {
-                        break;
-                    }
-                }
-                if (AL.isCreated()) {
-                    AL.destroy();
-                }
-            }
-        });
+        app.start();
     }
 }

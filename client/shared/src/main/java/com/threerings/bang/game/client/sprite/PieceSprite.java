@@ -6,16 +6,15 @@ package com.threerings.bang.game.client.sprite;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
-import com.jmex.effects.particles.ParticleMesh;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.Spatial.CullHint;
 
 import com.threerings.util.MessageBundle;
 
@@ -135,20 +134,18 @@ public class PieceSprite extends Sprite
         _piece = piece;
         _tick = tick;
 
-        // create and set the material that we will use to change shadow values
-        // (if appropriate)
+        // create the material-tint helper that we will use to change shadow values
+        // (if appropriate); jME3 has no fixed-function MaterialState, so this pushes the diffuse
+        // colour onto the model's geometry materials when applied (see SpriteMaterialState).
         if (isShadowable()) {
-            _mstate = ctx.getRenderer().createMaterialState();
-            _mstate.getDiffuse().set(ColorRGBA.white);
-            _mstate.getAmbient().set(ColorRGBA.white);
-            setRenderState(_mstate);
+            _mstate = new SpriteMaterialState();
+            _mstate.getDiffuse().set(ColorRGBA.White);
+            _mstate.getAmbient().set(ColorRGBA.White);
         }
 
-        // don't create collision trees when not necessary
-        if (!view.isHoverable(this) && !view.hasTooltip(this)) {
-            setIsCollidable(false);
-        }
-        
+        // jME3 picking is via BoardView.collideWith on demand; there is no per-spatial
+        // "collidable" flag to clear here (the fork setIsCollidable(false) optimisation is gone).
+
         // position ourselves properly to start
         setLocation(board, _piece.x, _piece.y);
         setOrientation(piece.orientation);
@@ -224,7 +221,7 @@ public class PieceSprite extends Sprite
     public void setLocation (int tx, int ty, int elevation)
     {
         toWorldCoords(_px = tx, _py = ty, elevation, _temp);
-        if (!_temp.equals(localTranslation)) {
+        if (!_temp.equals(getLocalTranslation())) {
             setLocalTranslation(new Vector3f(_temp));
 //             log.info("Moving to " + tx + ", " + ty + ", " + elevation +
 //                      ": " + _temp);
@@ -357,13 +354,14 @@ public class PieceSprite extends Sprite
             return;
         }
 
+        Vector3f trans = getLocalTranslation();
         float sheight = _view.getTerrainNode().getShadowHeight(
-            localTranslation.x, localTranslation.y), shadowed;
-        if (sheight >= localTranslation.z + TILE_SIZE) {
+            trans.x, trans.y), shadowed;
+        if (sheight >= trans.z + TILE_SIZE) {
             shadowed = 1f;
 
-        } else if (sheight > localTranslation.z) {
-            shadowed = (sheight - localTranslation.z) / TILE_SIZE;
+        } else if (sheight > trans.z) {
+            shadowed = (sheight - trans.z) / TILE_SIZE;
 
         } else {
             shadowed = 0f;
@@ -371,6 +369,7 @@ public class PieceSprite extends Sprite
         float diffuse = 1f - _view.getShadowIntensity() * shadowed;
         _mstate.getDiffuse().set(diffuse, diffuse, diffuse,
             _mstate.getDiffuse().a);
+        _mstate.apply(this);
     }
 
     /**
@@ -489,22 +488,23 @@ public class PieceSprite extends Sprite
      */
     public void displayParticles (String name, final boolean center)
     {
-        final Quaternion rot = new Quaternion(localRotation);
-        final Vector3f trans = new Vector3f(localTranslation);
+        final Quaternion rot = new Quaternion(getLocalRotation());
+        final Vector3f trans = new Vector3f(getLocalTranslation());
         ParticlePool.getParticles(name,
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
-                rot.mult(ParticleCache.Z_UP_ROTATION,
-                    result.getLocalRotation());
+                // jME3: mutating getLocalRotation()/getLocalTranslation() in place does not flag
+                // the transform dirty, so build the values and assign them via set*.
+                result.setLocalRotation(rot.mult(ParticleCache.Z_UP_ROTATION));
                 if (center) {
-                    rot.multLocal(result.getLocalTranslation().set(
-                        0f, 0f, _piece.getHeight() *
-                            TILE_SIZE * 0.5f)).addLocal(trans);
+                    Vector3f off = new Vector3f(0f, 0f,
+                        _piece.getHeight() * TILE_SIZE * 0.5f);
+                    result.setLocalTranslation(rot.multLocal(off).addLocal(trans));
                 } else {
-                    result.getLocalTranslation().set(trans);
+                    result.setLocalTranslation(new Vector3f(trans));
                 }
-            }      
+            }
         });
     }
     
@@ -513,26 +513,26 @@ public class PieceSprite extends Sprite
      */
     public void displayDustRing ()
     {
-        ParticleMesh ring = ParticlePool.getDustRing();
+        ParticleEmitter ring = ParticlePool.getDustRing();
         TerrainConfig terrain = TerrainConfig.getConfig(
             _view.getBoard().getPredominantTerrain(_piece.x, _piece.y));
         ColorRGBA color = terrain.dustColor;
-        ring.getStartColor().set(color);
-        ring.getEndColor().set(color.r, color.g, color.b, 0f);
-        
+        ring.setStartColor(new ColorRGBA(color));
+        ring.setEndColor(new ColorRGBA(color.r, color.g, color.b, 0f));
+
         ring.setLocalTranslation(getLocalTranslation());
         ring.setLocalRotation(getLocalRotation());
-        
+
         _view.getPieceNode().attachChild(ring);
-        ring.updateRenderState();
-        ring.updateGeometricState(0f, false);
-        ring.forceRespawn();
+        // jME3 uploads materials lazily and computes geometric state in the update loop; no
+        // explicit updateRenderState/updateGeometricState needed.
+        ring.emitAllParticles();
     }
 
     @Override // documentation inherited
-    public void updateWorldData (float time)
+    public void updateLogicalState (float time)
     {
-        super.updateWorldData(time);
+        super.updateLogicalState(time);
 
         if (_status != null) {
             // of up and forward, use the one with the greater x/y
@@ -576,12 +576,16 @@ public class PieceSprite extends Sprite
             float length = TILE_SIZE, // _view.getShadowLength(),
                 rotation = 0f, // _view.getShadowRotation(),
                 intensity = _view.getDynamicShadowIntensity();
+            Vector3f trans = getLocalTranslation();
             _shadow = _view.getTerrainNode().createHighlight(
-                localTranslation.x, localTranslation.y, length, length);
-            _shadow.setIsCollidable(false);
-            _shadow.setRenderState(RenderUtil.createShadowTexture(
-                _ctx, length, rotation, intensity));
-            _shadow.updateRenderState();
+                trans.x, trans.y, length, length);
+            // the shadow blob is a textured highlight; the fork applied a TextureState, the
+            // Highlight now carries a Material built from the generated shadow texture.
+            com.jme3.material.Material smat = RenderUtil.createTextureMaterial(
+                _ctx, RenderUtil.createShadowTexture(_ctx, length, rotation, intensity));
+            RenderUtil.applyBlendAlpha(smat);
+            RenderUtil.applyOverlayZBuf(smat);
+            _shadow.setTextures(smat, smat);
             attachHighlight(_shadow);
         }
     }
@@ -632,7 +636,7 @@ public class PieceSprite extends Sprite
     {
         if (_status != null) {
             _status.update(_piece, _selected || _hovered);
-            _status.setCullMode(CULL_DYNAMIC);
+            _status.setCullHint(CullHint.Dynamic);
         }
     }
 
@@ -651,11 +655,9 @@ public class PieceSprite extends Sprite
     protected Node createHighlightNode ()
     {
         Node hnode = new Node("highlight");
-        hnode.setLightCombineMode(LightState.OFF);
-        hnode.setRenderState(RenderUtil.overlayZBuf);
-        hnode.setRenderState(RenderUtil.blendAlpha);
-        hnode.setRenderState(RenderUtil.backCull);
-        hnode.updateRenderState();
+        // jME3: blend/depth/cull live on each child geometry's material (the children apply the
+        // RenderUtil presets); the node only needs to render in the transparent bucket.
+        RenderUtil.setOverlay(hnode);
         return hnode;
     }
 
@@ -748,6 +750,11 @@ public class PieceSprite extends Sprite
                 ((SpriteEmission)ctrl).setSpriteRefs(_ctx, _view, this);
             }
         }
+
+        // apply the current shadow/fade tint onto the freshly loaded model geometries
+        if (_mstate != null) {
+            _mstate.apply(this);
+        }
     }
     
     /**
@@ -756,7 +763,8 @@ public class PieceSprite extends Sprite
     protected void updateHighlight ()
     {
         if (_shadow != null) {
-            _shadow.setPosition(localTranslation.x, localTranslation.y);
+            Vector3f trans = getLocalTranslation();
+            _shadow.setPosition(trans.x, trans.y);
         }
         updateTileHighlight();
     }
@@ -783,8 +791,9 @@ public class PieceSprite extends Sprite
     /** Colorizations to apply to the model. */
     protected Colorization[] _zations;
     
-    /** The material state used to manipulate shadow values. */
-    protected MaterialState _mstate;
+    /** The material-tint helper used to manipulate shadow / fade values (jME3: replaces the fork
+     * {@code MaterialState}, pushing the diffuse colour onto the model's geometry materials). */
+    protected SpriteMaterialState _mstate;
 
     /** The emissions associated with the model. */
     protected List<SpriteEmission> _emissions = new ArrayList<SpriteEmission>();

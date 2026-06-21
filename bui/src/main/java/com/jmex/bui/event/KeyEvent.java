@@ -5,7 +5,7 @@
 
 package com.jmex.bui.event;
 
-import com.badlogic.gdx.Input.Keys;
+import com.jme3.input.KeyInput;
 
 /**
  * Encapsulates the information associated with a keyboard event.
@@ -49,16 +49,16 @@ public class KeyEvent extends InputEvent
         // TEMP: This is a hack to get around a bug in lwjgl's handling of numpad keys in windows
         if (_keyChar == 0) {
             switch (_keyCode) {
-            case Keys.NUMPAD_1: return '1';
-            case Keys.NUMPAD_2: return '2';
-            case Keys.NUMPAD_3: return '3';
-            case Keys.NUMPAD_4: return '4';
-            case Keys.NUMPAD_5: return '5';
-            case Keys.NUMPAD_6: return '6';
-            case Keys.NUMPAD_7: return '7';
-            case Keys.NUMPAD_8: return '8';
-            case Keys.NUMPAD_9: return '9';
-            case Keys.NUMPAD_0: return '0';
+            case KeyInput.KEY_NUMPAD1: return '1';
+            case KeyInput.KEY_NUMPAD2: return '2';
+            case KeyInput.KEY_NUMPAD3: return '3';
+            case KeyInput.KEY_NUMPAD4: return '4';
+            case KeyInput.KEY_NUMPAD5: return '5';
+            case KeyInput.KEY_NUMPAD6: return '6';
+            case KeyInput.KEY_NUMPAD7: return '7';
+            case KeyInput.KEY_NUMPAD8: return '8';
+            case KeyInput.KEY_NUMPAD9: return '9';
+            case KeyInput.KEY_NUMPAD0: return '0';
             default: return _keyChar;
             }
         }

@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,15 +61,22 @@ public class EditorClient extends BasicClient
     {
         // create our context
         _frame = frame;
-        _frame.setJMenuBar(new JMenuBar());
-        JPanel statusPanel = GroupLayout.makeHBox(GroupLayout.STRETCH);
-        statusPanel.add(_status = new JLabel(" "));
-        statusPanel.add(_coords = new JLabel("x:  , y:  "), GroupLayout.FIXED);
-        _frame.getContentPane().add(statusPanel, BorderLayout.SOUTH);
-
-        // we can't use lightweight popups because our OpenGL display is a
-        // heavyweight component
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+        // init() runs on the jME3 render thread and the frame is already realised/visible, so build
+        // the menu bar + status bar on the EDT. (The heavyweight-GL-canvas lightweight-popup toggle
+        // is set earlier, on the EDT, in EditorDesktop before the frame is built.)
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run () {
+                    _frame.setJMenuBar(new JMenuBar());
+                    JPanel statusPanel = GroupLayout.makeHBox(GroupLayout.STRETCH);
+                    statusPanel.add(_status = new JLabel(" "));
+                    statusPanel.add(_coords = new JLabel("x:  , y:  "), GroupLayout.FIXED);
+                    _frame.getContentPane().add(statusPanel, BorderLayout.SOUTH);
+                }
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to build editor chrome", e);
+        }
 
         initClient(_ctx, app, RunQueue.AWT);
 
@@ -172,18 +179,30 @@ public class EditorClient extends BasicClient
         }
 
         public void setPlaceView (PlaceView view) {
+            // jME3 cutover (Phase 7c): the content pane is canvas=CENTER, status=SOUTH, and the
+            // place view chrome=EAST. Target the EAST slot explicitly rather than indexing by a
+            // magic component count (which broke once the canvas occupied CENTER): remove whatever
+            // currently holds EAST, then install the new view there.
             Container pane = _frame.getContentPane();
-            if (pane.getComponentCount() > 2) {
-                pane.remove(2);
+            BorderLayout layout = (BorderLayout)pane.getLayout();
+            Component prev = layout.getLayoutComponent(pane, BorderLayout.EAST);
+            if (prev != null) {
+                pane.remove(prev);
             }
             pane.add((Component)view, BorderLayout.EAST);
             _frame.validate();
         }
 
         public void clearPlaceView (PlaceView view) {
+            // Remove exactly the EAST place view, not whatever happens to live at index 1 (that was
+            // the SOUTH status panel once the canvas took CENTER — removing it blanked the status
+            // bar). Remove the passed-in component when it is the one in the EAST slot.
             Container pane = _frame.getContentPane();
-            if (pane.getComponentCount() > 1) {
-                pane.remove(1);
+            BorderLayout layout = (BorderLayout)pane.getLayout();
+            Component east = layout.getLayoutComponent(pane, BorderLayout.EAST);
+            if (east != null && east == view) {
+                pane.remove(east);
+                _frame.validate();
             }
         }
 

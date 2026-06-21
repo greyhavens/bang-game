@@ -138,14 +138,28 @@ public class ModelToJ3o
                 " != " + actual.size());
             ok = false;
         }
+        // Skinned meshes are deliberately reparented to the model root (their vertices are baked
+        // into model space; see ModelConverter.applySkinning), so the path/traversal-order is not
+        // a stable identity any more. Match expected->actual as a multiset on content-minus-path
+        // so a dropped texture/flipped flag/lost skin-width is still caught, but reparenting is not
+        // reported as a mismatch.
+        List<ModelConverter.GeoStats> pool = new ArrayList<>(actual);
         int totalVerts = 0, totalTris = 0;
-        for (int ii = 0, nn = Math.min(expected.size(), actual.size()); ii < nn; ii++) {
-            ModelConverter.GeoStats exp = expected.get(ii), act = actual.get(ii);
-            // records compare counts, base + glow texture, blend/cull/bucket, and skinning width
-            boolean match = exp.equals(act);
+        for (ModelConverter.GeoStats exp : expected) {
+            int found = -1;
+            for (int jj = 0; jj < pool.size(); jj++) {
+                if (sameContent(exp, pool.get(jj))) {
+                    found = jj;
+                    break;
+                }
+            }
+            boolean match = found >= 0;
             System.out.println("  " + (match ? "OK " : "MISMATCH ") + exp.path() +
                 ": " + exp.vertices() + "v/" + exp.triangles() + "t/" + exp.texture() +
-                (match ? "" : "\n      expected " + exp + "\n      actual   " + act));
+                (match ? "" : "\n      no actual geometry with matching content for " + exp));
+            if (match) {
+                pool.remove(found);
+            }
             ok &= match;
             totalVerts += exp.vertices();
             totalTris += exp.triangles();
@@ -153,5 +167,17 @@ public class ModelToJ3o
         System.out.println("  " + expected.size() + " geometries, " + totalVerts +
             " vertices, " + totalTris + " triangles: " + (ok ? "PARITY OK" : "FAILED"));
         return ok;
+    }
+
+    /** Geometry parity on everything except the scene-graph path (which legitimately changes
+     * when skinned meshes are reparented to the model root). */
+    protected static boolean sameContent (ModelConverter.GeoStats a, ModelConverter.GeoStats b)
+    {
+        return a.vertices() == b.vertices() && a.triangles() == b.triangles()
+            && java.util.Objects.equals(a.texture(), b.texture())
+            && java.util.Objects.equals(a.glowTexture(), b.glowTexture())
+            && java.util.Objects.equals(a.blend(), b.blend())
+            && a.cullOff() == b.cullOff() && a.transparentBucket() == b.transparentBucket()
+            && a.maxWeights() == b.maxWeights();
     }
 }

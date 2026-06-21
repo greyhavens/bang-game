@@ -3,11 +3,11 @@
 
 package com.threerings.bang.game.client;
 
-import com.badlogic.gdx.Input.Keys;
-
-import com.jme.input.KeyBindingManager;
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
+import com.jme3.input.InputManager;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
 
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseWheelListener;
@@ -153,19 +153,24 @@ public class GameInputHandler extends GodViewHandler
                                           angvel, deltaZoom));
     }
 
-    protected void setKeyBindings ()
+    @Override // documentation inherited
+    public void registerWith (InputManager inputManager)
     {
-        KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
-
-        // we only allow free form panning, nothing else
-        keyboard.set("forward", Keys.W);
-        keyboard.set("arrow_forward", Keys.UP);
-        keyboard.set("backward", Keys.S);
-        keyboard.set("arrow_backward", Keys.DOWN);
-        keyboard.set("left", Keys.A);
-        keyboard.set("arrow_left", Keys.LEFT);
-        keyboard.set("right", Keys.D);
-        keyboard.set("arrow_right", Keys.RIGHT);
+        // jME3 cutover: the fork registered named actions on the polled KeyBindingManager (via the
+        // gdx Input.Keys keycodes), restricting the GodViewHandler defaults to free-form panning
+        // only (no zoom/orbit/tilt key bindings in-game). The jME3 equivalent maps only the pan
+        // actions on the InputManager and listens for them.
+        // TODO(phase3-host): installed by the Phase-3 host once it owns the jME3 InputManager
+        // (the input source flips from libGDX to jME3 there).
+        inputManager.addMapping(FORWARD, new KeyTrigger(KeyInput.KEY_W),
+            new KeyTrigger(KeyInput.KEY_UP));
+        inputManager.addMapping(BACKWARD, new KeyTrigger(KeyInput.KEY_S),
+            new KeyTrigger(KeyInput.KEY_DOWN));
+        inputManager.addMapping(LEFT, new KeyTrigger(KeyInput.KEY_A),
+            new KeyTrigger(KeyInput.KEY_LEFT));
+        inputManager.addMapping(RIGHT, new KeyTrigger(KeyInput.KEY_D),
+            new KeyTrigger(KeyInput.KEY_RIGHT));
+        inputManager.addListener(this, FORWARD, BACKWARD, LEFT, RIGHT);
     }
 
     /** Updates the board view's hover state on completion of camera paths. */

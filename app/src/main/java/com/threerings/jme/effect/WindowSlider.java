@@ -21,8 +21,10 @@
 
 package com.threerings.jme.effect;
 
-import com.jme.scene.Node;
-import com.jme.system.DisplaySystem;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Node;
+import com.jme3.scene.control.AbstractControl;
 
 import com.jmex.bui.BWindow;
 
@@ -30,8 +32,13 @@ import com.threerings.jme.util.LinearTimeFunction;
 import com.threerings.jme.util.TimeFunction;
 
 /**
- * Slides a window onto the center of the screen from offscreen or offscreen
- * from the center of the screen.
+ * Slides a window onto the center of the screen from offscreen or offscreen from the center of
+ * the screen.
+ *
+ * <p>jME3 cutover (Phase 1): jME3 has no global {@code DisplaySystem}, so the screen dimensions
+ * the slide geometry needs are passed into the constructor (the fork read them from
+ * {@code DisplaySystem.getWidth/Height}); and the per-frame slide moved from the fork
+ * {@code updateGeometricState} override into an attached {@link AbstractControl}.
  */
 public class WindowSlider extends Node
 {
@@ -48,21 +55,20 @@ public class WindowSlider extends Node
     public static final int FROM_TOP_STICKY = 4;
 
     /**
-     * Creates a window slider with the specified mode and window that will
-     * slide the window either onto or off of the screen in the specified
-     * number of seconds.
+     * Creates a window slider with the specified mode and window that will slide the window
+     * either onto or off of the screen in the specified number of seconds.
      *
-     * @param dx an offset applied to the starting or destination position
-     * along the x axis (starting for sliding off, destination for sliding on).
+     * @param swidth the screen width (formerly DisplaySystem.getWidth()).
+     * @param sheight the screen height (formerly DisplaySystem.getHeight()).
+     * @param dx an offset applied to the starting or destination position along the x axis
+     * (starting for sliding off, destination for sliding on).
      * @param dy an offset applied along the y axis.
      */
-    public WindowSlider (BWindow window, int mode, float duration,
+    public WindowSlider (BWindow window, int swidth, int sheight, int mode, float duration,
                          int dx, int dy)
     {
         super("slider");
 
-        DisplaySystem ds = DisplaySystem.getDisplaySystem();
-        int swidth = ds.getWidth(), sheight = ds.getHeight();
         int wwidth = window.getWidth(), wheight = window.getHeight();
 
         int start = 0, end = 0;
@@ -100,24 +106,25 @@ public class WindowSlider extends Node
         _mode = mode;
         _window = window;
         _tfunc = new LinearTimeFunction(start, end, duration);
+
+        addControl(new SlideControl());
     }
 
     /**
-     * Allows some number of ticks to be skipped to give the window that is
-     * being slid a chance to be layed out before we start keeping track of
-     * time. The layout may be expensive and cause the frame rate to drop for a
-     * frame or two, thus booching our smooth sliding onto the screen.
+     * Allows some number of ticks to be skipped to give the window that is being slid a chance to
+     * be layed out before we start keeping track of time. The layout may be expensive and cause
+     * the frame rate to drop for a frame or two, thus booching our smooth sliding onto the screen.
      */
     public void setSkipTicks (int skipTicks)
     {
         _skipTicks = skipTicks;
     }
 
-    // documentation inherited
-    public void updateGeometricState (float time, boolean initiator)
+    /**
+     * Steps the slide by the supplied elapsed time. Driven each frame by the attached control.
+     */
+    protected void updateSlide (float time)
     {
-        super.updateGeometricState(time, initiator);
-
         // skip ticks as long as we need to
         if (_skipTicks-- > 0) {
             return;
@@ -139,12 +146,24 @@ public class WindowSlider extends Node
     }
 
     /**
-     * Called (only once) when we have reached the end of our slide.
-     * Automatically detaches this effect from the hierarchy.
+     * Called (only once) when we have reached the end of our slide.  Automatically detaches this
+     * effect from the hierarchy.
      */
     protected void slideComplete ()
     {
-        getParent().detachChild(this);
+        if (getParent() != null) {
+            getParent().detachChild(this);
+        }
+    }
+
+    /** Drives {@link #updateSlide} each frame (replaces the fork updateGeometricState hook). */
+    protected class SlideControl extends AbstractControl
+    {
+        @Override protected void controlUpdate (float tpf) {
+            updateSlide(tpf);
+        }
+        @Override protected void controlRender (RenderManager rm, ViewPort vp) {
+        }
     }
 
     protected int _mode;

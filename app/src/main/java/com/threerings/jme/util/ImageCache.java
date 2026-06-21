@@ -39,7 +39,7 @@ import java.awt.image.Raster;
 
 import com.google.common.collect.Maps;
 
-import com.jme.image.Image;
+import com.jme3.texture.Image;
 import com.jmex.bui.BImage;
 
 import com.threerings.media.image.Colorization;
@@ -137,12 +137,13 @@ public class ImageCache
      */
     public static Image convertImage (BufferedImage bufimg)
     {
-        Image image = new Image();
-        image.setType(bufimg.getColorModel().hasAlpha() ? Image.RGBA8888 : Image.RGB888);
-        image.setWidth(bufimg.getWidth());
-        image.setHeight(bufimg.getHeight());
-        image.setData(convertImage(bufimg, null));
-        return image;
+        // GL_ALPHA_MODEL / GL_OPAQUE_MODEL lay the bytes out in straight RGBA / RGB order
+        // (see createCompatibleImage), which maps directly onto jME3 Format.RGBA8 / RGB8 with
+        // no channel reshuffle.
+        boolean hasAlpha = bufimg.getColorModel().hasAlpha();
+        return new Image(hasAlpha ? Image.Format.RGBA8 : Image.Format.RGB8,
+                         bufimg.getWidth(), bufimg.getHeight(), convertImage(bufimg, null),
+                         com.jme3.texture.image.ColorSpace.sRGB);
     }
 
     /**

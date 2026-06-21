@@ -5,8 +5,8 @@
 
 package com.jmex.bui;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.backend.BackendProvider;
 import com.jmex.bui.event.ActionEvent;
@@ -330,7 +330,7 @@ public class BTextField extends BTextComponent
     }
 
     // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
 

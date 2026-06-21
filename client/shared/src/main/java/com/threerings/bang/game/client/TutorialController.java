@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -73,7 +73,7 @@ public class TutorialController
                 return (comp == _back || comp == _forward || _pending == null ||
                         TutorialCodes.TEXT_CLICKED.equals(_pending.getEvent())) ? comp : null;
             }
-            protected void renderBackground (Renderer renderer) {
+            protected void renderBackground (RenderManager renderer) {
                 getBackground().render(renderer, 0, 0, _width, _height, 0.5f);
             }
         };
@@ -360,7 +360,7 @@ public class TutorialController
             updateBubbleBackground();
         }
 
-        int width = _ctx.getDisplay().getWidth();
+        int width = _ctx.getCamera().getWidth();
         // take up all the space between the two player status views
         _view.tutwin.pack(width - 2*(246+10), -1);
         _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2, 2);

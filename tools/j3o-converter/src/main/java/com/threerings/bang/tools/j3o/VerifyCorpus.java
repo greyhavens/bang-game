@@ -172,14 +172,36 @@ public class VerifyCorpus
         if (expected.size() != actual.size()) {
             return "geometry count " + expected.size() + " != " + actual.size();
         }
-        for (int ii = 0; ii < expected.size(); ii++) {
-            ModelConverter.GeoStats e = expected.get(ii), a = actual.get(ii);
-            // records compare all fields (counts, base + glow texture, blend/cull/bucket flags,
-            // skinning maxWeights); path is identical by construction, so equals() is the check
-            if (!e.equals(a)) {
-                return "geom " + e.path() + "\n    expected " + e + "\n    actual   " + a;
+        // Skinned meshes are reparented to the model root (vertices baked into model space; see
+        // ModelConverter.applySkinning), so the path/traversal order is no longer a stable
+        // identity. Match as a multiset on content-minus-path: counts, base + glow texture,
+        // blend/cull/bucket flags and skinning maxWeights are still all compared.
+        List<ModelConverter.GeoStats> pool = new ArrayList<>(actual);
+        for (ModelConverter.GeoStats e : expected) {
+            int found = -1;
+            for (int jj = 0; jj < pool.size(); jj++) {
+                if (sameContent(e, pool.get(jj))) {
+                    found = jj;
+                    break;
+                }
             }
+            if (found < 0) {
+                return "no actual geometry matching content of " + e;
+            }
+            pool.remove(found);
         }
         return null;
+    }
+
+    /** Geometry parity on everything except the scene-graph path (which legitimately changes
+     * when skinned meshes are reparented to the model root). */
+    protected static boolean sameContent (ModelConverter.GeoStats a, ModelConverter.GeoStats b)
+    {
+        return a.vertices() == b.vertices() && a.triangles() == b.triangles()
+            && java.util.Objects.equals(a.texture(), b.texture())
+            && java.util.Objects.equals(a.glowTexture(), b.glowTexture())
+            && java.util.Objects.equals(a.blend(), b.blend())
+            && a.cullOff() == b.cullOff() && a.transparentBucket() == b.transparentBucket()
+            && a.maxWeights() == b.maxWeights();
     }
 }

@@ -5,9 +5,9 @@ package com.threerings.bang.game.client;
 
 import java.awt.Rectangle;
 
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 
 import com.threerings.jme.camera.CameraHandler;
 
@@ -122,8 +122,8 @@ public class GameCameraHandler extends CameraHandler
             cc = getSmoothedHeight(cx, cy),
             ax = x - fx, ay = y - fy;
 
-        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
-            FastMath.LERP(ay, cf, cc));
+        return FastMath.interpolateLinear(ax, FastMath.interpolateLinear(ay, ff, fc),
+            FastMath.interpolateLinear(ay, cf, cc));
     }
     
     /**
@@ -162,7 +162,7 @@ public class GameCameraHandler extends CameraHandler
             result = new Vector3f();
         }
         float dist = -1f * (_camera.getLocation().z - _groundz) /
-            _ground.normal.dot(_camera.getDirection());
+            _ground.getNormal().dot(_camera.getDirection());
         result.scaleAdd(dist, _camera.getDirection(), _camera.getLocation());
         return result;
     }

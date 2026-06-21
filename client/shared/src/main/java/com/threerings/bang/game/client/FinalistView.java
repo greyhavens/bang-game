@@ -5,7 +5,7 @@ package com.threerings.bang.game.client;
 
 import java.awt.image.BufferedImage;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
@@ -169,7 +169,7 @@ public class FinalistView extends BContainer
     }
 
     @Override // documentation inherited
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         super.renderBackground(renderer);
 

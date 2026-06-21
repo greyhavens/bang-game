@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
@@ -408,7 +408,7 @@ public class BuckleDialog extends BDecoratedWindow
                     setSelectedIcon(-1);
                     return true;
                 }
-                protected void renderComponent (Renderer renderer) {
+                protected void renderComponent (RenderManager renderer) {
                     // render the icons in order
                     for (int ii = 2; ii < _buckle.length; ii++) {
                         _icons.get(_buckle[ii]).render(renderer);
@@ -489,7 +489,7 @@ public class BuckleDialog extends BDecoratedWindow
             getImage().reference();
         }
 
-        public void render (Renderer renderer)
+        public void render (RenderManager renderer)
         {
             getImage().render(renderer, _part.getX()/2, -_part.getY()/2, 1f);
         }

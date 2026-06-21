@@ -3,28 +3,26 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.io.IOException;
-
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import java.util.HashMap;
 import java.util.Properties;
 
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.scene.Controller;
-import com.jme.scene.SharedMesh;
-import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.Savable;
-import com.jme.util.geom.BufferUtils;
+import com.jme3.material.Material;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.VertexBuffer;
+import com.jme3.scene.control.AbstractControl;
+import com.jme3.scene.control.Control;
+import com.jme3.texture.Texture;
+import com.jme3.util.BufferUtils;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
@@ -33,11 +31,17 @@ import com.threerings.bang.util.RenderUtil;
 
 /**
  * A dud shot effect.
+ *
+ * <h3>jME3 cutover (Phase 2, cluster 1 — effects port stub)</h3>
+ *
+ * Fork {@code SharedMesh}/{@code TriMesh}/{@code TextureState} -> jME3 {@link Geometry}/{@link Mesh}/
+ * {@link Material}; the per-frame {@code updateWorldData} repositioning rides an
+ * {@link AbstractControl} on the dud geometry. The Savable {@code EmissionData} becomes a plain data
+ * holder (no longer serialized into the model; the effects port reconstructs it from properties).
  */
 public class DudShotEmission extends SpriteEmission
 {
     public static class EmissionData
-        implements Savable
     {
         public int frame;
         public boolean continueForward;
@@ -46,34 +50,6 @@ public class DudShotEmission extends SpriteEmission
 
         public EmissionData ()
         {
-        }
-
-        // documentation inherited
-        public Class<?> getClassTag ()
-        {
-            return getClass();
-        }
-
-        // documentation inherited
-        public void read (JMEImporter im)
-            throws IOException
-        {
-            InputCapsule capsule = im.getCapsule(this);
-            frame = capsule.readInt("frame", 0);
-            continueForward = capsule.readBoolean("continueForward", false);
-            stop = capsule.readBoolean("stop", true);
-            pause = capsule.readFloat("pause", 1f);
-        }
-
-        // documentation inherited
-        public void write (JMEExporter ex)
-            throws IOException
-        {
-            OutputCapsule capsule = ex.getCapsule(this);
-            capsule.write(frame, "frame", 0);
-            capsule.write(continueForward, "continueForward", false);
-            capsule.write(stop, "stop", true);
-            capsule.write(pause, "pause", 1f);
         }
     }
 
@@ -109,27 +85,27 @@ public class DudShotEmission extends SpriteEmission
         if (_dmesh == null) {
             createDudMesh();
         }
-        if (RenderUtil.blendAlpha == null) {
-            RenderUtil.initStates();
-        }
         _dud = new Dud();
         if (_dudtex != null) {
-            _dud.setRenderState(_dudtex);
+            _dud.setTexture(_dudtex);
         }
     }
 
     @Override // documentation inherited
     public void resolveTextures (TextureProvider tprov)
     {
-        if (_dudtex == null) {
-            _dudtex = tprov.getTexture("/textures/effects/dud.png");
+        // effect texture loaded by path; load from the cache.
+        if (_dudtex == null && _ctx != null) {
+            _dudtex = _ctx.getTextureCache().getTexture("textures/effects/dud.png");
         }
-        _dud.setRenderState(_dudtex);
+        if (_dud != null && _dudtex != null) {
+            _dud.setTexture(_dudtex);
+        }
     }
 
     @Override // documentation inherited
-    public Controller putClone (
-            Controller store, Model.CloneCreator properties)
+    public Control putClone (
+            Control store, Model.CloneCreator properties)
     {
         DudShotEmission dstore;
         if (store == null) {
@@ -141,34 +117,6 @@ public class DudShotEmission extends SpriteEmission
         dstore._animData = _animData;
         dstore._size = _size;
         return dstore;
-    }
-
-    @Override // documentation inherited
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        String[] keys = capsule.readStringArray("animDataKeys", null);
-        Savable[] values = capsule.readSavableArray("animDataValues", null);
-        _animData = new HashMap<String, EmissionData>();
-        for (int ii = 0; ii < keys.length; ii++) {
-            _animData.put(keys[ii], (EmissionData)values[ii]);
-        }
-        _size = capsule.readFloat("size", 1f);
-    }
-
-    @Override // documentation inherited
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        super.write(ex);
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(_animData.keySet().toArray(
-            new String[_animData.size()]), "animDataKeys", null);
-        capsule.write(_animData.values().toArray(
-            new EmissionData[_animData.size()]), "animDataValues", null);
-        capsule.write(_size, "size", 1f);
     }
 
     @Override // documentation inherited
@@ -276,34 +224,49 @@ public class DudShotEmission extends SpriteEmission
         ibuf.put(0).put(2).put(1);
         ibuf.put(0).put(3).put(2);
 
-        _dmesh = new TriMesh("dmesh", vbuf, null, null, tbuf, ibuf);
+        _dmesh = new Mesh();
+        _dmesh.setBuffer(VertexBuffer.Type.Position, 3, vbuf);
+        _dmesh.setBuffer(VertexBuffer.Type.TexCoord, 2, tbuf);
+        _dmesh.setBuffer(VertexBuffer.Type.Index, 3, ibuf);
+        _dmesh.updateBound();
     }
 
     /** Handles the appearance and fading of the dud mesh. */
-    protected class Dud extends SharedMesh
+    protected class Dud extends Geometry
     {
         public Dud ()
         {
             super("dud", _dmesh);
 
-            setLightCombineMode(LightState.OFF);
+            _mat = new Material(_ctx == null ? null : _ctx.getAssetManager(),
+                "Common/MatDefs/Misc/Unshaded.j3md");
+            RenderUtil.applyBlendAlpha(_mat);
+            setMaterial(_mat);
+            setQueueBucket(Bucket.Transparent);
             setLocalScale(1.5f * _size);
-            updateRenderState();
+            // track the emitter target each frame
+            addControl(new AbstractControl() {
+                protected void controlUpdate (float tpf) {
+                    if (getParent() != null) {
+                        setLocalTranslation(new Vector3f(_target.getWorldTranslation()));
+                        setLocalRotation(_target.getWorldRotation().clone());
+                    }
+                }
+                protected void controlRender (RenderManager rm, ViewPort vp) {}
+            });
+        }
+
+        public void setTexture (Texture tex)
+        {
+            _mat.setTexture("ColorMap", tex);
         }
 
         public void activate ()
         {
             _model.getEmissionNode().attachChild(this);
-            updateRenderState();
         }
 
-        public void updateWorldData (float time)
-        {
-            super.updateWorldData(time);
-            getLocalTranslation().set(_target.getWorldTranslation());
-            getLocalRotation().set(_target.getWorldRotation());
-        }
-
+        protected Material _mat;
         protected float _elapsed;
     }
 
@@ -336,13 +299,11 @@ public class DudShotEmission extends SpriteEmission
     protected DudStage _stage = DudStage.DUD_START;
 
     /** The shared dud mesh. */
-    protected static TriMesh _dmesh;
+    protected static Mesh _dmesh;
 
     /** The dud texture. */
-    protected static TextureState _dudtex;
+    protected static Texture _dudtex;
 
     /** Dud stages. */
     protected static enum DudStage { DUD_START, DUD_PAUSE, DUD_FINISH };
-
-    private static final long serialVersionUID = 1;
 }

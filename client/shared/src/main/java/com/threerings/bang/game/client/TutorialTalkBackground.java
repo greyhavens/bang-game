@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BImage;
 import com.jmex.bui.util.Insets;
@@ -32,7 +32,7 @@ public class TutorialTalkBackground extends ImageBackground
 
     @Override // documentation inherited
     protected void renderFramed (
-        Renderer renderer, int x, int y, int width, int height, float alpha)
+        RenderManager renderer, int x, int y, int width, int height, float alpha)
     {
         // render each of our image sections appropriately
         int twidth = _image.getWidth(), theight = _image.getHeight();

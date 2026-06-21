@@ -11,9 +11,9 @@ import javax.swing.JFrame;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
-import com.jme.math.Vector3f;
+import com.jme3.math.FastMath;
+import com.jme3.math.Matrix3f;
+import com.jme3.math.Vector3f;
 
 import com.threerings.bang.client.BangApp;
 import com.threerings.jme.JmeApp;
@@ -22,7 +22,7 @@ import com.threerings.jme.JmeApp;
  * Sets up the necessary business for the Bang! editor.
  */
 @Singleton
-public class EditorApp extends JmeApp // TODO: use GDX's canvas stuffs
+public class EditorApp extends JmeApp
 {
     public static String[] appArgs;
 
@@ -33,22 +33,14 @@ public class EditorApp extends JmeApp // TODO: use GDX's canvas stuffs
         return canvas;
     }
 
-    @Override // documentation inherited
+    // jME3 cutover (Phase 7b — editor canvas embedding): called by the SimpleApplication host from
+    // simpleInitApp, on the jME3 render thread, once startCanvas() spins the GL loop. By now
+    // EditorDesktop has built the Swing JFrame and the embedded AWT canvas and published both to
+    // this app (frame/canvas), so EditorClient.init installs the menu bar + status bar into the
+    // real (non-null) frame, and EditorPanel.willEnterPlace sizes the BUI board view to the canvas.
+    @Override
     public void create ()
     {
-        super.create();
-
-        // two-pass transparency is expensive
-        _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
-
-        // // queue an update to make sure that the context is current before the client's event
-        // // handlers start firing.  somehow calling repaint() doesn't have the same effect.
-        // postRunnable(new Runnable() {
-        //     public void run () {
-        //         _canvas.update(_canvas.getGraphics());
-        //     }
-        // });
-
         // initialize and start our client instance
         _client.init(this, frame);
         _client.start();
@@ -72,7 +64,8 @@ public class EditorApp extends JmeApp // TODO: use GDX's canvas stuffs
         _camera.update();
     }
 
-    @Override // documentation inherited
+    // jME3 cutover: JmeApp no longer has an initLighting() hook (the fork set up a global
+    // LightState here); the editor handles lights in the board view. Kept as a plain method.
     protected void initLighting ()
     {
         // handle lights in board view

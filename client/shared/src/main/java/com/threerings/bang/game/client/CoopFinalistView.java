@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Rectangle;
@@ -154,7 +154,7 @@ public class CoopFinalistView extends BContainer
     }
 
     @Override // documentation inherited
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         super.renderBackground(renderer);
         int ax = (710 - _frame.getWidth()) / 2, ay = 36;
@@ -171,7 +171,7 @@ public class CoopFinalistView extends BContainer
     }
 
     @Override // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
         int width = _medal.getWidth();

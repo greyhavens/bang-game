@@ -28,6 +28,9 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.ALCCapabilities;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -78,9 +81,51 @@ public class SoundManager
     public void shutdown ()
     {
         if (isInitialized() && !_sharingAL) {
-            AL.destroy();
+            destroyAL();
         }
     }
+
+    // jME3 cutover (Phase 3): LWJGL3 replaced LWJGL2's monolithic org.lwjgl.openal.AL device API
+    // (AL.create/destroy/isCreated) with explicit ALC device + context management. These helpers
+    // preserve the old behavior the SoundManager relied on.
+    protected static boolean alCreated ()
+    {
+        return _alDevice != 0L;
+    }
+
+    protected static void createAL ()
+        throws Exception
+    {
+        long device = ALC10.alcOpenDevice((java.nio.ByteBuffer)null);
+        if (device == 0L) {
+            throw new IllegalStateException("Failed to open the default OpenAL device.");
+        }
+        ALCCapabilities caps = ALC.createCapabilities(device);
+        long context = ALC10.alcCreateContext(device, (IntBuffer)null);
+        if (context == 0L || !ALC10.alcMakeContextCurrent(context)) {
+            ALC10.alcCloseDevice(device);
+            throw new IllegalStateException("Failed to create/realize the OpenAL context.");
+        }
+        AL.createCapabilities(caps);
+        _alDevice = device;
+        _alContext = context;
+    }
+
+    protected static void destroyAL ()
+    {
+        if (_alContext != 0L) {
+            ALC10.alcMakeContextCurrent(0L);
+            ALC10.alcDestroyContext(_alContext);
+            _alContext = 0L;
+        }
+        if (_alDevice != 0L) {
+            ALC10.alcCloseDevice(_alDevice);
+            _alDevice = 0L;
+        }
+    }
+
+    /** LWJGL3 OpenAL device + context handles (0 == not created). */
+    protected static long _alDevice, _alContext;
 
     /**
      * Returns true if we were able to initialize the sound system.
@@ -201,11 +246,11 @@ public class SoundManager
         _rqueue = rqueue;
 
         // initialize the OpenAL sound system
-        if (AL.isCreated()) {
+        if (alCreated()) {
             _sharingAL = true;
         } else {
             try {
-                AL.create("", 44100, 15, false);
+                createAL();
             } catch (Exception e) {
                 log.warning("Failed to initialize sound system.", e);
                 // don't start the background loading thread

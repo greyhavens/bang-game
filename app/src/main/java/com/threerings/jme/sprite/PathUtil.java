@@ -21,9 +21,9 @@
 
 package com.threerings.jme.sprite;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
 /**
  * Path related utility functions.
@@ -64,8 +64,7 @@ public class PathUtil
         if (angle == FastMath.PI) { // opposite
             target.fromAngleAxis(angle, axis);
         } else if (angle == 0) { // coincident
-            target.x = target.y = target.z = 0;
-            target.w = 1;
+            target.set(0, 0, 0, 1); // identity (jME3 Quaternion x/y/z/w are protected)
         } else {
             from.cross(to, _axis);
             target.fromAngleAxis(angle, _axis);

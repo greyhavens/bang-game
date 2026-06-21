@@ -1,63 +1,22 @@
 //
 // $Id$
-//
-// Nenya library - tools for developing networked games
-// Copyright (C) 2002-2010 Three Rings Design, Inc., All Rights Reserved
-// http://code.google.com/p/nenya/
-//
-// This library is free software; you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published
-// by the Free Software Foundation; either version 2.1 of the License, or
-// (at your option) any later version.
-//
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 package com.threerings.jme.model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.nio.FloatBuffer;
-
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.jme3.anim.AnimClip;
+import com.jme3.anim.AnimComposer;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
 
-import com.jme.bounding.BoundingVolume;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Controller;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
-import com.jme.util.export.binary.BinaryExporter;
-import com.jme.util.export.binary.BinaryImporter;
-
-import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ObserverList;
-import com.samskivert.util.PropertiesUtil;
-import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.jme.util.SpatialVisitor;
@@ -65,17 +24,48 @@ import com.threerings.jme.util.SpatialVisitor;
 import static com.threerings.jme.Log.log;
 
 /**
- * The base node for models.
+ * The fork-free, jME3-native app-side facade over a {@code .j3o}-loaded model.
+ *
+ * <p>jME3 cutover decision (recorded in {@code docs/jme3-cutover-plan.md}): the fork's bespoke
+ * model framework ({@code com.jme.*}-coupled {@code Model}/{@code ModelMesh}/{@code SkinMesh})
+ * is <b>retired</b>. {@code model.dat} is baked to jME3-native {@code .j3o} at build time by
+ * {@code tools/j3o-converter} ({@code ModelConverter}/{@code ModelToJ3o}), and the runtime client
+ * loads {@code .j3o} through stock jME3. This {@code Model} is a thin {@link Node} that wraps the
+ * loaded {@link Spatial} (its {@link AnimComposer} / {@link com.jme3.anim.SkinningControl} ride
+ * along as controls on the content) and re-exposes the exact client-facing surface the
+ * sprite/effect framework calls, so {@code ModelCache.getModel(...)} keeps returning a
+ * {@code Model} and Phase-2 churn over the model API is localized here rather than spread as a
+ * tree-wide {@code Model}-{@literal >}{@code Spatial} rewrite.
+ *
+ * <p>The converter preserves fork metadata as user data on the loaded root:
+ * <ul>
+ *   <li>{@code bang.properties} — the model {@code Properties} (one {@code key = value} per line)</li>
+ *   <li>{@code bang.animations} — comma-separated animation names</li>
+ *   <li>{@code bang.frameRates} — comma-separated {@code name=fps} pairs</li>
+ *   <li>{@code bang.loopModes} — comma-separated {@code name=LoopMode} pairs</li>
+ *   <li>{@code bang.type} — the model type path</li>
+ * </ul>
+ * which this facade reads back to reconstruct {@link #getProperties}, {@link #getAnimation},
+ * {@link #getVariantNames}, etc.
+ *
+ * <p><b>Phase boundary.</b> The facade's <em>type surface</em> is the Phase-2 foundation; the
+ * playback fidelity behind a few methods (frame-accurate {@link #fastForwardAnimation},
+ * pause-resume, the emission-controller {@link CloneCreator} wiring) is finished at the Phase-3
+ * host flip / Phase-4 effects port. Where a body cannot be faithfully implemented before the
+ * live {@code AssetManager}/host exists, it drives the {@link AnimComposer} where present and is
+ * marked accordingly — the <em>shape</em> the fan-out codes against is stable.
  */
-public class Model extends ModelNode
+public class Model extends Node
 {
-    /** The supported types of animation in decreasing order of complexity. */
+    /** The supported types of animation in decreasing order of complexity.
+     * Retained for client API compatibility; jME3 skinning is uniform (the {@code .j3o} carries
+     * a {@code SkinningControl}), so the mode is informational on jME3. */
     public enum AnimationMode {
         SKIN, MORPH, FLIPBOOK
     };
 
-    /** Lets listeners know when animations are completed (which only happens
-     * for non-repeating animations) or cancelled. */
+    /** Lets listeners know when animations are completed (which only happens for non-repeating
+     * animations) or cancelled. */
     public interface AnimationObserver
     {
         /**
@@ -100,331 +90,100 @@ public class Model extends ModelNode
         public boolean animationCancelled (Model model, String anim);
     }
 
-    /** An animation for the model. */
+    /**
+     * A lightweight descriptor of one of the model's animations, re-exposing the fields the
+     * client reads off the fork's {@code Model.Animation}: {@link #frameRate} (the sprite code
+     * computes per-frame durations as {@code 1f/frameRate}) and {@link #getDuration} (used to
+     * schedule shot/move handlers and paths). Backed by the {@code .j3o}'s {@link AnimClip}.
+     */
     public static class Animation
-        implements Savable
     {
         /** The rate of the animation in frames per second. */
         public int frameRate;
 
-        /** The animation repeat type ({@link Controller#RT_CLAMP},
-         * {@link Controller#RT_CYCLE}, or {@link Controller#RT_WRAP}). */
-        public int repeatType;
+        public Animation (String name, int frameRate, float duration)
+        {
+            this.name = name;
+            this.frameRate = frameRate;
+            _duration = duration;
+        }
 
-        /** Any nodes visible that never move within the model. */
-        public Spatial[] staticTargets;
-
-        /** The transformation targets of the animation. */
-        public Spatial[] transformTargets;
-
-        /** The animation transforms (one transform per target per frame). */
-        public transient Transform[][] transforms;
-
-        /** Uniquely identifies this animation within the model. */
-        public transient int animId;
-
-        /** For each frame, whether the frame has been stored in meshes. */
-        public transient boolean[] stored;
-
-        /**
-         * Returns this animation's duration in seconds.
-         */
+        /** Returns this animation's duration in seconds. */
         public float getDuration ()
         {
-            return (float)transforms.length / frameRate;
+            return _duration;
         }
 
-        /**
-         * Rebinds this animation for a prototype instance.
-         *
-         * @param pnodes a mapping from prototype nodes to instance nodes
-         */
-        public Animation rebind (Map<ModelSpatial, ModelSpatial> pnodes)
+        /** Returns this animation's name. */
+        public String getName ()
         {
-            Animation anim = new Animation();
-            anim.frameRate = frameRate;
-            anim.repeatType = repeatType;
-            anim.staticTargets = rebind(staticTargets, pnodes);
-            anim.transformTargets = rebind(transformTargets, pnodes);
-            anim.transforms = transforms;
-            anim.animId = animId;
-            anim.stored = stored;
-            return anim;
+            return name;
         }
 
-        /**
-         * Applies the transforms for a frame of this animation.
-         */
-        public void applyFrame (int fidx)
-        {
-            Transform[] xforms = transforms[fidx];
-            for (int ii = 0; ii < transformTargets.length; ii++) {
-                xforms[ii].apply(transformTargets[ii]);
-            }
-        }
-
-        /**
-         * Blends the transforms between two frames of this animation.
-         */
-        public void blendFrames (int fidx, int nidx, float alpha)
-        {
-            Transform[] xforms = transforms[fidx], nxforms = transforms[nidx];
-            for (int ii = 0; ii < transformTargets.length; ii++) {
-                xforms[ii].blend(nxforms[ii], alpha, transformTargets[ii]);
-            }
-        }
-
-        // documentation inherited
-        public Class<?> getClassTag ()
-        {
-            return getClass();
-        }
-
-        // documentation inherited
-        public void read (JMEImporter im)
-            throws IOException
-        {
-            InputCapsule capsule = im.getCapsule(this);
-            frameRate = capsule.readInt("frameRate", 0);
-            repeatType = capsule.readInt("repeatType", Controller.RT_CLAMP);
-            staticTargets = ArrayUtil.copy(capsule.readSavableArray(
-                "staticTargets", null), new Spatial[0]);
-            transformTargets = ArrayUtil.copy(capsule.readSavableArray(
-                "transformTargets", null), new Spatial[0]);
-            FloatBuffer pxforms = capsule.readFloatBuffer("transforms", null);
-            transforms = new Transform[pxforms.capacity() /
-                Transform.PACKED_SIZE / transformTargets.length][];
-            for (int ii = 0; ii < transforms.length; ii++) {
-                Transform[] frame = transforms[ii] =
-                    new Transform[transformTargets.length];
-                for (int jj = 0; jj < frame.length; jj++) {
-                    frame[jj] = new Transform(pxforms);
-                }
-            }
-        }
-
-        // documentation inherited
-        public void write (JMEExporter ex)
-            throws IOException
-        {
-            OutputCapsule capsule = ex.getCapsule(this);
-            capsule.write(frameRate, "frameRate", 0);
-            capsule.write(repeatType, "repeatType", Controller.RT_CLAMP);
-            capsule.write(staticTargets, "staticTargets", null);
-            capsule.write(transformTargets, "transformTargets", null);
-            FloatBuffer pxforms = FloatBuffer.allocate(
-                transforms.length * transformTargets.length * Transform.PACKED_SIZE);
-            for (Transform[] frame : transforms) {
-                for (Transform xform : frame) {
-                    xform.writeToBuffer(pxforms);
-                }
-            }
-            pxforms.rewind();
-            capsule.write(pxforms, "transforms", null);
-        }
-
-        protected Spatial[] rebind (Spatial[] targets, Map<ModelSpatial, ModelSpatial> pnodes)
-        {
-            Spatial[] ntargets = new Spatial[targets.length];
-            for (int ii = 0; ii < targets.length; ii++) {
-                ntargets[ii] = (Spatial)pnodes.get(targets[ii]);
-            }
-            return ntargets;
-        }
+        protected final String name;
+        protected final float _duration;
     }
 
-    /** A frame element that manipulates the target's transform. */
-    public static final class Transform
-    {
-        /** The number of floats required to store a packed transform. */
-        public static final int PACKED_SIZE = 3 + 4 + 3;
-
-        public Transform (
-            Vector3f translation, Quaternion rotation, Vector3f scale)
-        {
-            _translation = translation;
-            _rotation = rotation;
-            _scale = scale;
-        }
-
-        public Transform (FloatBuffer buf)
-        {
-            _translation = new Vector3f(buf.get(), buf.get(), buf.get());
-            _rotation = new Quaternion(buf.get(), buf.get(), buf.get(),
-                buf.get());
-            _scale = new Vector3f(buf.get(), buf.get(), buf.get());
-        }
-
-        public void apply (Spatial target)
-        {
-            target.getLocalTranslation().set(_translation);
-            target.getLocalRotation().set(_rotation);
-            target.getLocalScale().set(_scale);
-        }
-
-        /**
-         * Blends between this transform and the next, applying the result to
-         * the given target.
-         *
-         * @param alpha the blend factor: 0.0 for entirely this frame, 1.0 for
-         * entirely the next
-         */
-        public void blend (Transform next, float alpha, Spatial target)
-        {
-            target.getLocalTranslation().interpolate(_translation,
-                next._translation, alpha);
-            target.getLocalRotation().slerp(_rotation, next._rotation, alpha);
-            target.getLocalScale().interpolate(_scale, next._scale, alpha);
-        }
-
-        /**
-         * Writes this transform to the current position in the supplied
-         * buffer.
-         */
-        public void writeToBuffer (FloatBuffer buf)
-        {
-            buf.put(_translation.x);
-            buf.put(_translation.y);
-            buf.put(_translation.z);
-
-            buf.put(_rotation.x);
-            buf.put(_rotation.y);
-            buf.put(_rotation.z);
-            buf.put(_rotation.w);
-
-            buf.put(_scale.x);
-            buf.put(_scale.y);
-            buf.put(_scale.z);
-        }
-
-        /** The transform at this frame. */
-        protected Vector3f _translation, _scale;
-        protected Quaternion _rotation;
-    }
-
-    /** Customized clone creator for models. */
+    /**
+     * Customized clone creator for models. The fork passed this to each controller's
+     * {@code putClone}; the emission controllers (effects port) still take it, so the type
+     * survives. On jME3, instance creation is a {@link Spatial#clone()} of the content, so the
+     * creator mainly carries the shared random seed used to pick consistently among multi-valued
+     * (variant) textures.
+     */
     public static class CloneCreator
     {
-        /** A shared seed used to select textures consistently. */
+        /** A shared seed used to select textures consistently across an instance's geometries. */
         public int random;
-
-        /** Maps original objects to their copies. */
-        public Map<ModelSpatial, ModelSpatial> originalToCopy = Maps.newHashMap();
 
         public CloneCreator (Model toCopy)
         {
             _toCopy = toCopy;
-            addProperty("vertices");
-            addProperty("colors");
-            addProperty("normals");
-            addProperty("texcoords");
-            addProperty("vboinfo");
-            addProperty("indices");
-            addProperty("obbtree");
-            addProperty("displaylistid");
-            addProperty("bound");
         }
 
-        /**
-         * Sets the named property.
-         */
-        public void addProperty (String name)
-        {
-            _properties.add(name);
-        }
-
-        /**
-         * Clears the named property.
-         */
-        public void removeProperty (String name)
-        {
-            _properties.remove(name);
-        }
-
-        /**
-         * Checks whether the named property has been set.
-         */
-        public boolean isSet (String name)
-        {
-            return _properties.contains(name);
-        }
-
-        /**
-         * Creates a new copy of the target model.
-         */
+        /** Creates a new copy of the target model. */
         public Model createCopy ()
         {
-            random = RandomUtil.getInt(Integer.MAX_VALUE);
-            Model copy = (Model)_toCopy.putClone(null, this);
-            originalToCopy.clear(); // make sure no references remain
-            return copy;
+            random = (int)(Math.random() * Integer.MAX_VALUE);
+            return _toCopy.cloneModel(this);
         }
 
-        /** The model to copy. */
-        protected Model _toCopy;
+        // The fork CloneCreator carried a per-property "what to share vs. copy" set and an
+        // original->copy node map used by ModelMesh.putClone. jME3 cloning handles mesh/buffer
+        // sharing itself, so those are no-ops kept only so existing callers compile.
+        public void addProperty (String name) { /* no-op on jME3 */ }
+        public void removeProperty (String name) { /* no-op on jME3 */ }
+        public boolean isSet (String name) { return false; }
 
-        /** The set of added properties. */
-        protected HashSet<String> _properties = Sets.newHashSet();
+        protected final Model _toCopy;
     }
 
     /**
-     * Attempts to read a model from the specified file.
+     * Wraps a freshly {@code .j3o}-loaded {@link Spatial} as a {@code Model} prototype. The
+     * loaded content becomes this node's sole child; its {@link AnimComposer}/{@code
+     * SkinningControl} controls ride along.
      */
-    public static Model readFromFile (File file)
-        throws IOException
+    public Model (Spatial content)
     {
-        // read the serialized model and its children
-        FileInputStream fis = new FileInputStream(file);
-        Model model = (Model)BinaryImporter.getInstance().load(fis);
-        fis.close();
-
-        // initialize the model as a prototype
-        model.initPrototype();
-
-        return model;
+        super(content.getName());
+        _content = content;
+        attachChild(content);
+        readMetadata(content);
     }
 
-    /**
-     * No-arg constructor for deserialization.
-     */
-    public Model ()
-    {
-    }
-
-    /**
-     * Standard constructor.
-     */
-    public Model (String name, Properties props)
+    /** No-arg constructor for cloning. */
+    protected Model (String name)
     {
         super(name);
-        _props = props;
     }
 
     /**
-     * Returns a reference to the properties of the model.
+     * Returns a reference to the properties of the model (reconstructed from the
+     * {@code bang.properties} user data the converter preserved).
      */
     public Properties getProperties ()
     {
         return _props;
-    }
-
-    /**
-     * Initializes this model as prototype.  Only necessary when the prototype
-     * was not loaded through {@link #readFromFile}.
-     */
-    public void initPrototype ()
-    {
-        // initialize shared transient animation state
-        if (_anims != null) {
-            int nextId = 1;
-            for (Animation anim : _anims.values()) {
-                anim.animId = nextId++;
-                anim.stored = new boolean[anim.transforms.length];
-            }
-        }
-        setReferenceTransforms();
-        cullInvisibleNodes();
-        initInstance();
     }
 
     /**
@@ -436,105 +195,61 @@ public class Model extends ModelNode
     }
 
     /**
-     * Adds an animation to the model's library.  This should only be called by
-     * the model compiler.
-     */
-    public void addAnimation (String name, Animation anim)
-    {
-        if (_anims == null) {
-            _anims = Maps.newHashMap();
-        }
-        _anims.put(name, anim);
-
-        // store the original transforms
-        Transform[] oxforms = new Transform[anim.transformTargets.length];
-        for (int ii = 0; ii < anim.transformTargets.length; ii++) {
-            Spatial target = anim.transformTargets[ii];
-            oxforms[ii] = new Transform(
-                new Vector3f(target.getLocalTranslation()),
-                new Quaternion(target.getLocalRotation()),
-                new Vector3f(target.getLocalScale()));
-        }
-
-        // run through every frame of the animation, expanding the bounding
-        // volumes of any deformable meshes
-        for (int ii = 0; ii < anim.transforms.length; ii++) {
-            for (int jj = 0; jj < anim.transforms[ii].length; jj++) {
-                anim.transforms[ii][jj].apply(anim.transformTargets[jj]);
-            }
-            updateWorldData(0f);
-            expandModelBounds();
-        }
-
-        // restore the original transforms
-        for (int ii = 0; ii < anim.transformTargets.length; ii++) {
-            oxforms[ii].apply(anim.transformTargets[ii]);
-        }
-        updateWorldData(0f);
-    }
-
-    /**
-     * Sets the animation mode to use for this model.  This should be set
-     * on the prototype before any animations are started or any instances
-     * are created.
+     * Sets the animation mode to use for this model. Informational on jME3 (skinning is uniform);
+     * retained for client API compatibility.
      */
     public void setAnimationMode (AnimationMode mode)
     {
         _animMode = mode;
     }
 
-    /**
-     * Returns the animation mode configured for this model.
-     */
+    /** Returns the animation mode configured for this model. */
     public AnimationMode getAnimationMode ()
     {
         return _animMode;
     }
 
-    /**
-     * Returns the names of the model's animations.
-     */
+    /** Returns the names of the model's animations. */
     public String[] getAnimationNames ()
     {
-        if (_prototype != null) {
-            return _prototype.getAnimationNames();
-        }
-        return (_anims == null) ? new String[0] :
-            _anims.keySet().toArray(new String[_anims.size()]);
+        return _anims.keySet().toArray(new String[_anims.size()]);
     }
 
-    /**
-     * Checks whether the unit has an animation with the given name.
-     */
+    /** Checks whether the model has an animation with the given name. */
     public boolean hasAnimation (String name)
     {
-        if (_prototype != null) {
-            return _prototype.hasAnimation(name);
+        return _anims.containsKey(name);
+    }
+
+    /**
+     * Gets the descriptor for the animation with the given name, or {@code null} if there is no
+     * such animation.
+     */
+    public Animation getAnimation (String name)
+    {
+        Animation anim = _anims.get(name);
+        if (anim == null) {
+            log.warning("Requested unknown animation [name=" + name + "].");
         }
-        return (_anims == null) ? false : _anims.containsKey(name);
+        return anim;
+    }
+
+    /**
+     * Returns the descriptor for the currently running animation, or {@code null} if no animation
+     * is running.
+     */
+    public Animation getAnimation ()
+    {
+        return _anim;
     }
 
     /**
      * Starts the named animation.
      *
-     * @return the duration of the started animation (for looping animations,
-     * the duration of one cycle), or -1 if the animation was not found
+     * @return the duration of the started animation (one cycle for looping animations), or -1 if
+     * the animation was not found.
      */
     public float startAnimation (String name)
-    {
-        return startAnimation (name, 0, +1);
-    }
-
-    /**
-     * Starts the named animation.
-     *
-     * @param fidx the frame to start with
-     * @param fdir the direction to go (+1 forward, -1 backward)
-     *
-     * @return the duration of the started animation (for looping animations,
-     * the duration of one cycle), or -1 if the animation was not found
-     */
-    public float startAnimation (String name, int fidx, int fdir)
     {
         Animation anim = getAnimation(name);
         if (anim == null) {
@@ -543,649 +258,353 @@ public class Model extends ModelNode
         if (_anim != null) {
             _animObservers.apply(new AnimCancelledOp(_animName));
         }
-
-        // first cull all model nodes, then re-activate the ones in the target lists
-        cullModelNodes();
-        for (Spatial target : anim.staticTargets) {
-            ((ModelNode)target).updateCullMode();
-        }
-        for (Spatial target : anim.transformTargets) {
-            ((ModelNode)target).updateCullMode();
-        }
-
-        _paused = false;
         _anim = anim;
         _animName = name;
-        _fidx = fidx;
-        _nidx = fidx;
-        _fdir = fdir;
-        _elapsed = 0f;
-        advanceFrameCounter();
-        _animObservers.apply(new AnimStartedOp(_animName));
+        _paused = false;
+        AnimComposer composer = getComposer();
+        if (composer != null && composer.getAnimClip(name) != null) {
+            // The fork carried a per-animation repeat type (RT_CLAMP one-shot vs. RT_WRAP/RT_CYCLE
+            // loop); the converter preserves it as the bang.loopModes user data. jME3's
+            // AnimComposer.setCurrentAction(name) defaults to LoopMode.Loop, so without honouring
+            // this every action (including the death/"dying" one-shot) loops forever (BUG-28: the
+            // death animation replays until the sprite's _nextAction timer swaps in the dead model).
+            // Map DontLoop -> non-looping (the AnimLayer clamps on the final frame and clears the
+            // action after one cycle, matching RT_CLAMP); Loop/Cycle stay looping.
+            boolean loop = !"DontLoop".equals(_loopModes.get(name));
+            composer.setCurrentAction(name, AnimComposer.DEFAULT_LAYER, loop);
+        }
+        _animObservers.apply(new AnimStartedOp(name));
         return anim.getDuration() / _animSpeed;
     }
 
-    /**
-     * Fast-forwards the current animation by the given number of seconds.
-     */
-    public void fastForwardAnimation (float time)
-    {
-        updateAnimation(time);
-    }
-
-    /**
-     * Gets a reference to the animation with the given name.
-     */
-    public Animation getAnimation (String name)
-    {
-        if (_anims == null) {
-            return null;
-        }
-        Animation anim = _anims.get(name);
-        if (anim != null) {
-            return anim;
-        }
-        if (_prototype != null) {
-            Animation panim = _prototype._anims.get(name);
-            if (panim != null) {
-                _anims.put(name, anim = panim.rebind(_pnodes));
-                return anim;
-            }
-        }
-        log.warning("Requested unknown animation [name=" + name + "].");
-        return null;
-    }
-
-    /**
-     * Returns a reference to the currently running animation, or
-     * <code>null</code> if no animation is running.
-     */
-    public Animation getAnimation ()
-    {
-        return _anim;
-    }
-
-    /**
-     * Stops the currently running animation.
-     */
+    /** Stops the currently running animation. */
     public void stopAnimation ()
     {
         if (_anim == null) {
             return;
         }
-        if (_outside) {
-            // make sure the meshes are in the right places when we come back into view
-            updateMeshes();
+        AnimComposer composer = getComposer();
+        if (composer != null) {
+            composer.removeCurrentAction();
         }
         _paused = false;
+        String name = _animName;
         _anim = null;
-        _animObservers.apply(new AnimCancelledOp(_animName));
+        _animName = null;
+        _animObservers.apply(new AnimCancelledOp(name));
     }
 
-    /**
-     * Sets the pause state of the animation.
-     */
+    /** Sets the pause state of the animation. */
     public void pauseAnimation (boolean pause)
     {
         _paused = pause;
+        AnimComposer composer = getComposer();
+        if (composer != null) {
+            composer.setGlobalSpeed(pause ? 0f : _animSpeed);
+        }
     }
 
-    /**
-     * Returns the pause state of the animation.
-     */
+    /** Returns the pause state of the animation. */
     public boolean isAnimationPaused ()
     {
         return _paused;
     }
 
-    /**
-     * Causes the animation to start running in reverse.
-     */
+    /** Causes the animation to start running in reverse. */
     public void reverseAnimation ()
     {
-        _fdir *= -1;
+        _animSpeed = -_animSpeed;
+        AnimComposer composer = getComposer();
+        if (composer != null) {
+            composer.setGlobalSpeed(_paused ? 0f : _animSpeed);
+        }
+    }
+
+    /** Fast-forwards the current animation by the given number of seconds. */
+    public void fastForwardAnimation (float time)
+    {
+        AnimComposer composer = getComposer();
+        if (composer != null && _anim != null) {
+            composer.setTime(composer.getTime() + time);
+        }
     }
 
     /**
-     * Sets the animation speed, which acts as a multiplier for the frame rate
-     * of each animation.
+     * Sets the animation speed, a multiplier on each animation's frame rate.
      */
     public void setAnimationSpeed (float speed)
     {
         _animSpeed = speed;
+        AnimComposer composer = getComposer();
+        if (composer != null && !_paused) {
+            composer.setGlobalSpeed(speed);
+        }
     }
 
-    /**
-     * Returns the currently configured animation speed.
-     */
+    /** Returns the currently configured animation speed. */
     public float getAnimationSpeed ()
     {
         return _animSpeed;
     }
 
-    /**
-     * Adds an animation observer.
-     */
+    /** Adds an animation observer. */
     public void addAnimationObserver (AnimationObserver obs)
     {
         _animObservers.add(obs);
     }
 
-    /**
-     * Removes an animation observer.
-     */
+    /** Removes an animation observer. */
     public void removeAnimationObserver (AnimationObserver obs)
     {
         _animObservers.remove(obs);
     }
 
     /**
-     * Returns a reference to the node that contains this model's emissions
-     * (in world space, so the emissions do not move with the model).  This
-     * node is created and added when this method is first called.
+     * Returns a reference to the node that contains this model's emissions, in world space so the
+     * emissions do not move with the model. Created and attached on first call.
      */
     public Node getEmissionNode ()
     {
         if (_emissionNode == null) {
-            attachChild(_emissionNode = new Node("emissions") {
-                public void updateWorldVectors () {
-                    worldTranslation.set(localTranslation);
-                    worldRotation.set(localRotation);
-                    worldScale.set(localScale);
-                }
-            });
+            attachChild(_emissionNode = new Node("emissions"));
         }
         return _emissionNode;
     }
 
     /**
-     * Writes this model out to a file.
+     * Returns the model's controllers — the procedural / emission controllers the client iterates
+     * (the {@code SpriteEmission} subclasses get sprite refs wired here). On jME3 these are app /
+     * effect-side {@link Control}s collected from the content; the effects port (Phase 4) populates
+     * this list as it rebuilds the emission controllers. Never {@code null}.
      */
-    public void writeToFile (File file)
-        throws IOException
+    public List<Control> getControllers ()
     {
-        // start out by writing this node and its children
-        FileOutputStream fos = new FileOutputStream(file);
-        BinaryExporter.getInstance().save(this, fos);
-        fos.close();
+        return _controllers;
     }
 
-    @Override
-    public void read (JMEImporter im)
-        throws IOException
+    /** Adds a controller to this model. */
+    public void addController (Control control)
     {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        String[] propNames = capsule.readStringArray("propNames", null),
-            propValues = capsule.readStringArray("propValues", null);
-        _props = new Properties();
-        for (int ii = 0; ii < propNames.length; ii++) {
-            _props.setProperty(propNames[ii], propValues[ii]);
-        }
-        String[] animNames = capsule.readStringArray("animNames", null);
-        if (animNames != null) {
-            Savable[] animValues = capsule.readSavableArray(
-                "animValues", null);
-            _anims = Maps.newHashMap();
-            for (int ii = 0; ii < animNames.length; ii++) {
-                _anims.put(animNames[ii], (Animation)animValues[ii]);
-            }
-        } else {
-            _anims = null;
-        }
-        List<?> controllers = capsule.readSavableArrayList("controllers", null);
-        if (controllers != null) {
-            for (Object ctrl : controllers) {
-                addController((Controller)ctrl);
-            }
-        }
-    }
-
-    @Override
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        // don't serialize the emission node; it contains transient geometry
-        // created by controllers
-        if (_emissionNode != null) {
-            detachChild(_emissionNode);
-        }
-        super.write(ex);
-        if (_emissionNode != null) {
-            attachChild(_emissionNode);
-        }
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(_props.keySet().toArray(new String[_props.size()]),
-            "propNames", null);
-        capsule.write(_props.values().toArray(new String[_props.size()]),
-            "propValues", null);
-        if (_anims != null) {
-            capsule.write(_anims.keySet().toArray(
-                new String[_anims.size()]), "animNames", null);
-            capsule.write(_anims.values().toArray(
-                new Animation[_anims.size()]), "animValues", null);
-        }
-        capsule.writeSavableArrayList(getControllers(), "controllers", null);
-    }
-
-    @Override
-    public void resolveTextures (TextureProvider tprov)
-    {
-        super.resolveTextures(tprov);
-        for (Object ctrl : getControllers()) {
-            if (ctrl instanceof ModelController) {
-                ((ModelController)ctrl).resolveTextures(tprov);
-            }
-        }
+        _controllers.add(control);
     }
 
     /**
-     * Creates a new prototype using the given variant configuration.
-     * Use {@link #createInstance} on the returned prototype to create
-     * additional instances of the variant.
+     * Re-resolves the model's textures for this instance (variant / colorization), walking the
+     * content's geometries and rebinding the material textures the supplied provider returns. The
+     * provider is driven by {@code ModelCache} from the {@code ModelTextureResolver}; the candidate
+     * texture list is preserved as {@code bang.textures} user data on each geometry.
+     */
+    public void resolveTextures (final TextureProvider tprov)
+    {
+        new SpatialVisitor<Geometry>(Geometry.class) {
+            protected void visit (Geometry geom) {
+                Object names = geom.getUserData("bang.textures");
+                if (names == null) {
+                    return;
+                }
+                String first = names.toString().split(",")[0];
+                com.jme3.texture.Texture tex = tprov.getTexture(geom, first);
+                if (tex != null && geom.getMaterial() != null) {
+                    geom.getMaterial().setTexture("DiffuseMap", tex);
+                }
+            }
+        }.traverse(this);
+    }
+
+    /**
+     * Creates a new prototype using the given variant configuration. Use {@link #createInstance}
+     * on the returned prototype to create additional instances of the variant.
      */
     public Model createPrototype (String variant)
     {
-        if (_prototype != null) {
-            return _prototype.createPrototype(variant);
-        }
-        // create an instance and rebind all animations
-        final Model prototype = createInstance();
-        if (_anims != null) {
-            for (Map.Entry<String, Animation> entry : _anims.entrySet()) {
-                prototype._anims.put(entry.getKey(),
-                    entry.getValue().rebind(prototype._pnodes));
-            }
-        }
-        prototype._prototype = null;
-        prototype._pnodes = null;
-
-        // reconfigure meshes with new variant type
+        // a variant prototype is a clone whose properties are re-filtered by the variant prefix;
+        // the per-mesh texture re-pick is applied via resolveTextures at the ModelCache seam.
+        Model prototype = cloneModel(new CloneCreator(this));
         if (variant != null) {
-            prototype._props = PropertiesUtil.getFilteredProperties(
-                _props, variant);
-            new SpatialVisitor<ModelMesh>(ModelMesh.class) {
-                public void visit (ModelMesh mesh) {
-                    mesh.reconfigure(PropertiesUtil.getFilteredProperties(
-                        prototype._props, mesh.getParent().getName()));
+            Properties filtered = new Properties();
+            String prefix = variant + ".";
+            for (String key : _props.stringPropertyNames()) {
+                if (key.startsWith(prefix)) {
+                    filtered.setProperty(key.substring(prefix.length()), _props.getProperty(key));
+                } else if (!filtered.containsKey(key)) {
+                    filtered.setProperty(key, _props.getProperty(key));
                 }
-            }.traverse(prototype);
+            }
+            prototype._props = filtered;
         }
         return prototype;
     }
 
-    /**
-     * Creates and returns a new instance of this model.
-     */
+    /** Creates and returns a new instance of this model. */
     public Model createInstance ()
     {
-        if (_prototype != null) {
-            return _prototype.createInstance();
-        }
-        if (_ccreator == null) {
-            _ccreator = new CloneCreator(this);
-        }
-        Model instance = _ccreator.createCopy();
-        instance.initInstance();
-        return instance;
+        return new CloneCreator(this).createCopy();
     }
 
     /**
-     * Locks the transforms and bounds of this model in the expectation that it
-     * will never be moved from its current position.
+     * Locks the transforms and bounds of this model in the expectation that it will never be moved
+     * from its current position. jME3 has no fork {@code lockMeshes} batching; this is a no-op hook
+     * kept for API compatibility (see migration map §2.2 — leave dynamic / use {@code BatchNode}).
      */
     public void lockInstance ()
     {
-        // collect the instance's animation and controller targets and lock
-        // recursively
-        HashSet<Spatial> targets = Sets.newHashSet();
-        for (String aname : getAnimationNames()) {
-            Collections.addAll(targets, getAnimation(aname).transformTargets);
-        }
-        for (Object ctrl : getControllers()) {
-            if (ctrl instanceof ModelController) {
-                targets.add(((ModelController)ctrl).getTarget());
-            }
-        }
-        lockInstance(targets);
+        // no-op on jME3
     }
 
-    @Override
-    public Spatial putClone (Spatial store, CloneCreator properties)
+    /** Clones this model (used by {@link CloneCreator}). */
+    protected Model cloneModel (CloneCreator creator)
     {
-        Model mstore = (Model)properties.originalToCopy.get(this);
-        if (mstore != null) {
-            return mstore;
-        } else if (store == null) {
-            mstore = new Model(getName(), _props);
-        } else {
-            mstore = (Model)store;
-        }
-        // don't clone the emission node, as it contains transient geometry
-        if (_emissionNode != null) {
-            detachChild(_emissionNode);
-        }
-        super.putClone(mstore, properties);
-        if (_emissionNode != null) {
-            attachChild(_emissionNode);
-        }
-        mstore._prototype = this;
-        if (_anims != null) {
-            mstore._anims = Maps.newHashMap();
-        }
-        mstore._pnodes = Maps.newHashMap(properties.originalToCopy);
-        mstore._animMode = _animMode;
-        return mstore;
+        Spatial contentClone = _content.clone();
+        Model instance = new Model(getName());
+        instance._content = contentClone;
+        instance.attachChild(contentClone);
+        instance._props = _props;
+        instance._anims = _anims;
+        instance._animMode = _animMode;
+        instance.readMetadata(contentClone);
+        return instance;
     }
 
-    @Override
-    public void updateGeometricState (float time, boolean initiator)
+    /** Reconstructs the facade state from the converter-preserved user data on the content root. */
+    protected void readMetadata (Spatial content)
     {
-        // if we were not visible the last time we were rendered, don't do a
-        // full update; just update the world bound and wait until we come
-        // into view
-        boolean wasOutside = _outside;
-        _outside = isOutsideFrustum() && worldBound != null;
-
-        // slow evvvverything down by the animation speed
-        time *= _animSpeed;
-        if (_anim != null) {
-            updateAnimation(time);
+        _props = new Properties();
+        Object props = content.getUserData("bang.properties");
+        if (props != null) {
+            for (String line : props.toString().split("\n")) {
+                int eq = line.indexOf('=');
+                if (eq > 0) {
+                    _props.setProperty(line.substring(0, eq).trim(), line.substring(eq + 1).trim());
+                }
+            }
         }
 
-        // update controllers and children with accumulated time
-        _accum += time;
-        if (_outside) {
-            if ((lockedMode & LOCKED_TRANSFORMS) != 0) {
-                return; // world bound will not changed
+        Map<String, Integer> frameRates = parsePairs(content.getUserData("bang.frameRates"));
+        _loopModes = new HashMap<String, String>();
+        Object loopModes = content.getUserData("bang.loopModes");
+        if (loopModes != null) {
+            for (String pair : loopModes.toString().split(",")) {
+                int eq = pair.indexOf('=');
+                if (eq > 0) {
+                    _loopModes.put(pair.substring(0, eq), pair.substring(eq + 1));
+                }
             }
-            if (!wasOutside) {
-                storeWorldBound();
+        }
+        _anims = new HashMap<String, Animation>();
+        AnimComposer composer = getComposer(content);
+        Object names = content.getUserData("bang.animations");
+        if (names != null && composer != null) {
+            for (String name : names.toString().split(",")) {
+                if (name.isEmpty()) {
+                    continue;
+                }
+                AnimClip clip = composer.getAnimClip(name);
+                if (clip == null) {
+                    continue;
+                }
+                int fps = frameRates.getOrDefault(name, 30);
+                _anims.put(name, new Animation(name, fps, (float)clip.getLength()));
             }
-            updateWorldVectors();
-            worldBound = _storedBound.transform(getWorldRotation(),
-                getWorldTranslation(), getWorldScale(), worldBound);
-
-        } else {
-            super.updateGeometricState(_shouldAccumulate ? _accum : time,
-                initiator);
-            _accum = 0f;
         }
     }
 
-    @Override
-    public void onDraw (Renderer r)
+    /** Parses a comma-separated {@code name=intvalue} user-data string into a map. */
+    protected Map<String, Integer> parsePairs (Object data)
     {
-        // if we switch from invisible to visible, we have to do a last-minute
-        // full update (which only works if our meshes are enqueued)
-        super.onDraw(r);
-        if (_outside && !isOutsideFrustum()) {
-            updateWorldData(0f);
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        if (data != null) {
+            for (String pair : data.toString().split(",")) {
+                int eq = pair.indexOf('=');
+                if (eq > 0) {
+                    try {
+                        map.put(pair.substring(0, eq), Integer.parseInt(pair.substring(eq + 1)));
+                    } catch (NumberFormatException nfe) {
+                        // ignore malformed entry
+                    }
+                }
+            }
         }
+        return map;
     }
 
-    /**
-     * Transforms the current world bound into model space and stores it for
-     * when the model is offscreen.
-     */
-    protected void storeWorldBound ()
+    /** Returns the {@link AnimComposer} driving this model's content, or {@code null}. */
+    protected AnimComposer getComposer ()
     {
-        // update the bounds with an identity transform (which will be
-        // overwritten after this method is called)
-        getWorldRotation().loadIdentity();
-        getWorldTranslation().set(Vector3f.ZERO);
-        getWorldScale().set(Vector3f.UNIT_XYZ);
-        for (int ii = 0, nn = getQuantity(); ii < nn; ii++) {
-            getChild(ii).updateGeometricState(0f, false);
-        }
-        updateWorldBound();
-
-        _storedBound = worldBound.clone(_storedBound);
+        return getComposer(_content);
     }
 
-    /**
-     * Determines whether this node was determined to be entirely outside the
-     * view frustum.
-     */
-    protected boolean isOutsideFrustum ()
+    protected static AnimComposer getComposer (Spatial content)
     {
-        for (Node node = this; node != null; node = node.getParent()) {
-            if (node.getLastFrustumIntersection() == Camera.OUTSIDE_FRUSTUM) {
-                return true;
-            }
-        }
-        return false;
+        return (content == null) ? null : content.getControl(AnimComposer.class);
     }
 
-    /**
-     * Initializes the per-instance state of this model.
-     */
-    protected void initInstance ()
-    {
-        // initialize the controllers
-        for (Object ctrl : getControllers()) {
-            if (ctrl instanceof ModelController) {
-                ModelController mctrl = (ModelController)ctrl;
-                mctrl.init(this);
-                _shouldAccumulate |= mctrl.shouldAccumulate();
-            }
-        }
-    }
+    /** The loaded {@code .j3o} content this facade wraps. */
+    protected Spatial _content;
 
-    /**
-     * Updates the model's state according to the current animation.
-     */
-    protected void updateAnimation (float time)
-    {
-        // no need to update between frames for flipbook animation
-        if (_animMode == AnimationMode.FLIPBOOK && _elapsed > 0f &&
-            _elapsed < 1f) {
-            _elapsed += (time * _anim.frameRate);
-            return;
-        }
+    /** The model properties (from {@code bang.properties} user data). */
+    protected Properties _props = new Properties();
 
-        // advance the frame counter if necessary
-        while (_elapsed > 1f) {
-            if (!_paused) {
-                advanceFrameCounter();
-                _elapsed -= 1f;
-            } else {
-                _elapsed = 1f;
-            }
-        }
+    /** The model animations by name (from {@code bang.animations} + the content's clips). */
+    protected Map<String, Animation> _anims = new HashMap<String, Animation>();
 
-        // update the target transforms and animation frame if not outside the
-        // view frustum
-        if (!_outside) {
-            updateMeshes();
-        }
+    /** Per-animation jME3 loop-mode names (from {@code bang.loopModes}: {@code Loop}, {@code Cycle},
+     * or {@code DontLoop}). A {@code DontLoop} entry makes its playback action one-shot. */
+    protected Map<String, String> _loopModes = new HashMap<String, String>();
 
-        // if the next index is the same as this one, we are finished
-        if (_fidx == _nidx && !_paused) {
-            _anim = null;
-            _animObservers.apply(new AnimCompletedOp(_animName));
-            return;
-        }
-        _elapsed += (time * _anim.frameRate);
-    }
-
-    /**
-     * Advances the frame counter by one frame.
-     */
-    protected void advanceFrameCounter ()
-    {
-        _fidx = _nidx;
-        int nframes = _anim.transforms.length;
-        if (_anim.repeatType == Controller.RT_CLAMP) {
-            _nidx = Math.max(0, Math.min(_nidx + _fdir, nframes - 1));
-
-        } else if (_anim.repeatType == Controller.RT_WRAP) {
-            // % is not a modulo operator, so is not guaranteed to be positive
-            _nidx = (_nidx + _fdir) % nframes;
-            if (_nidx < 0) {
-                _nidx += nframes;
-            }
-
-        } else { // _anim.repeatType == Controller.RT_CYCLE
-            if ((_nidx + _fdir) < 0 || (_nidx + _fdir) >= nframes) {
-                _fdir *= -1; // reverse direction
-            }
-            _nidx += _fdir;
-        }
-    }
-
-    /**
-     * Updates the states of the model's meshes according to the animation state.
-     */
-    protected void updateMeshes ()
-    {
-        if (_animMode == AnimationMode.FLIPBOOK) {
-            int frameId = (_anim.animId << 16) | _fidx;
-            _anim.applyFrame(_fidx);
-            if (!_anim.stored[_fidx]) {
-                storeMeshFrame(frameId, false);
-                updateWorldData(0f);
-                _anim.stored[_fidx] = true;
-            }
-            setMeshFrame(frameId);
-
-        } else if (_animMode == AnimationMode.MORPH) {
-            int frameId1 = (_anim.animId << 16) | _fidx,
-                frameId2 = (_anim.animId << 16) | _nidx;
-            if (!_anim.stored[_fidx]) {
-                storeMeshFrame(frameId1, true);
-                _anim.applyFrame(_fidx);
-                updateWorldData(0f);
-                _anim.stored[_fidx] = true;
-            }
-            if (!_anim.stored[_nidx]) {
-                storeMeshFrame(frameId2, true);
-                _anim.applyFrame(_nidx);
-                updateWorldData(0f);
-                _anim.stored[_nidx] = true;
-            }
-            _anim.blendFrames(_fidx, _nidx, _elapsed);
-            blendMeshFrames(frameId1, frameId2, _elapsed);
-
-        } else { // _animMode == AnimationMode.SKIN
-            _anim.blendFrames(_fidx, _nidx, _elapsed);
-        }
-    }
-
-    /** A reference to the prototype, or <code>null</code> if this is a prototype. */
-    protected Model _prototype;
-
-    /** For prototype models, a customized clone creator used to generate instances. */
-    protected CloneCreator _ccreator;
-
-    /** The animation mode to use for this model. */
-    protected AnimationMode _animMode;
-
-    /** For instances, maps prototype nodes to their corresponding instance nodes. */
-    protected Map<ModelSpatial, ModelSpatial> _pnodes;
-
-    /** The model properties. */
-    protected Properties _props;
-
-    /** The model animations. */
-    protected HashMap<String, Animation> _anims;
-
-    /** The currently running animation, or <code>null</code> for none. */
+    /** The currently running animation, or {@code null} for none. */
     protected Animation _anim;
 
     /** The name of the currently running animation, if any. */
     protected String _animName;
 
+    /** The animation mode (informational on jME3). */
+    protected AnimationMode _animMode = AnimationMode.SKIN;
+
     /** The current animation speed multiplier. */
     protected float _animSpeed = 1f;
 
-    /** The index of the current and next frames. */
-    protected int _fidx, _nidx;
-
-    /** The direction for wrapping animations (+1 forward, -1 backward). */
-    protected int _fdir;
-
-    /** The frame portion elapsed since the start of the current frame. */
-    protected float _elapsed;
-
-    /** The pause status of this model. */
+    /** Whether the animation is paused. */
     protected boolean _paused;
-
-    /** The amount of update time accumulated while outside of view frustum. */
-    protected float _accum;
-
-    /** Whether or not we should accumulate update time while out of view. */
-    protected boolean _shouldAccumulate;
 
     /** The child node that contains the model's emissions in world space. */
     protected Node _emissionNode;
 
-    /** The model space bounding volume stored for use when the model is
-     * offscreen. */
-    protected BoundingVolume _storedBound;
-
-    /** Whether or not we were outside the frustum at the last update. */
-    protected boolean _outside;
+    /** The procedural / emission controllers attached to the model. */
+    protected List<Control> _controllers = new ArrayList<Control>();
 
     /** Animation completion listeners. */
     protected ObserverList<AnimationObserver> _animObservers = ObserverList.newFastUnsafe();
 
-    /** Used to notify observers of animation initiation. */
+    /** Notifies observers of animation initiation. */
     protected class AnimStartedOp
         implements ObserverList.ObserverOp<AnimationObserver>
     {
-        public AnimStartedOp (String name)
-        {
-            _name = name;
-        }
-
-        // documentation inherited from interface ObserverOp
-        public boolean apply (AnimationObserver obs)
-        {
+        public AnimStartedOp (String name) { _name = name; }
+        public boolean apply (AnimationObserver obs) {
             return obs.animationStarted(Model.this, _name);
         }
-
-        /** The name of the animation started. */
         protected String _name;
     }
 
-    /** Used to notify observers of animation completion. */
+    /** Notifies observers of animation completion. */
     protected class AnimCompletedOp
         implements ObserverList.ObserverOp<AnimationObserver>
     {
-        public AnimCompletedOp (String name)
-        {
-            _name = name;
-        }
-
-        // documentation inherited from interface ObserverOp
-        public boolean apply (AnimationObserver obs)
-        {
+        public AnimCompletedOp (String name) { _name = name; }
+        public boolean apply (AnimationObserver obs) {
             return obs.animationCompleted(Model.this, _name);
         }
-
-        /** The name of the animation completed. */
         protected String _name;
     }
 
-    /** Used to notify observers of animation cancellation. */
+    /** Notifies observers of animation cancellation. */
     protected class AnimCancelledOp
         implements ObserverList.ObserverOp<AnimationObserver>
     {
-        public AnimCancelledOp (String name)
-        {
-            _name = name;
-        }
-
-        // documentation inherited from interface ObserverOp
-        public boolean apply (AnimationObserver obs)
-        {
+        public AnimCancelledOp (String name) { _name = name; }
+        public boolean apply (AnimationObserver obs) {
             return obs.animationCancelled(Model.this, _name);
         }
-
-        /** The name of the animation cancelled. */
         protected String _name;
     }
-
-    private static final long serialVersionUID = 1;
 }

@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.io.ObjectInputStream;
@@ -233,7 +233,7 @@ public abstract class Item
                 super.wasRemoved();
                 icon.wasRemoved();
             }
-            public void render (Renderer r, int x, int y, float alpha) {
+            public void render (RenderManager r, int x, int y, float alpha) {
                 icon.render(r, x, y, alpha);
                 super.render(r, x, y, alpha);
             }

@@ -6,7 +6,7 @@ package com.threerings.bang.client;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
@@ -337,12 +337,12 @@ public class WantedPosterView extends BContainer
     {
         // overlay the avatar with the sepia at a low alpha level
         AvatarView avatar = new AvatarView(_ctx, 2, false, false) {
-            protected void renderComponent (Renderer renderer) {
+            protected void renderComponent (RenderManager renderer) {
                 super.renderComponent(renderer);
                 _avatarSepia.render(renderer, 0, 0, _width, _height, 0.25f);
             }
             @Override // from AvatarView
-            protected void renderImage (Renderer renderer) {
+            protected void renderImage (RenderManager renderer) {
                 if (_image != null) {
                     int sx = 0;
                     int ix = (getWidth() - _image.getWidth())/2;
@@ -370,7 +370,7 @@ public class WantedPosterView extends BContainer
     {
         IconPalette palette = new IconPalette(
             null, PosterInfo.BADGES, 1, ItemIcon.ICON_SIZE, 0) {
-            protected void renderComponent (Renderer renderer) {
+            protected void renderComponent (RenderManager renderer) {
                 super.renderComponent(renderer);
                 _badgeSepia.render(renderer, 0, 0, _width, _height, 0.25f);
             }

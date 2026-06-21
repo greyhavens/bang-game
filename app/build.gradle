@@ -1,7 +1,56 @@
+// jME3 cutover (Phase 1): app's runtime framework (`com.threerings.jme.*`, the `main` source
+// set) now sits on jME3 only; the vendored fork (`jme` module) is off main's compile path.
+// jme3-core is `api` because app's public API threads jME3 type tokens (Spatial, Node, Camera,
+// AnimComposer) through its signatures, which client/shared consumes in Phase 2.
+//
+// The fork-coupled BUILD-TIME model compiler (XML/model.properties -> fork-binary model.dat)
+// lives in the separate `modeltool` source set below, which DOES depend on the fork `jme`
+// module. It is NOT on main's compile/runtime classpath; it is invoked only by the assets
+// `compileModels` ant task. Its fork-format model.dat output is baked to jME3 .j3o by the
+// offline tools/j3o-converter (see docs/jme3-cutover-plan.md, the Phase 1 app decision).
+// It was relocated to package `com.threerings.jme.tools.model` so it does not clash with
+// main's new fork-free `com.threerings.jme.model` facade.
+
+sourceSets {
+  modeltool {
+    java {
+      srcDir "src/modeltool/java"
+    }
+    // the build-time compiler uses main's engine-neutral helpers (JmeUtil, SpatialVisitor,
+    // TimeFunction); compile it against main's output + classpath.
+    compileClasspath += sourceSets.main.output
+  }
+}
+
 dependencies {
   api project(":bui")
   api "com.threerings:narya:${naryaVersion}"
   api "com.threerings:nenya:${nenyaVersion}"
+
+  // jME3 is app's only engine on the main (runtime) path; pulled `api` for the type tokens
+  // threaded through app's public surface. (bui also exports it; declared here explicitly so
+  // app does not rely on a transitive provider.)
+  api "org.jmonkeyengine:jme3-core:${jme3Version}"
+  // terrain heightmap generators (editor) + post-process effects (fog, etc.)
+  api "org.jmonkeyengine:jme3-terrain:${jme3Version}"
+  api "org.jmonkeyengine:jme3-effects:${jme3Version}"
+
+  // build-time model compiler source set: the fork engine + nenya-tools + ant + digester.
+  modeltoolImplementation project(":jme")
+  modeltoolImplementation "com.threerings:narya:${naryaVersion}"
+  modeltoolImplementation "com.threerings:nenya:${nenyaVersion}"
+  modeltoolImplementation "com.threerings:nenya-tools:${nenyaVersion}"
+  modeltoolImplementation "org.apache.ant:ant:1.7.1"
+  modeltoolImplementation "commons-digester:commons-digester:1.8"
+
+  // jME3 cutover (Phase 3): GL11.glGetString for the perf-report GL driver identity (read on the
+  // render thread by JmeApp.getGLRendererString). compileOnly — the natives reach runtime via the
+  // client/desktop jme3-lwjgl3 dependency.
+  compileOnly "org.lwjgl:lwjgl-opengl:3.3.6"
+  // jME3 cutover (Phase 3): glfwSetWindowIcon for the application/window+taskbar icon, installed
+  // on the render thread by JmeApp.setWindowIcons (replaces the fork's LWJGL2 Display.setIcon).
+  // compileOnly — the lwjgl-glfw classes + natives reach runtime via client/desktop's jme3-lwjgl3.
+  compileOnly "org.lwjgl:lwjgl-glfw:3.3.6"
 
   // these are only for tools, so we don't export them as depends
   compileOnly "com.threerings:nenya-tools:${nenyaVersion}"

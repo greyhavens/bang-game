@@ -15,14 +15,13 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 
-import com.jme.image.Texture;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
+import com.jme3.material.MatParam;
+import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Geometry;
+import com.jme3.texture.Texture;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
@@ -47,6 +46,8 @@ import com.samskivert.util.StringUtil;
 import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.jme.util.ImageCache;
+import com.threerings.jme.util.SpatialVisitor;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -98,8 +99,8 @@ public class TownView extends BWindow
         _bctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("town");
 
-        int width = ctx.getDisplay().getWidth();
-        int height = ctx.getDisplay().getHeight();
+        int width = ctx.getCamera().getWidth();
+        int height = ctx.getCamera().getHeight();
         setBounds(0, 0, width, height);
 
         // load up our menu props
@@ -134,7 +135,7 @@ public class TownView extends BWindow
         gl.setGap(0);
         gl.setOffAxisJustification(GroupLayout.BOTTOM);
         add(_menu = new BContainer(gl) {
-            public void render (Renderer renderer) {
+            public void render (RenderManager renderer) {
                 if (_active) {
                     super.render(renderer);
                 }
@@ -318,11 +319,6 @@ public class TownView extends BWindow
                     }
                 }
             });
-
-            _hstate = _ctx.getRenderer().createMaterialState();
-            _hstate.getAmbient().set(ColorRGBA.white);
-            _hstate.getDiffuse().set(ColorRGBA.white);
-            _hstate.getEmissive().set(ColorRGBA.white);
 
             // load up our hover cursor
             try {
@@ -517,10 +513,9 @@ public class TownView extends BWindow
         {
             super.hoverSpritesChanged(hover, thover);
 
-            // clear our previous highlight
+            // clear our previous highlight (restore each building geometry's saved material colour)
             if (_hsprite != null) {
-                _hsprite.clearRenderState(RenderState.RS_MATERIAL);
-                _hsprite.updateRenderState();
+                clearHighlight(_hsprite);
             }
             _hsprite = null;
 
@@ -538,10 +533,76 @@ public class TownView extends BWindow
 
             // highlight the sprite
             _hsprite = (PieceSprite)hover;
-            _hsprite.setRenderState(_hstate);
-            _hsprite.updateRenderState();
+            applyHighlight(_hsprite);
 
             updateCursor(_hcursor);
+        }
+
+        /**
+         * Brightens every geometry beneath the hovered building sprite with a subtle white wash,
+         * preserving its texture and lighting (the master client used a fork {@code MaterialState}
+         * with white ambient/diffuse/emissive applied over the lit, textured model — NOT a flat
+         * white material).
+         *
+         * <p>jME3 cutover: the broken port called {@code setMaterial(Unshaded white)}, replacing the
+         * whole textured model material with an opaque white one (the building rendered as a solid
+         * white silhouette) and never restored it. The faithful equivalent here is the same lever
+         * the sprite framework already uses for shadow/fade tints ({@link SpriteMaterialState}):
+         * push white material colours onto the model's {@code Lighting.j3md} geometries. We enable
+         * {@code UseMaterialColors} and set {@code Ambient}/{@code Diffuse} above white so the lit
+         * result brightens toward white while the {@code DiffuseMap} texture still shows through.
+         * Each geometry's original material colours are saved as user data so the clear path can
+         * restore them exactly.
+         */
+        protected void applyHighlight (Sprite sprite)
+        {
+            new SpatialVisitor<Geometry>(Geometry.class) {
+                protected void visit (Geometry geom) {
+                    Material mat = geom.getMaterial();
+                    if (mat == null ||
+                        mat.getMaterialDef().getMaterialParam("UseMaterialColors") == null) {
+                        return;
+                    }
+                    // remember the original material-colour state so we can restore it on un-hover
+                    MatParam umc = mat.getParam("UseMaterialColors");
+                    MatParam amb = mat.getParam("Ambient");
+                    MatParam dif = mat.getParam("Diffuse");
+                    geom.setUserData(HL_SAVED_UMC,
+                        Boolean.valueOf(umc != null && Boolean.TRUE.equals(umc.getValue())));
+                    geom.setUserData(HL_SAVED_AMBIENT, amb == null ? null : amb.getValue());
+                    geom.setUserData(HL_SAVED_DIFFUSE, dif == null ? null : dif.getValue());
+
+                    mat.setBoolean("UseMaterialColors", true);
+                    mat.setColor("Ambient", new ColorRGBA(HL_LEVEL, HL_LEVEL, HL_LEVEL, 1f));
+                    mat.setColor("Diffuse", new ColorRGBA(HL_LEVEL, HL_LEVEL, HL_LEVEL, 1f));
+                }
+            }.traverse(sprite);
+        }
+
+        /** Restores the material colours saved by {@link #applyHighlight}. */
+        protected void clearHighlight (Sprite sprite)
+        {
+            new SpatialVisitor<Geometry>(Geometry.class) {
+                protected void visit (Geometry geom) {
+                    Material mat = geom.getMaterial();
+                    if (mat == null || geom.getUserData(HL_SAVED_UMC) == null) {
+                        return;
+                    }
+                    boolean umc = (Boolean)geom.getUserData(HL_SAVED_UMC);
+                    ColorRGBA amb = geom.getUserData(HL_SAVED_AMBIENT);
+                    ColorRGBA dif = geom.getUserData(HL_SAVED_DIFFUSE);
+                    mat.setBoolean("UseMaterialColors", umc);
+                    if (amb != null) {
+                        mat.setColor("Ambient", amb);
+                    }
+                    if (dif != null) {
+                        mat.setColor("Diffuse", dif);
+                    }
+                    geom.setUserData(HL_SAVED_UMC, null);
+                    geom.setUserData(HL_SAVED_AMBIENT, null);
+                    geom.setUserData(HL_SAVED_DIFFUSE, null);
+                }
+            }.traverse(sprite);
         }
 
         protected Viewpoint getViewpoint (String name)
@@ -606,16 +667,10 @@ public class TownView extends BWindow
                     return true;
                 }
                 public void handleResult () {
-                    // delete the old texture using a dummy state now that we're in the main thread
-                    int oldTextureId = _poptex.getTextureId();
-                    if (oldTextureId > 0) {
-                        TextureState tstate = _ctx.getRenderer().createTextureState();
-                        Texture tex = new Texture();
-                        tex.setTextureId(oldTextureId);
-                        tstate.setTexture(tex);
-                        tstate.deleteAll();
-                    }
-                    _poptex.setTextureId(0);
+                    // jME3 cutover: the fork explicitly deleted the previous GL texture id via a
+                    // throwaway TextureState (getTextureId/deleteAll/setTextureId(0)). jME3 owns
+                    // texture GPU lifecycle (the old Image is released when the Texture's image is
+                    // replaced / GC'd), so the manual delete is dropped.
                     clearResolving(TownBoardView.this);
                 }
             });
@@ -650,12 +705,13 @@ public class TownView extends BWindow
             if (_poptex == null) {
                 _poptex = _ctx.getTextureCache().getTexture(path);
             }
-            RenderUtil.configureTexture(_poptex, TextureManager.loadImage(img, true));
+            // jME3 cutover: TextureManager.loadImage(BufferedImage,flip) -> the migrated
+            // app-side ImageCache.createImage (returns a jME3 com.jme3.texture.Image).
+            RenderUtil.configureTexture(_poptex, ImageCache.createImage(img, true));
         }
 
         protected BangContext _bctx;
 
-        protected MaterialState _hstate;
         protected PieceSprite _hsprite;
         protected ViewpointSprite _vpsprite;
         protected Vector3f _pos = new Vector3f();
@@ -696,7 +752,7 @@ public class TownView extends BWindow
             setLocation(x, y);
         }
 
-        @Override public void render (Renderer renderer) {
+        @Override public void render (RenderManager renderer) {
             if (_active) {
                 super.render(renderer);
             }
@@ -740,4 +796,15 @@ public class TownView extends BWindow
     // the number of bounties and ranked games needed to cause the tip to go away
     protected static final int OFFICE_TIP = 4;
     protected static final int SALOON_TIP = 4;
+
+    /** Building hover-highlight brightness: the white material-colour level (>1 brightens the lit
+     * result toward white while the texture still shows through). Matches the fork's subtle
+     * white MaterialState wash. */
+    protected static final float HL_LEVEL = 1.8f;
+
+    /** Geometry user-data keys for saving/restoring the original material colours under a hover
+     * highlight (so the un-hover path restores the building's textured material exactly). */
+    protected static final String HL_SAVED_UMC = "bang.hl.umc";
+    protected static final String HL_SAVED_AMBIENT = "bang.hl.ambient";
+    protected static final String HL_SAVED_DIFFUSE = "bang.hl.diffuse";
 }

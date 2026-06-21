@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 import com.google.common.collect.Lists;
 
-import com.jme.math.FastMath;
+import com.jme3.math.FastMath;
 
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;

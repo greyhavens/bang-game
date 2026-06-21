@@ -3,7 +3,7 @@
 
 package com.threerings.bang.client.bui;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.background.BBackground;
 
@@ -18,7 +18,7 @@ public class TabbedPane extends BTabbedPane
     }
 
     @Override // documentation inherited
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         // shrink the tab background so that the tabs overlap the top edge and
         // the scroll bar falls outside

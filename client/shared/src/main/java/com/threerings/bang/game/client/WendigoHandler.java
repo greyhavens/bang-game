@@ -3,11 +3,14 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Controller;
-import com.jme.scene.state.MaterialState;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.control.AbstractControl;
 
 import com.samskivert.util.Interval;
 
@@ -172,13 +175,18 @@ public class WendigoHandler extends EffectHandler
             sprite.getModelNode().pauseAnimation(true);
             sprite.attachChild(this);
             final int penderId = notePender();
-            final MaterialState mstate = _ctx.getRenderer().createMaterialState();
-            mstate.getAmbient().set(ColorRGBA.white);
-            mstate.getDiffuse().set(1f, 1f, 1f, 0f);
-            setRenderState(mstate);
-            updateRenderState();
-            addController(new Controller() {
-                public void update (float time) {
+            // jME3 cutover: the fork applied a MaterialState (white, animating diffuse alpha) to
+            // fade the rising ice shard in. jME3 fades via a Material Color alpha.
+            // TODO(sprite-cluster reconcile): overrides the sprite's whole material via
+            // setMaterial; reconcile to the *Sprite framework's alpha/colour-modulation seam once
+            // cluster 1's render-state->Material port lands.
+            final Material mstate = new Material(_ctx.getAssetManager(),
+                "Common/MatDefs/Misc/Unshaded.j3md");
+            mstate.setColor("Color", new ColorRGBA(1f, 1f, 1f, 0f));
+            mstate.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+            setMaterial(mstate);
+            addControl(new AbstractControl() {
+                @Override protected void controlUpdate (float time) {
                     if ((_elapsed += time) >=
                         SHARD_RISE_DURATION + SHARD_LINGER_DURATION) {
                         sprite.detachChild(ShardSprite.this);
@@ -189,10 +197,12 @@ public class WendigoHandler extends EffectHandler
                         maybeComplete(penderId);
                     }
                     float alpha = Math.min(1f, _elapsed / SHARD_RISE_DURATION);
-                    mstate.getDiffuse().a = alpha;
+                    mstate.setColor("Color", new ColorRGBA(1f, 1f, 1f, alpha));
                     getLocalTranslation().set(0f, 0f, TILE_SIZE * (alpha - 1));
                     getLocalRotation().fromAngleNormalAxis(
                         FastMath.TWO_PI * alpha, Vector3f.UNIT_Z);
+                }
+                @Override protected void controlRender (RenderManager rm, ViewPort vp) {
                 }
                 protected float _elapsed;
             });

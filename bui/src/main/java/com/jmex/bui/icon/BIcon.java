@@ -5,7 +5,7 @@
 
 package com.jmex.bui.icon;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 /**
  * Provides icon imagery for various components which make use of it.
@@ -19,7 +19,7 @@ public abstract class BIcon
     public abstract int getHeight ();
 
     /** Renders this icon. */
-    public void render (Renderer renderer, int x, int y, float alpha)
+    public void render (RenderManager renderer, int x, int y, float alpha)
     {
     }
 

@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.scene.Spatial;
+import com.jme3.scene.Spatial;
 import com.threerings.jme.model.Model;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.game.client.sprite.BreakableSprite;
@@ -31,7 +31,7 @@ public class FireworksSprite extends BreakableSprite
         String bsource = _model.getProperties().getProperty(
             "ballistic_shot_source");
         _rocketSource = (bsource == null ?
-            null : _model.getDescendant(bsource));
+            null : _model.getChild(bsource));
     }
 
     /**

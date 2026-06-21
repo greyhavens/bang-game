@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-import com.jme.util.export.binary.BinaryImporter;
+import com.jme3.export.binary.BinaryImporter;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;

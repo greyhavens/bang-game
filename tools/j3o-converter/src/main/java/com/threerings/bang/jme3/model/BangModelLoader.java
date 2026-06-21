@@ -15,7 +15,8 @@ import com.jme3.asset.AssetManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
-import com.threerings.jme.model.Model;
+import com.threerings.jme.tools.model.Model;
+import com.threerings.jme.model.ModelTextureResolver;
 
 /**
  * A jMonkeyEngine&nbsp;3 {@link AssetLoader} that reads a Bang {@code model.dat} (the vendored

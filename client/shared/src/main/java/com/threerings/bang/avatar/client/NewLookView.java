@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
@@ -149,7 +149,7 @@ public class NewLookView extends BContainer
                     malebg.release();
                 }
             }
-            protected void renderBackground (Renderer renderer) {
+            protected void renderBackground (RenderManager renderer) {
                 super.renderBackground(renderer);
                 blankbg.render(
                     renderer, -5, _height - blankbg.getHeight() - 5, _alpha);

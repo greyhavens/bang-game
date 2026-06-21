@@ -52,7 +52,8 @@ public class TrackSprite extends PieceSprite
         // because we know they won't move
         super.modelLoaded(model);
         if (!_editorMode) {
-            updateWorldVectors();
+            // jME3: ensure world transforms are current before locking (fork updateWorldVectors()).
+            updateGeometricState();
             model.lockInstance();
         }
     }

@@ -3,8 +3,10 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.renderer.Renderer;
-import com.jme.scene.Controller;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Node;
+import com.jme3.scene.control.AbstractControl;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -300,10 +302,17 @@ public class PlayerStatusView extends BContainer
         final BButton card, final int height, final boolean in,
         final float delay, final float duration)
     {
-        _ctx.getRootNode().addController(new Controller() {
-            public void update (float time) {
+        // jME3 cutover: the fork stepped this card fly via a scene Controller attached to the BUI
+        // root node (addController). jME3's BRootNode is no longer a scene node and hosts no
+        // controllers, so we drive it with a small Node + AbstractControl attached to the
+        // interface node, matching the migrated WindowFader/WindowSlider idiom.
+        final Node driver = new Node("flycard");
+        driver.addControl(new AbstractControl() {
+            @Override protected void controlUpdate (float time) {
                 if ((_elapsed += time) >= duration + delay) {
-                    _ctx.getRootNode().removeController(this);
+                    if (driver.getParent() != null) {
+                        driver.getParent().detachChild(driver);
+                    }
                     if (in) {
                         card.setAlpha(1f);
                         card.setLocation(card.getX(), CARD_RECT.y);
@@ -318,8 +327,11 @@ public class PlayerStatusView extends BContainer
                         (int)(height * (in ? ralpha : alpha)));
                 }
             }
+            @Override protected void controlRender (RenderManager rm, ViewPort vp) {
+            }
             protected float _elapsed;
         });
+        _ctx.getInterface().attachChild(driver);
     }
 
     @Override // documentation inherited
@@ -345,7 +357,7 @@ public class PlayerStatusView extends BContainer
     }
 
     @Override // documentation inherited
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         // first draw our color
         _color.render(renderer, BACKGROUND_LOC.x, BACKGROUND_LOC.y, _alpha);

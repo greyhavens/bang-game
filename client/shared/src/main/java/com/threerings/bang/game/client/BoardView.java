@@ -17,42 +17,35 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.jme.intersection.PickData;
-import com.jme.intersection.TrianglePickResults;
-import com.jme.light.DirectionalLight;
-import com.jme.light.PointLight;
-import com.jme.math.FastMath;
-import com.jme.math.Ray;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.PointLight;
+import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Ray;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 
-import com.jme.scene.Controller;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.FogState;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.TextureState;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.AbstractControl;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BRootNode;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Insets;
-
-import com.jmex.effects.particles.ParticleGeometry;
-import com.jmex.effects.particles.SimpleParticleInfluenceFactory;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
@@ -88,7 +81,9 @@ import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.util.PointSet;
+import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ParticleInfluenceControl;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -193,27 +188,14 @@ public class BoardView extends BComponent
         // create our top-level node
         _node = new Node("board_view");
 
-        // let there be lights
-        _lstate = _ctx.getRenderer().createLightState();
+        // let there be lights (jME3: lights attach to the scene node, no LightState)
         _lights = new DirectionalLight[BangBoard.NUM_LIGHTS];
         for (int i = 0; i < _lights.length; i++) {
-            _lstate.attach(_lights[i] = new DirectionalLight());
-            _lights[i].setEnabled(true);
+            _node.addLight(_lights[i] = new DirectionalLight());
         }
-        _node.setRenderState(_lstate);
-        _node.setLightCombineMode(LightState.REPLACE);
-        _node.setNormalsMode(Spatial.NM_GL_NORMALIZE_PROVIDED);
-
-        // default states
-        MaterialState mstate = _ctx.getRenderer().createMaterialState();
-        mstate.getDiffuse().set(ColorRGBA.white);
-        mstate.getAmbient().set(ColorRGBA.white);
-        _node.setRenderState(mstate);
-        _node.setRenderState(RenderUtil.lequalZBuf);
-        _node.setRenderState(RenderUtil.opaqueAlpha);
-        _node.setTextureCombineMode(TextureState.REPLACE);
-        _node.setCullMode(Spatial.CULL_DYNAMIC);
-        _node.updateRenderState();
+        // jME3: the fork's default MaterialState (white diffuse/ambient) + lequal-depth +
+        // opaque-blend + REPLACE texture-combine are now per-Geometry material concerns; the
+        // terrain/water/sprite materials carry their own state.
 
         // create the sky
         if (shouldShowSky() && Config.displaySky) {
@@ -232,25 +214,25 @@ public class BoardView extends BComponent
             bnode.attachChild(_wnode);
         }
 
-        // create the shared wind influence
-        _wind = new SimpleParticleInfluenceFactory.BasicWind(
-            0f, new Vector3f(), true, false);
+        // jME3: the fork's shared BasicWind particle influence has no direct jME3 analogue
+        // (ParticleEmitter has one ParticleInfluencer); wind on emitters is a Phase-4 custom
+        // influencer. addWindInfluence is a flagged no-op until then.
 
         // the children of this node will have special tile textures
         bnode.attachChild(_texnode = new Node("texturehighlights"));
-        _texnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _texnode.setQueueBucket(Bucket.Transparent);
 
         // the children of this node will display highlighted tiles
         // with colors that may throb on and off
         bnode.attachChild(_hnode = new Node("highlights") {
-            public void updateWorldData (float time) {
-                super.updateWorldData(time);
+            @Override public void updateLogicalState (float tpf) {
+                super.updateLogicalState(tpf);
                 if (getQuantity() > 0) {
                     updateThrobbingColors();
                 }
             }
         });
-        _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _hnode.setQueueBucket(Bucket.Transparent);
 
         // we'll hang all of our pieces off this node
         _pnode = createPieceNode();
@@ -258,31 +240,19 @@ public class BoardView extends BComponent
             _node.attachChild(_pnode);
         }
 
-        // create our highlight alpha state
-        _hastate = ctx.getDisplay().getRenderer().createAlphaState();
-        _hastate.setBlendEnabled(true);
-        _hastate.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        _hastate.setDstFunction(AlphaState.DB_ONE);
-        _hastate.setEnabled(true);
+        // jME3: the fork's shared additive highlight AlphaState is now applied per-material by
+        // the highlight materials (RenderUtil.applyAddAlpha); no shared state object.
 
-        // this is used to target tiles when deploying a card
-        _tgtstate = RenderUtil.createTextureState(
+        // these crosshair/movement indicators are textured Materials assigned via setMaterial
+        _tgtstate = RenderUtil.createTextureMaterial(
             ctx, "textures/ustatus/crosshairs_card.png");
-
-        // this is used to indicate where you can move
-        _movstate = RenderUtil.createTextureState(
+        _movstate = RenderUtil.createTextureMaterial(
             ctx, "textures/ustatus/movement.png");
-
-        // this is used to indicate you hovering over a valid move
-        _movhovstate = RenderUtil.createTextureState(
+        _movhovstate = RenderUtil.createTextureMaterial(
             ctx, "textures/ustatus/movement_hover.png");
-
-        // this is used to indicate a movement goal
-        _goalstate = RenderUtil.createTextureState(
+        _goalstate = RenderUtil.createTextureMaterial(
             ctx, "textures/ustatus/movement_goal.png");
-
-        // this is used to indicate you hovering over a movement goal
-        _goalhovstate = RenderUtil.createTextureState(
+        _goalhovstate = RenderUtil.createTextureMaterial(
             ctx, "textures/ustatus/movement_goal_hover.png");
 
         // create a sound group that we'll use for all in-game sounds
@@ -383,7 +353,7 @@ public class BoardView extends BComponent
                 createPieceSprite(piece, _bangobj.tick);
             }
         }
-        _pnode.updateGeometricState(0, true);
+        _pnode.updateGeometricState();
 
         // create a loading marquee to report loading progress
         if (_toLoad > 0) {
@@ -552,9 +522,13 @@ public class BoardView extends BComponent
         // total light falling onto the terrain
         Vector3f normal = _tnode.getHeightfieldNormal(location.x, location.y);
         result.set(0f, 0f, 0f, 1f);
+        // jME3: directional lights carry a single color (diffuse); the ambient term is the shared
+        // AmbientLight (driven by light 0).
+        if (_ambient != null) {
+            result.addLocal(_ambient.getColor());
+        }
         for (int ii = 0; ii < _lights.length; ii++) {
-            result.addLocal(_lights[ii].getAmbient());
-            _color.set(_lights[ii].getDiffuse());
+            _color.set(_lights[ii].getColor());
             result.addLocal(_color.multLocal(
                 Math.max(0, -normal.dot(_lights[ii].getDirection()))));
         }
@@ -576,9 +550,19 @@ public class BoardView extends BComponent
      */
     public void addWindInfluence (Spatial spatial)
     {
-        new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
-            protected void visit (ParticleGeometry geom) {
-                geom.addInfluence(_wind);
+        // jME3: the fork shared a single mutable BasicWind influence (board wind, refreshed from the
+        // board's wind direction/speed) added to every runtime-spawned effect's particle systems so
+        // they drift with the wind. jME3's ParticleEmitter has only a spawn-time ParticleInfluencer
+        // and a constant per-frame gravity -- no per-frame wind hook -- so reproduce the fork's
+        // per-frame BasicWind.apply via a ParticleInfluenceControl(WIND) attached to each emitter.
+        // The control adds _windAccel (the board wind already folded into the converter's baked
+        // world-velocity units; see refreshWindInfluence) to each live particle's velocity each
+        // frame. We attach one control per emitter and leave it; refreshWindInfluence rewrites the
+        // shared _windAccel in place, and each control reads the live value, mirroring the fork's
+        // single shared mutable influence.
+        new SpatialVisitor<ParticleEmitter>(ParticleEmitter.class) {
+            protected void visit (ParticleEmitter emitter) {
+                emitter.addControl(ParticleInfluenceControl.wind(_windAccel, true));
             }
         }.traverse(spatial);
     }
@@ -591,27 +575,27 @@ public class BoardView extends BComponent
         final float duration)
     {
         final PointLight light = new PointLight();
-        light.setLocation(location);
-        light.setAttenuate(true);
-        light.setConstant(1f);
-        light.setQuadratic(0.01f);
-        light.setEnabled(true);
-        _lstate.attach(light);
+        light.setPosition(location);
+        light.setRadius(TILE_SIZE * 4);
+        light.setColor(new ColorRGBA(color));
+        _node.addLight(light);
 
-        _node.addController(new Controller() {
-            public void update (float time) {
-                if ((_elapsed += time) < duration) {
+        // jME3: the fork Controller becomes an AbstractControl that fades the light's color and
+        // detaches itself when done. (jME3 PointLight uses a radius attenuation model, so the
+        // fork's constant/quadratic attenuation is approximated by a fixed radius.)
+        _node.addControl(new AbstractControl() {
+            @Override protected void controlUpdate (float tpf) {
+                if ((_elapsed += tpf) < duration) {
                     float alpha = _elapsed / duration;
-                    light.getDiffuse().interpolate(color, ColorRGBA.black,
-                        alpha);
-                    light.getAmbient().interpolate(color, ColorRGBA.black,
-                        0.5f + alpha * 0.5f);
-
+                    ColorRGBA c = new ColorRGBA();
+                    c.interpolateLocal(color, ColorRGBA.Black, alpha);
+                    light.setColor(c);
                 } else {
-                    _node.removeController(this);
-                    _lstate.detach(light);
+                    _node.removeControl(this);
+                    _node.removeLight(light);
                 }
             }
+            @Override protected void controlRender (RenderManager rm, ViewPort vp) {}
             float _elapsed;
         });
     }
@@ -664,13 +648,11 @@ public class BoardView extends BComponent
     public void addSprite (Sprite sprite)
     {
         _pnode.attachChild(sprite);
-        sprite.updateRenderState();
-        sprite.updateGeometricState(0.0f, true);
+        sprite.updateGeometricState();
         if (sprite instanceof PieceSprite) {
             Spatial highlight = ((PieceSprite)sprite).getHighlight();
             if (highlight != null) {
                 _pnode.attachChild(highlight);
-                highlight.updateRenderState();
                 _plights.put(highlight, sprite);
             }
         }
@@ -910,7 +892,7 @@ public class BoardView extends BComponent
         // compute the vector from camera location to mouse cursor
         Camera camera = _ctx.getCameraHandler().getCamera();
         Vector2f screenPos = new Vector2f(e.getX(), e.getY());
-        _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
+        _worldMouse = camera.getWorldCoordinates(screenPos, 0);
         Vector3f camloc = camera.getLocation();
         _worldMouse.subtractLocal(camloc).normalizeLocal();
 
@@ -953,7 +935,7 @@ public class BoardView extends BComponent
         clearMarquee(0f);
 
         // restore the black background color
-        _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
+        _ctx.getApp().setViewportBackground(com.jme3.math.ColorRGBA.Black);
 
         // let the child nodes know that they need to clean up any textures
         // they've created
@@ -977,15 +959,17 @@ public class BoardView extends BComponent
             _ctx.getInterface().detachChild(_fadein);
             _fadein = null;
         }
-        if (_mroot != null) {
-            _ctx.getInterface().detachChild(_mroot);
+        if (_mwindow != null) {
+            // detach any lingering marquee overlay window from the live in-game BUI root
+            _ctx.getRootNode().removeWindow(_mwindow);
+            _mwindow = null;
         }
 
         // clear out the particle pool
         ParticlePool.clear();
 
-        // clear the render queue of any lingering references
-        _ctx.getRenderer().clearQueue();
+        // TODO(phase3-host): the render queue is owned by the host ViewPort now;
+        // RenderManager.clearQueue(ViewPort) needs the active viewport. No-op until host wiring.
     }
 
     /**
@@ -1050,8 +1034,7 @@ public class BoardView extends BComponent
         }
         ColorRGBA color = RenderUtil.createColorRGBA(
             _board.getGridColor());
-        _grid.getBatch(0).getDefaultColor().set(
-            color.r, color.g, color.b, 0.4f);
+        _grid.setColor(new ColorRGBA(color.r, color.g, color.b, 0.4f));
     }
 
     /**
@@ -1075,7 +1058,8 @@ public class BoardView extends BComponent
     protected void createPausedFadeIn ()
     {
         _fadein = new FadeInOutEffect(
-            ColorRGBA.black, 1f, 0f, getFadeInTime(), false) {
+                _ctx.getAssetManager(), _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(),
+                ColorRGBA.Black, 1f, 0f, getFadeInTime(), false) {
             protected void fadeComplete () {
                 super.fadeComplete();
                 fadeInComplete();
@@ -1120,20 +1104,33 @@ public class BoardView extends BComponent
         int dcolor = _board.getLightDiffuseColor(idx),
             acolor = _board.getLightAmbientColor(idx);
         if (dcolor == 0 && acolor == 0) {
-            _lights[idx].setEnabled(false);
+            // jME3: lights have no enabled flag; remove from the node to disable
+            _node.removeLight(_lights[idx]);
             return;
         }
-        _lights[idx].setEnabled(true);
+        // re-attach if it was previously removed (removeLight is a no-op if not present)
+        _node.removeLight(_lights[idx]);
+        _node.addLight(_lights[idx]);
 
+        Vector3f dir = new Vector3f();
         getDirectionVector(
-            _board.getLightAzimuth(idx), _board.getLightElevation(idx),
-            _lights[idx].getDirection());
+            _board.getLightAzimuth(idx), _board.getLightElevation(idx), dir);
+        _lights[idx].setDirection(dir);
 
+        // jME3 directional lights carry a single color (the fork carried separate diffuse/specular/
+        // ambient). Use the diffuse color for the directional light; the ambient term becomes a
+        // shared AmbientLight on the node (driven by light 0). Specular is folded into diffuse and
+        // refined at the Phase-4 material pass.
         float[] drgb = new Color(dcolor).getRGBColorComponents(null),
             argb = new Color(acolor).getRGBColorComponents(null);
-        _lights[idx].getDiffuse().set(drgb[0], drgb[1], drgb[2], 1f);
-        _lights[idx].getSpecular().set(drgb[0], drgb[1], drgb[2], 1f);
-        _lights[idx].getAmbient().set(argb[0], argb[1], argb[2], 1f);
+        _lights[idx].setColor(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
+        if (idx == 0) {
+            if (_ambient == null) {
+                _ambient = new com.jme3.light.AmbientLight();
+                _node.addLight(_ambient);
+            }
+            _ambient.setColor(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
+        }
     }
 
     /**
@@ -1141,21 +1138,10 @@ public class BoardView extends BComponent
      */
     protected void refreshFog ()
     {
-        float density = _board.getFogDensity();
-        if (density == 0f) {
-            _node.clearRenderState(RenderState.RS_FOG);
-            _node.updateRenderState();
-            return;
-        }
-        FogState fstate = (FogState)_node.getRenderState(RenderState.RS_FOG);
-        if (fstate == null) {
-            fstate = _ctx.getRenderer().createFogState();
-            fstate.setDensityFunction(FogState.DF_EXP);
-            _node.setRenderState(fstate);
-            _node.updateRenderState();
-        }
-        fstate.setColor(RenderUtil.createColorRGBA(_board.getFogColor()));
-        fstate.setDensity(density);
+        // jME3: the fork's per-node FogState has no scene-graph equivalent; board fog becomes a
+        // FogFilter on the viewport (jme3-effects). That post-process is wired at the Phase-4
+        // board-renderer pass; refreshFog is a flagged no-op until then (the fog color still feeds
+        // the background color via refreshBackgroundColor).
     }
 
     /**
@@ -1166,7 +1152,13 @@ public class BoardView extends BComponent
     {
         int bg = (_board.getFogDensity() > 0f) ?
             _board.getFogColor() : _board.getSkyHorizonColor();
-        _ctx.getRenderer().setBackgroundColor(RenderUtil.createColorRGBA(bg));
+        _backgroundColor = RenderUtil.createColorRGBA(bg);
+        // apply it to the host-owned main 3D ViewPort so any sliver beyond the sky dome (and the
+        // frame before the dome gradient is built) clears to the board's horizon/fog tone rather
+        // than black.
+        if (_ctx.getApp() != null) {
+            _ctx.getApp().setViewportBackground(_backgroundColor);
+        }
     }
 
     /**
@@ -1175,10 +1167,25 @@ public class BoardView extends BComponent
      */
     protected void refreshWindInfluence ()
     {
+        // jME3: recompute the shared board-wind acceleration that addWindInfluence bakes into each
+        // runtime-spawned effect's ParticleInfluenceControl(WIND). The fork's BasicWind blew in the
+        // board XY plane at (-cos(wdir), -sin(wdir), 0) with strength windSpeed * 0.0005 (see the
+        // pre-cutover BoardView), applied per frame to particle velocities. The baked effect emitters
+        // are WORLD-space and run at the converter's baked world-velocity units (the fork's per-ms
+        // velocities multiplied by MS_PER_SEC * the effect node scale) AND are rendered through
+        // ParticleCache.Z_UP_ROTATION (y-up author space -> z-up board space). So scale the fork
+        // wind by the same MS_PER_SEC * scale motion factor and pre-rotate it into z-up, exactly as
+        // ParticleConverter does for baked gravity/wind on world-space emitters (E15-16): authored
+        // board-plane wind then drifts the particles along the board, not off into +Y. (The fork
+        // board wind used rotateWithScene == false, so it applied in world axes; the runtime emitter
+        // velocities already live in the Z_UP-rotated world, hence the same pre-rotation here.)
         float wdir = _board.getWindDirection();
-        _wind.getWindDirection().set(
-            -FastMath.cos(wdir), -FastMath.sin(wdir), 0f);
-        _wind.setStrength(_board.getWindSpeed() * 0.0005f);
+        float strength = _board.getWindSpeed() * 0.0005f;
+        Vector3f accel = new Vector3f(
+            -FastMath.cos(wdir) * strength, -FastMath.sin(wdir) * strength, 0f);
+        accel.multLocal(PARTICLE_MOTION_SCALE);
+        ParticleCache.Z_UP_ROTATION.mult(accel, accel);
+        _windAccel.set(accel);
     }
 
     /**
@@ -1337,7 +1344,7 @@ public class BoardView extends BComponent
 
         // create the marquee, center it and display it
         addMarquee(_marquee = createMarqueeLabel(text),
-            _ctx.getRenderer().getWidth()/2, _ctx.getRenderer().getHeight()/2);
+            _ctx.getCamera().getWidth()/2, _ctx.getCamera().getHeight()/2);
     }
 
     /**
@@ -1385,7 +1392,7 @@ public class BoardView extends BComponent
                 "m.loading_pct", String.valueOf(pct)));
         if (_loading == null) {
             addMarquee(_loading = new BLabel(pctstr, "loading_marquee"),
-                _ctx.getRenderer().getWidth()/2, 100);
+                _ctx.getCamera().getWidth()/2, 100);
         } else {
             _loading.setText(pctstr);
         }
@@ -1409,18 +1416,7 @@ public class BoardView extends BComponent
      */
     protected void addMarquee (BComponent marquee, int x, int y)
     {
-        if (_mroot == null) {
-            // create a bare bones root node above the normal one
-            _ctx.getInterface().attachChild(_mroot = new BRootNode() {
-                public long getTickStamp () {
-                    return System.currentTimeMillis();
-                }
-                public void rootInvalidated (BComponent root) {
-                    root.validate();
-                }
-            });
-            _mroot.setZOrder(-2);
-
+        if (_mwindow == null) {
             // the layout centers its components about their positions
             AbsoluteLayout layout = new AbsoluteLayout() {
                 public void layoutContainer (BContainer target) {
@@ -1447,9 +1443,15 @@ public class BoardView extends BComponent
                     return null;
                 }
             };
-            _mroot.addWindow(_mwindow);
-            _mwindow.setBounds(0, 0, _ctx.getRenderer().getWidth(),
-                _ctx.getRenderer().getHeight());
+            // route the marquee overlay through the host's live in-game BUI root (the same
+            // BRootNode the rest of BangView's in-game windows render through) so it composites
+            // on top of the board. In the jME1 fork this was a separate overlay BRootNode
+            // attached to _ctx.getInterface() (a Spatial); in jME3 BRootNode is no longer a
+            // Spatial, so we instead add the window to the live root on a high overlay layer.
+            _mwindow.setLayer(MARQUEE_LAYER);
+            _ctx.getRootNode().addWindow(_mwindow);
+            _mwindow.setBounds(0, 0, _ctx.getCamera().getWidth(),
+                _ctx.getCamera().getHeight());
         }
         _mwindow.add(marquee, new com.jmex.bui.util.Point(x, y));
     }
@@ -1461,10 +1463,8 @@ public class BoardView extends BComponent
     {
         _mwindow.remove(marquee);
         if (_mwindow.getComponentCount() == 0) {
-            _mroot.removeWindow(_mwindow);
-            _ctx.getInterface().detachChild(_mroot);
+            _ctx.getRootNode().removeWindow(_mwindow);
             _mwindow = null;
-            _mroot = null;
         }
     }
 
@@ -1520,15 +1520,15 @@ public class BoardView extends BComponent
     {
         Vector3f camloc = _ctx.getCameraHandler().getCamera().getLocation();
         _pick.clear();
-        _pnode.findPick(new Ray(camloc, _worldMouse), _pick);
+        _pnode.collideWith(new Ray(camloc, _worldMouse), _pick);
         float dist = Float.MAX_VALUE, tdist = Float.MAX_VALUE;
         Sprite hit = null, thit = null;
-        for (int ii = 0; ii < _pick.getNumber(); ii++) {
-            PickData pdata = _pick.getPickData(ii);
+        for (int ii = 0; ii < _pick.size(); ii++) {
+            CollisionResult pdata = _pick.getCollision(ii);
             if (notReallyAHit(pdata)) {
                 continue;
             }
-            Sprite s = getPieceSprite(pdata.getTargetMesh().getParentGeom());
+            Sprite s = getPieceSprite(pdata.getGeometry());
             boolean hoverable = isHoverable(s), tooltip = hasTooltip(s);
             if (!hoverable && !tooltip) {
                 continue;
@@ -1590,15 +1590,15 @@ public class BoardView extends BComponent
             Vector3f camloc =
                 _ctx.getCameraHandler().getCamera().getLocation();
             _pick.clear();
-            _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
+            _hnode.collideWith(new Ray(camloc, _worldMouse), _pick);
             float dist = Float.MAX_VALUE;
 
-            for (int ii = 0; ii < _pick.getNumber(); ii++) {
-                PickData pdata = _pick.getPickData(ii);
+            for (int ii = 0; ii < _pick.size(); ii++) {
+                CollisionResult pdata = _pick.getCollision(ii);
                 if (notReallyAHit(pdata)) {
                     continue;
                 }
-                Spatial hit = pdata.getTargetMesh().getParentGeom();
+                Spatial hit = pdata.getGeometry();
                 if (!(hit instanceof TerrainNode.Highlight)) {
                     continue;
                 }
@@ -1676,7 +1676,7 @@ public class BoardView extends BComponent
 
     /** Creates geometry to highlight the supplied set of tiles. */
     protected void highlightTiles (
-        PointSet set, ColorRGBA highlightColor, TextureState tstate,
+        PointSet set, ColorRGBA highlightColor, Material tstate,
         boolean flatten)
     {
         highlightTiles(set, null, highlightColor, tstate, flatten, false);
@@ -1685,7 +1685,7 @@ public class BoardView extends BComponent
     /** Creates geometry to highlight the supplied set of tiles. */
     protected void highlightTiles (
         PointSet set, PointSet goals, ColorRGBA highlightColor,
-        TextureState tstate, boolean flatten, boolean hoverable)
+        Material tstate, boolean flatten, boolean hoverable)
     {
         ColorRGBA hoverHighlightColor =
             highlightColor.add(HOVER_HIGHLIGHT_COLOR);
@@ -1732,7 +1732,7 @@ public class BoardView extends BComponent
         float v = FastMath.sin((System.currentTimeMillis() % THROB_PERIOD) *
             FastMath.TWO_PI / THROB_PERIOD) * 0.5f + 0.5f;
         for (Map.Entry<ColorRGBA, ColorRGBA> me : _throbbers.entrySet()) {
-            me.getValue().a = FastMath.LERP(v, me.getKey().a, 1f);
+            me.getValue().a = FastMath.interpolateLinear(v, me.getKey().a, 1f);
         }
     }
 
@@ -1747,9 +1747,9 @@ public class BoardView extends BComponent
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             TerrainNode.Highlight highlight = attachHighlight(
                 set.getX(ii), set.getY(ii), true, false);
-            highlight.setRenderState(_tgtstate);
-            highlight.updateRenderState();
-            highlight.setDefaultColor(valid ? ColorRGBA.white : INVALID_TARGET_HIGHLIGHT_COLOR);
+            ColorRGBA color = valid ? ColorRGBA.White : INVALID_TARGET_HIGHLIGHT_COLOR;
+            highlight.setColors(color, color);
+            highlight.setTextures(_tgtstate, _tgtstate);
         }
     }
 
@@ -1788,12 +1788,13 @@ public class BoardView extends BComponent
         _throbbers.clear();
     }
 
-    /** JME peskily returns bogus hits when we do triangle level picking. */
-    protected boolean notReallyAHit (PickData pdata)
+    /**
+     * jME3 collision is always triangle-accurate against the geometry's mesh, so the fork's
+     * "bogus triangle-pick" guard collapses to a simple geometry presence check.
+     */
+    protected boolean notReallyAHit (CollisionResult pdata)
     {
-        List<?> tris = pdata.getTargetTris();
-        Object mesh = pdata.getTargetMesh().getParentGeom();
-        return (tris == null || tris.size() == 0 || !(mesh instanceof TriMesh));
+        return pdata == null || pdata.getGeometry() == null;
     }
 
     protected void notePending (BoardAction action)
@@ -2096,8 +2097,14 @@ public class BoardView extends BComponent
         public void mediaResolved ();
     };
 
-    /** Fades a component in or out by manipulating its alpha value. */
-    protected class ComponentFader extends Controller
+    /**
+     * Fades a component in or out by manipulating its alpha value.
+     *
+     * <p>jME3: was a fork {@code Controller} attached to the BUI root node; the BUI root is no
+     * longer a scene-graph node, so this is an {@link AbstractControl} stepped by the 3D board
+     * {@code _node} (it drives a BUI component's alpha, which is engine-neutral).
+     */
+    protected class ComponentFader extends AbstractControl
     {
         public ComponentFader (BComponent target, TimeFunction tfunc) {
             _target = target;
@@ -2105,16 +2112,18 @@ public class BoardView extends BComponent
         }
 
         public void start () {
-            _ctx.getRootNode().addController(this);
+            _node.addControl(this);
         }
 
-        public void update (float time) {
-            _target.setAlpha(_tfunc.getValue(time));
+        @Override protected void controlUpdate (float tpf) {
+            _target.setAlpha(_tfunc.getValue(tpf));
             if (_tfunc.isComplete()) {
-                _ctx.getRootNode().removeController(this);
+                _node.removeControl(this);
                 fadeComplete();
             }
         }
+
+        @Override protected void controlRender (RenderManager rm, ViewPort vp) {}
 
         public void fadeComplete () {
             // nothing by default
@@ -2131,21 +2140,29 @@ public class BoardView extends BComponent
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected BRootNode _mroot;
+    /** The shared board-wind acceleration baked into every runtime-spawned effect's
+     * {@link ParticleInfluenceControl}(WIND) by {@link #addWindInfluence}; recomputed from the
+     * board's wind direction/speed by {@link #refreshWindInfluence}. */
+    protected Vector3f _windAccel = new Vector3f();
+
     protected BWindow _mwindow;
     protected BLabel _marquee, _loading;
     protected int _toLoad, _loaded, _curpct = -1;
 
     protected Node _node, _pnode, _hnode, _texnode;
-    protected LightState _lstate;
     protected DirectionalLight[] _lights;
+
+    /** Shared ambient light (the fork carried ambient per directional light). */
+    protected com.jme3.light.AmbientLight _ambient;
+
+    /** The board background/clear color (applied to the main ViewPort by the Phase-3 host). */
+    protected ColorRGBA _backgroundColor;
     protected SkyNode _snode;
     protected TerrainNode _tnode;
     protected WaterNode _wnode;
-    protected SimpleParticleInfluenceFactory.BasicWind _wind;
     protected Vector3f _worldMouse;
     protected Ray _pray = new Ray();
-    protected TrianglePickResults _pick = new TrianglePickResults();
+    protected CollisionResults _pick = new CollisionResults();
     protected Sprite _hover, _thover;
 
     protected ArrayList<BoardAction> _ractions = new ArrayList<BoardAction>();
@@ -2155,14 +2172,11 @@ public class BoardView extends BComponent
     protected ArrayList<Rectangle> _ebounds = new ArrayList<Rectangle>();
     protected HashSet<Rectangle> _pbounds = new HashSet<Rectangle>();
 
-    /** Used to texture a quad that "targets" a tile. */
-    protected TextureState _tgtstate;
+    /** Material that "targets" a tile. */
+    protected Material _tgtstate;
 
-    /** Used to texture movement highlights. */
-    protected TextureState _movstate, _movhovstate, _goalstate, _goalhovstate;
-
-    // TODO: rename _hastate
-    protected AlphaState _hastate;
+    /** Materials for movement highlights. */
+    protected Material _movstate, _movhovstate, _goalstate, _goalhovstate;
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);
@@ -2222,6 +2236,12 @@ public class BoardView extends BComponent
     /** Used when intersecting the ground. */
     protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
 
+    /** The factor the ParticleConverter bakes into world-space emitter velocities: the fork's
+     * millisecond position-integration (x1000) times the default effect node scale (0.025, the
+     * particles.properties default ParticleCache applies). The board-wind acceleration must carry
+     * the same factor to drift the baked particles at the fork's apparent rate (E15-17). */
+    protected static final float PARTICLE_MOTION_SCALE = 1000f * 0.025f;
+
     protected static final ColorRGBA DARK =
         new ColorRGBA(0.3f, 0.3f, 0.3f, 1.0f);
     protected static final ColorRGBA LIGHT =
@@ -2243,6 +2263,11 @@ public class BoardView extends BComponent
 
     /** The time in milliseconds that it takes to complete one throb cycle. */
     protected static final long THROB_PERIOD = 1000L;
+
+    /** Layer for the marquee overlay window: above the in-game HUD windows (layers 1-2) so it
+     * composites on top of the board, but well below the tooltip layer. Mirrors the fork's
+     * separate overlay BRootNode (drawn on top of the main root). */
+    protected static final int MARQUEE_LAYER = 1000;
 
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;

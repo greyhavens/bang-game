@@ -5,7 +5,7 @@
 
 package com.jmex.bui;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
@@ -138,7 +138,7 @@ public class BSlider extends BComponent
     }
 
     // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
 

@@ -1,0 +1,32 @@
+MaterialDef Bang Water {
+
+    MaterialParameters {
+        // the Fresnel sphere map (water-color <-> sky-color by reflectivity), sampled with
+        // eye-space sphere-map coordinates derived from the (wave-perturbed) surface normal.
+        // This reproduces the fork's fixed-function EM_SPHERE environment map look.
+        Texture2D SphereMap
+
+        // overall surface alpha
+        Float Alpha : 0.95
+
+        // fog (board ambience)
+        Boolean UseFog
+        Color   FogColor
+        Float   FogDensity : 0.0
+    }
+
+    Technique {
+        VertexShader   GLSL100 GLSL150 : shaders/BangWater.vert
+        FragmentShader GLSL100 GLSL150 : shaders/BangWater.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+            WorldViewMatrix
+            NormalMatrix
+        }
+
+        Defines {
+            USE_FOG : UseFog
+        }
+    }
+}

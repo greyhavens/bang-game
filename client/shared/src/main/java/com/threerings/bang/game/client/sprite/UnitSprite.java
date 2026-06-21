@@ -5,18 +5,20 @@ package com.threerings.bang.game.client.sprite;
 
 import java.util.HashMap;
 
-import com.jme.image.Texture;
+import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
+import com.jme3.math.ColorRGBA;
 
-import com.jme.renderer.ColorRGBA;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.Spatial.CullHint;
+import com.jme3.texture.Texture.WrapMode;
+import com.jme3.texture.Texture2D;
 
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-
-import com.jme.scene.state.TextureState;
+import com.threerings.jme.util.SpatialVisitor;
 
 import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ObserverList;
@@ -98,12 +100,8 @@ public class UnitSprite extends MobileSprite
         if (_hovered != hovered) {
             // if we have a pending node, adjust its highlight as well
             if (_pendnode != null) {
-                if (hovered) {
-                    _pendnode.getBatch(0).getDefaultColor().set(ColorRGBA.white);
-                } else {
-                    _pendnode.getBatch(0).getDefaultColor().set(getJPieceColor(_piece.owner));
-                }
-                _pendnode.updateRenderState();
+                ColorRGBA pc = hovered ? ColorRGBA.White : getJPieceColor(_piece.owner);
+                _pendnode.setColors(pc, pc);
             }
         }
         super.setHovered(hovered);
@@ -206,10 +204,10 @@ public class UnitSprite extends MobileSprite
                 log.warning("Am pending but am movable!? " + this);
                 ticks = 1;
             }
-            _pendtst.setTexture(createPendingTexture(ticks-1));
-            _pendnode.setRenderState(_pendtst);
-            _pendnode.getBatch(0).getDefaultColor().set(getJPieceColor(_piece.owner));
-            _pendnode.updateRenderState();
+            _pendMat.setTexture("ColorMap", createPendingTexture(ticks-1));
+            _pendnode.setTextures(_pendMat, _pendMat);
+            ColorRGBA pc = getJPieceColor(_piece.owner);
+            _pendnode.setColors(pc, pc);
         }
     }
 
@@ -264,7 +262,6 @@ public class UnitSprite extends MobileSprite
             if (_holding.getParent() == null) {
                 _holding.setLocalTranslation(new Vector3f(0, 0, getHeight()));
                 attachChild(_holding);
-                _holding.updateRenderState();
             }
         } else if (_holding.getParent() != null) {
             detachChild(_holding);
@@ -291,7 +288,7 @@ public class UnitSprite extends MobileSprite
         // if our pending node is showing, update it to reflect our correct
         // ticks until movable
         if (_pendnode != null && ticks > 0) {
-            _pendtst.setTexture(createPendingTexture(ticks-1));
+            _pendMat.setTexture("ColorMap", createPendingTexture(ticks-1));
         }
 
         // notify any updated observers
@@ -316,7 +313,7 @@ public class UnitSprite extends MobileSprite
     public void move (Path path)
     {
         super.move(path);
-        _ustatus.setCullMode(CULL_ALWAYS);
+        _ustatus.setCullHint(CullHint.Always);
 
         // load the fire effect for the death flights of airborne steam units
         if (path instanceof MoveUnitPath && !_piece.isAlive() &&
@@ -405,20 +402,12 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public void updateWorldData (float time)
+    public void updateLogicalState (float time)
     {
-        super.updateWorldData(time);
-
-        // we have to do extra fiddly business here because our texture is
-        // additionally scaled and translated to center the texture at half
-        // size within the highlight node
-        Texture gptex = _pendtst.getTexture();
-        _gcamrot.fromAngleAxis(_angle, Vector3f.UNIT_Z);
-        _gcamrot.mult(WHOLE_UNIT, _gcamtrans);
-        _gcamtrans.set(1f - _gcamtrans.x - 0.5f,
-                       1f - _gcamtrans.y - 0.5f, 0f);
-        gptex.setRotation(_gcamrot);
-        gptex.setTranslation(_gcamtrans);
+        super.updateLogicalState(time);
+        // jME3: the fork camera-rotated/translated the pending highlight's texture transform each
+        // frame to keep the tick icon upright; Texture2D carries no transform, so the camera-
+        // aligned pending icon is deferred to the Phase-4 board-renderer billboard/UV pass.
     }
 
     @Override // documentation inherited
@@ -441,21 +430,21 @@ public class UnitSprite extends MobileSprite
         // make sure the pending move textures for our unit type are loaded
         _pendtexs = _pendtexmap.get(_name);
         if (_pendtexs == null) {
-            _pendtexmap.put(_name, _pendtexs = new Texture[4]);
+            _pendtexmap.put(_name, _pendtexs = new Texture2D[4]);
             for (int ii = 0; ii < _pendtexs.length; ii++) {
                 _pendtexs[ii] = _ctx.getTextureCache().getTexture(
                     "units/" + _name + "/pending.png", 64, 64, 2, ii);
-                _pendtexs[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-                RenderUtil.ensureLoaded(_ctx, _pendtexs[ii]);
+                _pendtexs[ii].setWrap(WrapMode.Clamp);
             }
         }
-        _pendtst = RenderUtil.createTextureState(
-            _ctx, createPendingTexture(0));
+        _pendMat = RenderUtil.createTextureMaterial(_ctx, createPendingTexture(0));
+        RenderUtil.applyBlendAlpha(_pendMat);
+        RenderUtil.applyOverlayZBuf(_pendMat);
 
         // this composite of icons combines to display our status
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, true, true);
-        attachHighlight(_status = new UnitStatus(_ctx, _tlight));
+        attachHighlight(_status = new UnitStatus(_ctx, _tlight, this));
         _ustatus = (UnitStatus)_status;
         _ustatus.update(
                 _piece, _piece.ticksUntilMovable(_tick), _pendo, false, _pidx);
@@ -465,7 +454,7 @@ public class UnitSprite extends MobileSprite
 
         // when holding a bonus it is shown over our head
         _holding = new Node("holding");
-        _holding.addController(new Spinner(_holding, FastMath.PI/2));
+        _holding.addControl(new Spinner(_holding, FastMath.PI/2));
         _holding.setLocalScale(0.5f);
 
         // configure our colors
@@ -484,8 +473,7 @@ public class UnitSprite extends MobileSprite
         }
         String bsource = _model.getProperties().getProperty(
             "ballistic_shot_source");
-        _ballisticShotSource = (bsource == null ?
-            null : _model.getDescendant(bsource));
+        _ballisticShotSource = (bsource == null ? null : findDescendant(_model, bsource));
     }
 
     @Override // from MobileSprite
@@ -516,10 +504,24 @@ public class UnitSprite extends MobileSprite
             int ticks = _piece.ticksUntilMovable(_tick);
             _ustatus.update(
                     _piece, ticks, _pendo, _hovered || _selected, _pidx);
-            _ustatus.setCullMode(CULL_DYNAMIC);
+            _ustatus.setCullHint(CullHint.Dynamic);
         } else {
-            _ustatus.setCullMode(CULL_ALWAYS);
+            _ustatus.setCullHint(CullHint.Always);
         }
+    }
+
+    /** Finds the first descendant geometry/node with the given name under the supplied spatial. */
+    protected static Spatial findDescendant (Spatial root, final String name)
+    {
+        final Spatial[] result = new Spatial[1];
+        new SpatialVisitor<Spatial>(Spatial.class) {
+            protected void visit (Spatial spatial) {
+                if (result[0] == null && name.equals(spatial.getName())) {
+                    result[0] = spatial;
+                }
+            }
+        }.traverse(root);
+        return result[0];
     }
 
     @Override // documentation inherited
@@ -551,17 +553,13 @@ public class UnitSprite extends MobileSprite
         // nothing to do at present
     }
 
-    protected Texture createPendingTexture (int tidx)
+    protected Texture2D createPendingTexture (int tidx)
     {
         tidx = Math.min(tidx, _pendtexs.length - 1);
-        Texture gpendtex = _pendtexs[tidx].createSimpleClone();
-        // start with a translation that will render nothing until we are
-        // properly updated with our camera rotation on the next call to
-        // updateWorldData()
-        gpendtex.setTranslation(new Vector3f(-2f, -2f, 0));
-        // the ground textures are "shrunk" by 50% and centered
-        gpendtex.setScale(new Vector3f(2f, 2f, 0));
-        return gpendtex;
+        // jME3: the fork cloned the texture and applied a centring scale + camera-driven rotation
+        // on the texture transform; Texture2D has no transform, so we return the plain texture
+        // (the centring/rotation is deferred to the Phase-4 board-renderer pass).
+        return _pendtexs[tidx];
     }
 
     /** Used to dispatch {@link UpdateObserver#updated}. */
@@ -579,8 +577,8 @@ public class UnitSprite extends MobileSprite
     protected Spatial _ballisticShotSource;
 
     protected TerrainNode.Highlight _pendnode;
-    protected TextureState _pendtst;
-    protected Texture[] _pendtexs;
+    protected Material _pendMat;
+    protected Texture2D[] _pendtexs;
 
     protected int _pidx = -1;
 
@@ -605,8 +603,8 @@ public class UnitSprite extends MobileSprite
 
     protected EffectHandler _effectHandler;
 
-    protected static HashMap<String,Texture[]> _pendtexmap =
-        new HashMap<String,Texture[]>();
+    protected static HashMap<String,Texture2D[]> _pendtexmap =
+        new HashMap<String,Texture2D[]>();
 
     protected static final Vector3f WHOLE_UNIT = new Vector3f(1f, 1f, 0f);
 

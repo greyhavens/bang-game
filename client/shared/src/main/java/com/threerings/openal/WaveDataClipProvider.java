@@ -21,7 +21,6 @@ package com.threerings.openal;
 
 import java.io.IOException;
 
-import org.lwjgl.util.WaveData;
 
 /**
  * Loads clips via the class loader using LWJGL's {@link WaveData} utility

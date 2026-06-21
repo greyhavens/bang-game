@@ -12,8 +12,8 @@ import java.util.TimeZone;
 import java.net.ConnectException;
 import java.net.URL;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -128,7 +128,7 @@ public class LogonView extends BWindow
         setStyleClass("logon_view");
 
         _ctx = ctx;
-        _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
+        _ctx.getApp().setViewportBackground(com.jme3.math.ColorRGBA.Black);
 
         _msgs = ctx.getMessageManager().getBundle(BangAuthCodes.AUTH_MSGS);
         String username = BangPrefs.config.getValue("username", "");
@@ -378,7 +378,7 @@ public class LogonView extends BWindow
     }
 
     @Override // documentation inherited
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         super.renderBackground(renderer);
 

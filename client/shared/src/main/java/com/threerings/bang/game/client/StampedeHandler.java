@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.math.FastMath;
+import com.jme3.math.FastMath;
 
 import com.samskivert.util.Interval;
 import com.samskivert.util.RandomUtil;

@@ -21,8 +21,8 @@
 
 package com.threerings.jme.camera;
 
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 
 /**
  * Moves the camera along a cubic Hermite spline path defined by the start and

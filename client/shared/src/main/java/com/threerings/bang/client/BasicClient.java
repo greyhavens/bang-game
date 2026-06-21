@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
-import com.jme.input.InputHandler;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.system.DisplaySystem;
+import com.jme3.asset.AssetManager;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 import com.jmex.bui.BImage;
 import com.jmex.bui.BRootNode;
@@ -43,9 +43,9 @@ import com.threerings.parlor.util.ParlorContext;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
+import com.threerings.jme.camera.GodViewHandler;
 import com.threerings.jme.model.Model;
 import com.threerings.jme.util.ImageCache;
-import com.threerings.jme.util.ShaderCache;
 import com.threerings.openal.SoundManager;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
@@ -131,7 +131,6 @@ public class BasicClient
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _icache = new ImageCache(_ctx.getResourceManager());
         _tcache = new TextureCache(_ctx);
-        _scache = new ShaderCache(_ctx.getResourceManager());
         _mcache = new ModelCache(_ctx);
         _pcache = new ParticleCache(_ctx);
 
@@ -153,6 +152,10 @@ public class BasicClient
         });
         _soundmgr = SoundManager.createSoundManager(rqueue);
         _soundmgr.setBaseGain(BangPrefs.getEffectsVolume()/100f);
+
+        // seed the live camera pan speed from the persisted preference (BUG-5); the Esc options
+        // slider updates it on the fly thereafter
+        GodViewHandler.setPanSpeed(BangPrefs.getCameraPanSpeed());
 
         // initialize our user interface bits
         _keymgr.init(_ctx);
@@ -291,10 +294,6 @@ public class BasicClient
             return _tcache;
         }
 
-        public ShaderCache getShaderCache () {
-            return _scache;
-        }
-
         public ModelCache getModelCache () {
             return _mcache;
         }
@@ -303,32 +302,40 @@ public class BasicClient
             return _pcache;
         }
 
-        public DisplaySystem getDisplay () {
-            return _app.getContext().getDisplay();
+        // jME3 cutover: the fork DisplaySystem service-locator (getDisplay/getRenderer) and the
+        // polled InputHandler (getInputHandler) are gone. The context now surfaces the jME3
+        // AssetManager / RenderManager / Camera the app owns; input is wired at the Phase-3 host
+        // (registerWith(InputManager)).
+        public AssetManager getAssetManager () {
+            return _app.getJmeContext().getAssetManager();
         }
 
-        public Renderer getRenderer () {
-            return _app.getContext().getRenderer();
+        public RenderManager getRenderManager () {
+            return _app.getJmeContext().getRenderManager();
+        }
+
+        public Camera getCamera () {
+            return _app.getJmeContext().getCamera();
         }
 
         public CameraHandler getCameraHandler () {
-            return _app.getContext().getCameraHandler();
+            return _app.getJmeContext().getCameraHandler();
+        }
+
+        public GodViewHandler getInputHandler () {
+            return _app.getJmeContext().getInputHandler();
         }
 
         public Node getGeometry () {
-            return _app.getContext().getGeometry();
+            return _app.getJmeContext().getGeometry();
         }
 
         public Node getInterface () {
-            return _app.getContext().getInterface();
-        }
-
-        public InputHandler getInputHandler () {
-            return _app.getContext().getInputHandler();
+            return _app.getJmeContext().getInterface();
         }
 
         public BRootNode getRootNode () {
-            return _app.getContext().getRootNode();
+            return _app.getJmeContext().getRootNode();
         }
 
         public BStyleSheet getStyleSheet () {
@@ -385,7 +392,6 @@ public class BasicClient
 
     protected ImageCache _icache;
     protected TextureCache _tcache;
-    protected ShaderCache _scache;
     protected ModelCache _mcache;
     protected ParticleCache _pcache;
     protected CharacterManager _charmgr;

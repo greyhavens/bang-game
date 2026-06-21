@@ -5,7 +5,7 @@
 
 package com.jmex.bui;
 
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.ColorRGBA;
 import com.jmex.bui.text.BTextFactory;
 
 /**
@@ -91,7 +91,7 @@ public abstract class BTextComponent extends BComponent
             ColorRGBA effcol = _effcols[getState()];
             return (effcol != null) ? effcol : _effcols[DEFAULT];
         }
-        return ColorRGBA.white;
+        return ColorRGBA.White;
     }
 
     /**

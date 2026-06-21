@@ -5,11 +5,11 @@ package com.threerings.bang.game.client;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
-import com.jme.renderer.Renderer;
-import com.jme.scene.Controller;
-import com.jme.scene.Spatial;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.AbstractControl;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -18,6 +18,7 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.ArrayUtil;
 
@@ -65,8 +66,8 @@ public class RobotWaveHandler extends EffectHandler
         public void display ()
         {
             _ctx.getRootNode().addWindow(this);
-            setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                _ctx.getDisplay().getHeight());
+            setBounds(0, 0, _ctx.getCamera().getWidth(),
+                _ctx.getCamera().getHeight());
 
             final BLabel buzzsaw = new BLabel(new ImageIcon(
                 _ctx.loadImage("ui/wave/buzzsaw.png")));
@@ -79,14 +80,17 @@ public class RobotWaveHandler extends EffectHandler
             // saw
             BContainer cont = new BContainer(
                 GroupLayout.makeVert(GroupLayout.CENTER)) {
-                protected void renderComponent (Renderer r) {
-                    GL11.glEnable(GL11.GL_SCISSOR_TEST);
-                    GL11.glScissor(0, 0, buzzsaw.getX() + bsize.width,
-                        WaveMarquee.this._height);
+                protected void renderComponent (RenderManager r) {
+                    // jME3 cutover: the fork clipped via raw LWJGL2 GL11 scissor calls; BUI now
+                    // exposes an engine-neutral scissor seam (intersectScissorBox/
+                    // restoreScissorState) backed by the jME3 render backend.
+                    Rectangle oscissor = new Rectangle();
+                    boolean oscissorOn = intersectScissorBox(oscissor, 0, 0,
+                        buzzsaw.getX() + bsize.width, WaveMarquee.this._height);
                     try {
                         super.renderComponent(r);
                     } finally {
-                        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                        restoreScissorState(oscissorOn, oscissor);
                     }
                 }
             };
@@ -102,8 +106,12 @@ public class RobotWaveHandler extends EffectHandler
             // it
             final float lingerDuration = getLingerDuration();
             final int penderId = notePender();
-            _ctx.getRootNode().addController(new Controller() {
-                public void update (float time) {
+            // jME3 cutover: the fork stepped this via a scene Controller on the BUI root node;
+            // driven now by a Node + AbstractControl attached to the interface node (the migrated
+            // WindowFader idiom).
+            final Node driver = new Node("wavemarquee");
+            driver.addControl(new AbstractControl() {
+                @Override protected void controlUpdate (float time) {
                     if ((_elapsed += time) < BUZZSAW_FLIGHT_DURATION) {
                         buzzsaw.setLocation(-bsize.width +
                             (int)((_elapsed / BUZZSAW_FLIGHT_DURATION) *
@@ -124,12 +132,17 @@ public class RobotWaveHandler extends EffectHandler
 
                     } else {
                         _ctx.getRootNode().removeWindow(WaveMarquee.this);
-                        _ctx.getRootNode().removeController(this);
+                        if (driver.getParent() != null) {
+                            driver.getParent().detachChild(driver);
+                        }
                         maybeComplete(penderId);
                     }
                 }
+                @Override protected void controlRender (RenderManager rm, ViewPort vp) {
+                }
                 protected float _elapsed;
             });
+            _ctx.getInterface().attachChild(driver);
         }
 
         @Override // documentation inherited
@@ -277,8 +290,8 @@ public class RobotWaveHandler extends EffectHandler
                         // count the sprite and make it invisible.  if it is
                         // not removed, it will be made visible again on reset
                         PieceSprite sprite = _tsprites.get(_tidx);
-                        sprite.setCullMode(Spatial.CULL_ALWAYS);
-                        sprite.getHighlight().setCullMode(Spatial.CULL_ALWAYS);
+                        sprite.setCullHint(Spatial.CullHint.Always);
+                        sprite.getHighlight().setCullHint(Spatial.CullHint.Always);
                         queueEffect(sprite, sprite.getPiece(),
                             new RepairViz());
                     }

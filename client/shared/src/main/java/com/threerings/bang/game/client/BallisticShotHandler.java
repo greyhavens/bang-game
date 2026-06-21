@@ -3,10 +3,10 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.scene.Spatial;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.BallisticPath;
@@ -180,7 +180,7 @@ public class BallisticShotHandler extends ShotHandler
             0f : getActionDuration(dsprite, "blocking") * 0.5f);
         final float delay = (_sidx == 0 && usprite != null) ?
             usprite.getBallisticShotDelay() : 0f;
-        _ssprite.setCullMode(Spatial.CULL_ALWAYS);
+        _ssprite.setCullHint(Spatial.CullHint.Always);
         _ssprite.move(new OrientingBallisticPath(_ssprite,
             new Vector3f(1, 0, 0), start, pparams.velocity, gravity,
             pparams.duration) {
@@ -188,7 +188,7 @@ public class BallisticShotHandler extends ShotHandler
                 if ((_daccum += time) < delay) {
                     return;
                 }
-                _ssprite.setCullMode(Spatial.CULL_DYNAMIC);
+                _ssprite.setCullHint(Spatial.CullHint.Dynamic);
                 super.update(time);
                 if (dsprite != null && !_blocking && _accum >= btime) {
                     _deflectSound.play(false);

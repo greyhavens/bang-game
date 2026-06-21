@@ -5,8 +5,8 @@
 
 package com.jmex.bui.border;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.backend.BackendProvider;
@@ -36,7 +36,7 @@ public class LineBorder extends BBorder
     }
 
     @Override // from BBorder
-    public void render (Renderer renderer, int x, int y, int width, int height, float alpha)
+    public void render (RenderManager renderer, int x, int y, int width, int height, float alpha)
     {
         super.render(renderer, x, y, width, height, alpha);
 

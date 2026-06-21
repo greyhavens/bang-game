@@ -1,6 +1,6 @@
 allprojects {
   group = "com.threerings"
-  version = "1.1-SNAPSHOT"
+  version = "1.1.0"
 
   ext {
     gdxVersion = "1.5.4"

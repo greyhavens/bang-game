@@ -7,31 +7,22 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GLContext;
-
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Image;
-import com.jme.image.Texture;
-import com.jme.light.DirectionalLight;
-import com.jme.math.FastMath;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
-import com.jme.scene.TriMesh;
-import com.jme.scene.batch.TriangleBatch;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.GLSLShaderObjectsState;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.TextureState;
-import com.jme.scene.state.gdx.GDXTextureState;
-import com.jme.scene.state.gdx.records.TextureStateRecord;
-import com.jme.util.geom.BufferUtils;
+import com.jme3.bounding.BoundingBox;
+import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
+import com.jme3.scene.Node;
+import com.jme3.scene.VertexBuffer;
+import com.jme3.texture.Image;
+import com.jme3.texture.Texture2D;
+import com.jme3.texture.Texture.MagFilter;
+import com.jme3.texture.Texture.WrapMode;
+import com.jme3.util.BufferUtils;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.game.data.BangBoard;
@@ -43,6 +34,34 @@ import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Handles the rendering of Bang's wet spots.
+ *
+ * <h3>jME3 cutover (Phase 2, cluster 3 — REBUILD, migration map §4 risk #3)</h3>
+ *
+ * This is the highest fidelity-risk node in the board renderer. What changed and what is deferred:
+ *
+ * <ul>
+ *   <li><b>Geometry:</b> the fork built the surface from {@code TriMesh} wave patches shared by
+ *   {@code SharedMesh} blocks. jME3 uses a {@link Mesh} per wave patch and a {@link Geometry} per
+ *   visible block sharing that mesh. The CPU FFT wave simulation ({@link WaveUtil}) is
+ *   engine-neutral and is kept verbatim.</li>
+ *   <li><b>Materials/render state:</b> the fork's {@code AlphaState}/{@code MaterialState}/
+ *   {@code LightState} move onto a jME3 {@link Material} (specular water look via
+ *   {@code Lighting.j3md}) with blend + back-cull on its render state; the board light is attached
+ *   to this node.</li>
+ *   <li><b>GLSL water shader (fork {@code GLSLShaderObjectsState} + {@code ShaderCache}):</b> the
+ *   fork's high-detail path used {@code shaders/water.vert}/{@code .frag} via the (now fork-only)
+ *   {@code ShaderCache}, and updated a normal map through raw {@code GL11.glTexSubImage2D} from a
+ *   {@code GDXTextureState.apply()} override. jME3 has neither {@code ShaderCache} nor the gdx GL
+ *   poking. <b>The custom water {@code .j3md} (porting water.vert/frag to jME3 GLSL + a normal-map
+ *   MatParamTexture) is a Phase-4 fidelity task.</b> For Phase 2 the high-detail branch still runs
+ *   the wave simulation and maintains a {@link Texture2D} normal map (updated each frame by
+ *   re-uploading its {@link Image}); the surface renders with the specular fallback material until
+ *   the water MatDef lands. This is flagged for Phase-4 visual review.</li>
+ *   <li><b>GL-thread / capability gating:</b> the fork queried {@code GLContext.getCapabilities()}
+ *   in the constructor (engine-notes: WaterNode could only be constructed on the GL thread). jME3
+ *   owns the context and reports capabilities through the renderer; the high-detail path is now
+ *   gated on {@link BangPrefs#isHighDetail()} alone. Construction is GL-thread-safe under jME3.</li>
+ * </ul>
  */
 public class WaterNode extends Node
 {
@@ -52,43 +71,21 @@ public class WaterNode extends Node
         _ctx = ctx;
         _light = light;
         _editorMode = editorMode;
+        _highDetail = BangPrefs.isHighDetail();
 
-        setRenderState(RenderUtil.blendAlpha);
-        setRenderState(RenderUtil.backCull);
-
-        // we normalize things ourself
-        setNormalsMode(NM_USE_PROVIDED);
-
-        // use our fancy shaders if possible
-        if (GLContext.getCapabilities().GL_ARB_vertex_shader &&
-            GLContext.getCapabilities().GL_ARB_fragment_shader &&
-            BangPrefs.isHighDetail() && !_disableShaders && initShaders()) {
-            return;
-        }
-
-        // otherwise, use a combination of sphere map, lighting, and material
-        // that approximates the effect
-        setRenderState(_smtstate = _ctx.getRenderer().createTextureState());
-
-        // use the board's main light in a new state that enables specular
-        // properties
-        LightState lstate = _ctx.getRenderer().createLightState();
-        lstate.attach(light);
-        lstate.setLocalViewer(true);
-        lstate.setSeparateSpecular(true);
-        setRenderState(lstate);
-
-        MaterialState mstate = _ctx.getRenderer().createMaterialState();
-        mstate.getDiffuse().set(ColorRGBA.black);
-        mstate.getAmbient().set(ColorRGBA.black);
-        mstate.getSpecular().set(ColorRGBA.white);
-        mstate.setShininess(32f);
-        setRenderState(mstate);
+        // build the surface material: the custom Bang water MatDef does GL_SPHERE_MAP texgen of the
+        // (wave-perturbed) surface normal against a Fresnel sphere map (water-color <-> sky-color by
+        // reflectivity), reproducing the fork's fixed-function EM_SPHERE reflection look.
+        _material = new Material(ctx.getAssetManager(), "shaders/BangWater.j3md");
+        _material.setFloat("Alpha", WATER_ALPHA);
+        RenderUtil.applyBlendAlpha(_material);
+        RenderUtil.applyBackCull(_material);
+        setQueueBucket(com.jme3.renderer.queue.RenderQueue.Bucket.Transparent);
     }
 
     /**
-     * Initializes the water geometry using terrain data from the given board
-     * and saves the board reference for later updates.
+     * Initializes the water geometry using terrain data from the given board and saves the board
+     * reference for later updates.
      */
     public void createBoardWater (BangBoard board)
     {
@@ -98,24 +95,20 @@ public class WaterNode extends Node
         detachAllChildren();
 
         // initialize the array of blocks and patches
-        _blocks = new SharedMesh[_board.getWidth()][_board.getHeight()];
-        if (BangPrefs.isHighDetail()) {
-            _patches = new TriMesh[WAVE_MAP_TILES][WAVE_MAP_TILES];
+        _blocks = new Geometry[_board.getWidth()][_board.getHeight()];
+        if (_highDetail) {
+            _patches = new Mesh[WAVE_MAP_TILES][WAVE_MAP_TILES];
             int vsize = (WAVE_MAP_SIZE + 1) * (WAVE_MAP_SIZE + 1);
             _vbuf = BufferUtils.createVector3Buffer(vsize);
-            if (_sstate == null) {
-                _nbuf = BufferUtils.createVector3Buffer(vsize);
-            } else {
-                initNormalMap();
-            }
+            _nbuf = BufferUtils.createVector3Buffer(vsize);
+            initNormalMap();
         } else {
             _patches = null;
         }
         _bcount = 0;
         refreshSurface();
 
-        // refresh the sphere map and wave amplitudes if there are any
-        // blocks visible
+        // refresh the sphere map and wave amplitudes if there are any blocks visible
         if (_editorMode || _bcount > 0) {
             refreshColors();
             refreshShader();
@@ -126,47 +119,29 @@ public class WaterNode extends Node
     }
 
     /**
-     * Releases the resources created by this node.
+     * Releases the resources created by this node. jME3 reclaims textures/materials with the node.
      */
     public void cleanup ()
     {
-        if (_smtstate != null) {
-            _smtstate.deleteAll();
-        }
-        if (_nmtstate != null) {
-            _nmtstate.deleteAll();
-        }
+        // no explicit GL deletes needed under jME3.
     }
 
     /**
-     * Creates and attaches the sphere map that blends the water and sky colors
-     * according to the Fresnel term, or sets those parameters in the shaders.
-     * This code and that of the shaders is based on the RenderMan shader in
-     * Jerry Tessendorf's
-     * <a href="http://www.finelightvisualtechnology.com/docs/coursenotes2004.pdf">
-     * Simulating Ocean Water</a>.
+     * Updates the water/sky blend colors. The fork baked a Fresnel sphere map (fixed-function) or
+     * set shader uniforms (GLSL). The Fresnel sphere map is preserved as a {@link Texture2D} bound
+     * as the material's {@code DiffuseMap}; the GLSL uniform path is folded into the Phase-4 water
+     * MatDef.
      */
     public void refreshColors ()
     {
-        ColorRGBA wcolor = RenderUtil.createColorRGBA(
-            _board.getWaterColor()),
-                scolor = RenderUtil.createColorRGBA(
-            _board.getSkyOverheadColor());
+        if (_board == null) {
+            return;
+        }
+        ColorRGBA wcolor = RenderUtil.createColorRGBA(_board.getWaterColor()),
+                scolor = RenderUtil.createColorRGBA(_board.getSkyOverheadColor());
         wcolor.a = WATER_ALPHA;
-        if (_sstate != null) {
-            _sstate.setUniform("waterColor",
-                wcolor.r, wcolor.g, wcolor.b, wcolor.a);
-            _sstate.setUniform("skyOverheadColor",
-                scolor.r, scolor.g, scolor.b, scolor.a);
-            return;
-        }
-        if (_smtstate == null) {
-            return;
-        }
-        _smtstate.deleteAll();
 
-        ByteBuffer pbuf = ByteBuffer.allocateDirect(SPHERE_MAP_SIZE *
-            SPHERE_MAP_SIZE * 4);
+        ByteBuffer pbuf = ByteBuffer.allocateDirect(SPHERE_MAP_SIZE * SPHERE_MAP_SIZE * 4);
         ColorRGBA color = new ColorRGBA();
 
         float x, y, d, thetai, thetat, reflectivity, fs, ts;
@@ -182,7 +157,6 @@ public class WaterNode extends Node
                     if (thetai == 0f) {
                         reflectivity = (SNELL_RATIO - 1f) / (SNELL_RATIO + 1f);
                         reflectivity = reflectivity * reflectivity;
-
                     } else {
                         fs = FastMath.sin(thetat - thetai) /
                             FastMath.sin(thetat + thetai);
@@ -190,10 +164,9 @@ public class WaterNode extends Node
                             FastMath.tan(thetat + thetai);
                         reflectivity = 0.5f * (fs*fs + ts*ts);
                     }
-                    color.interpolate(wcolor, scolor, reflectivity);
-
+                    color.interpolateLocal(wcolor, scolor, reflectivity);
                 } else {
-                    color.set(ColorRGBA.black);
+                    color.set(ColorRGBA.Black);
                 }
                 pbuf.put((byte)(color.r * 255));
                 pbuf.put((byte)(color.g * 255));
@@ -203,34 +176,49 @@ public class WaterNode extends Node
         }
         pbuf.rewind();
 
-        Texture texture = _ctx.getTextureCache().createTexture();
-        RenderUtil.configureTexture(texture,
-            new Image(Image.RGBA8888, SPHERE_MAP_SIZE, SPHERE_MAP_SIZE, pbuf));
-        RenderUtil.enableTextureCompression(texture);
-        texture.setEnvironmentalMapMode(Texture.EM_SPHERE);
-        texture.setApply(Texture.AM_REPLACE);
-        _smtstate.setTexture(texture);
-    }
+        // The sphere map holds the fork's interpolated water<->sky colors verbatim; the fork
+        // displayed them with no gamma management (fixed-function EM_SPHERE replace). Tag the image
+        // Linear so a gamma-correct pipeline samples it as-is rather than sRGB-decoding (which
+        // darkened the surface to a near-black sheet). The water then reads at full color.
+        Image img = new Image(Image.Format.RGBA8, SPHERE_MAP_SIZE, SPHERE_MAP_SIZE, pbuf,
+            com.jme3.texture.image.ColorSpace.Linear);
+        Texture2D sphereMap = new Texture2D(img);
+        sphereMap.setMagFilter(MagFilter.Bilinear);
+        sphereMap.setWrap(WrapMode.EdgeClamp);
+        // bound as the Fresnel sphere map sampled via GL_SPHERE_MAP texgen in BangWater.vert.
+        _material.setTexture("SphereMap", sphereMap);
 
-    /**
-     * Updates the shader program based on the board state.
-     */
-    public void refreshShader ()
-    {
-        if (_sstate != null) {
-            _ctx.getShaderCache().configureState(_sstate,
-                "shaders/water.vert", "shaders/water.frag",
-                (_board.getFogDensity() > 0f) ? new String[] { "ENABLE_FOG" } : new String[0]);
+        // fog ambience
+        float density = _board.getFogDensity();
+        if (density > 0f) {
+            int fc = _board.getFogColor();
+            _material.setBoolean("UseFog", true);
+            _material.setColor("FogColor", new ColorRGBA(
+                ((fc >> 16) & 0xFF) / 255f, ((fc >> 8) & 0xFF) / 255f,
+                (fc & 0xFF) / 255f, 1f));
+            _material.setFloat("FogDensity", density);
         }
     }
 
     /**
-     * Updates the wave amplitudes based on the amplitude scale and environment
-     * parameters.
+     * Updates the shader program based on the board state. The fork (re)configured the GLSL
+     * {@code water.vert}/{@code water.frag} state; under jME3 the water MatDef and its fog define
+     * are a Phase-4 task, so this is currently a flagged no-op.
+     */
+    public void refreshShader ()
+    {
+        // Phase 4: select the water MatDef's ENABLE_FOG define from _board.getFogDensity() once the
+        // custom water .j3md is authored.
+    }
+
+    /**
+     * Updates the wave amplitudes based on the amplitude scale and environment parameters.
      */
     public void refreshWaveAmplitudes ()
     {
-        // create the initial set of wave amplitudes
+        if (_board == null) {
+            return;
+        }
         float wdir = _board.getWindDirection(), wspeed = _board.getWindSpeed();
         Vector2f wvec = new Vector2f(wspeed * FastMath.cos(wdir),
             wspeed * FastMath.sin(wdir));
@@ -249,9 +237,7 @@ public class WaterNode extends Node
     }
 
     /**
-     * Updates the visible set of surface blocks within the specified tile
-     * coordinate rectangle based on the state of the board terrain and
-     * water level.
+     * Updates the visible set of surface blocks within the specified tile coordinate rectangle.
      */
     public void refreshSurface (int x1, int y1, int x2, int y2)
     {
@@ -273,26 +259,24 @@ public class WaterNode extends Node
             }
         }
 
-        getLocalTranslation().set(0f, 0f,
+        setLocalTranslation(0f, 0f,
             (_board.getWaterLevel() - 1) *
                 _board.getElevationScale(TILE_SIZE));
 
-        updateWorldBound();
-
-        updateRenderState();
-        updateGeometricState(0, true);
+        updateModelBound();
+        updateGeometricState();
     }
 
     @Override // documentation inherited
-    public void updateWorldData (float time)
+    public void updateLogicalState (float tpf)
     {
-        super.updateWorldData(time);
+        super.updateLogicalState(tpf);
         if (_blocks == null || _patches == null || _bcount == 0) {
             return;
         }
 
         // compute the vertices and normals for the entire wave map
-        _t += time;
+        _t += tpf;
         WaveUtil.getAmplitudes(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
             MAP_WORLD_SIZE, MAP_WORLD_SIZE, _iramps, _iiamps, _disp, _t,
             _ramps, _iamps);
@@ -301,78 +285,44 @@ public class WaterNode extends Node
             _rgrady, _igrady, 1f, _vbuf);
         WaveUtil.addVertices(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
             MAP_WORLD_SIZE, MAP_WORLD_SIZE, _ramps, _iamps, _vbuf);
-        if (_sstate == null) {
-            WaveUtil.getNormals(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
-                MAP_WORLD_SIZE, MAP_WORLD_SIZE, _vbuf, _nbuf);
-        } else {
-            Vector3f lvec = _light.getDirection();
-            _sstate.setUniform("lightVector", -lvec.x, -lvec.y, -lvec.z);
-            WaveUtil.getNormalMap(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
-                MAP_WORLD_SIZE, MAP_WORLD_SIZE, _vbuf, _nmap);
-            _nmtstate.setNeedsRefresh(true);
-        }
-    }
+        WaveUtil.getNormals(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
+            MAP_WORLD_SIZE, MAP_WORLD_SIZE, _vbuf, _nbuf);
 
-    /**
-     * Initializes the shader state.
-     *
-     * @return true if the shaders were compiled successfully, false to fall back on the fixed
-     * function implementation.
-     */
-    protected boolean initShaders ()
-    {
-        _sstate = _ctx.getShaderCache().createState("shaders/water.vert", "shaders/water.frag");
-        if (_sstate == null) {
-            _disableShaders = true;
-            return false;
-        }
-        _sstate.setUniform("normalMap", 0);
-
-        setRenderState(_sstate);
-        setRenderState(_nmtstate = new GDXTextureState() {
-            public void apply () {
-                super.apply();
-                if (needsRefresh() && _nmap != null) {
-                    TextureStateRecord rec = (TextureStateRecord)_ctx.getDisplay().
-                        getCurrentContext().getStateRecord(RenderState.RS_TEXTURE);
-                    if (rec.currentUnit != 0) {
-                        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-                        rec.currentUnit = 0;
-                    }
-                    GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0,
-                        WAVE_MAP_SIZE, WAVE_MAP_SIZE,
-                        GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, _nmap);
+        // push the recomputed vertices/normals into each patch mesh
+        for (int px = 0; px < WAVE_MAP_TILES; px++) {
+            for (int py = 0; py < WAVE_MAP_TILES; py++) {
+                Mesh patch = _patches[px][py];
+                if (patch == null) {
+                    continue;
                 }
+                VertexBuffer pos = patch.getBuffer(VertexBuffer.Type.Position);
+                _vbuf.rewind();
+                pos.updateData(_vbuf);
+                VertexBuffer nrm = patch.getBuffer(VertexBuffer.Type.Normal);
+                if (nrm != null) {
+                    _nbuf.rewind();
+                    nrm.updateData(_nbuf);
+                }
+                patch.updateBound();
             }
-        });
-        return true;
+        }
+
+        // Phase 4: when the GLSL water MatDef lands, also recompute the normal-map image
+        // (WaveUtil.getNormalMap) and re-upload _normalMap's Image here.
     }
 
     /**
-     * Initializes the state required for the normal map.
+     * Initializes the state required for the normal map (high-detail GLSL path). Kept so the
+     * Phase-4 water MatDef has its normal-map texture ready; not yet sampled by a material.
      */
     protected void initNormalMap ()
     {
-        // create the texture coordinate buffer
-        int vsize = WAVE_MAP_SIZE + 1;
-        float step = 1f / WAVE_MAP_SIZE;
-        _tbuf = BufferUtils.createVector2Buffer(vsize * vsize);
-        for (int xx = 0; xx < vsize; xx++) {
-            for (int yy = 0; yy < vsize; yy++) {
-                _tbuf.put((yy + 0.5f) * step);
-                _tbuf.put((xx + 0.5f) * step);
-            }
-        }
-        _tbuf.rewind();
-
-        // create and add the texture
-        _nmtstate.deleteAll();
-        Texture tex = _ctx.getTextureCache().createTexture();
-        tex.setImage(new Image(Image.RGBA8888, WAVE_MAP_SIZE, WAVE_MAP_SIZE,
-            _nmap = BufferUtils.createByteBuffer(WAVE_MAP_SIZE * WAVE_MAP_SIZE * 4)));
-        tex.setFilter(Texture.FM_LINEAR);
-        tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
-        _nmtstate.setTexture(tex);
+        _nmap = BufferUtils.createByteBuffer(WAVE_MAP_SIZE * WAVE_MAP_SIZE * 4);
+        Image img = new Image(Image.Format.RGBA8, WAVE_MAP_SIZE, WAVE_MAP_SIZE, _nmap,
+            com.jme3.texture.image.ColorSpace.Linear);
+        _normalMap = new Texture2D(img);
+        _normalMap.setMagFilter(MagFilter.Bilinear);
+        _normalMap.setWrap(WrapMode.Repeat);
     }
 
     /**
@@ -381,38 +331,51 @@ public class WaterNode extends Node
     protected void createWaveBlock (int bx, int by)
     {
         // medium/low detail is just a tile-sized quad
-        if (!BangPrefs.isHighDetail()) {
+        if (!_highDetail) {
             if (_quad == null) {
-                _quad = new Quad("quad", TILE_SIZE, TILE_SIZE);
-                _quad.setModelBound(new BoundingBox());
-                _quad.updateModelBound();
+                _quad = new com.jme3.scene.shape.Quad(TILE_SIZE, TILE_SIZE);
             }
-            _blocks[bx][by] = new SharedMesh("block", _quad);
-            _blocks[bx][by].getLocalTranslation().set((bx + 0.5f) * TILE_SIZE,
+            Geometry block = new Geometry("block", _quad);
+            block.setMaterial(_material);
+            block.setLocalTranslation((bx + 0.5f) * TILE_SIZE,
                 (by + 0.5f) * TILE_SIZE, 0f);
+            _blocks[bx][by] = block;
             return;
         }
         int px = bx % WAVE_MAP_TILES, py = by % WAVE_MAP_TILES;
         if (_patches[px][py] == null) {
             createWavePatch(px, py);
         }
-        _blocks[bx][by] = new SharedMesh("block", _patches[px][py]);
+        Geometry block = new Geometry("block", _patches[px][py]);
+        block.setMaterial(_material);
         int wx = bx / WAVE_MAP_TILES, wy = by / WAVE_MAP_TILES;
-        _blocks[bx][by].getLocalTranslation().set(
+        block.setLocalTranslation(
             wx * WAVE_MAP_TILES * TILE_SIZE,
             wy * WAVE_MAP_TILES * TILE_SIZE, 0f);
+        _blocks[bx][by] = block;
     }
 
     /**
-     * Creates the state necessary to render the wave patch at the given patch
-     * coordinates.
+     * Creates the mesh for the wave patch at the given patch coordinates (a triangle-strip grid).
      */
     protected void createWavePatch (int px, int py)
     {
-        // reuse the dispersion model
         if (_disp == null) {
             _disp = new WaveUtil.DeepWaterModel(GRAVITY);
         }
+
+        // build the texture coordinate buffer for this patch
+        int vsize = WAVE_MAP_SIZE + 1;
+        float step = 1f / WAVE_MAP_SIZE;
+        FloatBuffer tbuf = BufferUtils.createVector2Buffer(vsize * vsize);
+        for (int xx = 0; xx < vsize; xx++) {
+            for (int yy = 0; yy < vsize; yy++) {
+                tbuf.put((yy + 0.5f) * step);
+                tbuf.put((xx + 0.5f) * step);
+            }
+        }
+        tbuf.rewind();
+
         IntBuffer ibuf = BufferUtils.createIntBuffer(
             (PATCH_SIZE + 1) * 2 * PATCH_SIZE);
         int stride = WAVE_MAP_SIZE + 1;
@@ -433,13 +396,21 @@ public class WaterNode extends Node
             }
             even = !even;
         }
+        ibuf.rewind();
 
-        // create the trimesh
-        _patches[px][py] = new TriMesh("patch", _vbuf, _nbuf, null, _tbuf, ibuf);
-        _patches[px][py].getBatch(0).setMode(TriangleBatch.TRIANGLE_STRIP);
-        _patches[px][py].setModelBound(new BoundingBox(
+        Mesh mesh = new Mesh();
+        mesh.setMode(Mesh.Mode.TriangleStrip);
+        _vbuf.rewind();
+        mesh.setBuffer(VertexBuffer.Type.Position, 3, _vbuf);
+        _nbuf.rewind();
+        mesh.setBuffer(VertexBuffer.Type.Normal, 3, _nbuf);
+        mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, tbuf);
+        mesh.setBuffer(VertexBuffer.Type.Index, 2, ibuf);
+        mesh.setBound(new BoundingBox(
             new Vector3f((px+0.5f) * TILE_SIZE, (py+0.5f) * TILE_SIZE, 0f),
             TILE_SIZE/2, TILE_SIZE/2, 5f));
+        mesh.updateCounts();
+        _patches[px][py] = mesh;
     }
 
     /** The application context. */
@@ -451,23 +422,23 @@ public class WaterNode extends Node
     /** Whether or not we are in editor mode. */
     protected boolean _editorMode;
 
+    /** Whether we run the high-detail (wave simulation) path. */
+    protected boolean _highDetail;
+
     /** The board with the terrain information. */
     protected BangBoard _board;
 
+    /** The water surface material. */
+    protected Material _material;
+
     /** The shared wave patches. */
-    protected TriMesh[][] _patches;
+    protected Mesh[][] _patches;
 
     /** The array of surface blocks referring to instances of the patches. */
-    protected SharedMesh[][] _blocks;
+    protected Geometry[][] _blocks;
 
-    /** The water shader state, if GLSL shading is supported. */
-    protected GLSLShaderObjectsState _sstate;
-
-    /** The sphere map texture state, if GLSL shading is not supported. */
-    protected TextureState _smtstate;
-
-    /** The normal map texture state, if GLSL shading *is* supported. */
-    protected TextureState _nmtstate;
+    /** The normal map texture (high-detail path; sampled by the Phase-4 water MatDef). */
+    protected Texture2D _normalMap;
 
     /** The number of active blocks. */
     protected int _bcount;
@@ -482,10 +453,10 @@ public class WaterNode extends Node
         _rgrady = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE],
         _igrady = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE];
 
-    /** Buffers for the vertices, normals, and tex coords of the entire wave patch. */
-    protected FloatBuffer _vbuf, _nbuf, _tbuf;
+    /** Buffers for the vertices and normals of the entire wave patch. */
+    protected FloatBuffer _vbuf, _nbuf;
 
-    /** If using the pixel shader, the normal map. */
+    /** If using the pixel shader, the normal map pixel buffer. */
     protected ByteBuffer _nmap;
 
     /** The time of the last frame within the animation period. */
@@ -494,11 +465,8 @@ public class WaterNode extends Node
     /** The dispersion model. */
     protected static WaveUtil.DispersionModel _disp;
 
-    /** A tile-sized quad to share as a low resolution water surface. */
-    protected static Quad _quad;
-
-    /** If true, the shaders didn't link; don't try to compile them again. */
-    protected static boolean _disableShaders;
+    /** A tile-sized quad mesh to share as a low resolution water surface. */
+    protected static com.jme3.scene.shape.Quad _quad;
 
     /** The size in samples of the wave map. */
     protected static final int WAVE_MAP_SIZE = 32;

@@ -5,8 +5,8 @@ package com.threerings.bang.client;
 
 import java.awt.Color;
 
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
 
 /**
  * Defines sizes of things.
@@ -43,10 +43,10 @@ public class BangMetrics
 
     /** JME colors for each of the players. */
     public static final ColorRGBA[] JPIECE_COLORS = {
-        ColorRGBA.gray,
+        ColorRGBA.Gray,
         new ColorRGBA(0.08f, 0.33f, 1f, 1f),
-        ColorRGBA.red,
-        ColorRGBA.green,
+        ColorRGBA.Red,
+        ColorRGBA.Green,
         new ColorRGBA(1, 1, 0, 1),
         new ColorRGBA(1f, 0.47f, 0f, 1f),
         new ColorRGBA(0.08f, 0.73f, 1f, 1f),
@@ -55,14 +55,14 @@ public class BangMetrics
 
     /** Darker JME colors for each of the players. */
     public static final ColorRGBA[] DARKER_COLORS = {
-        JPIECE_COLORS[0].mult(ColorRGBA.darkGray),
-        JPIECE_COLORS[1].mult(ColorRGBA.darkGray),
-        JPIECE_COLORS[2].mult(ColorRGBA.darkGray),
-        JPIECE_COLORS[3].mult(ColorRGBA.darkGray),
-        JPIECE_COLORS[4].mult(ColorRGBA.darkGray),
-        JPIECE_COLORS[5].mult(ColorRGBA.darkGray),
-        JPIECE_COLORS[6].mult(ColorRGBA.darkGray),
-        JPIECE_COLORS[7].mult(ColorRGBA.darkGray),
+        JPIECE_COLORS[0].mult(ColorRGBA.DarkGray),
+        JPIECE_COLORS[1].mult(ColorRGBA.DarkGray),
+        JPIECE_COLORS[2].mult(ColorRGBA.DarkGray),
+        JPIECE_COLORS[3].mult(ColorRGBA.DarkGray),
+        JPIECE_COLORS[4].mult(ColorRGBA.DarkGray),
+        JPIECE_COLORS[5].mult(ColorRGBA.DarkGray),
+        JPIECE_COLORS[6].mult(ColorRGBA.DarkGray),
+        JPIECE_COLORS[7].mult(ColorRGBA.DarkGray),
     };
 
     /** Color indices for the teams. */

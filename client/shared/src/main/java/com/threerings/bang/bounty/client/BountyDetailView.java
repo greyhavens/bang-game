@@ -3,7 +3,7 @@
 
 package com.threerings.bang.bounty.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
@@ -135,7 +135,7 @@ public class BountyDetailView extends BContainer
     }
 
     @Override // from BComponent
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
         if (_completed) {

@@ -3,15 +3,17 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.image.Texture;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Renderer;
-import com.jme.scene.BillboardNode;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
-import com.jme.util.geom.BufferUtils;
+import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial.CullHint;
+import com.jme3.scene.VertexBuffer;
+import com.jme3.scene.control.BillboardControl;
+import com.jme3.scene.shape.Quad;
+import com.jme3.texture.Texture2D;
+import com.jme3.util.BufferUtils;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BasicContext;
@@ -71,23 +73,27 @@ public class CounterSprite extends PropSprite
         // recompute and display our nugget count
         Counter counter = (Counter)piece;
         if (_piece.owner >= 0 && _dcount != counter.count) {
-            if (_tstate.getNumberOfSetTextures() > 0) {
-                _tstate.deleteAll();
-            }
             Vector2f[] tcoords = new Vector2f[4];
-            Texture tex = RenderUtil.createTextTexture(
+            Texture2D tex = RenderUtil.createTextTexture(
                 _ctx, BangUI.COUNTER_FONT, getJPieceColor(_piece.owner),
                 getDarkerPieceColor(_piece.owner), String.valueOf(counter.count),
                 tcoords, null);
-            _counter.setTextureBuffer(
-                0, BufferUtils.createFloatBuffer(tcoords));
-            // resize our quad to accomodate the text
+            // resize our quad to accommodate the text and set its UVs
             float qrat = TILE_SIZE * 0.8f / tcoords[2].y;
-            _counter.resize(qrat * tcoords[2].x, qrat * tcoords[2].y);
-            _tstate.setTexture(tex);
-            _counter.updateRenderState();
+            float qw = qrat * tcoords[2].x, qh = qrat * tcoords[2].y;
+            Quad mesh = new Quad(qw, qh);
+            mesh.setBuffer(VertexBuffer.Type.TexCoord, 2,
+                BufferUtils.createFloatBuffer(tcoords));
+            mesh.updateBound();
+            _counter.setMesh(mesh);
+            // jME3 Quad is corner-anchored ((0,0)..(w,h)); the fork Quad was
+            // center-anchored (-w/2..+w/2). Recenter on the billboard pivot so
+            // the number floats centered above the claim rather than off-pivot
+            // (up-and-right) and sunk into the claim rock mesh (BUG-22).
+            _counter.setLocalTranslation(-qw / 2f, -qh / 2f, 0f);
+            _mat.setTexture("ColorMap", tex);
             _dcount = counter.count;
-            _counter.setCullMode(CULL_DYNAMIC);
+            _counter.setCullHint(CullHint.Dynamic);
         }
     }
 
@@ -96,21 +102,21 @@ public class CounterSprite extends PropSprite
     {
         super.createGeometry();
 
-        // create a billboard to display this mine's current nugget count
-        _counter = new Quad("counter", 25, 25);
-        _tstate = _ctx.getRenderer().createTextureState();
-        _tstate.setEnabled(true);
-        _counter.setRenderState(_tstate);
-        _counter.setRenderState(RenderUtil.blendAlpha);
-        _counter.setRenderState(RenderUtil.overlayZBuf);
-        _counter.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _counter.setLightCombineMode(LightState.OFF);
-        BillboardNode bbn = new BillboardNode("cbillboard");
+        // create a billboard to display this mine's current count
+        _counter = new Geometry("counter", new Quad(25, 25));
+        _counter.setLocalTranslation(-25 / 2f, -25 / 2f, 0f);
+        _mat = RenderUtil.createTextureMaterial(_ctx, (Texture2D)null);
+        RenderUtil.applyBlendAlpha(_mat);
+        RenderUtil.applyOverlayZBuf(_mat);
+        _counter.setMaterial(_mat);
+        RenderUtil.setOverlay(_counter);
+        Node bbn = new Node("cbillboard");
+        bbn.addControl(new BillboardControl());
         bbn.attachChild(_counter);
         bbn.setLocalTranslation(new Vector3f(
                     0, 0, (_config.height + 0.5f) * TILE_SIZE));
         attachChild(bbn);
-        _counter.setCullMode(CULL_ALWAYS);
+        _counter.setCullHint(CullHint.Always);
     }
 
     @Override // documentation inherited
@@ -119,7 +125,7 @@ public class CounterSprite extends PropSprite
         return (pidx == _piece.owner ? "own_" : "other_") + _config.type;
     }
 
-    protected Quad _counter;
-    protected TextureState _tstate;
+    protected Geometry _counter;
+    protected Material _mat;
     protected int _dcount = -1;
 }

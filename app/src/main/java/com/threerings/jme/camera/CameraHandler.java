@@ -21,11 +21,11 @@
 
 package com.threerings.jme.camera;
 
-import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
-import com.jme.math.Plane;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
+import com.jme3.math.FastMath;
+import com.jme3.math.Matrix3f;
+import com.jme3.math.Plane;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 
 import com.samskivert.util.ObserverList;
 import com.threerings.jme.JmeApp;
@@ -50,11 +50,12 @@ public class CameraHandler
      */
     public void resetAxes ()
     {
-        _camera.getDirection().set(0, 0, -1);
-        _camera.getLeft().set(-1, 0, 0);
-        _camera.getUp().set(0, 1, 0);
-        _camera.update(); 
-        
+        // jME3 cutover: jME3's Camera.getDirection()/getLeft()/getUp() return derived copies;
+        // mutating them in place no longer affects the camera. Set the orientation through
+        // setAxes(left, up, direction) instead.
+        _camera.setAxes(new Vector3f(-1, 0, 0), new Vector3f(0, 1, 0), new Vector3f(0, 0, -1));
+        _camera.update();
+
         _rxdir.set(1, 0, 0);
         _rydir.set(0, 1, 0);
     }
@@ -116,8 +117,9 @@ public class CameraHandler
     {
 //         Log.info("Zoom " + level + " " + _camera.getLocation());
         level = Math.max(0f, Math.min(level, 1f));
-        _camera.getLocation().z = _minZ + (_maxZ - _minZ) * level;
-        _camera.update();
+        Vector3f loc = _camera.getLocation().clone();
+        loc.z = _minZ + (_maxZ - _minZ) * level;
+        _camera.setLocation(loc);
     }
 
     /**
@@ -253,9 +255,18 @@ public class CameraHandler
         // which we're going to orbit
         Vector3f direction = _camera.getLocation().subtract(spot);
 
+        // jME3 cutover: read the camera axes into mutable locals (jME3 getLeft/getUp/
+        // getDirection return derived copies); rotate them, then write them back atomically
+        // via setAxes. The "rotate around the left vector" test compares against this snapshot.
+        Vector3f left = _camera.getLeft();
+        Vector3f up = _camera.getUp();
+        Vector3f cdir = _camera.getDirection();
+        boolean aroundLeft = axis.equals(left);
+        boolean aroundGroundNormal = axis.equals(_ground.getNormal());
+
         // if we're rotating around the left vector, impose tilt limits
-        if (axis == _camera.getLeft()) {
-            float angle = FastMath.asin(_ground.normal.dot(direction) /
+        if (aroundLeft) {
+            float angle = FastMath.asin(_ground.getNormal().dot(direction) /
                 direction.length());
             float nangle = Math.min(Math.max(angle + deltaAngle, _minTilt),
                 _maxTilt);
@@ -263,19 +274,20 @@ public class CameraHandler
                 return;
             }
         }
-        
+
         // create a rotation matrix
         _rotm.fromAngleAxis(deltaAngle, axis);
 
-        // rotate the direction vector and the camera itself
+        // rotate the orbit-direction vector and each camera axis
         _rotm.mult(direction, direction);
-        _rotm.mult(_camera.getUp(), _camera.getUp());
-        _rotm.mult(_camera.getLeft(), _camera.getLeft());
-        _rotm.mult(_camera.getDirection(), _camera.getDirection());
+        _rotm.mult(up, up);
+        _rotm.mult(left, left);
+        _rotm.mult(cdir, cdir);
+        _camera.setAxes(left, up, cdir);
 
         // if we're rotating around the ground normal, we need to update our
         // notion of side-to-side and forward for panning
-        if (axis == _ground.normal) {
+        if (aroundGroundNormal) {
             _rotm.mult(_rxdir, _rxdir);
             _rotm.mult(_rydir, _rydir);
         }
@@ -293,7 +305,7 @@ public class CameraHandler
      */
     public void orbitCamera (float deltaAngle)
     {
-        rotateCamera(getGroundPoint(), _ground.normal, deltaAngle, 0);
+        rotateCamera(getGroundPoint(), _ground.getNormal(), deltaAngle, 0);
     }
 
     /**
@@ -310,8 +322,8 @@ public class CameraHandler
      */
     public Vector3f getGroundPoint ()
     {
-        float dist = -1f * _ground.normal.dot(_camera.getLocation()) /
-            _ground.normal.dot(_camera.getDirection());
+        float dist = -1f * _ground.getNormal().dot(_camera.getLocation()) /
+            _ground.getNormal().dot(_camera.getDirection());
         return _camera.getLocation().add(_camera.getDirection().mult(dist));
     }
 
@@ -321,7 +333,7 @@ public class CameraHandler
      */
     public Vector3f getGroundNormal ()
     {
-        return _ground.normal;
+        return _ground.getNormal();
     }
 
     protected Vector3f bound (Vector3f loc)
@@ -358,7 +370,7 @@ public class CameraHandler
         _temp.normalizeLocal();
 
         // determine the intersection of said vector with the ground plane
-        float dist = -1f * _ground.normal.dot(loc) / _ground.normal.dot(_temp);
+        float dist = -1f * _ground.getNormal().dot(loc) / _ground.getNormal().dot(_temp);
         _temp.scaleAdd(dist, _temp, loc);
 
         // we then assume that if the corner of the "viewable ground rectangle"

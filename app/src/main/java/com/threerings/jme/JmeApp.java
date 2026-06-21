@@ -22,157 +22,555 @@
 package com.threerings.jme;
 
 import java.io.File;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import java.util.Arrays;
-
-import com.samskivert.util.Queue;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
+import com.jme3.app.SimpleApplication;
+import com.jme3.asset.AssetManager;
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.post.SceneProcessor;
+import com.jme3.profile.AppProfiler;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.Node;
+import com.jme3.system.AppSettings;
+import com.jme3.texture.FrameBuffer;
 
-import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-
-import com.jme.scene.Node;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.ZBufferState;
-
-import com.jme.system.DisplaySystem;
-import com.jme.system.JmeException;
-
-import com.jme.input.InputHandler;
-import com.jme.input.KeyInput;
-import com.jme.input.MouseInput;
 import com.jmex.bui.BRootNode;
-import com.jmex.bui.PolledRootNode;
-
-import com.jme.light.PointLight;
-import com.jme.math.Vector3f;
-import com.jme.util.Timer;
+import com.jmex.bui.Jme3RootNode;
+import com.jmex.bui.backend.BackendProvider;
+import com.jmex.bui.backend.Jme3RenderBackend;
 
 import com.threerings.jme.camera.CameraHandler;
+import com.threerings.jme.camera.GodViewHandler;
 
 /**
- * Defines a basic application framework providing integration with the
- * <a href="../presents/package.html">Presents</a> networking system and
- * targeting the framerate of the display.
+ * Defines a basic application framework providing integration with the Presents networking system
+ * and a jME3 scene-graph host.
+ *
+ * <p>jME3 cutover (Phase 3 — the atomic host flip): this is now a
+ * {@link com.jme3.app.SimpleApplication} on the jME3/LWJGL3 context. It owns the window, the GL
+ * context, the main loop and input. The fork+gdx host (gdx {@code LwjglApplication} +
+ * {@code ApplicationListener}) and the fork {@code DisplaySystem}/{@code Renderer} are gone. The
+ * loop:
+ * <ul>
+ *   <li>{@link #simpleInitApp} installs the engine services ({@link #init}), the BUI render
+ *       backend ({@link Jme3RenderBackend} via {@link BackendProvider#set}) and a
+ *       {@link SceneProcessor} on the GUI viewport that brackets BUI's window traversal with
+ *       {@code beginFrame}/{@code endFrame} (the proven {@code tools/jme3-host} pattern), wires
+ *       the {@link Jme3RootNode} input path to the {@code InputManager}, and calls the
+ *       subclass {@link #create} hook;</li>
+ *   <li>{@link #simpleUpdate} drains posted runnables (Presents run queue) on the render thread,
+ *       drives the BUI root state, and calls the subclass {@link #update} hook;</li>
+ *   <li>{@link #destroy} calls the subclass {@link #cleanup} hook.</li>
+ * </ul>
  */
-public class JmeApp
-    implements RunQueue, ApplicationListener
+public class JmeApp extends SimpleApplication
+    implements RunQueue
 {
-    /**
-     * Returns a context implementation that provides access to all the
-     * necessary bits.
-     */
-    public JmeContext getContext ()
+    public JmeApp ()
     {
-        return _ctx;
+        // we manage our own scene; SimpleApplication's default state set (fly-cam, stats, debug
+        // keys) is suppressed in simpleInitApp.
     }
 
-    @Override public void create () {
-        // initialize the rendering system
-        initDisplay();
-        if (!_display.isCreated()) {
-            throw new IllegalStateException("Failed to initialize display?");
+    /**
+     * Returns the Bang-side context (our {@link JmeContext}, distinct from the jME3 system
+     * {@code com.jme3.system.JmeContext} that {@code Application.getContext()} returns).
+     */
+    public JmeContext getJmeContext ()
+    {
+        return _context;
+    }
+
+    /**
+     * Installs the jME3 services this host exposes. Called from {@link #simpleInitApp} with the
+     * engine-owned services.
+     */
+    public void init (AssetManager assetManager, RenderManager renderManager, Camera camera)
+    {
+        _assetManager = assetManager;
+        _renderManager = renderManager;
+        _camera = camera;
+        _dispatchThread = Thread.currentThread();
+
+        initRoot();
+        initInput();
+        initInterface();
+    }
+
+    @Override // from SimpleApplication
+    public void simpleInitApp ()
+    {
+        // suppress SimpleApplication's defaults: we drive our own camera + UI.
+        if (flyCam != null) {
+            flyCam.setEnabled(false);
+        }
+        if (stateManager.getState(com.jme3.app.StatsAppState.class) != null) {
+            stateManager.detach(stateManager.getState(com.jme3.app.StatsAppState.class));
+        }
+        if (stateManager.getState(com.jme3.app.DebugKeysAppState.class) != null) {
+            stateManager.detach(stateManager.getState(com.jme3.app.DebugKeysAppState.class));
+        }
+        // SimpleApplication.initialize() registers a default ESCAPE -> stop() exit mapping; drop it
+        // so Esc no longer instantly aborts the game (the game handles Esc itself: back/dismiss).
+        if (inputManager.hasMapping(INPUT_MAPPING_EXIT)) {
+            inputManager.deleteMapping(INPUT_MAPPING_EXIT);
+        }
+        inputManager.setCursorVisible(true);
+
+        // register an asset locator rooted at the dev resource tree (the staged rsrc dir the
+        // bin/ scripts point -Dresource_dir at) so the client can load baked model.j3o, textures
+        // and materials by their rsrc-relative paths. jME3's stock Common/ MatDefs ship inside
+        // jme3-core on the classpath (the default ClasspathLocator already finds them).
+        String rsrcDir = System.getProperty("resource_dir");
+        if (rsrcDir != null) {
+            java.io.File root = new java.io.File(rsrcDir);
+            if (root.isDirectory()) {
+                assetManager.registerLocator(
+                    root.getAbsolutePath(), com.jme3.asset.plugins.FileLocator.class);
+            }
         }
 
-        // create an appropriate timer
-        _timer = Timer.getTimer();
+        // make the main viewport clear to black (host owns the viewport background).
+        viewPort.setBackgroundColor(ColorRGBA.Black);
 
-        // initialize our main camera controls and user input handling
-        initInput();
+        // Order the main viewport's transparent bucket by an explicit per-geometry render-order key
+        // (then back-to-front as usual). The terrain renderer tags its alpha-blended splat overlay
+        // layers so the whole terrain surface draws before the transparent move/attack highlights,
+        // restoring the fork's "terrain before highlights" invariant (BUG-31); untagged transparent
+        // geometry (water, particles, effects, UI) keeps its stock relative ordering.
+        // (-Dbang.debug.noRenderOrder=true disables it, for A/B diagnosis of transparent-sort issues)
+        if (!Boolean.getBoolean("bang.debug.noRenderOrder")) {
+            viewPort.getQueue().setGeometryComparator(
+                RenderQueue.Bucket.Transparent, new com.threerings.jme.util.RenderOrderComparator());
+        }
 
-        // initialize the root node
-        initRoot();
+        // install the BUI render backend BEFORE building any widget (BImage chooses its backing
+        // from BackendProvider.get() at construction time).
+        _backend = new Jme3RenderBackend(assetManager);
+        BackendProvider.set(_backend);
 
-        // initialize the lighting
-        initLighting();
+        // install our services + build the scene graph + UI root.
+        init(assetManager, renderManager, cam);
 
-        // initialize the UI support stuff
-        initInterface();
+        // Establish our standard board perspective frustum on the main 3D camera (the jME3 default
+        // camera ships a near:far that far-clips the full-size sky cloud disk -- see FRUSTUM_FAR).
+        // The GLFW framebuffer-resize path (RenderManager.notifyReshape -> Camera.resize) preserves
+        // near/far, so this far plane survives window resizes; OptionsView re-applies the same
+        // FRUSTUM_NEAR/FRUSTUM_FAR on an explicit display-mode change.
+        setPerspectiveFrustum(cam.getWidth(), cam.getHeight());
 
-        // update everything for the zeroth tick
-        _iface.updateRenderState();
-        _geom.updateRenderState();
-        _root.updateGeometricState(0f, true);
-        _root.updateRenderState();
+        // attach our scene-graph root to the main viewport's scene.
+        rootNode.attachChild(_root);
+
+        // some basic lighting so 3D content is not black (board view adds its own per-board
+        // lights; this is a fallback for menu/town scenes).
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection(new Vector3f(-0.5f, -1f, -0.5f).normalizeLocal());
+        sun.setColor(ColorRGBA.White);
+        rootNode.addLight(sun);
+        AmbientLight amb = new AmbientLight();
+        amb.setColor(ColorRGBA.White.mult(0.4f));
+        rootNode.addLight(amb);
+
+        // wire the camera-control input mappings now that we own the InputManager.
+        if (_inputHandler != null) {
+            _inputHandler.registerWith(inputManager);
+        }
+
+        // wire BUI input: attach the Jme3RootNode's RawInputListener to the InputManager, and hand
+        // it the RenderManager so embedded-3D widgets (BGeomView) can create per-component
+        // viewports.
+        if (_rnode instanceof Jme3RootNode) {
+            ((Jme3RootNode)_rnode).registerWith(inputManager);
+            ((Jme3RootNode)_rnode).setRenderManager(renderManager);
+        }
+
+        // hand BCursor the live InputManager so hardware cursors (BCursor.show) can install
+        // through jME3/GLFW. Mirrors the fork's static org.lwjgl.input.Mouse.setNativeCursor seam.
+        com.jmex.bui.BCursor.setInputManager(inputManager);
+
+        // render BUI through a SceneProcessor on the GUI viewport (the tools/jme3-host pattern):
+        // postQueue runs with the GUI viewport active; we switch into the 2D ortho overlay and
+        // bracket the window traversal with beginFrame/endFrame.
+        guiViewPort.addProcessor(new BuiProcessor());
+
+        // let the subclass finish initializing (creates the BangClient, etc.).
+        create();
     }
 
-    @Override public void resize (int width, int height) {
-        // when we're embedded in an AWT canvas (the editor), the GL context is created while
-        // the canvas is still 1x1; AWT lays it out to its real size afterwards, so we have to
-        // propagate the new dimensions to the display system, renderer, and camera as they
-        // come in (BUI windows, popups, and tooltips all lay out from the display system's
-        // recorded size, which is otherwise only set at window creation)
-        if (_display == null || _display.getRenderer() == null ||
-            _camera == null || width <= 0 || height <= 0) {
+    @Override // from com.jme3.app.LegacyApplication
+    public void reshape (int width, int height)
+    {
+        // jME3 calls this on the render thread whenever the framebuffer changes size: a windowed
+        // resize (dragging the window edge), a fullscreen toggle, or an AppSettings restart()
+        // (OptionsView.switchDisplayMode). super.reshape -> RenderManager.notifyReshape re-fits
+        // every viewport camera (the 3D board camera AND the guiViewPort/BUI camera) to the new
+        // size; do that first so the cameras and the perspective frustum below are correct.
+        super.reshape(width, height);
+        if (width <= 0 || height <= 0) {
             return;
         }
-        _display.setWidth(width);
-        _display.setHeight(height);
-        _display.getRenderer().reinit(width, height);
+
+        // re-apply our standard board perspective frustum for the new aspect ratio (mirrors the
+        // fork's JmeApp.resize, which called setPerspectiveFrustum after the renderer reinit;
+        // Camera.resize already preserves near/far, but this keeps the 45-degree fov + FRUSTUM_NEAR/
+        // FRUSTUM_FAR authoritative and matches OptionsView's explicit re-fit on a mode change).
         setPerspectiveFrustum(width, height);
-        _camera.update();
+
+        // propagate the new size to BUI: the fork relied on the DisplaySystem recording a single
+        // display size that BUI windows/popups/tooltips lay out from. Our backend records that size
+        // per-frame from the GUI camera in beginFrame; push the new size in now so layout that runs
+        // synchronously below (and on this tick) reads the new size rather than the previous frame's.
+        if (_backend != null) {
+            _backend.setDisplaySize(width, height);
+        }
+        // tell the BUI root the display resized (invalidates existing windows so they re-layout /
+        // re-anchor against the new size on the next tick).
+        if (_rnode != null) {
+            _rnode.displayResized(width, height);
+        }
+        // notify any host resize listeners (BangClient re-bounds the active full-screen place view
+        // -- TownView/BangView fill the screen; ShopView/LogonView re-center -- the way the fork's
+        // OptionsView re-bounded its _parent after recreateWindow).
+        for (ResizeListener l : _resizeListeners) {
+            try {
+                l.displayResized(width, height);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Registers a listener notified (on the render thread) whenever the host display is resized,
+     * after the viewport cameras and the BUI backend size have been updated. The active view
+     * controller uses this to re-bound full-screen views to the new size.
+     */
+    public void addResizeListener (ResizeListener listener)
+    {
+        if (!_resizeListeners.contains(listener)) {
+            _resizeListeners.add(listener);
+        }
+    }
+
+    /**
+     * Removes a previously registered resize listener.
+     */
+    public void removeResizeListener (ResizeListener listener)
+    {
+        _resizeListeners.remove(listener);
+    }
+
+    @Override // from SimpleApplication
+    public void simpleUpdate (float tpf)
+    {
+        _frameTime = tpf;
+        _frameRate = (tpf > 0) ? 1f / tpf : 0f;
+
+        // drain runnables posted from other threads (Presents run queue) on the render thread.
+        executeRunnables();
+
+        // advance the active camera path (game-start board tour, swing/roll, pans). The fork's
+        // main loop ticked this every frame; SimpleApplication.simpleUpdate must do the same or
+        // scripted camera moves (CameraHandler.moveCamera) are set but never animate.
+        if (_camhand != null) {
+            _camhand.update(tpf);
+        }
+
+        // drive per-frame BUI logic (tooltips, geom views, key repeat).
+        if (_rnode != null) {
+            _rnode.updateRootState(tpf);
+        }
+
+        // subclass per-frame work (sound stream updates, etc.).
+        update((long)(tpf * 1000));
+    }
+
+    @Override // from SimpleApplication
+    public void destroy ()
+    {
+        try {
+            cleanup();
+        } finally {
+            super.destroy();
+        }
+    }
+
+    /**
+     * Subclass hook: called once at the end of {@link #simpleInitApp}, on the render thread, with
+     * all services installed. Builds the client.
+     */
+    public void create ()
+    {
+    }
+
+    /**
+     * Subclass hook: called once per frame from {@link #simpleUpdate} on the render thread.
+     */
+    protected void update (long frameTick)
+    {
+    }
+
+    /**
+     * Subclass hook: called from {@link #destroy} as the app tears down.
+     */
+    protected void cleanup ()
+    {
     }
 
     /**
      * (Re)applies our standard perspective frustum to the camera for the given viewport size.
      */
-    protected void setPerspectiveFrustum (int width, int height)
+    public void setPerspectiveFrustum (int width, int height)
     {
-        _camera.setFrustumPerspective(45.0f, width/(float)height, 1, 10000);
-    }
-
-    @Override public void render () {
-        if (_dispatchThread == null) {
-            _dispatchThread = Thread.currentThread();
+        if (_camera != null && width > 0 && height > 0) {
+            _camera.setFrustumPerspective(45.0f, width / (float)height, FRUSTUM_NEAR, FRUSTUM_FAR);
         }
-
-        // update our simulation and render a frame
-        long frameStart = _timer.getTime();
-        if (_updateEnabled) {
-            update(frameStart);
-        }
-        if (_renderEnabled) {
-            render(frameStart);
-            _display.getRenderer().displayBackBuffer();
-        }
-    }
-
-    @Override public void pause () {
-    }
-
-    @Override public void resume () {
-    }
-
-    @Override public void dispose () {
     }
 
     /**
-     * Returns the frames per second averaged over the last 32 frames.
+     * Returns the frames per second averaged over recent frames.
      */
     public float getRecentFrameRate ()
     {
-        return _timer.getFrameRate();
+        return _frameRate;
     }
 
     /**
-     * Instructs the application to stop the main loop, cleanup and exit.
+     * Sets the main 3D ViewPort's clear/background color (the host owns the viewport; views that
+     * used to set the fork display background call through here).
      */
-    public void stop ()
+    public void setViewportBackground (ColorRGBA color)
     {
-        _finished = true;
-        Gdx.app.exit();
+        if (viewPort != null) {
+            viewPort.setBackgroundColor(color);
+        }
+    }
+
+    /**
+     * Sets the window title (replaces the fork {@code Display.setTitle}).
+     */
+    public void setWindowTitle (String title)
+    {
+        com.jme3.system.JmeContext ctx = getContext();
+        if (ctx != null) {
+            ctx.setTitle(title);
+        }
+    }
+
+    /**
+     * Installs the application/window icon(s) on the live LWJGL3/GLFW window (shown in the window
+     * corner and the OS task bar). Replaces the fork's LWJGL2 {@code Display.setIcon(ByteBuffer[])}:
+     * the fork handed each icon's raw RGBA bytes to LWJGL2; here we convert each {@link BufferedImage}
+     * to a {@link org.lwjgl.glfw.GLFWImage} (tightly-packed RGBA, top-left origin -- the layout GLFW
+     * wants, mirroring jME3's own {@code LwjglWindow.setWindowIcon}) and call
+     * {@code glfwSetWindowIcon}. GLFW copies the pixels internally, so the native buffers are freed
+     * (try-with-resources) once the call returns.
+     *
+     * <p>Must be called on the render thread once the GLFW window exists (i.e. from {@link #create}
+     * onward); {@code glfwGetCurrentContext} returns this app's window handle there. A no-op (logged
+     * only) if no icons are supplied or the window handle is unavailable.
+     */
+    public void setWindowIcons (java.awt.image.BufferedImage[] icons)
+    {
+        if (icons == null || icons.length == 0) {
+            return;
+        }
+        long window = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
+        if (window == 0L) {
+            System.err.println("JmeApp.setWindowIcons: no current GLFW window; icons not set.");
+            return;
+        }
+        try (org.lwjgl.glfw.GLFWImage.Buffer iconSet =
+                 org.lwjgl.glfw.GLFWImage.malloc(icons.length)) {
+            // keep references to the per-image pixel buffers alive until the glfw call returns.
+            java.nio.ByteBuffer[] pixels = new java.nio.ByteBuffer[icons.length];
+            for (int ii = 0; ii < icons.length; ii++) {
+                java.awt.image.BufferedImage img = icons[ii];
+                int w = img.getWidth(), h = img.getHeight();
+                java.nio.ByteBuffer buf = org.lwjgl.BufferUtils.createByteBuffer(w * h * 4);
+                for (int y = 0; y < h; y++) {
+                    for (int x = 0; x < w; x++) {
+                        int argb = img.getRGB(x, y);
+                        buf.put((byte)((argb >> 16) & 0xFF)); // R
+                        buf.put((byte)((argb >> 8) & 0xFF));  // G
+                        buf.put((byte)(argb & 0xFF));         // B
+                        buf.put((byte)((argb >> 24) & 0xFF)); // A
+                    }
+                }
+                buf.flip();
+                pixels[ii] = buf;
+                org.lwjgl.glfw.GLFWImage gimg = org.lwjgl.glfw.GLFWImage.malloc();
+                gimg.set(w, h, buf);
+                iconSet.put(ii, gimg);
+                gimg.free();
+            }
+            org.lwjgl.glfw.GLFW.glfwSetWindowIcon(window, iconSet);
+        } catch (Throwable t) {
+            System.err.println("JmeApp.setWindowIcons: failed to set window icon: " + t);
+        }
+    }
+
+    /**
+     * Returns true if the live LWJGL3/GLFW context is currently in fullscreen mode (reads the
+     * settings the context applied, not a stored preference). Replaces the fork's
+     * {@code DisplaySystem.isFullScreen()}.
+     */
+    public boolean isFullscreen ()
+    {
+        AppSettings s = (settings != null) ? settings : getContext().getSettings();
+        return s != null && s.isFullscreen();
+    }
+
+    /**
+     * Returns the current window width (logical pixels) of the live context, or 0 if unavailable.
+     */
+    public int getDisplayWidth ()
+    {
+        return (_camera != null) ? _camera.getWidth() : 0;
+    }
+
+    /**
+     * Returns the current window height (logical pixels) of the live context, or 0 if unavailable.
+     */
+    public int getDisplayHeight ()
+    {
+        return (_camera != null) ? _camera.getHeight() : 0;
+    }
+
+    /**
+     * Returns the native (desktop) resolution of the primary monitor as <code>{width, height,
+     * refreshHz}</code>, read from the LWJGL3/GLFW context's monitor list. Returns
+     * <code>null</code> if the context cannot supply it (e.g. headless). This replaces the fork's
+     * LWJGL2 {@code Display.getDisplayMode()} for picking a sane fullscreen target — the jME3
+     * {@code DisplayInfo} exposes only the monitor's current mode, which is exactly the mode we
+     * want for desktop fullscreen.
+     */
+    public int[] getPrimaryMonitorMode ()
+    {
+        try {
+            com.jme3.system.JmeContext ctx = getContext();
+            if (ctx == null) {
+                return null;
+            }
+            com.jme3.system.Displays displays = ctx.getDisplays();
+            if (displays == null || displays.size() == 0) {
+                return null;
+            }
+            com.jme3.system.DisplayInfo info = displays.get(ctx.getPrimaryDisplay());
+            if (info == null) {
+                return null;
+            }
+            return new int[] { info.getWidth(), info.getHeight(), info.getRate() };
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    /**
+     * Switches the live LWJGL3/GLFW window to the requested display mode by mutating our
+     * {@link AppSettings} and restarting the context (the jME3 way; the fork called
+     * {@code DisplaySystem.recreateWindow}). Safe to call from any thread — the work is posted to
+     * the render thread. A windowed switch resizes the existing window; a fullscreen switch
+     * recreates it against the primary monitor.
+     *
+     * @param width  desired window/framebuffer width.
+     * @param height desired window/framebuffer height.
+     * @param bpp    bits per pixel (16/24/32); &lt;= 0 leaves the current value.
+     * @param freq   refresh rate in Hz; &lt;= 0 leaves the current value.
+     * @param fullscreen whether to go fullscreen.
+     */
+    public void switchDisplayMode (
+        final int width, final int height, final int bpp, final int freq, final boolean fullscreen)
+    {
+        postRunnable(new Runnable() {
+            public void run () {
+                AppSettings s = settings;
+                if (s == null) {
+                    return;
+                }
+                s.setResizable(true);
+                s.setFullscreen(fullscreen);
+                if (bpp > 0) {
+                    s.setBitsPerPixel(bpp);
+                }
+                if (freq > 0) {
+                    s.setFrequency(freq);
+                }
+                // setResolution/setWindowSize keep the framebuffer and the logical window size in
+                // step (matters for HiDPI); both set so the GLFW window comes up at the size.
+                s.setWindowSize(width, height);
+                s.setResolution(width, height);
+                // applies the mutated settings to the context and triggers a GLFW window
+                // recreate; the framebuffer-resize callback re-fits the viewport cameras.
+                restart();
+            }
+        });
+    }
+
+    /**
+     * Returns a GL driver identity string (vendor / renderer / version) for the perf report
+     * (replaces the fork's LWJGL2 {@code GL11.glGetString} reads). Best-effort; must be called on
+     * the render thread.
+     */
+    public String getGLRendererString ()
+    {
+        try {
+            String vendor = org.lwjgl.opengl.GL11.glGetString(org.lwjgl.opengl.GL11.GL_VENDOR);
+            String renderer = org.lwjgl.opengl.GL11.glGetString(org.lwjgl.opengl.GL11.GL_RENDERER);
+            String version = org.lwjgl.opengl.GL11.glGetString(org.lwjgl.opengl.GL11.GL_VERSION);
+            return vendor + " / " + renderer + " / " + version;
+        } catch (Throwable t) {
+            return "unknown";
+        }
+    }
+
+    /**
+     * Requests a framebuffer screenshot be written to the local data dir on the next frame
+     * (replaces the fork {@code Renderer.takeScreenShot}). Uses a jME3 {@code ScreenshotAppState}.
+     */
+    public void takeScreenshot (String dir, String filename)
+    {
+        com.jme3.app.state.ScreenshotAppState shotter =
+            stateManager.getState(com.jme3.app.state.ScreenshotAppState.class);
+        if (shotter == null) {
+            shotter = new com.jme3.app.state.ScreenshotAppState(dir + java.io.File.separator);
+            stateManager.attach(shotter);
+        }
+        shotter.takeScreenshot();
     }
 
     // from interface RunQueue
     public void postRunnable (Runnable r)
     {
-        Gdx.app.postRunnable(r);
+        // queued here; drained on the jME3 render thread in simpleUpdate (replacing gdx's
+        // postRunnable). If we are already on the render thread we could run immediately, but
+        // deferring to the next frame matches the old semantics.
+        _runnables.add(r);
+    }
+
+    /**
+     * Drains and runs any queued runnables. Called once per frame on the render thread.
+     */
+    public void executeRunnables ()
+    {
+        Runnable r;
+        while ((r = _runnables.poll()) != null) {
+            try {
+                r.run();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
     }
 
     // from interface RunQueue
@@ -187,60 +585,24 @@ public class JmeApp
         return !_finished;
     }
 
-    /**
-     * Initializes the underlying rendering system, creating a display of
-     * the proper resolution and depth.
-     */
-    protected void initDisplay ()
-        throws JmeException
+    @Override // from SimpleApplication / Application
+    public void stop ()
     {
-        // create the main display system
-        _display = DisplaySystem.getDisplaySystem();
-
-        // tell JME about GDX's display parameters
-        boolean fullscreen = false; // TODO
-        _display.createWindow(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
-                              Gdx.graphics.getBufferFormat().depth, 60, fullscreen);
-
-        // create a camera
-        int width = _display.getWidth(), height = _display.getHeight();
-        _camera = _display.getRenderer().createCamera(width, height);
-
-        // start with a black background
-        _display.getRenderer().setBackgroundColor(ColorRGBA.black);
-
-        // enable all of the "quick compares," which means that states will
-        // be refreshed only when necessary
-        Arrays.fill(RenderState.QUICK_COMPARE, true);
-
-        // set up the camera
-        setPerspectiveFrustum(width, height);
-        Vector3f loc = new Vector3f(0.0f, 0.0f, 25.0f);
-        Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
-        Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
-        Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);
-        _camera.setFrame(loc, left, up, dir);
-        _camera.update();
-        _display.getRenderer().setCamera(_camera);
-
-        // tell the renderer to keep track of rendering information (total
-        // triangles drawn, etc.)
-        _display.getRenderer().enableStatistics(true);
+        _finished = true;
+        super.stop();
     }
 
     /**
-     * Sets up a main input controller to handle the camera and deal with
-     * global user input.
+     * Sets up a main input controller to handle the camera and deal with global user input.
      */
     protected void initInput ()
     {
         _camhand = createCameraHandler(_camera);
-        _input = createInputHandler(_camhand);
+        _inputHandler = createInputHandler(_camhand);
     }
 
     /**
-     * Creates the camera handler which provides various camera manipulation
-     * functionality.
+     * Creates the camera handler which provides various camera manipulation functionality.
      */
     protected CameraHandler createCameraHandler (Camera camera)
     {
@@ -248,50 +610,22 @@ public class JmeApp
     }
 
     /**
-     * Creates the input handler used to control our camera and manage non-UI
-     * keyboard input.
+     * Creates the input handler (replacing the fork's polled {@code InputHandler}). Subclasses
+     * override to install a game- or editor-specific handler.
      */
-    protected InputHandler createInputHandler (CameraHandler hand)
+    protected GodViewHandler createInputHandler (CameraHandler camhand)
     {
-        return new InputHandler();
+        return new GodViewHandler(camhand);
     }
 
     /**
-     * Creates our root node and sets up the basic rendering system.
+     * Creates our root node and the geometry sub-node.
      */
     protected void initRoot ()
     {
         _root = new Node("Root");
-
-        // set up a node for our geometry
         _geom = new Node("Geometry");
-
-        // make everything opaque by default
-        _geom.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
-
-        // set up a zbuffer
-        ZBufferState zbuf = _display.getRenderer().createZBufferState();
-        zbuf.setEnabled(true);
-        zbuf.setFunction(ZBufferState.CF_LEQUAL);
-        _geom.setRenderState(zbuf);
         _root.attachChild(_geom);
-    }
-
-    /**
-     * Sets up some default lighting.
-     */
-    protected void initLighting ()
-    {
-        PointLight light = new PointLight();
-        light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-        light.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f));
-        light.setLocation(new Vector3f(100, 100, 100));
-        light.setEnabled(true);
-
-        _lights = _display.getRenderer().createLightState();
-        _lights.setEnabled(true);
-        _lights.attach(light);
-        _geom.setRenderState(_lights);
     }
 
     /**
@@ -299,86 +633,23 @@ public class JmeApp
      */
     protected void initInterface ()
     {
-        // set up a node for our interface
         _iface = new Node("Interface");
         _root.attachChild(_iface);
-
-        // create our root node
         _rnode = createRootNode();
-        _iface.attachChild(_rnode);
-
-        // we don't hide the cursor
-        MouseInput.get().setCursorVisible(true);
     }
 
     /**
-     * Allows a customized root node to be created.
+     * Allows a customized BUI root node to be created. The default is the jME3 input-fed
+     * {@link Jme3RootNode}.
      */
     protected BRootNode createRootNode ()
     {
-        return new PolledRootNode(_timer, _input);
+        return new Jme3RootNode();
     }
 
     /**
-     * Called every frame to update whatever sort of real time business we
-     * have that needs updating.
-     */
-    protected void update (long frameTick)
-    {
-        // recalculate the frame rate
-        _timer.update();
-
-        // update the camera handler
-        _camhand.update(_frameTime);
-
-        // run all of the controllers attached to nodes
-        _frameTime = (_lastTick == 0L) ? 0f : (float)(frameTick - _lastTick) /
-            _timer.getResolution();
-        _lastTick = frameTick;
-        _root.updateGeometricState(_frameTime, true);
-    }
-
-    /**
-     * Called every frame to issue the rendering instructions for this frame.
-     */
-    protected void render (float frameTime)
-    {
-        // clear out our previous information
-        _display.getRenderer().clearStatistics();
-        _display.getRenderer().clearBuffers();
-
-        // draw the root node and all of its children
-        _display.getRenderer().draw(_root);
-
-        // this would render bounding boxes
-        // _display.getRenderer().drawBounds(_root);
-    }
-
-    /**
-     * Called when the application is terminating cleanly after having
-     * successfully completed initialization and begun the main loop.
-     */
-    protected void cleanup ()
-    {
-        _display.reset();
-        KeyInput.destroyIfInitalized();
-        MouseInput.destroyIfInitalized();
-    }
-
-    /**
-     * Closes the display and exits the JVM process.
-     */
-    protected void exit ()
-    {
-        if (_display != null) {
-            _display.close();
-        }
-        System.exit(0);
-    }
-
-    /**
-     * Prepends the necessary bits onto the supplied path to properly
-     * locate it in our configuration directory.
+     * Prepends the necessary bits onto the supplied path to properly locate it in our
+     * configuration directory.
      */
     protected String getConfigPath (String file)
     {
@@ -387,7 +658,6 @@ public class JmeApp
         if (!StringUtil.isBlank(home)) {
             cfgdir = home + File.separator + cfgdir;
         }
-        // create the configuration directory if it does not already exist
         File dir = new File(cfgdir);
         if (!dir.exists()) {
             dir.mkdir();
@@ -395,59 +665,125 @@ public class JmeApp
         return cfgdir + File.separator + file;
     }
 
-    /** Provides access to various needed bits. */
-    protected JmeContext _ctx = new JmeContext() {
-        public DisplaySystem getDisplay () {
-            return _display;
-        }
+    /**
+     * Notified when the host display (framebuffer) is resized. Replaces the fork's implicit
+     * reliance on {@code DisplaySystem} recording the size plus {@code OptionsView} re-bounding the
+     * active view: registered listeners (the game client) re-bound their full-screen views.
+     */
+    public interface ResizeListener
+    {
+        /** Called on the render thread once the viewport cameras and BUI backend size have been
+         * updated to the new {@code width}x{@code height} (pixels). */
+        void displayResized (int width, int height);
+    }
 
-        public Renderer getRenderer () {
-            return _display.getRenderer();
+    /** Our {@link JmeContext} implementation, reading the host's services. */
+    protected class ContextImpl implements JmeContext
+    {
+        public AssetManager getAssetManager () {
+            return _assetManager;
         }
-
+        public RenderManager getRenderManager () {
+            return _renderManager;
+        }
+        public Camera getCamera () {
+            return _camera;
+        }
         public CameraHandler getCameraHandler () {
             return _camhand;
         }
-
+        public GodViewHandler getInputHandler () {
+            return _inputHandler;
+        }
         public Node getGeometry () {
             return _geom;
         }
-
         public Node getInterface () {
             return _iface;
         }
-
-        public InputHandler getInputHandler () {
-            return _input;
-        }
-
         public BRootNode getRootNode () {
             return _rnode;
         }
-    };
+    }
 
-    protected Timer _timer;
+    /**
+     * Renders BUI during the GUI viewport's queue flush, using the proven tools/jme3-host
+     * approach: switch into jME3's 2D ortho overlay (1 unit == 1 pixel, origin bottom-left =
+     * BUI's coordinate space) and bracket the window traversal with the backend's
+     * beginFrame/endFrame.
+     */
+    protected class BuiProcessor implements SceneProcessor
+    {
+        public void initialize (RenderManager rm, ViewPort vp) {
+            _rm = rm;
+            _initialized = true;
+        }
+        public boolean isInitialized () {
+            return _initialized;
+        }
+        public void postQueue (RenderQueue rq) {
+            if (_rnode == null || _rm == null) {
+                return;
+            }
+            Camera gcam = guiViewPort.getCamera();
+            int w = gcam.getWidth(), h = gcam.getHeight();
+            _rm.setCamera(gcam, true);
+            _backend.beginFrame(_rm, w, h);
+            try {
+                _rnode.renderWindows(null);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            } finally {
+                _backend.endFrame();
+                _rm.setCamera(gcam, false);
+            }
+        }
+        public void preFrame (float tpf) {}
+        public void postFrame (FrameBuffer out) {}
+        public void reshape (ViewPort vp, int w, int h) {}
+        public void cleanup () { _initialized = false; }
+        public void setProfiler (AppProfiler profiler) {}
+
+        protected RenderManager _rm;
+        protected boolean _initialized;
+    }
+
+    /** Near plane of the standard board perspective frustum. */
+    public static final float FRUSTUM_NEAR = 1f;
+
+    /**
+     * Far plane of the standard board perspective frustum. The fork's jME1 sky queue did not clip
+     * the full-size cloud disk (SkyNode CLOUD_RADIUS=10000, CLOUD_HEIGHT=500) against the camera
+     * far plane, but jME3 does; with a 10000 far the disk's visible rim (slant ~10012) was clipped
+     * and the clouds disappeared. Push the far plane out so the full-size disk renders unclipped,
+     * matching the fork look. Board geometry (terrain/units/props) lives within ~a few hundred
+     * units, so the wider near:far ratio (1:100000) does not introduce visible depth z-fighting.
+     */
+    public static final float FRUSTUM_FAR = 100000f;
+
     protected Thread _dispatchThread;
-    protected long _lastTick;
     protected float _frameTime;
+    protected float _frameRate;
 
-    protected String _api;
-    protected DisplaySystem _display;
+    protected AssetManager _assetManager;
+    protected RenderManager _renderManager;
     protected Camera _camera;
     protected CameraHandler _camhand;
+    protected GodViewHandler _inputHandler;
 
-    protected InputHandler _input;
     protected BRootNode _rnode;
+    protected Jme3RenderBackend _backend;
+    protected final JmeContext _context = new ContextImpl();
 
-    protected long _ticksPerFrame;
-    protected int _targetFPS;
     protected boolean _updateEnabled = true, _renderEnabled = true;
     protected boolean _finished;
-    protected int _failures;
 
     protected Node _root, _geom, _iface;
-    protected LightState _lights;
 
-    /** If we fail 100 frames in a row, stick a fork in ourselves. */
-    protected static final int MAX_SUCCESSIVE_FAILURES = 100;
+    /** Runnables posted from other threads, drained on the render thread. */
+    protected final ConcurrentLinkedQueue<Runnable> _runnables = new ConcurrentLinkedQueue<>();
+
+    /** Host display-resize listeners (notified on the render thread from {@link #reshape}). */
+    protected final java.util.List<ResizeListener> _resizeListeners =
+        new java.util.concurrent.CopyOnWriteArrayList<>();
 }

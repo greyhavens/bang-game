@@ -3,7 +3,7 @@
 
 package com.threerings.bang.client.bui;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Label;
@@ -72,7 +72,7 @@ public class PaletteIcon extends SelectableIcon
     }
 
     @Override // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
         _text.render(renderer, 0, 0, getWidth(), getHeight(), _alpha);

@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 import com.threerings.bang.client.Config;
 

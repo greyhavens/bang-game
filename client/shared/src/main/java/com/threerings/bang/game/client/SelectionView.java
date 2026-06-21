@@ -166,6 +166,16 @@ public class SelectionView extends SteelWindow
             _bigShotId = -1;
         }
 
+        // DEBUG self-verify aid (-Dbang.debug.autoteam=true on the client JVM): auto-pick a
+        // default team and submit immediately, so a non-autoplay -test game can reach interactive
+        // play WITHOUT hand-driving this BUI picker (XTest synthetic clicks can't drive BUI). This
+        // lets a dev reach the play phase in control of their own units and then board-pick a unit
+        // to exercise selection/move-highlight rendering. No-op in normal play.
+        if (DEBUG_AUTOTEAM) {
+            autoSelectTeam();
+            return;
+        }
+
         // if they have no big shots, skip that selection mode
         if (bscount > 1) {
             setStep(BIGSHOT, _units);
@@ -347,6 +357,36 @@ public class SelectionView extends SteelWindow
         _ready.setEnabled(_units.getSelectedUnit() != null);
     }
 
+    /**
+     * DEBUG (-Dbang.debug.autoteam): fills the team with the cheapest available normal town units
+     * and submits the selection immediately, reusing the normal {@link #sendTeamSelection} path.
+     * Keeps whatever big shot was resolved in the constructor ({@link #_bigShotId}).
+     */
+    protected void autoSelectTeam ()
+    {
+        // gather the selectable normal town units (same filter as setPickTeamMode)
+        ArrayList<UnitConfig> units = new ArrayList<UnitConfig>();
+        CollectionUtil.addAll(units, UnitConfig.getTownUnits(_bangobj.townId));
+        for (Iterator<UnitConfig> iter = units.iterator(); iter.hasNext(); ) {
+            UnitConfig uc = iter.next();
+            if (uc.rank != UnitConfig.Rank.NORMAL || uc.scripCost < 0) {
+                iter.remove();
+            }
+        }
+        Collections.sort(units, new Comparator<UnitConfig>() {
+            public int compare (UnitConfig u1, UnitConfig u2) {
+                return (u1.scripCost == u2.scripCost) ?
+                    u1.type.compareTo(u2.type) : (u1.scripCost - u2.scripCost);
+            }
+        });
+
+        // fill the team with the cheapest units we can field
+        for (int ii = 0; ii < _tconfigs.length && ii < units.size(); ii++) {
+            _tconfigs[ii] = units.get(ii);
+        }
+        sendTeamSelection(new int[0]);
+    }
+
     protected void updateTeam ()
     {
         int uidx = 0, selected = 0, enabled = 0;
@@ -468,4 +508,9 @@ public class SelectionView extends SteelWindow
     protected static final int BIGSHOT = 0;
     protected static final int TEAM = 1;
     protected static final int CARDS = 2;
+
+    /** DEBUG: when {@code -Dbang.debug.autoteam=true} on the client JVM, the team picker auto-fills
+     * a default team and submits, so a non-autoplay {@code -test} game reaches interactive play
+     * without hand-driving the BUI picker (which XTest can't). For dev self-verification only. */
+    protected static final boolean DEBUG_AUTOTEAM = Boolean.getBoolean("bang.debug.autoteam");
 }

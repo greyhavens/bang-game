@@ -6,7 +6,7 @@ package com.threerings.bang.game.client.sprite;
 import java.util.List;
 import java.awt.Point;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 import com.samskivert.util.ListUtil;
 

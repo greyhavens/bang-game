@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.scene.Spatial;
+import com.jme3.scene.Spatial;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Sprite;

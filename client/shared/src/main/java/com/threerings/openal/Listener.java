@@ -91,7 +91,8 @@ public class Listener
         if (_ax != ax || _ay != ay || _az != az || _ux != ux || _uy != uy || _uz != uz) {
             _vbuf.put(_ax = ax).put(_ay = ay).put(_az = az);
             _vbuf.put(_ux = ux).put(_uy = uy).put(_uz = uz).rewind();
-            AL10.alListener(AL10.AL_ORIENTATION, _vbuf);
+            // LWJGL3 renamed the float-vector overload alListener(int,FloatBuffer) -> alListenerfv.
+            AL10.alListenerfv(AL10.AL_ORIENTATION, _vbuf);
         }
     }
 

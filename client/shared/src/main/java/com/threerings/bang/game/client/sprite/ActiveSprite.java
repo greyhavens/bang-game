@@ -6,10 +6,9 @@ package com.threerings.bang.game.client.sprite;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.state.RenderState;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
 
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.RandomUtil;
@@ -162,11 +161,11 @@ public class ActiveSprite extends PieceSprite
     }
     
     @Override // documentation inherited
-    public void updateWorldData (float time)
+    public void updateLogicalState (float time)
     {
         // wait until we're done moving to do any actions or idle animations
         if (isMoving() || _complexAction == ComplexAction.ACTIVE) {
-            super.updateWorldData(time);
+            super.updateLogicalState(time);
             return;
         }
         
@@ -200,7 +199,7 @@ public class ActiveSprite extends PieceSprite
             }
         }
 
-        super.updateWorldData(time);
+        super.updateLogicalState(time);
     }
 
     /** 
@@ -282,18 +281,19 @@ public class ActiveSprite extends PieceSprite
     protected void startRiseFade (
         float height, final boolean in, final float duration)
     {
-        setRenderState(RenderUtil.blendAlpha);
+        // jME3: fade rides on the SpriteMaterialState diffuse alpha (no fixed-function alpha/
+        // material state on the node). The model's geometry materials are made alpha-blended by
+        // SpriteMaterialState.apply when the tint is pushed below.
         if (_mstate == null) {
-            _mstate = _ctx.getRenderer().createMaterialState();
-            _mstate.setAmbient(ColorRGBA.white);
-            _mstate.setDiffuse(ColorRGBA.white);
-            setRenderState(_mstate);
+            _mstate = new SpriteMaterialState();
+            _mstate.setAmbient(ColorRGBA.White);
+            _mstate.setDiffuse(ColorRGBA.White);
         }
-        updateRenderState();
 
-        Vector3f tin = new Vector3f(localTranslation),
-            tout = localRotation.mult(Vector3f.UNIT_Z);
-        tout.multLocal(height).addLocal(localTranslation);
+        Vector3f trans = getLocalTranslation();
+        Vector3f tin = new Vector3f(trans),
+            tout = getLocalRotation().mult(Vector3f.UNIT_Z);
+        tout.multLocal(height).addLocal(trans);
         move(new LinePath(this, in ? tout : tin, in ? tin : tout,
             duration) {
             public void update (float time) {
@@ -301,19 +301,26 @@ public class ActiveSprite extends PieceSprite
                 float a = Math.min(Math.max(in ? (_accum / _duration) :
                     (1f - _accum / _duration), 0f), 1f);
                 _mstate.getDiffuse().a = a;
-                if (_shadow != null) {
-                    _shadow.getBatch(0).getDefaultColor().a = a;
+                _mstate.apply(ActiveSprite.this);
+                if (_shadow != null && _shadow.getMaterial() != null &&
+                        _shadow.getMaterial().getMaterialDef()
+                            .getMaterialParam("Color") != null) {
+                    ColorRGBA sc = new ColorRGBA(ColorRGBA.White);
+                    sc.a = a;
+                    _shadow.getMaterial().setColor("Color", sc);
                 }
             }
             public void wasRemoved () {
                 super.wasRemoved();
                 if (in) {
-                    clearRenderState(RenderState.RS_ALPHA);
+                    // reset the tint to opaque white; the shadow material keeps its colour.
+                    if (_mstate != null) {
+                        _mstate.getDiffuse().set(ColorRGBA.White);
+                        _mstate.apply(ActiveSprite.this);
+                    }
                     if (!isShadowable()) {
-                        clearRenderState(RenderState.RS_MATERIAL);
                         _mstate = null;
                     }
-                    updateRenderState();
                 }
             }
         });
@@ -422,9 +429,18 @@ public class ActiveSprite extends PieceSprite
             _model.fastForwardAnimation(time);
         }
         
-        // if we are in low detail mode, stop the idle animation at the first frame
+        // if we are in low detail mode, stop the idle animation at the first frame. The fork posed
+        // the mesh here via _model.updateGeometricState(0f, false) BEFORE stopping; on jME3 the
+        // SkinningControl only deforms the skin when its controls actually run a tick while the
+        // action is current. If we just call stopAnimation() (which removes the composer action)
+        // the SkinningControl never consumes the posed armature and the skinned mesh renders as an
+        // unposed/exploded mass (BUG-9: the neutral homestead). So drive the controls with two
+        // tpf=0 ticks (the bake documents this skin-then-pose ordering in Models.poseAnimation),
+        // update geometric state to bake the frame-0 pose, and only then stop the animation.
         if (!BangPrefs.isMediumDetail() && _idle != null) {
-            _model.updateGeometricState(0f, false);
+            _model.updateLogicalState(0f);
+            _model.updateLogicalState(0f);
+            _model.updateGeometricState();
             _model.stopAnimation();
             _nextIdle = Float.MAX_VALUE;
         }

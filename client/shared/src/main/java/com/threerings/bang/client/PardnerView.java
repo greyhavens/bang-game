@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 
 import com.google.common.collect.Maps;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -213,7 +213,7 @@ public class PardnerView extends IconPalette
         }
 
         @Override // documentation inherited
-        protected void renderComponent (Renderer renderer)
+        protected void renderComponent (RenderManager renderer)
         {
             super.renderComponent(renderer);
             if (_location != null) {

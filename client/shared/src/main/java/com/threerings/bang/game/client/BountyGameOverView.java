@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.system.DisplaySystem;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
@@ -326,7 +325,7 @@ public class BountyGameOverView extends SteelWindow
     {
         int oy = getY(), oheight = getHeight(); // preserve our funny vertical centering
         pack();
-        int width = DisplaySystem.getDisplaySystem().getWidth();
+        int width = _ctx.getCamera().getWidth();
         setLocation((width-getWidth())/2, oy + (oheight-getHeight())/2);
     }
 

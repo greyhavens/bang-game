@@ -7,7 +7,7 @@ import java.util.List;
 
 import java.awt.Point;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 import com.threerings.bang.client.Config;
 
@@ -73,7 +73,7 @@ public class ThunderbirdSprite extends UnitSprite
         // If we're dying, drop us to the ground while playing the dying
         // animation
         if (_action == "dying") {
-            Vector3f air = new Vector3f(localTranslation),
+            Vector3f air = new Vector3f(getLocalTranslation()),
                      ground = toWorldCoords(_piece.x, _piece.y,
                         _piece.computeElevation(_view.getBoard(),
                             _piece.x, _piece.y, false), new Vector3f());

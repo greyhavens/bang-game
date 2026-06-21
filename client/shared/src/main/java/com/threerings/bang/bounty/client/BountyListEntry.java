@@ -3,7 +3,7 @@
 
 package com.threerings.bang.bounty.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
@@ -127,7 +127,7 @@ public class BountyListEntry extends SelectableIcon
     }
 
     @Override // from BComponent
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
 

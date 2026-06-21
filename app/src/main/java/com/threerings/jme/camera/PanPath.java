@@ -21,9 +21,9 @@
 
 package com.threerings.jme.camera;
 
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 
 /**
  * Pans the camera to the specified location in the specified amount of time.

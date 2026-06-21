@@ -12,7 +12,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioSystem;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
@@ -28,12 +27,7 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
-import org.lwjgl.openal.AL10;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.WaveData;
-
-import com.jme.image.Image;
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCursor;
@@ -231,26 +225,13 @@ public class BangUI
                     return loadOggClip(file);
                 }
 
-                // TODO: preconvert all of our sounds to a standard format and then mmap() the
-                // sound files and stuff them directly into the clip; WaveData does all sorts of
-                // expensive conversion
-                Clip clip = new Clip();
-                WaveData wfile = null;
-                Exception cause = null;
-                try {
-                    wfile = WaveData.create(AudioSystem.getAudioInputStream(file));
-                } catch (Exception e) {
-                    cause = e;
-                }
-                if (wfile == null) {
-                    String err = "Error loading sound resource '" + path + "'.";
-                    throw (IOException)new IOException(err).initCause(cause);
-                }
-
-                clip.format = wfile.format;
-                clip.frequency = wfile.samplerate;
-                clip.data = wfile.data;
-                return clip;
+                // TODO(phase3-host): the fork loaded non-OGG (WAV) clips via LWJGL2
+                // org.lwjgl.util.WaveData. The com.threerings.openal sound layer moves to
+                // LWJGL3/jME3 audio at Phase 3; re-implement WAV decoding there (jME3
+                // WAVLoader or a stb_vorbis-style path). All shipped Bang sounds are .ogg, so
+                // this branch is unused at runtime; fail loudly if a WAV path is requested.
+                throw new IOException("WAV clip loading is deferred to the Phase-3 audio cutover " +
+                    "(non-OGG sound '" + path + "').");
             }
         };
 
@@ -267,28 +248,31 @@ public class BangUI
     /**
      * Configures our application icons (shown in the corner of the window and in the task bar,
      * etc.).
+     *
+     * <p>jME3 cutover (Phase 3): the fork loaded each icon PNG into a fork {@code com.jme.image.Image}
+     * and handed its raw RGBA {@code ByteBuffer} to LWJGL2 {@code Display.setIcon(ByteBuffer[])}.
+     * Here we load the same icon PNGs straight from the unpacked resource tree (the resource manager
+     * and image cache are not yet set up when this runs -- it is called from {@link BangApp#create})
+     * and hand the {@link BufferedImage}s to the host, which installs them on the live LWJGL3/GLFW
+     * window via {@code glfwSetWindowIcon} (see {@code JmeApp.setWindowIcons}).
      */
-    public static void configIcons ()
+    public static void configIcons (com.threerings.jme.JmeApp app)
     {
-        ByteBuffer[] icons = new ByteBuffer[ICON_SIZES.length];
+        BufferedImage[] icons = new BufferedImage[ICON_SIZES.length];
         for (int ii = 0; ii < ICON_SIZES.length; ii++) {
             String path = "rsrc/ui/icons/" + ICON_SIZES[ii] + "_icon.png";
             try {
                 // getdown has already unpacked our resources, so we can load these images straight
                 // from the filesystem (this method gets called before the resource manager and
                 // image cache are set up, otherwise we'd use them)
-                BufferedImage bicon = ImageIO.read(BangUtil.getResourceFile(path));
-                Image icon = ImageCache.createImage(bicon, false);
-                icons[ii] = icon.getData();
+                icons[ii] = ImageIO.read(BangUtil.getResourceFile(path));
             } catch (Exception e) {
                 log.warning("Failed to load icon", "path", path, e);
                 return;
             }
         }
-        try {
-            Display.setIcon(icons);
-        } catch (Exception e) {
-            log.warning("Failed to set icons.", e);
+        if (app != null) {
+            app.setWindowIcons(icons);
         }
     }
 
@@ -538,8 +522,10 @@ public class BangUI
     {
         OggInputStream istream = new OggInputStream(new FileInputStream(file));
         Clip clip = new Clip();
+        // The AL_FORMAT_* token values (0x1101/0x1103) are stable across the LWJGL2->LWJGL3 audio
+        // cutover; kept as local constants to avoid an AL10 import in this UI class.
         clip.format = (istream.getFormat() == OggInputStream.FORMAT_MONO16) ?
-            AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16;
+            AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
         clip.frequency = istream.getRate();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
@@ -600,6 +586,10 @@ public class BangUI
 
     /** A cache of {@link BCursor} instances. */
     protected static HashMap<String, BCursor> _ccache = new HashMap<String, BCursor>();
+
+    /** OpenAL clip format tokens (stable across LWJGL2/3; see loadOggClip / Phase-3 audio). */
+    protected static final int AL_FORMAT_MONO16 = 0x1101;
+    protected static final int AL_FORMAT_STEREO16 = 0x1103;
 
     /** The size (in bytes) of the pool to maintain for UI textures. */
     protected static final int TEXTURE_POOL_SIZE = 1024 * 1024 * 4;

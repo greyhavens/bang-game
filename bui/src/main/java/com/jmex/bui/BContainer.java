@@ -8,7 +8,7 @@ package com.jmex.bui;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.layout.BLayoutManager;
 import com.jmex.bui.util.Dimension;
@@ -286,7 +286,7 @@ public class BContainer extends BComponent
     }
 
     // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
 

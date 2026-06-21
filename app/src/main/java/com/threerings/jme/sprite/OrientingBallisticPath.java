@@ -21,8 +21,8 @@
 
 package com.threerings.jme.sprite;
 
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
 /**
  * A ballistic path that orients the sprite toward the velocity vector as

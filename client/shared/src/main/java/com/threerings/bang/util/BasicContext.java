@@ -3,7 +3,7 @@
 
 package com.threerings.bang.util;
 
-import com.jme.scene.Spatial;
+import com.jme3.scene.Spatial;
 
 import com.jmex.bui.BImage;
 import com.jmex.bui.BStyleSheet;
@@ -16,7 +16,6 @@ import com.threerings.jme.JmeApp;
 import com.threerings.jme.JmeContext;
 import com.threerings.jme.model.Model;
 import com.threerings.jme.util.ImageCache;
-import com.threerings.jme.util.ShaderCache;
 import com.threerings.media.image.ImageManager;
 import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
@@ -65,9 +64,6 @@ public interface BasicContext extends JmeContext
 
     /** Returns a reference to our texture cache. */
     public TextureCache getTextureCache ();
-
-    /** Returns a reference to our shader cache. */
-    public ShaderCache getShaderCache ();
 
     /** Returns a reference to our model cache. */
     public ModelCache getModelCache ();

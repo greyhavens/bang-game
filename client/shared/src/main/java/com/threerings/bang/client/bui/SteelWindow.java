@@ -3,7 +3,7 @@
 
 package com.threerings.bang.client.bui;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
@@ -49,7 +49,7 @@ public class SteelWindow extends BDecoratedWindow
     }
 
     @Override // documentation inherited
-    protected void renderBackground (Renderer renderer)
+    protected void renderBackground (RenderManager renderer)
     {
         // we don't call super because we need to jimmy things up a bit
         int hwidth = _header.getWidth() + 2*HEADER_EDGE;

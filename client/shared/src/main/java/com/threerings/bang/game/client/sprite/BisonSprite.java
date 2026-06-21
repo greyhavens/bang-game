@@ -6,16 +6,14 @@ package com.threerings.bang.game.client.sprite;
 import java.awt.Point;
 import java.util.List;
 
-import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Controller;
-import com.jme.scene.state.MaterialState;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.control.AbstractControl;
 
 import com.threerings.jme.model.Model;
-
-import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.StampedeHandler;
 import com.threerings.bang.game.data.BangBoard;
@@ -41,18 +39,13 @@ public class BisonSprite extends MobileSprite
         
         // fade the bison in and out at the beginning and end of the path
         final float duration = (path.size() - 1) / speed;
-        final MaterialState mstate = _ctx.getRenderer().createMaterialState();
-        mstate.getAmbient().set(ColorRGBA.white);
-        mstate.getDiffuse().set(ColorRGBA.white);
-        setRenderState(mstate);
-        setRenderState(RenderUtil.blendAlpha);
-        setRenderState(RenderUtil.overlayZBuf);
-        setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        updateRenderState();
-        addController(new Controller() {
-            public void update (float time) {
+        final SpriteMaterialState mstate = new SpriteMaterialState();
+        mstate.getAmbient().set(ColorRGBA.White);
+        mstate.getDiffuse().set(ColorRGBA.White);
+        addControl(new AbstractControl() {
+            protected void controlUpdate (float time) {
                 if ((_elapsed += time) >= duration) {
-                    removeController(this);
+                    spatial.removeControl(this);
                     return;
                 } else if (_elapsed > duration - FADE_TIME) {
                     mstate.getDiffuse().a = (duration - _elapsed) / FADE_TIME;
@@ -61,7 +54,9 @@ public class BisonSprite extends MobileSprite
                 } else {
                     mstate.getDiffuse().a = _elapsed / FADE_TIME;
                 }
+                mstate.apply(BisonSprite.this);
             }
+            protected void controlRender (RenderManager rm, ViewPort vp) {}
             protected float _elapsed;
         });
     }

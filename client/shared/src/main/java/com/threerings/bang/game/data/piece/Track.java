@@ -3,13 +3,7 @@
 
 package com.threerings.bang.game.data.piece;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TrackSprite;
@@ -107,24 +101,6 @@ public class Track extends Piece
     public PieceSprite createSprite ()
     {
         return new TrackSprite();
-    }
-    
-    @Override // documentation inherited
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        type = capsule.readByte("type", (byte)0);
-    }
-    
-    @Override // documentation inherited
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        super.write(ex);
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(type, "type", (byte)0);
     }
     
     /**

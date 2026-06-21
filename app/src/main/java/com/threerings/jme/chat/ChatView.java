@@ -21,7 +21,7 @@
 
 package com.threerings.jme.chat;
 
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -124,16 +124,16 @@ public class ChatView extends BContainer
         if (msg instanceof UserMessage) {
             UserMessage umsg = (UserMessage) msg;
             if (ChatCodes.USER_CHAT_TYPE.equals(umsg.localtype)) {
-                append("[" + umsg.speaker + " whispers] ", ColorRGBA.green);
+                append("[" + umsg.speaker + " whispers] ", ColorRGBA.Green);
                 append(umsg.message + "\n");
             } else {
-                append("<" + umsg.speaker + "> ", ColorRGBA.blue);
+                append("<" + umsg.speaker + "> ", ColorRGBA.Blue);
                 append(umsg.message + "\n");
             }
             return true;
 
         } else if (msg instanceof SystemMessage) {
-            append(msg.message + "\n", ColorRGBA.red);
+            append(msg.message + "\n", ColorRGBA.Red);
             return true;
 
         } else {
@@ -150,7 +150,7 @@ public class ChatView extends BContainer
 
     protected void displayError (String message)
     {
-        append(message + "\n", ColorRGBA.red);
+        append(message + "\n", ColorRGBA.Red);
     }
 
     protected void append (String text, ColorRGBA color)

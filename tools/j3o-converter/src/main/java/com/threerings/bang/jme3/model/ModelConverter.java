@@ -34,12 +34,13 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.util.BufferUtils;
 
-import com.threerings.jme.model.Model;
-import com.threerings.jme.model.ModelAnimAccess;
-import com.threerings.jme.model.ModelMesh;
-import com.threerings.jme.model.ModelMeshAccess;
-import com.threerings.jme.model.ModelNode;
-import com.threerings.jme.model.SkinMesh;
+import com.threerings.jme.tools.model.Model;
+import com.threerings.jme.model.ModelTextureResolver;
+import com.threerings.jme.tools.model.ModelAnimAccess;
+import com.threerings.jme.tools.model.ModelMesh;
+import com.threerings.jme.tools.model.ModelMeshAccess;
+import com.threerings.jme.tools.model.ModelNode;
+import com.threerings.jme.tools.model.SkinMesh;
 
 /**
  * Converts a loaded fork {@link Model} (the vendored jME-fork scenegraph deserialized from
@@ -141,6 +142,12 @@ public class ModelConverter
         /** Total TransformTracks across all converted AnimClips. */
         public int animTracks;
 
+        /** Names of nodes that are BOTH an armature Joint AND a converted Node carrying rigid
+         * geometry descendants (the homestead-float at-risk pattern: such a node needs its
+         * keyframes to drive both targets, which {@link #resolveTrackTargets} now does). Reported
+         * for the cross-model audit. */
+        public final List<String> dualTargetGeoNodes = new ArrayList<>();
+
         public boolean isAnimated () { return !animations.isEmpty(); }
         public boolean isSkinned () { return skinnedMeshes > 0; }
     }
@@ -198,6 +205,15 @@ public class ModelConverter
         result.root.setUserData("bang.properties", buf.toString());
         result.root.setUserData("bang.animations", String.join(",", model.getAnimationNames()));
         result.root.setUserData("bang.type", _typePath);
+
+        // audit: flag nodes that are BOTH a Joint AND a converted Node with rigid geometry
+        // descendants (the homestead-float at-risk pattern).
+        for (ModelNode bn : _joints.keySet()) {
+            Spatial node = _nodeMap.get(bn);
+            if (node != null && hasGeometryDescendant(node)) {
+                result.dualTargetGeoNodes.add(bn.getName());
+            }
+        }
 
         return result;
     }
@@ -270,6 +286,20 @@ public class ModelConverter
         boolean skinned = false;
         if (fmesh instanceof SkinMesh skin) {
             skinned = addSkinningBuffers(skin, mesh, result);
+            if (skinned) {
+                // The fork stores skin vertices in mesh-local space and deforms them with bone
+                // matrices framed by the mesh's inverse model-ref transform; jME3 skins vertices
+                // in the armature/model (root) frame. Bake the vertices into model space here
+                // (vertex' = inverse(meshInvRef) * vertex) and let the geometry sit at the root
+                // with an identity transform (see applySkinning) so the joint model * inverseBind
+                // offset matrices deform them directly — matching the fork's posed result.
+                com.jme.math.Matrix4f invRef = ModelMeshAccess.invRefTransform(skin);
+                if (invRef != null) {
+                    com.jme.math.Matrix4f toModel = invRef.invert();
+                    transformPositions(mesh.getFloatBuffer(VertexBuffer.Type.Position), toModel);
+                    transformNormals(mesh.getFloatBuffer(VertexBuffer.Type.Normal), toModel);
+                }
+            }
         }
 
         mesh.updateBound();
@@ -418,45 +448,85 @@ public class ModelConverter
     }
 
     /**
-     * Builds a jME3 {@link Armature} from the collected bone nodes, mirroring the fork node
-     * hierarchy among the bones (a bone's jME3 parent is its nearest bone ancestor).
+     * Builds a jME3 {@link Armature} that reproduces the fork bone nodes' <em>full model-space
+     * transforms</em>. The fork skin deformer accumulates a bone's model transform through the
+     * whole ancestor chain (including non-bone {@link ModelNode}s) — see
+     * {@link ModelNode#updateWorldVectors}. So a bone-to-nearest-bone joint hierarchy (as an
+     * earlier cut did) silently drops every intermediate node's transform, contorting the rig.
+     *
+     * <p>Instead we build a {@link Joint} for every {@link ModelNode} that is a bone <em>or an
+     * ancestor of a bone</em> (up to the model root), preserving the true parent links and each
+     * node's fork local TRS. Joint model transforms then equal the fork node model transforms,
+     * so jME3's {@code jointModel * inverseBind} offset matrices match the fork's
+     * {@code Bcur * inverse(Bref)} skinning (the per-mesh model-space framing is handled by
+     * pre-transforming the skin vertices into model space; see {@link #addSkinningBuffers}).
      */
     protected void buildArmature ()
     {
-        // create a Joint per bone node, carrying the fork local transform
+        // expand the bone set to its full ancestor closure so intermediate (non-bone) node
+        // transforms are not dropped from the accumulated joint model transforms
+        Map<ModelNode, Boolean> skeletonNodes = new LinkedHashMap<>();
         for (ModelNode bnode : _boneNodes.keySet()) {
-            Joint joint = new Joint(uniqueJointName(bnode.getName()));
-            com.jme.math.Vector3f t = bnode.getLocalTranslation();
-            com.jme.math.Quaternion r = bnode.getLocalRotation();
-            com.jme.math.Vector3f s = bnode.getLocalScale();
-            joint.setLocalTransform(new com.jme3.math.Transform(
-                new Vector3f(t.x, t.y, t.z),
-                new Quaternion(r.x, r.y, r.z, r.w),
-                new Vector3f(s.x, s.y, s.z)));
-            _joints.put(bnode, joint);
+            for (com.jme.scene.Spatial p = bnode; p instanceof ModelNode mn; p = p.getParent()) {
+                if (skeletonNodes.put(mn, Boolean.TRUE) != null) {
+                    break; // this node (and thus all its ancestors) already added
+                }
+            }
         }
-        // parent each joint under its nearest bone ancestor; roots (no bone ancestor) stay
-        // top-level — the Armature derives its roots from the joint parent links itself
+
+        // create a Joint per skeleton node, carrying the fork local transform (so the joint
+        // model transform, accumulated through the true hierarchy, equals the fork node's).
+        //
+        // CRITICAL reference-space rule: the fork measures all bone model transforms (and the skin
+        // mesh's _invRefTransform used to bake the vertices into model space) in a frame where the
+        // *model root's own local transform is dropped*. ModelNode.updateWorldVectors() sets the
+        // model transform to parentModelTransform * localTransform only when the parent is itself a
+        // ModelNode; for the topmost ModelNode (the Model root, whose parent is the scene/null) it
+        // loads IDENTITY — discarding that node's local TRS. So Bref/Bcur and the baked skin
+        // vertices both live in "root-as-identity" model space. jME3 accumulates a joint's model
+        // transform from the armature root down, INCLUDING the root joint's own local transform, so
+        // giving the root joint the Model's local TRS would conjugate every off-bind deformation by
+        // that transform (jointModel(t) * inverse(jointModel(bind)) = R*X(t)*inverse(X_bind)*inv(R))
+        // — coherent only at bind (offset == identity there), shattering as a clip advances.
+        // Fix: a model-root skeleton node (parent not a ModelNode) gets an IDENTITY joint local
+        // transform, exactly mirroring the fork. Then jME3's joint model transforms equal the fork
+        // node model transforms at every joint, so jointModel*inverseBind == fork Bcur*inverse(Bref)
+        // and the baked model-space vertices (root-as-identity) are deformed in the same frame.
+        for (ModelNode node : skeletonNodes.keySet()) {
+            Joint joint = new Joint(uniqueJointName(node.getName()));
+            boolean isModelRoot = !(node.getParent() instanceof ModelNode);
+            if (isModelRoot) {
+                // fork: getModelTransform() == IDENTITY for the root ModelNode (local TRS dropped)
+                joint.setLocalTransform(new com.jme3.math.Transform());
+                _rootJoint = joint;
+            } else {
+                com.jme.math.Vector3f t = node.getLocalTranslation();
+                com.jme.math.Quaternion r = node.getLocalRotation();
+                com.jme.math.Vector3f s = node.getLocalScale();
+                joint.setLocalTransform(new com.jme3.math.Transform(
+                    new Vector3f(t.x, t.y, t.z),
+                    new Quaternion(r.x, r.y, r.z, r.w),
+                    new Vector3f(s.x, s.y, s.z)));
+            }
+            _joints.put(node, joint);
+        }
+        // parent each joint under its actual parent skeleton node (the true fork hierarchy)
         for (Map.Entry<ModelNode, Joint> e : _joints.entrySet()) {
-            ModelNode parent = nearestBoneAncestor(e.getKey());
-            if (parent != null) {
-                _joints.get(parent).addChild(e.getValue());
+            com.jme.scene.Spatial p = e.getKey().getParent();
+            if (p instanceof ModelNode mn && _joints.containsKey(mn)) {
+                _joints.get(mn).addChild(e.getValue());
             }
         }
         List<Joint> all = new ArrayList<>(_joints.values());
         _armature = new Armature(all.toArray(new Joint[0]));
+        // The joints are positioned at the bind (reference) pose. saveBindPose() computes each
+        // joint's inverseModelBindMatrix = inverse(jointModelTransform) — WITHOUT this they
+        // default to identity and the skinning offset (jointModel * inverseBind) collapses to
+        // the raw joint model transform, grossly contorting the rig. saveInitialPose() then
+        // makes that same pose the animation reset pose.
+        _armature.update();
+        _armature.saveBindPose();
         _armature.saveInitialPose();
-    }
-
-    /** Returns the nearest ancestor ModelNode of {@code node} that is itself a bone. */
-    protected ModelNode nearestBoneAncestor (ModelNode node)
-    {
-        for (com.jme.scene.Spatial p = node.getParent(); p != null; p = p.getParent()) {
-            if (p instanceof ModelNode mn && _boneNodes.containsKey(mn)) {
-                return mn;
-            }
-        }
-        return null;
     }
 
     /** Attaches a SkinningControl with the armature to each skinned mesh's geometry. */
@@ -473,6 +543,13 @@ public class ModelConverter
             // remap the mesh's local bone indices to armature joint indices
             remapBoneIndices(geom.getMesh(), order);
             geom.getMesh().generateBindPose();
+            // the skin vertices were baked into model (root/armature) space (see convertMesh),
+            // so reparent the geometry directly under the root with an identity transform —
+            // otherwise its fork mesh-local transform (and parent node transforms) would be
+            // applied on top of the already model-space skinning, double-transforming it
+            geom.removeFromParent();
+            geom.setLocalTransform(com.jme3.math.Transform.IDENTITY.clone());
+            result.root.attachChild(geom);
         }
         // a single SkinningControl on the root drives all skinned geometries beneath it
         SkinningControl skinning = new SkinningControl(_armature);
@@ -512,6 +589,7 @@ public class ModelConverter
         String[] names = model.getAnimationNames();
         AnimComposer composer = null;
         StringBuilder loopModes = new StringBuilder();
+        StringBuilder frameRates = new StringBuilder();
         for (String name : names) {
             Model.Animation anim = model.getAnimation(name);
             if (anim == null || anim.transforms == null || anim.transformTargets == null) {
@@ -535,6 +613,13 @@ public class ModelConverter
                 loopModes.append(',');
             }
             loopModes.append(name).append('=').append(loopMode(anim.repeatType));
+            // the runtime app-side Model facade re-exposes the fork Animation.frameRate (sprite
+            // code computes per-frame durations as 1f/frameRate); jME3 clips only carry absolute
+            // times, so preserve the source frame rate per animation as user data.
+            if (frameRates.length() > 0) {
+                frameRates.append(',');
+            }
+            frameRates.append(name).append('=').append(anim.frameRate > 0 ? anim.frameRate : 30);
         }
         if (_skinningControl != null) {
             result.root.addControl(_skinningControl);
@@ -542,6 +627,7 @@ public class ModelConverter
         if (composer != null) {
             result.root.addControl(composer);
             result.root.setUserData("bang.loopModes", loopModes.toString());
+            result.root.setUserData("bang.frameRates", frameRates.toString());
         }
     }
 
@@ -571,23 +657,43 @@ public class ModelConverter
         List<AnimTrack<?>> tracks = new ArrayList<>();
         com.jme.scene.Spatial[] targets = anim.transformTargets;
         for (int tt = 0; tt < targets.length; tt++) {
-            HasLocalTransform target = resolveTrackTarget(targets[tt]);
-            if (target == null) {
-                continue; // target wasn't converted (e.g. under a skipped ParticleMesh)
+            // A fork node may map to MORE THAN ONE jME3 track target: it is always converted to
+            // a Node (carrying its rigid mesh/child descendants), and if it is also a skinning
+            // bone (or a bone ancestor) it ALSO has an armature Joint. The fork drives the single
+            // ModelNode and both its rigid children and the skin follow; jME3 splits these, so the
+            // SAME keyframes must drive BOTH the converted Node and the Joint. Animating only the
+            // Joint (the earlier behaviour) froze the rigid children at the bind pose — e.g. the
+            // homestead's "Homestead" node is a flag-bone ancestor that also carries the house
+            // mesh, so the house floated at its bind Z while the flag rig posed correctly.
+            for (HasLocalTransform target : resolveTrackTargets(targets[tt])) {
+                // The model-root joint is pinned to identity (see buildArmature: the fork's
+                // getModelTransform() always returns IDENTITY for the root ModelNode, dropping its
+                // TRS — for the bind pose AND every animated frame). If a clip animates the root,
+                // honouring those keyframes would re-introduce the dropped transform on the joint
+                // and re-contort the skin off-bind, so force the root-joint track to identity to
+                // match. (This only applies to the Joint target; the converted Node, if any, still
+                // gets the real keyframes so its rigid descendants animate.)
+                boolean rootJoint = (target == _rootJoint);
+                Vector3f[] trans = new Vector3f[frames];
+                Quaternion[] rots = new Quaternion[frames];
+                Vector3f[] scales = new Vector3f[frames];
+                for (int ff = 0; ff < frames; ff++) {
+                    if (rootJoint) {
+                        trans[ff] = new Vector3f();
+                        rots[ff] = new Quaternion();
+                        scales[ff] = new Vector3f(1f, 1f, 1f);
+                        continue;
+                    }
+                    Model.Transform xf = anim.transforms[ff][tt];
+                    com.jme.math.Vector3f t = ModelAnimAccess.translation(xf);
+                    com.jme.math.Quaternion r = ModelAnimAccess.rotation(xf);
+                    com.jme.math.Vector3f s = ModelAnimAccess.scale(xf);
+                    trans[ff] = new Vector3f(t.x, t.y, t.z);
+                    rots[ff] = new Quaternion(r.x, r.y, r.z, r.w);
+                    scales[ff] = new Vector3f(s.x, s.y, s.z);
+                }
+                tracks.add(new TransformTrack(target, times, trans, rots, scales));
             }
-            Vector3f[] trans = new Vector3f[frames];
-            Quaternion[] rots = new Quaternion[frames];
-            Vector3f[] scales = new Vector3f[frames];
-            for (int ff = 0; ff < frames; ff++) {
-                Model.Transform xf = anim.transforms[ff][tt];
-                com.jme.math.Vector3f t = ModelAnimAccess.translation(xf);
-                com.jme.math.Quaternion r = ModelAnimAccess.rotation(xf);
-                com.jme.math.Vector3f s = ModelAnimAccess.scale(xf);
-                trans[ff] = new Vector3f(t.x, t.y, t.z);
-                rots[ff] = new Quaternion(r.x, r.y, r.z, r.w);
-                scales[ff] = new Vector3f(s.x, s.y, s.z);
-            }
-            tracks.add(new TransformTrack(target, times, trans, rots, scales));
         }
         if (tracks.isEmpty()) {
             return null;
@@ -598,15 +704,51 @@ public class ModelConverter
     }
 
     /**
-     * Resolves an animation target (a fork Spatial) to its jME3 track target: a {@link Joint}
-     * if the node is a skinning bone, otherwise the converted {@link Node} (rigid animation).
+     * Resolves an animation target (a fork Spatial) to every jME3 track target it drives.
+     *
+     * <p>A fork {@link ModelNode} is always converted to a jME3 {@link Node} (carrying its rigid
+     * mesh/child descendants); if it is also a skinning bone or a bone ancestor it ALSO has an
+     * armature {@link Joint}. The fork drives the single ModelNode and both its rigid children and
+     * the skin follow. jME3 splits these into a Node (positions the rigid descendants) and a Joint
+     * (deforms the skin), so the SAME keyframes must drive BOTH — otherwise a node that is a bone
+     * ancestor yet also carries geometry (e.g. the homestead's "Homestead" node: a flag-bone
+     * ancestor that holds the house mesh) leaves its rigid descendants frozen at the bind pose
+     * while only the skin poses, floating the geometry.
+     *
+     * <p>Returns at most two targets (Node and/or Joint), the Joint first. A non-{@link ModelNode}
+     * target (e.g. a rigid {@link com.jme.scene.TriMesh} converted to a {@link Geometry}) yields
+     * its single converted spatial.
      */
-    protected HasLocalTransform resolveTrackTarget (com.jme.scene.Spatial forkTarget)
+    protected List<HasLocalTransform> resolveTrackTargets (com.jme.scene.Spatial forkTarget)
     {
-        if (forkTarget instanceof ModelNode mn && _joints.containsKey(mn)) {
-            return _joints.get(mn);
+        List<HasLocalTransform> out = new ArrayList<>(2);
+        if (forkTarget instanceof ModelNode mn) {
+            Joint joint = _joints.get(mn);
+            if (joint != null) {
+                out.add(joint);
+            }
         }
-        return _nodeMap.get(forkTarget);
+        Spatial node = _nodeMap.get(forkTarget);
+        if (node instanceof HasLocalTransform hlt) {
+            out.add(hlt);
+        }
+        return out;
+    }
+
+    /** True if the converted spatial is, or contains, a {@link Geometry} (rigid mesh). */
+    protected static boolean hasGeometryDescendant (Spatial sp)
+    {
+        if (sp instanceof Geometry) {
+            return true;
+        }
+        if (sp instanceof Node n) {
+            for (Spatial child : n.getChildren()) {
+                if (hasGeometryDescendant(child)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     protected String uniqueJointName (String base)
@@ -645,6 +787,36 @@ public class ModelConverter
         return out;
     }
 
+    /** In-place transform of a packed xyz position buffer by a fork {@link com.jme.math.Matrix4f}
+     * (full affine: rotation/scale + translation). Used to bake skin vertices into model space. */
+    protected static void transformPositions (FloatBuffer buf, com.jme.math.Matrix4f m)
+    {
+        if (buf == null) {
+            return;
+        }
+        for (int ii = 0; ii + 2 < buf.limit(); ii += 3) {
+            float x = buf.get(ii), y = buf.get(ii + 1), z = buf.get(ii + 2);
+            buf.put(ii,     x*m.m00 + y*m.m01 + z*m.m02 + m.m03);
+            buf.put(ii + 1, x*m.m10 + y*m.m11 + z*m.m12 + m.m13);
+            buf.put(ii + 2, x*m.m20 + y*m.m21 + z*m.m22 + m.m23);
+        }
+    }
+
+    /** In-place transform of a packed xyz normal buffer by a fork matrix (rotation/scale only,
+     * no translation; matches the fork's normal handling in {@code SkinMesh.updateWorldData}). */
+    protected static void transformNormals (FloatBuffer buf, com.jme.math.Matrix4f m)
+    {
+        if (buf == null) {
+            return;
+        }
+        for (int ii = 0; ii + 2 < buf.limit(); ii += 3) {
+            float x = buf.get(ii), y = buf.get(ii + 1), z = buf.get(ii + 2);
+            buf.put(ii,     x*m.m00 + y*m.m01 + z*m.m02);
+            buf.put(ii + 1, x*m.m10 + y*m.m11 + z*m.m12);
+            buf.put(ii + 2, x*m.m20 + y*m.m21 + z*m.m22);
+        }
+    }
+
     /** Defensive copy of a fork index buffer (see {@link #prepare}). */
     protected static IntBuffer copy (IntBuffer buf)
     {
@@ -677,4 +849,8 @@ public class ModelConverter
 
     protected Armature _armature;
     protected SkinningControl _skinningControl;
+
+    /** The armature's model-root joint (parent not a ModelNode). Pinned to identity to mirror the
+     * fork's root model transform; its animation track (if any) is forced to identity too. */
+    protected Joint _rootJoint;
 }

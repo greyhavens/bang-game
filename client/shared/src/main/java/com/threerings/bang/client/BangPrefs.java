@@ -3,11 +3,7 @@
 
 package com.threerings.bang.client;
 
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.Display;
-
-import com.jme.system.JmeException;
-import com.jme.system.PropertiesIO;
+import com.jme3.system.AppSettings;
 
 import com.samskivert.util.PrefsConfig;
 import com.samskivert.util.StringUtil;
@@ -32,6 +28,11 @@ public class BangPrefs
     /** Contains our client-side preferences. */
     public static PrefsConfig config = new PrefsConfig("bang");
 
+    /** Dev convenience: audio is audible by default; pass <code>-Dmute=true</code> to start the
+     * client MUTED (music and effects volumes report 0) so repeated test launches don't blast
+     * sound. Does not touch the persisted volume prefs. */
+    public static final boolean SILENT = Boolean.getBoolean("mute");
+
     /**
      * Returns true if no logon information is set.
      */
@@ -42,70 +43,41 @@ public class BangPrefs
     }
 
     /**
-     * Configures props with a display setting.
+     * Configures the supplied jME3 {@link AppSettings} with the preferred display settings
+     * (width/height/bpp/frequency/fullscreen) read from our preferences.
      *
-     * @throws JmeException if a valid displaymode cannot be found
+     * <p>jME3 cutover: the fork wrote into a {@code com.jme.system.PropertiesIO} and queried the
+     * LWJGL2 {@code org.lwjgl.opengl.Display} to discover/sanitize the current mode (throwing the
+     * fork {@code JmeException}). Mode <em>enumeration/validation</em> against the live display is
+     * a host concern: at launch the GLFW context/window does not exist yet, so there is nothing to
+     * query — we only seed the AppSettings from stored preferences (clamped to the minimum playable
+     * size). The live monitor-mode resolution (a sane fullscreen target, the nearest-mode picker)
+     * happens at runtime against the LWJGL3 context in {@link OptionsView} / {@link
+     * com.threerings.jme.JmeApp#getPrimaryMonitorMode}, where the context is up.
      */
-    public static void configureDisplayMode (PropertiesIO props, boolean safeMode)
-        throws JmeException
+    public static void configureDisplayMode (AppSettings settings, boolean safeMode)
     {
-        // first look up our "preferred" mode
         int width = safeMode ? BangUI.MIN_WIDTH :
                 config.getValue("display_width", BangUI.MIN_WIDTH);
         int height = safeMode ? BangUI.MIN_HEIGHT :
                 config.getValue("display_height", BangUI.MIN_HEIGHT);
         int bpp = safeMode ? 16 : config.getValue("display_bpp", 16);
         int freq = safeMode ? 60 : config.getValue("display_freq", 60);
-        boolean fullscreenSet = isFullscreenSet();
-        boolean fullscreen = safeMode ? true : isFullscreen();
+        // safe mode recovers to the minimum windowed size (fullscreen off) so a bad stored
+        // fullscreen/resolution can't lock the user out.
+        boolean fullscreen = safeMode ? false : isFullscreen();
 
-        if (!fullscreen) {
-            DisplayMode mode = Display.getDisplayMode();
-            // if the display mode is too small, we'll try to go fullscreen (if this is their
-            // first time then force fullscreen when the display mode is the minimum)
-            if (mode.getWidth() < BangUI.MIN_WIDTH || mode.getHeight() < BangUI.MIN_HEIGHT ||
-                    mode.getBitsPerPixel() < BangUI.MIN_BPP || (!fullscreenSet &&
-                        (mode.getWidth() <= BangUI.MIN_WIDTH ||
-                         mode.getHeight() <= BangUI.MIN_HEIGHT))) {
-                fullscreen = true;
-                updateFullscreen(true);
-
-            // otherwise we just need to sanitize the depth and frequency
-            } else {
-                bpp = mode.getBitsPerPixel();
-                freq = mode.getFrequency();
-            }
-        }
-
-        // if this is a full screen mode, we need to find the closest matching
-        // available screen mode
-        if (fullscreen) {
-            DisplayMode mode = getClosest(width, height, bpp, freq);
-            if (mode == null) {
-                mode = Display.getDisplayMode();
-            }
-            width = mode.getWidth();
-            height = mode.getHeight();
-            bpp = mode.getBitsPerPixel();
-            freq = mode.getFrequency();
-        }
-        if (width < BangUI.MIN_WIDTH || height < BangUI.MIN_HEIGHT) {
-            throw new JmeException("Cannot find display mode which meats the minimum dimensions [" +
-                    "found (" + width + "x" + height + ") requires (" + BangUI.MIN_WIDTH +
-                    "x" + BangUI.MIN_HEIGHT + ")]");
-        }
-
-        props.set("WIDTH", String.valueOf(width));
-        props.set("HEIGHT", String.valueOf(height));
-        props.set("DEPTH", String.valueOf(bpp));
-        props.set("FREQ", String.valueOf(freq));
-        props.set("FULLSCREEN", String.valueOf(fullscreen));
-        props.set("RENDERER", "LWJGL");
+        int w = Math.max(width, BangUI.MIN_WIDTH);
+        int h = Math.max(height, BangUI.MIN_HEIGHT);
+        settings.setResolution(w, h);
+        settings.setWindowSize(w, h);
+        settings.setBitsPerPixel(bpp);
+        settings.setFrequency(freq);
+        settings.setFullscreen(fullscreen);
 
         log.info("Display " + (safeMode ? "in safe mode: " : "mode: ") +
-                 props.getWidth() + "x" + props.getHeight() +
-                 "x" + props.getDepth() + " " + props.getFreq() + "Hz " +
-                 "(current: " + Display.getDisplayMode() + ").");
+                 settings.getWidth() + "x" + settings.getHeight() +
+                 "x" + bpp + " " + freq + "Hz" + (fullscreen ? " fullscreen" : "") + ".");
     }
 
     public static int getDisplayWidth () {
@@ -139,14 +111,18 @@ public class BangPrefs
 
     /**
      * Stores our preferred display mode.
+     *
+     * <p>jME3 cutover: was {@code updateDisplayMode(org.lwjgl.opengl.DisplayMode)}; retyped to
+     * host-neutral primitives so the LWJGL2 {@code DisplayMode} type does not leak into the
+     * preferences layer. The Phase-3 host (LWJGL3/GLFW) supplies these values.
      */
-    public static void updateDisplayMode (DisplayMode mode)
+    public static void updateDisplayMode (int width, int height, int bpp, int freq)
     {
-        config.setValue("display_width", mode.getWidth());
-        config.setValue("display_height", mode.getHeight());
+        config.setValue("display_width", width);
+        config.setValue("display_height", height);
         // see OptionsView for explanation for this hackery
-        config.setValue("display_bpp", Math.max(mode.getBitsPerPixel(), 16));
-        config.setValue("display_freq", mode.getFrequency());
+        config.setValue("display_bpp", Math.max(bpp, 16));
+        config.setValue("display_freq", freq);
     }
 
     /**
@@ -220,7 +196,8 @@ public class BangPrefs
      */
     public static int getMusicVolume ()
     {
-        return config.getValue("music_volume", 50);
+        // dev convenience: launch with -Dmute=true to start muted (does not persist)
+        return SILENT ? 0 : config.getValue("music_volume", 50);
     }
 
     /**
@@ -236,7 +213,8 @@ public class BangPrefs
      */
     public static int getEffectsVolume ()
     {
-        return config.getValue("effects_volume", 100);
+        // dev convenience: launch with -Dmute=true to start muted (does not persist)
+        return SILENT ? 0 : config.getValue("effects_volume", 100);
     }
 
     /**
@@ -245,6 +223,24 @@ public class BangPrefs
     public static void updateEffectsVolume (int volume)
     {
         config.setValue("effects_volume", volume);
+    }
+
+    /**
+     * Returns the WASD/arrow camera pan speed in world units per second. Defaults to
+     * {@link com.threerings.jme.camera.GodViewHandler#DEFAULT_PAN_SPEED} (BUG-5).
+     */
+    public static int getCameraPanSpeed ()
+    {
+        return config.getValue("camera_pan_speed",
+            Math.round(com.threerings.jme.camera.GodViewHandler.DEFAULT_PAN_SPEED));
+    }
+
+    /**
+     * Updates the WASD/arrow camera pan speed (world units per second).
+     */
+    public static void updateCameraPanSpeed (int speed)
+    {
+        config.setValue("camera_pan_speed", speed);
     }
 
     /**
@@ -418,43 +414,9 @@ public class BangPrefs
         config.setValue(username + ".town_id", townId);
     }
 
-    /**
-     * Returns the closest display mode to our specified default.
-     */
-    protected static DisplayMode getClosest (int width, int height, int depth, int freq)
-    {
-        DisplayMode c = null;
-        try {
-            DisplayMode[] modes = Display.getAvailableDisplayModes();
-            for (int ii = 0; ii < modes.length; ii++) {
-                DisplayMode m = modes[ii];
-                // apparently LWJGL can't cope with >24 bpp
-                if (m.getBitsPerPixel() > 24 || m.getWidth() < BangUI.MIN_WIDTH ||
-                        m.getHeight() < BangUI.MIN_HEIGHT) {
-                    continue;
-                }
-                if (c == null) {
-                    c = m;
-                } else if (closer(c.getWidth(), m.getWidth(), width)) {
-                    c = m;
-                } else if (closer(c.getHeight(), m.getHeight(), height)) {
-                    c = m;
-                } else if (closer(c.getBitsPerPixel(), m.getBitsPerPixel(), depth)) {
-                    c = m;
-                } else if (closer(c.getFrequency(), m.getFrequency(), freq)) {
-                    c = m;
-                }
-            }
-            return c;
-
-        } catch (Exception e) {
-            log.warning("Unable to enumerate display modes.", e);
-            return null;
-        }
-    }
-
-    protected static boolean closer (int value, int ovalue, int tvalue)
-    {
-        return Math.abs(value-tvalue) > Math.abs(ovalue-tvalue);
-    }
+    // jME3 cutover: the fork's getClosest()/closer() picked the nearest available LWJGL2
+    // DisplayMode from Display.getAvailableDisplayModes(). Mode enumeration is a host concern: the
+    // LWJGL3/GLFW context exposes the primary-monitor native mode via JmeApp.getPrimaryMonitorMode
+    // (a fork-free jME3 Displays read), and OptionsView offers a curated windowed-resolution list
+    // clamped to MIN_WIDTH/MIN_HEIGHT for the resolution chooser.
 }

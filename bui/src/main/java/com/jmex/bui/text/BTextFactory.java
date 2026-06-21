@@ -5,7 +5,7 @@
 
 package com.jmex.bui.text;
 
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.ColorRGBA;
 
 import com.jmex.bui.BConstants;
 

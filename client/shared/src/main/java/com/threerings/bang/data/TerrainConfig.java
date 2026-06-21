@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.ColorRGBA;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.StringUtil;

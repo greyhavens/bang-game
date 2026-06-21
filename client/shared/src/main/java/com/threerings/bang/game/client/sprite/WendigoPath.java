@@ -3,9 +3,9 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
 import com.threerings.jme.sprite.CubicSplinePath;
 import com.threerings.jme.sprite.PathUtil;
@@ -36,7 +36,15 @@ public class WendigoPath extends CubicSplinePath
     {
         super.update(time);
 
-        adjustRotation();
+        // super.update() may have completed the path -- advancing _current to
+        // _durations.length and calling pathCompleted() -- in which case interpolate()
+        // would index _durations[_current] out of bounds (ArrayIndexOutOfBounds on the
+        // jME3 render thread, which kills the client). jME1 stopped ticking the path once
+        // it completed; jME3 still runs the rest of this override, so only adjust the
+        // rotation while the path is still active.
+        if (_current < _durations.length) {
+            adjustRotation();
+        }
 
         _elapsed += time;
         if (_elapsed > _outFadeTime) {

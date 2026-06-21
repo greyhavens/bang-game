@@ -21,38 +21,56 @@
 
 package com.threerings.jme;
 
-import com.jme.input.InputHandler;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.system.DisplaySystem;
+import com.jme3.asset.AssetManager;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Node;
 
 import com.jmex.bui.BRootNode;
 
 import com.threerings.jme.camera.CameraHandler;
+import com.threerings.jme.camera.GodViewHandler;
 
 /**
- * Provides access to the various bits needed by things that operate in
- * JME land.
+ * Provides access to the various bits needed by things that operate in jME land.
+ *
+ * <p>jME3 cutover (Phase 1): retyped off the fork. jME3 has no global {@code DisplaySystem}
+ * service locator (§2.5 / risk #6 of the migration map) — the application owns the
+ * {@link AssetManager}, {@link RenderManager} and {@link Camera}, so they are surfaced here as
+ * the threaded-through accessors that replace {@code getDisplaySystem()...}: {@code getDisplay()}
+ * → {@link #getRenderManager()} + {@link #getCamera()} + {@link #getAssetManager()}, and the
+ * fork {@code Renderer} → jME3 {@link RenderManager}. Input ({@code getInputHandler}) is dropped
+ * here; the jME3 {@code InputManager}/{@code RawInputListener} path is wired at the Phase-3 host
+ * flip. The implementers (BangApp/EditorApp/BasicContext in client/shared) re-fit to this seam
+ * in Phase 2.
  */
 public interface JmeContext
 {
-    /** Returns the display to which we are rendering. */
-    public DisplaySystem getDisplay ();
+    /** Returns the asset manager used to load textures, models and materials. */
+    public AssetManager getAssetManager ();
 
-    /** Returns the renderer being used to draw everything. */
-    public Renderer getRenderer ();
+    /** Returns the render manager driving the viewports. */
+    public RenderManager getRenderManager ();
+
+    /** Returns the camera being used to view the scene. */
+    public Camera getCamera ();
 
     /** Returns the handler for the camera being used to view the scene. */
     public CameraHandler getCameraHandler ();
+
+    /**
+     * Returns the input handler (a {@link GodViewHandler}, replacing the fork's polled
+     * {@code InputHandler}). The object exists in Phase 2 so camera-control logic
+     * (enable/disable, round setup) keeps working; its jME3 {@code InputManager} mappings
+     * are wired at the Phase-3 host flip via {@link GodViewHandler#registerWith}.
+     */
+    public GodViewHandler getInputHandler ();
 
     /** Returns the main geometry of our scene graph. */
     public Node getGeometry ();
 
     /** Returns the main interface node of our scene graph. */
     public Node getInterface ();
-
-    /** Returns our main input handler. */
-    public InputHandler getInputHandler ();
 
     /** Returns our UI root node. */
     public BRootNode getRootNode ();

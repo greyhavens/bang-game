@@ -3,19 +3,12 @@
 
 package com.threerings.bang.game.data;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.ObjectUtil;
-
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
 
 import com.threerings.crowd.client.PlaceController;
 import com.threerings.io.SimpleStreamableObject;
@@ -28,7 +21,6 @@ import com.threerings.bang.game.client.BangController;
  * Used to configure a Bang! game.
  */
 public class BangConfig extends GameConfig
-    implements Savable
 {
     /** Indicates the type of game being played. */
     public static enum Type {
@@ -96,7 +88,6 @@ public class BangConfig extends GameConfig
 
     /** Represents a particular player's configuration. */
     public static class Player extends SimpleStreamableObject
-        implements Savable
     {
         /** The Big Shot unit to be used by this player (or null if they won't use one). */
         public String bigShot;
@@ -117,33 +108,6 @@ public class BangConfig extends GameConfig
          * then use it to populate {@link BangConfig#ais} when the game is being created. */
         public int skill = 50;
 
-        // from interface Savable
-        public void write (JMEExporter ex) throws IOException {
-            OutputCapsule out = ex.getCapsule(this);
-            out.write(bigShot, "bigShot", null);
-            out.write(units, "team", null); // old name to avoid breakage
-            out.write(cards, "cards", null);
-            out.write(startSpot, "startSpot", -1);
-            out.write(teamIdx, "teamIdx", -1);
-            out.write(skill, "skill", 50);
-        }
-
-        // from interface Savable
-        public void read (JMEImporter im) throws IOException {
-            InputCapsule in = im.getCapsule(this);
-            bigShot = in.readString("bigShot", null);
-            units = in.readStringArray("team", null); // old name to avoid breakage
-            cards = in.readStringArray("cards", null);
-            startSpot = in.readInt("startSpot", -1);
-            teamIdx = in.readInt("teamIdx", -1);
-            skill = in.readInt("skill", 50);
-        }
-
-        // from interface Savable
-        public Class<?> getClassTag () {
-            return getClass();
-        }
-
         @Override // from Object
         public boolean equals (Object other)
         {
@@ -157,7 +121,6 @@ public class BangConfig extends GameConfig
      * Represents the configuration of a particular round.
      */
     public static class Round extends SimpleStreamableObject
-        implements Savable
     {
         /** The scenario to be played during this round. */
         public String scenario;
@@ -175,29 +138,6 @@ public class BangConfig extends GameConfig
         public String bdataToString ()
         {
             return (bdata == null) ? "<none>" : (bdata.length + " bytes");
-        }
-
-        // from interface Savable
-        public void write (JMEExporter ex) throws IOException {
-            OutputCapsule out = ex.getCapsule(this);
-            out.write(scenario, "scenario", null);
-            out.write(board, "board", null);
-            out.write(sdata, "sdata", null);
-            // bdata is not serialized
-        }
-
-        // from interface Savable
-        public void read (JMEImporter im) throws IOException {
-            InputCapsule in = im.getCapsule(this);
-            scenario = in.readString("scenario", null);
-            board = in.readString("board", null);
-            sdata = in.readString("sdata", null);
-            // bdata is not serialized
-        }
-
-        // from interface Savable
-        public Class<?> getClassTag () {
-            return getClass();
         }
 
         @Override // from Object
@@ -332,45 +272,6 @@ public class BangConfig extends GameConfig
         return (ais != null && ListUtil.indexOfNull(ais) == -1);
     }
 
-    // from interface Savable
-    public void write (JMEExporter ex) throws IOException
-    {
-        OutputCapsule out = ex.getCapsule(this);
-        out.write(rated, "rated", false);
-        out.write(type.toString(), "type", Type.BOUNTY.toString());
-        out.write(duration.toString(), "duration", Duration.NORMAL.toString());
-        out.write(speed.toString(), "speed", Speed.NORMAL.toString());
-        out.write(minWeight, "minWeight", 0);
-        out.write(respawnUnits, "respawnUnits", true);
-        out.writeSavableArrayList(rounds, "rounds", DEF_ROUNDS);
-        out.writeSavableArrayList(plist, "teams", DEF_PLAYERS); // old name to avoid breakage
-        out.writeSavableArrayList(criteria, "criteria", DEF_CRIT);
-    }
-
-    // from interface Savable
-    public void read (JMEImporter im) throws IOException
-    {
-        InputCapsule in = im.getCapsule(this);
-        rated = in.readBoolean("rated", false);
-        type = Type.valueOf(in.readString("type", Type.BOUNTY.toString()));
-        duration = Duration.valueOf(in.readString("duration", Duration.NORMAL.toString()));
-        speed = Speed.valueOf(in.readString("speed", Speed.NORMAL.toString()));
-        minWeight = in.readInt("minWeight", 0);
-        respawnUnits = in.readBoolean("respawnUnits", true);
-        rounds = in.readSavableArrayList("rounds", DEF_ROUNDS);
-        plist = in.readSavableArrayList("teams", DEF_PLAYERS); // old name to avoid breakage
-        criteria = in.readSavableArrayList("criteria", DEF_CRIT);
-        if (criteria == DEF_CRIT) { // legacy fixy
-            criteria = in.readSavableArrayList("criterion", DEF_CRIT);
-        }
-    }
-
-    // from interface Savable
-    public Class<?> getClassTag ()
-    {
-        return getClass();
-    }
-
     @Override // from GameConfig
     public int getGameId ()
     {
@@ -412,8 +313,4 @@ public class BangConfig extends GameConfig
             rounds.equals(oconfig.rounds) && plist.equals(oconfig.plist) &&
             criteria.equals(oconfig.criteria);
     }
-
-    protected static final ArrayList<Round> DEF_ROUNDS = new ArrayList<Round>();
-    protected static final ArrayList<Player> DEF_PLAYERS = new ArrayList<Player>();
-    protected static final ArrayList<Criterion> DEF_CRIT = new ArrayList<Criterion>();
 }

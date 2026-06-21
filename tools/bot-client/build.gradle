@@ -1,0 +1,61 @@
+// Phase 5 harness #2: a RENDERING-FREE Narya "Presents" bot client. It logs in over the wire
+// as test/yeehaw, drives an AI-vs-AI game to completion via PlayerService.playComputer(...,
+// autoplay=true), and asserts on the live BangObject/GameObject distributed-object state
+// (PRE_GAME -> IN_PLAY -> GAME_OVER, ticks advance, units exist, a winner/points are recorded).
+//
+// It is the "Playwright for this game": no jME3, no LWJGL, no GL context, no BUI -- a pure
+// Presents network client + dobj subscription. It depends on :server purely for the Bang
+// data/service classes (BangObject, PlayerService, BangCredentials, ScenarioInfo, ...) and the
+// Narya/vilya/crowd wire layer that :server transitively provides. The bot code itself imports
+// ONLY com.threerings.{presents,crowd,parlor,bang.data,bang.game.data,...} -- never any
+// rendering class -- so although jME3 jars sit inertly on the runtime classpath (dragged in by
+// :client:shared), nothing here ever initializes a display. See docs/jme3-cutover-plan.md
+// (Phase 5, harness #2).
+
+plugins {
+  id "application"
+}
+
+dependencies {
+  // Brings the full Bang data/service/server classes + the Narya/vilya/crowd wire layer.
+  // (No jME3 is referenced by the bot source; the GL jars on the classpath are never touched.)
+  implementation project(":server")
+
+  // The bot resolves unit/prop/i18n config off the classpath as the BangObject's pieces stream
+  // in: UnitConfig/PropConfig + piece readObject() load rsrc/units/*/unit.properties,
+  // rsrc/props/*/prop.properties, rsrc/i18n/*.properties via BangUtil.getResourceAsStream. The
+  // live server puts assets/build/staging (which contains rsrc/) on its classpath (see
+  // bin/bangserver); without these configs, deserializing a unit/prop (e.g. "frontier_town/
+  // cavalry", a Homestead/CargoTank) NPEs on a null config and drops the connection.
+  //
+  // Use the built staging rsrc/ tree (assets/build/staging, populated by :assets:processResources
+  // -- the same directory bin/bangserver puts on the live server's classpath). The directory
+  // itself is the classpath root so the "rsrc/..." resource path resolves. NB: props.txt and
+  // similar list files are GENERATED at build time (the source assets/rsrc/.../props.txt is empty),
+  // so the source tree alone is not enough -- staging is required. The run task depends on
+  // :assets:processResources to guarantee it exists.
+  runtimeOnly files(rootProject.file("assets/build/staging"))
+}
+
+application {
+  mainClass = "com.threerings.bang.tools.bot.BangBotClient"
+}
+
+// Convenience task mirroring the other tool modules' run tasks. Point it at a running devtest
+// server (bin/devtest --no-client). Tunables via -P props -> forwarded as -D system properties.
+tasks.named("run", JavaExec) {
+  // make sure the staging rsrc/ tree (unit/prop/i18n configs) exists before we run
+  dependsOn ":assets:processResources"
+  // standard local devtest server
+  systemProperty "bot.host", project.findProperty("host") ?: "localhost"
+  systemProperty "bot.username", project.findProperty("username") ?: "test"
+  systemProperty "bot.password", project.findProperty("password") ?: "yeehaw"
+  systemProperty "bot.players", project.findProperty("players") ?: "2"
+  systemProperty "bot.timeout", project.findProperty("timeout") ?: "180"
+  if (project.hasProperty("scenario")) {
+    systemProperty "bot.scenario", project.property("scenario")
+  }
+  if (project.hasProperty("board")) {
+    systemProperty "bot.board", project.property("board")
+  }
+}

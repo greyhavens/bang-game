@@ -5,7 +5,7 @@
 
 package com.jmex.bui.background;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.BImage;
 import com.jmex.bui.util.Insets;
@@ -100,7 +100,7 @@ public class ImageBackground extends BBackground
     }
 
     // documentation inherited
-    public void render (Renderer renderer, int x, int y, int width, int height, float alpha)
+    public void render (RenderManager renderer, int x, int y, int width, int height, float alpha)
     {
         super.render(renderer, x, y, width, height, alpha);
 
@@ -138,7 +138,7 @@ public class ImageBackground extends BBackground
     }
 
     protected void renderCentered (
-        Renderer renderer, int x, int y, int width, int height, float alpha)
+        RenderManager renderer, int x, int y, int width, int height, float alpha)
     {
         if (_mode == CENTER_X || _mode == CENTER_XY) {
             x += (width-_image.getWidth())/2;
@@ -150,7 +150,7 @@ public class ImageBackground extends BBackground
     }
 
     protected void renderScaled (
-        Renderer renderer, int x, int y, int width, int height, float alpha)
+        RenderManager renderer, int x, int y, int width, int height, float alpha)
     {
         switch (_mode) {
         case SCALE_X:
@@ -166,7 +166,7 @@ public class ImageBackground extends BBackground
     }
 
     protected void renderTiled (
-        Renderer renderer, int x, int y, int width, int height, float alpha)
+        RenderManager renderer, int x, int y, int width, int height, float alpha)
     {
         int iwidth = _image.getWidth(), iheight = _image.getHeight();
         if (_mode == TILE_X) {
@@ -198,7 +198,7 @@ public class ImageBackground extends BBackground
     }
 
     protected void renderRow (
-        Renderer renderer, int x, int y, int width, int iheight, float alpha)
+        RenderManager renderer, int x, int y, int width, int iheight, float alpha)
     {
         int iwidth = _image.getWidth();
         int across = width / iwidth;
@@ -214,7 +214,7 @@ public class ImageBackground extends BBackground
     }
 
     protected void renderFramed (
-        Renderer renderer, int x, int y, int width, int height, float alpha)
+        RenderManager renderer, int x, int y, int width, int height, float alpha)
     {
         // render each of our image sections appropriately
         int twidth = _image.getWidth(), theight = _image.getHeight();

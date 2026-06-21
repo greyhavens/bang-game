@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.math.Vector3f;
+import com.jme3.math.Vector3f;
 
 import com.samskivert.util.Interval;
 

@@ -3,13 +3,7 @@
 
 package com.threerings.bang.bounty.data;
 
-import java.io.IOException;
 import java.util.HashSet;
-
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.OutputCapsule;
 
 import com.samskivert.util.StringUtil;
 
@@ -86,30 +80,6 @@ public class IntStatCriterion extends Criterion
             break;
         }
         return false;
-    }
-
-    // from interface Savable
-    public void write (JMEExporter ex) throws IOException
-    {
-        OutputCapsule out = ex.getCapsule(this);
-        out.write(stat.toString(), "stat", null);
-        out.write(condition.toString(), "condition", null);
-        out.write(value, "value", 0);
-    }
-
-    // from interface Savable
-    public void read (JMEImporter im) throws IOException
-    {
-        InputCapsule in = im.getCapsule(this);
-        stat = StatType.valueOf(in.readString("stat", null));
-        condition = Condition.valueOf(in.readString("condition", null));
-        value = in.readInt("value", 0);
-    }
-
-    // from interface Savable
-    public Class<?> getClassTag ()
-    {
-        return getClass();
     }
 
     @Override // from Object

@@ -7,8 +7,8 @@ package com.jmex.bui;
 
 import java.util.ArrayList;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.event.ChangeEvent;
 import com.jmex.bui.event.ChangeListener;
@@ -214,7 +214,7 @@ public class BTextArea extends BContainer
             ColorRGBA effcol = _effcols[getState()];
             return (effcol != null) ? effcol : _effcols[DEFAULT];
         }
-        return ColorRGBA.white;
+        return ColorRGBA.White;
     }
 
     @Override // from BTextArea
@@ -317,7 +317,7 @@ public class BTextArea extends BContainer
     }
 
     // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
 
@@ -507,7 +507,7 @@ public class BTextArea extends BContainer
         /**
          * Renders this line of text.
          */
-        public void render (Renderer renderer, int x, int y, float alpha)
+        public void render (RenderManager renderer, int x, int y, float alpha)
         {
             int dx = x;
             for (int ii = 0, ll = segments.size(); ii < ll; ii++) {

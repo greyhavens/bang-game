@@ -3,7 +3,7 @@
 
 package com.threerings.bang.bounty.client;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BImage;
 import com.jmex.bui.util.Dimension;
@@ -75,7 +75,7 @@ public class OutlawView extends BComponent
         }
     }
 
-    public void render (Renderer renderer, int x, int y, float alpha)
+    public void render (RenderManager renderer, int x, int y, float alpha)
     {
         _images[BACKGROUND].render(renderer, x, y, alpha);
         if (_images[AVATAR] != null) {
@@ -134,7 +134,7 @@ public class OutlawView extends BComponent
     }
 
     @Override // from BComponent
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
         render(renderer, 0, 0, _alpha);

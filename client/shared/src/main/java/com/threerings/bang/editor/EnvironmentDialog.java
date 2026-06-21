@@ -15,7 +15,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jme.math.FastMath;
+import com.jme3.math.FastMath;
 
 import com.samskivert.swing.VGroupLayout;
 

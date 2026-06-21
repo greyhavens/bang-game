@@ -5,9 +5,10 @@ package com.threerings.bang.game.client;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
-import com.jme.scene.Controller;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Node;
+import com.jme3.scene.control.AbstractControl;
 
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
@@ -231,12 +232,18 @@ public class BangView extends BWindow
                                pstatus[pidx].getAbsoluteY() + 15);
         }
         final int ox = window.getX(), oy = window.getY(), height = (pidx == -1) ? 200 : 100;
-        _ctx.getRootNode().addController(new Controller() {
-            public void update (float time) {
+        // jME3 cutover: the fork stepped this card animation via a scene Controller on the BUI
+        // root node; jME3's BRootNode hosts no controllers, so drive it with a Node +
+        // AbstractControl attached to the interface node (the migrated WindowFader idiom).
+        final Node driver = new Node("cardfall");
+        driver.addControl(new AbstractControl() {
+            @Override protected void controlUpdate (float time) {
                 if ((_elapsed += time) >= CARD_FALL_DURATION + CARD_LINGER_DURATION +
                     CARD_FADE_DURATION) {
                     _ctx.getRootNode().removeWindow(window);
-                    _ctx.getRootNode().removeController(this);
+                    if (driver.getParent() != null) {
+                        driver.getParent().detachChild(driver);
+                    }
                 } else if (_elapsed >= CARD_FALL_DURATION +
                     CARD_LINGER_DURATION) {
                     window.setAlpha(1f - (_elapsed - CARD_FALL_DURATION - CARD_LINGER_DURATION) /
@@ -250,8 +257,11 @@ public class BangView extends BWindow
                     window.setLocation(ox, oy + (int)(height * (1f - alpha)));
                 }
             }
+            @Override protected void controlRender (RenderManager rm, ViewPort vp) {
+            }
             protected float _elapsed;
         });
+        _ctx.getInterface().attachChild(driver);
     }
 
     // documentation inherited from interface PlaceView
@@ -522,7 +532,7 @@ public class BangView extends BWindow
             return;
         }
 
-        int width = _ctx.getDisplay().getWidth();
+        int width = _ctx.getCamera().getWidth();
         int gap = 0, wcount = _pswins.length, tgap = 2, offset = 5;
         int tcount = wcount;
         for (int ii = 0; ii < wcount; ii++) {
@@ -564,7 +574,7 @@ public class BangView extends BWindow
     protected void showRoundTimer ()
     {
         if (!_timer.isAdded()) {
-            int height = _ctx.getDisplay().getHeight(), width = _ctx.getDisplay().getWidth();
+            int height = _ctx.getCamera().getHeight(), width = _ctx.getCamera().getWidth();
             _ctx.getRootNode().addWindow(_timer);
             _timer.pack();
             _timer.setLocation(width - _timer.getWidth(), height - _timer.getHeight());
@@ -574,7 +584,7 @@ public class BangView extends BWindow
     protected void showChat ()
     {
         if (!chat.isAdded()) {
-            int width = _ctx.getDisplay().getWidth();
+            int width = _ctx.getCamera().getWidth();
             _ctx.getRootNode().addWindow(chat);
             chat.pack();
             chat.setBounds(5, 80, width - 10, chat.getHeight());
@@ -590,7 +600,7 @@ public class BangView extends BWindow
             log.info("practice view", "height", _practiceView.getHeight(),
                      "width", _practiceView.getWidth());
             _practiceView.setLocation(
-                (_ctx.getDisplay().getWidth() - _practiceView.getWidth())/2, 10);
+                (_ctx.getCamera().getWidth() - _practiceView.getWidth())/2, 10);
         }
     }
 
@@ -601,7 +611,7 @@ public class BangView extends BWindow
             _ctx.getRootNode().addWindow(critview);
             critview.pack();
             _ctx.getInterface().attachChild(
-                new WindowSlider(critview, WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
+                new WindowSlider(critview, _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(), WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
         }
     }
 
@@ -621,7 +631,7 @@ public class BangView extends BWindow
             _ctx.getRootNode().addWindow(scenHUD);
             scenHUD.pack();
             _ctx.getInterface().attachChild(
-                    new WindowSlider(scenHUD, WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
+                    new WindowSlider(scenHUD, _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(), WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
         }
     }
 
@@ -671,9 +681,8 @@ public class BangView extends BWindow
             // make sure we're not too late to the party
             if (_bangobj != null) {
                 int[] histo = _perfhisto.getBuckets().clone();
-                String driver = GL11.glGetString(GL11.GL_VENDOR) + ", " +
-                    GL11.glGetString(GL11.GL_RENDERER) + ", " +
-                    GL11.glGetString(GL11.GL_VERSION);
+                // GL driver identity (vendor / renderer / version), read on the render thread.
+                String driver = _ctx.getApp().getGLRendererString();
                 _bangobj.service.reportPerformance(_boardId, driver, histo);
             }
 

@@ -3,8 +3,8 @@
 
 package com.threerings.bang.saloon.client;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
 import com.jmex.bui.BImage;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.util.Dimension;
@@ -146,7 +146,7 @@ public class PlayerSlot extends AvatarView
     }
 
     @Override // documentation inherited
-    protected void renderImage (Renderer renderer)
+    protected void renderImage (RenderManager renderer)
     {
         if (_pinfo != null) {
             super.renderImage(renderer);
@@ -160,7 +160,7 @@ public class PlayerSlot extends AvatarView
     }
 
     @Override // documentation inherited
-    protected void renderScroll (Renderer renderer)
+    protected void renderScroll (RenderManager renderer)
     {
         if (_pinfo != null || _anonymous) {
             super.renderScroll(renderer);

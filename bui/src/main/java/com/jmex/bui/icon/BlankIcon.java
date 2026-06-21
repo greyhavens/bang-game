@@ -5,7 +5,7 @@
 
 package com.jmex.bui.icon;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 /**
  * Takes up space.
@@ -31,7 +31,7 @@ public class BlankIcon extends BIcon
     }
 
     // documentation inherited
-    public void render (Renderer renderer, int x, int y, float alpha)
+    public void render (RenderManager renderer, int x, int y, float alpha)
     {
         // nothing doing
     }

@@ -199,7 +199,9 @@ public class BuiHostApp extends SimpleApplication
             _rm.setCamera(guiViewPort.getCamera(), true);
             _backend.beginFrame(_rm, w, h);
             try {
-                _root.renderWindows();
+                // null token: the jME3 backend renders through its own RenderManager and
+                // ignores BUI's pass-through Renderer argument.
+                _root.renderWindows(null);
             } finally {
                 _backend.endFrame();
                 // restore non-overlay camera so the GUI bucket flush after us is undisturbed.

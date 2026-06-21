@@ -3,13 +3,6 @@
 
 package com.threerings.bang.game.data.piece;
 
-import java.io.IOException;
-
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -37,34 +30,6 @@ public class Viewpoint extends Piece
     public int computeElevation (BangBoard board, int tx, int ty)
     {
         return elevation;
-    }
-    
-    @Override // documentation inherited
-    public void read (JMEImporter im)
-        throws IOException
-    {
-        super.read(im);
-        InputCapsule capsule = im.getCapsule(this);
-        name = capsule.readString("name", null);
-        fx = capsule.readByte("fx", (byte)0);
-        fy = capsule.readByte("fy", (byte)0);
-        forient = capsule.readByte("forient", (byte)0);
-        pitch = capsule.readShort("pitch", (short)0);
-        elevation = capsule.readShort("elevation", (short)0);
-    }
-    
-    @Override // documentation inherited
-    public void write (JMEExporter ex)
-        throws IOException
-    {
-        super.write(ex);
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(name, "name", null);
-        capsule.write(fx, "fx", (byte)0);
-        capsule.write(fy, "fy", (byte)0);
-        capsule.write(forient, "forient", (byte)0);
-        capsule.write(pitch, "pitch", (short)0);
-        capsule.write(elevation, "elevation", (short)0);
     }
     
     @Override // documentation inherited

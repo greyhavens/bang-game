@@ -7,8 +7,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.jme.util.export.binary.BinaryExporter;
-import com.jme.util.export.binary.BinaryImporter;
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
@@ -419,7 +419,10 @@ public class BountyGameEditor extends BDecoratedWindow
     {
         try {
             File file = getFile(filename);
-            displayConfig((BangConfig)BinaryImporter.getInstance().load(file));
+            try (ObjectInputStream oin = new ObjectInputStream(
+                    new java.io.BufferedInputStream(new java.io.FileInputStream(file)))) {
+                displayConfig((BangConfig)oin.readObject());
+            }
             _status.setStatus(OfficeCodes.OFFICE_MSGS,
                               MessageBundle.tcompose("m.loaded_game", file), false);
 
@@ -434,7 +437,11 @@ public class BountyGameEditor extends BDecoratedWindow
     {
         try {
             File file = getFile(filename);
-            BinaryExporter.getInstance().save(createConfig(), file);
+            try (ObjectOutputStream oout = new ObjectOutputStream(
+                    new java.io.BufferedOutputStream(new java.io.FileOutputStream(file)))) {
+                oout.writeObject(createConfig());
+                oout.flush();
+            }
             _status.setStatus(OfficeCodes.OFFICE_MSGS,
                               MessageBundle.tcompose("m.saved_game", file), false);
 

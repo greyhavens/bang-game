@@ -13,9 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-
 import com.samskivert.swing.MultiLineLabel;
 import com.samskivert.swing.VGroupLayout;
 import com.samskivert.util.ResultListener;

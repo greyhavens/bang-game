@@ -3,7 +3,8 @@
 
 package com.threerings.bang.game.client.effect;
 
-import com.jme.scene.Spatial;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -30,8 +31,12 @@ public class ParticleInfluenceViz extends InfluenceViz
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
                 _particles = result;
-                _particles.getLocalTranslation().set(0, 0,
-                    _target.getPiece().getHeight() * 0.5f * TILE_SIZE);
+                // jME3: Spatial.getLocalTranslation() returns the internal vector but mutating it
+                // in place does NOT flag the transform refresh, so the particle system stayed at the
+                // sprite origin (on the ground, under the unit). setLocalTranslation applies the
+                // transform and dirties the spatial, floating it above the unit as the fork intended.
+                _particles.setLocalTranslation(new Vector3f(0, 0,
+                    _target.getPiece().getHeight() * 0.5f * TILE_SIZE));
             }
         });
     }

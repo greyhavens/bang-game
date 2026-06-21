@@ -3,7 +3,7 @@
 
 package com.threerings.bang.client;
 
-import com.jme.input.KeyInput;
+import com.jme3.input.KeyInput;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.KeyEvent;

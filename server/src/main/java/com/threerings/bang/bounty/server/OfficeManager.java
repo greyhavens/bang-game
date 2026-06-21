@@ -10,7 +10,7 @@ import java.util.HashSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import com.jme.util.export.binary.BinaryImporter;
+import com.threerings.io.ObjectInputStream;
 import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.Invoker;
 
@@ -115,8 +115,10 @@ public class OfficeManager extends ShopManager
             public boolean invoke () {
                 try {
                     String path = config.getGamePath(gameId);
-                    _gconfig = (BangConfig)BinaryImporter.getInstance().load(
-                        _rsrcmgr.getResource(path));
+                    // jME3 cutover (Phase 3): .game bounties are now Narya streams (BangConfig is
+                    // a Streamable GameConfig); read via Narya, no jME3 Savable dependency.
+                    _gconfig = (BangConfig)new ObjectInputStream(
+                        _rsrcmgr.getResource(path)).readObject();
                 } catch (Exception e) {
                     log.warning("Failed to load bounty game", "key", key, e);
                 }

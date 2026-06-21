@@ -1,8 +1,24 @@
 dependencies {
   api project(":client:shared")
-  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:${gdxVersion}"
-  implementation group: "com.badlogicgames.gdx", name: "gdx-platform", version: gdxVersion,
-          classifier: "natives-desktop"
+
+  // jME3 cutover (Phase 3 — the atomic host flip): the client now runs on jME3/LWJGL3. The host
+  // (BangApp) is a com.jme3.app.SimpleApplication; jme3-lwjgl3 supplies the LWJGL3 window/context,
+  // jme3-desktop supplies the AWT image loaders + desktop asset support. The old gdx LWJGL2 host
+  // (gdx-backend-lwjgl + gdx-platform natives) is dropped.
+  runtimeOnly "org.jmonkeyengine:jme3-lwjgl3:${jme3Version}"
+  // jme3-desktop is `implementation` (not runtimeOnly) because EditorDesktop references
+  // com.jme3.system.JmeCanvasContext directly at compile time (it lives in jme3-desktop, not
+  // jme3-core) to grab the embedded AWT canvas from the jME3 Canvas context.
+  implementation "org.jmonkeyengine:jme3-desktop:${jme3Version}"
+
+  // jME3 cutover (Phase 7b — editor canvas embedding): EditorDesktop embeds jME3 into a Swing
+  // JFrame via the LWJGL3 Canvas context (com.jme3.system.lwjgl.LwjglCanvas), which bridges to
+  // org.lwjgl.opengl.awt.AWTGLCanvas in lwjgl3-awt. Proven by tools/jme3-host's CanvasSpike (7a).
+  // lwjgl3-awt's POM declares an lwjgl dependency with an unresolved ${lwjgl.natives} native
+  // classifier (a broken Maven property) — exclude its transitives; jme3-lwjgl3 already supplies
+  // the matching lwjgl 3.3.x core + per-OS natives. We only need lwjgl3-awt's AWTGLCanvas classes.
+  runtimeOnly("org.lwjglx:lwjgl3-awt:0.2.3") { transitive = false }
+
   // narya 1.19's Streamer hard-references depot's ByteEnum when streaming any enum;
   // depot is optional for narya but required on the classpath at runtime
   runtimeOnly "com.samskivert:depot:${depotVersion}"

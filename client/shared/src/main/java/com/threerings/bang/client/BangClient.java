@@ -17,15 +17,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-
-import com.badlogic.gdx.Input.Keys;
+import com.jme3.input.KeyInput;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import com.jme.renderer.ColorRGBA;
+import com.jme3.math.ColorRGBA;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -48,6 +45,7 @@ import com.threerings.getdown.util.LaunchUtil;
 // import com.threerings.hemiptera.data.Report;
 // import com.threerings.hemiptera.util.SendReportUtil;
 
+import com.threerings.jme.JmeApp;
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.effect.WindowSlider;
 
@@ -316,8 +314,7 @@ public class BangClient extends BasicClient
             return;
         }
 
-        // set our proper window title
-        Display.setTitle(_ctx.xlate(BangCodes.BANG_MSGS, "m.app_title"));
+        _ctx.getApp().setWindowTitle(_ctx.xlate(BangCodes.BANG_MSGS, "m.app_title"));
 
         // upgrade getdown if appropriate
         File newgd = new File(localDataDir("code/getdown-pro-new.jar"));
@@ -344,6 +341,16 @@ public class BangClient extends BasicClient
         // setup our modal shade color
         _ctx.getRootNode().setModalShade(BangUI.MODAL_SHADE);
 
+        // re-fit the active main view when the display is resized (fullscreen toggle / mode change /
+        // window drag). The fork's OptionsView re-bounded its _parent after recreateWindow; here the
+        // host fires this once the GLFW window has actually been recreated and the cameras re-fit
+        // (OptionsView's synchronous re-bound could not, because the jME3 restart() is asynchronous).
+        _ctx.getApp().addResizeListener(new JmeApp.ResizeListener() {
+            public void displayResized (int width, int height) {
+                refitMainView(width, height);
+            }
+        });
+
         // configure our guest handle name
         GuestHandle.setDefaultName(_ctx.xlate(BangCodes.BANG_MSGS, "m.you"));
 
@@ -354,7 +361,9 @@ public class BangClient extends BasicClient
         _ctx.getRootNode().addWindow(_mview);
         _mview.pack();
         _mview.center();
-        FadeInOutEffect fade = new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true) {
+        FadeInOutEffect fade = new FadeInOutEffect(
+                _ctx.getAssetManager(), _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(),
+                ColorRGBA.Black, 1f, 0f, 0.25f, true) {
             protected void fadeComplete () {
                 super.fadeComplete();
                 // now start unpacking our resources
@@ -597,7 +606,7 @@ public class BangClient extends BasicClient
         popup.pack(twidth, -1);
         int dy = (_mview instanceof BangView) ? ((BangView)_mview).getCenterOffset() : 0;
         _ctx.getInterface().attachChild(
-            new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f, 0, dy));
+            new WindowSlider(popup, _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(), WindowSlider.FROM_TOP, 0.25f, 0, dy));
     }
 
     /**
@@ -639,7 +648,7 @@ public class BangClient extends BasicClient
             BangUI.play(BangUI.FeedbackSound.WINDOW_DISMISS);
             int dy = (_mview instanceof BangView) ? ((BangView)_mview).getCenterOffset() : 0;
             _ctx.getInterface().attachChild(
-                new WindowSlider(popup, WindowSlider.TO_RIGHT, 0.25f, 0, dy) {
+                new WindowSlider(popup, _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(), WindowSlider.TO_RIGHT, 0.25f, 0, dy) {
                 protected void slideComplete () {
                     super.slideComplete();
                     if (popup.isAdded()) {
@@ -895,7 +904,7 @@ public class BangClient extends BasicClient
         // update our title to contain our username
         PlayerObject user = _ctx.getUserObject();
         if (!user.tokens.isAnonymous()) {
-            Display.setTitle(
+            _ctx.getApp().setWindowTitle(
                 _msgmgr.getBundle(BangCodes.BANG_MSGS).get("m.online_title", user.username));
         }
 
@@ -1098,7 +1107,9 @@ public class BangClient extends BasicClient
         if (BangPrefs.isDetailSet()) {
             return;
         }
-        String renderer = GL11.glGetString(GL11.GL_RENDERER);
+        // TODO(phase3-host): query the GL renderer string from the jME3 context to
+        // auto-pick a default detail level; until the host is wired, skip autodetect.
+        String renderer = null;
         if (renderer == null) {
             return;
         }
@@ -1207,6 +1218,95 @@ public class BangClient extends BasicClient
         return true;
     }
 
+    /**
+     * Re-fits the active main view to a new display size after a resolution / fullscreen change.
+     * Mirrors the re-fit the fork's {@code OptionsView} did on its {@code _parent}: full-screen
+     * views (TownView, BangView) re-bound to fill the new size -- which re-runs their layout, so the
+     * bottom/lower-right-anchored menu, Exit and admin buttons re-anchor to the new corners -- while
+     * centered views (ShopView, LogonView) re-center. Runs on the render thread (from the host
+     * {@link JmeApp.ResizeListener}) once the GLFW window has actually been recreated.
+     */
+    protected void refitMainView (int width, int height)
+    {
+        if (_mview == null || !_mview.isAdded()) {
+            return;
+        }
+        if (_mview instanceof ShopView) {
+            // shops keep their 1024x768 logical layout but scale up to fill the (re-fit) display
+            scaleShopView((ShopView)_mview, width, height);
+        } else if (_mview instanceof LogonView) {
+            _mview.center();
+        } else {
+            _mview.setBounds(0, 0, width, height);
+        }
+    }
+
+    /**
+     * Shop scale policy. Shop views are authored against a fixed 1024x768 logical canvas (the
+     * shopkeeper art, the {@code to_town} button at 1012,756, etc. are hard-coded pixels). To fill
+     * a larger fullscreen display we keep that logical size and apply a uniform BUI render+input
+     * scale to the window (see {@link BWindow#setRenderScale}).
+     *
+     * <p>Two policies are available; flip {@link #SHOP_STRETCH_FILL} to switch:
+     * <ul>
+     *   <li><b>full-stretch</b> (current, {@code true}): a NON-UNIFORM render scale {@code
+     *       (w/1024, h/768)} pivoted at the origin (0,0) -- the art fills the whole display
+     *       edge-to-edge with no bars and no crop, at the cost of a mild aspect stretch (e.g. a
+     *       16:9 display stretches the 4:3 art horizontally). See {@link #scaleShopView}.</li>
+     *   <li><b>uniform-fit</b> ({@code false}): {@code scale = min(w/1024, h/768)} applied to both
+     *       axes -- the art scales without aspect distortion and nothing is cropped; a 16:9 display
+     *       gets modest side bars. The window's scaled footprint is centered in the display.</li>
+     * </ul>
+     * At exactly 1024x768 either policy yields scale 1.0 and location (0,0), i.e. identical to
+     * today's legacy {@code setSize(1024,768); center()}.
+     */
+    protected static final boolean SHOP_STRETCH_FILL = true;
+
+    /**
+     * Computes the uniform shop render scale (the {@link #SHOP_STRETCH_FILL}{@code == false}
+     * branch) for the given display size: {@code min(w/1024, h/768)}, i.e. the largest uniform
+     * scale that fits the 1024x768 art within the display without cropping.
+     */
+    protected static float computeShopScale (int width, int height)
+    {
+        float sx = width / 1024f, sy = height / 768f;
+        return Math.min(sx, sy);
+    }
+
+    /**
+     * Applies the shop render scale to the (logically 1024x768) shop window. The window's logical
+     * bounds stay 1024x768 so its children lay out exactly as before; only its render and mouse
+     * input are scaled. Two policies (see {@link #SHOP_STRETCH_FILL}):
+     *
+     * <ul>
+     *   <li><b>full-stretch</b>: a NON-UNIFORM scale {@code (w/1024, h/768)} pivoted at the origin,
+     *       window located at (0,0) -- fills the entire display edge-to-edge (no bars, no crop) with
+     *       a mild aspect stretch.</li>
+     *   <li><b>uniform-fit</b>: a single {@code min} scale applied to both axes, with the scaled
+     *       1024*scale x 768*scale footprint centered in the display.</li>
+     * </ul>
+     *
+     * At 1024x768 both policies yield scale 1.0 and location (0,0), matching the legacy
+     * {@code setSize(1024,768); center()}.
+     */
+    protected void scaleShopView (ShopView shop, int width, int height)
+    {
+        shop.setSize(1024, 768);
+        if (SHOP_STRETCH_FILL) {
+            // non-uniform stretch from the origin: fill the whole display, pivot at (0,0).
+            shop.setRenderScale(width / 1024f, height / 768f);
+            shop.setLocation(0, 0);
+        } else {
+            // uniform-fit: scale both axes by min() and center the scaled footprint.
+            float scale = computeShopScale(width, height);
+            shop.setRenderScale(scale);
+            // the window's (x,y) origin is the render/input pivot, so the scaled art grows
+            // down-right from there.
+            int sw = Math.round(1024 * scale), sh = Math.round(768 * scale);
+            shop.setLocation((width - sw) / 2, (height - sh) / 2);
+        }
+    }
+
     protected void setMainView (final BWindow view)
     {
         // if the view is a game view, fade out the current music as we fade out the current view
@@ -1216,7 +1316,9 @@ public class BangClient extends BasicClient
 
         // if we have an existing main view, fade that out
         if (_mview != null) {
-            FadeInOutEffect fade = new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.5f, true) {
+            FadeInOutEffect fade = new FadeInOutEffect(
+                _ctx.getAssetManager(), _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(),
+                ColorRGBA.Black, 0f, 1f, 0.5f, true) {
                 protected void fadeComplete () {
                     super.fadeComplete();
                     _ctx.getRootNode().removeAllWindows();
@@ -1254,14 +1356,16 @@ public class BangClient extends BasicClient
 
             // also re-wire up our options view whenever the main view changes as the BangView
             // overrides the escape mapping during the game
-            _ctx.getKeyManager().registerCommand(Keys.ESCAPE, _clearPopup);
+            _ctx.getKeyManager().registerCommand(KeyInput.KEY_ESCAPE, _clearPopup);
         }
 
         // don't fade in the game or town views, they'll handle that themselves when they're ready
         if (view instanceof BangView || view instanceof TownView) {
             return;
         }
-        _ctx.getInterface().attachChild(new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true));
+        _ctx.getInterface().attachChild(new FadeInOutEffect(
+                _ctx.getAssetManager(), _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight(),
+                ColorRGBA.Black, 1f, 0f, 0.25f, true));
     }
 
     /**
@@ -1323,6 +1427,43 @@ public class BangClient extends BasicClient
         }.schedule(exitDelay);
 
         return true;
+    }
+
+    /**
+     * Restarts the Bang session in-process: re-establishes the client connection using the
+     * server and credentials configured at the original logon and returns the player to the town
+     * hub. This is the dev-build equivalent of {@link #relaunchGetdown}: in a production install
+     * Getdown relaunches the whole process (which re-runs the auto-logon); in a dev build there is
+     * no Getdown, so instead of exiting we simply log back on within the same process.
+     *
+     * <p>Called when the user clicks "Restart" on the {@link LogOffView} that pops up after an idle
+     * logoff (or other logoff with message). By the time that view is shown the client has already
+     * fully logged off ({@link #clientDidLogoff} is what displays the view), so the communicator is
+     * torn down and a fresh {@link Client#logon} will reconnect with the previously configured
+     * server/credentials. A successful logon eventually fires {@link #clientDidLogon} which calls
+     * {@link #showTownView}, replacing the LogOffView with the town hub.
+     *
+     * @return true if a logon attempt was initiated, false if we could not restart (e.g. we have
+     * no credentials configured or are somehow still logged on).
+     */
+    public boolean restartBang ()
+    {
+        Client client = _ctx.getClient();
+        if (client.isLoggedOn() || client.isActive()) {
+            // we're already (re)connecting/connected; nothing to do
+            log.info("Ignoring restart request; client already active.");
+            return false;
+        }
+        if (client.getCredentials() == null) {
+            // without credentials we can't reconnect in-process (would need the logon view)
+            log.warning("Cannot restart Bang in-process; no credentials configured.");
+            return false;
+        }
+        // clear the stale logoff message so a successful reconnect doesn't immediately re-pop the
+        // LogOffView if something goes wrong, and so a fresh connection failure is reported cleanly
+        _logOffMsg = null;
+        log.info("Restarting Bang session in-process.");
+        return client.logon();
     }
 
     /** Tracks user idleness and lets the server know when we're idle and eventually logs us
@@ -1425,14 +1566,16 @@ public class BangClient extends BasicClient
             // clear any lingering popups
             clearPopups(false);
 
-            // shop views are hard-coded to 1024x768
+            // shop views are authored at a fixed 1024x768 logical canvas; scale that canvas up to
+            // fill the display (uniform-fit, see scaleShopView / SHOP_STRETCH_FILL). At 1024x768
+            // the scale resolves to 1.0, i.e. identical to the legacy setSize(1024,768)+center().
             BWindow pview = (BWindow)view;
             if (pview instanceof ShopView) {
-                pview.setSize(1024, 768);
-                pview.center();
+                scaleShopView((ShopView)pview,
+                              _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight());
             } else {
                 // size the view to fill the display
-                pview.setBounds(0, 0, _ctx.getDisplay().getWidth(), _ctx.getDisplay().getHeight());
+                pview.setBounds(0, 0, _ctx.getCamera().getWidth(), _ctx.getCamera().getHeight());
             }
 
             // configure the main view; fades the previous view out and fades the new view in

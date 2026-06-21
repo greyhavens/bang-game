@@ -5,7 +5,7 @@
 
 package com.jmex.bui;
 
-import com.jme.renderer.Renderer;
+import com.jme3.renderer.RenderManager;
 
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.util.Dimension;
@@ -168,7 +168,7 @@ public class BLabel extends BTextComponent
     }
 
     // documentation inherited
-    protected void renderComponent (Renderer renderer)
+    protected void renderComponent (RenderManager renderer)
     {
         super.renderComponent(renderer);
         _label.render(renderer, 0, 0, getWidth(), getHeight(), _alpha);

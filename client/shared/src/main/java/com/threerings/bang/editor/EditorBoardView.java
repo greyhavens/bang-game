@@ -9,18 +9,18 @@ import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.jme.math.Vector2f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.scene.state.RenderState;
-import com.jme.scene.state.WireframeState;
-import com.jme.util.geom.Debugger;
+import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.SceneGraphVisitor;
+import com.jme3.scene.Spatial;
 
-import com.jmex.terrain.util.AbstractHeightMap;
-import com.jmex.terrain.util.FaultFractalHeightMap;
-import com.jmex.terrain.util.MidPointHeightMap;
-import com.jmex.terrain.util.ParticleDepositionHeightMap;
+import com.jme3.terrain.heightmap.AbstractHeightMap;
+import com.jme3.terrain.heightmap.FaultHeightMap;
+import com.jme3.terrain.heightmap.MidpointDisplacementHeightMap;
+import com.jme3.terrain.heightmap.ParticleDepositionHeightMap;
 
 import com.samskivert.util.RandomUtil;
 
@@ -130,20 +130,25 @@ public class EditorBoardView extends BoardView
 
     /**
      * Activates or deactivates wireframe rendering.
+     *
+     * <p>jME3 cutover: the fork toggled a single {@code WireframeState} on the root node; jME3
+     * wireframe is per-material ({@code material.getAdditionalRenderState().setWireframe(...)}),
+     * so we walk the geometries under {@code _node} and flip the flag on each material. (Editor
+     * tooling; Phase-5 work, migrated fork-free now.)
      */
     public void toggleWireframe ()
     {
-        WireframeState wstate = (WireframeState)_node.getRenderState(
-            RenderState.RS_WIREFRAME);
-        if (wstate == null) {
-            wstate = _ctx.getRenderer().createWireframeState();
-            wstate.setFace(WireframeState.WS_FRONT_AND_BACK);
-            _node.setRenderState(wstate);
-
-        } else {
-            wstate.setEnabled(!wstate.isEnabled());
-        }
-        _node.updateRenderState();
+        _wireframe = !_wireframe;
+        _node.depthFirstTraversal(new SceneGraphVisitor() {
+            public void visit (Spatial spatial) {
+                if (spatial instanceof Geometry) {
+                    Material mat = ((Geometry)spatial).getMaterial();
+                    if (mat != null) {
+                        mat.getAdditionalRenderState().setWireframe(_wireframe);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -455,7 +460,13 @@ public class EditorBoardView extends BoardView
     {
         int size = RenderUtil.nextPOT(Math.max(_board.getHeightfieldWidth(),
             _board.getHeightfieldHeight()));
-        setHeightfield(new MidPointHeightMap(size, roughness));
+        try {
+            // jME3's MidpointDisplacementHeightMap takes (size, range, persistence); the fork's
+            // single "roughness" param maps to the range, with a default persistence.
+            setHeightfield(new MidpointDisplacementHeightMap(size, roughness, 0.5f));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -466,8 +477,14 @@ public class EditorBoardView extends BoardView
     {
         int size = RenderUtil.nextPOT(Math.max(_board.getHeightfieldWidth(),
             _board.getHeightfieldHeight()));
-        setHeightfield(new FaultFractalHeightMap(size, iterations, minDelta,
-            maxDelta, filter));
+        try {
+            // jME3's FaultHeightMap has no "filter" param (the fork's smoothing filter); it is
+            // dropped. min/maxDelta map to min/maxFaultHeight.
+            setHeightfield(new FaultHeightMap(size, iterations, minDelta,
+                maxDelta));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -478,8 +495,12 @@ public class EditorBoardView extends BoardView
     {
         int size = RenderUtil.nextPOT(Math.max(_board.getHeightfieldWidth(),
             _board.getHeightfieldHeight()));
-        setHeightfield(new ParticleDepositionHeightMap(size, jumps, peakWalk,
-            minParticles, maxParticles, caldera));
+        try {
+            setHeightfield(new ParticleDepositionHeightMap(size, jumps, peakWalk,
+                minParticles, maxParticles, caldera));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -862,16 +883,12 @@ public class EditorBoardView extends BoardView
     @Override // documentation inherited
     protected Node createPieceNode ()
     {
-        return new Node("pieces") {
-            public void draw (Renderer r) {
-                super.draw(r);
-                if (_showBounds) {
-                    for (int ii = 0, nn = getQuantity(); ii < nn; ii++) {
-                        Debugger.drawBounds(getChild(ii), r);
-                    }
-                }
-            }
-        };
+        // jME3 cutover: the fork overrode draw(Renderer) to call Debugger.drawBounds for each
+        // child when _showBounds was set. jME3 has no draw(Renderer) hook; bounding-volume
+        // debug rendering is done by attaching com.jme3.scene.debug.WireBox geometries (or via
+        // a debug SceneProcessor). This is editor-only debug tooling.
+        // TODO(phase5-editor): re-implement _showBounds via attached WireBox debug shapes.
+        return new Node("pieces");
     }
 
     @Override // documentation inherited
@@ -1341,6 +1358,9 @@ public class EditorBoardView extends BoardView
 
     /** Whether or not to show the bounding volumes. */
     protected boolean _showBounds;
+
+    /** Whether wireframe rendering is currently enabled. */
+    protected boolean _wireframe;
 
     /** The in-progress edits, if any. */
     protected HeightfieldEdit _hfedit;
