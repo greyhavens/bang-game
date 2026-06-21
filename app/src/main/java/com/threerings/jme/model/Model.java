@@ -12,6 +12,7 @@ import java.util.Properties;
 import com.jme3.anim.AnimClip;
 import com.jme3.anim.AnimComposer;
 import com.jme3.scene.Geometry;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
@@ -462,7 +463,59 @@ public class Model extends Node
         instance._anims = _anims;
         instance._animMode = _animMode;
         instance.readMetadata(contentClone);
+        // apply procedural controllers (e.g. the Rotator spin) to the INSTANCE only -- not the
+        // prototype -- so the control isn't copied by the next clone() and double-applied.
+        instance.applyControllers();
         return instance;
+    }
+
+    /**
+     * Applies the model's procedural {@code controllers} (declared in {@code model.properties},
+     * preserved by the converter as {@code bang.properties} but not converted) to this instance.
+     * Currently supports the fork {@code Rotator}: a constant-velocity spin on the named node
+     * (windmill blades, vultures, the firestarter bonus, etc. -- BUG-27).
+     */
+    protected void applyControllers ()
+    {
+        String ctrls = (_props == null) ? null : _props.getProperty("controllers");
+        if (ctrls == null || !(_content instanceof Node)) {
+            return;
+        }
+        Node root = (Node)_content;
+        for (String name : ctrls.split(",")) {
+            name = name.trim();
+            if (name.isEmpty()) {
+                continue;
+            }
+            // the controller's name is the name of the node it drives
+            String cls = _props.getProperty(name + ".class", "");
+            if (!cls.endsWith("Rotator")) {
+                continue; // only the constant-velocity Rotator is ported so far
+            }
+            Spatial target = name.equals(root.getName()) ? root : root.getChild(name);
+            if (target == null) {
+                continue;
+            }
+            Vector3f axis = parseAxis(_props.getProperty(name + ".axis", "x"));
+            float velocity;
+            try {
+                velocity = Float.parseFloat(_props.getProperty(name + ".velocity", "3.14"));
+            } catch (NumberFormatException nfe) {
+                velocity = 3.14f;
+            }
+            target.addControl(new Rotator(axis, velocity));
+        }
+    }
+
+    /** Parses a model-property axis string ("x"/"y"/"z") into a unit vector (defaults to X). */
+    protected static Vector3f parseAxis (String axis)
+    {
+        if ("y".equalsIgnoreCase(axis)) {
+            return Vector3f.UNIT_Y.clone();
+        } else if ("z".equalsIgnoreCase(axis)) {
+            return Vector3f.UNIT_Z.clone();
+        }
+        return Vector3f.UNIT_X.clone();
     }
 
     /** Reconstructs the facade state from the converter-preserved user data on the content root. */
