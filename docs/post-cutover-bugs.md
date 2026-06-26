@@ -347,8 +347,16 @@ Both on `github.com/claridtimo/bang-game`. Post-1.1.0 fixes (BUG-27, BUG-32 #2/#
 
 **Also fixed earlier (status corrected):** BUG-1 (fullscreen/resize reflow + shop scale-to-fill), BUG-5
 (camera pan speed + in-game slider), BUG-6 (scroll-wheel rotate), BUG-7 (artillery/explosion size, via the
-BUG-12 particle ms-fix). **Still open:** BUG-16 (dead/wreck model facing, low-pri/unverified), E15-11
-(board fog). (BUG-3 camera intro sweep is now working — see above.)
+BUG-12 particle ms-fix). **Still open:** BUG-16 (dead/wreck model facing, low-pri/unverified).
+(BUG-3 camera intro sweep is now working — see above. E15-11 board fog is now wired — see below.)
+
+**E15-11 board fog — FIXED 2026-06-27 (`e5e969fa4`).** `BoardView.refreshFog` was a flagged no-op; the
+fork hazed distant ground into the horizon via a per-node exp `FogState`. Now a `com.jme3.post.filters.
+FogFilter` rides the main viewport's existing FilterPostProcessor (added before the Warmth grade), driven
+from the board's fog params; the fork's world-space exp density (editor 0..0.02) maps onto jME3's
+normalized exp&sup2; FogFilter via `JmeApp.FOG_DISTANCE=650`/`FOG_DENSITY_SCALE=120` (tuned live).
+Density 0 disables it (the common case — most shipped boards carry no fog, faithful to the fork). Tune/
+exercise on fog-less boards with `-Dbang.debug.fog=<density>` (+ `-Dbang.debug.fogdist`/`fogscale`).
 
 **Effect glows — live-verified 2026-06-26** (HeroBuilding `hb` autoplay on indian_post, burst screenshots):
 - **BUG-14** (pooled sparkle/streamer/explosion additive glow) — **CONFIRMED FIXED.** Muzzle flashes,
