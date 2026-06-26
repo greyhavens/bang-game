@@ -1216,10 +1216,24 @@ public class BoardView extends BComponent
      */
     protected void refreshFog ()
     {
-        // jME3: the fork's per-node FogState has no scene-graph equivalent; board fog becomes a
-        // FogFilter on the viewport (jme3-effects). That post-process is wired at the Phase-4
-        // board-renderer pass; refreshFog is a flagged no-op until then (the fog color still feeds
-        // the background color via refreshBackgroundColor).
+        // E15-11: the fork's per-node exp FogState becomes a FogFilter on the main viewport (wired in
+        // JmeApp). Drive it from the board's fog params; density 0 disables it (the common case), as
+        // the fork added no FogState when density was 0. The fog color also feeds the background via
+        // refreshBackgroundColor. -Dbang.debug.fog=<density> forces a density to exercise/tune fog on
+        // boards that ship without it.
+        if (_ctx.getApp() == null) {
+            return;
+        }
+        float density = _board.getFogDensity();
+        String dbg = System.getProperty("bang.debug.fog");
+        if (dbg != null) {
+            try {
+                density = Float.parseFloat(dbg);
+            } catch (NumberFormatException nfe) {
+                // ignore a malformed override
+            }
+        }
+        _ctx.getApp().setBoardFog(_board.getFogColor(), density);
     }
 
     /**
