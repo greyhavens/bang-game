@@ -18,7 +18,12 @@ handling — fullscreen toggle + resolution picker in `OptionsView`, and `BangPr
 fullscreen). **Fix area:** `BangDesktop`/`BangApp` `AppSettings` (resizable + window hints) and
 `OptionsView` fullscreen/resolution → an LWJGL3 context mode switch/restart.
 
-## BUG-3 — Game-start camera intro (sweep / 360 rotate / zoom-out) doesn't play  [OPEN]
+## BUG-3 — Game-start camera intro (sweep / 360 rotate / zoom-out) doesn't play  [FIXED — observed working 2026-06-26]
+**RESOLVED:** Tim confirmed the game-start camera sweep/zoom-out now plays. No targeted fix was made for
+it — it came back incidentally as a side effect of the camera-path / camera-input work (most likely the
+E15-15 pre-round camera-enable restoration and/or the reshape/frustum fixes), which is why the exact
+fixing commit isn't pinned. Closing as working; reopen if it regresses.
+
 *Reported 2026-06-14 — documented in `docs/fidelity-reference/video/StartGameAndZoomOut.mp4`.* At
 game start the camera should do the scripted sweep/rotate + zoom-out to the board overview; it doesn't.
 
@@ -342,9 +347,19 @@ Both on `github.com/claridtimo/bang-game`. Post-1.1.0 fixes (BUG-27, BUG-32 #2/#
 
 **Also fixed earlier (status corrected):** BUG-1 (fullscreen/resize reflow + shop scale-to-fill), BUG-5
 (camera pan speed + in-game slider), BUG-6 (scroll-wheel rotate), BUG-7 (artillery/explosion size, via the
-BUG-12 particle ms-fix). **Still open:** BUG-3 (camera intro sweep), BUG-13/14/15 (effect glows — Phase-4;
-implemented in the E15 batch but not yet live-verified), BUG-16 (dead/wreck model facing, low-pri/unverified),
-E15-11 (board fog).
+BUG-12 particle ms-fix). **Still open:** BUG-16 (dead/wreck model facing, low-pri/unverified), E15-11
+(board fog). (BUG-3 camera intro sweep is now working — see above.)
+
+**Effect glows — live-verified 2026-06-26** (HeroBuilding `hb` autoplay on indian_post, burst screenshots):
+- **BUG-14** (pooled sparkle/streamer/explosion additive glow) — **CONFIRMED FIXED.** Muzzle flashes,
+  projectile streaks and combat bursts render as bright additive glows (not the dark/missing boxes the
+  bug described).
+- **BUG-15** (hero/iron-plate spheremap shine) — **CONFIRMED FIXED.** Hero/special units show bright
+  emissive spheremap shine overlays (blue/cyan/gold) — the overlay is present, no longer missing.
+- **BUG-13** (RepairViz glow halo) — **FIXED (implemented E15-8), high-confidence but not isolated in a
+  still.** Healing occurs in-scenario (green heal numbers, effect clusters) and RepairViz rides the same
+  additive `ParticleEffectViz` path confirmed working for BUG-14/15; a transient repair halo wasn't pinned
+  in a periodic screenshot. Recommend a quick close-up eyeball on a repair to call it 100%.
 
 ---
 
