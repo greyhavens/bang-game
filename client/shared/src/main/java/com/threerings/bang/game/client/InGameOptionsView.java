@@ -81,7 +81,7 @@ public class InGameOptionsView extends BDecoratedWindow
         cont.add(OptionsView.createLightSlider(ctx, "ambient"));
         cont.add(new BLabel("Shadow darkness", "right_label"));
         cont.add(OptionsView.createLightSlider(ctx, "shadow"));
-        cont.add(new BLabel("Sepia tone", "right_label"));
+        cont.add(new BLabel("Warmth", "right_label"));
         cont.add(OptionsView.createSepiaSlider(ctx));
 
         tabs.addTab(msgs.get("t.general"), cont);

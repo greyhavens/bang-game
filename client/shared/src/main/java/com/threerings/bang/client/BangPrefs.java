@@ -253,8 +253,9 @@ public class BangPrefs
     public static int getLightShadow () { return config.getValue("light_shadow", 100); }
     public static void updateLightShadow (int v) { config.setValue("light_shadow", v); }
 
-    /** Sepia post-process tint strength (Esc-options "Sepia tone"), 0 (off) .. 100 (full sepia);
-     * tints the whole 3D world viewport for the fork's aged-photo look. Defaults to 0. */
+    /** Warm-grade post-process strength (Esc-options "Warmth" slider; pref key kept as "sepia"),
+     * 0 (off) .. 100 (full); warms the whole 3D world viewport toward the fork's golden look.
+     * Defaults to 0. */
     public static int getSepia () { return config.getValue("sepia", 0); }
     public static void updateSepia (int v) { config.setValue("sepia", v); }
 

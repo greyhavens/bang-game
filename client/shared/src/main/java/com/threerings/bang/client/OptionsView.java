@@ -158,9 +158,9 @@ public class OptionsView extends BDecoratedWindow
     }
 
     /**
-     * Creates the "Sepia tone" slider (0..100%), which drives the world-viewport sepia post-process
-     * tint (the fork's aged-photo look). Persists in {@link BangPrefs} and applies live to the
-     * active board view (full in the town/menu, reduced during gameplay).
+     * Creates the "Warmth" slider (0..100%), which drives the world-viewport warm-grade post-process
+     * tint (the fork's golden sun-baked look). Persists in {@link BangPrefs} (key "sepia") and applies
+     * live to the active board view (full in the town/menu, reduced during gameplay).
      */
     public static BContainer createSepiaSlider (final BangContext ctx)
     {
@@ -229,7 +229,7 @@ public class OptionsView extends BDecoratedWindow
         cont.add(createLightSlider(_ctx, "ambient"));
         cont.add(new BLabel("Shadow darkness", "right_label"));
         cont.add(createLightSlider(_ctx, "shadow"));
-        cont.add(new BLabel("Sepia tone", "right_label"));
+        cont.add(new BLabel("Warmth", "right_label"));
         cont.add(createSepiaSlider(_ctx));
 
         // create the Chat tab if we're logged on
