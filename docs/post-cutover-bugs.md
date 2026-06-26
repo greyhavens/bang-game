@@ -278,14 +278,20 @@ how the fork highlighted a hovered building (`TownView`/building sprite: the hig
 blend/material state) and reproduce that subtle blend in jME3; ensure it clears on mouse-exit. Verify live
 (hover a building) against `barbershopHighlighted.png`.
 
-## BUG-26 — Sky gradient dome lacks the warm/yellow horizon tinge  [OPEN — gamma/colorspace]
-*Reported 2026-06-20.* The fork sky has a warm/yellow horizon band; ours reads as a plainer cool gradient.
+## BUG-26 — Sky gradient dome lacks the warm/yellow horizon tinge  [LARGELY ADDRESSED 2026-06-26]
+*Reported 2026-06-20.* The fork sky has a warm/yellow horizon band; ours read as a plainer cool gradient.
 **Diagnosis (2026-06-21):** NOT the gradient build — `SkyNode.createGradientTexture` is byte-identical to
 the fork (same horizon/overhead board colors, same `exp(-falloff*s)` interpolation). The difference is the
 **gamma/sRGB pipeline**: gamma correction is on (jME3 default — no explicit `setGammaCorrection`) and the
 gradient image is tagged `ColorSpace.sRGB`, so the rendered colors shift vs the fork's raw FFP output.
-**Fix:** a deliberate colorspace/gamma pass (entangled with the parked warm-cast/shadow look-work; the
-stash's blind gamma-off experiments made things worse). Not a one-liner.
+**RESOLUTION (see "Look-tuning" below).** Two committed changes addressed this without chasing a
+separate sky-dome recolor: (1) **gamma-off** (`BangDesktop.setGammaCorrection(false)`, commit `7ffaf34c9`)
+directly fixes the diagnosed sRGB shift, restoring the fork's raw-FFP colour response; (2) the **Warmth**
+post-grade (commit `a19fd7b53`) warms the bright sky toward the fork's cream as a side effect of its
+luma-split highlight tint. With Warmth on, Tim confirmed the sky "kinda fixed" too. Remaining nuance: the
+Warmth slider defaults to **0** (off), so a fresh install still shows the cooler gradient until the player
+warms it — a possible follow-up is to ship a small warm default. A dedicated sky-dome gradient recolour is
+no longer needed unless we want the warm horizon independent of the global Warmth grade.
 
 ## BUG-27 — Windmill prop (right of the Sheriff's Office) doesn't spin  [FIXED 2026-06-21]
 Models declare procedural `controllers` in `model.properties` (windmill blades: `Rotator`, axis=z,
@@ -336,5 +342,35 @@ Both on `github.com/claridtimo/bang-game`. Post-1.1.0 fixes (BUG-27, BUG-32 #2/#
 
 **Also fixed earlier (status corrected):** BUG-1 (fullscreen/resize reflow + shop scale-to-fill), BUG-5
 (camera pan speed + in-game slider), BUG-6 (scroll-wheel rotate), BUG-7 (artillery/explosion size, via the
-BUG-12 particle ms-fix). Still open: BUG-3 (camera intro sweep), BUG-13/14/15 (effect glows, Phase-4),
-BUG-16 (dead/wreck model facing, low-pri), BUG-26 (above), E15-11 (board fog).
+BUG-12 particle ms-fix). **Still open:** BUG-3 (camera intro sweep), BUG-13/14/15 (effect glows — Phase-4;
+implemented in the E15 batch but not yet live-verified), BUG-16 (dead/wreck model facing, low-pri/unverified),
+E15-11 (board fog).
+
+---
+
+## Look-tuning (gamma + lighting + warmth) — 2026-06-21 / 2026-06-26
+
+Not bugs but deliberate look work to match the fork's warmer FFP rendering; recorded here since several
+overlap the sky/shadow bugs above. All committed on `JRECutover`.
+
+- **Gamma correction OFF** (`BangDesktop.setGammaCorrection(false)`, `7ffaf34c9`). jME3 defaults gamma
+  correction ON (sRGB pipeline); the fork was gamma-naive FFP. Disabling it restores the fork's colour
+  response across the whole game — the core fix behind BUG-26 and the general "too cool / too contrasty" feel.
+- **Live lighting sliders** (`48319344e`, `4999d7661`) — Esc → Options, both the town/menu `OptionsView`
+  and in-game `InGameOptionsView`: **Building light** (directional diffuse), **Ambient fill** (summed
+  ambient), **Shadow darkness** (0–200%, default 100). Backed by `BangPrefs` (`light_diffuse/ambient/shadow`);
+  `BoardView.applyLightingPrefs()` re-runs the light setup live (and re-bakes terrain shadow vertex colours
+  via `TerrainNode.getShadowValue * shadowScale`, clamped). The shadow slider's first version did nothing
+  visible because the on-ground shadows are baked terrain vertex colours from the *unscaled* board intensity;
+  that's the `4999d7661` fix.
+- **Warmth grade** (`a19fd7b53`) — a jME3 `FilterPostProcessor` (`SepiaFilter` + `shaders/Sepia.{frag,j3md}`)
+  on the **main viewport only** (not the BUI overlay). Originally a desaturating sepia matrix (read wrong);
+  reworked into a colour-preserving warm grade: ~22% gentle desaturate + a luma-split warm tint (strong amber
+  shadows, cream highlights) calibrated against `baseline/correct/FrontierTown/FrontierTown.png`. Esc-options
+  **"Warmth"** slider (0–100, pref key `sepia`, default 0); full strength in town/menu, dialed to 0.35× on the
+  actual game board (`BangBoardView.sepiaContextScale`) so gameplay stays readable. User-confirmed.
+
+**Open follow-ups from the look work:** consider a small non-zero **Warmth default** so a fresh install gets
+the fork's warm look out of the box; the parked warm-cast/shadow `stash@{0}` (terrain AmbientTint/LightTint
+split + ambient-floor lift) is now largely **superseded** by gamma-off + the ambient-sum (BUG-32 #2) + the
+sliders — drop it unless a specific jail-area-too-dark case resurfaces.
