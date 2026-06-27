@@ -1398,7 +1398,9 @@ public class BangClient extends BasicClient
 
         File appdir = new File(localDataDir(""));
         String[] args = new String[] {
-            LaunchUtil.getJVMPath(appdir), "-jar", pro.toString(), appdir.getPath()
+            // getdown 1.8 renamed getJVMPath(appdir) -> getJVMBinaryPath(appdir, windebug);
+            // windebug=false picks javaw (no console window) on Windows, matching the old relaunch.
+            LaunchUtil.getJVMBinaryPath(appdir, false), "-jar", pro.toString(), appdir.getPath()
         };
 
         // if we were passed a username and password on the command line, tack those on as well (we

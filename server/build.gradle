@@ -3,7 +3,7 @@ dependencies {
   api "com.samskivert:depot:${depotVersion}"
   // 1.5.1 is the first ooo-user built against depot 1.8 (1.4.5 calls removed
   // ColumnExp.in signatures and fails at runtime with NoSuchMethodError)
-  api "com.threerings:ooo-user:1.5.1"
+  api "com.threerings:ooo-user:${oooUserVersion}"
   api "net.sf.ehcache:ehcache:1.6.0"
   runtimeOnly "com.mysql:mysql-connector-j:8.0.33"
   api "commons-digester:commons-digester:1.8"

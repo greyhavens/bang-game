@@ -4,9 +4,20 @@ allprojects {
 
   ext {
     gdxVersion = "1.5.4"
+    // Three Rings / samskivert stack versions, centralised here (Epic 2 Phase 1) so any single lib
+    // can be forked + locally republished + swapped via a one-line change. mavenLocal() is first in
+    // `repositories`, so a locally-published `com.x:lib:<ver>-bang1` transparently wins.
     naryaVersion = "1.19"
     nenyaVersion = "1.7.2"
+    vilyaVersion = "1.7.1"
     depotVersion = "1.8"
+    samskivertVersion = "1.11"
+    oooUtilVersion = "1.5"
+    oooUserVersion = "1.5.1"
+    // getdown bumped 1.4 -> 1.8.10 (Epic 2 Phase 2): the applet-era 1.4 won't build on JDK 21
+    // (netscape.javascript.JSObject / source 1.5); modern getdown dropped applets and split into
+    // getdown-core/launcher/ant — Bang only needs getdown-core (LaunchUtil).
+    getdownVersion = "1.8.10"
     // jME3 is used only by the isolated Phase 5 tool modules + the (dormant, compileOnly)
     // jME3 BUI backend — centralised so a cutover bump can't leave modules on mismatched
     // versions (which would crash at runtime once they share a classpath)
@@ -46,6 +57,18 @@ allprojects {
 
   repositories {
     mavenLocal()
+    // Our forked Three Rings / samskivert stack, published to GitHub Packages (Epic 2 Phase 2).
+    // Ordered ahead of mavenCentral so our source-built copies win for these coordinates; creds come
+    // from ~/.gradle/gradle.properties (gpr.user/gpr.token) or the GITHUB_ACTOR/GITHUB_TOKEN env
+    // (CI), never hardcoded. Resolves nothing else, so the rest still comes from Central.
+    maven {
+      name = "githubBang"
+      url = uri("https://maven.pkg.github.com/claridtimo/bang-game")
+      credentials {
+        username = (project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR"))?.toString()
+        password = (project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN"))?.toString()
+      }
+    }
     mavenCentral()
   }
 }
