@@ -1,0 +1,21 @@
+MaterialDef Bang Sepia {
+
+    MaterialParameters {
+        // bound by the FilterPostProcessor to the rendered scene color
+        Int NumSamples
+        Texture2D Texture
+
+        // sepia amount, 0 (pass-through) .. 1 (full sepia)
+        Float Intensity : 0.0
+    }
+
+    Technique {
+        // single non-multisampled pass; the client runs without MSAA, so the scene
+        // is bound as a regular Texture2D and one technique serves both GLSL levels.
+        VertexShader   GLSL150 GLSL100 : Common/MatDefs/Post/Post.vert
+        FragmentShader GLSL150 GLSL100 : shaders/Sepia.frag
+
+        WorldParameters {
+        }
+    }
+}

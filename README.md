@@ -5,10 +5,12 @@ Design in 2004 and which is still limping along at http://www.banghowdy.com/
 
 This fork modernizes the game to run on current tooling: it builds with **Gradle 8.14** on a
 **JDK 21** toolchain and runs against **MySQL 8** (Connector/J 8, with the legacy schema migrations
-fixed up for MySQL 8's reserved words). An earlier effort started porting the rendering to
-[libGDX]; that direction has been dropped — the plan instead is to upgrade the forked
-jMonkeyEngine renderer to [jMonkeyEngine 3.8] (see `UPGRADE_PLAN.md`). The in-game board/map
-editor has also been fixed up and runs again.
+fixed up for MySQL 8's reserved words). The rendering has been cut over from the vendored 2005-era
+jMonkeyEngine fork (LWJGL 2.9 + [libGDX]) to stock [jMonkeyEngine 3.9] on LWJGL3 — the running
+client, server, and editor ship and load **zero fork code**. (The old `jme` fork module survives
+only as a build-time model/particle asset compiler, whose removal is deferred to a later epic.)
+See `docs/epics.md` and `docs/jme3-cutover-plan.md` for the cutover plan and status. The in-game
+board/map editor has also been fixed up and runs again.
 
 The client, server, and editor all build and run locally. Here's how.
 
@@ -141,6 +143,6 @@ texture images, UI images, sound files, everything other than the code, is relea
 Creative Commons [Attribution-NonCommercial 3.0] license.
 
 [libGDX]: https://libgdx.com/
-[jMonkeyEngine 3.8]: https://jmonkeyengine.org/
+[jMonkeyEngine 3.9]: https://jmonkeyengine.org/
 [Gradle]: https://gradle.org/
 [Attribution-NonCommercial 3.0]: https://creativecommons.org/licenses/by-nc/3.0/us/

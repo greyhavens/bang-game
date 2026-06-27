@@ -709,22 +709,13 @@ public class EffectHandler extends BoardView.BoardAction
         if (sprite == null) {
             return;
         }
-        // jME3 cutover: the fork fetched the sprite's MaterialState and animated its diffuse alpha
-        // to fade a dropped bonus in. jME3 fades via a Material Color alpha. We only need a fade
-        // material when fadeIn is requested.
-        // TODO(sprite-cluster reconcile): overrides the sprite's whole material via setMaterial;
-        // reconcile to the *Sprite framework's per-sprite alpha/colour-modulation seam (cluster 1)
-        // once its render-state->Material port lands, so the textured model material is preserved.
-        final Material mstate;
-        if (fadeIn) {
-            mstate = new Material(_ctx.getAssetManager(),
-                "Common/MatDefs/Misc/Unshaded.j3md");
-            mstate.setColor("Color", new ColorRGBA(1f, 1f, 1f, 0f));
-            mstate.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-            sprite.setMaterial(mstate);
-        } else {
-            mstate = null;
-        }
+        // jME3 cutover: the fork animated the sprite's MaterialState diffuse alpha to fade a dropped
+        // bonus in, KEEPING its textured model material. The prior cutover shortcut replaced the
+        // whole material with a textureless Unshaded white quad for the fade -- and never restored
+        // it -- so hero-death/dropped bonuses flew in white and stayed pure white (BUG-32). Instead
+        // we fly + scale the textured sprite in (the 0.5->1 scale is the spawn-in cue); the texture
+        // is preserved the whole time. (fadeIn retained for call compatibility; a texture-preserving
+        // alpha fade can be layered on via the sprite SpriteMaterialState seam later if desired.)
         BallisticShotHandler.PathParams pparams =
             BallisticShotHandler.computePathParams(
                 htrans, sprite.getWorldTranslation());
@@ -735,12 +726,10 @@ public class EffectHandler extends BoardView.BoardAction
                 super.update(time);
                 float alpha = Math.min(_accum / _duration, 1f);
                 _sprite.setLocalScale(FastMath.interpolateLinear(alpha, 0.5f, 1f));
-                if (fadeIn && mstate != null) {
-                    mstate.setColor("Color", new ColorRGBA(1f, 1f, 1f, alpha));
-                }
             }
             public void wasRemoved () {
                 super.wasRemoved();
+                _sprite.setLocalScale(1f);
                 bounceSprite(_sprite, TILE_SIZE / 4);
                 maybeComplete(penderId);
             }

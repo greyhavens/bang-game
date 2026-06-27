@@ -301,6 +301,11 @@ public class BoardView extends BComponent
      */
     public void refreshBoard ()
     {
+        // mark this as the active board view so the Esc-options lighting sliders apply here live
+        _activeView = this;
+        // apply the sepia tint at this view's context strength (full in town/menu, reduced in game)
+        applySepiaPref();
+
         // remove any old sprites
         removePieceSprites();
 
@@ -467,7 +472,63 @@ public class BoardView extends BComponent
      */
     public float getShadowIntensity ()
     {
-        return _board.getShadowIntensity();
+        return _board.getShadowIntensity() * shadowScale();
+    }
+
+    /** Live look-tuning scales, persisted in {@link BangPrefs} and adjustable from the in-game Esc
+     * options sliders. The jME3 lighting pipeline renders the board's light values with more
+     * contrast than the fork's FFP (lit faces near-clip, shadows too dark), so these dial the
+     * directional diffuse (building brightness), summed ambient fill, and shadow darkening toward
+     * the fork's flatter look. Stored as percent (100 = 1.0x). */
+    protected static float diffuseScale () { return BangPrefs.getLightDiffuse() / 100f; }
+    protected static float ambientScale () { return BangPrefs.getLightAmbient() / 100f; }
+    protected static float shadowScale () { return BangPrefs.getLightShadow() / 100f; }
+
+    /**
+     * Re-applies the current lighting prefs to the active board view (called when an Esc-options
+     * lighting slider changes, for live feedback): re-runs the light setup and re-darkens every
+     * sprite by the new shadow scale.
+     */
+    public static void applyLightingPrefs ()
+    {
+        BoardView v = _activeView;
+        if (v == null) {
+            return;
+        }
+        v.refreshLights();
+        // re-bake the terrain shadow vertex colors (they carry the bulk of the visible shadowing,
+        // and are scaled by the shadow-darkness slider in TerrainNode.getShadowValue)
+        if (v._tnode != null) {
+            v._tnode.refreshShadows();
+        }
+        for (PieceSprite ps : v._pieces.values()) {
+            ps.updateShadowValue();
+        }
+    }
+
+    /** The most-recently-shown board view (for live lighting-pref application). */
+    protected static BoardView _activeView;
+
+    /** Per-view context scale for the sepia post-process tint: full (1.0) in the town/menu, reduced
+     * during actual gameplay (BangBoardView overrides) so the game board stays readable -- "not so
+     * much inside the actual gameplay". */
+    protected float sepiaContextScale ()
+    {
+        return 1f;
+    }
+
+    /**
+     * Pushes the current sepia-tone pref to the world-viewport post-process filter, scaled by the
+     * active view's context (full in the town/menu, reduced during gameplay). Called when the
+     * Esc-options sepia slider changes and whenever a board view is (re)shown.
+     */
+    public static void applySepiaPref ()
+    {
+        BoardView v = _activeView;
+        if (v != null) {
+            v._ctx.getApp().setSepiaIntensity(
+                BangPrefs.getSepia() / 100f * v.sepiaContextScale());
+        }
     }
 
     /**
@@ -485,7 +546,9 @@ public class BoardView extends BComponent
             Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
             total += hsb[2];
         }
-        return 0.7f * _board.getShadowIntensity() * Math.max(0f, 1f - total);
+        // also honor the shadow-darkness slider (this feeds the per-unit dynamic shadow blob, which
+        // is baked into a texture at sprite creation, so it tracks the slider for newly built sprites)
+        return 0.7f * _board.getShadowIntensity() * shadowScale() * Math.max(0f, 1f - total);
     }
 
     /**
@@ -1094,6 +1157,27 @@ public class BoardView extends BComponent
         for (int i = 0; i < _lights.length; i++) {
             refreshLight(i);
         }
+        // jME3 has a single shared AmbientLight, but the fork's fixed-function pipeline accumulated
+        // the ambient term of EVERY active directional light as flat fill. Sum them all here;
+        // keeping only light 0's ambient (the prior cutover behaviour) dropped the fill from the
+        // secondary fill light(s), so shadowed sprites/terrain rendered too dark vs the fork.
+        float ar = 0f, ag = 0f, ab = 0f;
+        for (int i = 0; i < _lights.length; i++) {
+            int dcolor = _board.getLightDiffuseColor(i),
+                acolor = _board.getLightAmbientColor(i);
+            if (dcolor == 0 && acolor == 0) {
+                continue; // disabled light contributes nothing
+            }
+            float[] argb = new Color(acolor).getRGBColorComponents(null);
+            ar += argb[0]; ag += argb[1]; ab += argb[2];
+        }
+        if (_ambient == null) {
+            _ambient = new com.jme3.light.AmbientLight();
+            _node.addLight(_ambient);
+        }
+        float as = ambientScale();
+        _ambient.setColor(new ColorRGBA(
+            Math.min(1f, ar * as), Math.min(1f, ag * as), Math.min(1f, ab * as), 1f));
     }
 
     /**
@@ -1118,19 +1202,13 @@ public class BoardView extends BComponent
         _lights[idx].setDirection(dir);
 
         // jME3 directional lights carry a single color (the fork carried separate diffuse/specular/
-        // ambient). Use the diffuse color for the directional light; the ambient term becomes a
-        // shared AmbientLight on the node (driven by light 0). Specular is folded into diffuse and
-        // refined at the Phase-4 material pass.
-        float[] drgb = new Color(dcolor).getRGBColorComponents(null),
-            argb = new Color(acolor).getRGBColorComponents(null);
-        _lights[idx].setColor(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
-        if (idx == 0) {
-            if (_ambient == null) {
-                _ambient = new com.jme3.light.AmbientLight();
-                _node.addLight(_ambient);
-            }
-            _ambient.setColor(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
-        }
+        // ambient). Use the diffuse color for the directional light; the ambient terms of ALL lights
+        // are accumulated into one shared AmbientLight in refreshLights() (the fork's FFP summed
+        // every light's ambient as flat fill -- using only light 0's ambient left shadowed sprites
+        // and terrain too dark). Specular is folded into diffuse and refined at the material pass.
+        float[] drgb = new Color(dcolor).getRGBColorComponents(null);
+        float ds = diffuseScale();
+        _lights[idx].setColor(new ColorRGBA(drgb[0] * ds, drgb[1] * ds, drgb[2] * ds, 1f));
     }
 
     /**
@@ -1138,10 +1216,24 @@ public class BoardView extends BComponent
      */
     protected void refreshFog ()
     {
-        // jME3: the fork's per-node FogState has no scene-graph equivalent; board fog becomes a
-        // FogFilter on the viewport (jme3-effects). That post-process is wired at the Phase-4
-        // board-renderer pass; refreshFog is a flagged no-op until then (the fog color still feeds
-        // the background color via refreshBackgroundColor).
+        // E15-11: the fork's per-node exp FogState becomes a FogFilter on the main viewport (wired in
+        // JmeApp). Drive it from the board's fog params; density 0 disables it (the common case), as
+        // the fork added no FogState when density was 0. The fog color also feeds the background via
+        // refreshBackgroundColor. -Dbang.debug.fog=<density> forces a density to exercise/tune fog on
+        // boards that ship without it.
+        if (_ctx.getApp() == null) {
+            return;
+        }
+        float density = _board.getFogDensity();
+        String dbg = System.getProperty("bang.debug.fog");
+        if (dbg != null) {
+            try {
+                density = Float.parseFloat(dbg);
+            } catch (NumberFormatException nfe) {
+                // ignore a malformed override
+            }
+        }
+        _ctx.getApp().setBoardFog(_board.getFogColor(), density);
     }
 
     /**

@@ -1080,7 +1080,11 @@ public class TerrainNode extends Node
                 total += weight;
             }
         }
-        return (value / total) * _board.getShadowIntensity();
+        // scale by the Esc-options "shadow darkness" slider (clamped: 200% would over-darken past
+        // black); the terrain shadow is baked into vertex colors, so refreshShadows() re-runs this
+        // when the slider changes for live feedback.
+        return FastMath.clamp(
+            (value / total) * _board.getShadowIntensity() * BoardView.shadowScale(), 0f, 1f);
     }
 
     protected void computeBoundingBoxPlanes ()

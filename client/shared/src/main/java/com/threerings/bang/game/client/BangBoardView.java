@@ -695,6 +695,14 @@ public class BangBoardView extends BoardView
         return _highNoon ? 0f : super.getShadowIntensity();
     }
 
+    @Override // from BoardView
+    protected float sepiaContextScale ()
+    {
+        // dial the sepia tint well down on the actual game board so gameplay stays readable -- the
+        // effect is meant mainly for the FrontierTown hub/menus ("not so much inside gameplay").
+        return 0.35f;
+    }
+
     /**
      * Returns a set of pieceIds for pieces with pending move actions.
      */

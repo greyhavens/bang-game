@@ -243,6 +243,23 @@ public class BangPrefs
         config.setValue("camera_pan_speed", speed);
     }
 
+    /** Board-lighting tuning sliders (Esc options), as percent of the board's authored values
+     * (100 = 1.0x). Let the player dial the jME3 lighting toward the fork's flatter look:
+     * directional diffuse = building brightness, ambient = flat fill, shadow = shadow darkening. */
+    public static int getLightDiffuse () { return config.getValue("light_diffuse", 100); }
+    public static void updateLightDiffuse (int v) { config.setValue("light_diffuse", v); }
+    public static int getLightAmbient () { return config.getValue("light_ambient", 100); }
+    public static void updateLightAmbient (int v) { config.setValue("light_ambient", v); }
+    public static int getLightShadow () { return config.getValue("light_shadow", 100); }
+    public static void updateLightShadow (int v) { config.setValue("light_shadow", v); }
+
+    /** Warm-grade post-process strength (Esc-options "Warmth" slider; pref key kept as "sepia"),
+     * 0 (off) .. 100 (full); warms the whole 3D world viewport toward the fork's golden look.
+     * Defaults to 50 so a fresh install gets the fork's warm look out of the box (the player can dial
+     * it down/off via the slider). In-game the effect is further reduced to 0.35x for readability. */
+    public static int getSepia () { return config.getValue("sepia", 50); }
+    public static void updateSepia (int v) { config.setValue("sepia", v); }
+
     /**
      * Returns the current chat filter mode.
      */

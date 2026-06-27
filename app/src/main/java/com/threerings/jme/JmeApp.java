@@ -33,6 +33,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.SceneProcessor;
 import com.jme3.profile.AppProfiler;
 import com.jme3.renderer.Camera;
@@ -152,6 +153,21 @@ public class JmeApp extends SimpleApplication
             viewPort.getQueue().setGeometryComparator(
                 RenderQueue.Bucket.Transparent, new com.threerings.jme.util.RenderOrderComparator());
         }
+
+        // install a post-process sepia tint on the main 3D viewport (driven by the Esc-options
+        // "Sepia tone" slider). It runs on the composited world image, so it tints the ground, sky
+        // dome, buildings and town backdrop uniformly while leaving the BUI overlay (rendered on the
+        // separate GUI viewport) untouched. Intensity 0 (the default) is a pure pass-through.
+        _sepiaPost = new FilterPostProcessor(assetManager);
+        // board fog (E15-11): a depth-based haze into the horizon, driven from the active board's fog
+        // params (BoardView.refreshFog). Added BEFORE the warmth grade so the warm tint also grades
+        // the fogged result. Starts disabled; enabled only on boards whose fog density > 0.
+        _fogFilter = new com.jme3.post.filters.FogFilter();
+        _fogFilter.setEnabled(false);
+        _sepiaPost.addFilter(_fogFilter);
+        _sepiaFilter = new com.threerings.jme.post.SepiaFilter();
+        _sepiaPost.addFilter(_sepiaFilter);
+        viewPort.addProcessor(_sepiaPost);
 
         // install the BUI render backend BEFORE building any widget (BImage chooses its backing
         // from BackendProvider.get() at construction time).
@@ -354,6 +370,45 @@ public class JmeApp extends SimpleApplication
         if (viewPort != null) {
             viewPort.setBackgroundColor(color);
         }
+    }
+
+    /**
+     * Sets the strength of the world-viewport sepia post-process tint, 0 (off) .. 1 (full sepia).
+     * Driven live from the Esc-options "Sepia tone" slider via {@code BoardView.applySepiaPref}.
+     */
+    public void setSepiaIntensity (float intensity)
+    {
+        if (_sepiaFilter != null) {
+            _sepiaFilter.setIntensity(intensity);
+        }
+    }
+
+    /**
+     * Drives the board-fog post-process (E15-11) from the active board's fog params, mapping the
+     * fork's world-space exp density onto the jME3 FogFilter. {@code boardDensity <= 0} disables fog
+     * (the common case -- most boards ship without fog), matching the fork's "no FogState when
+     * density 0" behaviour. Called from {@link com.threerings.bang.game.client.BoardView#refreshFog}.
+     */
+    public void setBoardFog (int rgb, float boardDensity)
+    {
+        if (_fogFilter == null) {
+            return;
+        }
+        if (boardDensity <= 0f) {
+            _fogFilter.setEnabled(false);
+            return;
+        }
+        // -Dbang.debug.fogdist / -Dbang.debug.fogscale let the two mapping knobs be tuned live
+        // (relaunch only, no recompile); fall back to the baked constants.
+        float dist = Float.parseFloat(
+            System.getProperty("bang.debug.fogdist", String.valueOf(FOG_DISTANCE)));
+        float scale = Float.parseFloat(
+            System.getProperty("bang.debug.fogscale", String.valueOf(FOG_DENSITY_SCALE)));
+        _fogFilter.setFogColor(new ColorRGBA(
+            ((rgb >> 16) & 0xFF) / 255f, ((rgb >> 8) & 0xFF) / 255f, (rgb & 0xFF) / 255f, 1f));
+        _fogFilter.setFogDistance(dist);
+        _fogFilter.setFogDensity(boardDensity * scale);
+        _fogFilter.setEnabled(true);
     }
 
     /**
@@ -774,6 +829,21 @@ public class JmeApp extends SimpleApplication
     protected BRootNode _rnode;
     protected Jme3RenderBackend _backend;
     protected final JmeContext _context = new ContextImpl();
+
+    /** The main-viewport post-process chain, its board-fog filter (E15-11), and the warm-grade
+     * ("Warmth") filter. */
+    protected FilterPostProcessor _sepiaPost;
+    protected com.jme3.post.filters.FogFilter _fogFilter;
+    protected com.threerings.jme.post.SepiaFilter _sepiaFilter;
+
+    /** Board-fog FogFilter mapping (E15-11). The fork hazed distant ground via a per-node exp
+     * {@code FogState} ({@code exp(-density*dist)}, editor density 0..0.02 world-space); jME3's
+     * FogFilter is a normalized exp&sup2; depth fog, so we map that density onto its (density,
+     * distance) knobs: {@code FOG_DISTANCE} = the world distance at which fog saturates,
+     * {@code FOG_DENSITY_SCALE} = the multiplier from the board's world-space density to the filter's
+     * density knob. Tuned live. */
+    protected static final float FOG_DISTANCE = 650f;
+    protected static final float FOG_DENSITY_SCALE = 120f;
 
     protected boolean _updateEnabled = true, _renderEnabled = true;
     protected boolean _finished;

@@ -122,6 +122,66 @@ public class OptionsView extends BDecoratedWindow
         return wrapper;
     }
 
+    /**
+     * Creates a slider for one of the board-lighting tuning knobs ("diffuse" = building/sun
+     * brightness, "ambient" = flat fill, "shadow" = shadow darkening), as percent (0..200, 100 =
+     * the board's authored 1.0x). The change persists in {@link BangPrefs} and applies live to the
+     * active board view (to dial the jME3 lighting toward the fork's flatter look).
+     */
+    public static BContainer createLightSlider (final BangContext ctx, final String which)
+    {
+        int value = "ambient".equals(which) ? BangPrefs.getLightAmbient() :
+            "shadow".equals(which) ? BangPrefs.getLightShadow() : BangPrefs.getLightDiffuse();
+        BSlider slider = new BSlider(BSlider.HORIZONTAL, 0, 200, value);
+        final BLabel vallbl = new BLabel(value + "%");
+        vallbl.setPreferredSize(new Dimension(50, 10));
+        slider.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged (ChangeEvent event) {
+                int val = ((BoundedRangeModel)event.getSource()).getValue();
+                if ("ambient".equals(which)) {
+                    BangPrefs.updateLightAmbient(val);
+                } else if ("shadow".equals(which)) {
+                    BangPrefs.updateLightShadow(val);
+                } else {
+                    BangPrefs.updateLightDiffuse(val);
+                }
+                com.threerings.bang.game.client.BoardView.applyLightingPrefs();
+                vallbl.setText(val + "%");
+            }
+        });
+
+        // create a wrapper to hold them both
+        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
+        wrapper.add(slider);
+        wrapper.add(vallbl, GroupLayout.FIXED);
+        return wrapper;
+    }
+
+    /**
+     * Creates the "Warmth" slider (0..100%), which drives the world-viewport warm-grade post-process
+     * tint (the fork's golden sun-baked look). Persists in {@link BangPrefs} (key "sepia") and applies
+     * live to the active board view (full in the town/menu, reduced during gameplay).
+     */
+    public static BContainer createSepiaSlider (final BangContext ctx)
+    {
+        int value = BangPrefs.getSepia();
+        BSlider slider = new BSlider(BSlider.HORIZONTAL, 0, 100, value);
+        final BLabel vallbl = new BLabel(value + "%");
+        vallbl.setPreferredSize(new Dimension(50, 10));
+        slider.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged (ChangeEvent event) {
+                int val = ((BoundedRangeModel)event.getSource()).getValue();
+                BangPrefs.updateSepia(val);
+                com.threerings.bang.game.client.BoardView.applySepiaPref();
+                vallbl.setText(val + "%");
+            }
+        });
+        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
+        wrapper.add(slider);
+        wrapper.add(vallbl, GroupLayout.FIXED);
+        return wrapper;
+    }
+
     public OptionsView (BangContext ctx, BWindow parent)
     {
         super(ctx.getStyleSheet(), ctx.xlate(BangCodes.OPTS_MSGS, "m.title"));
@@ -134,7 +194,8 @@ public class OptionsView extends BDecoratedWindow
         _msgs = ctx.getMessageManager().getBundle(BangCodes.OPTS_MSGS);
 
         TabbedPane tabs = new TabbedPane(false);
-        tabs.setPreferredSize(new Dimension(375, 275));
+        // taller than the original 275 to fit the added lighting + sepia tuning sliders w/o clipping
+        tabs.setPreferredSize(new Dimension(375, 410));
 
         // create the General tab
         TableLayout layout = new TableLayout(2, 10, 10);
@@ -159,6 +220,17 @@ public class OptionsView extends BDecoratedWindow
         cont.add(createSoundSlider(_ctx, SoundType.MUSIC));
         cont.add(new BLabel(_msgs.get("m.effects_vol"), "right_label"));
         cont.add(createSoundSlider(_ctx, SoundType.EFFECTS));
+
+        // board-lighting tuning knobs (dial jME3 lighting toward the fork's flatter look); these
+        // apply to any active board view, including the town hub's TownBoardView
+        cont.add(new BLabel("Building light", "right_label"));
+        cont.add(createLightSlider(_ctx, "diffuse"));
+        cont.add(new BLabel("Ambient fill", "right_label"));
+        cont.add(createLightSlider(_ctx, "ambient"));
+        cont.add(new BLabel("Shadow darkness", "right_label"));
+        cont.add(createLightSlider(_ctx, "shadow"));
+        cont.add(new BLabel("Warmth", "right_label"));
+        cont.add(createSepiaSlider(_ctx));
 
         // create the Chat tab if we're logged on
         if (ctx.getMuteDirector() != null) {

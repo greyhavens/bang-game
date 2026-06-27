@@ -18,7 +18,12 @@ handling — fullscreen toggle + resolution picker in `OptionsView`, and `BangPr
 fullscreen). **Fix area:** `BangDesktop`/`BangApp` `AppSettings` (resizable + window hints) and
 `OptionsView` fullscreen/resolution → an LWJGL3 context mode switch/restart.
 
-## BUG-3 — Game-start camera intro (sweep / 360 rotate / zoom-out) doesn't play  [OPEN]
+## BUG-3 — Game-start camera intro (sweep / 360 rotate / zoom-out) doesn't play  [FIXED — observed working 2026-06-26]
+**RESOLVED:** Tim confirmed the game-start camera sweep/zoom-out now plays. No targeted fix was made for
+it — it came back incidentally as a side effect of the camera-path / camera-input work (most likely the
+E15-15 pre-round camera-enable restoration and/or the reshape/frustum fixes), which is why the exact
+fixing commit isn't pinned. Closing as working; reopen if it regresses.
+
 *Reported 2026-06-14 — documented in `docs/fidelity-reference/video/StartGameAndZoomOut.mp4`.* At
 game start the camera should do the scripted sweep/rotate + zoom-out to the board overview; it doesn't.
 
@@ -210,7 +215,8 @@ backdrop. **Fix area:** `SkyNode` (Dome orientation/radius for Z-up, gradient + 
 and match its dome coverage/shading. Verify live on the town screen (and cross-check an in-game board,
 since the same SkyNode renders there).
 
-## BUG-22 — Claim/counter score number occluded behind the claim rock mesh (number invisible)  [OPEN]
+## BUG-22 — Claim/counter score number occluded behind the claim rock mesh (number invisible)  [FIXED 2026-06-20]
+*FIX: re-centered the corner-anchored counter `Quad` (and `GenericCounterNode`) on the billboard pivot so the number floats above the rock, as the fork's center-anchored quad did.*
 *Reported 2026-06-18 (screenshot: `baseline/incorrect/ClaimJumpingNumber/ClaimJumpingNumberRendersBEHINDtexture.png`).*
 Split off from BUG-4 (mirroring is now FIXED). The claim/counter prop renders, but its **count number
 is swallowed by the rock texture** — drawn behind/inside the prop mesh so nothing is visible.
@@ -227,7 +233,8 @@ above the rock as in the fork; if any residual occlusion remains, also confirm t
 height vs the fork (`_config.height`) and the overlay draw order. **Diff against fork `CounterSprite`.** Same
 fix likely applies to `GenericCounterNode` (the totem/score counter) — audit it too.
 
-## BUG-23 — Sky has no clouds (master has white/yellow-tinged clouds woven into the blue)  [OPEN]
+## BUG-23 — Sky has no clouds (master has white/yellow-tinged clouds woven into the blue)  [FIXED 2026-06-20]
+*FIX: cloud disk rebuilt at full size + `JmeApp` FRUSTUM_FAR actually applied (clouds were beyond the far plane).*
 *Reported 2026-06-18.* Target look: `baseline/correct/FrontierTown/FrontierTown.png` (and
 `barbershopHighlighted.png`) — the master sky is blue with soft **white, yellow-tinged clouds** threaded
 through it. Our render shows a plain blue gradient with **no visible clouds at all**. (Split out from the
@@ -244,7 +251,8 @@ invisible. **CHECK AGAINST MASTER FORK CODE** (`bang-game .../game/client/SkyNod
 setup: texture state, `ctex.setScale`, per-vertex color buffer, wrap) and the master `clouds.png`. Verify
 live on the town hub against `FrontierTown.png`.
 
-## BUG-24 — Ground/terrain texture too plain (master has grey gravel mixed into the sand)  [OPEN]
+## BUG-24 — Ground/terrain texture too plain (master has grey gravel mixed into the sand)  [FIXED 2026-06-20]
+*FIX: `TerrainSplat.frag` sampled the alpha map's `.r` instead of `.a`, so splat layers were invisible — corrected to `.a`.*
 *Reported 2026-06-18.* Target: `baseline/correct/FrontierTown/FrontierTown.png` — the plaza ground in
 front of the buildings has **grey gravel blended into the sand/tan**, a richer multi-texture terrain. Our
 render shows flat, uniform sand — the gravel layer is missing, so the ground looks plainer/lower-fidelity.
@@ -258,7 +266,8 @@ terrain material only samples the base sand layer. **CHECK AGAINST MASTER FORK C
 `TerrainNode` texture/splat setup and the town board's ground texture set vs `bang-game`. Verify against
 `FrontierTown.png`.
 
-## BUG-25 — Building hover-highlight renders the WHOLE building as a solid white block  [OPEN]
+## BUG-25 — Building hover-highlight renders the WHOLE building as a solid white block  [FIXED 2026-06-20]
+*FIX: `TownView` hover now brightens the building's Lighting ambient/diffuse (save/restore) instead of replacing the material with flat Unshaded white.*
 *Reported 2026-06-18 (defect `baseline/incorrect/town/FrontierTownBadBuilding.png`; correct
 `baseline/correct/FrontierTown/barbershopHighlighted.png`).* When you mouse-over a town building (a shop
 you can enter), it should get a **subtle translucent white brightening** (all wood/window/sign detail still
@@ -273,3 +282,136 @@ white unshaded replace), so the whole building goes solid white. **CHECK AGAINST
 how the fork highlighted a hovered building (`TownView`/building sprite: the highlight color, alpha, and
 blend/material state) and reproduce that subtle blend in jME3; ensure it clears on mouse-exit. Verify live
 (hover a building) against `barbershopHighlighted.png`.
+
+## BUG-26 — Sky gradient dome lacks the warm/yellow horizon tinge  [LARGELY ADDRESSED 2026-06-26]
+*Reported 2026-06-20.* The fork sky has a warm/yellow horizon band; ours read as a plainer cool gradient.
+**Diagnosis (2026-06-21):** NOT the gradient build — `SkyNode.createGradientTexture` is byte-identical to
+the fork (same horizon/overhead board colors, same `exp(-falloff*s)` interpolation). The difference is the
+**gamma/sRGB pipeline**: gamma correction is on (jME3 default — no explicit `setGammaCorrection`) and the
+gradient image is tagged `ColorSpace.sRGB`, so the rendered colors shift vs the fork's raw FFP output.
+**RESOLUTION (see "Look-tuning" below).** Two committed changes addressed this without chasing a
+separate sky-dome recolor: (1) **gamma-off** (`BangDesktop.setGammaCorrection(false)`, commit `7ffaf34c9`)
+directly fixes the diagnosed sRGB shift, restoring the fork's raw-FFP colour response; (2) the **Warmth**
+post-grade (commit `a19fd7b53`) warms the bright sky toward the fork's cream as a side effect of its
+luma-split highlight tint. With Warmth on, Tim confirmed the sky "kinda fixed" too. Remaining nuance: the
+Warmth slider defaults to **0** (off), so a fresh install still shows the cooler gradient until the player
+warms it — a possible follow-up is to ship a small warm default. A dedicated sky-dome gradient recolour is
+no longer needed unless we want the warm horizon independent of the global Warmth grade.
+
+## BUG-27 — Windmill prop (right of the Sheriff's Office) doesn't spin  [FIXED 2026-06-21]
+Models declare procedural `controllers` in `model.properties` (windmill blades: `Rotator`, axis=z,
+velocity=1.5). The converter preserved them as `bang.properties` user data but never converted them, and
+the fork's runtime `com.threerings.jme.model.Rotator` was gone — so nothing spun (also vultures, firestarter
+bonus, boom_town gears). *FIX: added a jME3 runtime `Rotator` AbstractControl + `Model.applyControllers()`
+that re-adds it to the named node on each instance.* Verified (frame-diff isolates the spinning blades).
+
+## BUG-28 — Death animation plays 3× after a unit is killed  [FIXED 2026-06-19]
+*FIX: jME3 `setCurrentAction` 3-arg defaults LoopMode.Loop; `Model.startAnimation` now honors the baked
+`bang.loopModes` (RT_CLAMP → DontLoop one-shot).*
+
+## BUG-29 — Client crash (ArrayIndexOutOfBounds) on the wendigo sweep  [FIXED 2026-06-20]
+*FIX: `WendigoPath.update` called `adjustRotation()` after the path completed (`_current==_durations.length`),
+indexing `_durations[_current]` OOB on the render thread; guarded on `_current < _durations.length`.*
+
+## BUG-30 — Safe-marker glyph tiles render an opaque black square (Wendigo Attack)  [FIXED 2026-06-20]
+*FIX (E15-10 regression): per-facing image rotation dropped the PNG alpha and the emissive overlay was
+glyph-on-opaque-black with an additive blend that didn't survive the Highlight path. Bind the alpha-correct
+texture for all (rotationally-symmetric) facings and drop the emissive overlay.*
+
+## BUG-31 — Move/attack highlight tiles sink under the terrain on slopes  [FIXED 2026-06-21]
+Draw-order, not depth: the cutover renders multi-texture terrain as separate `Bucket.Transparent` splat
+geometries that sort by centroid alongside the (also transparent) highlights, so a splat could draw over a
+highlight. *FIX: a `RenderOrderComparator` on the main viewport's transparent bucket; terrain splats tagged
+to sort before highlights, restoring the fork's "terrain before highlights" invariant.*
+
+## BUG-32 — Bonus models render white/grey  [FIXED 2026-06-21]
+Three distinct causes, all fixed:
+1. **Intermittent pure-white under churn** — `TextureCache` held textures by `WeakReference`; under churn
+   jME3 freed a texture's GL id and the driver recycled it onto a live texture (`Image.getId() == -1`).
+   *FIX: SoftReference + a canonical one-`Image`-per-key cache so GL ids aren't recycled out from under
+   live sprites* (also routed the uncolorized bind through `TextureCache` like the fork). *In v1.1.0.*
+2. **Grey/dark shadowed bonuses (and units)** — the cutover set the single `AmbientLight` from light 0's
+   ambient only; the fork's FFP summed every light's ambient as flat fill. *FIX: `BoardView.refreshLights`
+   sums all active lights' ambient.*
+3. **Hero-death-drop bonuses pure white** — `EffectHandler.flyDroppedBonus` faded a dropped bonus in by
+   replacing its textured material with a textureless white Unshaded quad and never restored it. *FIX: fly +
+   scale the textured sprite in, no material swap.*
+A gated `-Dbang.debug.bonusdiag` probe (logs each bonus's DiffuseMap/Image-id/colour) isolated these.
+
+## BUG-16 — Dead/wreck unit model may lose its facing  [CLOSED — non-issue (code analysis) 2026-06-27]
+*Reported speculatively; never reproduced (no screenshot).* Original claim: a killed unit's wreck/dead
+model points a default direction instead of the way the unit was facing. **Re-scoped twice:** the flying
+`WreckViz` debris chunks are intentionally random (faithful to the fork — not a bug), leaving only the
+suspicion that the swapped-in `<unit>/dead` model loses facing.
+
+**CLOSED as a non-issue after tracing the code.** A unit's facing is `PieceSprite.setOrientation()` →
+`setLocalRotation(quat)` **on the sprite node**. Death runs the `DEAD` procedural action →
+`loadModel("<name>/dead")` → `modelLoaded()`, which only detaches the old model and attaches the dead
+model as a **child of that same sprite node** — it never touches the node's rotation; `updated()` also
+re-applies `setOrientation(_piece.orientation)`. So the dead model inherits the unit's facing by
+scene-graph hierarchy. The only way it could manifest is an asset/bake quirk (the `<unit>/dead` model
+baked to a different default facing than the live model) — per-unit, speculative, and not a code bug.
+Reopen with the specific unit if a corpse is ever seen facing visibly wrong in play (→ a quick
+dead-model-bake check).
+
+---
+
+## Releases (2026-06-21)
+- **v1.0.0** — original jME1 fork baseline (preserved on branch `jre1`; cross-platform client zips).
+- **v1.1.0** — the jME3 / LWJGL3 cutover (PR #7 merged to master); cross-platform client zips.
+Both on `github.com/claridtimo/bang-game`. Post-1.1.0 fixes (BUG-27, BUG-32 #2/#3) live on `JRECutover`.
+
+**Also fixed earlier (status corrected):** BUG-1 (fullscreen/resize reflow + shop scale-to-fill), BUG-5
+(camera pan speed + in-game slider), BUG-6 (scroll-wheel rotate), BUG-7 (artillery/explosion size, via the
+BUG-12 particle ms-fix). **Still open:** none — the post-cutover bug list is cleared. (BUG-3 camera intro
+sweep works, E15-11 board fog wired, BUG-16 closed as a non-issue — all see above/below. Remaining items
+are optional cosmetic polish only: dropped Vortex/Swarm particle influencers with no jME3 equivalent, and
+the dev-only NodeRecord peer-refresh warning.)
+
+**E15-11 board fog — FIXED 2026-06-27 (`e5e969fa4`).** `BoardView.refreshFog` was a flagged no-op; the
+fork hazed distant ground into the horizon via a per-node exp `FogState`. Now a `com.jme3.post.filters.
+FogFilter` rides the main viewport's existing FilterPostProcessor (added before the Warmth grade), driven
+from the board's fog params; the fork's world-space exp density (editor 0..0.02) maps onto jME3's
+normalized exp&sup2; FogFilter via `JmeApp.FOG_DISTANCE=650`/`FOG_DENSITY_SCALE=120` (tuned live).
+Density 0 disables it (the common case — most shipped boards carry no fog, faithful to the fork). Tune/
+exercise on fog-less boards with `-Dbang.debug.fog=<density>` (+ `-Dbang.debug.fogdist`/`fogscale`).
+
+**Effect glows — live-verified 2026-06-26** (HeroBuilding `hb` autoplay on indian_post, burst screenshots):
+- **BUG-14** (pooled sparkle/streamer/explosion additive glow) — **CONFIRMED FIXED.** Muzzle flashes,
+  projectile streaks and combat bursts render as bright additive glows (not the dark/missing boxes the
+  bug described).
+- **BUG-15** (hero/iron-plate spheremap shine) — **CONFIRMED FIXED.** Hero/special units show bright
+  emissive spheremap shine overlays (blue/cyan/gold) — the overlay is present, no longer missing.
+- **BUG-13** (RepairViz glow halo) — **FIXED (implemented E15-8), high-confidence but not isolated in a
+  still.** Healing occurs in-scenario (green heal numbers, effect clusters) and RepairViz rides the same
+  additive `ParticleEffectViz` path confirmed working for BUG-14/15; a transient repair halo wasn't pinned
+  in a periodic screenshot. Recommend a quick close-up eyeball on a repair to call it 100%.
+
+---
+
+## Look-tuning (gamma + lighting + warmth) — 2026-06-21 / 2026-06-26
+
+Not bugs but deliberate look work to match the fork's warmer FFP rendering; recorded here since several
+overlap the sky/shadow bugs above. All committed on `JRECutover`.
+
+- **Gamma correction OFF** (`BangDesktop.setGammaCorrection(false)`, `7ffaf34c9`). jME3 defaults gamma
+  correction ON (sRGB pipeline); the fork was gamma-naive FFP. Disabling it restores the fork's colour
+  response across the whole game — the core fix behind BUG-26 and the general "too cool / too contrasty" feel.
+- **Live lighting sliders** (`48319344e`, `4999d7661`) — Esc → Options, both the town/menu `OptionsView`
+  and in-game `InGameOptionsView`: **Building light** (directional diffuse), **Ambient fill** (summed
+  ambient), **Shadow darkness** (0–200%, default 100). Backed by `BangPrefs` (`light_diffuse/ambient/shadow`);
+  `BoardView.applyLightingPrefs()` re-runs the light setup live (and re-bakes terrain shadow vertex colours
+  via `TerrainNode.getShadowValue * shadowScale`, clamped). The shadow slider's first version did nothing
+  visible because the on-ground shadows are baked terrain vertex colours from the *unscaled* board intensity;
+  that's the `4999d7661` fix.
+- **Warmth grade** (`a19fd7b53`) — a jME3 `FilterPostProcessor` (`SepiaFilter` + `shaders/Sepia.{frag,j3md}`)
+  on the **main viewport only** (not the BUI overlay). Originally a desaturating sepia matrix (read wrong);
+  reworked into a colour-preserving warm grade: ~22% gentle desaturate + a luma-split warm tint (strong amber
+  shadows, cream highlights) calibrated against `baseline/correct/FrontierTown/FrontierTown.png`. Esc-options
+  **"Warmth"** slider (0–100, pref key `sepia`, default 0); full strength in town/menu, dialed to 0.35× on the
+  actual game board (`BangBoardView.sepiaContextScale`) so gameplay stays readable. User-confirmed.
+
+**Open follow-ups from the look work:** consider a small non-zero **Warmth default** so a fresh install gets
+the fork's warm look out of the box; the parked warm-cast/shadow `stash@{0}` (terrain AmbientTint/LightTint
+split + ambient-floor lift) is now largely **superseded** by gamma-off + the ambient-sum (BUG-32 #2) + the
+sliders — drop it unless a specific jail-area-too-dark case resurfaces.
