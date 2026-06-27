@@ -255,8 +255,9 @@ public class BangPrefs
 
     /** Warm-grade post-process strength (Esc-options "Warmth" slider; pref key kept as "sepia"),
      * 0 (off) .. 100 (full); warms the whole 3D world viewport toward the fork's golden look.
-     * Defaults to 0. */
-    public static int getSepia () { return config.getValue("sepia", 0); }
+     * Defaults to 50 so a fresh install gets the fork's warm look out of the box (the player can dial
+     * it down/off via the slider). In-game the effect is further reduced to 0.35x for readability. */
+    public static int getSepia () { return config.getValue("sepia", 50); }
     public static void updateSepia (int v) { config.setValue("sepia", v); }
 
     /**
