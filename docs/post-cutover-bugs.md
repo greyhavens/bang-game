@@ -338,6 +338,22 @@ Three distinct causes, all fixed:
    scale the textured sprite in, no material swap.*
 A gated `-Dbang.debug.bonusdiag` probe (logs each bonus's DiffuseMap/Image-id/colour) isolated these.
 
+## BUG-16 — Dead/wreck unit model may lose its facing  [CLOSED — non-issue (code analysis) 2026-06-27]
+*Reported speculatively; never reproduced (no screenshot).* Original claim: a killed unit's wreck/dead
+model points a default direction instead of the way the unit was facing. **Re-scoped twice:** the flying
+`WreckViz` debris chunks are intentionally random (faithful to the fork — not a bug), leaving only the
+suspicion that the swapped-in `<unit>/dead` model loses facing.
+
+**CLOSED as a non-issue after tracing the code.** A unit's facing is `PieceSprite.setOrientation()` →
+`setLocalRotation(quat)` **on the sprite node**. Death runs the `DEAD` procedural action →
+`loadModel("<name>/dead")` → `modelLoaded()`, which only detaches the old model and attaches the dead
+model as a **child of that same sprite node** — it never touches the node's rotation; `updated()` also
+re-applies `setOrientation(_piece.orientation)`. So the dead model inherits the unit's facing by
+scene-graph hierarchy. The only way it could manifest is an asset/bake quirk (the `<unit>/dead` model
+baked to a different default facing than the live model) — per-unit, speculative, and not a code bug.
+Reopen with the specific unit if a corpse is ever seen facing visibly wrong in play (→ a quick
+dead-model-bake check).
+
 ---
 
 ## Releases (2026-06-21)
@@ -347,8 +363,10 @@ Both on `github.com/claridtimo/bang-game`. Post-1.1.0 fixes (BUG-27, BUG-32 #2/#
 
 **Also fixed earlier (status corrected):** BUG-1 (fullscreen/resize reflow + shop scale-to-fill), BUG-5
 (camera pan speed + in-game slider), BUG-6 (scroll-wheel rotate), BUG-7 (artillery/explosion size, via the
-BUG-12 particle ms-fix). **Still open:** BUG-16 (dead/wreck model facing, low-pri/unverified).
-(BUG-3 camera intro sweep is now working — see above. E15-11 board fog is now wired — see below.)
+BUG-12 particle ms-fix). **Still open:** none — the post-cutover bug list is cleared. (BUG-3 camera intro
+sweep works, E15-11 board fog wired, BUG-16 closed as a non-issue — all see above/below. Remaining items
+are optional cosmetic polish only: dropped Vortex/Swarm particle influencers with no jME3 equivalent, and
+the dev-only NodeRecord peer-refresh warning.)
 
 **E15-11 board fog — FIXED 2026-06-27 (`e5e969fa4`).** `BoardView.refreshFog` was a flagged no-op; the
 fork hazed distant ground into the horizon via a per-node exp `FogState`. Now a `com.jme3.post.filters.
