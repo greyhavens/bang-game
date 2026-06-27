@@ -14,7 +14,10 @@ allprojects {
     samskivertVersion = "1.11"
     oooUtilVersion = "1.5"
     oooUserVersion = "1.5.1"
-    getdownVersion = "1.4"
+    // getdown bumped 1.4 -> 1.8.10 (Epic 2 Phase 2): the applet-era 1.4 won't build on JDK 21
+    // (netscape.javascript.JSObject / source 1.5); modern getdown dropped applets and split into
+    // getdown-core/launcher/ant — Bang only needs getdown-core (LaunchUtil).
+    getdownVersion = "1.8.10"
     // jME3 is used only by the isolated Phase 5 tool modules + the (dormant, compileOnly)
     // jME3 BUI backend — centralised so a cutover bump can't leave modules on mismatched
     // versions (which would crash at runtime once they share a classpath)
