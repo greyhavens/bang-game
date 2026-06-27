@@ -131,6 +131,35 @@ shadowing proves fragile in CI, fall back to the `-bangN` suffix for the remote-
 expects the `ooo-build` Ant infra (grab `threerings/ooo-build` only if needed). Execution is strictly
 **sequential** (dependency order), est. ~½–1 day dominated by per-lib JDK-21 surprises.
 
+#### Status — DONE 2026-06-27 (mavenLocal; remote registry still TODO)
+All 10 libs forked to `claridtimo`, cloned under `/home/tim/Repos/`, built from the **release tag
+matching Bang's pinned version** (repo HEADs are ahead, e.g. samskivert HEAD = `1.12-SNAPSHOT`), and
+`mvn install`-ed to `~/.m2`. Bang **builds + an autoplay game runs** on the forked stack
+(`./gradlew deploy --refresh-dependencies` → mavenLocal wins; In Play reached, no classload errors).
+Maven isn't on the box — used a standalone Apache Maven 3.9.9 under `/home/tim/Repos/.tools/` (no sudo).
+
+| Lib | Version built | Build note |
+|---|---|---|
+| samskivert | 1.11 | clean (`--release 10`) |
+| ooo-util | 1.5 | clean |
+| depot | 1.8 | clean |
+| narya (+ narya-tools) | 1.19 | clean (multi-module core+tools) |
+| nenya (+ nenya-tools) | 1.7.2 | clean |
+| vilya | 1.7.1 | clean |
+| ooo-user | 1.5.1 | clean |
+| pythagoras | 1.3.2 | **patched** — compiler-plugin 2.3.2→3.13.0, source/target 6→8 (branch `bang-jdk21`) |
+| jmustache | 1.4 | **patched** — compiler-plugin 2.3.2→3.13.0, source/target 5→8 (branch `bang-jdk21`); not on Bang's current classpath, forked for completeness |
+| getdown | **1.4 → 1.8.10** | applet-era 1.4 won't build on JDK 21 (JSObject/source 1.5); **bumped** to modern `com.threerings.getdown:getdown-core:1.8.10`; one Bang API rename (`getJVMPath`→`getJVMBinaryPath`) |
+
+Fork patches are committed + pushed to the `claridtimo` forks on a `bang-jdk21` branch so the build
+fixes survive a re-clone (durable insurance). Bang-side changes are on branch
+`epic2-dependency-control` (Phase-1 ext centralization + the getdown bump).
+
+**Still TODO for full Phase-2 acceptance:** publish the forks to the **remote registry (GitHub
+Packages)** so CI / other machines resolve them (currently mavenLocal-only, per-dev), and the strict
+"Central never touched" proof (same-version shadowing means mavenLocal-first is what makes our copies
+win locally). See the remote-registry caveat above.
+
 ### Phase 3 — Source-build integration (optional)
 - Wire the forks in as a Gradle **composite build** (`includeBuild`) or source modules so we can
   edit-and-run without a publish step — direct source-level debugging across the whole stack.
