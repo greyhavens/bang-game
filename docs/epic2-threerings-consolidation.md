@@ -50,13 +50,31 @@ Dependency order (fork/build bottom-up): `samskivert` → `ooo-util`, `pythagora
 ### Phase 1 — Dependency-control mechanism
 Make any single lib forkable + patchable + swappable with a one-line change, without restructuring
 the build. Low risk, can land any time.
-- Centralize every Three Rings / samskivert version into the root `build.gradle` `ext` block (several
-  are still hardcoded per-module: `vilya:1.7.1`, `samskivert:1.11`, `getdown:1.4`, `ooo-util:1.5`,
-  `ooo-user:1.5.1`, the `jmustache`/`pythagoras` transitives).
-- Confirm the override path: `mavenLocal()` is already first in `repositories`, so a locally-published
-  `com.x:lib:<ver>-bang1` transparently wins. Document the publish→override loop.
-- Optionally stand up our own mirror of Three Rings' `maven-repo` (or a GitHub Packages registry) so
-  forked builds resolve without relying on the upstream OOO Maven repo.
+- **[DONE]** Centralize every Three Rings / samskivert version into the root `build.gradle` `ext`
+  block. All direct deps now resolve from `ext`: `naryaVersion 1.19`, `nenyaVersion 1.7.2`,
+  `vilyaVersion 1.7.1`, `depotVersion 1.8`, `samskivertVersion 1.11`, `oooUtilVersion 1.5`,
+  `oooUserVersion 1.5.1`, `getdownVersion 1.4`. (`jmustache`/`pythagoras` are pulled in transitively,
+  not declared directly — pin them in `ext` too only if/when a fork needs an explicit override.)
+- **[DONE]** Override path confirmed + documented (see below): `mavenLocal()` is first in
+  `repositories`, so a locally-published `com.x:lib:<ver>-bang1` transparently wins.
+- **[TODO, optional]** Stand up our own mirror of Three Rings' `maven-repo` (or a GitHub Packages
+  registry) so forked builds resolve without relying on the upstream OOO Maven repo.
+
+#### The publish → override loop (how to run a patched lib without touching Bang's build)
+Each Bang module's `repositories` lists `mavenLocal()` **before** `mavenCentral()`, and Gradle picks
+the first repo that has the requested coordinate, so anything published to the local `~/.m2`
+repository wins for that exact `group:artifact:version`. To run a locally-patched copy of, say,
+`samskivert`:
+
+1. In your fork of the lib, bump its version to a Bang-private suffix (e.g. `1.11-bang1`) and
+   `./gradlew publishToMavenLocal` (or `mvn install`) — it lands in `~/.m2/repository`.
+2. In Bang's root `build.gradle` `ext`, change the one line: `samskivertVersion = "1.11-bang1"`.
+3. `./gradlew deploy` — Gradle resolves `com.samskivert:samskivert:1.11-bang1` from `mavenLocal`;
+   every module that declares `${samskivertVersion}` follows automatically.
+
+To revert, set the version back to the upstream string. Using a distinct `-bangN` suffix (rather than
+re-publishing the upstream version number) keeps the local artifact from silently shadowing the real
+one and makes "are we on a patched build?" obvious from the version string.
 
 ### Phase 2 — Fork & vendor (the insurance)
 - Fork all 10 repos above to our GitHub; take local clones alongside the existing
