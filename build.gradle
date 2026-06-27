@@ -57,6 +57,18 @@ allprojects {
 
   repositories {
     mavenLocal()
+    // Our forked Three Rings / samskivert stack, published to GitHub Packages (Epic 2 Phase 2).
+    // Ordered ahead of mavenCentral so our source-built copies win for these coordinates; creds come
+    // from ~/.gradle/gradle.properties (gpr.user/gpr.token) or the GITHUB_ACTOR/GITHUB_TOKEN env
+    // (CI), never hardcoded. Resolves nothing else, so the rest still comes from Central.
+    maven {
+      name = "githubBang"
+      url = uri("https://maven.pkg.github.com/claridtimo/bang-game")
+      credentials {
+        username = (project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR"))?.toString()
+        password = (project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN"))?.toString()
+      }
+    }
     mavenCentral()
   }
 }
