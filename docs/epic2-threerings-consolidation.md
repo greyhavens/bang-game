@@ -76,13 +76,60 @@ To revert, set the version back to the upstream string. Using a distinct `-bangN
 re-publishing the upstream version number) keeps the local artifact from silently shadowing the real
 one and makes "are we on a patched build?" obvious from the version string.
 
-### Phase 2 — Fork & vendor (the insurance)
-- Fork all 10 repos above to our GitHub; take local clones alongside the existing
-  `narya`/`nenya`/`vilya` reference checkouts.
-- Get each fork building from source on the JDK 21 toolchain and publishing to `mavenLocal` (verify
-  bottom-up in dependency order).
-- Pin Bang to the forked coordinates (via the Phase-1 version block) and confirm a full
-  `./gradlew deploy` + a `bin/devtest` run still passes on the forked artifacts.
+### Phase 2 — Fork & vendor (the insurance)  *(scoped 2026-06-27)*
+
+**Recon (2026-06-27):** all 10 upstream repos exist and are reachable; **every one builds with Maven**
+(`pom.xml`; several also carry a legacy Ant `build.xml` we can ignore). No local reference checkouts
+exist yet. The repos are *alive but unreleased* — recent commits (2026) but the published Maven
+artifacts are still the old 1.x versions — so the fork-as-insurance + patchability rationale holds, and
+any JDK-21 build fixes we make may even be upstreamable.
+
+**Decisions (locked):**
+- **Versioning:** keep each lib's **upstream version** and republish our build; `mavenLocal()` is first
+  in `repositories` so our `~/.m2` copy wins per-dev. Reserve the `-bangN` suffix for when we actually
+  *patch* a lib (then bump just that lib + its dependents). *(See the remote-registry caveat below.)*
+- **Order:** **critical path first** — fork+build the directly-declared core, prove Bang runs, then add
+  the rest.
+- **Publish target:** `mavenLocal` for per-dev, **plus a remote registry (GitHub Packages)** so CI /
+  other machines resolve the forks.
+- **Patching:** build as-is; only if a fork won't compile on JDK 21, make the **smallest** fix (bump
+  the maven-compiler `release`/`source`/`target`) and note it. No proactive modernization (that's
+  Phase 5).
+- **Fork destination:** `github.com/claridtimo/<repo>` (same account as the `bang-game` fork).
+
+**Build the stack with Maven, bottom-up.** `mvn install` publishes straight to `~/.m2` (= mavenLocal),
+which is exactly the Phase-1 override path. Per repo: fork on GitHub → clone locally under
+`/home/tim/Repos/` → `mvn -DskipTests install` on the JDK 21 toolchain → fix a compiler target only if
+it fails → confirm the artifact appears in `~/.m2`.
+
+*Wave 1 — critical path (Bang's directly-declared deps + what they need to build):*
+1. `samskivert/samskivert` (foundation)
+2. `threerings/ooo-util`
+3. `threerings/depot`, `threerings/narya` (+ `narya-tools`, same repo)
+4. `threerings/nenya` (+ `nenya-tools`), `threerings/vilya`, `threerings/ooo-user`
+
+After Wave 1: a full `./gradlew deploy` + `bin/devtest` game run should pass with the core resolving
+from our local builds and `getdown`/`pythagoras`/`jmustache` still coming from Maven Central
+(transitive — fine for the checkpoint).
+
+*Wave 2 — finish the set:*
+5. `threerings/getdown`
+6. `samskivert/pythagoras`, `samskivert/jmustache` (leaf transitives)
+
+Then a final `deploy` + `devtest` with **all** Three Rings / samskivert artifacts resolving from our
+forks — that's the Phase-2 acceptance bar.
+
+**Remote-registry caveat (confirm at the 2c sub-step):** keeping upstream version numbers means
+`com.samskivert:samskivert:1.11` would name *two* different artifacts (ours on GitHub Packages vs the
+real one on Central), resolved purely by **repository order**. For per-dev `mavenLocal` that's safe
+(it's first). For the shared registry we'll add the GitHub Packages repo **ahead of** `mavenCentral`
+in every module's `repositories` and authenticate via a `~/.gradle` token. If that same-version
+shadowing proves fragile in CI, fall back to the `-bangN` suffix for the remote-published copies.
+
+**Risks:** JDK-21 compile compat on the Java-6/8-era poms is the main one (rejected `-source/-target`
+< 7 → minimal compiler-target bump per fork); a repo or two may resist a standalone Maven build if it
+expects the `ooo-build` Ant infra (grab `threerings/ooo-build` only if needed). Execution is strictly
+**sequential** (dependency order), est. ~½–1 day dominated by per-lib JDK-21 surprises.
 
 ### Phase 3 — Source-build integration (optional)
 - Wire the forks in as a Gradle **composite build** (`includeBuild`) or source modules so we can
