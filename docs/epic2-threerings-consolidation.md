@@ -155,10 +155,25 @@ Fork patches are committed + pushed to the `claridtimo` forks on a `bang-jdk21` 
 fixes survive a re-clone (durable insurance). Bang-side changes are on branch
 `epic2-dependency-control` (Phase-1 ext centralization + the getdown bump).
 
-**Still TODO for full Phase-2 acceptance:** publish the forks to the **remote registry (GitHub
-Packages)** so CI / other machines resolve them (currently mavenLocal-only, per-dev), and the strict
-"Central never touched" proof (same-version shadowing means mavenLocal-first is what makes our copies
-win locally). See the remote-registry caveat above.
+**Remote registry — DONE 2026-06-27.** All 12 artifacts published to GitHub Packages at
+`maven.pkg.github.com/claridtimo/bang-game` (one endpoint, so Bang needs a single repo entry; they
+show in the bang-game repo's Packages list). Published with `mvn deploy:deploy-file` from temp copies
+(the deploy plugin refuses a `-Dfile` inside `~/.m2`). Bang's root `build.gradle` adds the `githubBang`
+maven repo **ahead of `mavenCentral`**, creds from `~/.gradle/gradle.properties` (`gpr.user`/`gpr.token`)
+or `GITHUB_ACTOR`/`GITHUB_TOKEN` in CI. **Proven end-to-end:** with samskivert hidden from mavenLocal +
+the Gradle cache, resolution fetched `samskivert-1.11` from `maven.pkg.github.com` and a full deploy
+stayed green. Auth: the publishing token needs `write:packages` (added via `gh auth refresh`).
+
+Local machine config (NOT in the repo — secrets): `~/.m2/settings.xml` (server id `github-bang`, for
+`mvn deploy`) and `~/.gradle/gradle.properties` (`gpr.user`/`gpr.token`, for Gradle resolution), both
+`chmod 600`. To republish a lib: `mvn deploy:deploy-file ... -DrepositoryId=github-bang -Durl=…/bang-game`
+from a temp copy of the jar+pom. Standalone Maven lives at `/home/tim/Repos/.tools/apache-maven-3.9.9/`.
+
+**Phase 2 is COMPLETE** — Bang builds + runs on our forked Three Rings / samskivert stack, resolvable
+from both per-dev `mavenLocal` and the shared GitHub Packages registry, with no hard dependency on the
+upstream Three Rings GitHub orgs or Maven repo. (Caveat unchanged: same version numbers mean our copies
+win by repo order, not by distinct coordinates; switch to `-bangN` if CI ever finds the shadowing
+fragile.)
 
 ### Phase 3 — Source-build integration (optional)
 - Wire the forks in as a Gradle **composite build** (`includeBuild`) or source modules so we can
