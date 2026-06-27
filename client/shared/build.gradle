@@ -1,11 +1,11 @@
 dependencies {
   api project(":app")
-  api "com.samskivert:samskivert:1.11"
+  api "com.samskivert:samskivert:${samskivertVersion}"
   api "com.threerings:narya:${naryaVersion}"
   api "com.threerings:nenya:${nenyaVersion}"
-  api "com.threerings:vilya:1.7.1"
-  api "com.threerings:getdown:1.4"
-  api "com.threerings:ooo-util:1.5"
+  api "com.threerings:vilya:${vilyaVersion}"
+  api "com.threerings:getdown:${getdownVersion}"
+  api "com.threerings:ooo-util:${oooUtilVersion}"
   api "commons-io:commons-io:1.4"
   api "org.jcraft:jorbis:0.0.17"
 

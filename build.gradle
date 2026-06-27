@@ -4,9 +4,17 @@ allprojects {
 
   ext {
     gdxVersion = "1.5.4"
+    // Three Rings / samskivert stack versions, centralised here (Epic 2 Phase 1) so any single lib
+    // can be forked + locally republished + swapped via a one-line change. mavenLocal() is first in
+    // `repositories`, so a locally-published `com.x:lib:<ver>-bang1` transparently wins.
     naryaVersion = "1.19"
     nenyaVersion = "1.7.2"
+    vilyaVersion = "1.7.1"
     depotVersion = "1.8"
+    samskivertVersion = "1.11"
+    oooUtilVersion = "1.5"
+    oooUserVersion = "1.5.1"
+    getdownVersion = "1.4"
     // jME3 is used only by the isolated Phase 5 tool modules + the (dormant, compileOnly)
     // jME3 BUI backend — centralised so a cutover bump can't leave modules on mismatched
     // versions (which would crash at runtime once they share a classpath)
