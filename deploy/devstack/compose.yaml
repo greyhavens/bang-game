@@ -1,0 +1,50 @@
+# Epic 3 Phase 2 — containerized devtest: a seeded MySQL + a BangServer (frontier_town) node.
+#
+# Brings up the same runtime bin/bangserver does, from the host's `./gradlew deploy` output
+# (bind-mounted read-only) so "works on my machine" and the container converge — no custom image to
+# rebuild when game code changes (just re-deploy on the host + restart the server service).
+#
+#   ./gradlew deploy                                   # build server jars + staged assets (host)
+#   podman-compose -f deploy/devstack/compose.yaml up  # bring up MySQL + the server node
+#
+# Rootless podman-compose runs both services in one pod sharing localhost, so the server reaches
+# MySQL on 127.0.0.1:3306 — matching the baked server.properties (no config rewrite needed).
+name: bang-devstack
+
+services:
+  mysql:
+    image: docker.io/library/mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: devstack-root
+    volumes:
+      - ./mysql-init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro,z
+      - bang-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pdevstack-root"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  server:
+    image: docker.io/library/eclipse-temurin:21-jre
+    depends_on:
+      mysql:
+        condition: service_healthy
+    working_dir: /bang
+    environment:
+      # podman-compose uses per-container networking (service-name DNS), not a shared pod, so the
+      # server reaches MySQL at the `mysql` service name, not localhost. The entrypoint rewrites the
+      # baked server.properties' jdbc URLs (localhost:3306 -> ${DB_HOST}:3306) accordingly.
+      DB_HOST: mysql
+    volumes:
+      - ../../build/server:/bang/build/server:ro,z
+      - ../../assets/build/staging:/bang/assets/build/staging:ro,z
+      - ../../data:/bang/data:ro,z                     # ${server_root}/data/boards — the 165 boards loaded at startup
+      - ../../etc/test/server.properties:/bang/conf-src/server.properties:ro,z
+      - ./entrypoint.sh:/bang/entrypoint.sh:ro,z
+    command: ["bash", "/bang/entrypoint.sh"]
+    ports:
+      - "47624:47624"   # Narya client port (so a host client / the bot can connect)
+
+volumes:
+  bang-db:
