@@ -1,8 +1,8 @@
 name: CI
 
-# Epic 3 Phase 1 — CI foundation. Builds + unit-tests every PR and push to master on a JDK 21
-# toolchain, so a broken compile, genService generator, model/particle bake, or unit test fails
-# here instead of in a later manual run.
+# Epic 3 CI. `build` (Phase 1): compile + unit-test all modules on JDK 21. `integration` (Phase 3):
+# stand up the containerized devstack (MySQL + a BangServer node) and run the headless Narya bot
+# smoke test — a full-stack assertion that an all-AI game reaches GAME_OVER with a winner.
 
 on:
   push:
@@ -48,3 +48,54 @@ jobs:
           name: test-reports
           path: '**/build/reports/tests/**'
           if-no-files-found: ignore
+
+  integration:
+    name: Integration smoke (bot vs AI game)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Generate etc/test config (from etc/*.dist)
+        run: bash deploy/devstack/gen-etc-test.sh
+
+      - name: Build (deploy server jars + staged assets)
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew deploy --no-daemon --stacktrace
+
+      - name: Bring up devstack (MySQL + BangServer)
+        run: docker compose -f deploy/devstack/compose.yaml up -d --wait
+
+      - name: Wait for the server to listen on 47624
+        run: |
+          for i in $(seq 1 90); do
+            if (echo > /dev/tcp/localhost/47624) 2>/dev/null; then echo "server listening"; exit 0; fi
+            sleep 2
+          done
+          echo "::error::server never started listening on 47624"
+          docker compose -f deploy/devstack/compose.yaml logs server
+          exit 1
+
+      - name: Bot smoke test (all-AI game must reach GAME_OVER)
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew :tools:bot-client:run -Phost=localhost -Ptimeout=240 --no-daemon
+
+      - name: Server logs on failure
+        if: failure()
+        run: docker compose -f deploy/devstack/compose.yaml logs --tail=300 server
+
+      - name: Tear down
+        if: always()
+        run: docker compose -f deploy/devstack/compose.yaml down -v
