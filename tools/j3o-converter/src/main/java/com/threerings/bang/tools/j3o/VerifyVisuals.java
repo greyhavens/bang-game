@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
@@ -161,18 +162,63 @@ public class VerifyVisuals
             return 3;
         }
         Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
-        // drain output (prefix harness chatter so it's attributable but quiet)
-        try (var in = p.getInputStream()) {
-            byte[] buf = new byte[4096];
-            while (in.read(buf) >= 0) { /* discard; render mains are verbose */ }
+        // Drain the (verbose) render output on a background thread, keeping a capped tail for
+        // diagnostics. Draining off-thread means a hung child can't block here, so the bounded
+        // waitFor below can actually time it out (a stuck GL init on a headless CI agent would
+        // otherwise hang the whole gate).
+        StringBuilder log = new StringBuilder();
+        Thread drain = new Thread(() -> {
+            try (var in = p.getInputStream()) {
+                byte[] buf = new byte[4096]; int n;
+                while ((n = in.read(buf)) >= 0) {
+                    synchronized (log) { if (log.length() < MAX_LOG) log.append(new String(buf, 0, n)); }
+                }
+            } catch (IOException ignore) { /* child gone */ }
+        });
+        drain.setDaemon(true);
+        drain.start();
+        if (!p.waitFor(RENDER_TIMEOUT_SECS, TimeUnit.SECONDS)) {
+            p.destroyForcibly();
+            System.out.printf("  %-22s RENDER-TIMEOUT (>%ds)%n", e.name, RENDER_TIMEOUT_SECS);
+            dumpTail(e.name, log);
+            return 124;
         }
-        return p.waitFor();
+        drain.join(2000);
+        int rc = p.exitValue();
+        if (rc != 0) {
+            // on a render failure, surface the child's output tail so a CI failure is debuggable
+            dumpTail(e.name, log);
+        }
+        return rc;
+    }
+
+    /** Per-render wall-clock cap; destroy + fail the entry rather than hang the gate. */
+    protected static final int RENDER_TIMEOUT_SECS =
+        Integer.getInteger("visual.renderTimeoutSecs", 120);
+    /** Cap on how much forked-render output we retain for diagnostics. */
+    protected static final int MAX_LOG = 16384;
+
+    /** Prints the last ~2KB of a failed/timed-out render's captured output, indented + attributable. */
+    protected static void dumpTail (String name, StringBuilder log)
+    {
+        String s; synchronized (log) { s = log.toString().strip(); }
+        if (s.isEmpty()) return;
+        s = s.substring(Math.max(0, s.length() - 2000));
+        System.out.println("  ---- " + name + " render output (tail) ----");
+        for (String line : s.split("\n")) System.out.println("    " + line);
+        System.out.println("  ---- end " + name + " ----");
     }
 
     /** SnapshotDiff metric (mean absolute per-channel diff in [0,1]) + a heat-map diff image. */
     protected static Result diff (File rendered, File golden, File diffOut)
         throws IOException
     {
+        // a render that exited 0 but wrote no/unreadable output (e.g. an offscreen GL context that
+        // failed silently on a headless software-GL agent) must fail the entry, not crash the gate
+        // on ImageIO's "Can't read input file!".
+        if (rendered == null || !rendered.isFile() || rendered.length() == 0) {
+            return new Result(false, 1.0, 100.0);
+        }
         BufferedImage a = ImageIO.read(rendered);
         BufferedImage b = ImageIO.read(golden);
         if (a == null || b == null ||
