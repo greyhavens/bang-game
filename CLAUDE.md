@@ -14,8 +14,9 @@ it entirely is deferred to Epic 4). Code is BSD-licensed; media (everything unde
 
 ## Build and run
 
-Built with Gradle 8.14 (via the checked-in wrapper) on a JDK 21 toolchain. Maven `pom.xml`
-files also exist per module but they are stale; Gradle is the build.
+Built with Gradle 8.14 (via the checked-in wrapper) on a JDK 21 toolchain. Gradle is the only
+build — the old per-module Maven `pom.xml` files were stale and have been removed. (The forked
+Three Rings / samskivert dependency libs *are* Maven-built; see `docs/epic2-threerings-consolidation.md`.)
 
 ```sh
 ./gradlew deploy                  # build everything into build/client, build/server, build/assets

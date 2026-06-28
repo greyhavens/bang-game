@@ -175,9 +175,34 @@ upstream Three Rings GitHub orgs or Maven repo. (Caveat unchanged: same version 
 win by repo order, not by distinct coordinates; switch to `-bangN` if CI ever finds the shadowing
 fragile.)
 
-### Phase 3 — Source-build integration (optional)
-- Wire the forks in as a Gradle **composite build** (`includeBuild`) or source modules so we can
-  edit-and-run without a publish step — direct source-level debugging across the whole stack.
+### Phase 3 — Source-build integration  *(DONE 2026-06-28 — lightweight approach)*
+Goal: step-through debugging into the lib code from Bang, and a fast edit-a-lib → run-Bang loop.
+
+**Decisions (after weighing the options):**
+- **Keep Bang on Gradle; keep the forks on Maven.** Gradle consumes the Maven artifacts natively
+  (proven in Phase 2), so the build-system split is a non-issue except for this dev loop. *Converting
+  Bang to Maven was considered and rejected* — Bang's poms were already stale and were deleted (commit
+  "Remove dead build and production infrastructure"); the project deliberately moved to Gradle, whose
+  ~14 build files + ~77 custom tasks (asset bake pipeline, genService codegen, `deploy` assembly,
+  j3o-converter, render harnesses, per-town jars) would be a large, risky port to Maven for purely
+  cosmetic unification.
+- **No Gradle `includeBuild` composite / dual-build.** It would require a Gradle build *alongside* each
+  fork's pom (drift risk). The recon showed all the libs are *plain* `compile-java + jar` builds (no
+  codegen/annotation-processor/antrun plugins — checked, incl. narya), so a composite would be feasible,
+  but it isn't worth the dual-build babysitting given the cheaper path below covers the need.
+
+**What we did instead:**
+- **Source jars in mavenLocal.** Rebuilt every fork with `source:jar install`, so `~/.m2` now holds a
+  `-sources.jar` for all 12 artifacts. The IDE attaches them → full step-through/breakpoint/inspect into
+  narya/samskivert/etc. while running Bang, against the real artifacts, with zero build-system change.
+- **`bin/rebuild-libs`** — one command that rebuilds the forks (all, or named ones, in dependency order)
+  to mavenLocal *with sources*. Since mavenLocal is first in Bang's `repositories`, an edited lib is
+  picked up on the next Bang build/run — the edit→run loop without publishing to a remote. Maven launcher
+  + fork-dir locations are auto-detected (`$BANG_FORKS_DIR`, `$MVN` overrides).
+
+Not done (deferred, low value): source jars on **GitHub Packages** — GH Packages versions are immutable,
+so adding sources means delete+republish each version; mavenLocal sources already cover local debugging
+(the primary need), so this is only for debugging on a fresh machine resolving purely from the registry.
 
 ### Phase 4 — Consolidation / combining the layers
 - Where it pays off, merge the libs into a unified source tree (dedupe overlapping utils, single

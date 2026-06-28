@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+#
+# rebuild-libs — rebuild the forked Three Rings / samskivert libraries into the local Maven
+# repository (~/.m2), WITH source jars, for the Epic 2 source-build dev loop.
+#
+# Why: Bang lists mavenLocal() first in its repositories, so a lib freshly installed here wins
+# over GitHub Packages / Maven Central for that coordinate. So: edit a lib's source -> run this ->
+# rebuild/run Bang, and your change is picked up (no publish to a remote needed). The source jars
+# also let the IDE attach sources for step-through debugging into the lib code while running Bang.
+#
+# This deliberately keeps the forks pure-Maven and Bang pure-Gradle (Gradle consumes the Maven
+# artifacts natively) — see docs/epic2-threerings-consolidation.md (Phase 3).
+#
+# Usage:
+#   bin/rebuild-libs                  # rebuild ALL libs, in dependency order
+#   bin/rebuild-libs narya samskivert # rebuild only the named libs
+#
+# Environment overrides:
+#   BANG_FORKS_DIR   directory holding the fork clones (default: the parent of this repo, e.g. the
+#                    dir that contains both bang-game and samskivert/narya/nenya/... clones)
+#   MVN              path to a maven launcher (default: $MVN, else `mvn` on PATH, else a bundled
+#                    apache-maven under $BANG_FORKS_DIR/.tools)
+#
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+forks_dir="${BANG_FORKS_DIR:-$(dirname "$repo_root")}"
+
+# locate a maven launcher
+if [ -n "${MVN:-}" ]; then
+  mvn_bin="$MVN"
+elif command -v mvn >/dev/null 2>&1; then
+  mvn_bin="mvn"
+else
+  mvn_bin="$(ls "$forks_dir"/.tools/apache-maven-*/bin/mvn 2>/dev/null | head -1 || true)"
+fi
+if [ -z "${mvn_bin:-}" ]; then
+  echo "ERROR: no maven found. Install maven, or set MVN=/path/to/mvn (a standalone tarball under" >&2
+  echo "       \$BANG_FORKS_DIR/.tools/apache-maven-*/bin/mvn is auto-detected)." >&2
+  exit 1
+fi
+
+# canonical bottom-up dependency order; per-lib extra mvn args (e.g. multi-module reactors where
+# Bang only needs one module)
+order=(samskivert pythagoras jmustache ooo-util depot narya nenya vilya ooo-user getdown)
+declare -A extra=( [getdown]="-pl core -am" )   # Bang only uses getdown-core
+
+if [ "$#" -gt 0 ]; then
+  libs=("$@")
+else
+  libs=("${order[@]}")
+fi
+
+# -DskipTests for speed; attach + install source jars (pinned plugin for determinism); skip
+# javadoc/gpg which the old poms don't need for a local install.
+flags="-q -DskipTests -Dmaven.javadoc.skip=true -Dgpg.skip=true"
+src_goal="org.apache.maven.plugins:maven-source-plugin:3.3.1:jar"
+
+rc=0
+for lib in "${libs[@]}"; do
+  dir="$forks_dir/$lib"
+  if [ ! -d "$dir" ]; then
+    printf '==> %-12s SKIP (no clone at %s)\n' "$lib" "$dir"
+    continue
+  fi
+  printf '==> %-12s ' "$lib"
+  if ( cd "$dir" && "$mvn_bin" $flags ${extra[$lib]:-} "$src_goal" install ) >"/tmp/rebuild-$lib.log" 2>&1; then
+    echo "OK"
+  else
+    echo "FAIL (see /tmp/rebuild-$lib.log)"
+    rc=1
+    break
+  fi
+done
+
+if [ "$rc" -eq 0 ]; then
+  echo "Done — installed to ~/.m2 with sources. Bang's mavenLocal resolves these first."
+fi
+exit "$rc"
