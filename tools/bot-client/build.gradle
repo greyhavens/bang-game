@@ -32,9 +32,13 @@ dependencies {
   // -- the same directory bin/bangserver puts on the live server's classpath). The directory
   // itself is the classpath root so the "rsrc/..." resource path resolves. NB: props.txt and
   // similar list files are GENERATED at build time (the source assets/rsrc/.../props.txt is empty),
-  // so the source tree alone is not enough -- staging is required. The run task depends on
-  // :assets:processResources to guarantee it exists.
-  runtimeOnly files(rootProject.file("assets/build/staging"))
+  // so the source tree alone is not enough -- staging is required.
+  //
+  // Mark the staging dir as built by :assets:processResources so EVERY task that reads this runtime
+  // classpath (the application plugin's startScripts / dist* tasks, as well as run) auto-orders after
+  // the asset bake -- otherwise `./gradlew build` fails Gradle's implicit-dependency validation
+  // (startScripts vs :assets:copyTownBits/copyResources/copyOggs).
+  runtimeOnly files(rootProject.file("assets/build/staging")) { builtBy ":assets:processResources" }
 }
 
 application {
