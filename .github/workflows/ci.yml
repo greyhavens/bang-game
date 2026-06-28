@@ -1,0 +1,50 @@
+name: CI
+
+# Epic 3 Phase 1 — CI foundation. Builds + unit-tests every PR and push to master on a JDK 21
+# toolchain, so a broken compile, genService generator, model/particle bake, or unit test fails
+# here instead of in a later manual run.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+  packages: read   # resolve the forked Three Rings / samskivert stack from GitHub Packages
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & test (JDK 21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build & test
+        env:
+          # Bang's build.gradle reads these for the githubBang Maven repo (the forked deps live in
+          # this repo's GitHub Packages); the Actions GITHUB_TOKEN has packages:read here.
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew build --no-daemon --stacktrace
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: '**/build/reports/tests/**'
+          if-no-files-found: ignore
