@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# devstack — thin wrapper around the Epic 3 Phase 2 containerized devtest stack
+# (MySQL + a BangServer node). See deploy/devstack/README.md.
+#
+#   bin/devstack up        # ./gradlew deploy (if needed) then bring the stack up (detached)
+#   bin/devstack down      # stop + remove the stack (keeps the DB volume)
+#   bin/devstack logs      # follow the server logs
+#   bin/devstack restart   # restart just the server (after a re-deploy)
+#   bin/devstack status    # show container status
+#
+# COMPOSE env override: the compose CLI to use (default: podman-compose, else `docker compose`).
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+compose_file="$here/deploy/devstack/compose.yaml"
+
+if [ -n "${COMPOSE:-}" ]; then
+  compose=($COMPOSE)
+elif command -v podman-compose >/dev/null 2>&1; then
+  compose=(podman-compose)
+elif docker compose version >/dev/null 2>&1; then
+  compose=(docker compose)
+else
+  echo "ERROR: no compose tool found (install podman-compose, or set COMPOSE=...)." >&2
+  exit 1
+fi
+
+dc() { "${compose[@]}" -f "$compose_file" "$@"; }
+
+case "${1:-up}" in
+  up)
+    if [ -z "$(ls "$here"/build/server/*.jar 2>/dev/null)" ]; then
+      echo "devstack: build/server is empty — running ./gradlew deploy first ..."
+      (cd "$here" && ./gradlew deploy)
+    fi
+    dc up -d
+    echo "devstack: up. Follow logs:  bin/devstack logs   (server published on localhost:47624)"
+    ;;
+  down)    dc down ;;
+  logs)    podman logs -f bang-devstack_server_1 2>/dev/null || dc logs -f server ;;
+  restart) podman restart bang-devstack_server_1 ;;
+  status)  dc ps ;;
+  *) echo "usage: bin/devstack {up|down|logs|restart|status}" >&2; exit 2 ;;
+esac
