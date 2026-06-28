@@ -45,6 +45,10 @@ JOPTS=(-server -Xmx512m
 echo "devstack: ensuring test/yeehaw account ..."
 java -cp "$CP" "${JOPTS[@]}" -Dooo.propfile=server \
   com.threerings.user.tools.UserTool create test yeehaw test@test.com || echo "devstack: (user likely already exists)"
+# grant the ADMIN token (autoplay / the bot smoke test require it; takes effect next fresh session,
+# i.e. when BangServer starts below). Idempotent: make_admin exits non-zero if already admin.
+java -cp "$CP" "${JOPTS[@]}" -Dooo.propfile=server \
+  com.threerings.user.tools.UserTool make_admin test || echo "devstack: (test is already admin)"
 java -cp "$CP" "${JOPTS[@]}" -Dooo.propfile=server \
   com.threerings.bang.server.tools.SetUserBirthday test 1990-01-01 || true
 
