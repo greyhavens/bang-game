@@ -66,15 +66,20 @@ the first repo that has the requested coordinate, so anything published to the l
 repository wins for that exact `group:artifact:version`. To run a locally-patched copy of, say,
 `samskivert`:
 
-1. In your fork of the lib, bump its version to a Bang-private suffix (e.g. `1.11-bang1`) and
-   `./gradlew publishToMavenLocal` (or `mvn install`) — it lands in `~/.m2/repository`.
-2. In Bang's root `build.gradle` `ext`, change the one line: `samskivertVersion = "1.11-bang1"`.
-3. `./gradlew deploy` — Gradle resolves `com.samskivert:samskivert:1.11-bang1` from `mavenLocal`;
-   every module that declares `${samskivertVersion}` follows automatically.
+1. In your fork of the lib, **bump its version with a clean minor/patch increment** (e.g. narya
+   `1.19` → `1.20`) and `mvn install` (or `./gradlew publishToMavenLocal`) — it lands in
+   `~/.m2/repository`.
+2. In Bang's root `build.gradle` `ext`, change the one line: `naryaVersion = "1.20"`.
+3. `./gradlew deploy` — Gradle resolves `com.threerings:narya:1.20` from `mavenLocal`;
+   every module that declares `${naryaVersion}` follows automatically (and transitive references
+   to the old version upgrade to it via Gradle conflict resolution). Publish the bumped artifact to
+   GitHub Packages too so CI / other machines resolve it.
 
-To revert, set the version back to the upstream string. Using a distinct `-bangN` suffix (rather than
-re-publishing the upstream version number) keeps the local artifact from silently shadowing the real
-one and makes "are we on a patched build?" obvious from the version string.
+**Versioning convention (updated 2026-06-29):** we now own these forks outright, so a patched fork
+gets a **normal version bump** (next minor/patch), not the old `-bangN` suffix. A real version number
+still avoids silently shadowing the upstream artifact, and GitHub Packages won't let you re-publish an
+existing version anyway. The first fork patched this way is **narya `1.20`** (Epic 3 Phase 4 TLS). The
+older `-bangN` suffix scheme below is **retired** — kept only as historical context.
 
 ### Phase 2 — Fork & vendor (the insurance)  *(scoped 2026-06-27)*
 
@@ -85,9 +90,10 @@ artifacts are still the old 1.x versions — so the fork-as-insurance + patchabi
 any JDK-21 build fixes we make may even be upstreamable.
 
 **Decisions (locked):**
-- **Versioning:** keep each lib's **upstream version** and republish our build; `mavenLocal()` is first
-  in `repositories` so our `~/.m2` copy wins per-dev. Reserve the `-bangN` suffix for when we actually
-  *patch* a lib (then bump just that lib + its dependents). *(See the remote-registry caveat below.)*
+- **Versioning:** keep each lib's **upstream version** when republishing an *unmodified* build;
+  `mavenLocal()` is first in `repositories` so our `~/.m2` copy wins per-dev. When we actually *patch*
+  a lib, give it a **clean version bump** (next minor/patch) — not the old `-bangN` suffix (retired
+  2026-06-29) — and bump that lib + its dependents. First example: narya `1.20` (Epic 3 Phase 4).
 - **Order:** **critical path first** — fork+build the directly-declared core, prove Bang runs, then add
   the rest.
 - **Publish target:** `mavenLocal` for per-dev, **plus a remote registry (GitHub Packages)** so CI /

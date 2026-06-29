@@ -78,7 +78,7 @@ gameplay — *all* of it, not just credentials) is now wrapped in **TLS 1.3**. M
 the whole session via vetted middleware over an ephemeral key exchange (Valve GameNetworkingSockets =
 AES-GCM-256 + Curve25519; GameLift = TLS 1.2 + DTLS 1.2); we follow that consensus with TLS rather
 than rolling our own AEAD on the existing (and, in Bang, never-enabled) RSA→AES handshake.
-- Implemented in the forked **narya** (`1.19-bang1`, published to GitHub Packages) via
+- Implemented in the forked **narya** (`1.20`, published to GitHub Packages) via
   [marianobarrios/tls-channel](https://github.com/marianobarrios/tls-channel) — a thin, vetted
   `ByteChannel`-over-`SSLEngine` wrapper (MIT, zero transitive deps). `TlsContextFactory` builds the
   contexts; `Connection` gained a `ByteChannel` indirection so the selector loop registers the raw

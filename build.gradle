@@ -7,7 +7,7 @@ allprojects {
     // Three Rings / samskivert stack versions, centralised here (Epic 2 Phase 1) so any single lib
     // can be forked + locally republished + swapped via a one-line change. mavenLocal() is first in
     // `repositories`, so a locally-published `com.x:lib:<ver>-bang1` transparently wins.
-    naryaVersion = "1.19-bang1"  // forked TLS transport patch (Epic 3 Phase 4)
+    naryaVersion = "1.20"  // forked TLS transport (Epic 3 Phase 4)
     nenyaVersion = "1.7.2"
     vilyaVersion = "1.7.1"
     depotVersion = "1.8"
