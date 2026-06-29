@@ -70,14 +70,41 @@ Cash in the Phase-5 testability investment. Depends on Phases 1–2 + the Epic-1
     silently diverge.
 - Establish the baseline-refresh workflow (how a legitimate visual change re-blesses the baseline).
 
-### Phase 4 — Transport & credential security
+### Phase 4 — Transport & credential security  *(TLS + credentials DONE; token review remains)*
 Close the in-the-clear gaps.
-- Wrap the Narya client↔server connection in **TLS** (or document the trusted-network assumption if
-  it is intentionally LAN-only).
-- Review credential storage in `OOOAuthenticator` / `ooo-user`: confirm passwords are salted +
-  modern-hashed (bcrypt/argon2), not MD5; migrate if not.
-- Review the session-token / admin-token / MAC-ident scheme (the path the bot client mirrors) for
-  replay and spoofing.
+
+**Full-session TLS — DONE.** The entire Narya client↔server TCP object stream (login, chat,
+gameplay — *all* of it, not just credentials) is now wrapped in **TLS 1.3**. Modern games encrypt
+the whole session via vetted middleware over an ephemeral key exchange (Valve GameNetworkingSockets =
+AES-GCM-256 + Curve25519; GameLift = TLS 1.2 + DTLS 1.2); we follow that consensus with TLS rather
+than rolling our own AEAD on the existing (and, in Bang, never-enabled) RSA→AES handshake.
+- Implemented in the forked **narya** (`1.19-bang1`, published to GitHub Packages) via
+  [marianobarrios/tls-channel](https://github.com/marianobarrios/tls-channel) — a thin, vetted
+  `ByteChannel`-over-`SSLEngine` wrapper (MIT, zero transitive deps). `TlsContextFactory` builds the
+  contexts; `Connection` gained a `ByteChannel` indirection so the selector loop registers the raw
+  socket but does app I/O through the TLS channel. Server side maps tls-channel's non-blocking
+  `NeedsRead`/`NeedsWrite` onto the existing overflow-queue / interest-op machinery; the client
+  (`BlockingCommunicator`) uses tls-channel's blocking mode (near drop-in for its reader/writer
+  threads). Inter-node **peer** connections also speak TLS (`PeerManager.setPeerClientContext`).
+- **Strictly opt-in:** a null `SSLContext` = byte-for-byte the original plaintext path. Enabled via
+  `server_tls` + keystore/truststore config (`server.properties` server-side, the shipped
+  `deployment.properties` client-side). `bin/gen-tls-certs` generates a self-signed server keystore +
+  a **pinned** client truststore (no public CA for a self-hosted/community deployment).
+- **No DTLS:** Bang never binds the UDP datagram channel (server `getDatagramPorts` is empty, the
+  client passes none), so DTLS would protect dead code. `DatagramChannelReader` instead **fails
+  closed** — refuses to bind datagram ports while TLS is on, so plaintext UDP can never silently run
+  alongside the encrypted TCP session.
+- **Verified:** the headless bot played a full all-AI game to GAME_OVER over TLS, and the GUI client
+  logs on + chats over TLS 1.3. Cluster-peering note: the dev two-node cluster still can't fully peer,
+  but only because of the pre-existing `NodeRecord` `LocalDateTime`↔`Timestamp` Connector/J 8 bug
+  (unrelated to TLS); peer connections were confirmed to attempt TLS (no plaintext-vs-TLS errors).
+
+**Credential storage — DONE (Epic 2).** `ooo-user`'s `Crypto` uses **Argon2**
+(`de.mkammerer:argon2-jvm`) with `verify`/`needsRehash`, not MD5.
+
+**Still remaining:** review the session-token / admin-token / MAC-ident scheme (the path the bot
+client mirrors) for replay and spoofing. Note TLS now protects these tokens in transit (the main
+over-the-wire replay vector), but the at-rest/issuance scheme review is still open.
 
 ### Phase 5 — Wire trust boundary & dependency CVEs
 - Audit the Narya **wire deserialization** trust boundary: what a hostile client can stream into the
