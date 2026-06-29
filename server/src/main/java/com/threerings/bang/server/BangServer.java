@@ -43,6 +43,7 @@ import com.threerings.presents.server.PresentsInvoker;
 import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.server.ReportManager;
 import com.threerings.presents.server.SessionFactory;
+import com.threerings.presents.net.TlsContextFactory;
 import com.threerings.presents.server.net.PresentsConnectionManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
@@ -295,6 +296,23 @@ public class BangServer extends CrowdServer
 
         // now initialize our runtime configuration
         RuntimeConfig.init(omgr, confreg);
+
+        // if TLS is configured, install the SSLContext so the connection manager wraps the entire
+        // client<->server stream in TLS; this must happen before super.init() starts accepting
+        // sockets (Epic 3 Phase 4). Fail hard rather than silently fall back to plaintext.
+        if (ServerConfig.config.getValue("server_tls", false)) {
+            String keystore = ServerConfig.config.getValue("server_tls_keystore", "");
+            String password = ServerConfig.config.getValue("server_tls_password", "");
+            try {
+                _conmgr.setSSLContext(
+                    TlsContextFactory.serverContext(keystore, password.toCharArray()));
+                log.info("Transport TLS enabled.", "keystore", keystore);
+            } catch (Exception e) {
+                log.warning("Failed to initialize server TLS; aborting startup.",
+                            "keystore", keystore, e);
+                System.exit(255);
+            }
+        }
 
         // do the base server initialization
         super.init(injector);

@@ -36,6 +36,7 @@ import com.threerings.jme.camera.GodViewHandler;
 import com.threerings.bang.game.client.GameCameraHandler;
 import com.threerings.bang.game.client.GameInputHandler;
 
+import com.threerings.bang.util.ClientTls;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
@@ -148,6 +149,9 @@ public class BangApp extends JmeApp
                  "version", DeploymentConfig.getVersion());
         client.setServer(server, ports);
         client.setVersion(String.valueOf(DeploymentConfig.getVersion()));
+
+        // wrap the connection in TLS if the deployment is configured for it (Epic 3 Phase 4)
+        ClientTls.configure(client);
 
         // configure the client with credentials if they were supplied
         if (username != null && password != null) {
