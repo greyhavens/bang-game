@@ -104,6 +104,7 @@ import com.threerings.bang.data.Shop;
 import com.threerings.bang.data.StatType;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.ClientTls;
 import com.threerings.bang.util.DeploymentConfig;
 import com.threerings.bang.util.IdentUtil;
 
@@ -1041,6 +1042,8 @@ public class BangClient extends BasicClient
         if (_pendingTownId != null) {
             _ctx.getClient().setServer(DeploymentConfig.getServerHost(_pendingTownId),
                                        DeploymentConfig.getServerPorts(_pendingTownId));
+            // wrap the connection in TLS if the deployment is configured for it (Epic 3 Phase 4)
+            ClientTls.configure(_ctx.getClient());
             if (!_ctx.getClient().logon()) {
                 log.warning("Trying to connect to " + _pendingTownId +
                             " but we're already logged on!?");

@@ -51,6 +51,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.ClientTls;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
@@ -308,6 +309,9 @@ public class LogonView extends BWindow
 
         _ctx.getClient().setServer(DeploymentConfig.getServerHost(townId),
                                    DeploymentConfig.getServerPorts(townId));
+
+        // wrap the connection in TLS if the deployment is configured for it (Epic 3 Phase 4)
+        ClientTls.configure(_ctx.getClient());
 
         // configure the client with the supplied credentials
         _ctx.getClient().setCredentials(
