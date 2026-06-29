@@ -37,6 +37,10 @@ frontier_town.server_host = localhost
 # server_tls = true
 # server_tls_keystore = etc/test/tls-server.p12
 # server_tls_password = yeehaw
+# In cluster mode, peer connections to other nodes' TLS ports also use TLS; point this at the
+# truststore that pins the cluster's certificate (the same tls-trust.p12 bin/gen-tls-certs makes
+# when every node shares one cert). Only needed when running a multi-node cluster with TLS.
+# server_tls_truststore = etc/test/tls-trust.p12
 
 #
 # The directory from which the server is run. Used to put log files in the

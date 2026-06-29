@@ -347,6 +347,21 @@ public class BangServer extends CrowdServer
             log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
             _peermgr.init(ServerConfig.nodename, ServerConfig.sharedSecret,
                           ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
+
+            // if TLS is on, peer connections (to other nodes' TLS client ports) must speak TLS too;
+            // install a pinned client context built from the cluster truststore (Epic 3 Phase 4)
+            if (ServerConfig.config.getValue("server_tls", false)) {
+                String truststore = ServerConfig.config.getValue("server_tls_truststore", "");
+                String password = ServerConfig.config.getValue("server_tls_password", "");
+                try {
+                    _peermgr.setPeerClientContext(
+                        TlsContextFactory.clientContext(truststore, password.toCharArray()));
+                    log.info("Peer transport TLS enabled.", "truststore", truststore);
+                } catch (Exception e) {
+                    log.warning("Failed to initialize peer TLS; cluster peering will fail.",
+                                "truststore", truststore, e);
+                }
+            }
         }
 
         // set up our authenticator
