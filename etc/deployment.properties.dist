@@ -13,6 +13,17 @@
 server_ports = 47624
 
 #
+# Transport encryption (Epic 3 Phase 4). Must match the server's server_tls setting.
+# When true, the client wraps its connection in TLS 1.3 and trusts only the pinned
+# certificate in the truststore below (produced alongside the server keystore by
+# bin/gen-tls-certs). The truststore contains only the public certificate, so it is
+# safe to ship; do not put the server keystore or its private key here.
+
+# server_tls = true
+# server_tls_truststore = etc/test/tls-trust.p12
+# server_tls_password = yeehaw
+
+#
 # The public hostname and ports for the various town lobby servers.
 
 # frontier_town.server_host = bang1.banghowdy.com

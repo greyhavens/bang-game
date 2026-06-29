@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# gen-tls-certs — generate the self-signed TLS material for the Presents transport (Epic 3 Phase 4).
+#
+# A self-hosted / community Bang deployment has no public CA, so the server uses a self-signed
+# certificate and the client *pins* it (trusts only that cert). This script produces:
+#
+#   etc/test/tls-server.p12   PKCS12 keystore: server cert + private key   (server reads it)
+#   etc/test/tls-server.crt   the exported public certificate              (intermediate)
+#   etc/test/tls-trust.p12    PKCS12 truststore: just the server cert      (client reads it)
+#
+# Both stores live under the gitignored etc/test/, so they are per-deployment and never committed.
+# Re-running regenerates them (the old client truststore stops trusting an old server cert, so
+# regenerate both ends together and redeploy).
+#
+# Env overrides:
+#   TLS_HOST      cert CN + SAN (default: localhost) — must match the host the client connects to
+#   TLS_PASS      keystore/truststore password (default: yeehaw)
+#   TLS_DAYS      validity in days (default: 3650)
+#   TLS_OUT       output dir (default: etc/test)
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+HOST="${TLS_HOST:-localhost}"
+PASS="${TLS_PASS:-yeehaw}"
+DAYS="${TLS_DAYS:-3650}"
+OUT="${TLS_OUT:-$root/etc/test}"
+
+ks="$OUT/tls-server.p12"
+crt="$OUT/tls-server.crt"
+ts="$OUT/tls-trust.p12"
+
+command -v keytool >/dev/null || { echo "keytool not on PATH (need a JDK)"; exit 1; }
+mkdir -p "$OUT"
+rm -f "$ks" "$crt" "$ts"
+
+echo "gen-tls-certs: generating self-signed server cert for CN=$HOST (valid ${DAYS}d)"
+# RSA-2048 self-signed, with a SAN so modern clients accept it for $HOST.
+keytool -genkeypair -alias bang-server -keyalg RSA -keysize 2048 \
+  -dname "CN=$HOST, OU=Bang, O=ThreeRings, C=US" \
+  -ext "SAN=dns:$HOST,ip:127.0.0.1" \
+  -validity "$DAYS" -keystore "$ks" -storetype PKCS12 \
+  -storepass "$PASS" -keypass "$PASS" >/dev/null
+
+echo "gen-tls-certs: exporting public cert"
+keytool -exportcert -alias bang-server -keystore "$ks" -storetype PKCS12 \
+  -storepass "$PASS" -file "$crt" -rfc >/dev/null
+
+echo "gen-tls-certs: building client truststore (pins the server cert)"
+keytool -importcert -noprompt -alias bang-server -file "$crt" \
+  -keystore "$ts" -storetype PKCS12 -storepass "$PASS" >/dev/null
+
+chmod 600 "$ks" "$ts"
+echo "gen-tls-certs: wrote"
+echo "  server keystore : $ks"
+echo "  client truststore: $ts"
+echo
+echo "Point the config at them (etc/test/server.properties, etc/test/deployment.properties):"
+echo "  server_tls = true"
+echo "  server_tls_keystore = $ks"
+echo "  server_tls_truststore = $ts"
+echo "  server_tls_password = $PASS"
