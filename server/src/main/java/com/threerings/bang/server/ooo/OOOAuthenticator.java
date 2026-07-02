@@ -293,7 +293,9 @@ public class OOOAuthenticator extends BangAuthenticator
         if (!anonymous) {
             boolean ok;
             if (user.isArgon2Hashed()) {
-                ok = user.checkPassword(password.toCharArray());
+                // guard null: a handcrafted AuthRequest can stream a null password, and unlike the
+                // old .equals check, checkPassword(null.toCharArray()) would NPE out of login
+                ok = password != null && user.checkPassword(password.toCharArray());
             } else {
                 ok = user.password.equals(password);
                 if (ok) {

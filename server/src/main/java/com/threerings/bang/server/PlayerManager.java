@@ -44,6 +44,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.peer.server.PeerManager;
+import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.util.PersistingUnit;
@@ -686,8 +687,15 @@ public class PlayerManager
                                   int[] badgeIds, final PlayerService.ConfirmListener cl)
         throws InvocationException
     {
+        // SECURITY: always write the caller's own poster; the client-supplied playerId is ignored,
+        // otherwise a crafted request could overwrite any player's poster record. Also validate the
+        // client-supplied badge array before indexing it (a short/null array would crash the call).
+        if (badgeIds == null || badgeIds.length != 4) {
+            throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
+        }
+
         // create a poster record and populate it
-        final PosterRecord poster = new PosterRecord(playerId);
+        final PosterRecord poster = new PosterRecord(user.playerId);
         poster.statement = statement;
         poster.badge1 = badgeIds[0];
         poster.badge2 = badgeIds[1];
