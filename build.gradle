@@ -1,3 +1,10 @@
+plugins {
+  // OWASP dependency-check (Epic 3 Phase 5): scans the RESOLVED classpath — including the
+  // transitive deps our forked jars drag in, which Dependabot cannot see — against the NVD.
+  // Run via `./gradlew dependencyCheckAggregate`.
+  id "org.owasp.dependencycheck" version "12.2.2"
+}
+
 allprojects {
   group = "com.threerings"
   version = "1.1.0"
@@ -70,5 +77,25 @@ allprojects {
       }
     }
     mavenCentral()
+  }
+}
+
+// OWASP dependency-check scan config (root-level; dependencyCheckAggregate spans all modules).
+dependencyCheck {
+  formats = ["HTML", "JSON"]
+  // fail on any High/Critical (CVSS >= 7.0); Medium/Low are report-only
+  failBuildOnCVSS = 7.0f
+  suppressionFile = "config/owasp-suppressions.xml"
+  // the NVD feed now requires an API key to avoid aggressive throttling; supplied in CI via the
+  // NVD_API_KEY secret. Locally it falls back to unauthenticated (slow) updates if unset.
+  nvd {
+    apiKey = System.getenv("NVD_API_KEY")
+  }
+  analyzers {
+    // pure-Java project: disable the irrelevant analyzers to cut noise and runtime
+    assemblyEnabled = false
+    nodeAuditEnabled = false
+    nodeEnabled = false
+    nuspecEnabled = false
   }
 }
