@@ -27,6 +27,22 @@ frontier_town.server_host = localhost
 # server_secret = Is it secret? Is it safe?
 
 #
+# Transport encryption (Epic 3 Phase 4). When enabled, the entire client<->server
+# TCP object stream (login, chat, gameplay) is wrapped in TLS 1.3. Generate the
+# self-signed material with bin/gen-tls-certs, which writes the keystore below and
+# a matching client truststore (point deployment.properties at the truststore).
+# These settings are SERVER-SIDE ONLY — the keystore holds the private key, so
+# never ship server.properties to clients.
+
+# server_tls = true
+# server_tls_keystore = etc/test/tls-server.p12
+# server_tls_password = yeehaw
+# In cluster mode, peer connections to other nodes' TLS ports also use TLS; point this at the
+# truststore that pins the cluster's certificate (the same tls-trust.p12 bin/gen-tls-certs makes
+# when every node shares one cert). Only needed when running a multi-node cluster with TLS.
+# server_tls_truststore = etc/test/tls-trust.p12
+
+#
 # The directory from which the server is run. Used to put log files in the
 # proper location and things like that.
 

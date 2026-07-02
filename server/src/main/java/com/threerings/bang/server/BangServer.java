@@ -43,6 +43,7 @@ import com.threerings.presents.server.PresentsInvoker;
 import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.server.ReportManager;
 import com.threerings.presents.server.SessionFactory;
+import com.threerings.presents.net.TlsContextFactory;
 import com.threerings.presents.server.net.PresentsConnectionManager;
 
 import com.threerings.crowd.chat.server.ChatProvider;
@@ -296,6 +297,23 @@ public class BangServer extends CrowdServer
         // now initialize our runtime configuration
         RuntimeConfig.init(omgr, confreg);
 
+        // if TLS is configured, install the SSLContext so the connection manager wraps the entire
+        // client<->server stream in TLS; this must happen before super.init() starts accepting
+        // sockets (Epic 3 Phase 4). Fail hard rather than silently fall back to plaintext.
+        if (ServerConfig.config.getValue("server_tls", false)) {
+            String keystore = ServerConfig.config.getValue("server_tls_keystore", "");
+            String password = ServerConfig.config.getValue("server_tls_password", "");
+            try {
+                _conmgr.setSSLContext(
+                    TlsContextFactory.serverContext(keystore, password.toCharArray()));
+                log.info("Transport TLS enabled.", "keystore", keystore);
+            } catch (Exception e) {
+                log.warning("Failed to initialize server TLS; aborting startup.",
+                            "keystore", keystore, e);
+                System.exit(255);
+            }
+        }
+
         // do the base server initialization
         super.init(injector);
 
@@ -329,6 +347,21 @@ public class BangServer extends CrowdServer
             log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
             _peermgr.init(ServerConfig.nodename, ServerConfig.sharedSecret,
                           ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
+
+            // if TLS is on, peer connections (to other nodes' TLS client ports) must speak TLS too;
+            // install a pinned client context built from the cluster truststore (Epic 3 Phase 4)
+            if (ServerConfig.config.getValue("server_tls", false)) {
+                String truststore = ServerConfig.config.getValue("server_tls_truststore", "");
+                String password = ServerConfig.config.getValue("server_tls_password", "");
+                try {
+                    _peermgr.setPeerClientContext(
+                        TlsContextFactory.clientContext(truststore, password.toCharArray()));
+                    log.info("Peer transport TLS enabled.", "truststore", truststore);
+                } catch (Exception e) {
+                    log.warning("Failed to initialize peer TLS; cluster peering will fail.",
+                                "truststore", truststore, e);
+                }
+            }
         }
 
         // set up our authenticator

@@ -44,6 +44,7 @@ import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.saloon.data.Criterion;
+import com.threerings.bang.util.ClientTls;
 import com.threerings.bang.util.DeploymentConfig;
 import com.threerings.bang.util.IdentUtil;
 
@@ -124,6 +125,8 @@ public class BangBotClient
         _client = new Client(creds, _rqueue);
         _client.setServer(host, new int[] { port });
         _client.setVersion(String.valueOf(DeploymentConfig.getVersion()));
+        // speak TLS to the server if the deployment is configured for it (Epic 3 Phase 4)
+        ClientTls.configure(_client);
         _client.addClientObserver(this);
 
         // construct the (renderless) directors now that the Client exists -- their ctors call

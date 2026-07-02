@@ -2,6 +2,12 @@ etc/test/*.conf
 etc/test/*.properties
 etc/prod/*.conf
 etc/prod/*.properties
+# TLS keystores/truststores/certs (bin/gen-tls-certs output) — never commit private keys
+etc/*/*.p12
+etc/*/*.pfx
+etc/*/*.pkcs12
+etc/*/*.jks
+etc/*/*.crt
 etc/blosxom.conf
 etc/bang-client.pro
 etc/proguard/*.map
