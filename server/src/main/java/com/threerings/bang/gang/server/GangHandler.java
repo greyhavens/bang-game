@@ -1060,11 +1060,14 @@ public class GangHandler
     public void grantScrip (ClientObject caller, final int scrip)
     {
         try {
-            // make sure is comes from this server or a peer
+            // make sure it comes from this server or a peer
             verifyLocalOrPeer(caller);
         } catch (InvocationException ie) {
+            // SECURITY: must return, not fall through — otherwise any gang member could stream
+            // grantScrip() directly and mint arbitrary persisted scrip (matches grantAces)
             log.warning("Grant scrip request received from illegal caller.", "caller", caller,
                         "ie", ie);
+            return;
         }
 
         // persist this expenditure to the database
@@ -1089,11 +1092,13 @@ public class GangHandler
     public void updateCoins (ClientObject caller)
     {
         try {
-            // make sure is comes from this server or a peer
+            // make sure it comes from this server or a peer
             verifyLocalOrPeer(caller);
         } catch (InvocationException ie) {
+            // SECURITY: must return, not fall through (see grantScrip)
             log.warning("Update Coins request received from illegal caller.", "caller", caller,
                         "ie", ie);
+            return;
         }
 
         _invoker.postUnit(new RepositoryUnit("updateCoins") {
