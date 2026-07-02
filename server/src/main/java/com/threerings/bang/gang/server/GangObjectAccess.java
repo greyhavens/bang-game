@@ -32,12 +32,18 @@ public class GangObjectAccess implements AccessController
     // from interface AccessController
     public boolean allowSubscribe (DObject object, Subscriber<?> sub)
     {
-        // real game clients arrive as a ProxySubscriber wrapping their PlayerObject; peer/server
-        // subscriptions (cross-node replication) are plain Subscribers and are always allowed
+        // Real game clients arrive as a ProxySubscriber wrapping their PlayerObject: this is the
+        // exact mechanism the proven crowd PlaceAccessController relies on (a real client session's
+        // subscriber is PresentsSession.ClientProxy, which implements ProxySubscriber and returns
+        // the client's ClientObject). Peer/server subscriptions (cross-node replication) are plain
+        // Subscribers and fall through to allowed.
         if (sub instanceof ProxySubscriber) {
             ClientObject co = ((ProxySubscriber)sub).getClientObject();
             if (co instanceof PlayerObject) {
-                return ((PlayerObject)co).gangId == ((GangObject)object).gangId;
+                // gangId > 0 guard: a gangless player has gangId 0 (int default); never let that
+                // match (gang ids are DB auto-increment starting at 1, so a real gang is never 0)
+                int gangId = ((GangObject)object).gangId;
+                return gangId > 0 && ((PlayerObject)co).gangId == gangId;
             }
         }
         return true;
