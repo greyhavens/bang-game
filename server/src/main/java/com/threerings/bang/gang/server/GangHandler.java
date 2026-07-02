@@ -2054,7 +2054,10 @@ public class GangHandler
         _tmgr = new TableGameManager();
         _gangobj.tableOid = _tmgr.getTableGameObject().getOid();
 
-        // register and announce
+        // register and announce; restrict subscription to this gang's own members (a GangObject is
+        // a plain dobj, not a place, so it gets no occupancy controller by default — see
+        // GangObjectAccess). Set before any client can learn the oid and subscribe.
+        _gangobj.setAccessController(GangObjectAccess.INSTANCE);
         _omgr.registerObject(_gangobj);
         log.info("Initialized gang object " + this + ".");
 
