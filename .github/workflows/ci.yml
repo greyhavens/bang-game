@@ -120,11 +120,19 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      # rotate the cache key weekly: a per-run key (github.run_id) never hits, so every run would
+      # save a fresh multi-hundred-MB NVD DB and never reuse/evict-in-place, pressuring the repo
+      # cache quota. Weekly rotation reuses within a week (restore-keys falls back to the prior
+      # week's DB, which the plugin then delta-updates) and saves the refreshed DB under the new key.
+      - name: Compute weekly NVD cache key
+        id: nvdkey
+        run: echo "week=$(date -u +%Y-%U)" >> "$GITHUB_OUTPUT"
+
       - name: Cache the NVD database
         uses: actions/cache@v4
         with:
           path: ~/.gradle/dependency-check-data
-          key: nvd-${{ runner.os }}-${{ github.run_id }}
+          key: nvd-${{ runner.os }}-${{ steps.nvdkey.outputs.week }}
           restore-keys: nvd-${{ runner.os }}-
 
       - name: OWASP dependency-check (aggregate)

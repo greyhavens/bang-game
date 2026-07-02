@@ -2,5 +2,5 @@ dependencies {
   api project(":server")
   api "com.threerings:nenya-tools:${nenyaVersion}"
   api "org.apache.ant:ant:1.7.1"
-  api "commons-digester:commons-digester:1.8"
+  api "commons-digester:commons-digester:2.1"
 }
