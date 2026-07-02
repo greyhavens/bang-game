@@ -4,9 +4,28 @@ dependencies {
   // 1.5.1 is the first ooo-user built against depot 1.8 (1.4.5 calls removed
   // ColumnExp.in signatures and fails at runtime with NoSuchMethodError)
   api "com.threerings:ooo-user:${oooUserVersion}"
+  // ehcache 1.6.0 is EOL but kept: it's depot 1.8's L2 cache and 2.x is an API-incompatible
+  // major jump. No CVE pins to 1.6.0 given our usage (single-JVM, no RMI replication listener,
+  // trusted local ehcache.xml). Tracked for a coordinated bump with a depot compat check.
   api "net.sf.ehcache:ehcache:1.6.0"
-  runtimeOnly "com.mysql:mysql-connector-j:8.0.33"
-  api "commons-digester:commons-digester:1.8"
+  // 8.4.0 (LTS) fixes CVE-2023-22102 (connection takeover) and pulls a patched protobuf-java
+  runtimeOnly "com.mysql:mysql-connector-j:8.4.0"
+  // digester 2.1 keeps the org.apache.commons.digester package (drop-in; 3.x renames to
+  // digester3) but pulls commons-beanutils 1.8.3 + commons-logging 1.1.1, which mark log4j /
+  // logkit / avalon / servlet-api as OPTIONAL — dropping the EOL log4j 1.2.12 chain off runtime.
+  api "commons-digester:commons-digester:2.1"
+}
+
+// Force commons-beanutils to 1.9.4 (digester 2.1 would otherwise pull 1.8.3): clears
+// CVE-2014-0114 (class-property manipulation) and CVE-2019-10086 (BeanIntrospector).
+configurations.all {
+  resolutionStrategy {
+    force "commons-beanutils:commons-beanutils:1.9.4"
+    // mysql-connector-j 8.4.0 pulls protobuf-java 3.25.1; 3.25.5 clears CVE-2024-7254
+    // (unbounded-recursion parse DoS). Not reachable via the classic MySQL protocol, but keeps
+    // the dependency scan clean.
+    force "com.google.protobuf:protobuf-java:3.25.5"
+  }
 }
 
 // bake the deployment configs into our jar alongside our other resources

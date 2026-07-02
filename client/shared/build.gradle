@@ -6,7 +6,9 @@ dependencies {
   api "com.threerings:vilya:${vilyaVersion}"
   api "com.threerings.getdown:getdown-core:${getdownVersion}"
   api "com.threerings:ooo-util:${oooUtilVersion}"
-  api "commons-io:commons-io:1.4"
+  // 2.16.1 clears CVE-2021-29425 (FileNameUtils.normalize path traversal); API-compatible for
+  // the classes Bang uses
+  api "commons-io:commons-io:2.16.1"
   api "org.jcraft:jorbis:0.0.17"
 
   // jME3 cutover (Phase 3 — the atomic host flip): the vendored com.threerings.openal package is

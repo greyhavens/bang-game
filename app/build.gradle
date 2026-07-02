@@ -41,7 +41,7 @@ dependencies {
   modeltoolImplementation "com.threerings:nenya:${nenyaVersion}"
   modeltoolImplementation "com.threerings:nenya-tools:${nenyaVersion}"
   modeltoolImplementation "org.apache.ant:ant:1.7.1"
-  modeltoolImplementation "commons-digester:commons-digester:1.8"
+  modeltoolImplementation "commons-digester:commons-digester:2.1"
 
   // jME3 cutover (Phase 3): GL11.glGetString for the perf-report GL driver identity (read on the
   // render thread by JmeApp.getGLRendererString). compileOnly — the natives reach runtime via the
@@ -55,5 +55,5 @@ dependencies {
   // these are only for tools, so we don't export them as depends
   compileOnly "com.threerings:nenya-tools:${nenyaVersion}"
   compileOnly "org.apache.ant:ant:1.7.1"
-  compileOnly "commons-digester:commons-digester:1.8"
+  compileOnly "commons-digester:commons-digester:2.1"
 }
