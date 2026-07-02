@@ -14,6 +14,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.media.util.MathUtil;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.server.BangServer;
@@ -96,6 +97,13 @@ public class TableGameManager implements TableGameProvider
             joinMatch(caller);
             listener.requestProcessed();
             return;
+        }
+
+        // SECURITY: slots is client-supplied. Require exactly the fixed slot count so a crafted
+        // config can neither crash below (indexing slots[0]/[1]) nor drive a huge playerOids
+        // allocation further down (which would OOM and kill the node).
+        if (game.slots == null || game.slots.length != GameCodes.MAX_PLAYERS) {
+            throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
         }
 
         // sanity check the configuration
