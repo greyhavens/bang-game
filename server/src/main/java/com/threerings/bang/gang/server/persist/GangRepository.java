@@ -664,17 +664,24 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         final ArrayList<HistoryEntry> list = new ArrayList<HistoryEntry>();
+        // SECURITY: the client-supplied `filter` MUST be bound as a parameter, never concatenated —
+        // it previously went straight into the SQL text, allowing UNION-based exfiltration of any
+        // table. gangId/offset/count are server-side ints and safe to inline.
         final String query = "select RECORDED, DESCRIPTION from GANG_HISTORY " +
             "where GANG_ID = " + gangId +
-            (filter == null ? "" : " and DESCRIPTION like \"" + filter + "%\"") +
+            (filter == null ? "" : " and DESCRIPTION like ?") +
             " order by ENTRY_ID desc limit " + offset + ", " + count;
+        final String filterArg = filter;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
-                Statement stmt = conn.createStatement();
+                PreparedStatement stmt = conn.prepareStatement(query);
                 try {
-                    ResultSet rs = stmt.executeQuery(query);
+                    if (filterArg != null) {
+                        stmt.setString(1, filterArg + "%");
+                    }
+                    ResultSet rs = stmt.executeQuery();
                     while (rs.next()) {
                         list.add(new HistoryEntry(rs.getTimestamp(1), rs.getString(2)));
                     }

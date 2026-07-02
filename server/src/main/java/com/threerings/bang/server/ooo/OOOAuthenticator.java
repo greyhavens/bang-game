@@ -285,9 +285,33 @@ public class OOOAuthenticator extends BangAuthenticator
             return;
         }
 
-        if (!anonymous && !user.password.equals(password)) {
-            rdata.code = INVALID_PASSWORD;
-            return;
+        // verify the password. Historically the client-supplied credential (an unsalted md5hex of
+        // the password) was compared byte-for-byte against the stored value — so the stored hash
+        // WAS the wire credential (pass-the-hash). We now store an Argon2 hash of that credential:
+        // Argon2-stored users verify via checkPassword; legacy md5-stored users are compared once
+        // and then transparently migrated to Argon2 on this successful login.
+        if (!anonymous) {
+            boolean ok;
+            if (user.isArgon2Hashed()) {
+                ok = user.checkPassword(password.toCharArray());
+            } else {
+                ok = user.password.equals(password);
+                if (ok) {
+                    try {
+                        user.setPassword(password.toCharArray()); // -> Argon2 hash in memory
+                        _authrep.updatePassword(user.userId, user.password);
+                        log.info("Migrated legacy password hash to Argon2.", "who", username);
+                    } catch (Exception e) {
+                        // non-fatal: the login still succeeds; we'll retry the migration next time
+                        log.warning("Failed to migrate password hash to Argon2.",
+                                    "who", username, e);
+                    }
+                }
+            }
+            if (!ok) {
+                rdata.code = INVALID_PASSWORD;
+                return;
+            }
         }
 
         // see if they're a coin buyer
