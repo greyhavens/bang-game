@@ -275,8 +275,9 @@ public class BangServer extends CrowdServer
     {
         com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
 
-        String format = System.getProperty(
-            "server.log_format", System.getenv().getOrDefault("BANG_SERVER_LOG_FORMAT", "oneline"));
+        // read via ServerConfig so this honors the baked properties file AND the Phase-6 PR1 env
+        // bridge (BANG_SERVER_LOG_FORMAT), consistent with every other server_* setting
+        String format = ServerConfig.config.getValue("server_log_format", "oneline");
         java.util.logging.Formatter formatter = "json".equalsIgnoreCase(format) ?
             new JsonLogFormatter() : new OneLineLogFormatter(false);
         FormatterUtil.configureDefaultHandler(formatter);

@@ -13,7 +13,7 @@ import java.util.logging.LogRecord;
  * A minimal JSON-lines {@link java.util.logging.Formatter} for the server: one flat JSON object
  * per line ({@code {"ts","level","logger","thread","msg"[,"exception"]}}), which log-aggregation
  * pipelines (Loki, ELK, CloudWatch, …) parse directly off the container's stdout stream. Selected
- * via {@code server.log_format = json} (see {@code BangServer.configureLog}); the default is the
+ * via {@code server_log_format = json} (see {@code BangServer.configureLog}); the default is the
  * human-readable one-line format.
  */
 public class JsonLogFormatter extends Formatter
