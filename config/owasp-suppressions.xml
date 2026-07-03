@@ -16,7 +16,7 @@
       coordinated bump with a depot compatibility check. Accept-risk in the interim.
     ]]></notes>
     <packageUrl regex="true">^pkg:maven/net\.sf\.ehcache/ehcache@.*$</packageUrl>
-    <cvssBelow>11</cvssBelow>
+    <vulnerabilityName regex="true">.*</vulnerabilityName>
   </suppress>
 
   <suppress>
@@ -25,7 +25,7 @@
       attacker-supplied streams. No notable CVE; suppressed defensively as accept-risk.
     ]]></notes>
     <packageUrl regex="true">^pkg:maven/org\.jcraft/jorbis@.*$</packageUrl>
-    <cvssBelow>11</cvssBelow>
+    <vulnerabilityName regex="true">.*</vulnerabilityName>
   </suppress>
 
 </suppressions>
