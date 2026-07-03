@@ -237,15 +237,10 @@ public class Unit extends Piece
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        // SECURITY: reject an unknown unit type rather than constructing a null-config Unit —
-        // getConfig() returns null (only logs) for a bad type, and a null _config then NPEs on
-        // every later access (a crafted Unit streamed as e.g. a playCard target could wedge a tick)
+        // reject an unknown/crafted unit type rather than init'ing a null-config Unit (see
+        // Piece.requireConfig); getConfig only logs and returns null for a bad type
         String type = in.readUTF();
-        UnitConfig config = UnitConfig.getConfig(type, true);
-        if (config == null) {
-            throw new IOException("Unknown unit type in stream: " + type);
-        }
-        init(config);
+        init(requireConfig(UnitConfig.getConfig(type, true), type));
     }
 
     /** Writes some custom information for this piece. */

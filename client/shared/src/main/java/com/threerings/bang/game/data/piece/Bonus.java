@@ -231,7 +231,10 @@ public class Bonus extends Piece
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        init(BonusConfig.getConfig(in.readUTF()));
+        // reject an unknown/crafted bonus type rather than storing a null config (deferred NPE) —
+        // see Piece.requireConfig
+        String type = in.readUTF();
+        init(requireConfig(BonusConfig.getConfig(type), type));
     }
 
     /** Writes some custom information for this piece. */

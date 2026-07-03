@@ -481,12 +481,14 @@ public class BangManager extends GameManager
         Effect effect;
         try {
             // cards cast the client-supplied target to their expected type ((Integer)/(int[])/...);
-            // a malformed or hostile target (wrong type, null, short array) would otherwise throw
-            // uncaught out of the invocation dispatch. A legitimate target never trips this.
+            // a wrong-type target throws ClassCastException here. Catch ONLY that — a malformed
+            // target of the right type (null / short array) is still contained by the invocation
+            // dispatch's catch(Throwable), and narrowing to CCE avoids masking a genuine internal
+            // NPE/IOOBE bug in the card's post-cast game logic as a mere "card unplayable".
             effect = card.activate(_bangobj, target);
-        } catch (ClassCastException | NullPointerException | IndexOutOfBoundsException e) {
-            log.warning("Rejecting card with malformed target", "who", user.who(), "card", card,
-                        "target", target, "error", e.getMessage());
+        } catch (ClassCastException cce) {
+            log.warning("Rejecting card with wrong-type target", "who", user.who(), "card", card,
+                        "target", target, "error", cce.getMessage());
             throw new InvocationException(CARD_UNPLAYABLE);
         }
         if (effect == null) {
