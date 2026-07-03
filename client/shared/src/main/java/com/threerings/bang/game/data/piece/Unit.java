@@ -237,7 +237,10 @@ public class Unit extends Piece
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        init(UnitConfig.getConfig(in.readUTF(), true));
+        // reject an unknown/crafted unit type rather than init'ing a null-config Unit (see
+        // Piece.requireConfig); getConfig only logs and returns null for a bad type
+        String type = in.readUTF();
+        init(requireConfig(UnitConfig.getConfig(type, true), type));
     }
 
     /** Writes some custom information for this piece. */

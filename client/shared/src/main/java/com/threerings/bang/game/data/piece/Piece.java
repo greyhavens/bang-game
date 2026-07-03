@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -718,6 +719,22 @@ public abstract class Piece
     public String toFullString ()
     {
         return StringUtil.fieldsToString(this);
+    }
+
+    /**
+     * SECURITY: returns {@code config}, or throws {@link IOException} if it is null. Piece
+     * subclasses look up their config by a type string read off the wire in {@code readObject}; a
+     * crafted/unknown type makes {@code getConfig} return null, and passing that to {@code init}
+     * either NPEs immediately or produces a piece that NPEs on first use. Route every such lookup
+     * through here so a bad type rejects the stream cleanly instead.
+     */
+    protected static <T> T requireConfig (T config, String type)
+        throws IOException
+    {
+        if (config == null) {
+            throw new IOException("Unknown piece type in stream: " + type);
+        }
+        return config;
     }
 
     /**

@@ -21,6 +21,7 @@ import com.samskivert.depot.StaticConnectionProvider;
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.admin.server.ConfigRegistry;
 import com.threerings.admin.server.DatabaseConfigRegistry;
@@ -344,6 +345,17 @@ public class BangServer extends CrowdServer
         // if we have a shared secret, assume we're running in a cluster
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
+            // SECURITY: fail closed on a blank/weak server_secret. Peer authentication (PeerCreds)
+            // is derived from it, so a blank or trivially short secret means weak cluster auth — a
+            // present-but-empty `server_secret = ` in config would otherwise silently cluster with
+            // no real peer authentication.
+            if (StringUtil.isBlank(ServerConfig.sharedSecret) ||
+                    ServerConfig.sharedSecret.trim().length() < MIN_SERVER_SECRET_LENGTH) {
+                log.warning("Refusing to run in cluster mode with a blank or weak server_secret; " +
+                            "peer authentication derives from it. Set a strong server_secret.",
+                            "minLength", MIN_SERVER_SECRET_LENGTH);
+                System.exit(255);
+            }
             log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
             _peermgr.init(ServerConfig.nodename, ServerConfig.sharedSecret,
                           ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
@@ -514,6 +526,9 @@ public class BangServer extends CrowdServer
 
     /** Check for modified code every 30 seconds. */
     protected static final long AUTO_RESTART_CHECK_INTERVAL = 30 * 1000L;
+
+    /** Minimum acceptable length for the cluster {@code server_secret} (peer auth derives from it). */
+    protected static final int MIN_SERVER_SECRET_LENGTH = 16;
 
     /** The class name prefixes that may be instantiated from network streams. Everything Bang
      * streams is a {@link com.threerings.io.Streamable} (or enum) under com.threerings, a

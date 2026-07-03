@@ -92,7 +92,10 @@ public class Prop extends BigPiece
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        init(PropConfig.getConfig(_type));
+        // reject an unknown/crafted prop type: getConfig is a bare map lookup returning null, and
+        // Prop.init dereferences config.type immediately (NPE during deserialization) — see
+        // Piece.requireConfig
+        init(requireConfig(PropConfig.getConfig(_type), _type));
     }
 
     @Override // documentation inherited

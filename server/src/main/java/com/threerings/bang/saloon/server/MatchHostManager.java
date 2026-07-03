@@ -17,6 +17,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ShopManager;
 
@@ -155,6 +156,13 @@ public abstract class MatchHostManager extends ShopManager
      */
     protected void checkCriterion (Criterion criterion)
     {
+        // SECURITY: players/rounds are bitmasks (bit N of players => player count N+2; bit N of
+        // rounds => round count N+1). Mask off any bits outside the valid range so a crafted
+        // Criterion (e.g. players = -1) can't set a high bit that later indexes out of bounds
+        // (highestBitIndex -> TEAM_SIZES[...] AIOOBE in Match.createConfig).
+        criterion.players &= (1 << (GameCodes.MAX_PLAYERS - 1)) - 1;
+        criterion.rounds &= (1 << GameCodes.MAX_ROUNDS) - 1;
+
         // force at least 2 players and 1 round if nothing was selected
         if (criterion.players == 0) {
             criterion.players = 1;
