@@ -248,6 +248,12 @@ public class BangServer extends CrowdServer
         // set up server-side logging first, so every subsequent line is formatted consistently
         configureLog();
 
+        // any thread that dies to an uncaught exception should leave a formatted record in the
+        // server log (and thus the container's stdout stream), not just a bare stack trace on
+        // stderr — this is the last-resort visibility for crashed invoker/background threads
+        Thread.setDefaultUncaughtExceptionHandler((thread, error) ->
+            log.warning("Uncaught exception", "thread", thread.getName(), error));
+
         // // if we're on the dev server, up our long invoker warning to 3 seconds
         // if (ServerConfig.config.getValue("auto_restart", false)) {
         //     Invoker.setDefaultLongThreshold(3000L);
@@ -519,6 +525,10 @@ public class BangServer extends CrowdServer
     {
         @Override protected void logReport (String report) {
             _stlog.log(report);
+            // also surface the periodic health report (uptime, JVM memory, connection and session
+            // counts) in the server log so it lands on stdout for container log collection — the
+            // state audit file above is invisible to `docker logs` and log aggregators
+            log.info(report);
         }
     }
 
