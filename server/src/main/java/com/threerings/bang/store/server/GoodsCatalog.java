@@ -175,7 +175,9 @@ public class GoodsCatalog
      */
     protected static int toInt (Object arg)
     {
-        return (arg == null) ? 0 : (Integer)arg;
+        // defensive: the args are client-supplied, so a non-Integer (or null) shouldn't throw a
+        // ClassCastException out of the purchase path — treat anything unexpected as 0
+        return (arg instanceof Integer) ? (Integer)arg : 0;
     }
 
     /** Used to create a {@link Provider} for a particular {@link Good}. */
@@ -211,7 +213,11 @@ public class GoodsCatalog
                                     "who", _user.who(), "good", _good);
                         throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
                     }
-                    // our arguments are colorization ids
+                    // our arguments are colorization ids (client-supplied; guard the length before
+                    // indexing so a short/empty array can't AIOOBE out of the purchase path)
+                    if (_args == null || _args.length < 3) {
+                        throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
+                    }
                     int zations = AvatarLogic.composeZations(
                         toInt(_args[0]), toInt(_args[1]), toInt(_args[2]));
                     Item item = _alogic.createArticle(_user.playerId, article, zations);

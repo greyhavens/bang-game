@@ -478,7 +478,17 @@ public class BangManager extends GameManager
 
         // this is a little fiddly; we want to prepare the effect and make sure it's applicable
         // before removing the card
-        Effect effect = card.activate(_bangobj, target);
+        Effect effect;
+        try {
+            // cards cast the client-supplied target to their expected type ((Integer)/(int[])/...);
+            // a malformed or hostile target (wrong type, null, short array) would otherwise throw
+            // uncaught out of the invocation dispatch. A legitimate target never trips this.
+            effect = card.activate(_bangobj, target);
+        } catch (ClassCastException | NullPointerException | IndexOutOfBoundsException e) {
+            log.warning("Rejecting card with malformed target", "who", user.who(), "card", card,
+                        "target", target, "error", e.getMessage());
+            throw new InvocationException(CARD_UNPLAYABLE);
+        }
         if (effect == null) {
             throw new InvocationException(CARD_UNPLAYABLE);
         }
