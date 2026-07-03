@@ -19,8 +19,12 @@ import com.samskivert.depot.PersistenceContext;
 import com.samskivert.depot.StaticConnectionProvider;
 
 import com.samskivert.util.AuditLogger;
+import com.samskivert.util.FormatterUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.LoggingLogProvider;
+import com.samskivert.util.OneLineLogFormatter;
+import com.samskivert.util.RepeatRecordFilter;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.admin.server.ConfigRegistry;
@@ -94,6 +98,17 @@ import static com.threerings.bang.Log.log;
  */
 public class BangServer extends CrowdServer
 {
+    static {
+        // Configure logging as the very FIRST thing during class init — before the static _logdir
+        // field (below) forces ServerConfig's static initializer, which can System.exit(-1) on a
+        // missing node/hostname. Installing the provider + default one-line formatter here means
+        // even static-init-time output (e.g. that misconfig error) is formatted; main() later
+        // upgrades to JSON if server_log_format=json (safe to read ServerConfig by then).
+        com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
+        FormatterUtil.configureDefaultHandler(new OneLineLogFormatter(false));
+        RepeatRecordFilter.configureDefaultHandler(100);
+    }
+
     /** Configures dependencies needed by the Bang server. */
     public static class Module extends CrowdServer.CrowdModule {
         @Override protected void configure () {
@@ -230,6 +245,9 @@ public class BangServer extends CrowdServer
      */
     public static void main (String[] args)
     {
+        // set up server-side logging first, so every subsequent line is formatted consistently
+        configureLog();
+
         // // if we're on the dev server, up our long invoker warning to 3 seconds
         // if (ServerConfig.config.getValue("auto_restart", false)) {
         //     Invoker.setDefaultLongThreshold(3000L);
@@ -253,6 +271,25 @@ public class BangServer extends CrowdServer
         } catch (Exception e) {
             log.warning("Server initialization failed.", e);
             System.exit(255);
+        }
+    }
+
+    /**
+     * Configures server-side logging: routes the samskivert {@code Log} facade through
+     * java.util.logging and installs a consistent one-line (default) or JSON formatter on the root
+     * handler. Unlike the client, we do NOT redirect stdout/stderr to a file — the process logs
+     * straight to stdout/stderr so container runtimes capture it (docker/podman logs). The format
+     * is chosen by {@code server.log_format} (env: {@code BANG_SERVER_LOG_FORMAT}): {@code oneline}
+     * (default) or {@code json} for log aggregation.
+     */
+    protected static void configureLog ()
+    {
+        // the static initializer already installed the log provider + a default one-line formatter
+        // (before any ServerConfig-triggering static field). Here we upgrade to JSON if configured;
+        // reading ServerConfig is safe now (its static init has already run), and it honors the
+        // baked properties file AND the Phase-6 PR1 env bridge (BANG_SERVER_LOG_FORMAT).
+        if ("json".equalsIgnoreCase(ServerConfig.config.getValue("server_log_format", "oneline"))) {
+            FormatterUtil.configureDefaultHandler(new JsonLogFormatter());
         }
     }
 

@@ -49,6 +49,12 @@ server_tls_truststore_password =
 server_root = /export/bang
 
 #
+# Server log format: "oneline" (default, human-readable) or "json" (one JSON object per line for
+# log aggregation). Overridable via BANG_SERVER_LOG_FORMAT.
+
+server_log_format = oneline
+
+#
 # Defines the client authenticator used by the server.
 
 server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
