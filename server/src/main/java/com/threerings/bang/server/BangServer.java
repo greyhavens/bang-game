@@ -342,17 +342,16 @@ public class BangServer extends CrowdServer
         hideoutmgr = (HideoutManager)plreg.createPlace(new HideoutConfig());
         officemgr = (OfficeManager)plreg.createPlace(new OfficeConfig());
 
-        // if we have a shared secret, assume we're running in a cluster
+        // cluster mode iff a NON-BLANK shared secret is configured; blank = standalone. server_secret
+        // is present-but-blank in the baked default and injected via BANG_SERVER_SECRET in production,
+        // so the gate must key on blank-ness, not null-ness (an env-overridable key is never null).
         String node = System.getProperty("node");
-        if (node != null && ServerConfig.sharedSecret != null) {
-            // SECURITY: fail closed on a blank/weak server_secret. Peer authentication (PeerCreds)
-            // is derived from it, so a blank or trivially short secret means weak cluster auth — a
-            // present-but-empty `server_secret = ` in config would otherwise silently cluster with
-            // no real peer authentication.
-            if (StringUtil.isBlank(ServerConfig.sharedSecret) ||
-                    ServerConfig.sharedSecret.trim().length() < MIN_SERVER_SECRET_LENGTH) {
-                log.warning("Refusing to run in cluster mode with a blank or weak server_secret; " +
-                            "peer authentication derives from it. Set a strong server_secret.",
+        if (node != null && !StringUtil.isBlank(ServerConfig.sharedSecret)) {
+            // SECURITY: fail closed on a weak (too-short) server_secret. Peer authentication
+            // (PeerCreds) derives from it, so a trivially short secret means weak cluster auth.
+            if (ServerConfig.sharedSecret.trim().length() < MIN_SERVER_SECRET_LENGTH) {
+                log.warning("Refusing to run in cluster mode with a weak server_secret; peer " +
+                            "authentication derives from it. Set a strong server_secret.",
                             "minLength", MIN_SERVER_SECRET_LENGTH);
                 System.exit(255);
             }
@@ -364,7 +363,9 @@ public class BangServer extends CrowdServer
             // install a pinned client context built from the cluster truststore (Epic 3 Phase 4)
             if (ServerConfig.config.getValue("server_tls", false)) {
                 String truststore = ServerConfig.config.getValue("server_tls_truststore", "");
-                String password = ServerConfig.config.getValue("server_tls_password", "");
+                // the truststore holds only the public cert, so its password is decoupled from the
+                // secret keystore password (server_tls_password) — see gen-tls-certs
+                String password = ServerConfig.config.getValue("server_tls_truststore_password", "");
                 try {
                     _peermgr.setPeerClientContext(
                         TlsContextFactory.clientContext(truststore, password.toCharArray()));

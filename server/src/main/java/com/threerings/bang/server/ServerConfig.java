@@ -4,6 +4,7 @@
 package com.threerings.bang.server;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Properties;
 
 import com.samskivert.util.Config;
@@ -49,7 +50,38 @@ public class ServerConfig
     public static File serverRoot;
 
     /** Provides access to our config properties. <em>Do not</em> modify these properties! */
-    public static Config config = new Config("server");
+    public static Config config = loadConfig();
+
+    /**
+     * Loads the baked {@code server.properties} defaults, then overlays environment-variable
+     * overrides so container images can stay environment-agnostic (12-factor). For any configured
+     * key {@code foo.bar}, an env var {@code BANG_FOO_BAR} (key upper-cased, {@code .} and {@code -}
+     * mapped to {@code _}) wins over the baked default. This is how secrets (DB passwords, the
+     * cluster {@code server_secret}, the TLS keystore password) and per-node hosts are injected in
+     * production without baking them into the image.
+     */
+    protected static Config loadConfig ()
+    {
+        // load the baked defaults exactly as before, then copy them into a mutable Properties
+        Config base = new Config("server");
+        Properties props = new Properties();
+        for (Iterator<String> iter = base.keys(); iter.hasNext(); ) {
+            String key = iter.next();
+            String value = base.getValue(key, (String)null);
+            if (value != null) {
+                props.setProperty(key, value);
+            }
+        }
+
+        // overlay env-var overrides (env wins over the baked default)
+        for (String key : props.stringPropertyNames()) {
+            String env = System.getenv("BANG_" + key.toUpperCase().replace('.', '_').replace('-', '_'));
+            if (env != null) {
+                props.setProperty(key, env);
+            }
+        }
+        return new Config(props);
+    }
 
     /**
      * Returns the JDBC configuration.
