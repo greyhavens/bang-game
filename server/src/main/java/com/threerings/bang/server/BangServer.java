@@ -19,8 +19,12 @@ import com.samskivert.depot.PersistenceContext;
 import com.samskivert.depot.StaticConnectionProvider;
 
 import com.samskivert.util.AuditLogger;
+import com.samskivert.util.FormatterUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.LoggingLogProvider;
+import com.samskivert.util.OneLineLogFormatter;
+import com.samskivert.util.RepeatRecordFilter;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.admin.server.ConfigRegistry;
@@ -230,6 +234,9 @@ public class BangServer extends CrowdServer
      */
     public static void main (String[] args)
     {
+        // set up server-side logging first, so every subsequent line is formatted consistently
+        configureLog();
+
         // // if we're on the dev server, up our long invoker warning to 3 seconds
         // if (ServerConfig.config.getValue("auto_restart", false)) {
         //     Invoker.setDefaultLongThreshold(3000L);
@@ -254,6 +261,26 @@ public class BangServer extends CrowdServer
             log.warning("Server initialization failed.", e);
             System.exit(255);
         }
+    }
+
+    /**
+     * Configures server-side logging: routes the samskivert {@code Log} facade through
+     * java.util.logging and installs a consistent one-line (default) or JSON formatter on the root
+     * handler. Unlike the client, we do NOT redirect stdout/stderr to a file — the process logs
+     * straight to stdout/stderr so container runtimes capture it (docker/podman logs). The format
+     * is chosen by {@code server.log_format} (env: {@code BANG_SERVER_LOG_FORMAT}): {@code oneline}
+     * (default) or {@code json} for log aggregation.
+     */
+    protected static void configureLog ()
+    {
+        com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
+
+        String format = System.getProperty(
+            "server.log_format", System.getenv().getOrDefault("BANG_SERVER_LOG_FORMAT", "oneline"));
+        java.util.logging.Formatter formatter = "json".equalsIgnoreCase(format) ?
+            new JsonLogFormatter() : new OneLineLogFormatter(false);
+        FormatterUtil.configureDefaultHandler(formatter);
+        RepeatRecordFilter.configureDefaultHandler(100);
     }
 
     @Override // documentation inherited
