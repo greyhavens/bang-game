@@ -98,6 +98,17 @@ import static com.threerings.bang.Log.log;
  */
 public class BangServer extends CrowdServer
 {
+    static {
+        // Configure logging as the very FIRST thing during class init — before the static _logdir
+        // field (below) forces ServerConfig's static initializer, which can System.exit(-1) on a
+        // missing node/hostname. Installing the provider + default one-line formatter here means
+        // even static-init-time output (e.g. that misconfig error) is formatted; main() later
+        // upgrades to JSON if server_log_format=json (safe to read ServerConfig by then).
+        com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
+        FormatterUtil.configureDefaultHandler(new OneLineLogFormatter(false));
+        RepeatRecordFilter.configureDefaultHandler(100);
+    }
+
     /** Configures dependencies needed by the Bang server. */
     public static class Module extends CrowdServer.CrowdModule {
         @Override protected void configure () {
@@ -273,15 +284,13 @@ public class BangServer extends CrowdServer
      */
     protected static void configureLog ()
     {
-        com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
-
-        // read via ServerConfig so this honors the baked properties file AND the Phase-6 PR1 env
-        // bridge (BANG_SERVER_LOG_FORMAT), consistent with every other server_* setting
-        String format = ServerConfig.config.getValue("server_log_format", "oneline");
-        java.util.logging.Formatter formatter = "json".equalsIgnoreCase(format) ?
-            new JsonLogFormatter() : new OneLineLogFormatter(false);
-        FormatterUtil.configureDefaultHandler(formatter);
-        RepeatRecordFilter.configureDefaultHandler(100);
+        // the static initializer already installed the log provider + a default one-line formatter
+        // (before any ServerConfig-triggering static field). Here we upgrade to JSON if configured;
+        // reading ServerConfig is safe now (its static init has already run), and it honors the
+        // baked properties file AND the Phase-6 PR1 env bridge (BANG_SERVER_LOG_FORMAT).
+        if ("json".equalsIgnoreCase(ServerConfig.config.getValue("server_log_format", "oneline"))) {
+            FormatterUtil.configureDefaultHandler(new JsonLogFormatter());
+        }
     }
 
     @Override // documentation inherited
