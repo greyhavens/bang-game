@@ -364,7 +364,9 @@ public class BangServer extends CrowdServer
             // install a pinned client context built from the cluster truststore (Epic 3 Phase 4)
             if (ServerConfig.config.getValue("server_tls", false)) {
                 String truststore = ServerConfig.config.getValue("server_tls_truststore", "");
-                String password = ServerConfig.config.getValue("server_tls_password", "");
+                // the truststore holds only the public cert, so its password is decoupled from the
+                // secret keystore password (server_tls_password) — see gen-tls-certs
+                String password = ServerConfig.config.getValue("server_tls_truststore_password", "");
                 try {
                     _peermgr.setPeerClientContext(
                         TlsContextFactory.clientContext(truststore, password.toCharArray()));

@@ -12,16 +12,23 @@
 # Re-running regenerates them (the old client truststore stops trusting an old server cert, so
 # regenerate both ends together and redeploy).
 #
+# The keystore (private key) and the truststore (public cert only) get DIFFERENT passwords: the
+# keystore password is a server-side secret, while the truststore password protects only a public
+# certificate and is safe to ship to clients in deployment.properties. Never reuse the keystore
+# secret as the truststore password.
+#
 # Env overrides:
-#   TLS_HOST      cert CN + SAN (default: localhost) — must match the host the client connects to
-#   TLS_PASS      keystore/truststore password (default: yeehaw)
-#   TLS_DAYS      validity in days (default: 3650)
-#   TLS_OUT       output dir (default: etc/test)
+#   TLS_HOST         cert CN + SAN (default: localhost) — must match the host the client connects to
+#   TLS_KEYSTORE_PASS server keystore (private key) password — SECRET (default: yeehaw)
+#   TLS_TRUST_PASS    client truststore (public cert) password — shippable (default: trustpass)
+#   TLS_DAYS         validity in days (default: 3650)
+#   TLS_OUT          output dir (default: etc/test)
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HOST="${TLS_HOST:-localhost}"
-PASS="${TLS_PASS:-yeehaw}"
+KSPASS="${TLS_KEYSTORE_PASS:-yeehaw}"
+TSPASS="${TLS_TRUST_PASS:-trustpass}"
 DAYS="${TLS_DAYS:-3650}"
 OUT="${TLS_OUT:-$root/etc/test}"
 
@@ -39,23 +46,29 @@ keytool -genkeypair -alias bang-server -keyalg RSA -keysize 2048 \
   -dname "CN=$HOST, OU=Bang, O=ThreeRings, C=US" \
   -ext "SAN=dns:$HOST,ip:127.0.0.1" \
   -validity "$DAYS" -keystore "$ks" -storetype PKCS12 \
-  -storepass "$PASS" -keypass "$PASS" >/dev/null
+  -storepass "$KSPASS" -keypass "$KSPASS" >/dev/null
 
 echo "gen-tls-certs: exporting public cert"
 keytool -exportcert -alias bang-server -keystore "$ks" -storetype PKCS12 \
-  -storepass "$PASS" -file "$crt" -rfc >/dev/null
+  -storepass "$KSPASS" -file "$crt" -rfc >/dev/null
 
 echo "gen-tls-certs: building client truststore (pins the server cert)"
 keytool -importcert -noprompt -alias bang-server -file "$crt" \
-  -keystore "$ts" -storetype PKCS12 -storepass "$PASS" >/dev/null
+  -keystore "$ts" -storetype PKCS12 -storepass "$TSPASS" >/dev/null
 
 chmod 600 "$ks" "$ts"
 echo "gen-tls-certs: wrote"
 echo "  server keystore : $ks"
 echo "  client truststore: $ts"
 echo
-echo "Point the config at them (etc/test/server.properties, etc/test/deployment.properties):"
+echo "Server-side config (etc/test/server.properties — secret keystore password):"
 echo "  server_tls = true"
 echo "  server_tls_keystore = $ks"
+echo "  server_tls_password = $KSPASS"
+echo "  server_tls_truststore = $ts             # for cluster peer connections"
+echo "  server_tls_truststore_password = $TSPASS"
+echo
+echo "Client config (etc/test/deployment.properties — shipped; truststore password only, NO keystore secret):"
+echo "  server_tls = true"
 echo "  server_tls_truststore = $ts"
-echo "  server_tls_password = $PASS"
+echo "  server_tls_truststore_password = $TSPASS"

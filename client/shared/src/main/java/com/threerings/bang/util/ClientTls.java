@@ -31,7 +31,9 @@ public class ClientTls
             return;
         }
         String truststore = DeploymentConfig.config.getValue("server_tls_truststore", "");
-        String password = DeploymentConfig.config.getValue("server_tls_password", "");
+        // the truststore holds only the server's public cert, so this password is NOT the secret
+        // keystore password — it is safe to ship in deployment.properties (see gen-tls-certs)
+        String password = DeploymentConfig.config.getValue("server_tls_truststore_password", "");
         try {
             client.setSSLContext(
                 TlsContextFactory.clientContext(truststore, password.toCharArray()));
