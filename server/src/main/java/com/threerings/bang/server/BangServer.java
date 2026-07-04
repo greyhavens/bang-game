@@ -445,6 +445,16 @@ public class BangServer extends CrowdServer
             }.schedule(AUTO_RESTART_CHECK_INTERVAL, true);
         }
 
+        // start the management HTTP endpoint (/health + /metrics) last, so a 200 from /health
+        // means the server truly finished initializing; disabled unless server_mgmt_port is set
+        // (per-node override <node>.server_mgmt_port for multi-node hosts like the dev cluster)
+        int mgmtPort = ServerConfig.config.getValue(
+            ServerConfig.nodename + ".server_mgmt_port",
+            ServerConfig.config.getValue("server_mgmt_port", 0));
+        _opshttpd = OpsHttpServer.start(
+            ServerConfig.config.getValue("server_mgmt_host", "127.0.0.1"), mgmtPort,
+            ServerConfig.nodename, conmgr, clmgr);
+
         log.info("Bang server v" + DeploymentConfig.getVersion() + " initialized.");
     }
 
@@ -494,6 +504,11 @@ public class BangServer extends CrowdServer
     {
         super.invokerDidShutdown();
 
+        // stop answering health checks/scrapes now that we're going away
+        if (_opshttpd != null) {
+            _opshttpd.shutdown();
+        }
+
         // shutdown our persistence context
         perCtx.shutdown();
 
@@ -542,6 +557,9 @@ public class BangServer extends CrowdServer
     }
 
     protected long _codeModified;
+
+    /** The management HTTP endpoint (/health + /metrics), or null if disabled. */
+    protected OpsHttpServer _opshttpd;
 
     @Inject protected ConnectionProvider _conprov;
     @Inject protected PersistenceContext _perCtx;
