@@ -9,6 +9,7 @@ import java.lang.management.ManagementFactory;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -70,24 +71,32 @@ public class OpsHttpServer
     public void shutdown ()
     {
         _httpd.stop(0);
+        // HttpServer.stop does NOT shut down a custom executor; do it ourselves or the worker
+        // threads linger blocked on the task queue
+        _exec.shutdownNow();
     }
 
     protected OpsHttpServer (String host, int port, String node,
                              PresentsConnectionManager conmgr, ClientManager clmgr)
         throws IOException
     {
-        _node = node;
+        // escape the node name per the Prometheus text format so a hostile or odd value (it can
+        // arrive via the BANG_* env bridge) can't break out of the label position
+        _node = node.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
         _conmgr = conmgr;
         _clmgr = clmgr;
 
         _httpd = HttpServer.create(new InetSocketAddress(host, port), 0);
         _httpd.createContext("/health", this::handleHealth);
         _httpd.createContext("/metrics", this::handleMetrics);
-        _httpd.setExecutor(Executors.newSingleThreadExecutor(runnable -> {
+        // two workers so a slow or stalled /metrics scrape can't head-of-line-block the /health
+        // probe that drives container liveness decisions
+        _exec = Executors.newFixedThreadPool(2, runnable -> {
             Thread thread = new Thread(runnable, "OpsHttpServer");
             thread.setDaemon(true);
             return thread;
-        }));
+        });
+        _httpd.setExecutor(_exec);
         _httpd.start();
     }
 
@@ -176,4 +185,5 @@ public class OpsHttpServer
     protected final PresentsConnectionManager _conmgr;
     protected final ClientManager _clmgr;
     protected final HttpServer _httpd;
+    protected final ExecutorService _exec;
 }
