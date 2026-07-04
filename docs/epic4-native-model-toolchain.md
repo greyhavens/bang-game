@@ -124,7 +124,10 @@ dep and `tools/j3o-converter`'s fork coupling, and **delete the `jme` module** f
 `settings.gradle`. Delete the retired `.mxml`/`.dat` machinery. Update CLAUDE.md/engine-notes.
 
 ## Acceptance
-A full `./gradlew deploy` compiles every model/particle from **committed glTF source** to runtime
-`.j3o` with **no `jme` fork module in the build at all**; the output matches the fork-wrapper
-oracle (render + structural); a model edited in Blender and re-exported flows through the build and
-renders in-game; and the game + editor run unchanged.
+A full `./gradlew deploy` compiles every **model from committed glTF source** — and every particle
+effect from its own fork-free source (glTF carries no particle-system semantics, so particles land
+as re-authored committed jME3 emitters or a native `particles.jme` reader per Phase 2a; Blender
+editability applies to models, not particles) — to runtime `.j3o` with **no `jme` fork module in
+the build at all**; the output matches the fork-wrapper oracle (render + structural); a model
+edited in Blender and re-exported flows through the build and renders in-game; and the game +
+editor run unchanged.
