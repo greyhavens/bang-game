@@ -43,6 +43,9 @@ services:
       - ../../build/server:/bang/build/server:ro,z
       - ../../assets/build/staging:/bang/assets/build/staging:ro,z
       - ../../data:/bang/data:ro,z                     # ${server_root}/data/boards — the 165 boards loaded at startup
+      # the one writable spot under data/: soundtrack-download symlinks + stamp files
+      # (PlayerManager.createDownloadSymlink, a live client RPC) — writable volume over the ro mount
+      - bang-downloads:/bang/data/downloads
       - ../../etc/test/server.properties:/bang/conf-src/server.properties:ro,z
       - ./entrypoint.sh:/bang/entrypoint.sh:ro,z
     command: ["bash", "/bang/entrypoint.sh"]
@@ -63,3 +66,4 @@ services:
 
 volumes:
   bang-db:
+  bang-downloads:

@@ -106,26 +106,49 @@ than rolling our own AEAD on the existing (and, in Bang, never-enabled) RSA→AE
 client mirrors) for replay and spoofing. Note TLS now protects these tokens in transit (the main
 over-the-wire replay vector), but the at-rest/issuance scheme review is still open.
 
-### Phase 5 — Wire trust boundary & dependency CVEs
-- Audit the Narya **wire deserialization** trust boundary: what a hostile client can stream into the
-  server, and what validation gates it (Presents `InvocationService` args, dobj subscriptions, the
-  unit/prop config deserialization the bot notes can NPE).
-- Add **dependency vulnerability scanning** (OWASP dependency-check / Gradle `dependencyCheck` or
-  GitHub Dependabot) to the Phase-1 CI; triage the 2005-era transitive graph.
-- Patch findings via the Epic-2 forks (this phase is the concrete consumer of Epic-2 ownership).
+### Phase 5 — Wire trust boundary & dependency CVEs — DONE
+- **Wire boundary hardened** (PRs #22–#27): streamed-class whitelist, gang service auth-bypass +
+  SQLi fixes, gang dobj subscription access control, poster/matchmaking arg validation, null-config
+  deserialization guards, criterion bitmask clamps. Three subtle items deliberately backlogged
+  (task #61: colorization entitlement, ident-MAC demote, peer nonce'd-HMAC).
+- **CVE patching**: commons-digester 1.8→2.1 (kills the log4j-1.x chain), mysql-connector-j 8.4.0,
+  commons-io 2.16.1, forced commons-beanutils 1.11.0 (CVE-2025-48734, #34) + protobuf-java 3.25.5.
+- **OWASP dependency-check** scans the resolved classpath in CI (aggregate, `failBuildOnCVSS=7.0`,
+  NVD_API_KEY + weekly-keyed NVD cache, suppressions in `config/owasp-suppressions.xml`). GATING
+  via its own `security.yml` workflow (#35) — see that file for the cancel-safety/cache design.
+  Baseline: clean above the gate; two below-gate Mediums (ant 1.7.1, CVE-2020-1945) on the tools
+  chain remain as backlog.
 
-### Phase 6 — Ops & observability
-- Externalize config/secrets out of the baked `etc/<deployment>/` properties (env/secret-store), so
-  images are environment-agnostic.
-- Structured logging (replace ad-hoc `Log` output where it matters), basic metrics, and crash/error
-  reporting for the server nodes.
-- A documented deploy + runbook for the cluster-per-town topology, building on the Phase-2 images.
+### Phase 6 — Ops & observability — DONE
+- **Config externalized** (#28): `BANG_<KEY>` env-var bridge over the baked properties (a key must
+  be present in the baked config to be overridable — the `.dist` templates keep secrets
+  present-but-blank on purpose); TLS keystore/truststore passwords decoupled.
+- **Logging** (#29, #31): one-line (default) or JSON-lines (`server_log_format=json`) formatting on
+  stdout for container log collection; a default uncaught-exception handler; the 15-minute state
+  report mirrored to stdout alongside the `state_<node>.log` audit file.
+- **/health + /metrics** (#32): `OpsHttpServer` on the JDK http server (zero deps), loopback-only,
+  `server_mgmt_port`/`server_mgmt_host` (+ per-node override). `/health` 200 = init fully complete;
+  `/metrics` = Prometheus text (JVM, sessions/connections, ConMgrStats counters, node label).
+- **Deploy + runbook** (#33): `docs/runbook.md`, `deploy/prod/` systemd template unit
+  (`bang@<node>`, env-file secrets, `ProtectSystem=strict` with the audited write surface) +
+  launcher + env examples; devstack container healthcheck against /health makes the CI
+  `compose up --wait` a real init-complete gate; devstack entrypoint converted from sed rewrites
+  to explicit env-derived appended overrides.
 
 ### Phase 7 — Database lifecycle
 - Replace create-tables-on-first-run with a **schema migration framework** (Flyway/Liquibase) so DB
   changes are versioned and repeatable.
 - Review Depot connection pooling / sizing under the cluster-per-town node model.
 - A backup/restore story for the `bang` + `ooouser` databases.
+- **Recon done (2026-07-04):** TWO auto-migrating stacks own the schema today — Depot
+  (`DepotSchemaVersion`-versioned, `CanMigrate.ALLOWED`, minority of tables) and legacy samskivert
+  JDBC (majority: PLAYERS/ITEMS/GANGS/… + the whole `ooouser` DB; hand-written DDL `String[]` +
+  conditional ALTERs in each repo's `migrateSchema`, run at *constructor* time, no version
+  tracking, soft-fail). No `.sql` files exist; all Bang tables physically live in the one `bang`
+  DB; ooo-user's versioned Depot user records are dormant. Non-DB backup surface: `log/`
+  item/state audit logs + `data/boards`. Proposed shape (to be decided): backups first, then
+  Flyway **baseline + freeze for new changes only** — a full cutover means neutralizing both
+  auto-migrators across 8+ repos and is high-risk.
 
 ### Phase 8 — Cleanup & idiom modernization
 - Finish the **libGDX excision**: `gdx 1.5.4` (2015) still lingers in `jme`/`bui` only for the
