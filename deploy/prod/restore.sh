@@ -14,16 +14,11 @@ umask 077
 src="${1:?usage: restore.sh <backup-dir> <db>...|all}"; shift
 [ -d "$src" ] || { echo "restore: no such backup dir: $src" >&2; exit 1; }
 
-DB_USER="${BANG_DB_DEFAULT_USERNAME:-bang}"
-DB_PASS="${BANG_DB_DEFAULT_PASSWORD:?BANG_DB_DEFAULT_PASSWORD is required}"
-hostport="$(sed -nE 's#^jdbc:mysql://([^/]+)/.*#\1#p' <<< "${BANG_DB_DEFAULT_URL:-}")"
-DB_HOST="${hostport%%:*}"; DB_HOST="${DB_HOST:-127.0.0.1}"
-DB_PORT="${hostport##*:}"; [[ "$DB_PORT" == "$hostport" || -z "$DB_PORT" ]] && DB_PORT=3306
+# per-database host/credential resolution (ooouser may live on a separate USERDBHOST)
+. "$(dirname "${BASH_SOURCE[0]}")/db-common.sh"
 
 defaults="$(mktemp)"
 trap 'rm -f "$defaults"' EXIT
-printf '[client]\nhost=%s\nport=%s\nuser=%s\npassword=%s\n' \
-  "$DB_HOST" "$DB_PORT" "$DB_USER" "$DB_PASS" > "$defaults"
 
 # resolve "all" to whatever the backup actually contains
 if [ "${1:-}" = "all" ]; then
@@ -35,14 +30,15 @@ for db in "$@"; do
   f="$src/$db.sql.gz"
   [ -f "$f" ] || { echo "restore: $f not found" >&2; exit 1; }
   gzip -t "$f" || { echo "restore: $f is corrupt" >&2; exit 1; }
+  target="$(db_defaults "$db" "$defaults")"
 
   if [ "${BANG_RESTORE_YES:-0}" != "1" ]; then
-    echo "About to DROP and restore database '$db' on ${DB_HOST}:${DB_PORT} from $f"
+    echo "About to DROP and restore database '$db' on $target from $f"
     read -r -p "Type '$db' to confirm: " answer
     [ "$answer" = "$db" ] || { echo "restore: aborted"; exit 1; }
   fi
 
-  echo "restore: restoring $db ..."
+  echo "restore: restoring $db (at $target) ..."
   mysql --defaults-extra-file="$defaults" \
     -e "DROP DATABASE IF EXISTS \`$db\`; CREATE DATABASE \`$db\`;"
   zcat "$f" | mysql --defaults-extra-file="$defaults" "$db"
