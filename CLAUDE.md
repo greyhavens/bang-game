@@ -147,6 +147,12 @@ not in the `server` module — the `server` module mainly adds persistence and t
 `BangServer` bootstrap. Core gameplay (board game rules, effects, AI) is in
 `com.threerings.bang.game.{client,data,server}` within `client/shared`.
 
+**Database schema changes MUST ship as Flyway migrations** (Epic 3 Phase 7, baseline+freeze):
+add a new `V<n>__description.sql` under `server/src/main/resources/db/migration/{bang,ooouser}/`
+— never new DDL in Java repositories (`migrateSchema` overrides / Depot `SchemaMigration`
+registrations are frozen legacy, kept only as the fresh-install bootstrap), and never edit an
+already-applied migration (Flyway checksums them). See `docs/runbook.md` "Schema migrations".
+
 The game world is divided into "towns" (`frontier_town`, `indian_post` — listed in the root
 `build.gradle` `towns` ext property). Asset jars and avatar bundles are built per-town, and the
 server runs in cluster mode as one node per town.

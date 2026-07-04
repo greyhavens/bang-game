@@ -1,0 +1,11 @@
+-- V1: baseline marker for the `bang` game database (Epic 3 Phase 7 — baseline + freeze).
+--
+-- Deliberately empty. Existing databases are baselined AT this version by baselineOnMigrate
+-- (their schema was built by Depot auto-migration + the legacy repositories' constructor-time
+-- DDL over two decades); fresh installs still get their tables from those same auto-create
+-- paths at first boot, so recreating the schema here would only duplicate it.
+--
+-- Every schema change from now on is a new versioned file in this directory:
+--   V2__short_description.sql, V3__..., applied by BangSchemaMigrations at server startup.
+-- Never edit an applied migration (Flyway checksums them); never add schema DDL to the Java
+-- repositories again — see docs/runbook.md "Schema migrations".

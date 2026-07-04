@@ -157,7 +157,30 @@ confirm (`BANG_RESTORE_YES=1` for automation). Audit logs restore by untarring
    deploying, even for "client-only" changes.
 4. Watch `/health` return 200 and a clean startup in the journal.
 
-DB schema is auto-migrated by Depot at startup (Phase 7 will move this to explicit migrations).
+Schema changes apply automatically at node startup — see the next section. Take a backup before
+upgrading across a schema change.
+
+## Schema migrations (Flyway — baseline + freeze)
+
+The schema history lives in the repo as versioned SQL under
+`server/src/main/resources/db/migration/{bang,ooouser}/`, applied by Flyway at the very start of
+`BangServer.main` — before any persistence code runs — and tracked per database in a
+`flyway_schema_history` table. A failed migration **aborts startup** (fail closed) rather than
+booting against a half-migrated schema.
+
+**The policy (baseline + freeze):**
+
+- `V1` is an empty baseline marker: databases that predate Flyway are baselined at version 1 on
+  first contact (`baselineOnMigrate`); fresh installs still get their tables from the legacy
+  auto-create paths at first boot, exactly as before.
+- **Every schema change from now on ships as a new file** — `V2__short_description.sql`,
+  `V3__...` — in the matching database's migration directory. No new DDL in Java repositories
+  (`migrateSchema`, Depot `SchemaMigration` registrations): those paths are frozen as the
+  fresh-install bootstrap.
+- **Never edit an applied migration** (Flyway checksums them and refuses to continue); fix
+  mistakes with a follow-up migration.
+- In a multi-node cluster the first node to restart applies the migrations; Flyway takes a
+  history-table lock, so simultaneous restarts are safe (later nodes see "up to date").
 
 ## Common failures
 

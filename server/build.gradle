@@ -14,6 +14,10 @@ dependencies {
   // digester3) but pulls commons-beanutils 1.8.3 + commons-logging 1.1.1, which mark log4j /
   // logkit / avalon / servlet-api as OPTIONAL — dropping the EOL log4j 1.2.12 chain off runtime.
   api "commons-digester:commons-digester:2.1"
+  // versioned schema migrations (Epic 3 Phase 7): applied in BangServer.main before any
+  // persistence code runs. Baseline+freeze policy — see docs/runbook.md "Schema migrations".
+  implementation "org.flywaydb:flyway-core:${flywayVersion}"
+  runtimeOnly "org.flywaydb:flyway-mysql:${flywayVersion}"
 }
 // NB: the commons-beanutils/protobuf-java version forces live in the ROOT build.gradle's
 // allprojects block — a resolutionStrategy.force here would only apply to :server, leaving the

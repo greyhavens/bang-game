@@ -1,0 +1,6 @@
+-- V1: baseline marker for the `ooouser` user/auth database (Epic 3 Phase 7 — baseline + freeze).
+--
+-- Deliberately empty — same rationale as db/migration/bang/V1__baseline.sql: existing databases
+-- are baselined here by baselineOnMigrate; fresh installs are bootstrapped by
+-- OOOUserRepository.migrateSchema's auto-create at first boot (or UserTool). New ooouser schema
+-- changes ship as versioned files in this directory.
