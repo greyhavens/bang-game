@@ -78,6 +78,27 @@ community **Blender Ogre importer add-ons** directly against a couple of `.mxml`
 path into Blender may exist today for free (even a lossy one is useful for scoping Phase 2b's glTF
 writer against a visual reference inside Blender).
 
+**PHASE 1 RESULTS (2026-07-05) — Ogre refuted, but the probe found something better.**
+Inspected `units/frontier_town/shotgunner/{model,dying}.mxml` directly:
+
+- **`.mxml` is NOT Ogre XML.** It is a custom Three Rings format: root `<model>` containing
+  `<skinMesh name= translation= rotation= scale= texture= …>` elements whose children are inline
+  triangle-soup `<vertex location= normal= tcoords=>` entries with nested
+  `<boneWeight bone= weight=/>`; animations are a separate root `<animation frameRate=30>` of
+  `<frame>` × N, each a flat list of per-bone `<transform name= translation= rotation= scale=/>`
+  (sampled TRS keyframes). Bone names (`Bip01 …`) are 3ds Max Biped; the format's producer is the
+  committed MaxScript exporter **`jme/src/main/ms/TRModelExporter.mcr`** — the authoritative
+  format spec from the write side. The jME3 Ogre-loader path and the Blender-Ogre-importer path
+  are both **refuted**.
+- **The consolation collapses Phase 2a instead:** the fork tree already contains a complete,
+  almost-fork-free parser for the format. `tools/xml/ModelParser.java` (109 lines, digester-based)
+  and `tools/xml/AnimationParser.java` have **zero** fork imports; the `ModelDef` intermediate
+  (1,029 lines) has exactly **9** fork imports, all math/scene types with direct jME3 equivalents
+  (`Vector3f`, `Quaternion`, `Matrix4f`, `FastMath`, `BoundingBox/Sphere`, `Node`, `Spatial`,
+  `BufferUtils`). Phase 2a is therefore a **mechanical port** of ~1,200 lines to jME3 types, not a
+  from-scratch importer. (The `tools/model/*` classes behind `ModelDef` are the fork-typed layer
+  the port replaces.)
+
 ### Phase 2 — Native importer, one parser / two writers (scope set by Phase 1)
 **2a — the reader:** build the `.mxml` parser into a neutral in-memory model: either adapt the Ogre
 loader (if Phase 1 is promising) or write a dedicated reader. Cover geometry, textures/materials
