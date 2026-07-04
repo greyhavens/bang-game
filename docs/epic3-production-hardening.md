@@ -144,8 +144,9 @@ over-the-wire replay vector), but the at-rest/issuance scheme review is still op
   (`DepotSchemaVersion`-versioned, `CanMigrate.ALLOWED`, minority of tables) and legacy samskivert
   JDBC (majority: PLAYERS/ITEMS/GANGS/… + the whole `ooouser` DB; hand-written DDL `String[]` +
   conditional ALTERs in each repo's `migrateSchema`, run at *constructor* time, no version
-  tracking, soft-fail). No `.sql` files exist; all Bang tables physically live in the one `bang`
-  DB; ooo-user's versioned Depot user records are dormant. Non-DB backup surface: `log/`
+  tracking, soft-fail). No `.sql` defines the game-server schema (the only `.sql` in the repo is
+  devstack DB/user seeding + the separate bangmeta Rails app's card data); all Bang tables
+  physically live in the one `bang` DB; ooo-user's versioned Depot user records are dormant. Non-DB backup surface: `log/`
   item/state audit logs + `data/boards`. Proposed shape (to be decided): backups first, then
   Flyway **baseline + freeze for new changes only** — a full cutover means neutralizing both
   auto-migrators across 8+ repos and is high-risk.
