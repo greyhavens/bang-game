@@ -32,12 +32,8 @@
 
 package com.jmex.awt;
 
-import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
-import com.jme.scene.state.ZBufferState;
-import com.jme.system.DisplaySystem;
 import com.jme.util.Timer;
 
 /**
