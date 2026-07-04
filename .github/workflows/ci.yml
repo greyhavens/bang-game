@@ -100,54 +100,6 @@ jobs:
         if: always()
         run: docker compose -f deploy/devstack/compose.yaml down -v
 
-  security-scan:
-    name: Dependency vulnerability scan (OWASP)
-    runs-on: ubuntu-latest
-    # NON-GATING for now (continue-on-error): the scan reports but never blocks a PR. Flip this off
-    # once the NVD_API_KEY secret is set and the baseline is confirmed clean, so it gates PRs on
-    # High/Critical CVEs (the build.gradle dependencyCheck config already sets failBuildOnCVSS=7.0).
-    # Prereq: `gh secret set NVD_API_KEY` (get a free key at https://nvd.nist.gov/developers/request-an-api-key).
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '21'
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v6
-
-      # rotate the cache key weekly: a per-run key (github.run_id) never hits, so every run would
-      # save a fresh multi-hundred-MB NVD DB and never reuse/evict-in-place, pressuring the repo
-      # cache quota. Weekly rotation reuses within a week (restore-keys falls back to the prior
-      # week's DB, which the plugin then delta-updates) and saves the refreshed DB under the new key.
-      - name: Compute weekly NVD cache key
-        id: nvdkey
-        run: echo "week=$(date -u +%Y-%U)" >> "$GITHUB_OUTPUT"
-
-      - name: Cache the NVD database
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/dependency-check-data
-          key: nvd-${{ runner.os }}-${{ steps.nvdkey.outputs.week }}
-          restore-keys: nvd-${{ runner.os }}-
-
-      - name: OWASP dependency-check (aggregate)
-        env:
-          # resolve the forked stack from GitHub Packages, same as the build job
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # avoids NVD throttling; job is non-gating until this is set
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: ./gradlew dependencyCheckAggregate --no-daemon --stacktrace
-
-      - name: Upload the report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: dependency-check-report
-          path: '**/build/reports/dependency-check-report.*'
-          if-no-files-found: ignore
+  # The OWASP dependency scan lives in its own workflow (security.yml): this workflow's
+  # cancel-in-progress concurrency would kill the in-flight master scan (and its NVD cache save)
+  # on every merge. It is GATING there — see security.yml for the details.
