@@ -19,5 +19,6 @@ ExecStart=/opt/bang/deploy/prod/backup.sh
 # the backup root must exist and be writable by the bang user; create it here ('+' = as root)
 ExecStartPre=+/usr/bin/mkdir -p /var/backups/bang
 ExecStartPre=+/usr/bin/chown bang:bang /var/backups/bang
+ExecStartPre=+/usr/bin/chmod 700 /var/backups/bang
 NoNewPrivileges=true
 PrivateTmp=true
