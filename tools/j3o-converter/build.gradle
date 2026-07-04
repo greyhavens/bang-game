@@ -21,6 +21,12 @@ dependencies {
   implementation "org.jmonkeyengine:jme3-core:${jme3Version}"
   // AWTLoader, for loading the .png textures referenced by converted materials
   implementation "org.jmonkeyengine:jme3-desktop:${jme3Version}"
+
+  // Epic 4 Phase 2a: the native .mxml parsers (com.threerings.bang.jme3.mxml) — ported off the
+  // fork onto jME3 math types. They need only digester + samskivert's SetPropertyFieldsRule
+  // (same coordinates as the rest of the repo); NO fork/LWJGL2 dependency.
+  implementation "commons-digester:commons-digester:2.1"
+  implementation "com.samskivert:samskivert:${samskivertVersion}"
 }
 
 application {
@@ -35,6 +41,32 @@ tasks.register("verifyCorpus", JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = "com.threerings.bang.tools.j3o.VerifyCorpus"
   args = [ rootProject.file("assets/build/staging/rsrc").absolutePath ]
+}
+
+// Epic 4 Phase 2a: run the ported fork-free .mxml parsers over the whole committed corpus
+// (every model.properties under assets/rsrc: sibling model.mxml + every sibling animation
+// .mxml), printing per-model mesh/vertex/index/bone stats, per-animation frame counts, and a
+// final "PARSED <n> models, <m> animations, <k> failures" line (non-zero exit on any failure).
+//   ./gradlew :tools:j3o-converter:mxmlProbe            [-Proot=<dir>]
+// Runs on a deliberately ISOLATED classpath (like renderToPng below): jme3-core + digester +
+// samskivert only — proving the parsers need no fork/modeltool classes at runtime (and keeping
+// the fork's LWJGL2 jars off the classpath per this module's sealing notes).
+configurations {
+  mxmlProbeRuntime
+}
+dependencies {
+  mxmlProbeRuntime "org.jmonkeyengine:jme3-core:${jme3Version}"
+  mxmlProbeRuntime "commons-digester:commons-digester:2.1"
+  mxmlProbeRuntime "com.samskivert:samskivert:${samskivertVersion}"
+}
+tasks.register("mxmlProbe", JavaExec) {
+  group = "verification"
+  description = "Parse every committed .mxml with the ported (fork-free) Epic 4 Phase 2a parsers."
+  classpath = sourceSets.main.output + configurations.mxmlProbeRuntime
+  mainClass = "com.threerings.bang.jme3.mxml.MxmlProbe"
+  def root = project.hasProperty("root") ? project.property("root").toString() :
+      rootProject.file("assets/rsrc").absolutePath
+  args = [ root ]
 }
 
 // Phase 3: bake every staged model.dat to a sibling model.j3o that the runtime client loads
