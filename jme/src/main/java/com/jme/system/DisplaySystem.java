@@ -151,6 +151,12 @@ public abstract class DisplaySystem {
             // the build-time asset compiler): default to the headless dummy that the compiler
             // tasks previously had to install by hand before touching model.dat files
             new com.jme.util.DummyDisplaySystem();
+            if (system == null) {
+                // the dummy registers itself as the provider from its constructor; fail loud if
+                // that side effect is ever refactored away rather than returning null forever
+                throw new IllegalStateException(
+                    "DummyDisplaySystem no longer self-registers as the SystemProvider");
+            }
         }
         return system;
     }
