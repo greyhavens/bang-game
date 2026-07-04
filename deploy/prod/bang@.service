@@ -23,11 +23,11 @@ WorkingDirectory=/opt/bang
 # %i.env: per-node values, e.g. a unique BANG_SERVER_MGMT_PORT when nodes share a host (optional)
 EnvironmentFile=/etc/bang/common.env
 EnvironmentFile=-/etc/bang/%i.env
-# create the audit-log dir before the sandbox maps it writable: ReadWritePaths only remounts an
-# EXISTING path, it never creates one — and the launcher itself couldn't mkdir it, because inside
-# the strict sandbox /opt is read-only ('+' prefix = run outside the sandbox, as root)
-ExecStartPre=+/usr/bin/mkdir -p /opt/bang/log
-ExecStartPre=+/usr/bin/chown bang:bang /opt/bang/log
+# create the writable dirs before the sandbox maps them: ReadWritePaths only remounts EXISTING
+# paths, it never creates them — and the launcher itself couldn't mkdir them, because inside the
+# strict sandbox /opt is read-only ('+' prefix = run outside the sandbox, as root)
+ExecStartPre=+/usr/bin/mkdir -p /opt/bang/log /opt/bang/data/downloads
+ExecStartPre=+/usr/bin/chown bang:bang /opt/bang/log /opt/bang/data/downloads
 ExecStart=/opt/bang/deploy/prod/run-node.sh %i
 Restart=on-failure
 RestartSec=5
@@ -36,13 +36,15 @@ RestartSec=5
 TimeoutStopSec=60
 
 # basic hardening — strict makes the whole filesystem read-only for the service except the paths
-# below, so writes really are confined to the audit-log dir (`full` would leave /opt writable and
-# reduce ReadWritePaths to a no-op); the rsrc cache goes to /tmp, covered by PrivateTmp
+# below (`full` would leave /opt writable and reduce ReadWritePaths to a no-op); the rsrc cache
+# goes to /tmp, covered by PrivateTmp. The server's full runtime write surface: audit logs
+# (log/) and the soundtrack-download symlinks + stamp files (data/downloads — a live client RPC,
+# PlayerManager.createDownloadSymlink).
 NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=true
 PrivateTmp=true
-ReadWritePaths=/opt/bang/log
+ReadWritePaths=/opt/bang/log /opt/bang/data/downloads
 
 [Install]
 WantedBy=multi-user.target

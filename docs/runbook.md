@@ -135,7 +135,7 @@ DB schema is auto-migrated by Depot at startup (Phase 7 will move this to explic
 | in-game `NoClassDefFoundError`, AI units not spawning | stale node after a deploy — restart the node |
 | env override ignored | key absent from the baked config — the bridge only overrides present keys |
 | `/health` 503 | init incomplete or connection manager stopped — check the journal for the real error |
-| `Read-only file system` errors in the journal | the unit runs `ProtectSystem=strict`: only `/opt/bang/log` (+ private `/tmp`) is writable — add legitimate new write paths to `ReadWritePaths` in `bang@.service` |
+| `Read-only file system` errors in the journal | the unit runs `ProtectSystem=strict`: only `/opt/bang/log`, `/opt/bang/data/downloads` (+ private `/tmp`) are writable — add legitimate new write paths to `ReadWritePaths` in `bang@.service` |
 
 ## Containerized dev/CI reference
 
