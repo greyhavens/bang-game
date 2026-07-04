@@ -34,6 +34,10 @@ jobs:
     runs-on: ubuntu-latest
     # GATING: fails on High/Critical (build.gradle dependencyCheck failBuildOnCVSS = 7.0).
     # Accept-risk exceptions go in config/owasp-suppressions.xml with a written justification.
+    # Skip fork PRs: they don't receive the NVD_API_KEY secret, so a gating scan would block them
+    # on NVD rate limits rather than actual findings (this repo takes no fork PRs today; revisit
+    # with a keyless fallback if that changes).
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v7
 
