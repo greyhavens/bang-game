@@ -7,7 +7,8 @@
 # DESTRUCTIVE: each restore drops and recreates the named database from the dump. Stop every
 # server node first (a live node would keep writing mid-restore and be left with stale caches).
 # Requires typing the literal database name(s) to confirm, or pass BANG_RESTORE_YES=1 (automation).
-# DB connection env is the same as backup.sh (BANG_DB_DEFAULT_URL/USERNAME/PASSWORD).
+# DB connections resolve PER DATABASE exactly as in backup.sh (db-common.sh): ooouser honors
+# BANG_DB_USERDB_URL/_USERNAME/_PASSWORD when set, falling back to the BANG_DB_DEFAULT_* values.
 set -euo pipefail
 umask 077
 
