@@ -26,7 +26,9 @@ Multi-town = one node per town, peered as a cluster:
   data/                         boards etc. (checkout or rsync of data/)
   conf/server.properties        from etc/server.properties.dist — NON-secret values only
   conf/deployment.properties    from etc/deployment.properties.dist
-  log/                          audit logs (state/item/perf/server per node)
+  log/                          audit logs (state/item/perf/server per node); lands here only
+                                because common.env sets BANG_SERVER_ROOT=/opt/bang — the .dist
+                                default is the historical /export/bang, don't skip the override
   deploy/prod/run-node.sh       node launcher (this repo, deploy/prod/)
 /etc/systemd/system/bang@.service   template unit (copy from deploy/prod/)
 /etc/bang/common.env            secrets shared by all nodes on the host (0600 root:bang)

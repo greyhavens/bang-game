@@ -28,9 +28,11 @@ RestartSec=5
 # BangServer shuts down gracefully on SIGTERM (saves state, closes audit logs); give it time
 TimeoutStopSec=60
 
-# basic hardening — the server only needs to write its log dir (audit logs) under server_root
+# basic hardening — strict makes the whole filesystem read-only for the service except the paths
+# below, so writes really are confined to the audit-log dir (`full` would leave /opt writable and
+# reduce ReadWritePaths to a no-op); the rsrc cache goes to /tmp, covered by PrivateTmp
 NoNewPrivileges=true
-ProtectSystem=full
+ProtectSystem=strict
 ProtectHome=true
 PrivateTmp=true
 ReadWritePaths=/opt/bang/log
