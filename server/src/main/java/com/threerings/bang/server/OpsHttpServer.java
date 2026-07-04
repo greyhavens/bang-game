@@ -58,9 +58,12 @@ public class OpsHttpServer
             OpsHttpServer server = new OpsHttpServer(host, port, node, conmgr, clmgr);
             log.info("Management HTTP server running.", "host", host, "port", port);
             return server;
-        } catch (IOException ioe) {
+        } catch (Exception e) {
+            // not just IOException: a misconfigured port (> 65535, e.g. a typo'd
+            // BANG_SERVER_MGMT_PORT) throws an unchecked IllegalArgumentException from
+            // InetSocketAddress, and that must not take down the game server either
             log.warning("Failed to start management HTTP server.",
-                        "host", host, "port", port, ioe);
+                        "host", host, "port", port, e);
             return null;
         }
     }
