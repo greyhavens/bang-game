@@ -84,8 +84,10 @@ public class OpsHttpServer
         throws IOException
     {
         // escape the node name per the Prometheus text format so a hostile or odd value (it can
-        // arrive via the BANG_* env bridge) can't break out of the label position
-        _node = node.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
+        // arrive via the BANG_* env bridge) can't break out of the label position; null only if a
+        // future launcher skips is_node=true, but that shouldn't masquerade as a bind failure
+        _node = (node == null ? "unknown" : node)
+            .replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
         _conmgr = conmgr;
         _clmgr = clmgr;
 
