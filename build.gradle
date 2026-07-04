@@ -99,6 +99,14 @@ dependencyCheck {
   // fail on any High/Critical (CVSS >= 7.0); Medium/Low are report-only
   failBuildOnCVSS = 7.0f
   suppressionFile = "config/owasp-suppressions.xml"
+  // keep the NVD database OUT of GRADLE_USER_HOME: in CI, gradle/actions/setup-gradle caches
+  // ~/.gradle per job, and its default location (~/.gradle/dependency-check-data) let a failed
+  // scan's partial/locked H2 database circulate via the gradle-home cache and poison later runs
+  // ("Unable to obtain an exclusive lock" / "No documents exist"). security.yml caches this
+  // directory itself, win or lose.
+  data {
+    directory = "${System.getProperty('user.home')}/dependency-check-data"
+  }
   // the NVD feed now requires an API key to avoid aggressive throttling; supplied in CI via the
   // NVD_API_KEY secret. Locally it falls back to unauthenticated (slow) updates if unset.
   nvd {

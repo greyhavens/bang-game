@@ -66,7 +66,9 @@ jobs:
         id: nvdrestore
         uses: actions/cache/restore@v4
         with:
-          path: ~/.gradle/dependency-check-data
+          # kept OUTSIDE ~/.gradle on purpose (build.gradle data.directory): setup-gradle caches
+          # gradle-home per job, which let failed scans' partial NVD data poison later runs
+          path: ~/dependency-check-data
           key: nvd-${{ runner.os }}-${{ steps.nvdkey.outputs.week }}
           restore-keys: nvd-${{ runner.os }}-
 
@@ -79,14 +81,26 @@ jobs:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: ./gradlew dependencyCheckAggregate --no-daemon --stacktrace
 
+      # a cache key is IMMUTABLE once saved — saving garbage under the weekly key poisons every
+      # run until the key rotates (exactly what the first run of this workflow did: it failed in
+      # 2 minutes on a permissions error and its unconditional save banked a 0 MB data dir). Only
+      # save when the data dir actually looks like a populated NVD database.
+      - name: Check the NVD database is worth caching
+        id: nvdcheck
+        if: always()
+        run: |
+          size_mb=$(du -sm ~/dependency-check-data 2>/dev/null | cut -f1 || echo 0)
+          echo "size: ${size_mb} MB"
+          echo "ok=$([ "${size_mb:-0}" -ge 100 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
       - name: Save the NVD database
-        # always(): persist the DB even when the scan fails/gates. Skip when this exact weekly key
-        # was restored (immutable caches — saving the same key again just errors); restore-keys
-        # fallback hits (prior week) DO save under the new week's key.
-        if: always() && steps.nvdrestore.outputs.cache-hit != 'true'
+        # persist the DB even when the scan fails/gates (a CVE finding shouldn't cost the next run
+        # a multi-hour cold rebuild) — but only a plausibly-complete one, and only when this exact
+        # weekly key wasn't already restored (immutable; re-saving the same key just errors).
+        if: always() && steps.nvdrestore.outputs.cache-hit != 'true' && steps.nvdcheck.outputs.ok == 'true'
         uses: actions/cache/save@v4
         with:
-          path: ~/.gradle/dependency-check-data
+          path: ~/dependency-check-data
           key: nvd-${{ runner.os }}-${{ steps.nvdkey.outputs.week }}
 
       - name: Upload the report
