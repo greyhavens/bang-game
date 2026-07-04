@@ -1,0 +1,93 @@
+# Dependency vulnerability scan (OWASP dependency-check) — GATING (Epic 3 Phase 5/6).
+#
+# Lives in its own workflow, NOT ci.yml, on purpose: ci.yml's `concurrency: cancel-in-progress`
+# kills the in-flight master run whenever another merge lands, which repeatedly cancelled the
+# multi-hour cold NVD-database build before its cache could save (a failed/cancelled job never
+# saves its actions/cache). Here master runs QUEUE instead of cancelling each other, so a
+# cache-building run always completes; PR pushes still cancel their own stale scans.
+#
+# With a warm weekly cache + NVD_API_KEY the scan takes minutes; the weekly scheduled run warms
+# the new week's cache right after the key rotates so PR scans never eat the cold rebuild.
+name: Security
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  schedule:
+    # Sunday 03:17 UTC — just after the %Y-%U weekly cache key rotates (weeks start Sunday), so
+    # the scheduled run pays the delta-update and everything else that week restores warm
+    - cron: '17 3 * * 0'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  # cancel superseded PR scans, but never a master/scheduled run (it may be saving the NVD cache)
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  security-scan:
+    name: Dependency vulnerability scan (OWASP)
+    runs-on: ubuntu-latest
+    # GATING: fails on High/Critical (build.gradle dependencyCheck failBuildOnCVSS = 7.0).
+    # Accept-risk exceptions go in config/owasp-suppressions.xml with a written justification.
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      # rotate the cache key weekly: a per-run key (github.run_id) never hits, so every run would
+      # save a fresh multi-hundred-MB NVD DB and never reuse/evict-in-place, pressuring the repo
+      # cache quota. Weekly rotation reuses within a week (restore-keys falls back to the prior
+      # week's DB, which the plugin then delta-updates) and saves the refreshed DB under the new key.
+      - name: Compute weekly NVD cache key
+        id: nvdkey
+        run: echo "week=$(date -u +%Y-%U)" >> "$GITHUB_OUTPUT"
+
+      # restore/save are SPLIT (not the combined actions/cache) so the freshly built NVD database
+      # is saved even when the scan itself fails — a gating scan that finds a CVE would otherwise
+      # discard the multi-hour cold build and re-pay it on every retry (this exact loop burned
+      # three cold builds before the flip: fail/cancel -> no cache -> cold again)
+      - name: Restore the NVD database
+        id: nvdrestore
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.gradle/dependency-check-data
+          key: nvd-${{ runner.os }}-${{ steps.nvdkey.outputs.week }}
+          restore-keys: nvd-${{ runner.os }}-
+
+      - name: OWASP dependency-check (aggregate)
+        env:
+          # resolve the forked stack from GitHub Packages, same as the build job
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # avoids NVD throttling (and the cold DB build takes hours without it)
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: ./gradlew dependencyCheckAggregate --no-daemon --stacktrace
+
+      - name: Save the NVD database
+        # always(): persist the DB even when the scan fails/gates. Skip when this exact weekly key
+        # was restored (immutable caches — saving the same key again just errors); restore-keys
+        # fallback hits (prior week) DO save under the new week's key.
+        if: always() && steps.nvdrestore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.gradle/dependency-check-data
+          key: nvd-${{ runner.os }}-${{ steps.nvdkey.outputs.week }}
+
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependency-check-report
+          path: '**/build/reports/dependency-check-report.*'
+          if-no-files-found: ignore
