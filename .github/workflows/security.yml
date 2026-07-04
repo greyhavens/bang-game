@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: read
+  packages: read   # resolve the forked Three Rings / samskivert stack from GitHub Packages
 
 concurrency:
   group: security-${{ github.ref }}
