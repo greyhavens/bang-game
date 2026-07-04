@@ -1,9 +1,24 @@
-# Epic 4 — Native model toolchain (fork eradication)
+# Epic 4 — Native model toolchain + Blender authoring (fork eradication)
 
 Epic 1 moved the **running game** entirely off the vendored 2005-era jME fork (the client/editor
 ship and load zero fork code — confirmed: no `com.jme.*`/fork-`com.jmex.*` imports in any runtime/main
 source). But the fork is **not gone** — it survives as the **build-time asset compiler**. This epic
 replaces it with a jME3-native toolchain so the `jme` module can be deleted outright.
+
+**Scope extension (decided 2026-07-05):** the Blender content pipeline is folded into this epic
+(not a standalone "Epic 6"), and the requirement is that the **legacy 310 models become editable in
+Blender** — not merely replaceable by new content. That decision has one structural consequence:
+**glTF 2.0 becomes the canonical committed model source** at the end of this epic. Blender's native
+game interchange is glTF and jME3 ships a maintained glTF loader, but there is no path *back* from
+an edited Blender model to `.mxml` — so a one-time, oracle-verified `.mxml`→glTF migration replaces
+the committed sources, and `.mxml` retires with the fork. Practically this changes little in the
+plan below: the same parsed in-memory model that Phase 2 builds from `.mxml` simply feeds **two
+writers** (jME3 `.j3o` for the game, glTF for Blender) instead of one.
+
+Out of scope here (tracked as ideas, not phases): Blender as a **board/map** editor (`.board` is a
+heightmap+prop format with a dedicated in-game editor — improving that editor likely beats a
+Blender add-on; feasibility note only) and 2D/avatar art workflows (render-to-texture conventions,
+docs not code).
 
 ## Why the fork can't be deleted yet (the build-time coupling)
 
@@ -58,13 +73,24 @@ natively (or with a thin format shim / rename), turning this epic from "write a 
 representative `.mxml` (a static prop + a skinned unit like `units/frontier_town/shotgunner`), and see
 how close it gets — mesh, skin weights, `Armature`, the per-file `*.mxml` animations. Record the gap.
 
-### Phase 2 — Native importer (scope set by Phase 1)
-Build the `.mxml`→jME3 importer: either adapt the Ogre loader (if Phase 1 is promising) or write a
-dedicated reader. Cover geometry, textures/materials (the existing `ModelTextureResolver` resolution
-can be reused), `SkinningControl`/`Armature` + bind pose (mind the 6b skinning lessons —
-inverse-bind matrices, full ancestor-chain joint transforms, model-space skin verts), and the
-multi-file `*.mxml` animation clips → `AnimClip`/`AnimComposer`. Also a native `particles.jme` path
-(or re-author particles as committed jME3 emitters, superseding the 6a fork bake).
+**Blender corollary to the same probe:** if `.mxml` really is Ogre-XML lineage, also test the
+community **Blender Ogre importer add-ons** directly against a couple of `.mxml` — a working import
+path into Blender may exist today for free (even a lossy one is useful for scoping Phase 2b's glTF
+writer against a visual reference inside Blender).
+
+### Phase 2 — Native importer, one parser / two writers (scope set by Phase 1)
+**2a — the reader:** build the `.mxml` parser into a neutral in-memory model: either adapt the Ogre
+loader (if Phase 1 is promising) or write a dedicated reader. Cover geometry, textures/materials
+(the existing `ModelTextureResolver` resolution can be reused), skinning + bind pose (mind the 6b
+skinning lessons — inverse-bind matrices, full ancestor-chain joint transforms, model-space skin
+verts), and the multi-file `*.mxml` animation clips. Also a native `particles.jme` path (or
+re-author particles as committed jME3 emitters, superseding the 6a fork bake).
+
+**2b — the writers:** from that one parsed representation, emit
+- **jME3 `.j3o`** (`Mesh`/`Armature`/`AnimClip` via jME3's `BinaryExporter`) — the game path; and
+- **glTF 2.0** — the Blender path. Define the conventions here once: axis/scale mapping, material
+  naming, animation-clip naming (must round-trip the `model.properties` action names), texture
+  reference style. Blender must open the result with mesh, skin, and every animation intact.
 
 ### Phase 3 — Verify against the fork-wrapper oracle
 The current fork-wrapper `.j3o` are **verified-correct** (310/310 `verifyCorpus` parity + visually
@@ -80,12 +106,25 @@ precision, and Savable field order all legitimately differ, so a binary diff giv
 Keep the fork wrapper as the live oracle **throughout** — retire it only once the native importer
 matches across the full corpus. Never a blind swap.
 
-### Phase 4 — Delete the fork
-Once the native path passes Phase 3 across all 310 models (+ particles): drop `CompileModelTask` +
-the fork-coupled bridge, remove the `app` `modeltool` source set's fork dep and `tools/j3o-converter`'s
-fork coupling, and **delete the `jme` module** from `settings.gradle`. Update CLAUDE.md/engine-notes.
+### Phase 4 — glTF becomes the source (the Blender cutover)
+With Phase 3 proving the reader correct, run the one-time migration:
+- Convert all 310 models (`.mxml` → glTF) and commit the glTF as the **new canonical source**;
+  the build pipeline becomes `glTF → .j3o` via jME3's own `GltfLoader` + our `.j3o` bake — the
+  Phase-2a `.mxml` reader retires along with the format it reads.
+- **Round-trip gate:** for every model, `glTF → .j3o` must match the Phase-3 oracle renders the
+  same way the direct `.mxml → .j3o` path did (Blender-agnostic check), and a spot set must
+  survive an actual Blender open → re-export → bake → render-diff cycle (the real "editable"
+  proof — Blender's importer/exporter normalization must not silently mangle skins or clips).
+- Document the authoring workflow (docs/blender-authoring.md): scale/axis/material conventions,
+  how animations map to `model.properties` actions, how to add a NEW model entirely in Blender.
+
+### Phase 5 — Delete the fork
+Drop `CompileModelTask` + the fork-coupled bridge, remove the `app` `modeltool` source set's fork
+dep and `tools/j3o-converter`'s fork coupling, and **delete the `jme` module** from
+`settings.gradle`. Delete the retired `.mxml`/`.dat` machinery. Update CLAUDE.md/engine-notes.
 
 ## Acceptance
-A full `./gradlew deploy` compiles every model/particle from `.mxml`/source to runtime `.j3o` with
-**no `jme` fork module in the build at all**, the native output matches the fork-wrapper oracle
-(render + structural), and the game + editor run unchanged.
+A full `./gradlew deploy` compiles every model/particle from **committed glTF source** to runtime
+`.j3o` with **no `jme` fork module in the build at all**; the output matches the fork-wrapper
+oracle (render + structural); a model edited in Blender and re-exported flows through the build and
+renders in-game; and the game + editor run unchanged.
