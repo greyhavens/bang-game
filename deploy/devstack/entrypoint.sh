@@ -9,6 +9,7 @@ set -euo pipefail
 BANG_HOME=/bang
 DB_HOST="${DB_HOST:-127.0.0.1}"
 NODE="${BANG_NODE:-frontier_town}"
+MGMT_PORT="${BANG_SERVER_MGMT_PORT:-8081}"
 
 echo "devstack: waiting for MySQL at ${DB_HOST}:3306 ..."
 for i in $(seq 1 60); do
@@ -17,16 +18,48 @@ for i in $(seq 1 60); do
   [ "$i" = 60 ] && { echo "devstack: MySQL never came up"; exit 1; }
 done
 
-# The baked server.properties carries host-specific absolute values: the jdbc URLs point at
-# localhost:3306, and server_root is the host checkout path (used for the audit log dir). Rewrite both
-# for the container (DB -> the mysql service host, server_root -> $BANG_HOME) and put the override
-# FIRST on the classpath so samskivert Config("server") loads it instead of the copy baked into the
-# server jar. Only the `//host:3306` jdbc authority is touched, so non-DB `localhost` settings (node
-# server_host etc.) are left alone.
+# The baked server.properties carries host-specific values (jdbc URLs point at localhost:3306,
+# server_root at the host checkout path), and this container needs the Phase-6 management endpoint
+# on regardless of how old the mounted host config is. Rather than sed-ing patterns in the baked
+# file, APPEND explicit env-derived overrides — java.util.Properties keeps the last value for a
+# repeated key, so appended keys always win — and put the override dir FIRST on the classpath so
+# samskivert Config("server") loads it instead of the copy baked into the server jar.
+#
+# Why an override file and not the BANG_* env bridge (ServerConfig.loadConfig)? Two reasons: the
+# legacy UserTool pre-steps below read Config("server") directly and predate the bridge, and the
+# bridge only overrides keys PRESENT in the loaded config — a dev's pre-Phase-6
+# etc/test/server.properties has no server_mgmt_* keys, so a pure env override would silently
+# no-op. Appended keys work for both consumers and any vintage of mounted config. (Production
+# servers — no UserTool, config generated fresh from the .dist templates — use the pure BANG_* env
+# bridge; see docs/runbook.md.)
 mkdir -p "$BANG_HOME/conf" "$BANG_HOME/log"
-sed -e "s#//localhost:3306#//${DB_HOST}:3306#g" \
-    -e "s#^server_root *=.*#server_root = ${BANG_HOME}#" \
-  "$BANG_HOME/conf-src/server.properties" > "$BANG_HOME/conf/server.properties"
+{
+  cat "$BANG_HOME/conf-src/server.properties"
+  cat <<EOF
+
+# --- devstack container overrides (appended; last value wins) ---
+db.default.url = jdbc:mysql://${DB_HOST}:3306/bang?serverTimezone=UTC
+db.userdb.url = jdbc:mysql://${DB_HOST}:3306/ooouser?serverTimezone=UTC
+db.sitedb.url = jdbc:mysql://${DB_HOST}:3306/ooouser?serverTimezone=UTC
+server_root = ${BANG_HOME}
+# management endpoint (/health for the container healthcheck, /metrics for scraping); loopback
+# only — the compose healthcheck runs inside the container's network namespace
+server_mgmt_port = ${MGMT_PORT}
+server_mgmt_host = 127.0.0.1
+EOF
+} > "$BANG_HOME/conf/server.properties"
+
+# the compose healthcheck runs `bash /bang/healthcheck.sh` (a deliberately quote-free command:
+# podman-compose 1.0.6 mangles quoted CMD lists, and its /bin/sh is dash, which has no /dev/tcp —
+# so the bash-isms live here, not in compose.yaml). Probes the Phase-6 /health endpoint; the
+# temurin JRE image ships no curl/wget.
+cat > "$BANG_HOME/healthcheck.sh" <<EOF
+#!/usr/bin/env bash
+exec 3<>/dev/tcp/127.0.0.1/${MGMT_PORT} || exit 1
+printf 'GET /health HTTP/1.0\r\n\r\n' >&3
+grep -q ' 200 ' <&3
+EOF
+chmod +x "$BANG_HOME/healthcheck.sh"
 
 # classpath: override conf dir FIRST, then the staged rsrc tree + every server jar (bin/bangserver)
 CP="$BANG_HOME/conf:$BANG_HOME/assets/build/staging"
@@ -52,5 +85,5 @@ java -cp "$CP" "${JOPTS[@]}" -Dooo.propfile=server \
 java -cp "$CP" "${JOPTS[@]}" -Dooo.propfile=server \
   com.threerings.bang.server.tools.SetUserBirthday test 1990-01-01 || true
 
-echo "devstack: starting BangServer node=${NODE} ..."
+echo "devstack: starting BangServer node=${NODE} (mgmt on 127.0.0.1:${MGMT_PORT}) ..."
 exec java -cp "$CP" "${JOPTS[@]}" -Dnode="$NODE" com.threerings.bang.server.BangServer

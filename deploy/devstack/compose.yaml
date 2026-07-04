@@ -33,9 +33,11 @@ services:
     working_dir: /bang
     environment:
       # podman-compose uses per-container networking (service-name DNS), not a shared pod, so the
-      # server reaches MySQL at the `mysql` service name, not localhost. The entrypoint rewrites the
-      # baked server.properties' jdbc URLs (localhost:3306 -> ${DB_HOST}:3306) accordingly.
+      # server reaches MySQL at the `mysql` service name, not localhost. The entrypoint appends
+      # env-derived overrides (jdbc URLs -> ${DB_HOST}, server_root, mgmt endpoint) to the baked
+      # server.properties.
       DB_HOST: mysql
+      BANG_SERVER_MGMT_PORT: "8081"
     volumes:
       - ../../build/server:/bang/build/server:ro,z
       - ../../assets/build/staging:/bang/assets/build/staging:ro,z
@@ -43,6 +45,18 @@ services:
       - ../../etc/test/server.properties:/bang/conf-src/server.properties:ro,z
       - ./entrypoint.sh:/bang/entrypoint.sh:ro,z
     command: ["bash", "/bang/entrypoint.sh"]
+    # liveness via the Phase-6 management endpoint: /health answers 200 only once BangServer.init
+    # fully completed (it is started last) and the connection manager is running. The probe script
+    # is written by entrypoint.sh (the JRE image has no curl/wget, and this command must stay
+    # quote-free: podman-compose 1.0.6 mangles quoted CMD lists and healthchecks run under dash).
+    # `compose up --wait` (the CI integration gate) blocks on this, so a server that boots but
+    # never becomes healthy fails CI.
+    healthcheck:
+      test: ["CMD-SHELL", "bash /bang/healthcheck.sh"]
+      interval: 5s
+      timeout: 5s
+      retries: 60          # boards/avatar bundles make first boot slow; allow ~5 min + start_period
+      start_period: 30s
     ports:
       - "47624:47624"   # Narya client port (so a host client / the bot can connect)
 

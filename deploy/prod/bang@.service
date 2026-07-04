@@ -1,0 +1,39 @@
+# Bang! Howdy per-town server node — systemd template unit (Epic 3 Phase 6).
+#
+# One town per instance; the instance name is the node name from server.properties:
+#   systemctl enable --now bang@frontier_town
+#   systemctl enable --now bang@indian_post
+#
+# Install: copy to /etc/systemd/system/bang@.service, adjust paths if not using /opt/bang, then
+# `systemctl daemon-reload`. Config/secrets come from the EnvironmentFiles below (see the
+# *.env.example files next to this unit and docs/runbook.md).
+[Unit]
+Description=Bang! Howdy server node %i
+After=network-online.target mysql.service
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=bang
+Group=bang
+WorkingDirectory=/opt/bang
+# common.env: cluster/DB/TLS secrets shared by all nodes on this host (mode 0600, owned root:bang)
+# %i.env: per-node values, e.g. a unique BANG_SERVER_MGMT_PORT when nodes share a host (optional)
+EnvironmentFile=/etc/bang/common.env
+EnvironmentFile=-/etc/bang/%i.env
+ExecStart=/opt/bang/deploy/prod/run-node.sh %i
+Restart=on-failure
+RestartSec=5
+
+# BangServer shuts down gracefully on SIGTERM (saves state, closes audit logs); give it time
+TimeoutStopSec=60
+
+# basic hardening — the server only needs to write its log dir (audit logs) under server_root
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/bang/log
+
+[Install]
+WantedBy=multi-user.target
