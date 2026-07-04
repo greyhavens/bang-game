@@ -65,9 +65,9 @@ public class UpdatePropHeightTask extends Task
     public void execute () throws BuildException
     {
         // Ensure a headless display system is installed before any model.dat is read: the fork
-        // ModelMesh.read() path calls DisplaySystem.getDisplaySystem() (to build render states),
-        // which otherwise constructs the gdx GDXDisplaySystem and NPEs in this headless ant task.
-        // init() may not be invoked when run via gradle's ant bridge, so do it here too.
+        // ModelMesh.read() path calls DisplaySystem.getDisplaySystem() (to build render states).
+        // Since the libGDX excision (Epic 3 Phase 8) the fork lazily defaults to this same
+        // headless dummy, so this is an explicit idempotent step, no longer an NPE dodge.
         new DummyDisplaySystem();
         LoggingSystem.getLogger().setLevel(Level.WARNING);
 

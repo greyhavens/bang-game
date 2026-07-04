@@ -104,10 +104,9 @@ public class BangModelLoader
      * The fork model reader touches render-state setup; ensure a headless display exists.
      *
      * <p>Constructs a {@link com.jme.util.DummyDisplaySystem} exactly once, which swaps the
-     * fork's static {@code SystemProvider} for a headless one. This MUST happen before any
-     * call to {@code DisplaySystem.getDisplaySystem()}, because the default provider is the
-     * gdx one, whose {@code GDXDisplaySystem} constructor dereferences {@code Gdx.input} (null
-     * outside a real gdx app) and NPEs. So we never call {@code getDisplaySystem()} here.
+     * fork's static {@code SystemProvider} for a headless one. Since the libGDX excision (Epic 3
+     * Phase 8) the fork lazily defaults to this same headless dummy, so this pre-install is an
+     * explicit, harmless idempotent step rather than the NPE dodge it used to be.
      */
     protected static synchronized void ensureDisplaySystem ()
     {

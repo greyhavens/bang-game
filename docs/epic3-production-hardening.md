@@ -160,9 +160,15 @@ over-the-wire replay vector), but the at-rest/issuance scheme review is still op
   auto-migrators across 8+ repos and is high-risk.
 
 ### Phase 8 — Cleanup & idiom modernization
-- Finish the **libGDX excision**: `gdx 1.5.4` (2015) still lingers in `jme`/`bui` only for the
-  `com.badlogic.gdx.Input.Keys` keycode constants — replace with our own/jME3 codes and drop the
-  dependency. (Coordinate with Epic 1 Phase 8.)
+- **libGDX excision — DONE.** Reality was better than the plan: BUI had already shed gdx in the
+  Epic-1 cutover; the only remaining consumer was the build-time `jme` fork — keycode constants in
+  three input files plus its whole dormant gdx display/input/render backend (which the headless
+  compiler tasks were actively dodging with `DummyDisplaySystem`). Deleted the backend packages,
+  made the headless dummy the default `SystemProvider` (removing the dodge-it-or-NPE trap),
+  localized the keycodes, dropped `gdx 1.5.4` from every build file. Verified: byte-compared the
+  full 740-file asset bake (26 j3o index-table shifts, all visually nil), 22/23 verifyVisuals
+  goldens pass (the 1 failure — `ip_fx_fireflies` — pre-exists on the baseline bake, tracked
+  separately), bot game + live client screenshot on the excised build.
 - Content-pipeline note: the authoring source is still the fork `model.dat` binary (baked to `.j3o`);
   sketch a standard-format (glTF) path for any *new* content. Only pursue if content will change.
 - Opportunistic modern-Java idioms in the Bang app code (records/switch-expressions/`var`, stdlib

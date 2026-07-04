@@ -34,7 +34,6 @@ package com.jme.input;
 
 import java.util.ArrayList;
 
-import com.jme.input.gdx.GDXMouseInput;
 
 
 /**
@@ -52,7 +51,7 @@ import com.jme.input.gdx.GDXMouseInput;
  */
 public abstract class MouseInput extends Input {
 
-    private static MouseInput instance = new GDXMouseInput();
+    private static MouseInput instance;
 
     /**
      * list of event listeners.
@@ -63,6 +62,10 @@ public abstract class MouseInput extends Input {
      * @return the input instance, implementation is determined by querying {@link #getProvider()}
      */
     public static MouseInput get() {
+        if (instance == null) {
+            throw new UnsupportedOperationException("mouse input is not available: the fork " +
+                "is a build-time asset compiler and its gdx input backend was removed");
+        }
         return instance;
     }
 

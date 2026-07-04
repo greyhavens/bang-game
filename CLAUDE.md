@@ -103,7 +103,8 @@ and `-Dplayers=` are also honored.) This is the deterministic way to self-verify
 
 Gradle modules (see `settings.gradle`), in dependency order:
 
-- `jme` — the **vendored 2005-era jMonkeyEngine fork** (LWJGL 2.9 + libGDX). **Build-time only**: no
+- `jme` — the **vendored 2005-era jMonkeyEngine fork** (LWJGL 2.9; its libGDX backend was excised
+  in Epic 3 Phase 8 — the repo is now gdx-free). **Build-time only**: no
   longer on any runtime/main classpath — it survives solely as the model/particle asset compiler
   (`CompileModelTask` + the fork `BinaryImporter` the `.dat`→`.j3o` bake reads). Epic 4 retires it.
 - `app` — `com.threerings.jme.*`: scenegraph/sprite/model/camera framework, now on **jME3** (a thin
