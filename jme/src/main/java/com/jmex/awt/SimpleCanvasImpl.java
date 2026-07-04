@@ -72,68 +72,10 @@ public class SimpleCanvasImpl extends JMECanvasImplementor {
     
     @Override
 	public void doSetup() {
-        
-        // the gdx render backend was removed with the libGDX excision; this AWT canvas impl
-        // is dead code in the build (only the legacy, unbuilt projects/pseditor referenced it)
-        if (true) {
-            throw new UnsupportedOperationException("SimpleCanvasImpl requires the removed gdx " +
-                "render backend; the fork is a build-time asset compiler only");
-        }
-        DisplaySystem display = DisplaySystem.getDisplaySystem();
-        renderer.setHeadless(true);
-        display.setRenderer(renderer);
-        display.getCurrentContext().setupRecords(renderer);
-        DisplaySystem.updateStates(renderer);
-
-        /**
-         * Create a camera specific to the DisplaySystem that works with the
-         * width and height
-         */
-        cam = renderer.createCamera(width, height);
-
-        /** Set up how our camera sees. */
-        cam.setFrustumPerspective(45.0f, (float) width / (float) height, 1,
-                1000);
-        Vector3f loc = new Vector3f(0.0f, 0.0f, 25.0f);
-        Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
-        Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
-        Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);
-        /** Move our camera to a correct place and orientation. */
-        cam.setFrame(loc, left, up, dir);
-        /** Signal that we've changed our camera's location/frustum. */
-        cam.update();
-        /** Assign the camera to this renderer. */
-        renderer.setCamera(cam);
-
-        /** Set a black background. */
-        renderer.setBackgroundColor(ColorRGBA.black);
-
-        /** Get a high resolution timer for FPS updates. */
-        timer = Timer.getTimer();
-
-        /** Create rootNode */
-        rootNode = new Node("rootNode");
-
-        /**
-         * Create a ZBuffer to display pixels closest to the camera above
-         * farther ones.
-         */
-        ZBufferState buf = renderer.createZBufferState();
-        buf.setEnabled(true);
-        buf.setFunction(ZBufferState.CF_LEQUAL);
-
-        rootNode.setRenderState(buf);
-
-        simpleSetup();
-        
-        /**
-         * Update geometric and rendering information for both the rootNode and
-         * fpsNode.
-         */
-        rootNode.updateGeometricState(0.0f, true);
-        rootNode.updateRenderState();
-
-        setup = true;
+        // the gdx render backend was removed with the libGDX excision; this AWT canvas impl is
+        // dead code in the build (only the legacy, unbuilt projects/pseditor referenced it)
+        throw new UnsupportedOperationException("SimpleCanvasImpl requires the removed gdx " +
+            "render backend; the fork is a build-time asset compiler only");
     }
 
     @Override
