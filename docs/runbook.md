@@ -104,7 +104,10 @@ minutes, so plain `journalctl -u bang@<node>` / container logs give a coarse hea
 
 1. Build the new tree: `./gradlew deploy` (CI must be green — the OWASP scan and the bot
    integration gate run on every PR).
-2. Rsync `build/server`, `assets/build/staging`, `data` to `/opt/bang`.
+2. Rsync `build/server`, `assets/build/staging`, `data`, **and `deploy/prod`** to `/opt/bang` —
+   forgetting `deploy/prod` leaves a stale launcher silently in place (no error, unlike stale
+   jars). If `bang@.service` itself changed, also re-copy it to `/etc/systemd/system/` and
+   `systemctl daemon-reload`.
 3. `systemctl restart 'bang@*'` — a **stale node against new jars throws
    `NoClassDefFoundError`** (`client/shared` is lazy-loaded), so always restart every node after
    deploying, even for "client-only" changes.
