@@ -55,6 +55,16 @@ server_root = /export/bang
 server_log_format = oneline
 
 #
+# Management HTTP endpoint (Epic 3 Phase 6): /health (container HEALTHCHECK / orchestrator probes)
+# and /metrics (Prometheus text). 0 = disabled. The endpoint is unauthenticated by design, so keep
+# it on 127.0.0.1 (default) or a network-isolated interface — never expose it publicly. Override
+# via BANG_SERVER_MGMT_PORT / BANG_SERVER_MGMT_HOST (e.g. host 0.0.0.0 inside a container);
+# multi-node hosts (like the dev cluster) can set <node>.server_mgmt_port per node.
+
+server_mgmt_port = 0
+server_mgmt_host = 127.0.0.1
+
+#
 # Defines the client authenticator used by the server.
 
 server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
