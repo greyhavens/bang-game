@@ -7,8 +7,9 @@
 #   ./gradlew deploy                                   # build server jars + staged assets (host)
 #   podman-compose -f deploy/devstack/compose.yaml up  # bring up MySQL + the server node
 #
-# Rootless podman-compose runs both services in one pod sharing localhost, so the server reaches
-# MySQL on 127.0.0.1:3306 — matching the baked server.properties (no config rewrite needed).
+# The entrypoint appends env-derived overrides (DB host, server_root, mgmt endpoint) to the
+# mounted server.properties — see entrypoint.sh for why a file rather than the BANG_* env bridge.
+# podman-compose 1.0.6 uses per-container networking (service-name DNS), hence DB_HOST=mysql below.
 name: bang-devstack
 
 services:
