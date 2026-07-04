@@ -34,9 +34,6 @@ package com.jme.input;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Input.Keys;
-
-import com.jme.input.gdx.GDXKeyInput;
 
 /**
  * <code>KeyInput</code> provides an interface for dealing with keyboard input.
@@ -54,7 +51,23 @@ import com.jme.input.gdx.GDXKeyInput;
  */
 public abstract class KeyInput extends Input {
 
-    private static KeyInput instance = new GDXKeyInput();
+    /** Keycode constants (values retained from the removed gdx/Android table so any
+     * serialized bindings keep meaning); this fork is a build-time asset compiler, so no
+     * input backend ever populates {@link #instance} anymore. */
+    public static final int KEY_W = 51;
+    public static final int KEY_A = 29;
+    public static final int KEY_S = 47;
+    public static final int KEY_D = 32;
+    public static final int KEY_UP = 19;
+    public static final int KEY_DOWN = 20;
+    public static final int KEY_LEFT = 21;
+    public static final int KEY_RIGHT = 22;
+    public static final int KEY_SHIFT_LEFT = 59;
+    public static final int KEY_SHIFT_RIGHT = 60;
+    public static final int KEY_CONTROL_LEFT = 129;
+    public static final int KEY_CONTROL_RIGHT = 130;
+
+    private static KeyInput instance;
 
     /**
      * list of event listeners.
@@ -65,6 +78,10 @@ public abstract class KeyInput extends Input {
      * @return the input instance, implementation is determined by querying {@link #getProvider()}
      */
     public static KeyInput get() {
+        if (instance == null) {
+            throw new UnsupportedOperationException("keyboard input is not available: the fork " +
+                "is a build-time asset compiler and its gdx input backend was removed");
+        }
         return instance;
     }
 
@@ -141,10 +158,10 @@ public abstract class KeyInput extends Input {
     }
 
     public boolean isShiftDown() {
-        return isKeyDown(Keys.SHIFT_LEFT) || isKeyDown(Keys.SHIFT_RIGHT);
+        return isKeyDown(KEY_SHIFT_LEFT) || isKeyDown(KEY_SHIFT_RIGHT);
     }
 
     public boolean isControlDown() {
-        return isKeyDown(Keys.CONTROL_LEFT) || isKeyDown(Keys.CONTROL_RIGHT);
+        return isKeyDown(KEY_CONTROL_LEFT) || isKeyDown(KEY_CONTROL_RIGHT);
     }
 }

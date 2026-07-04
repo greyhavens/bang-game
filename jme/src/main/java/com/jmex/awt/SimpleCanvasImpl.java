@@ -35,7 +35,6 @@ package com.jmex.awt;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.gdx.GDXRenderer;
 import com.jme.scene.Node;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
@@ -74,8 +73,13 @@ public class SimpleCanvasImpl extends JMECanvasImplementor {
     @Override
 	public void doSetup() {
         
+        // the gdx render backend was removed with the libGDX excision; this AWT canvas impl
+        // is dead code in the build (only the legacy, unbuilt projects/pseditor referenced it)
+        if (true) {
+            throw new UnsupportedOperationException("SimpleCanvasImpl requires the removed gdx " +
+                "render backend; the fork is a build-time asset compiler only");
+        }
         DisplaySystem display = DisplaySystem.getDisplaySystem();
-        renderer = new GDXRenderer(width, height);
         renderer.setHeadless(true);
         display.setRenderer(renderer);
         display.getCurrentContext().setupRecords(renderer);

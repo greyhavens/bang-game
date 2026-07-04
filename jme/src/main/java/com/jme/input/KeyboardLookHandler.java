@@ -32,7 +32,6 @@
 
 package com.jme.input;
 
-import com.badlogic.gdx.Input.Keys;
 
 import com.jme.input.action.KeyBackwardAction;
 import com.jme.input.action.KeyForwardAction;
@@ -58,14 +57,14 @@ public class KeyboardLookHandler extends InputHandler {
     public KeyboardLookHandler( Camera cam, float moveSpeed, float rotateSpeed ) {
         KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
 
-        keyboard.set( "forward", Keys.W );
-        keyboard.set( "backward", Keys.S );
-        keyboard.set( "strafeLeft", Keys.A );
-        keyboard.set( "strafeRight", Keys.D );
-        keyboard.set( "lookUp", Keys.UP );
-        keyboard.set( "lookDown", Keys.DOWN );
-        keyboard.set( "turnRight", Keys.RIGHT );
-        keyboard.set( "turnLeft", Keys.LEFT );
+        keyboard.set( "forward", KeyInput.KEY_W );
+        keyboard.set( "backward", KeyInput.KEY_S );
+        keyboard.set( "strafeLeft", KeyInput.KEY_A );
+        keyboard.set( "strafeRight", KeyInput.KEY_D );
+        keyboard.set( "lookUp", KeyInput.KEY_UP );
+        keyboard.set( "lookDown", KeyInput.KEY_DOWN );
+        keyboard.set( "turnRight", KeyInput.KEY_RIGHT );
+        keyboard.set( "turnLeft", KeyInput.KEY_LEFT );
 
         addAction( new KeyForwardAction( cam, moveSpeed ), "forward", true );
         addAction( new KeyBackwardAction( cam, moveSpeed ), "backward", true );

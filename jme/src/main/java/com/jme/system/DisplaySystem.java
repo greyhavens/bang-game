@@ -42,7 +42,6 @@ import com.jme.renderer.RenderContext;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.state.RenderState;
-import com.jme.system.gdx.GDXSystemProvider;
 import com.jmex.awt.JMECanvas;
 
 /**
@@ -67,7 +66,7 @@ import com.jmex.awt.JMECanvas;
 public abstract class DisplaySystem {
 
     /** The display system that has been created. */
-    protected static SystemProvider system = new GDXSystemProvider();
+    protected static SystemProvider system;
 
     /**
      * Width selected for the renderer.
@@ -147,6 +146,12 @@ public abstract class DisplaySystem {
      * @return The current system provider.
      */
     public static SystemProvider getSystemProvider() {
+        if (system == null) {
+            // the gdx display backend went with the libGDX excision (this fork survives only as
+            // the build-time asset compiler): default to the headless dummy that the compiler
+            // tasks previously had to install by hand before touching model.dat files
+            new com.jme.util.DummyDisplaySystem();
+        }
         return system;
     }
 

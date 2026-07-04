@@ -10,7 +10,6 @@ allprojects {
   version = "1.1.0"
 
   ext {
-    gdxVersion = "1.5.4"
     // Three Rings / samskivert stack versions, centralised here (Epic 2 Phase 1) so any single lib
     // can be forked + locally republished + swapped via a one-line change. mavenLocal() is first in
     // `repositories`, so a locally-published `com.x:lib:<ver>-bang1` transparently wins.

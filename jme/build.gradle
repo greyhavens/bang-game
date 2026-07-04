@@ -1,6 +1,7 @@
 dependencies {
-  api "com.badlogicgames.gdx:gdx:${gdxVersion}"
-  // TEMP: pull in LWJGL directly until we rewrite everything to use GDX
+  // libGDX excised (Epic 3 Phase 8): the gdx display/input/render backend packages were removed —
+  // this fork survives only as the build-time model/particle asset compiler (headless, via
+  // DummyDisplaySystem), so no windowing/input backend is needed at all.
   api ("org.lwjgl.lwjgl:lwjgl:2.9.2") {
      exclude group: 'org.lwjgl.lwjgl', module: 'lwjgl-platform'
      exclude group: 'net.java.jinput', module: 'jinput-platform'
