@@ -9,8 +9,10 @@
 # *.env.example files next to this unit and docs/runbook.md).
 [Unit]
 Description=Bang! Howdy server node %i
-After=network-online.target mysql.service
+After=network-online.target
 Wants=network-online.target
+# if MySQL runs on THIS host (the runbook's default topology is a remote db.internal), also order
+# after it: add `After=mysql.service` (and consider `Wants=mysql.service`)
 
 [Service]
 Type=exec
@@ -21,6 +23,11 @@ WorkingDirectory=/opt/bang
 # %i.env: per-node values, e.g. a unique BANG_SERVER_MGMT_PORT when nodes share a host (optional)
 EnvironmentFile=/etc/bang/common.env
 EnvironmentFile=-/etc/bang/%i.env
+# create the audit-log dir before the sandbox maps it writable: ReadWritePaths only remounts an
+# EXISTING path, it never creates one — and the launcher itself couldn't mkdir it, because inside
+# the strict sandbox /opt is read-only ('+' prefix = run outside the sandbox, as root)
+ExecStartPre=+/usr/bin/mkdir -p /opt/bang/log
+ExecStartPre=+/usr/bin/chown bang:bang /opt/bang/log
 ExecStart=/opt/bang/deploy/prod/run-node.sh %i
 Restart=on-failure
 RestartSec=5

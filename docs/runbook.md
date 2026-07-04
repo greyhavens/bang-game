@@ -37,12 +37,20 @@ Multi-town = one node per town, peered as a cluster:
 /etc/bang/tls-trust.p12         TLS truststore (public cert — shippable)
 ```
 
-Enable a node per town:
+First-time install — generate the baked config, then enable a node per town:
 
 ```sh
+# a plain copy of the templates is enough: every placeholder-ish value (db urls/creds, secrets,
+# server_root) is a PRESENT key, so the BANG_* env bridge (common.env) overrides it at runtime.
+# Only edit the copies for values you want baked, e.g. the <node>.server_host cluster entries.
+cp etc/server.properties.dist   /opt/bang/conf/server.properties
+cp etc/deployment.properties.dist /opt/bang/conf/deployment.properties
+
 systemctl enable --now bang@frontier_town
 systemctl enable --now bang@indian_post     # second town, typically another host
 ```
+
+(The unit's `ExecStartPre` creates `/opt/bang/log` itself — `ReadWritePaths` can't create paths.)
 
 ## Configuration and secrets — the BANG_* env bridge
 
