@@ -49,19 +49,29 @@ for db in $DBS; do
     --routines --triggers --events --no-tablespaces "$db" | gzip > "$dest/$db.sql.gz"
 done
 
-# audit logs (item/state are the financial/inventory trails; server/perf ride along)
+# audit logs (item/state are the financial/inventory trails; server/perf ride along). Live nodes
+# append to these files during the backup, and GNU tar exits 1 for "file changed as we read it" —
+# that's expected here and must not abort the run (set -e); anything worse (exit >= 2) still fails.
 if [ -d "$BANG_HOME/log" ]; then
   echo "backup: archiving audit logs ..."
-  tar czf "$dest/audit-logs.tar.gz" -C "$BANG_HOME" log
+  tar czf "$dest/audit-logs.tar.gz" -C "$BANG_HOME" log || {
+    rc=$?
+    [ "$rc" -eq 1 ] && echo "backup: note: logs changed while archiving (live node), tarball still valid" \
+      || { echo "backup: ERROR: tar failed (exit $rc)" >&2; exit "$rc"; }
+  }
 else
-  echo "backup: no $BANG_HOME/log dir, skipping audit logs"
+  # loud, not fatal: a wrong BANG_HOME (e.g. server_root repointed without updating backup.env)
+  # would otherwise silently drop the audit trail from every backup
+  echo "backup: WARNING: no $BANG_HOME/log dir — audit logs NOT backed up." >&2
+  echo "backup: WARNING: if server_root is not $BANG_HOME, set BANG_HOME for this unit (backup.env)." >&2
 fi
 
-# basic integrity check: every dump must be non-trivial and end with the mysqldump completion
-# marker — a connection drop mid-dump otherwise leaves a silently-truncated .sql.gz
+# basic integrity check: every dump must end with the mysqldump completion marker — a connection
+# drop mid-dump otherwise leaves a silently-truncated .sql.gz. zcat reads (and thus verifies) the
+# whole stream, so a corrupt gzip also fails here via pipefail — one decompression pass total.
 for db in $DBS; do
   f="$dest/$db.sql.gz"
-  if ! gzip -t "$f" 2>/dev/null || ! zcat "$f" | tail -1 | grep -q "Dump completed"; then
+  if ! zcat "$f" | tail -1 | grep -q "Dump completed"; then
     echo "backup: ERROR: $f is truncated or corrupt" >&2
     exit 1
   fi
