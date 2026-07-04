@@ -1,0 +1,13 @@
+# Nightly trigger for bang-backup.service (Epic 3 Phase 7).
+[Unit]
+Description=Nightly Bang! Howdy backup
+
+[Timer]
+# 04:30 server-local time, jittered so a fleet doesn't hammer the DB host in lockstep;
+# Persistent=true runs a missed backup at next boot instead of skipping the day
+OnCalendar=*-*-* 04:30:00
+RandomizedDelaySec=15m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

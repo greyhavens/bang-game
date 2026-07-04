@@ -1,0 +1,23 @@
+# Bang! Howdy nightly backup — oneshot unit driven by bang-backup.timer (Epic 3 Phase 7).
+# Install on ONE host per cluster (the DB is shared): copy this + bang-backup.timer to
+# /etc/systemd/system/, `systemctl daemon-reload && systemctl enable --now bang-backup.timer`.
+# DB credentials come from the same /etc/bang/common.env the game nodes use.
+[Unit]
+Description=Bang! Howdy database + audit-log backup
+# don't fight the game's DB writes needlessly — but no hard ordering; it's safe while nodes run
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=bang
+Group=bang
+EnvironmentFile=/etc/bang/common.env
+# override BANG_BACKUP_DIR/_KEEP_DAYS/_DBS in this optional file if the defaults don't suit
+EnvironmentFile=-/etc/bang/backup.env
+ExecStart=/opt/bang/deploy/prod/backup.sh
+# the backup root must exist and be writable by the bang user; create it here ('+' = as root)
+ExecStartPre=+/usr/bin/mkdir -p /var/backups/bang
+ExecStartPre=+/usr/bin/chown bang:bang /var/backups/bang
+NoNewPrivileges=true
+PrivateTmp=true

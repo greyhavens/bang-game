@@ -108,6 +108,42 @@ minutes, so plain `journalctl -u bang@<node>` / container logs give a coarse hea
 - **Audit logs**: `${server_root}/log/{server,item,state,perf}_<node>.log` — game-economy and
   state history, rotated daily by the server itself. Back these up with the database.
 
+## Backups & restore
+
+What holds irreplaceable runtime state (everything else — code, boards, assets — is in git):
+
+- the **`bang`** database: players, items, gangs, ratings, runtime admin config
+- the **`ooouser`** database: accounts and credentials
+- **`${server_root}/log/`**: the item/state audit trails (financial/inventory history)
+
+`deploy/prod/backup.sh` dumps all three into a timestamped dir under `/var/backups/bang`
+(`mysqldump --single-transaction` per DB + a logs tarball), verifies the dumps aren't truncated,
+and prunes backups older than `BANG_BACKUP_KEEP_DAYS` (default 14). Enable nightly runs on **one
+host per cluster** (the DB is shared; on multi-host clusters archive the other nodes' `log/`
+separately):
+
+```sh
+cp /opt/bang/deploy/prod/bang-backup.{service,timer} /etc/systemd/system/
+systemctl daemon-reload && systemctl enable --now bang-backup.timer
+systemctl start bang-backup.service        # run one now; check journalctl -u bang-backup
+```
+
+Credentials come from the same `/etc/bang/common.env` the nodes use. Replicating
+`/var/backups/bang` offsite (rsync/rclone/object storage) is the operator's job — a backup on the
+same disk as the database only survives software mistakes, not hardware.
+
+**Restore** (destructive — stop all nodes first):
+
+```sh
+systemctl stop 'bang@*'
+/opt/bang/deploy/prod/restore.sh /var/backups/bang/<stamp> bang        # or: ooouser, or: all
+systemctl start 'bang@*'
+```
+
+The script drops and recreates each named DB from the dump and requires typing the DB name to
+confirm (`BANG_RESTORE_YES=1` for automation). Audit logs restore by untarring
+`audit-logs.tar.gz` into `${server_root}`.
+
 ## Upgrades
 
 1. Build the new tree: `./gradlew deploy` (CI must be green — the OWASP scan and the bot
