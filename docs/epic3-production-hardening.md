@@ -135,11 +135,19 @@ over-the-wire replay vector), but the at-rest/issuance scheme review is still op
   `compose up --wait` a real init-complete gate; devstack entrypoint converted from sed rewrites
   to explicit env-derived appended overrides.
 
-### Phase 7 — Database lifecycle
-- Replace create-tables-on-first-run with a **schema migration framework** (Flyway/Liquibase) so DB
-  changes are versioned and repeatable.
-- Review Depot connection pooling / sizing under the cluster-per-town node model.
-- A backup/restore story for the `bang` + `ooouser` databases.
+### Phase 7 — Database lifecycle — DONE (backups + baseline/freeze scope)
+- **Backups (#37):** `deploy/prod/backup.sh` + `restore.sh` + nightly `bang-backup.timer` —
+  per-database dumps (`--single-transaction`, split-host aware via `db-common.sh`), audit-log
+  tarball, truncation-detecting integrity check, retention pruning; verified with a real
+  drop-both-DBs restore + bot game on the restored data.
+- **Flyway, baseline + freeze:** Flyway (`flyway-core`/`flyway-mysql`) runs at the top of
+  `BangServer.main` — before the legacy repositories' constructor-time DDL — with an empty `V1`
+  baseline marker per database (`baselineOnMigrate` for pre-existing installs) and fail-closed
+  startup on migration errors. **All new schema changes ship as versioned SQL** under
+  `server/src/main/resources/db/migration/{bang,ooouser}/`; the two legacy auto-migrators are
+  frozen as the fresh-install bootstrap (full cutover deliberately rejected as high-risk — see
+  recon below). Policy documented in the runbook + CLAUDE.md.
+- Deferred: Depot connection pooling / sizing review (revisit with real load data).
 - **Recon done (2026-07-04):** TWO auto-migrating stacks own the schema today — Depot
   (`DepotSchemaVersion`-versioned, `CanMigrate.ALLOWED`, minority of tables) and legacy samskivert
   JDBC (majority: PLAYERS/ITEMS/GANGS/… + the whole `ooouser` DB; hand-written DDL `String[]` +

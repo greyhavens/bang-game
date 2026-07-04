@@ -266,6 +266,12 @@ public class BangServer extends CrowdServer
         // concrete collection types)
         com.threerings.io.ObjectInputStream.setAllowedClassPrefixes(ALLOWED_STREAMED_PREFIXES);
 
+        // apply versioned Flyway schema migrations (Epic 3 Phase 7) before ANY persistence code
+        // runs — the legacy repositories execute their DDL inside their constructors during the
+        // Guice module setup below, so this must precede createInjector. Fail-closed: a broken
+        // migration exits rather than booting against a half-migrated schema.
+        BangSchemaMigrations.apply();
+
         Injector injector = Guice.createInjector(new Module());
         BangServer server = injector.getInstance(BangServer.class);
         try {
