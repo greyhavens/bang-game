@@ -158,8 +158,8 @@ public class ModelDef
             // and append the other's offset
             xform.multLocal(omesh.getOffsetTransform());
 
-            // extract the rotation to transform normals
-            Quaternion xrot = xform.toRotationQuat();
+            // extract the rotation to transform normals (fork-exact: see toRotationQuat)
+            Quaternion xrot = toRotationQuat(xform);
 
             // transform the vertices and add them in
             for (Vertex vertex : omesh.vertices) {
@@ -537,12 +537,55 @@ public class ModelDef
      * Sets a matrix to the transform defined by the given translation, rotation, and scale
      * values (the fork's <code>JmeUtil.setTransform</code>, ported to jME3's
      * {@link Matrix4f} — same row-major field layout, so the column scaling is identical).
+     *
+     * <p>The quaternion&rarr;rotation-matrix conversion is a <b>bit-exact transliteration of
+     * the fork's</b> <code>Quaternion.toRotationMatrix(Matrix4f)</code> rather than a call to
+     * jME3's <code>setRotationQuaternion</code>, for two reasons: (1) jME3's version
+     * <em>preserves the target matrix's existing scale</em>, so reusing a result matrix would
+     * compound its previous scale into the new one; and (2) jME3 normalises with
+     * <code>2/norm</code> and halved products where the fork uses <code>invSqrt(norm)</code>
+     * and <code>1&nbsp;-&nbsp;2*(..)</code> — mathematically close but not bitwise equal, and
+     * the Phase 2b mesh-merge decisions compare these matrices against a 1e-4 epsilon, where
+     * ULP differences flipped real corpus cases (the frontier_town train models). Keeping the
+     * fork's exact float sequence keeps the merge decisions identical to the oracle's.
      */
     public static Matrix4f setTransform (
         Vector3f translation, Quaternion rotation, Vector3f scale, Matrix4f result)
     {
-        result.setRotationQuaternion(rotation);
-        result.setTranslation(translation);
+        // fork Quaternion.toRotationMatrix(Matrix4f), verbatim float sequence
+        float x = rotation.getX(), y = rotation.getY(), z = rotation.getZ(),
+            w = rotation.getW();
+        float norm = w * w + x * x + y * y + z * z;
+        if (norm != 1.0f) {
+            norm = (float)(1.0 / Math.sqrt(norm)); // fork FastMath.invSqrt
+        }
+        float xx = x * x * norm;
+        float xy = x * y * norm;
+        float xz = x * z * norm;
+        float xw = x * w * norm;
+        float yy = y * y * norm;
+        float yz = y * z * norm;
+        float yw = y * w * norm;
+        float zz = z * z * norm;
+        float zw = z * w * norm;
+
+        result.m00 = 1 - 2 * (yy + zz);
+        result.m01 =     2 * (xy - zw);
+        result.m02 =     2 * (xz + yw);
+        result.m10 =     2 * (xy + zw);
+        result.m11 = 1 - 2 * (xx + zz);
+        result.m12 =     2 * (yz - xw);
+        result.m20 =     2 * (xz - yw);
+        result.m21 =     2 * (yz + xw);
+        result.m22 = 1 - 2 * (xx + yy);
+
+        result.m03 = translation.x;
+        result.m13 = translation.y;
+        result.m23 = translation.z;
+        result.m30 = 0f;
+        result.m31 = 0f;
+        result.m32 = 0f;
+        result.m33 = 1f;
 
         result.m00 *= scale.x;
         result.m01 *= scale.y;
@@ -557,6 +600,47 @@ public class ModelDef
         result.m22 *= scale.z;
 
         return result;
+    }
+
+    /**
+     * Extracts the rotation quaternion from a (possibly scaled) matrix using the <b>fork's</b>
+     * <code>Matrix4f.toRotationQuat</code>/<code>Quaternion.fromRotationMatrix</code> trace
+     * method verbatim. jME3's version normalises the matrix columns first, so on the scaled
+     * matrices {@link TriMeshDef#merge} feeds it the two produce different quaternions — and
+     * merged-mesh <em>normals</em> (rotated by this quaternion; magnitude is washed out by the
+     * shader's normalise, direction is not) shade visibly differently from the oracle bake
+     * (bonuses/ghost_town/plague rendered at meanDiff 0.004 vs 0.000 with the fork method).
+     */
+    public static Quaternion toRotationQuat (Matrix4f m)
+    {
+        float t = m.m00 + m.m11 + m.m22 + 1;
+        float x, y, z, w;
+        if (t > 1e-5) {
+            float s = 2 * FastMath.sqrt(t);
+            w = 0.25f * s;
+            x = (m.m21 - m.m12) / s;
+            y = (m.m02 - m.m20) / s;
+            z = (m.m10 - m.m01) / s;
+        } else if ((m.m00 > m.m11) && (m.m00 > m.m22)) {
+            float s = FastMath.sqrt(1.0f + m.m00 - m.m11 - m.m22) * 2;
+            x = 0.25f * s;
+            y = (m.m01 + m.m10) / s;
+            z = (m.m02 + m.m20) / s;
+            w = (m.m21 - m.m12) / s;
+        } else if (m.m11 > m.m22) {
+            float s = FastMath.sqrt(1.0f + m.m11 - m.m00 - m.m22) * 2;
+            x = (m.m01 + m.m10) / s;
+            y = 0.25f * s;
+            z = (m.m12 + m.m21) / s;
+            w = (m.m02 - m.m20) / s;
+        } else {
+            float s = FastMath.sqrt(1.0f + m.m22 - m.m00 - m.m11) * 2;
+            x = (m.m02 + m.m20) / s;
+            y = (m.m21 + m.m12) / s;
+            z = 0.25f * s;
+            w = (m.m10 - m.m01) / s;
+        }
+        return new Quaternion(x, y, z, w);
     }
 
     /** Converts a boxed Float list to an unboxed float array. */

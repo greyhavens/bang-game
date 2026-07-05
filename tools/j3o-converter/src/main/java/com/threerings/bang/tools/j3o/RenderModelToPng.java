@@ -27,6 +27,11 @@ import com.threerings.jme.model.Model;
  * standing 0}. With no {@code anim} the model is posed in its first available animation; pass
  * {@code list} as the anim name to print the available animations and exit (rendering the bind
  * pose). A negative {@code time} poses the clip midpoint.
+ *
+ * <p>The {@code <rsrc root>} may be a {@link File#pathSeparator}-separated list of roots,
+ * registered (and searched) in order — the Epic 4 {@code mxmlParity} harness uses this to render
+ * a natively-baked {@code model.j3o} from a scratch overlay root while its textures fall through
+ * to the staging root.
  */
 public class RenderModelToPng extends OffscreenRenderApp
 {
@@ -46,7 +51,7 @@ public class RenderModelToPng extends OffscreenRenderApp
                              float time)
     {
         super(new File(outPng));
-        _rsrcRoot = new File(rsrcRoot).getAbsoluteFile();
+        _rsrcRoots = rsrcRoot;
         _modelType = modelType;
         _anim = anim;
         _time = time;
@@ -54,7 +59,9 @@ public class RenderModelToPng extends OffscreenRenderApp
 
     @Override protected Node buildScene ()
     {
-        assetManager.registerLocator(_rsrcRoot.getPath(), FileLocator.class);
+        for (String root : _rsrcRoots.split(File.pathSeparator)) {
+            assetManager.registerLocator(new File(root).getAbsolutePath(), FileLocator.class);
+        }
 
         Model model = Models.loadModel(assetManager, _modelType);
 
@@ -75,7 +82,7 @@ public class RenderModelToPng extends OffscreenRenderApp
         return scene;
     }
 
-    protected final File _rsrcRoot;
+    protected final String _rsrcRoots;
     protected final String _modelType;
     protected final String _anim;
     protected final float _time;

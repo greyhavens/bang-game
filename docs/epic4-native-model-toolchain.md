@@ -114,9 +114,86 @@ re-author particles as committed jME3 emitters, superseding the 6a fork bake).
   reference style. Blender must open the result with mesh, skin, and every animation intact.
 
 *(2a landed in #44: `com.threerings.bang.jme3.mxml` in `tools/j3o-converter`, full-corpus probe
-`PARSED 310 models, 202 animations, 0 failures`. 2b-i, the `.j3o` writer + parity harness, is in
-flight. The rest of this section is the upfront design for 2b-ii, written 2026-07-05 so execution
-can proceed without re-deriving it.)*
+`PARSED 310 models, 202 animations, 0 failures`. 2b-i, the `.j3o` writer + parity harness, landed
+2026-07-05 — results below. The 2b-ii section after it is the upfront design for the glTF writer.)*
+
+#### 2b-i — the `.j3o` writer: RESULTS (2026-07-05, full-corpus parity)
+`MxmlToJ3o` (same `mxml` package) bakes `model.properties` + `model.mxml` + animation `.mxml`
+straight to `model.j3o` with **no fork code on any classpath**, reproducing both oracle stages:
+the fork *compile* (animation-aware mesh merging via the `TransformNode` sweep, Forsyth
+vertex-cache optimisation, skin weight-group partitioning, per-mesh property/texture flags,
+bounding-box vertex centering, unused-node pruning, bind/reference transforms,
+static-vs-transform animation-target classification) and the *fork→jME3 conversion* (a
+transliteration of `ModelConverter`: materials via `ModelTextureResolver`, 4-influence skinning
+over the full bone-ancestor-closure `Armature` with the identity-pinned root joint,
+model-space-baked skin vertices, dual Joint+Node track targets, the `bang.*` user data).
+
+The parity harness `MxmlParity` (`./gradlew :tools:j3o-converter:mxmlParity -PallModels`, or
+`-Pmodels=a,b,c`; `-Prender=false` for the fast structural-only pass) bakes each model natively
+and compares it to the staged oracle `.j3o` — structurally (geometry count; per-mesh
+vertex/triangle counts + diffuse/glow texture paths + blend/cull/bucket/skin-width flags as an
+order-insensitive multiset; armature joint-name multiset; clip names/durations/frame/track
+counts; `bang.animations`) and by render (forked `RenderModelToPng` JVMs — oracle tree vs. a
+native overlay tree whose textures fall through to staging — diffed with the `SnapshotDiff`
+metric; animated models posed at frame 0 AND clip midpoint of the alphabetically-first clip).
+**Result: 310/310 structural parity and 310/310 render parity, meanDiff ≤ 0.000001 (typically
+0.000000, pixel-exact) at tolerance 0.005.**
+
+Three bugs surfaced and fixed on the way — the interesting two are **fork-vs-jME3
+float-behavior divergences** (the fork's math classes are jME3's ancestors, but not
+bitwise-identical; every other op on the decision path — `Matrix4f.invert`/`mult`,
+`Quaternion.mult`, `Matrix4f.mult(Vector3f)`, TRS world composition — was verified identical
+by source diff):
+- `ModelDef.setTransform` now transliterates the **fork's** `Quaternion.toRotationMatrix`
+  float-for-float instead of calling jME3's `setRotationQuaternion`: jME3's version *preserves
+  the target matrix's existing scale* (compounding scale when a result matrix is reused, which
+  broke the merge sweep outright), and it normalises with `2/norm` where the fork uses
+  `invSqrt(norm)` — a ULP-level difference that flipped real epsilon-boundary (1e-4) merge
+  decisions on the `extras/frontier_town/train/*` models (both directions: coal/freight
+  under-merged, locomotive over-merged, vs. the oracle).
+- `ModelDef.toRotationQuat` (used by `TriMeshDef.merge` to rotate merged-in normals)
+  transliterates the fork's trace-method `Quaternion.fromRotationMatrix`; jME3's normalises the
+  matrix columns first, and on the scaled merge matrices the differing quaternion shaded merged
+  normals visibly off (bonuses/ghost_town/plague: meanDiff 0.004 → 0.000 with the fork method).
+- `ModelParser`/`AnimationParser` now close their input streams (the #44 review note).
+
+Pre-existing **content** bug found (not fixed — parity preserved): `bonuses/ghost_town/plague`'s
+`pistol.png = ../../units/gunslinger/pistol.png` alias resolves to the nonexistent
+`bonuses/units/gunslinger/pistol.png`; oracle and native bakes both leave the mesh untextured
+(the real texture lives at `units/frontier_town/gunslinger/pistol.png`).
+
+**2b-i gap list — what the native writer deliberately does NOT bake.** Each item verified to
+match the *current oracle* bake (none is a Phase 2b regression; "fork-of-2005" behaviors the
+oracle already dropped are inherited knowingly):
+- **Controllers/emissions are not compiled** (`controllers = …`; 61 models — e.g. steamgunman's
+  Gunshot/DudShot/Misfire/SmokePlume emitters, windmill/steamgear `Rotator`s,
+  `BillboardController` glows, `TextureTranslator` flame). The *current* oracle compile drops
+  every one of them: post-cutover the classes the properties name are jME3 types, so the fork
+  compiler's `(ModelController)Class.forName(…)` cast throws and `createController` returns null
+  — verified empirically (no controller class names appear in any staged `model.dat`).
+  Consequently controller *target* nodes (empty emitter locators) are not marked referenced and
+  are pruned from oracle and native alike when nothing else keeps them. Controller
+  *declarations* survive in `bang.properties` for the runtime/effects port. The one compile-time
+  effect controllers still have — the `controlled` flag restricting which meshes may merge — IS
+  honoured.
+- **Texture `filter`/`mipmap`/`compress` hints and the `translucent` per-triangle depth-sort
+  flag**: parsed but not representable in the baked placeholder material — the oracle
+  `ModelConverter` drops them identically. (All of these live in `model.properties`, which stays
+  committed — nothing is lost from source.)
+- **Animation-expanded skin bounds** (fork `Model.addAnimation` grew each skin mesh's model
+  bound across every animation frame): not stored; jME3 recomputes bounds from bind-pose vertex
+  data, exactly as the oracle `.j3o` path does.
+- **Variants / multi-texture random picks / colorization**: per-instance runtime concerns
+  re-resolved from `bang.properties`/`bang.textures` user data (the `ModelCache` path); the
+  oracle bakes a single base `.j3o` too.
+- **`bound = sphere`** (fork `BoundingSphere` model bounds): only bounding-box centering is
+  implemented; no corpus `model.properties` uses `sphere` (grep-verified). Add if content ever
+  does.
+- **Byte-level (non-semantic) differences from the oracle**: skin vertex floats differ at ~1 ULP
+  (the oracle round-trips its buffers through one bind-pose deformation before serialising;
+  renders are pixel-identical); armature joint order (oracle: `IdentityHashMap` order — itself
+  run-dependent; native: deterministic first-use order), per-clip track order, and geometry
+  attach order may differ — compared as multisets per Phase 3's "semantic, not byte-wise" rule.
 
 #### 2b-ii — the glTF writer: designed decisions
 **Ground truth this design rests on (verified against shotgunner):** `model.mxml` contains the
@@ -162,8 +239,10 @@ glTF representation — `model.properties` remains a separate committed source; 
   in v1). Store `frameRate` in the animation's `extras` for exact round-trip.
 - **`extras` (the losslessness valve):** anything the fork bake honors that glTF can't express
   natively rides in spec-sanctioned `extras`: per-mesh `{solid, transparent, offset*}` if the
-  offset transform is non-identity, per-animation `{frameRate}`, plus whatever the 2b-i gap list
-  surfaces as actually-baked-into-`.j3o` (SLOT: fill from the 2b-i report when it lands).
+  offset transform is non-identity, per-animation `{frameRate}`. The landed 2b-i gap list
+  confirms nothing further is needed: every other dropped/deferred feature (controllers, texture
+  filter/mipmap/compress hints, `translucent`, variants, bounds mode) lives in
+  `model.properties`, which stays a separately committed source.
 - **Verification for 2b-ii (before any cutover):** (1) **round-trip identity** — a
   `GltfToModelDef` reader (exact mirror of the writer) must reproduce a `ModelDef` whose
   `MxmlToJ3o` output matches the mxml-path output across all 310 (this is cheap once 2b-i's
@@ -251,9 +330,13 @@ Only after Phase 3 full-corpus sign-off + Phase 4 cutover + a particles decision
   blender-authoring.md so nobody "fixes" rolls and breaks re-export.
 - **Texture path casing** (Linux is case-sensitive; Blender may rewrite relative URIs on
   re-export): round-trip gate asserts URIs unchanged.
-- **2b-i gap list** (SLOT — fill when the in-flight `.j3o` writer report lands): whatever
-  CompileModelTask semantics the writer had to special-case get an explicit `extras` mapping +
-  a line here.
+- **2b-i gap list** (landed — see the 2b-i results above): the only CompileModelTask semantics
+  the writer special-cases are `.mxml`-side (`solid`/`transparent`/offset transforms/frameRate),
+  which map to the `extras` bullet above; everything else dropped by the bake lives in the
+  still-committed `model.properties`. One genuinely sharp edge for 2b-ii: the mesh-merge sweep's
+  1e-4 epsilon decisions require the FORK's exact `Quaternion.toRotationMatrix` float sequence
+  (see `ModelDef.setTransform`) — `GltfToModelDef`→`MxmlToJ3o` inherits this for free, but any
+  alternative path re-deriving transforms will diverge on the train models.
 
 ## Acceptance
 A full `./gradlew deploy` compiles every **model from committed glTF source** — and every particle

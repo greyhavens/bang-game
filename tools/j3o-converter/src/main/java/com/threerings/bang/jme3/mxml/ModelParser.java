@@ -91,7 +91,9 @@ public class ModelParser
     {
         _model = null;
         _digester.push(this);
-        _digester.parse(new FileInputStream(path));
+        try (FileInputStream in = new FileInputStream(path)) {
+            _digester.parse(in);
+        }
         return _model;
     }
 
