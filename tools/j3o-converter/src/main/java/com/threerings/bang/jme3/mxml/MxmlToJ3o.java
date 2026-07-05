@@ -49,6 +49,7 @@ import com.jme3.util.BufferUtils;
 import com.samskivert.util.PropertiesUtil;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.jme.model.ModelMetadata;
 import com.threerings.jme.model.ModelTextureResolver;
 
 import com.threerings.bang.jme3.mxml.ModelDef.SkinMeshDef;
@@ -342,10 +343,10 @@ public class MxmlToJ3o
         for (String key : props.stringPropertyNames().stream().sorted().toList()) {
             buf.append(key).append(" = ").append(props.getProperty(key)).append('\n');
         }
-        result.root.setUserData("bang.properties", buf.toString());
-        result.root.setUserData("bang.animations", String.join(",",
+        result.root.setUserData(ModelMetadata.PROPERTIES, buf.toString());
+        result.root.setUserData(ModelMetadata.ANIMATIONS, String.join(",",
             anims.keySet().toArray(new String[0])));
-        result.root.setUserData("bang.type", _typePath);
+        result.root.setUserData(ModelMetadata.TYPE, _typePath);
         return result;
     }
 
@@ -733,7 +734,7 @@ public class MxmlToJ3o
         mesh.transparent = tdef.transparent;
         String threshold = tprops.getProperty("alpha_threshold");
         mesh.alphaThreshold = (threshold == null) ?
-            DEFAULT_ALPHA_THRESHOLD : Float.parseFloat(threshold);
+            ModelMetadata.DEFAULT_ALPHA_THRESHOLD : Float.parseFloat(threshold);
         // (filter/mipmap/compress hints and the translucent depth-sort flag are dropped, as in
         // the oracle bake)
 
@@ -882,7 +883,7 @@ public class MxmlToJ3o
 
         CAnim anim = new CAnim();
         anim.frameRate = adef.frameRate;
-        anim.loopMode = loopMode(aprops.getProperty("repeat_type"));
+        anim.loopMode = ModelMetadata.loopMode(aprops.getProperty("repeat_type"));
         anim.transformTargets = targets.toArray(new CNode[0]);
 
         int frames = adef.frames.size(), ntargets = anim.transformTargets.length;
@@ -904,18 +905,6 @@ public class MxmlToJ3o
             }
         }
         return anim;
-    }
-
-    /** Fork repeat_type property to jME3 LoopMode name (JmeUtil.parseRepeatType +
-     * ModelConverter.loopMode; the fork default is RT_CLAMP = DontLoop). */
-    protected static String loopMode (String repeatType)
-    {
-        if ("wrap".equals(repeatType)) {
-            return "Loop";
-        } else if ("cycle".equals(repeatType)) {
-            return "Cycle";
-        }
-        return "DontLoop";
     }
 
     // ================================================================================
@@ -1220,15 +1209,16 @@ public class MxmlToJ3o
             if (frameRates.length() > 0) {
                 frameRates.append(',');
             }
-            frameRates.append(name).append('=').append(anim.frameRate > 0 ? anim.frameRate : 30);
+            frameRates.append(name).append('=').append(
+                anim.frameRate > 0 ? anim.frameRate : ModelMetadata.DEFAULT_FRAME_RATE);
         }
         if (_skinningControl != null) {
             result.root.addControl(_skinningControl);
         }
         if (composer != null) {
             result.root.addControl(composer);
-            result.root.setUserData("bang.loopModes", loopModes.toString());
-            result.root.setUserData("bang.frameRates", frameRates.toString());
+            result.root.setUserData(ModelMetadata.LOOP_MODES, loopModes.toString());
+            result.root.setUserData(ModelMetadata.FRAME_RATES, frameRates.toString());
         }
     }
 
@@ -1367,7 +1357,4 @@ public class MxmlToJ3o
     protected Armature _armature;
     protected SkinningControl _skinningControl;
     protected Joint _rootJoint;
-
-    /** The fork's default alpha-test threshold. */
-    protected static final float DEFAULT_ALPHA_THRESHOLD = 0.5f;
 }
