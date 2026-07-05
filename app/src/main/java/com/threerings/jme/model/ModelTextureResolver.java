@@ -81,7 +81,7 @@ public class ModelTextureResolver
             }
             // preserve the full list and key so a re-resolve (variant/colorize) is possible
             geom.setUserData("bang.textureKey", textureKey);
-            geom.setUserData("bang.textures", String.join(",", textures));
+            geom.setUserData(ModelMetadata.TEXTURES, String.join(",", textures));
         }
         // the fork binds a distinct emissive map as a second additive texture unit (lit
         // windows/signs); carry it onto Lighting.j3md's GlowMap so the glow layer survives
