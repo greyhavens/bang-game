@@ -193,7 +193,7 @@ public class GltfToModelDef
         // viewers/Blender; the bake's vertex dedup / merge keys on the exact raw normal, so the
         // round-trip must use the raw values — see MxmlToGltf). Fall back to NORMAL for any glTF
         // written before _MXMLNORMAL existed.
-        Object rawNrm = attrs.get("_MXMLNORMAL");
+        Object rawNrm = attrs.get(MxmlGltfConventions.MXML_NORMAL_ATTR);
         float[] nrm = readFloats(intVal(rawNrm != null ? rawNrm : attrs.get("NORMAL")));
         float[] tc = hasTc ? readFloats(intVal(attrs.get("TEXCOORD_0"))) : null;
         int nverts = pos.length / 3;

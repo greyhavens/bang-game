@@ -393,7 +393,7 @@ public class MxmlToGltf
         Map<String,Object> attributes = new LinkedHashMap<>();
         attributes.put("POSITION", posAcc);
         attributes.put("NORMAL", nrmAcc);
-        attributes.put("_MXMLNORMAL", rawNrmAcc);
+        attributes.put(MxmlGltfConventions.MXML_NORMAL_ATTR, rawNrmAcc);
         if (tcAcc != null) attributes.put("TEXCOORD_0", tcAcc);
 
         // skinning attributes (may span multiple sets)
