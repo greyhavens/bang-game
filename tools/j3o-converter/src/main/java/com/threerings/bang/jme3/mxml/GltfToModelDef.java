@@ -189,7 +189,12 @@ public class GltfToModelDef
         Map<String,Object> attrs = (Map<String,Object>)prim.get("attributes");
 
         float[] pos = readFloats(intVal(attrs.get("POSITION")));
-        float[] nrm = readFloats(intVal(attrs.get("NORMAL")));
+        // read the RAW normals from _MXMLNORMAL (the standard NORMAL is a normalised copy for
+        // viewers/Blender; the bake's vertex dedup / merge keys on the exact raw normal, so the
+        // round-trip must use the raw values — see MxmlToGltf). Fall back to NORMAL for any glTF
+        // written before _MXMLNORMAL existed.
+        Object rawNrm = attrs.get("_MXMLNORMAL");
+        float[] nrm = readFloats(intVal(rawNrm != null ? rawNrm : attrs.get("NORMAL")));
         float[] tc = hasTc ? readFloats(intVal(attrs.get("TEXCOORD_0"))) : null;
         int nverts = pos.length / 3;
 

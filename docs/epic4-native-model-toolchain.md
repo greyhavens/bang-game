@@ -227,6 +227,14 @@ glTF representation — `model.properties` remains a separate committed source; 
   (ubyte/float4). **Probe first: max bone influences per vertex across the corpus** (one-line
   MxmlProbe extension) — glTF caps a vertex at 4 per set; if any model exceeds 4, cap+renormalize
   and record the affected models (render oracle will show whether it matters).
+- **Normals — dual, deliberately (the glTF-Validator gate forced this).** The mxml normals are raw
+  **non-unit** (a 3ds Max export artifact, magnitudes ~1.8–2.9), and glTF's `NORMAL` MUST be unit
+  length (`ACCESSOR_VECTOR3_NON_UNIT` — 7184 errors on the first validator run). But the bake's
+  `Vertex` identity keys on the normal, so renormalising before dedup/merge changes vertex counts
+  (saloon's wood mesh 669→667) and breaks the round-trip. So emit **both**: a normalised copy as the
+  spec-valid, correctly-shaded standard `NORMAL` (what viewers/Blender read — Blender ignores the
+  custom attribute; the game shaders normalise anyway), and the raw values as a custom
+  `_MXMLNORMAL` accessor that `GltfToModelDef` reads back to reproduce the oracle bake bit-for-bit.
 - **Materials:** per-mesh `pbrMetallicRoughness` with `baseColorTexture` = the mxml `texture`
   PNG, metallic 0/roughness 1, plus **`KHR_materials_unlit`** so Blender previews match the
   game's unlit look; `alphaMode=BLEND` iff `transparent`, `doubleSided` iff `!solid`.

@@ -366,8 +366,19 @@ public class MxmlToGltf
                 tc[ii * 2 + 1] = (v.tcoords != null) ? v.tcoords[1] : 0f;
             }
         }
+        // glTF requires the standard NORMAL to be unit length (ACCESSOR_VECTOR3_NON_UNIT), but the
+        // mxml normals are raw non-unit (a 3ds Max export artifact — magnitudes ~1.8-2.9) and the
+        // round-trip needs them EXACT: Vertex identity (hashCode/equals) keys on the normal, so
+        // renormalising before the bake's vertex dedup / mesh merge changes vertex counts (saloon's
+        // wood mesh drops 669->667). So emit BOTH — a normalised copy as the spec-valid, correctly
+        // shaded NORMAL that viewers/Blender read, and the raw values as a custom _MXMLNORMAL that
+        // GltfToModelDef reads back to reproduce the oracle bake bit-for-bit. (Blender ignores
+        // unknown _-prefixed attributes; the validator applies no unit check to custom attributes.)
+        float[] nrmUnit = nrm.clone();
+        normalizeVec3(nrmUnit);
         int posAcc = addFloatAccessor(pos, 3, "VEC3", min, max, ARRAY_BUFFER);
-        int nrmAcc = addFloatAccessor(nrm, 3, "VEC3", null, null, ARRAY_BUFFER);
+        int nrmAcc = addFloatAccessor(nrmUnit, 3, "VEC3", null, null, ARRAY_BUFFER);
+        int rawNrmAcc = addFloatAccessor(nrm, 3, "VEC3", null, null, ARRAY_BUFFER);
         Integer tcAcc = hasTc ? addFloatAccessor(tc, 2, "VEC2", null, null, ARRAY_BUFFER) : null;
 
         // indices
@@ -381,6 +392,7 @@ public class MxmlToGltf
         Map<String,Object> attributes = new LinkedHashMap<>();
         attributes.put("POSITION", posAcc);
         attributes.put("NORMAL", nrmAcc);
+        attributes.put("_MXMLNORMAL", rawNrmAcc);
         if (tcAcc != null) attributes.put("TEXCOORD_0", tcAcc);
 
         // skinning attributes (may span multiple sets)
@@ -969,6 +981,21 @@ public class MxmlToGltf
     {
         for (float f : v) if (f != 0f) return false;
         return true;
+    }
+
+    /** Normalizes each packed xyz triple to unit length in place (glTF NORMAL requirement); a
+     * degenerate zero-length normal is left untouched rather than producing NaN. */
+    protected static void normalizeVec3 (float[] xyz)
+    {
+        for (int ii = 0; ii + 2 < xyz.length; ii += 3) {
+            float x = xyz[ii], y = xyz[ii + 1], z = xyz[ii + 2];
+            double len = Math.sqrt((double)x * x + (double)y * y + (double)z * z);
+            if (len > 0) {
+                xyz[ii]     = (float)(x / len);
+                xyz[ii + 1] = (float)(y / len);
+                xyz[ii + 2] = (float)(z / len);
+            }
+        }
     }
 
     protected static boolean isOne (float[] v)
