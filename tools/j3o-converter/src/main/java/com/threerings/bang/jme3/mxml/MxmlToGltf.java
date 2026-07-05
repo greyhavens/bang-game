@@ -247,8 +247,10 @@ public class MxmlToGltf
         // ---- animations ----
         for (int ii = 0; ii < animNames.length; ii++) {
             buildAnimation(animNames[ii], adefs[ii]);
-            result.animations++;
         }
+        // count what was actually written (buildAnimation drops empty-channel clips), so the
+        // summary doesn't overcount dropped animations
+        result.animations = _animations.size();
 
         // ---- assemble the glTF JSON ----
         Map<String,Object> gltf = new LinkedHashMap<>();
@@ -582,15 +584,18 @@ public class MxmlToGltf
         // the URI is the texture *basename* (TriMeshDef.getTextureFilename, the same reduction the
         // real bake applies): the PNG sits next to model.mxml, and a few mxml sources still carry
         // leftover absolute authoring-machine paths (C:\projects\... with spaces/backslashes) in
-        // their raw texture attribute that would be an invalid, non-resolvable URI. All 262 corpus
-        // basenames are URI-safe (verified: [A-Za-z0-9._-] only). Reuse identical URIs so viewers
-        // de-dupe. (The RAW texture string still rides EXTRA_TEXTURE for the lossless round-trip.)
-        Integer existing = _textureByUri.get(filename);
+        // their raw texture attribute that would be an invalid, non-resolvable URI. Percent-encode
+        // the basename per RFC 3986 so any future/hand-edited filename (spaces, #, non-ASCII — the
+        // Phase-4 Blender cutover is the intended consumer) stays a valid URI, not just today's
+        // URI-safe corpus. Reuse identical URIs so viewers de-dupe. (The RAW texture string still
+        // rides EXTRA_TEXTURE for the lossless round-trip; this only affects the viewer-facing URI.)
+        String uri = uriEncode(filename);
+        Integer existing = _textureByUri.get(uri);
         if (existing != null) {
             return existing;
         }
         Map<String,Object> image = new LinkedHashMap<>();
-        image.put("uri", filename);
+        image.put("uri", uri);
         _images.add(image);
         int imageIdx = _images.size() - 1;
         if (_defaultSampler < 0) {
@@ -605,8 +610,26 @@ public class MxmlToGltf
         tex.put("sampler", _defaultSampler);
         _textures.add(tex);
         int texIdx = _textures.size() - 1;
-        _textureByUri.put(filename, texIdx);
+        _textureByUri.put(uri, texIdx);
         return texIdx;
+    }
+
+    /** Percent-encodes a path segment per RFC 3986: keeps the unreserved set
+     * ({@code A-Z a-z 0-9 - . _ ~}) and {@code %}-encodes every other byte (UTF-8). */
+    protected static String uriEncode (String segment)
+    {
+        StringBuilder b = new StringBuilder(segment.length());
+        for (byte by : segment.getBytes(StandardCharsets.UTF_8)) {
+            int c = by & 0xFF;
+            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') ||
+                c == '-' || c == '.' || c == '_' || c == '~') {
+                b.append((char)c);
+            } else {
+                b.append('%').append(Character.forDigit(c >> 4, 16)).append(
+                    Character.forDigit(c & 0xF, 16));
+            }
+        }
+        return b.toString();
     }
 
     // ================================================================================
