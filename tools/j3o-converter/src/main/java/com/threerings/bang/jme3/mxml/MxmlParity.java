@@ -39,6 +39,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
+import com.threerings.jme.model.ModelMetadata;
 import com.threerings.jme.model.ModelTextureResolver;
 
 /**
@@ -405,7 +406,7 @@ public class MxmlParity
                         clip.getLength(), frames, clip.getTracks().length });
                 }
             }
-            Object names = root.getUserData("bang.animations");
+            Object names = root.getUserData(ModelMetadata.ANIMATIONS);
             if (names instanceof String s && !s.isEmpty()) {
                 for (String n : s.split(",")) {
                     stats.animNames.add(n);

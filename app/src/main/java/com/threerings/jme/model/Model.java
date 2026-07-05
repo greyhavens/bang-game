@@ -271,7 +271,7 @@ public class Model extends Node
             // death animation replays until the sprite's _nextAction timer swaps in the dead model).
             // Map DontLoop -> non-looping (the AnimLayer clamps on the final frame and clears the
             // action after one cycle, matching RT_CLAMP); Loop/Cycle stay looping.
-            boolean loop = !"DontLoop".equals(_loopModes.get(name));
+            boolean loop = !ModelMetadata.LOOP_NONE.equals(_loopModes.get(name));
             composer.setCurrentAction(name, AnimComposer.DEFAULT_LAYER, loop);
         }
         _animObservers.apply(new AnimStartedOp(name));
@@ -399,7 +399,7 @@ public class Model extends Node
     {
         new SpatialVisitor<Geometry>(Geometry.class) {
             protected void visit (Geometry geom) {
-                Object names = geom.getUserData("bang.textures");
+                Object names = geom.getUserData(ModelMetadata.TEXTURES);
                 if (names == null) {
                     return;
                 }
@@ -522,7 +522,7 @@ public class Model extends Node
     protected void readMetadata (Spatial content)
     {
         _props = new Properties();
-        Object props = content.getUserData("bang.properties");
+        Object props = content.getUserData(ModelMetadata.PROPERTIES);
         if (props != null) {
             for (String line : props.toString().split("\n")) {
                 int eq = line.indexOf('=');
@@ -532,9 +532,9 @@ public class Model extends Node
             }
         }
 
-        Map<String, Integer> frameRates = parsePairs(content.getUserData("bang.frameRates"));
+        Map<String, Integer> frameRates = parsePairs(content.getUserData(ModelMetadata.FRAME_RATES));
         _loopModes = new HashMap<String, String>();
-        Object loopModes = content.getUserData("bang.loopModes");
+        Object loopModes = content.getUserData(ModelMetadata.LOOP_MODES);
         if (loopModes != null) {
             for (String pair : loopModes.toString().split(",")) {
                 int eq = pair.indexOf('=');
@@ -545,7 +545,7 @@ public class Model extends Node
         }
         _anims = new HashMap<String, Animation>();
         AnimComposer composer = getComposer(content);
-        Object names = content.getUserData("bang.animations");
+        Object names = content.getUserData(ModelMetadata.ANIMATIONS);
         if (names != null && composer != null) {
             for (String name : names.toString().split(",")) {
                 if (name.isEmpty()) {
@@ -555,7 +555,7 @@ public class Model extends Node
                 if (clip == null) {
                     continue;
                 }
-                int fps = frameRates.getOrDefault(name, 30);
+                int fps = frameRates.getOrDefault(name, ModelMetadata.DEFAULT_FRAME_RATE);
                 _anims.put(name, new Animation(name, fps, (float)clip.getLength()));
             }
         }
