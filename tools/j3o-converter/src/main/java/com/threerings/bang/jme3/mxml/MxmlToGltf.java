@@ -565,7 +565,7 @@ public class MxmlToGltf
         pbr.put("roughnessFactor", 1);
         if (tdef.texture != null) {
             Map<String,Object> bct = new LinkedHashMap<>();
-            bct.put("index", textureFor(tdef.texture));
+            bct.put("index", textureFor(tdef.getTextureFilename()));
             pbr.put("baseColorTexture", bct);
         }
         mat.put("pbrMetallicRoughness", pbr);
@@ -578,16 +578,20 @@ public class MxmlToGltf
         return _materials.size() - 1;
     }
 
-    protected int textureFor (String rawTexture)
+    protected int textureFor (String filename)
     {
-        // reference the existing PNG relatively; the raw mxml texture path is already relative to
-        // the model dir (some are ../.. paths). Reuse identical URIs so viewers de-dupe.
-        Integer existing = _textureByUri.get(rawTexture);
+        // the URI is the texture *basename* (TriMeshDef.getTextureFilename, the same reduction the
+        // real bake applies): the PNG sits next to model.mxml, and a few mxml sources still carry
+        // leftover absolute authoring-machine paths (C:\projects\... with spaces/backslashes) in
+        // their raw texture attribute that would be an invalid, non-resolvable URI. All 262 corpus
+        // basenames are URI-safe (verified: [A-Za-z0-9._-] only). Reuse identical URIs so viewers
+        // de-dupe. (The RAW texture string still rides EXTRA_TEXTURE for the lossless round-trip.)
+        Integer existing = _textureByUri.get(filename);
         if (existing != null) {
             return existing;
         }
         Map<String,Object> image = new LinkedHashMap<>();
-        image.put("uri", rawTexture);
+        image.put("uri", filename);
         _images.add(image);
         int imageIdx = _images.size() - 1;
         if (_defaultSampler < 0) {
@@ -602,7 +606,7 @@ public class MxmlToGltf
         tex.put("sampler", _defaultSampler);
         _textures.add(tex);
         int texIdx = _textures.size() - 1;
-        _textureByUri.put(rawTexture, texIdx);
+        _textureByUri.put(filename, texIdx);
         return texIdx;
     }
 
