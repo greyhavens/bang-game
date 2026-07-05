@@ -27,7 +27,6 @@ import com.jme3.math.Vector3f;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.jme3.mxml.ModelDef.BoneWeight;
-import com.threerings.bang.jme3.mxml.ModelDef.NodeDef;
 import com.threerings.bang.jme3.mxml.ModelDef.SkinMeshDef;
 import com.threerings.bang.jme3.mxml.ModelDef.SkinVertex;
 import com.threerings.bang.jme3.mxml.ModelDef.SpatialDef;
@@ -675,12 +674,20 @@ public class MxmlToGltf
                 addFloatAccessor(sc, 3, "VEC3", null, null, null));
         }
 
+        if (channels.isEmpty()) {
+            // an animation whose every target is a phantom node (absent from the model), or which
+            // has no frames, produces no keyframe data. glTF's schema requires animation.channels
+            // with minItems:1, so emitting such an object yields a spec-invalid file a validator /
+            // Blender rejects. Drop it — MxmlToJ3o drops the same clip (droppedAnimations), so this
+            // matches the oracle. (Not triggered by the current corpus; a future/edited model with
+            // an all-phantom animation would surface here as a round-trip animName mismatch.)
+            System.out.println("  note: dropped empty (no-channel) animation '" + name + "'");
+            return;
+        }
         Map<String,Object> anim = new LinkedHashMap<>();
         anim.put("name", name);
-        if (!channels.isEmpty()) {
-            anim.put("channels", channels);
-            anim.put("samplers", samplers);
-        }
+        anim.put("channels", channels);
+        anim.put("samplers", samplers);
         Map<String,Object> extras = new LinkedHashMap<>();
         extras.put(MxmlGltfConventions.EXTRA_FRAME_RATE, adef.frameRate);
         extras.put("frameCount", frames);
