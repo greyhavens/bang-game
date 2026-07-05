@@ -81,12 +81,40 @@ public class MxmlToGltf
     {
         if (args.length != 3) {
             System.err.println(
-                "Usage: MxmlToGltf <src rsrc root> <model type path> <out rsrc root>");
+                "Usage: MxmlToGltf <src rsrc root> <model type path | --all> <out rsrc root>");
             System.exit(1);
         }
         File srcRoot = new File(args[0]).getAbsoluteFile();
         String typePath = args[1];
         File outRoot = new File(args[2]).getAbsoluteFile();
+
+        // --all: write glTF for every model in the corpus (used by the glTF-validator CI job).
+        if ("--all".equals(typePath)) {
+            java.util.List<String> types = MxmlParity.enumerateModels(srcRoot);
+            if (types.isEmpty()) {
+                System.err.println("--all found no models under " + srcRoot);
+                System.exit(2);
+            }
+            int wrote = 0, failed = 0;
+            for (String type : types) {
+                File outDir = new File(outRoot, type);
+                if (!outDir.isDirectory() && !outDir.mkdirs()) {
+                    System.err.println("Unable to create " + outDir);
+                    System.exit(1);
+                }
+                try {
+                    new MxmlToGltf().writeFromDir(new File(srcRoot, type), outDir);
+                    wrote++;
+                } catch (Exception e) {
+                    System.out.println("FAIL " + type + ": " + e);
+                    failed++;
+                }
+            }
+            System.out.println("MxmlToGltf --all: wrote " + wrote + " glTF, " + failed +
+                " failure(s) into " + outRoot);
+            System.exit(failed == 0 ? 0 : 1);
+        }
+
         File modelDir = new File(srcRoot, typePath);
         if (!new File(modelDir, "model.properties").isFile()) {
             System.err.println("No model.properties in " + modelDir);

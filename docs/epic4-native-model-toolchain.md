@@ -297,15 +297,19 @@ MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf
   0.000000, pixel-exact) at tolerance 0.005** — the round-trip `.j3o` matches the oracle exactly as
   the direct `.mxml`→`.j3o` path did. Run `./gradlew :tools:j3o-converter:mxmlGltfParity -PallModels`
   (add `-Prender=false` for the fast structural-only pass).
-- **Deferred verification (out of scope on this box, tracked as CI / Phase-4 follow-ups):** the
-  design's **glTF-Validator** pass and **Blender headless smoke** steps are NOT run here — there is
-  no Node/`gltf-validator`, and no Blender, on this machine. Neither is needed for the primary
-  correctness signal: the round-trip parity above bakes through the SAME `MxmlToJ3o` as the game and
-  diffs against the verified oracle, so a layout/precision bug that a validator would catch would
-  also break the bake or the render diff. The validator becomes a CI gate and the Blender smoke a
-  Phase-4 gate once those tools are available. (`inverseBindMatrices` correctness for *viewing* is
-  likewise unverified here — no viewer — but it does not affect the round-trip, which re-derives
-  skinning from the reconstructed `ModelDef`.)
+- **glTF-Validator — now a CI gate (`glTF validity` job in `ci.yml`).** `MxmlToGltf --all` writes
+  the whole corpus's glTF, the PNGs are co-located so image URIs resolve, and the official Khronos
+  **`gltf-validator`** (`deploy/ci/gltf-validate/`) validates every file, failing the build on any
+  Error-severity issue. This is the automated substitute for a viewer opening the file: the
+  round-trip parity proves losslessness (our reader mirrors our writer) but is blind to spec
+  violations only a validator/Blender rejects — three such (raw texture path, empty-channel
+  animation, unencoded URI) were caught by hand during #48 review, which is exactly why this gate
+  exists. It cannot run on the dev box (no Node) — the CI runners have it.
+- **Blender headless smoke — still a Phase-4 gate.** A `blender --background --python` import test
+  (mesh/bone/animation counts, and the real "does it edit + re-export" cycle) needs Blender, which
+  isn't on the dev box or the CI runners; it lands with the Phase-4 cutover. (`inverseBindMatrices`
+  correctness for *viewing* is likewise unverified until then — but it does not affect the
+  round-trip, which re-derives skinning from the reconstructed `ModelDef`.)
 
 ### Phase 3 — Verify against the fork-wrapper oracle
 The current fork-wrapper `.j3o` are **verified-correct** (310/310 `verifyCorpus` parity + visually
