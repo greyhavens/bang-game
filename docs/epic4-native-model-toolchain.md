@@ -113,6 +113,65 @@ re-author particles as committed jME3 emitters, superseding the 6a fork bake).
   naming, animation-clip naming (must round-trip the `model.properties` action names), texture
   reference style. Blender must open the result with mesh, skin, and every animation intact.
 
+*(2a landed in #44: `com.threerings.bang.jme3.mxml` in `tools/j3o-converter`, full-corpus probe
+`PARSED 310 models, 202 animations, 0 failures`. 2b-i, the `.j3o` writer + parity harness, is in
+flight. The rest of this section is the upfront design for 2b-ii, written 2026-07-05 so execution
+can proceed without re-deriving it.)*
+
+#### 2b-ii — the glTF writer: designed decisions
+**Ground truth this design rests on (verified against shotgunner):** `model.mxml` contains the
+full node hierarchy (`<node name= parent=>`, 46 nodes incl. the whole Bip01 skeleton), so bind
+pose and armature come straight from `ModelDef`; `model.properties` carries `scale` (e.g. 0.04),
+the `animations`/`sequences` lists, repeat types, and all controllers as **game-class config bound
+to named nodes** (`emitter_L_barrel.class = …GunshotEmission`). Controllers therefore do NOT need
+glTF representation — `model.properties` remains a separate committed source; glTF only has to
+**preserve node names**, which it does natively.
+
+- **Output layout:** `model.gltf` (JSON) + `model.bin` sibling to today's sources, textures
+  referenced *relatively* to the existing PNGs (untouched). JSON form (not GLB) on purpose:
+  diffable in review, and the PNGs stay shared with the avatar/etc. pipelines. Sizes are modest
+  (model.dat ≈ 100 KB) — no LFS needed.
+- **Library:** default to `de.javagl:jgltf-model` (+`jgltf-model-builder` if helpful; MIT, on
+  Central) for buffer/accessor layout; if its API fights, hand-rolling is acceptable (glTF 2.0
+  skinned+animated is well-specced) but budget the extra care for accessor min/max, alignment,
+  and componentType rules. Validate every emitted file with the Khronos **glTF-Validator** in CI
+  for this task (`npx gltf-validator` or the Java port) — non-negotiable, catches layout bugs
+  render tests can't.
+- **Axes (the big convention):** `.mxml` data is 3ds Max **Z-up right-handed**; glTF mandates
+  **Y-up right-handed**. Define ONE constant (`MxmlGltfConventions.MXML_TO_GLTF` = −90° about X)
+  applied to root-level nodes on export, with the exact inverse applied on import — never
+  per-vertex, never in two places. Blender's own glTF importer converts Y-up→Blender-Z-up, so
+  models arrive upright in Blender with no manual rotation.
+- **Scale:** export in raw mxml units (shotgunner ≈ 130 units tall). Do NOT bake
+  `model.properties scale=` into the glTF — it is game-side config and must survive round-trips
+  untouched. Record the unit convention in `asset.extras`.
+- **Meshes:** Phase-2a `ModelDef` already dedupes the triangle soup into indexed vertices —
+  emit POSITION/NORMAL/TEXCOORD_0 + indices directly. Skinned meshes add JOINTS_0/WEIGHTS_0
+  (ubyte/float4). **Probe first: max bone influences per vertex across the corpus** (one-line
+  MxmlProbe extension) — glTF caps a vertex at 4 per set; if any model exceeds 4, cap+renormalize
+  and record the affected models (render oracle will show whether it matters).
+- **Materials:** per-mesh `pbrMetallicRoughness` with `baseColorTexture` = the mxml `texture`
+  PNG, metallic 0/roughness 1, plus **`KHR_materials_unlit`** so Blender previews match the
+  game's unlit look; `alphaMode=BLEND` iff `transparent`, `doubleSided` iff `!solid`.
+- **Skins:** `skin.joints` = the bone nodes referenced by weights plus their ancestors;
+  `inverseBindMatrices` computed from the bind-pose node world transforms — reuse the exact math
+  the 2b-i `.j3o` writer uses (same source of truth, or they will disagree with each other).
+- **Animations:** one glTF `animation` per animation `.mxml`, **named exactly by the action name**
+  (file basename — `model.properties` refers to these). Channels: per-joint T/R/S with LINEAR
+  samplers; input times = frame/frameRate (dense per-frame keys — lossless; no keyframe reduction
+  in v1). Store `frameRate` in the animation's `extras` for exact round-trip.
+- **`extras` (the losslessness valve):** anything the fork bake honors that glTF can't express
+  natively rides in spec-sanctioned `extras`: per-mesh `{solid, transparent, offset*}` if the
+  offset transform is non-identity, per-animation `{frameRate}`, plus whatever the 2b-i gap list
+  surfaces as actually-baked-into-`.j3o` (SLOT: fill from the 2b-i report when it lands).
+- **Verification for 2b-ii (before any cutover):** (1) **round-trip identity** — a
+  `GltfToModelDef` reader (exact mirror of the writer) must reproduce a `ModelDef` whose
+  `MxmlToJ3o` output matches the mxml-path output across all 310 (this is cheap once 2b-i's
+  parity harness exists: same harness, different front end); (2) glTF-Validator clean on all 310;
+  (3) **Blender smoke** — headless `blender --background --python` script importing the spot set
+  and asserting mesh/bone/animation counts (no human in the loop; the human edit test comes in
+  Phase 4).
+
 ### Phase 3 — Verify against the fork-wrapper oracle
 The current fork-wrapper `.j3o` are **verified-correct** (310/310 `verifyCorpus` parity + visually
 correct after the 6b skinning fix + the game runs on them), so they're a trustworthy reference.
@@ -128,21 +187,73 @@ Keep the fork wrapper as the live oracle **throughout** — retire it only once 
 matches across the full corpus. Never a blind swap.
 
 ### Phase 4 — glTF becomes the source (the Blender cutover)
-With Phase 3 proving the reader correct, run the one-time migration:
-- Convert all 310 models (`.mxml` → glTF) and commit the glTF as the **new canonical source**;
-  the build pipeline becomes `glTF → .j3o` via jME3's own `GltfLoader` + our `.j3o` bake — the
-  Phase-2a `.mxml` reader retires along with the format it reads.
-- **Round-trip gate:** for every model, `glTF → .j3o` must match the Phase-3 oracle renders the
-  same way the direct `.mxml → .j3o` path did (Blender-agnostic check), and a spot set must
-  survive an actual Blender open → re-export → bake → render-diff cycle (the real "editable"
-  proof — Blender's importer/exporter normalization must not silently mangle skins or clips).
+With Phase 3 proving the writers correct, run the one-time migration:
+- **Design decision (2026-07-05): the build-side glTF reader is OUR `GltfToModelDef`** (the exact
+  mirror of the 2b-ii writer) feeding the SAME `MxmlToJ3o` — so an *unedited* migrated model
+  produces an identical `.j3o` **by construction**, making migration verification near-trivial.
+  jME3's own `GltfLoader` (note: that IS the class name; a review bot once "corrected" it to
+  GltfModelLoader — wrong) is used only as a cross-validation in tests, never as the build path:
+  we keep total control of conventions and don't inherit its material/armature construction
+  choices into the oracle-matched bake.
+- Convert all 310 models (`mxmlToGltf` gradle task) and commit the glTF as the **new canonical
+  source**; flip `assets:compileModels` input to glTF; delete `.mxml` **in the same PR** that
+  flips (git history preserves them; a dual-source window invites drift). `model.properties`
+  is untouched throughout — it remains the game-config source (scale, sequences, controllers).
+- **Round-trip gate:** (already proven Blender-agnostically in 2b-ii) plus the Blender cycle —
+  scripted headless `blender --background --python roundtrip.py` on the spot set: import glTF,
+  re-export, rebake, render-diff ≤ 0.005 mean; then ONE human edit test (Tim edits a mesh in
+  Blender, re-exports, model renders edited in-game) as the final "actually editable" proof.
 - Document the authoring workflow (docs/blender-authoring.md): scale/axis/material conventions,
-  how animations map to `model.properties` actions, how to add a NEW model entirely in Blender.
+  how animations map to `model.properties` actions, how to add a NEW model entirely in Blender,
+  and the don'ts (don't rename emitter/attachment nodes — controllers bind to them by name;
+  don't resample/retime animations unless you mean it).
 
-### Phase 5 — Delete the fork
-Drop `CompileModelTask` + the fork-coupled bridge, remove the `app` `modeltool` source set's fork
-dep and `tools/j3o-converter`'s fork coupling, and **delete the `jme` module** from
-`settings.gradle`. Delete the retired `.mxml`/`.dat` machinery. Update CLAUDE.md/engine-notes.
+### Phase 4½ — particles end-state (decision needed from Tim)
+glTF carries no particle-system semantics, and fork deletion (Phase 5) needs `particles.jme`
+(fork binary) off the build path too. Options:
+- **(a) RECOMMENDED — freeze:** run the existing verified `ParticleConverter` bake one final time
+  and commit the resulting 60 particle `.j3o` as source artifacts; delete `particles.jme`. Loses
+  "editability" that in practice died with the fork's particle editor years ago; effects are
+  stable and the render goldens cover the visible ones. Cheap, safe, reversible (re-authoring
+  any single effect as a jME3 emitter later is localized work).
+- (b) Native fork-binary reader for `particles.jme`: high effort (fork Savable wire format),
+  near-zero added value over (a).
+- (c) Hand re-author all 60 as jME3 emitter definitions now: regains real editability, medium
+  effort, verifiable against the same render goldens — fine as an *incremental follow-up* to (a),
+  effect by effect, but shouldn't gate fork deletion.
+
+### Phase 5 — Delete the fork (checklist)
+Only after Phase 3 full-corpus sign-off + Phase 4 cutover + a particles decision:
+- `settings.gradle`: remove `jme`; delete the `jme/` directory (the MaxScript exporter
+  `TRModelExporter.mcr` moves to `docs/legacy/` first — it's the historical format spec).
+- `app/build.gradle`: delete the `modeltool` source set + `CompileModelTask` wiring; delete
+  `app/src/modeltool/` (its parsers were superseded by #44's ports, its compiler by the writers).
+- `assets/build.gradle`: `compileModels` becomes the glTF→`.j3o` bake; remove the `.dat`
+  intermediate stage entirely.
+- `tools/j3o-converter`: remove fork deps + retire `ModelConverter`/`BangModelLoader`/
+  `ParticleConverter`/`ModelToJ3o` (they are the ORACLE generators — retire only after Phase 3
+  sign-off, and note the oracle renders themselves are kept as goldens).
+- Docs: CLAUDE.md module list + build notes, engine-notes.md pipeline section, epics.md Epic 1/4
+  status lines.
+- Final verification: full `./gradlew deploy` from clean, corpus parity harness green,
+  `verifyVisuals` 22/23 (fireflies pre-existing, #66), bot game PASS, editor boots, client
+  screenshot — the same battery every risky change in this repo gets.
+
+### Known risks / probes (pre-answered where possible)
+- **>4 bone influences per vertex** (glTF hard cap per attribute set): probe the corpus before
+  writing the exporter; cap+renormalize if rare, add JOINTS_1/WEIGHTS_1 only if actually needed.
+- **Winding/normals after the −90° X convention rotation**: the render oracle catches handedness
+  mistakes immediately — trust it, don't hand-verify.
+- **Non-uniform bind-pose scales**: legal in both formats, but inverse-bind-matrix math must be
+  the SAME code path as the `.j3o` writer (single Conventions class, no duplicated math).
+- **Blender bone-orientation cosmetics**: Blender infers bone tails/rolls on import (glTF joints
+  are just nodes) — armatures may LOOK odd while animating correctly; document in
+  blender-authoring.md so nobody "fixes" rolls and breaks re-export.
+- **Texture path casing** (Linux is case-sensitive; Blender may rewrite relative URIs on
+  re-export): round-trip gate asserts URIs unchanged.
+- **2b-i gap list** (SLOT — fill when the in-flight `.j3o` writer report lands): whatever
+  CompileModelTask semantics the writer had to special-case get an explicit `extras` mapping +
+  a line here.
 
 ## Acceptance
 A full `./gradlew deploy` compiles every **model from committed glTF source** — and every particle
