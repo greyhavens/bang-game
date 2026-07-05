@@ -69,6 +69,47 @@ tasks.register("mxmlProbe", JavaExec) {
   args = [ root ]
 }
 
+// Epic 4 Phase 2b: bake native .j3o straight from the committed .mxml (MxmlToJ3o, no fork input)
+// and compare against the fork-wrapper oracle .j3o in assets/build/staging (structural multiset
+// compare + optional forked-JVM render diff via RenderModelToPng/SnapshotDiff's metric).
+//   ./gradlew :tools:j3o-converter:mxmlParity -Pmodels=units/frontier_town/shotgunner,...
+//   ./gradlew :tools:j3o-converter:mxmlParity -PallModels [-Prender=false] [-Ptolerance=0.005]
+//       [-Prenders=bind|mid|both]
+// Runs on the full main runtime classpath (like verifyCorpus; the bake itself touches no fork
+// classes), forking renders on the isolated renderToPngRuntime classpath. Needs the staged
+// oracle tree (./gradlew assets:deploy — do NOT clean it, it is the parity reference).
+tasks.register("mxmlParity", JavaExec) {
+  group = "verification"
+  description = "Epic 4 Phase 2b: native .mxml->.j3o bake vs fork-wrapper oracle parity."
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = "com.threerings.bang.jme3.mxml.MxmlParity"
+  doFirst {
+    // the same isolated render classpath verifyVisuals forks with (defined below)
+    systemProperty "mxml.forkClasspath",
+        (sourceSets.main.output + configurations.renderToPngRuntime).asPath
+  }
+  def cmd = [
+    rootProject.file("assets/rsrc").absolutePath,
+    rootProject.file("assets/build/staging/rsrc").absolutePath,
+    "${project.layout.buildDirectory.get().asFile}/mxml-parity"
+  ]
+  if (!project.hasProperty("render") || project.property("render").toString() != "false") {
+    cmd += "--render"
+  }
+  if (project.hasProperty("renders")) {
+    cmd += "--renders=${project.property('renders')}"
+  }
+  if (project.hasProperty("tolerance")) {
+    cmd += "--tolerance=${project.property('tolerance')}"
+  }
+  if (project.hasProperty("allModels")) {
+    cmd += "--all"
+  } else if (project.hasProperty("models")) {
+    project.property("models").toString().split(",").each { cmd += it.trim() }
+  }
+  args = cmd
+}
+
 // Phase 3: bake every staged model.dat to a sibling model.j3o that the runtime client loads
 // natively through the jME3 AssetManager (ModelCache). The assets module invokes this after
 // compileModels (see assets/build.gradle).
