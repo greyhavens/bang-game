@@ -81,6 +81,12 @@ public final class MxmlGltfConventions
      * {@code TriMeshDef.tcoords} flag). Distinguishes an absent tcoord from a (0,0) one. */
     public static final String EXTRA_HAS_TCOORDS = "hasTcoords";
 
+    /** Custom vertex-attribute name carrying the RAW (non-unit) mxml normals: the standard
+     * {@code NORMAL} is a normalised copy for viewers, this is what {@code GltfToModelDef} reads
+     * back so the bake's normal-keyed vertex dedup is bit-exact. (Blender ignores {@code _}
+     * attributes; the validator applies no unit check to them.) */
+    public static final String MXML_NORMAL_ATTR = "_MXMLNORMAL";
+
     /** Mesh extras keys: the geometry offset transform, present only when non-identity. */
     public static final String EXTRA_OFFSET_TRANSLATION = "offsetTranslation";
     public static final String EXTRA_OFFSET_ROTATION = "offsetRotation";

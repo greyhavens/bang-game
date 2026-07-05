@@ -81,12 +81,40 @@ public class MxmlToGltf
     {
         if (args.length != 3) {
             System.err.println(
-                "Usage: MxmlToGltf <src rsrc root> <model type path> <out rsrc root>");
+                "Usage: MxmlToGltf <src rsrc root> <model type path | --all> <out rsrc root>");
             System.exit(1);
         }
         File srcRoot = new File(args[0]).getAbsoluteFile();
         String typePath = args[1];
         File outRoot = new File(args[2]).getAbsoluteFile();
+
+        // --all: write glTF for every model in the corpus (used by the glTF-validator CI job).
+        if ("--all".equals(typePath)) {
+            java.util.List<String> types = MxmlParity.enumerateModels(srcRoot);
+            if (types.isEmpty()) {
+                System.err.println("--all found no models under " + srcRoot);
+                System.exit(2);
+            }
+            int wrote = 0, failed = 0;
+            for (String type : types) {
+                File outDir = new File(outRoot, type);
+                if (!outDir.isDirectory() && !outDir.mkdirs()) {
+                    System.err.println("Unable to create " + outDir);
+                    System.exit(1);
+                }
+                try {
+                    new MxmlToGltf().writeFromDir(new File(srcRoot, type), outDir);
+                    wrote++;
+                } catch (Exception e) {
+                    System.out.println("FAIL " + type + ": " + e);
+                    failed++;
+                }
+            }
+            System.out.println("MxmlToGltf --all: wrote " + wrote + " glTF, " + failed +
+                " failure(s) into " + outRoot);
+            System.exit(failed == 0 ? 0 : 1);
+        }
+
         File modelDir = new File(srcRoot, typePath);
         if (!new File(modelDir, "model.properties").isFile()) {
             System.err.println("No model.properties in " + modelDir);
@@ -118,6 +146,7 @@ public class MxmlToGltf
     public Result writeFromDir (File modelDir, File outDir)
         throws Exception
     {
+        _modelDir = modelDir;
         Properties props = new Properties();
         try (FileInputStream in = new FileInputStream(new File(modelDir, "model.properties"))) {
             props.load(in);
@@ -338,8 +367,19 @@ public class MxmlToGltf
                 tc[ii * 2 + 1] = (v.tcoords != null) ? v.tcoords[1] : 0f;
             }
         }
+        // glTF requires the standard NORMAL to be unit length (ACCESSOR_VECTOR3_NON_UNIT), but the
+        // mxml normals are raw non-unit (a 3ds Max export artifact — magnitudes ~1.8-2.9) and the
+        // round-trip needs them EXACT: Vertex identity (hashCode/equals) keys on the normal, so
+        // renormalising before the bake's vertex dedup / mesh merge changes vertex counts (saloon's
+        // wood mesh drops 669->667). So emit BOTH — a normalised copy as the spec-valid, correctly
+        // shaded NORMAL that viewers/Blender read, and the raw values as a custom _MXMLNORMAL that
+        // GltfToModelDef reads back to reproduce the oracle bake bit-for-bit. (Blender ignores
+        // unknown _-prefixed attributes; the validator applies no unit check to custom attributes.)
+        float[] nrmUnit = nrm.clone();
+        normalizeVec3(nrmUnit);
         int posAcc = addFloatAccessor(pos, 3, "VEC3", min, max, ARRAY_BUFFER);
-        int nrmAcc = addFloatAccessor(nrm, 3, "VEC3", null, null, ARRAY_BUFFER);
+        int nrmAcc = addFloatAccessor(nrmUnit, 3, "VEC3", null, null, ARRAY_BUFFER);
+        int rawNrmAcc = addFloatAccessor(nrm, 3, "VEC3", null, null, ARRAY_BUFFER);
         Integer tcAcc = hasTc ? addFloatAccessor(tc, 2, "VEC2", null, null, ARRAY_BUFFER) : null;
 
         // indices
@@ -353,6 +393,7 @@ public class MxmlToGltf
         Map<String,Object> attributes = new LinkedHashMap<>();
         attributes.put("POSITION", posAcc);
         attributes.put("NORMAL", nrmAcc);
+        attributes.put(MxmlGltfConventions.MXML_NORMAL_ATTR, rawNrmAcc);
         if (tcAcc != null) attributes.put("TEXCOORD_0", tcAcc);
 
         // skinning attributes (may span multiple sets)
@@ -421,6 +462,28 @@ public class MxmlToGltf
             vweights.add(bw);
             maxInf = Math.max(maxInf, bn.size());
         }
+        // glTF requires each vertex's weights (summed across all JOINTS_n/WEIGHTS_n sets) to be 1.0
+        // (ACCESSOR_WEIGHTS_NON_NORMALIZED); the mxml weights sum to ~1.0 ± 1e-6 (source float
+        // noise). Normalise, then push the residual onto the largest weight so the FLOAT sum is
+        // exactly 1.0 — plain division still accumulates ~3e-6 of float error across many
+        // influences, outside the validator's tolerance. Round-trip safe: vertex dedup keys on
+        // location/normal/tcoords, NOT weights, and MxmlToJ3o renormalises the weights itself at
+        // bake time — verified by parity.
+        for (List<Float> bw : vweights) {
+            double sum = 0;
+            for (float w : bw) sum += w;
+            if (sum > 0) {
+                float fsum = 0f;
+                int maxIdx = 0;
+                for (int k = 0; k < bw.size(); k++) {
+                    float nw = (float)(bw.get(k) / sum);
+                    bw.set(k, nw);
+                    fsum += nw;
+                    if (nw > bw.get(maxIdx)) maxIdx = k;
+                }
+                bw.set(maxIdx, bw.get(maxIdx) + (1f - fsum));
+            }
+        }
         // this mesh's skin joint order: weighted bones (first-appearance) then their ancestors
         LinkedHashSet<String> jointNames = new LinkedHashSet<>();
         for (List<String> bn : vbones) {
@@ -479,6 +542,11 @@ public class MxmlToGltf
         for (int jj = 0; jj < jointNames.size(); jj++) {
             Matrix4f jb = globalBind(jointNames.get(jj));
             Matrix4f m = jb.invert().multLocal(meshToModel);
+            // the IBM of an affine transform is affine — its bottom row is exactly [0,0,0,1], but
+            // float noise in invert()/mult leaves m33 at e.g. 0.99999994 (ACCESSOR_INVALID_IBM).
+            // Force it exact; the round-trip does not read the glTF IBM (MxmlToJ3o recomputes
+            // skinning from the reconstructed bind pose), so this is purely viewer-facing.
+            m.m30 = 0f; m.m31 = 0f; m.m32 = 0f; m.m33 = 1f;
             columnMajor(m, ibm, jj * 16);
         }
         int ibmAcc = addFloatAccessor(ibm, 16, "MAT4", null, null, null);
@@ -564,7 +632,15 @@ public class MxmlToGltf
         Map<String,Object> pbr = new LinkedHashMap<>();
         pbr.put("metallicFactor", 0);
         pbr.put("roughnessFactor", 1);
-        if (tdef.texture != null) {
+        // Emit baseColorTexture only when the PNG actually exists next to the model. ~157 corpus
+        // models name a texture that is NOT a static file (e.g. bugle.png, star.png) — they are
+        // runtime-composited/colorized/variant textures the game resolves via the bang.textures
+        // user data (per the 2b-i gap list), so referencing them as a glTF image URI is a dangling
+        // reference a viewer/validator can't load (IO_ERROR). Skipping it yields a valid glTF and an
+        // honest Blender view (the mesh is plain — the texture is a runtime overlay with no file).
+        // The raw texture name still rides EXTRA_TEXTURE, so the round-trip is unaffected.
+        if (tdef.texture != null &&
+            (_modelDir == null || new File(_modelDir, tdef.getTextureFilename()).isFile())) {
             Map<String,Object> bct = new LinkedHashMap<>();
             bct.put("index", textureFor(tdef.getTextureFilename()));
             pbr.put("baseColorTexture", bct);
@@ -943,6 +1019,28 @@ public class MxmlToGltf
         return true;
     }
 
+    /** Normalizes each packed xyz triple to unit length in place (glTF NORMAL requirement). A
+     * degenerate zero-length normal (some particle/effect props have them) is replaced with a
+     * default (0,0,1) unit normal — a zero vector is itself invalid as a glTF NORMAL. This only
+     * runs on the viewer-facing NORMAL copy; the raw value (including zeros) is preserved in
+     * _MXMLNORMAL for the round-trip. */
+    protected static void normalizeVec3 (float[] xyz)
+    {
+        for (int ii = 0; ii + 2 < xyz.length; ii += 3) {
+            float x = xyz[ii], y = xyz[ii + 1], z = xyz[ii + 2];
+            double len = Math.sqrt((double)x * x + (double)y * y + (double)z * z);
+            if (len > 0) {
+                xyz[ii]     = (float)(x / len);
+                xyz[ii + 1] = (float)(y / len);
+                xyz[ii + 2] = (float)(z / len);
+            } else {
+                xyz[ii] = 0f;
+                xyz[ii + 1] = 0f;
+                xyz[ii + 2] = 1f;
+            }
+        }
+    }
+
     protected static boolean isOne (float[] v)
     {
         for (float f : v) if (f != 1f) return false;
@@ -970,6 +1068,9 @@ public class MxmlToGltf
         _images, _samplers, _skins, _animations;
     protected Map<String,SpatialDef> _byName;
     protected Map<String,Matrix4f> _globalBind;
+    /** The source model directory (set by {@link #writeFromDir}), for checking whether a named
+     * texture resolves to a static PNG file; null when a caller supplies a parsed model directly. */
+    protected File _modelDir;
     protected Map<String,Integer> _textureByUri = new LinkedHashMap<>();
     protected int _defaultSampler = -1;
     protected List<String> _pendingSkinJoints;

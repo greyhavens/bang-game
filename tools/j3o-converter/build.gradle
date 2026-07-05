@@ -155,8 +155,9 @@ tasks.register("mxmlToGltf", JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = "com.threerings.bang.jme3.mxml.MxmlToGltf"
   def rsrc = rootProject.file("assets/rsrc").absolutePath
-  def modelType = project.hasProperty("modelType") ?
-      project.property("modelType").toString() : "units/frontier_town/shotgunner"
+  def modelType = project.hasProperty("allModels") ? "--all" :
+      (project.hasProperty("modelType") ?
+          project.property("modelType").toString() : "units/frontier_town/shotgunner")
   def out = project.hasProperty("out") ? project.property("out").toString() :
       "${project.layout.buildDirectory.get().asFile}/mxml-gltf-out"
   args = [ rsrc, modelType, out ]

@@ -1,0 +1,9 @@
+{
+  "name": "bang-gltf-validate",
+  "private": true,
+  "description": "CI-only wrapper around the Khronos glTF-Validator for the Epic 4 glTF writer",
+  "type": "commonjs",
+  "dependencies": {
+    "gltf-validator": "2.0.0-dev.3.10"
+  }
+}

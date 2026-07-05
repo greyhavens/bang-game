@@ -227,6 +227,23 @@ glTF representation — `model.properties` remains a separate committed source; 
   (ubyte/float4). **Probe first: max bone influences per vertex across the corpus** (one-line
   MxmlProbe extension) — glTF caps a vertex at 4 per set; if any model exceeds 4, cap+renormalize
   and record the affected models (render oracle will show whether it matters).
+- **Normals — dual, deliberately (the glTF-Validator gate forced this).** The mxml normals are raw
+  **non-unit** (a 3ds Max export artifact, magnitudes ~1.8–2.9), and glTF's `NORMAL` MUST be unit
+  length (`ACCESSOR_VECTOR3_NON_UNIT` — 7184 errors on the first validator run). But the bake's
+  `Vertex` identity keys on the normal, so renormalising before dedup/merge changes vertex counts
+  (saloon's wood mesh 669→667) and breaks the round-trip. So emit **both**: a normalised copy as the
+  spec-valid, correctly-shaded standard `NORMAL` (what viewers/Blender read — Blender ignores the
+  custom attribute; the game shaders normalise anyway), and the raw values as a custom
+  `_MXMLNORMAL` accessor that `GltfToModelDef` reads back to reproduce the oracle bake bit-for-bit.
+- **Two more float-precision validator findings, handled similarly (viewer-facing exact, round trip
+  untouched):** skin `inverseBindMatrices` came out with a non-`[0,0,0,1]` bottom row
+  (`m33≈0.99999994`, `ACCESSOR_INVALID_IBM`) — forced exact, safe because the round-trip doesn't
+  read the glTF IBM (`MxmlToJ3o` recomputes skinning from the reconstructed bind pose). Skin
+  `WEIGHTS_0` sums were `1.0±1e-6` (`ACCESSOR_WEIGHTS_NON_NORMALIZED`) — the writer normalises each
+  vertex's weights and pushes the residual onto the largest, but float32 storage of up-to-12
+  influences can't hit the validator's sub-µ tolerance in double, a universal limitation the
+  game/Blender/three.js all resolve by renormalising at load, so this one check is downgraded to a
+  warning in `validate.js` (every structural check stays gating).
 - **Materials:** per-mesh `pbrMetallicRoughness` with `baseColorTexture` = the mxml `texture`
   PNG, metallic 0/roughness 1, plus **`KHR_materials_unlit`** so Blender previews match the
   game's unlit look; `alphaMode=BLEND` iff `transparent`, `doubleSided` iff `!solid`.
@@ -267,7 +284,15 @@ MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf
   parity harness re-reads every emitted file).
 - **Output:** `model.gltf` (JSON, diffable) + `model.bin`, textures referenced *relatively* to the
   existing PNGs (never copied). `pbrMetallicRoughness` (metallic 0/roughness 1) +
-  `KHR_materials_unlit`; `alphaMode=BLEND` iff transparent, `doubleSided` iff `!solid`.
+  `KHR_materials_unlit`; `alphaMode=BLEND` iff transparent, `doubleSided` iff `!solid`. **A
+  `baseColorTexture` is emitted only when the named PNG is a real file next to the model** — ~98
+  models name a texture with no static file (`bugle.png`, `star.png`, …): these are
+  runtime-composited/colorized/variant textures the game resolves from the `bang.textures` user data
+  (the 2b-i gap list's "variants / colorization" item). Referencing them would be a dangling image
+  URI (validator `IO_ERROR`); skipping it yields a valid glTF and an honest Blender view (plain
+  mesh, the texture being a runtime overlay). **Phase-4 note:** giving those meshes a real
+  Blender-editable texture would mean baking the runtime composite to a file — a Phase-4 authoring
+  decision, out of scope for the lossless writer (the raw name is preserved in `EXTRA_TEXTURE`).
 - **Axes:** the `-90°`-about-X convention lives in `MxmlGltfConventions.MXML_TO_GLTF` and is applied
   via a single **synthetic wrapper root node** that every mxml root hangs under. The mxml node
   transforms are therefore stored *verbatim*; the reader discards the wrapper (realising the exact
@@ -297,15 +322,19 @@ MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf
   0.000000, pixel-exact) at tolerance 0.005** — the round-trip `.j3o` matches the oracle exactly as
   the direct `.mxml`→`.j3o` path did. Run `./gradlew :tools:j3o-converter:mxmlGltfParity -PallModels`
   (add `-Prender=false` for the fast structural-only pass).
-- **Deferred verification (out of scope on this box, tracked as CI / Phase-4 follow-ups):** the
-  design's **glTF-Validator** pass and **Blender headless smoke** steps are NOT run here — there is
-  no Node/`gltf-validator`, and no Blender, on this machine. Neither is needed for the primary
-  correctness signal: the round-trip parity above bakes through the SAME `MxmlToJ3o` as the game and
-  diffs against the verified oracle, so a layout/precision bug that a validator would catch would
-  also break the bake or the render diff. The validator becomes a CI gate and the Blender smoke a
-  Phase-4 gate once those tools are available. (`inverseBindMatrices` correctness for *viewing* is
-  likewise unverified here — no viewer — but it does not affect the round-trip, which re-derives
-  skinning from the reconstructed `ModelDef`.)
+- **glTF-Validator — now a CI gate (`glTF validity` job in `ci.yml`).** `MxmlToGltf --all` writes
+  the whole corpus's glTF, the PNGs are co-located so image URIs resolve, and the official Khronos
+  **`gltf-validator`** (`deploy/ci/gltf-validate/`) validates every file, failing the build on any
+  Error-severity issue. This is the automated substitute for a viewer opening the file: the
+  round-trip parity proves losslessness (our reader mirrors our writer) but is blind to spec
+  violations only a validator/Blender rejects — three such (raw texture path, empty-channel
+  animation, unencoded URI) were caught by hand during #48 review, which is exactly why this gate
+  exists. It cannot run on the dev box (no Node) — the CI runners have it.
+- **Blender headless smoke — still a Phase-4 gate.** A `blender --background --python` import test
+  (mesh/bone/animation counts, and the real "does it edit + re-export" cycle) needs Blender, which
+  isn't on the dev box or the CI runners; it lands with the Phase-4 cutover. (`inverseBindMatrices`
+  correctness for *viewing* is likewise unverified until then — but it does not affect the
+  round-trip, which re-derives skinning from the reconstructed `ModelDef`.)
 
 ### Phase 3 — Verify against the fork-wrapper oracle
 The current fork-wrapper `.j3o` are **verified-correct** (310/310 `verifyCorpus` parity + visually
