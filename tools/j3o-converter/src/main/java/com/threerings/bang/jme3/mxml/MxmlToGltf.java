@@ -1019,8 +1019,11 @@ public class MxmlToGltf
         return true;
     }
 
-    /** Normalizes each packed xyz triple to unit length in place (glTF NORMAL requirement); a
-     * degenerate zero-length normal is left untouched rather than producing NaN. */
+    /** Normalizes each packed xyz triple to unit length in place (glTF NORMAL requirement). A
+     * degenerate zero-length normal (some particle/effect props have them) is replaced with a
+     * default (0,0,1) unit normal — a zero vector is itself invalid as a glTF NORMAL. This only
+     * runs on the viewer-facing NORMAL copy; the raw value (including zeros) is preserved in
+     * _MXMLNORMAL for the round-trip. */
     protected static void normalizeVec3 (float[] xyz)
     {
         for (int ii = 0; ii + 2 < xyz.length; ii += 3) {
@@ -1030,6 +1033,10 @@ public class MxmlToGltf
                 xyz[ii]     = (float)(x / len);
                 xyz[ii + 1] = (float)(y / len);
                 xyz[ii + 2] = (float)(z / len);
+            } else {
+                xyz[ii] = 0f;
+                xyz[ii + 1] = 0f;
+                xyz[ii + 2] = 1f;
             }
         }
     }
