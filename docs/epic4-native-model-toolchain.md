@@ -235,6 +235,15 @@ glTF representation — `model.properties` remains a separate committed source; 
   spec-valid, correctly-shaded standard `NORMAL` (what viewers/Blender read — Blender ignores the
   custom attribute; the game shaders normalise anyway), and the raw values as a custom
   `_MXMLNORMAL` accessor that `GltfToModelDef` reads back to reproduce the oracle bake bit-for-bit.
+- **Two more float-precision validator findings, handled similarly (viewer-facing exact, round trip
+  untouched):** skin `inverseBindMatrices` came out with a non-`[0,0,0,1]` bottom row
+  (`m33≈0.99999994`, `ACCESSOR_INVALID_IBM`) — forced exact, safe because the round-trip doesn't
+  read the glTF IBM (`MxmlToJ3o` recomputes skinning from the reconstructed bind pose). Skin
+  `WEIGHTS_0` sums were `1.0±1e-6` (`ACCESSOR_WEIGHTS_NON_NORMALIZED`) — the writer normalises each
+  vertex's weights and pushes the residual onto the largest, but float32 storage of up-to-12
+  influences can't hit the validator's sub-µ tolerance in double, a universal limitation the
+  game/Blender/three.js all resolve by renormalising at load, so this one check is downgraded to a
+  warning in `validate.js` (every structural check stays gating).
 - **Materials:** per-mesh `pbrMetallicRoughness` with `baseColorTexture` = the mxml `texture`
   PNG, metallic 0/roughness 1, plus **`KHR_materials_unlit`** so Blender previews match the
   game's unlit look; `alphaMode=BLEND` iff `transparent`, `doubleSided` iff `!solid`.

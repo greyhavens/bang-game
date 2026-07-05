@@ -461,6 +461,28 @@ public class MxmlToGltf
             vweights.add(bw);
             maxInf = Math.max(maxInf, bn.size());
         }
+        // glTF requires each vertex's weights (summed across all JOINTS_n/WEIGHTS_n sets) to be 1.0
+        // (ACCESSOR_WEIGHTS_NON_NORMALIZED); the mxml weights sum to ~1.0 ± 1e-6 (source float
+        // noise). Normalise, then push the residual onto the largest weight so the FLOAT sum is
+        // exactly 1.0 — plain division still accumulates ~3e-6 of float error across many
+        // influences, outside the validator's tolerance. Round-trip safe: vertex dedup keys on
+        // location/normal/tcoords, NOT weights, and MxmlToJ3o renormalises the weights itself at
+        // bake time — verified by parity.
+        for (List<Float> bw : vweights) {
+            double sum = 0;
+            for (float w : bw) sum += w;
+            if (sum > 0) {
+                float fsum = 0f;
+                int maxIdx = 0;
+                for (int k = 0; k < bw.size(); k++) {
+                    float nw = (float)(bw.get(k) / sum);
+                    bw.set(k, nw);
+                    fsum += nw;
+                    if (nw > bw.get(maxIdx)) maxIdx = k;
+                }
+                bw.set(maxIdx, bw.get(maxIdx) + (1f - fsum));
+            }
+        }
         // this mesh's skin joint order: weighted bones (first-appearance) then their ancestors
         LinkedHashSet<String> jointNames = new LinkedHashSet<>();
         for (List<String> bn : vbones) {
@@ -519,6 +541,11 @@ public class MxmlToGltf
         for (int jj = 0; jj < jointNames.size(); jj++) {
             Matrix4f jb = globalBind(jointNames.get(jj));
             Matrix4f m = jb.invert().multLocal(meshToModel);
+            // the IBM of an affine transform is affine — its bottom row is exactly [0,0,0,1], but
+            // float noise in invert()/mult leaves m33 at e.g. 0.99999994 (ACCESSOR_INVALID_IBM).
+            // Force it exact; the round-trip does not read the glTF IBM (MxmlToJ3o recomputes
+            // skinning from the reconstructed bind pose), so this is purely viewer-facing.
+            m.m30 = 0f; m.m31 = 0f; m.m32 = 0f; m.m33 = 1f;
             columnMajor(m, ibm, jj * 16);
         }
         int ibmAcc = addFloatAccessor(ibm, 16, "MAT4", null, null, null);
