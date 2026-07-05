@@ -556,6 +556,14 @@ public class ModelDef
         float x = rotation.getX(), y = rotation.getY(), z = rotation.getZ(),
             w = rotation.getW();
         float norm = w * w + x * x + y * y + z * z;
+        if (norm == 0f) {
+            // a zero/degenerate rotation quaternion (e.g. "0,0,0,0" from hand-editing) would make
+            // invSqrt(0)=Infinity and 0*Infinity=NaN, silently baking NaN geometry (the fork does
+            // this too); reject it with the values instead. Valid unit-ish quaternions are
+            // untouched — this guard runs before any arithmetic on the result.
+            throw new IllegalArgumentException("degenerate rotation quaternion (" +
+                x + ", " + y + ", " + z + ", " + w + "): zero norm");
+        }
         if (norm != 1.0f) {
             norm = (float)(1.0 / Math.sqrt(norm)); // fork FastMath.invSqrt
         }

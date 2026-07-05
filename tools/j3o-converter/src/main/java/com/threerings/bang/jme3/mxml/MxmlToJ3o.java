@@ -1180,6 +1180,14 @@ public class MxmlToJ3o
         data.clear();
         for (int ii = 0; ii < data.capacity(); ii++) {
             int local = data.get(ii) & 0xFFFF;
+            if (local >= remap.length) {
+                // a bone-index buffer entry past the weight-group order — only reachable with a
+                // skin mesh whose weight groups reference unresolved bones; fail with the cause
+                // rather than an opaque ArrayIndexOutOfBoundsException
+                throw new IllegalStateException("skin mesh bone index " + local +
+                    " exceeds the " + remap.length + " resolved weight-group bone(s); a weight " +
+                    "group references a bone missing from the model");
+            }
             data.put(ii, (short)(remap[local] & 0xFFFF));
         }
         ib.updateData(data);
@@ -1255,6 +1263,13 @@ public class MxmlToJ3o
                         rots[ff] = new Quaternion();
                         scales[ff] = new Vector3f(1f, 1f, 1f);
                         continue;
+                    }
+                    if (anim.translations[ff][tt] == null) {
+                        // a target that is animated in some frame but absent from this one — the
+                        // dense MaxScript .mxml never does this, so it means malformed/hand-edited
+                        // source; fail with the specifics rather than a bare NPE
+                        throw new IllegalStateException("animation '" + name + "' frame " + ff +
+                            " has no keyframe for target '" + anim.transformTargets[tt].name + "'");
                     }
                     trans[ff] = anim.translations[ff][tt].clone();
                     rots[ff] = anim.rotations[ff][tt].clone();

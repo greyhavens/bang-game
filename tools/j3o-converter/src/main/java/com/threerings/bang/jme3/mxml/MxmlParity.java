@@ -107,6 +107,13 @@ public class MxmlParity
         }
         if (all) {
             types = enumerateModels(srcRoot);
+            if (types.isEmpty()) {
+                // fail loud rather than exit 0 with "0/0 PASS": as a parity gate, finding no
+                // models means a wrong/empty src root, not success
+                System.err.println("FAIL: --all found no models under " + srcRoot +
+                    " (expected model.properties dirs); check the src rsrc root");
+                System.exit(2);
+            }
         }
         File nativeRoot = new File(workDir, "native-rsrc");
         File pngDir = new File(workDir, "png");

@@ -59,7 +59,7 @@ public class RenderModelToPng extends OffscreenRenderApp
 
     @Override protected Node buildScene ()
     {
-        for (String root : _rsrcRoots.split(File.pathSeparator)) {
+        for (String root : splitRoots(_rsrcRoots)) {
             assetManager.registerLocator(new File(root).getAbsolutePath(), FileLocator.class);
         }
 
@@ -80,6 +80,28 @@ public class RenderModelToPng extends OffscreenRenderApp
         scene.attachChild(model);
         lightLikeBoard(scene);
         return scene;
+    }
+
+    /**
+     * Splits a {@link File#pathSeparator}-joined list of rsrc roots into its members. A single
+     * root may legitimately contain the separator (':' is legal in a Unix directory name), so only
+     * treat the argument as a list when it splits into more than one fragment AND every fragment
+     * resolves to a real directory; otherwise use the whole string as one root. The multi-root
+     * caller (MxmlParity's native overlay) always passes existing dirs, so this is exact for it
+     * while a colon-containing single root no longer fractures into bogus locators.
+     */
+    protected static String[] splitRoots (String roots)
+    {
+        String[] parts = roots.split(File.pathSeparator);
+        if (parts.length <= 1) {
+            return parts;
+        }
+        for (String p : parts) {
+            if (!new File(p).isDirectory()) {
+                return new String[] { roots };
+            }
+        }
+        return parts;
     }
 
     protected final String _rsrcRoots;
