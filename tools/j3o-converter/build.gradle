@@ -110,6 +110,58 @@ tasks.register("mxmlParity", JavaExec) {
   args = cmd
 }
 
+// Epic 4 Phase 2b-ii: round-trip the committed .mxml through the glTF writer + mirror reader
+// (MxmlToGltf -> model.gltf/model.bin -> GltfToModelDef -> ModelDef') then bake native .j3o via
+// MxmlToJ3o and diff against the fork-wrapper oracle with MxmlParity's structural + render metric.
+//   ./gradlew :tools:j3o-converter:mxmlGltfParity -Pmodels=units/frontier_town/shotgunner,...
+//   ./gradlew :tools:j3o-converter:mxmlGltfParity -PallModels [-Prender=false] [-Ptolerance=0.005]
+//       [-Prenders=bind|mid|both]
+// Same isolated-fork render classpath as mxmlParity; needs the staged oracle tree
+// (./gradlew assets:deploy — do NOT clean it, it is the parity reference).
+tasks.register("mxmlGltfParity", JavaExec) {
+  group = "verification"
+  description = "Epic 4 Phase 2b-ii: .mxml->glTF->.mxml round-trip bake vs fork-wrapper oracle."
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = "com.threerings.bang.jme3.mxml.MxmlGltfParity"
+  doFirst {
+    systemProperty "mxml.forkClasspath",
+        (sourceSets.main.output + configurations.renderToPngRuntime).asPath
+  }
+  def cmd = [
+    rootProject.file("assets/rsrc").absolutePath,
+    rootProject.file("assets/build/staging/rsrc").absolutePath,
+    "${project.layout.buildDirectory.get().asFile}/mxml-gltf-parity"
+  ]
+  if (!project.hasProperty("render") || project.property("render").toString() != "false") {
+    cmd += "--render"
+  }
+  if (project.hasProperty("renders")) {
+    cmd += "--renders=${project.property('renders')}"
+  }
+  if (project.hasProperty("tolerance")) {
+    cmd += "--tolerance=${project.property('tolerance')}"
+  }
+  if (project.hasProperty("allModels")) {
+    cmd += "--all"
+  } else if (project.hasProperty("models")) {
+    project.property("models").toString().split(",").each { cmd += it.trim() }
+  }
+  args = cmd
+}
+
+// Epic 4 Phase 2b-ii: write a single model's glTF (model.gltf + model.bin) from its .mxml, for
+// eyeballing / Blender import.  ./gradlew :tools:j3o-converter:mxmlToGltf -PmodelType=... [-Pout=]
+tasks.register("mxmlToGltf", JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = "com.threerings.bang.jme3.mxml.MxmlToGltf"
+  def rsrc = rootProject.file("assets/rsrc").absolutePath
+  def modelType = project.hasProperty("modelType") ?
+      project.property("modelType").toString() : "units/frontier_town/shotgunner"
+  def out = project.hasProperty("out") ? project.property("out").toString() :
+      "${project.layout.buildDirectory.get().asFile}/mxml-gltf-out"
+  args = [ rsrc, modelType, out ]
+}
+
 // Phase 3: bake every staged model.dat to a sibling model.j3o that the runtime client loads
 // natively through the jME3 AssetManager (ModelCache). The assets module invokes this after
 // compileModels (see assets/build.gradle).

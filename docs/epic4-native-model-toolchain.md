@@ -251,6 +251,62 @@ glTF representation — `model.properties` remains a separate committed source; 
   and asserting mesh/bone/animation counts (no human in the loop; the human edit test comes in
   Phase 4).
 
+#### 2b-ii — the glTF writer: RESULTS (2026-07-05, full-corpus round-trip parity)
+Landed as `com.threerings.bang.jme3.mxml.{MxmlGltfConventions, MxmlToGltf, GltfToModelDef,
+MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf` Gradle tasks.
+
+- **Library: hand-rolled, not jgltf.** The round-trip must be *bit-exact* (the mesh-merge sweep's
+  1e-4 epsilon on node transforms is unforgiving — see the 2b-i train-model note), so the writer
+  emits its own glTF JSON with **lossless float text** (`Float.toString`, the shortest decimal that
+  reparses to the identical `float`) and packs all bulk arrays as float32 LE in `model.bin` (exact
+  by construction); the reader parses numbers as **raw token text** and `Float.parseFloat`s them
+  (never via `double`, which would double-round node TRS and could flip a merge decision). A
+  general glTF library gave no control over either and added a dependency fetch; the format subset
+  needed (indexed meshes, multi-set skins, TRS-node hierarchy, LINEAR TRS animations) is small and
+  well-specced. The self-check "re-read the file after writing" is `GltfToModelDef` itself (the
+  parity harness re-reads every emitted file).
+- **Output:** `model.gltf` (JSON, diffable) + `model.bin`, textures referenced *relatively* to the
+  existing PNGs (never copied). `pbrMetallicRoughness` (metallic 0/roughness 1) +
+  `KHR_materials_unlit`; `alphaMode=BLEND` iff transparent, `doubleSided` iff `!solid`.
+- **Axes:** the `-90°`-about-X convention lives in `MxmlGltfConventions.MXML_TO_GLTF` and is applied
+  via a single **synthetic wrapper root node** that every mxml root hangs under. The mxml node
+  transforms are therefore stored *verbatim*; the reader discards the wrapper (realising the exact
+  inverse **losslessly** — a numeric rotate-then-unrotate of the irrational-component quaternion was
+  rejected precisely because it could drift the train-model merge decisions). Scale is raw mxml
+  units; `model.properties scale=` is deliberately NOT baked (recorded in `asset.extras`).
+- **Skinning — the sharp edge:** the corpus goes up to **12 bone influences per vertex** (cavalry;
+  probe added), well past glTF's 4-per-set cap. Pre-capping to 4 in the glTF would shrink
+  `MxmlToJ3o`'s armature (fewer weight-referenced bones ⇒ fewer joints) and break structural
+  parity, so the writer preserves the **full** influence set across `ceil(max/4)` JOINTS_n/WEIGHTS_n
+  sets; `MxmlToJ3o` still does the top-4 cap+renormalise itself at bake time, exactly as the oracle.
+  `inverseBindMatrices` are computed from the SAME fork-exact bind-pose math `MxmlToJ3o` uses
+  (`ModelDef.setTransform`; `IBM = inverse(globalBind_j)·meshToModel`, the wrapper rotation cancels
+  so POSITION stays raw mxml-local and the round-trip is exact).
+- **Animations:** one glTF animation per animation `.mxml`, named exactly by the action (basename);
+  per-joint T/R/S LINEAR samplers, dense per-frame keys (input = frame/frameRate). `frameRate` +
+  frame count ride in the animation `extras`. Phantom targets (channels for nodes absent from the
+  model) are dropped — harmless, since `MxmlToJ3o.filterTransforms`/`createAnim` skip them anyway.
+- **What rides in `extras` (the losslessness valve):** on each spatial's **node** extras (so the 5
+  empty `triMesh`es — two in the merge-sensitive train models — keep them despite carrying no glTF
+  mesh): the spatial subtype, `solid`/`transparent`, the raw `texture` string (what `canMerge`
+  compares), the `hasTcoords` flag, and the geometry offset transform when non-identity; on the
+  animation, `frameRate`+frame count; the raw-units/axis notes on `asset.extras`. Everything else
+  the bake drops (controllers, filter/mipmap/compress hints, `translucent`, variants, bounds mode)
+  stays in the committed `model.properties`.
+- **Result: 310/310 structural parity AND 310/310 render parity, meanDiff ≤ 0.000001 (typically
+  0.000000, pixel-exact) at tolerance 0.005** — the round-trip `.j3o` matches the oracle exactly as
+  the direct `.mxml`→`.j3o` path did. Run `./gradlew :tools:j3o-converter:mxmlGltfParity -PallModels`
+  (add `-Prender=false` for the fast structural-only pass).
+- **Deferred verification (out of scope on this box, tracked as CI / Phase-4 follow-ups):** the
+  design's **glTF-Validator** pass and **Blender headless smoke** steps are NOT run here — there is
+  no Node/`gltf-validator`, and no Blender, on this machine. Neither is needed for the primary
+  correctness signal: the round-trip parity above bakes through the SAME `MxmlToJ3o` as the game and
+  diffs against the verified oracle, so a layout/precision bug that a validator would catch would
+  also break the bake or the render diff. The validator becomes a CI gate and the Blender smoke a
+  Phase-4 gate once those tools are available. (`inverseBindMatrices` correctness for *viewing* is
+  likewise unverified here — no viewer — but it does not affect the round-trip, which re-derives
+  skinning from the reconstructed `ModelDef`.)
+
 ### Phase 3 — Verify against the fork-wrapper oracle
 The current fork-wrapper `.j3o` are **verified-correct** (310/310 `verifyCorpus` parity + visually
 correct after the 6b skinning fix + the game runs on them), so they're a trustworthy reference.
