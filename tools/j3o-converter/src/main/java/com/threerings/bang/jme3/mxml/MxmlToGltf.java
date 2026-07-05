@@ -146,6 +146,7 @@ public class MxmlToGltf
     public Result writeFromDir (File modelDir, File outDir)
         throws Exception
     {
+        _modelDir = modelDir;
         Properties props = new Properties();
         try (FileInputStream in = new FileInputStream(new File(modelDir, "model.properties"))) {
             props.load(in);
@@ -631,7 +632,15 @@ public class MxmlToGltf
         Map<String,Object> pbr = new LinkedHashMap<>();
         pbr.put("metallicFactor", 0);
         pbr.put("roughnessFactor", 1);
-        if (tdef.texture != null) {
+        // Emit baseColorTexture only when the PNG actually exists next to the model. ~157 corpus
+        // models name a texture that is NOT a static file (e.g. bugle.png, star.png) — they are
+        // runtime-composited/colorized/variant textures the game resolves via the bang.textures
+        // user data (per the 2b-i gap list), so referencing them as a glTF image URI is a dangling
+        // reference a viewer/validator can't load (IO_ERROR). Skipping it yields a valid glTF and an
+        // honest Blender view (the mesh is plain — the texture is a runtime overlay with no file).
+        // The raw texture name still rides EXTRA_TEXTURE, so the round-trip is unaffected.
+        if (tdef.texture != null &&
+            (_modelDir == null || new File(_modelDir, tdef.getTextureFilename()).isFile())) {
             Map<String,Object> bct = new LinkedHashMap<>();
             bct.put("index", textureFor(tdef.getTextureFilename()));
             pbr.put("baseColorTexture", bct);
@@ -1052,6 +1061,9 @@ public class MxmlToGltf
         _images, _samplers, _skins, _animations;
     protected Map<String,SpatialDef> _byName;
     protected Map<String,Matrix4f> _globalBind;
+    /** The source model directory (set by {@link #writeFromDir}), for checking whether a named
+     * texture resolves to a static PNG file; null when a caller supplies a parsed model directly. */
+    protected File _modelDir;
     protected Map<String,Integer> _textureByUri = new LinkedHashMap<>();
     protected int _defaultSampler = -1;
     protected List<String> _pendingSkinJoints;

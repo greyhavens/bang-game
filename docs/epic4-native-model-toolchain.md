@@ -284,7 +284,15 @@ MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf
   parity harness re-reads every emitted file).
 - **Output:** `model.gltf` (JSON, diffable) + `model.bin`, textures referenced *relatively* to the
   existing PNGs (never copied). `pbrMetallicRoughness` (metallic 0/roughness 1) +
-  `KHR_materials_unlit`; `alphaMode=BLEND` iff transparent, `doubleSided` iff `!solid`.
+  `KHR_materials_unlit`; `alphaMode=BLEND` iff transparent, `doubleSided` iff `!solid`. **A
+  `baseColorTexture` is emitted only when the named PNG is a real file next to the model** — ~98
+  models name a texture with no static file (`bugle.png`, `star.png`, …): these are
+  runtime-composited/colorized/variant textures the game resolves from the `bang.textures` user data
+  (the 2b-i gap list's "variants / colorization" item). Referencing them would be a dangling image
+  URI (validator `IO_ERROR`); skipping it yields a valid glTF and an honest Blender view (plain
+  mesh, the texture being a runtime overlay). **Phase-4 note:** giving those meshes a real
+  Blender-editable texture would mean baking the runtime composite to a file — a Phase-4 authoring
+  decision, out of scope for the lossless writer (the raw name is preserved in `EXTRA_TEXTURE`).
 - **Axes:** the `-90°`-about-X convention lives in `MxmlGltfConventions.MXML_TO_GLTF` and is applied
   via a single **synthetic wrapper root node** that every mxml root hangs under. The mxml node
   transforms are therefore stored *verbatim*; the reader discards the wrapper (realising the exact
