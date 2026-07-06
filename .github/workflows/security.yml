@@ -14,6 +14,13 @@ on:
   push:
     branches: [master]
   pull_request:
+    # Repo-split Option C: android-only PRs skip the scan (client/android is a standalone
+    # composite build; its dependency surface is scanned when its shared-code changes land on
+    # master). Push + schedule triggers stay unfiltered — the weekly NVD cache warm-up and the
+    # master gating scan must always run. Same required-checks caveat as ci.yml.
+    paths-ignore:
+      - 'client/android/**'
+      - 'docs/epicA*.md'
   schedule:
     # Sunday 03:17 UTC — just after the %Y-%U weekly cache key rotates (weeks start Sunday), so
     # the scheduled run pays the delta-update and everything else that week restores warm

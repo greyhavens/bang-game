@@ -8,6 +8,15 @@ on:
   push:
     branches: [master]
   pull_request:
+    # Repo-split Option C (docs/android-repo-split.md): PRs that ONLY touch the Android port
+    # skip these desktop jobs — none of them compile client/android (it's a standalone composite
+    # build), so running them there is pure waste. Mixed PRs (any non-android file) still run
+    # everything. NOTE: master is not branch-protected; if required status checks are ever
+    # enabled, replace paths-ignore with an always-reporting gate job (a path-skipped workflow
+    # reports no status at all and would wedge a required check forever).
+    paths-ignore:
+      - 'client/android/**'
+      - 'docs/epicA*.md'
 
 permissions:
   contents: read
