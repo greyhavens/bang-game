@@ -17,6 +17,7 @@ on:
     paths-ignore:
       - 'client/android/**'
       - 'docs/epicA*.md'
+      - 'docs/android-*.md'
 
 permissions:
   contents: read

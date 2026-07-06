@@ -21,6 +21,7 @@ on:
     paths-ignore:
       - 'client/android/**'
       - 'docs/epicA*.md'
+      - 'docs/android-*.md'
   schedule:
     # Sunday 03:17 UTC — just after the %Y-%U weekly cache key rotates (weeks start Sunday), so
     # the scheduled run pays the delta-update and everything else that week restores warm
