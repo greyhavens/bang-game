@@ -39,7 +39,9 @@ import com.threerings.bang.jme3.mxml.ModelDef.Vertex;
  *       {@link MxmlGltfParity}.</li>
  *   <li><b>Blender re-exports (Khronos glTF Blender I/O, Blender 4.5) — render-parity rebake</b>
  *       (the Phase-4 edit loop: human edits a model in Blender and re-exports). Blender preserves
- *       our node {@code extras} and the {@code _MXMLNORMAL} attribute but re-splits/reorders
+ *       our node {@code extras} and the {@code _MXMLNORMAL}/{@code _MXMLTEXCOORD} attributes
+ *       (viewer UV edits are detected as a stale {@code _MXMLTEXCOORD} and the edited
+ *       {@code TEXCOORD_0} adopted instead — see {@link #resolveTcoords}) but re-splits/reorders
  *       vertices, reorders nodes, uses its own buffer layouts (accessor-level {@code byteOffset},
  *       interleaving via {@code bufferView.byteStride}, UNSIGNED_BYTE/SHORT indices and joints)
  *       and drops our animation {@code extras} (the frame rate is then derived from the sampler
@@ -60,7 +62,10 @@ import com.threerings.bang.jme3.mxml.ModelDef.Vertex;
  *       {@code Float.parseFloat} on the original token text (not via {@code double}) so they match
  *       the parser's floats bit-for-bit — critical for the mesh-merge 1e-4 epsilon decisions.</li>
  *   <li><b>Vertices/indices:</b> restored 1:1 in stored order into a fresh
- *       {@link ModelDef.TriMeshDef} (the geometry lives as float32 in {@code model.bin}, exact).</li>
+ *       {@link ModelDef.TriMeshDef} (the geometry lives as float32 in {@code model.bin}, exact);
+ *       normals and texture coordinates come from the raw {@code _MXMLNORMAL}/
+ *       {@code _MXMLTEXCOORD} attributes (the standard {@code NORMAL}/{@code TEXCOORD_0} are
+ *       viewer-facing copies — normalised resp. v-flipped — and dedup keys on the raw values).</li>
  *   <li><b>Skinning:</b> every JOINTS_n/WEIGHTS_n set is read and non-zero influences re-added in
  *       stored order (= the parser's {@code boneWeights} map iteration order), a fixed point that
  *       reproduces the map's exact key layout and hence the identical weight-group partitioning.</li>
@@ -208,11 +213,15 @@ public class GltfToModelDef
             Object os = extras.get(MxmlGltfConventions.EXTRA_OFFSET_SCALE);
             if (os != null) tdef.offsetScale = readTrs(os, 1f, 1f, 1f);
             boolean hasTc = Boolean.TRUE.equals(extras.get(MxmlGltfConventions.EXTRA_HAS_TCOORDS));
+            // the declared mxml vertex count; -1 when the key is absent (glTF written before it
+            // existed — the hasTcoords heuristic below remains the fallback for those)
+            Object vcRef = extras.get(MxmlGltfConventions.EXTRA_VERTEX_COUNT);
+            int vertexCount = (vcRef != null) ? intVal(vcRef) : -1;
 
             Object meshRef = node.get("mesh");
             if (meshRef != null) {
                 readGeometry(tdef, intVal(meshRef), node, hasTc);
-            } else if (hasTc && skin) {
+            } else if (skin && (hasTc || vertexCount > 0)) {
                 // Blender re-parents each skinned mesh onto a NEW extras-less '<name>.001' node
                 // (child of the armature, POSITIONs rebased into armature space) and leaves the
                 // original node as this extras-bearing empty — a restructure the reader does not
@@ -222,11 +231,22 @@ public class GltfToModelDef
                     "moves to a new extras-less '" + sdef.name + ".001' sibling with positions " +
                     "rebased into armature space — a restructure this reader does not support " +
                     "yet; skinned models are not Blender-editable until it does.");
-            } else if (hasTc) {
-                // every legitimately-empty triMesh in the corpus has hasTcoords=false; a meshless
-                // triMesh node that HAD texture coordinates means an authoring tool dropped the
-                // geometry (Blender's glTF importer silently discards 1-vertex particle-emitter
-                // meshes) — fail loudly rather than bake the mesh away
+            } else if (vertexCount > 0) {
+                // the definitive dropped-geometry tripwire: the node declares its mxml mesh had
+                // vertices but carries no glTF mesh, so an authoring tool dropped the geometry
+                // (Blender's exporter cannot write loose points, so 1-vertex particle-emitter
+                // meshes vanish silently on export — including tcoord-less ones the hasTcoords
+                // heuristic below cannot see) — fail loudly rather than bake the mesh away
+                throw new IllegalStateException("node " + idx + " ('" + sdef.name + "'): triMesh " +
+                    "declares vertexCount=" + vertexCount + " but carries no glTF mesh — its " +
+                    "geometry was dropped in the authoring round-trip (Blender's exporter cannot " +
+                    "write loose points, so 1-vertex particle-emitter meshes vanish on export; " +
+                    "models with such emitters are not Blender-editable). Restore the mesh from " +
+                    "the committed model.gltf.");
+            } else if (hasTc && vertexCount < 0) {
+                // fallback for files without the vertexCount key: every legitimately-empty
+                // triMesh in the corpus has hasTcoords=false, so a meshless triMesh node that HAD
+                // texture coordinates means an authoring tool dropped the geometry
                 throw new IllegalStateException("node " + idx + " ('" + sdef.name + "'): triMesh " +
                     "with hasTcoords=true carries no glTF mesh — its geometry was dropped in the " +
                     "authoring round-trip (Blender's importer discards 1-vertex particle-emitter " +
@@ -269,14 +289,25 @@ public class GltfToModelDef
         float[] nrm = (rawNrm != null)
             ? readFloats(intVal(rawNrm), where + " " + MxmlGltfConventions.MXML_NORMAL_ATTR)
             : readFloats(requireAttr(attrs, "NORMAL", where), where + " NORMAL");
-        float[] tc = hasTc
+        // texture coordinates are dual too: TEXCOORD_0 is the viewer-facing copy flipped to
+        // glTF's top-left origin (v' = 1-v; mxml is bottom-left), _MXMLTEXCOORD the raw mxml
+        // values the bake's vertex dedup keys on — resolved by resolveTcoords below
+        float[] tcView = hasTc
             ? readFloats(requireAttr(attrs, "TEXCOORD_0", where), where + " TEXCOORD_0") : null;
+        Object rawTc = hasTc ? attrs.get(MxmlGltfConventions.MXML_TEXCOORD_ATTR) : null;
+        float[] tcRaw = (rawTc != null)
+            ? readFloats(intVal(rawTc), where + " " + MxmlGltfConventions.MXML_TEXCOORD_ATTR)
+            : null;
         int nverts = pos.length / 3;
-        if (nrm.length != nverts * 3 || (hasTc && tc.length != nverts * 2)) {
+        if (nrm.length != nverts * 3 || (hasTc && tcView.length != nverts * 2) ||
+                (tcRaw != null && tcRaw.length != nverts * 2)) {
             throw new IllegalStateException(where + ": vertex attribute counts disagree " +
                 "(POSITION " + nverts + ", NORMAL " + (nrm.length / 3) +
-                (hasTc ? (", TEXCOORD_0 " + (tc.length / 2)) : "") + ")");
+                (hasTc ? (", TEXCOORD_0 " + (tcView.length / 2)) : "") +
+                (tcRaw != null ? (", " + MxmlGltfConventions.MXML_TEXCOORD_ATTR + " " +
+                    (tcRaw.length / 2)) : "") + ")");
         }
+        float[] tc = hasTc ? resolveTcoords(tcView, tcRaw, where) : null;
 
         // skin joint names (local skin index -> bone node name)
         String[] jointNames = null;
@@ -344,6 +375,60 @@ public class GltfToModelDef
         }
         tdef.tcoords = hasTc;
     }
+
+    /**
+     * Picks the mxml (bottom-left-origin) texture coordinates from the dual UV attributes:
+     * <ul>
+     *   <li>{@code _MXMLTEXCOORD} present and consistent with {@code TEXCOORD_0} &rarr; the raw
+     *       values (the bit-exact round-trip path — the bake's vertex dedup keys on them);</li>
+     *   <li>{@code _MXMLTEXCOORD} absent (a Blender re-export that lost the custom attribute, or
+     *       third-party glTF) &rarr; {@code TEXCOORD_0} flipped back (u unchanged, v = 1-v');</li>
+     *   <li>both present but <b>inconsistent</b> &rarr; the UVs were edited in a viewer, which
+     *       rewrites only {@code TEXCOORD_0} and leaves {@code _MXMLTEXCOORD} stale: adopt the
+     *       edited {@code TEXCOORD_0} wholesale (flipped back, per-mesh note printed) so the edit
+     *       actually takes effect on rebake instead of being silently ignored.</li>
+     * </ul>
+     * "Consistent" means max |u' - u| and max |(1-v') - v| &le; {@link #TC_STALE_TOLERANCE} over
+     * all vertices.
+     */
+    protected static float[] resolveTcoords (float[] tcView, float[] tcRaw, String where)
+    {
+        if (tcRaw == null) {
+            return unflipTcoords(tcView);
+        }
+        float maxDev = 0f;
+        for (int ii = 0; ii < tcView.length; ii += 2) {
+            maxDev = Math.max(maxDev, Math.abs(tcView[ii] - tcRaw[ii]));                // u
+            maxDev = Math.max(maxDev, Math.abs((1f - tcView[ii + 1]) - tcRaw[ii + 1])); // v
+        }
+        if (maxDev > TC_STALE_TOLERANCE) {
+            System.out.println("  note: " + where + ": TEXCOORD_0 disagrees with " +
+                MxmlGltfConventions.MXML_TEXCOORD_ATTR + " (max deviation " + maxDev + ") — " +
+                "the UVs were edited in a viewer; using the edited TEXCOORD_0 (v flipped back)");
+            return unflipTcoords(tcView);
+        }
+        return tcRaw;
+    }
+
+    /** Maps viewer-facing (top-left-origin) texture coordinates back to the mxml bottom-left
+     * convention: u unchanged, v = 1-v'. Lossy at the float-ULP level, so only used when the raw
+     * {@code _MXMLTEXCOORD} is absent or stale (see {@link #resolveTcoords}). */
+    protected static float[] unflipTcoords (float[] tcView)
+    {
+        float[] out = tcView.clone();
+        for (int ii = 1; ii < out.length; ii += 2) {
+            out[ii] = 1f - out[ii];
+        }
+        return out;
+    }
+
+    /** The stale-UV detection tolerance for {@link #resolveTcoords}. Must sit well ABOVE the
+     * float32 noise of the v &rarr; 1-v &rarr; 1-(1-v) flip cycle on unedited data (measured max
+     * 2.4e-7 across all 1434 textured corpus meshes, whose UVs tile out to &plusmn;130) — a false
+     * "stale" verdict would swap ULP-perturbed values into the bake and break bit-exact parity —
+     * and well BELOW the smallest meaningful UV edit (one texel of a 1024px texture &asymp;
+     * 9.8e-4). 1e-6 gives ~4x noise headroom and ~1000x edit margin. */
+    protected static final float TC_STALE_TOLERANCE = 1e-6f;
 
     /** Resolves a required primitive attribute to its accessor index, or fails naming the mesh
      * and the missing attribute. */

@@ -81,11 +81,30 @@ public final class MxmlGltfConventions
      * {@code TriMeshDef.tcoords} flag). Distinguishes an absent tcoord from a (0,0) one. */
     public static final String EXTRA_HAS_TCOORDS = "hasTcoords";
 
+    /** Mesh extras key: the mxml mesh's vertex count (0 for the legitimately-empty triMeshes).
+     * Lets the reader detect a mesh whose geometry an authoring tool silently dropped — Blender's
+     * exporter cannot write loose points, so a 1-vertex particle-emitter mesh vanishes on export
+     * — including the tcoord-less ones the older {@link #EXTRA_HAS_TCOORDS}-based diagnostic is
+     * blind to (that check stays as the fallback for files written before this key existed). */
+    public static final String EXTRA_VERTEX_COUNT = "vertexCount";
+
     /** Custom vertex-attribute name carrying the RAW (non-unit) mxml normals: the standard
      * {@code NORMAL} is a normalised copy for viewers, this is what {@code GltfToModelDef} reads
      * back so the bake's normal-keyed vertex dedup is bit-exact. (Blender ignores {@code _}
      * attributes; the validator applies no unit check to them.) */
     public static final String MXML_NORMAL_ATTR = "_MXMLNORMAL";
+
+    /** Custom vertex-attribute name carrying the RAW mxml texture coordinates: the standard
+     * {@code TEXCOORD_0} is a viewer-facing copy flipped to glTF's mandated top-left UV origin
+     * (u unchanged, v&prime;&nbsp;=&nbsp;1&minus;v — mxml UVs are bottom-left, the game's GL
+     * convention), and this is what {@code GltfToModelDef} prefers on read: 1&minus;v is NOT
+     * bit-exact-invertible in float, and {@link ModelDef.Vertex} dedup identity keys on
+     * location+normal+tcoords, so a lossy flip would corrupt the bake's vertex dedup / mesh merge
+     * and break structural parity. When absent (a Blender re-export that lost it, or third-party
+     * glTF) the reader falls back to 1&minus;TEXCOORD_0; when both are present but disagree
+     * beyond float-flip noise, TEXCOORD_0 was edited in a viewer and wins wholesale (so Blender
+     * UV edits take effect on rebake). Same dual-attribute pattern as {@link #MXML_NORMAL_ATTR}. */
+    public static final String MXML_TEXCOORD_ATTR = "_MXMLTEXCOORD";
 
     /** Mesh extras keys: the geometry offset transform, present only when non-identity. */
     public static final String EXTRA_OFFSET_TRANSLATION = "offsetTranslation";
