@@ -41,8 +41,14 @@ import com.threerings.jme.model.ModelTextureResolver;
  * <p>Usage (mirrors {@code mxmlParity}):
  * <pre>
  * MxmlGltfParity &lt;src rsrc root&gt; &lt;oracle rsrc root&gt; &lt;work dir&gt;
- *                [--render] [--renders=bind|mid|both] [--tolerance=0.005] [--all] [modelType ...]
+ *                [--render] [--renders=bind|mid|both] [--tolerance=0.005] [--all]
+ *                [--gltfRoot=&lt;committed glTF rsrc root&gt;] [modelType ...]
  * </pre>
+ *
+ * <p>With {@code --gltfRoot} the harness skips the {@link MxmlToGltf} write and reads the given
+ * pre-existing {@code model.gltf} tree (normally the committed source tree itself) — the Phase-4
+ * mode, verifying <em>committed glTF</em> &rarr; {@code .j3o} against the oracle, which is what
+ * the {@link GltfToJ3o} build path actually bakes.
  */
 public class MxmlGltfParity
 {
@@ -50,7 +56,7 @@ public class MxmlGltfParity
         throws Exception
     {
         List<String> types = new ArrayList<>();
-        File srcRoot = null, oracleRoot = null, workDir = null;
+        File srcRoot = null, oracleRoot = null, workDir = null, gltfRootArg = null;
         boolean render = false, all = false;
         String renders = "both";
         double tolerance = 0.005;
@@ -64,6 +70,8 @@ public class MxmlGltfParity
                 tolerance = Double.parseDouble(arg.substring("--tolerance=".length()));
             } else if (arg.equals("--all")) {
                 all = true;
+            } else if (arg.startsWith("--gltfRoot=")) {
+                gltfRootArg = new File(arg.substring("--gltfRoot=".length())).getAbsoluteFile();
             } else if (positional == 0) {
                 srcRoot = new File(arg).getAbsoluteFile();
                 positional++;
@@ -81,7 +89,7 @@ public class MxmlGltfParity
             (types.isEmpty() && !all)) {
             System.err.println("Usage: MxmlGltfParity <src rsrc root> <oracle rsrc root> " +
                 "<work dir> [--render] [--renders=bind|mid|both] [--tolerance=0.005] [--all] " +
-                "[modelType ...]");
+                "[--gltfRoot=<committed glTF rsrc root>] [modelType ...]");
             System.exit(2);
         }
         if (all) {
@@ -91,10 +99,18 @@ public class MxmlGltfParity
                 System.exit(2);
             }
         }
-        File gltfRoot = new File(workDir, "gltf");        // the intermediate model.gltf tree
+        // With --gltfRoot the harness reads a pre-existing (committed) model.gltf tree instead of
+        // writing its own intermediates — the Phase-4 mode: committed glTF -> .j3o vs the oracle.
+        boolean writeGltf = (gltfRootArg == null);
+        File gltfRoot = writeGltf ? new File(workDir, "gltf") : gltfRootArg;
         File nativeRoot = new File(workDir, "native-rsrc"); // the round-tripped native .j3o tree
         File pngDir = new File(workDir, "png");
-        gltfRoot.mkdirs();
+        if (writeGltf) {
+            gltfRoot.mkdirs();
+        } else if (!gltfRoot.isDirectory()) {
+            System.err.println("FAIL: --gltfRoot must exist: " + gltfRoot);
+            System.exit(2);
+        }
         nativeRoot.mkdirs();
         pngDir.mkdirs();
 
@@ -123,9 +139,11 @@ public class MxmlGltfParity
             File nativeJ3o = new File(outDir, "model.j3o");
             try {
                 File gltfDir = new File(gltfRoot, type);
-                gltfDir.mkdirs();
-                MxmlToGltf.Result wres = new MxmlToGltf()
-                    .writeFromDir(new File(srcRoot, type), gltfDir);
+                MxmlToGltf.Result wres = null;
+                if (writeGltf) {
+                    gltfDir.mkdirs();
+                    wres = new MxmlToGltf().writeFromDir(new File(srcRoot, type), gltfDir);
+                }
                 GltfToModelDef.Parsed parsed = new GltfToModelDef()
                     .read(new File(gltfDir, "model.gltf"));
 
@@ -148,7 +166,7 @@ public class MxmlGltfParity
                     .bake(props, parsed.model, animNames, adefs);
                 BinaryExporter.getInstance().save(baked.root, nativeJ3o);
 
-                if (wres.maxInfluences > 4) {
+                if (wres != null && wres.maxInfluences > 4) {
                     System.out.println("  note: " + wres.maxInfluences +
                         " glTF influence slots (>4) preserved across " + (wres.maxInfluences / 4) +
                         " JOINTS/WEIGHTS sets; MxmlToJ3o caps to 4 at bake time");

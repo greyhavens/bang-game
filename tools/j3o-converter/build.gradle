@@ -118,6 +118,8 @@ tasks.register("mxmlParity", JavaExec) {
 //       [-Prenders=bind|mid|both]
 // Same isolated-fork render classpath as mxmlParity; needs the staged oracle tree
 // (./gradlew assets:deploy — do NOT clean it, it is the parity reference).
+// Phase 4: add -PcommittedGltf to verify the COMMITTED assets/rsrc model.gltf tree (what the
+// GltfToJ3o build path bakes) instead of writing fresh round-trip intermediates.
 tasks.register("mxmlGltfParity", JavaExec) {
   group = "verification"
   description = "Epic 4 Phase 2b-ii: .mxml->glTF->.mxml round-trip bake vs fork-wrapper oracle."
@@ -146,6 +148,9 @@ tasks.register("mxmlGltfParity", JavaExec) {
   } else if (project.hasProperty("models")) {
     project.property("models").toString().split(",").each { cmd += it.trim() }
   }
+  if (project.hasProperty("committedGltf")) {
+    cmd += "--gltfRoot=${rootProject.file('assets/rsrc').absolutePath}"
+  }
   args = cmd
 }
 
@@ -170,6 +175,19 @@ tasks.register("bakeModels", JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = "com.threerings.bang.tools.j3o.BakeModels"
   args = [ rootProject.file("assets/build/staging/rsrc").absolutePath ]
+}
+
+// Epic 4 Phase 4: bake every COMMITTED model.gltf straight to a staged model.j3o
+// (GltfToModelDef -> MxmlToJ3o, the parity-verified round-trip pipeline) — the fork-free
+// replacement for BOTH CompileModelTask (.mxml -> model.dat) and bakeModels (.dat -> .j3o).
+// The assets module invokes this instead of the legacy pair when -PmodelSource=gltf
+// (see assets/build.gradle). -Pout= overrides the staging root for out-of-tree verification.
+tasks.register("bakeModelsGltf", JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = "com.threerings.bang.jme3.mxml.GltfToJ3o"
+  def out = project.hasProperty("out") ? project.property("out").toString() :
+      rootProject.file("assets/build/staging/rsrc").absolutePath
+  args = [ rootProject.file("assets/rsrc").absolutePath, out ]
 }
 
 // Phase 6a: bake each staged fork-format effects/<key>/particles.jme into a sibling
