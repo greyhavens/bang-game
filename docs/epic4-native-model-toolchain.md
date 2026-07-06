@@ -351,6 +351,16 @@ Keep the fork wrapper as the live oracle **throughout** — retire it only once 
 matches across the full corpus. Never a blind swap.
 
 ### Phase 4 — glTF becomes the source (the Blender cutover)
+**STAGING IN PROGRESS (PR #50, draft, 2026-07-06):** the glTF corpus is committed in-place next
+to the `.mxml` (310/310), the fork-free `GltfToJ3o` bake path sits behind `-PmodelSource=gltf`
+(default still `mxml`), `MxmlGltfParity -PcommittedGltf` verifies the committed tree against the
+oracle (310/310 structural, spot renders pixel-exact), and CI byte-checks committed-glTF
+freshness against a `.mxml` regeneration + runs the Khronos validator over the committed corpus.
+The flip (default→gltf) + `.mxml` delete land on that branch only after the human Blender
+edit-test; runtime-composited textures stay **plain mesh** in the committed glTF (Tim,
+2026-07-06 — no baked composites; the raw name stays in `EXTRA_TEXTURE`, per-model baking
+remains a later authoring option).
+
 With Phase 3 proving the writers correct, run the one-time migration:
 - **Design decision (2026-07-05): the build-side glTF reader is OUR `GltfToModelDef`** (the exact
   mirror of the 2b-ii writer) feeding the SAME `MxmlToJ3o` — so an *unedited* migrated model
@@ -372,9 +382,16 @@ With Phase 3 proving the writers correct, run the one-time migration:
   and the don'ts (don't rename emitter/attachment nodes — controllers bind to them by name;
   don't resample/retime animations unless you mean it).
 
-### Phase 4½ — particles end-state (decision needed from Tim)
-glTF carries no particle-system semantics, and fork deletion (Phase 5) needs `particles.jme`
-(fork binary) off the build path too. Options:
+### Phase 4½ — particles end-state (DECIDED 2026-07-06: re-author, via a freeze bridge)
+**Tim's decision (2026-07-06): (c) re-author as jME3 emitter definitions — executed as an
+incremental follow-up that does NOT gate the Phase-5 fork deletion.** The bridge is (a): freeze
+the verified baked `particles.j3o` at cutover (taking `particles.jme` + the fork BinaryImporter
+off the build path), then re-author effect-by-effect against the same render goldens, retiring
+each frozen `.j3o` as its editable source lands. Groundwork (inventory, parameter-space audit,
+editable-source-format proposal, mechanized-migration design) is in progress.
+
+The original options, for the record: glTF carries no particle-system semantics, and fork
+deletion (Phase 5) needs `particles.jme` (fork binary) off the build path too.
 - **(a) RECOMMENDED — freeze:** run the existing verified `ParticleConverter` bake one final time
   and commit the resulting 60 particle `.j3o` as source artifacts; delete `particles.jme`. Loses
   "editability" that in practice died with the fork's particle editor years ago; effects are
