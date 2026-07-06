@@ -103,7 +103,7 @@
       "bufferView": 4,
       "componentType": 5126,
       "count": 582,
-      "type": "VEC2"
+      "type": "VEC3"
     },
     {
       "bufferView": 5,
@@ -140,19 +140,19 @@
     {
       "buffer": 0,
       "byteOffset": 25608,
-      "byteLength": 4656,
+      "byteLength": 6984,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 30264,
+      "byteOffset": 32592,
       "byteLength": 4320,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 34584,
+      "byteLength": 36912,
       "uri": "model.bin"
     }
   ]

@@ -590,7 +590,7 @@
       "bufferView": 4,
       "componentType": 5126,
       "count": 487,
-      "type": "VEC2"
+      "type": "VEC3"
     },
     {
       "bufferView": 5,
@@ -628,7 +628,7 @@
       "bufferView": 10,
       "componentType": 5126,
       "count": 42,
-      "type": "VEC2"
+      "type": "VEC3"
     },
     {
       "bufferView": 11,
@@ -665,55 +665,55 @@
     {
       "buffer": 0,
       "byteOffset": 21428,
-      "byteLength": 3896,
+      "byteLength": 5844,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 25324,
+      "byteOffset": 27272,
       "byteLength": 3864,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteOffset": 29188,
+      "byteOffset": 31136,
       "byteLength": 504,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 29692,
+      "byteOffset": 31640,
       "byteLength": 504,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 30196,
+      "byteOffset": 32144,
       "byteLength": 504,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 30700,
+      "byteOffset": 32648,
       "byteLength": 336,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 31036,
-      "byteLength": 336,
+      "byteOffset": 32984,
+      "byteLength": 504,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 31372,
+      "byteOffset": 33488,
       "byteLength": 420,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 31792,
+      "byteLength": 33908,
       "uri": "model.bin"
     }
   ]
