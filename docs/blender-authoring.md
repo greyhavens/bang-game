@@ -1,11 +1,15 @@
 # Blender authoring workflow (Epic 4 — glTF model source)
 
 How to edit the committed models (`assets/rsrc/**/model.gltf` + `model.bin`) in Blender and get
-them back into the game. Verified against **Blender 4.5 LTS** (Khronos glTF I/O v4.5.51) via a
-full-corpus headless smoke — all 310 models import cleanly (zero warnings) — plus a
-sensitive-set re-export probe that established exactly what survives a Blender round trip, and
-a rebake proof: a Blender re-export of the saloon bakes to **meanDiff 0.000000** against the
-render oracle (and even re-collapses to structural parity — see Verification).
+them back into the game. The corpus imports cleanly on **Blender 4.5 LTS** (Khronos glTF I/O
+v4.5.51; full-corpus headless smoke — all 310 models, zero warnings) and on **Blender 5.1+**:
+the toolchain pads `_MXMLTEXCOORD` to VEC3 — (u, v, 0) — so every custom vertex attribute
+shares one width, because Blender 5.1.0–5.1.2's glTF importer crashes on spec-valid files with
+mixed-width custom attributes (upstream bug in `io_scene_gltf2` `do_primitives`, list-vs-set
+misalignment; the corpus now sidesteps it). The full re-export preservation matrix below was
+validated on 4.5 — its re-validation on 5.1 is a tracked follow-up — plus a rebake proof: a
+Blender re-export of the saloon bakes to **meanDiff 0.000000** against the render oracle (and
+even re-collapses to structural parity — see Verification).
 
 ## What you can edit today
 
