@@ -299,6 +299,22 @@ public class GltfToModelDef
             ? readFloats(intVal(rawTc), where + " " + MxmlGltfConventions.MXML_TEXCOORD_ATTR)
             : null;
         int nverts = pos.length / 3;
+        // _MXMLTEXCOORD comes in TWO widths and both must be accepted: the toolchain writes
+        // VEC3 — (u, v, 0), padded so all custom attributes share one width, sidestepping the
+        // Blender 5.1.0-5.1.2 importer bug with mixed-width custom attributes (see MxmlToGltf)
+        // — while pre-pad files and Blender re-exports of them still carry VEC2. Only (u, v)
+        // are meaningful either way; narrow VEC3 to VEC2 here (keyed off the accessor's
+        // declared type, not the array length) so all downstream logic (count checks,
+        // resolveTcoords stale detection, the bake) is width-agnostic.
+        if (tcRaw != null && accessorComps(intVal(rawTc)) == 3) {
+            int ntc = tcRaw.length / 3;
+            float[] narrowed = new float[ntc * 2];
+            for (int ii = 0; ii < ntc; ii++) {
+                narrowed[ii * 2] = tcRaw[ii * 3];
+                narrowed[ii * 2 + 1] = tcRaw[ii * 3 + 1];
+            }
+            tcRaw = narrowed;
+        }
         if (nrm.length != nverts * 3 || (hasTc && tcView.length != nverts * 2) ||
                 (tcRaw != null && tcRaw.length != nverts * 2)) {
             throw new IllegalStateException(where + ": vertex attribute counts disagree " +
@@ -711,6 +727,13 @@ public class GltfToModelDef
             }
         }
         return out;
+    }
+
+    /** The component count an accessor declares (its {@code type} field: VEC2 &rarr; 2, ...). */
+    @SuppressWarnings("unchecked")
+    protected int accessorComps (int accIdx)
+    {
+        return compsOf((String)((Map<String,Object>)_accessors.get(accIdx)).get("type"));
     }
 
     protected static int compsOf (String type)

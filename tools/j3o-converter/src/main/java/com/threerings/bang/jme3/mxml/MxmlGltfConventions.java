@@ -103,7 +103,16 @@ public final class MxmlGltfConventions
      * and break structural parity. When absent (a Blender re-export that lost it, or third-party
      * glTF) the reader falls back to 1&minus;TEXCOORD_0; when both are present but disagree
      * beyond float-flip noise, TEXCOORD_0 was edited in a viewer and wins wholesale (so Blender
-     * UV edits take effect on rebake). Same dual-attribute pattern as {@link #MXML_NORMAL_ATTR}. */
+     * UV edits take effect on rebake). Same dual-attribute pattern as {@link #MXML_NORMAL_ATTR}.
+     *
+     * <p>Written as <b>VEC3</b> — (u,&nbsp;v,&nbsp;0) — not the natural VEC2, so every custom
+     * attribute in a primitive shares one width/dtype (float32 VEC3, matching
+     * {@link #MXML_NORMAL_ATTR}): Blender 5.1.0&ndash;5.1.2's glTF importer
+     * ({@code io_scene_gltf2 blender/imp/mesh.py}, {@code do_primitives}) collects
+     * custom-attribute data arrays in a list but consumes them by enumerating a set, so
+     * mixed-width custom attributes misalign and the import fails with a numpy concatenation
+     * ValueError. The reader accepts both VEC2 (historical files / Blender re-exports) and VEC3,
+     * using only the first two components. */
     public static final String MXML_TEXCOORD_ATTR = "_MXMLTEXCOORD";
 
     /** Mesh extras keys: the geometry offset transform, present only when non-identity. */

@@ -402,12 +402,35 @@ public class MxmlToGltf
                 tcFlipped[ii] = 1f - tcFlipped[ii];
             }
         }
+        // _MXMLTEXCOORD is deliberately padded to VEC3 — (u, v, 0) — NOT the natural VEC2, so
+        // that every custom ("_"-prefixed) attribute in the primitive shares one width/dtype
+        // (float32 VEC3, matching _MXMLNORMAL). Blender 5.1.0-5.1.2's glTF importer
+        // (io_scene_gltf2 blender/imp/mesh.py, do_primitives) appends custom-attribute data
+        // arrays to a LIST in discovery order but consumes them by enumerating a SET, so with
+        // custom attributes of MIXED widths (_MXMLNORMAL VEC3 + _MXMLTEXCOORD VEC2) the data
+        // arrays misalign and np.concatenate raises "ValueError: all the input array dimensions
+        // except for the concatenation axis must match exactly", failing the whole import. When
+        // all custom attributes share one width the misindexing is shape-compatible and
+        // self-consistent, so the import works. Do NOT "optimize" this back to VEC2 — the third
+        // component is the workaround. The reader (GltfToModelDef) accepts both widths and only
+        // ever uses (u, v).
+        float[] tcPadded = null;
+        if (hasTc) {
+            int ntc = tc.length / 2;
+            tcPadded = new float[ntc * 3];
+            for (int ii = 0; ii < ntc; ii++) {
+                tcPadded[ii * 3] = tc[ii * 2];
+                tcPadded[ii * 3 + 1] = tc[ii * 2 + 1];
+                // tcPadded[ii * 3 + 2] stays 0f
+            }
+        }
         int posAcc = addFloatAccessor(pos, 3, "VEC3", min, max, ARRAY_BUFFER);
         int nrmAcc = addFloatAccessor(nrmUnit, 3, "VEC3", null, null, ARRAY_BUFFER);
         int rawNrmAcc = addFloatAccessor(nrm, 3, "VEC3", null, null, ARRAY_BUFFER);
         Integer tcAcc = hasTc
             ? addFloatAccessor(tcFlipped, 2, "VEC2", null, null, ARRAY_BUFFER) : null;
-        Integer rawTcAcc = hasTc ? addFloatAccessor(tc, 2, "VEC2", null, null, ARRAY_BUFFER) : null;
+        Integer rawTcAcc = hasTc
+            ? addFloatAccessor(tcPadded, 3, "VEC3", null, null, ARRAY_BUFFER) : null;
 
         // indices
         int nidx = tdef.indices.size();
