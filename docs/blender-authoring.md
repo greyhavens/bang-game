@@ -33,7 +33,7 @@ render oracle (and even re-collapses to structural parity — see Verification).
    bpy.ops.export_scene.gltf(
        filepath=..., export_format='GLTF_SEPARATE',   # separate .gltf+.bin — NOT GLB
        export_extras=True,                    # the mxml metadata valve — REQUIRED
-       export_attributes=True,                # _MXMLNORMAL custom attribute — REQUIRED
+       export_attributes=True,                # _MXMLNORMAL/_MXMLTEXCOORD custom attrs — REQUIRED
        export_yup=True,                       # default
        export_all_influences=True,            # REQUIRED for skinned units (corpus uses 2 sets)
        export_animations=True, export_animation_mode='ACTIONS',
@@ -80,7 +80,10 @@ Survives exactly (verified value-exact on the sensitive set):
   `hasTcoords`, offset transforms, the `mxmlWrapper` root marker. These are the
   **authoritative** render flags and hierarchy data; the glTF material (`doubleSided`,
   `alphaMode`) is just a viewer approximation of them. Don't edit extras unless you mean it.
-- `_MXMLNORMAL` (the raw mxml normals, bit-exact per vertex) — with `export_attributes=True`.
+- `_MXMLNORMAL` and `_MXMLTEXCOORD` (the raw mxml normals and UVs, bit-exact per vertex) —
+  with `export_attributes=True`. The standard `NORMAL`/`TEXCOORD_0` are viewer-facing copies
+  (normalised, resp. v-flipped to glTF's top-left UV origin — textures display right-side-up
+  in Blender); the bake keys on the raw attributes.
 - Animation names, counts, and (with the settings above) keyframe times/values to within
   float ULP; translation/scale channels bit-exact.
 - Empty `triMesh` nodes (they carry merge semantics in extras despite having no mesh).
@@ -107,6 +110,13 @@ Lost or changed no matter the settings — the reader/bake compensates, but know
 - Don't normalize or recalculate normals expecting it to stick: the bake reads
   `_MXMLNORMAL` (raw), not the display `NORMAL`. To intentionally change shading normals you
   must change `_MXMLNORMAL` (or regenerate the model through the toolchain).
+- **UV edits, by contrast, ARE honored on rebake** (stale-detection): editing UVs in Blender
+  rewrites only the display `TEXCOORD_0`, leaving `_MXMLTEXCOORD` stale — the reader spots the
+  disagreement (beyond 1e-6 after un-flipping v) and adopts your edited `TEXCOORD_0` wholesale,
+  printing a per-mesh note. An unedited mesh keeps its raw `_MXMLTEXCOORD` and rebakes
+  bit-exact. Remember `TEXCOORD_0` is v-flipped relative to the mxml values (glTF top-left vs
+  game bottom-left origin) — edit UVs visually against the texture and let the reader handle
+  the convention; don't hand-copy values between the two attributes.
 - `model.properties` stays the game-config source (scale, action sequences, controllers,
   variants) — model edits never touch it, and it is never baked into the glTF.
 - Runtime-composited textures (~98 colorized/variant models, e.g. `bugle.png`) intentionally

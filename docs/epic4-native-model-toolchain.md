@@ -332,6 +332,23 @@ MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf
   violations only a validator/Blender rejects — three such (raw texture path, empty-channel
   animation, unencoded URI) were caught by hand during #48 review, which is exactly why this gate
   exists. It cannot run on the dev box (no Node) — the CI runners have it.
+- **UV V-origin — the fourth spec deviation, caught by the human edit test (2026-07-06) and
+  invisible to every automated gate.** glTF mandates a **top-left** UV origin; mxml UVs are
+  bottom-left (the game's GL convention), and the writer stored them verbatim in `TEXCOORD_0` — so
+  every conformant viewer showed textures V-mirrored (the saloon's SALOON sign upside-down in
+  Blender) while all gates stayed green: round-trip parity uses our own mirror reader, the
+  validator has no semantic UV check, and the render oracle renders through the game pipeline.
+  Fixed with the same dual-attribute pattern as the normals: `TEXCOORD_0` is now the viewer-facing
+  flipped copy (u, 1−v) and the raw mxml UVs ride a custom **`_MXMLTEXCOORD`** the reader prefers —
+  1−v is not bit-exact-invertible in float, and the bake's `Vertex` dedup identity keys on
+  location+normal+tcoords, so a lossy flip would corrupt the dedup and break structural parity.
+  Plus **stale detection**: when both attributes are present but disagree beyond 1e-6 (measured
+  flip-cycle float noise across the corpus: ≤2.4e-7; smallest meaningful edit ≈1e-3), the UVs were
+  edited in a viewer (which rewrites only `TEXCOORD_0`) and the edited values win wholesale — so
+  Blender UV edits actually take effect on rebake instead of being silently ignored. Corpus
+  regenerated in place; 310/310 structural parity, spot renders 0.000000, and the Blender
+  round-trip re-verified (sign right-side-up, `_MXMLTEXCOORD` survives re-export at 1-ULP
+  deviation).
 - **Blender headless smoke — still a Phase-4 gate.** A `blender --background --python` import test
   (mesh/bone/animation counts, and the real "does it edit + re-export" cycle) needs Blender, which
   isn't on the dev box or the CI runners; it lands with the Phase-4 cutover. (`inverseBindMatrices`
