@@ -299,8 +299,10 @@ MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf
   inverse **losslessly** — a numeric rotate-then-unrotate of the irrational-component quaternion was
   rejected precisely because it could drift the train-model merge decisions). Scale is raw mxml
   units; `model.properties scale=` is deliberately NOT baked (recorded in `asset.extras`).
-- **Skinning — the sharp edge:** the corpus goes up to **12 bone influences per vertex** (cavalry;
-  probe added), well past glTF's 4-per-set cap. Pre-capping to 4 in the glTF would shrink
+- **Skinning — the sharp edge:** the corpus exceeds glTF's 4-influences-per-set cap (cavalry
+  et al; probe added) — the committed corpus carries **two JOINTS_n/WEIGHTS_n sets** and no
+  model needs a third (corrected 2026-07-06: an early probe note said "12 influences per
+  vertex", but no committed model has a JOINTS_2, so ≤8 is the corpus ground truth). Pre-capping to 4 in the glTF would shrink
   `MxmlToJ3o`'s armature (fewer weight-referenced bones ⇒ fewer joints) and break structural
   parity, so the writer preserves the **full** influence set across `ceil(max/4)` JOINTS_n/WEIGHTS_n
   sets; `MxmlToJ3o` still does the top-4 cap+renormalise itself at bake time, exactly as the oracle.
