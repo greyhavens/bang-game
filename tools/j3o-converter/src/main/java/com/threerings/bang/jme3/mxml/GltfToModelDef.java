@@ -25,16 +25,33 @@ import com.threerings.bang.jme3.mxml.ModelDef.TriMeshDef;
 import com.threerings.bang.jme3.mxml.ModelDef.Vertex;
 
 /**
- * The Epic 4 Phase 2b-ii glTF &rarr; {@link ModelDef} reader: the <b>exact inverse</b> of
- * {@link MxmlToGltf}. It reads {@code model.gltf}+{@code model.bin} and reconstructs a
- * {@link ModelDef} + {@code Map<String,AnimationDef>} bit-identical (for every field
- * {@link MxmlToJ3o#bake} reads) to what {@link ModelParser}/{@link AnimationParser} produced — so
- * feeding the reconstruction back through {@code MxmlToJ3o.bake(props, mdef, animNames, adefs)}
- * yields the same native {@code .j3o} as the direct {@code .mxml} path (verified by
- * {@link MxmlGltfParity}). This is also the intended <b>build-side</b> reader for the Phase-4
- * Blender cutover (so an unedited migrated model bakes identically by construction).
+ * The Epic 4 glTF &rarr; {@link ModelDef} reader: reads {@code model.gltf}+{@code model.bin} and
+ * reconstructs a {@link ModelDef} + {@code Map<String,AnimationDef>} that
+ * {@code MxmlToJ3o.bake(props, mdef, animNames, adefs)} turns into a native {@code .j3o}. It
+ * supports <b>two producer profiles</b>:
  *
- * <p>Reconstruction correctness rests on a few deliberate points, mirroring the writer:
+ * <ol>
+ *   <li><b>Our own writer {@link MxmlToGltf} — bit-exact round-trip</b> (the Phase 2b-ii
+ *       contract, and the Phase-4 build path for unedited models). The reconstruction is
+ *       bit-identical (for every field {@link MxmlToJ3o#bake} reads) to what
+ *       {@link ModelParser}/{@link AnimationParser} produced, so the bake yields the same native
+ *       {@code .j3o} as the direct {@code .mxml} path — verified across the full corpus by
+ *       {@link MxmlGltfParity}.</li>
+ *   <li><b>Blender re-exports (Khronos glTF Blender I/O, Blender 4.5) — render-parity rebake</b>
+ *       (the Phase-4 edit loop: human edits a model in Blender and re-exports). Blender preserves
+ *       our node {@code extras} and the {@code _MXMLNORMAL} attribute but re-splits/reorders
+ *       vertices, reorders nodes, uses its own buffer layouts (accessor-level {@code byteOffset},
+ *       interleaving via {@code bufferView.byteStride}, UNSIGNED_BYTE/SHORT indices and joints)
+ *       and drops our animation {@code extras} (the frame rate is then derived from the sampler
+ *       input key spacing). Such files cannot reproduce the oracle {@code .j3o} structurally; the
+ *       gate is {@link MxmlGltfParity} {@code --renderOnly} (render meanDiff &le; 0.005).
+ *       <b>Not yet supported:</b> Blender's skinned-mesh restructure (the mesh moves to an
+ *       extras-less {@code '&lt;name&gt;.001'} sibling of the extras-bearing empty, with POSITIONs
+ *       rebased into armature space) and meshes Blender's importer drops entirely (1-vertex
+ *       particle-emitter meshes) — the reader fails these with a diagnostic naming the node.</li>
+ * </ol>
+ *
+ * <p>Bit-exactness for profile 1 rests on a few deliberate points, mirroring the writer:
  * <ul>
  *   <li><b>Axis convention:</b> the synthetic wrapper node
  *       ({@link MxmlGltfConventions#EXTRA_WRAPPER}) is discarded and its children adopted as roots
@@ -82,11 +99,26 @@ public class GltfToModelDef
         String json = new String(Files.readAllBytes(gltfFile.toPath()), StandardCharsets.UTF_8);
         Map<String,Object> gltf = (Map<String,Object>)new Json(json).parse();
 
-        // resolve the binary buffer (single buffer, uri = sibling file)
+        // resolve the binary buffer: a single buffer whose uri is a sibling file (our writer:
+        // model.bin) or a base64 data: uri (Blender's "glTF Embedded" flavor). A file with no
+        // buffer at all is legal (a mesh-less, animation-less model carries no binary data).
         List<Object> buffers = (List<Object>)gltf.get("buffers");
-        Map<String,Object> buffer = (Map<String,Object>)buffers.get(0);
-        String uri = (String)buffer.get("uri");
-        _bin = Files.readAllBytes(new File(gltfFile.getParentFile(), uri).toPath());
+        if (buffers == null || buffers.isEmpty()) {
+            _bin = new byte[0];
+        } else {
+            Map<String,Object> buffer = (Map<String,Object>)buffers.get(0);
+            String uri = (String)buffer.get("uri");
+            if (uri == null) {
+                throw new IOException("buffer 0 has no uri (GLB-embedded binary chunks are not " +
+                    "supported; export as glTF Separate or Embedded)");
+            }
+            if (uri.startsWith("data:")) {
+                int comma = uri.indexOf(',');
+                _bin = java.util.Base64.getDecoder().decode(uri.substring(comma + 1));
+            } else {
+                _bin = Files.readAllBytes(new File(gltfFile.getParentFile(), uri).toPath());
+            }
+        }
 
         _accessors = (List<Object>)gltf.get("accessors");
         _bufferViews = (List<Object>)gltf.get("bufferViews");
@@ -135,6 +167,14 @@ public class GltfToModelDef
     {
         Map<String,Object> node = node(idx);
         Map<String,Object> extras = (Map<String,Object>)node.get("extras");
+        if (extras == null) {
+            throw new IllegalStateException("node " + idx + " ('" + node.get("name") + "') has " +
+                "no mxml extras, so it was not written by MxmlToGltf (nor preserved from it). If " +
+                "this is a Blender re-export of a SKINNED model: Blender moves each skinned mesh " +
+                "onto a new extras-less '<name>.001' sibling of the original (extras-bearing) " +
+                "node — a restructure this reader does not support yet; skinned models are not " +
+                "Blender-editable until it does.");
+        }
         String type = (String)extras.get(MxmlGltfConventions.EXTRA_MXML_TYPE);
 
         SpatialDef sdef;
@@ -172,8 +212,28 @@ public class GltfToModelDef
             Object meshRef = node.get("mesh");
             if (meshRef != null) {
                 readGeometry(tdef, intVal(meshRef), node, hasTc);
+            } else if (hasTc && skin) {
+                // Blender re-parents each skinned mesh onto a NEW extras-less '<name>.001' node
+                // (child of the armature, POSITIONs rebased into armature space) and leaves the
+                // original node as this extras-bearing empty — a restructure the reader does not
+                // support yet
+                throw new IllegalStateException("node " + idx + " ('" + sdef.name + "'): " +
+                    "skinMesh node carries no glTF mesh. In a Blender re-export the skinned mesh " +
+                    "moves to a new extras-less '" + sdef.name + ".001' sibling with positions " +
+                    "rebased into armature space — a restructure this reader does not support " +
+                    "yet; skinned models are not Blender-editable until it does.");
+            } else if (hasTc) {
+                // every legitimately-empty triMesh in the corpus has hasTcoords=false; a meshless
+                // triMesh node that HAD texture coordinates means an authoring tool dropped the
+                // geometry (Blender's glTF importer silently discards 1-vertex particle-emitter
+                // meshes) — fail loudly rather than bake the mesh away
+                throw new IllegalStateException("node " + idx + " ('" + sdef.name + "'): triMesh " +
+                    "with hasTcoords=true carries no glTF mesh — its geometry was dropped in the " +
+                    "authoring round-trip (Blender's importer discards 1-vertex particle-emitter " +
+                    "meshes, so models with such emitters are not Blender-editable). Restore the " +
+                    "mesh from the committed model.gltf.");
             } else {
-                tdef.tcoords = hasTc; // empty mesh: no vertices, but preserve the flag
+                tdef.tcoords = false; // empty mesh: no vertices (legitimate, e.g. train dummies)
             }
         }
         return sdef;
@@ -184,19 +244,39 @@ public class GltfToModelDef
         boolean hasTc)
     {
         Map<String,Object> mesh = (Map<String,Object>)_meshes.get(meshIdx);
-        Map<String,Object> prim =
-            (Map<String,Object>)((List<Object>)mesh.get("primitives")).get(0);
+        String where = "mesh " + meshIdx + " ('" + mesh.get("name") + "', node '" + tdef.name +
+            "')";
+        List<Object> prims = (List<Object>)mesh.get("primitives");
+        if (prims.size() != 1) {
+            throw new IllegalStateException(where + " has " + prims.size() + " primitives; " +
+                "expected exactly 1 (Blender splits a mesh into one primitive per material — " +
+                "keep a single material per mesh)");
+        }
+        Map<String,Object> prim = (Map<String,Object>)prims.get(0);
+        Object mode = prim.get("mode");
+        if (mode != null && intVal(mode) != 4) {
+            throw new IllegalStateException(
+                where + ": primitive mode " + intVal(mode) + " is not TRIANGLES (4)");
+        }
         Map<String,Object> attrs = (Map<String,Object>)prim.get("attributes");
 
-        float[] pos = readFloats(intVal(attrs.get("POSITION")));
+        float[] pos = readFloats(requireAttr(attrs, "POSITION", where), where + " POSITION");
         // read the RAW normals from _MXMLNORMAL (the standard NORMAL is a normalised copy for
         // viewers/Blender; the bake's vertex dedup / merge keys on the exact raw normal, so the
         // round-trip must use the raw values — see MxmlToGltf). Fall back to NORMAL for any glTF
         // written before _MXMLNORMAL existed.
         Object rawNrm = attrs.get(MxmlGltfConventions.MXML_NORMAL_ATTR);
-        float[] nrm = readFloats(intVal(rawNrm != null ? rawNrm : attrs.get("NORMAL")));
-        float[] tc = hasTc ? readFloats(intVal(attrs.get("TEXCOORD_0"))) : null;
+        float[] nrm = (rawNrm != null)
+            ? readFloats(intVal(rawNrm), where + " " + MxmlGltfConventions.MXML_NORMAL_ATTR)
+            : readFloats(requireAttr(attrs, "NORMAL", where), where + " NORMAL");
+        float[] tc = hasTc
+            ? readFloats(requireAttr(attrs, "TEXCOORD_0", where), where + " TEXCOORD_0") : null;
         int nverts = pos.length / 3;
+        if (nrm.length != nverts * 3 || (hasTc && tc.length != nverts * 2)) {
+            throw new IllegalStateException(where + ": vertex attribute counts disagree " +
+                "(POSITION " + nverts + ", NORMAL " + (nrm.length / 3) +
+                (hasTc ? (", TEXCOORD_0 " + (tc.length / 2)) : "") + ")");
+        }
 
         // skin joint names (local skin index -> bone node name)
         String[] jointNames = null;
@@ -204,15 +284,29 @@ public class GltfToModelDef
         List<float[]> weightSets = new ArrayList<>();
         boolean isSkin = tdef instanceof SkinMeshDef;
         if (isSkin) {
+            Object skinRef = node.get("skin");
+            if (skinRef == null) {
+                throw new IllegalStateException(where + " is a skinMesh but its node carries no " +
+                    "glTF skin");
+            }
             List<Object> joints = (List<Object>)((Map<String,Object>)_skins.get(
-                intVal(node.get("skin")))).get("joints");
+                intVal(skinRef))).get("joints");
             jointNames = new String[joints.size()];
             for (int jj = 0; jj < joints.size(); jj++) {
                 jointNames[jj] = (String)node(intVal(joints.get(jj))).get("name");
             }
             for (int set = 0; attrs.containsKey("JOINTS_" + set); set++) {
-                jointSets.add(readUShorts(intVal(attrs.get("JOINTS_" + set))));
-                weightSets.add(readFloats(intVal(attrs.get("WEIGHTS_" + set))));
+                int[] ji = readJoints(intVal(attrs.get("JOINTS_" + set)),
+                    where + " JOINTS_" + set);
+                float[] jw = readFloats(requireAttr(attrs, "WEIGHTS_" + set, where),
+                    where + " WEIGHTS_" + set);
+                if (ji.length != nverts * 4 || jw.length != nverts * 4) {
+                    throw new IllegalStateException(where + ": JOINTS_" + set + "/WEIGHTS_" + set +
+                        " counts (" + (ji.length / 4) + "/" + (jw.length / 4) +
+                        ") disagree with POSITION (" + nverts + " vertices)");
+                }
+                jointSets.add(ji);
+                weightSets.add(jw);
             }
         }
 
@@ -239,11 +333,27 @@ public class GltfToModelDef
             }
             tdef.vertices.add(v);
         }
-        int[] idx = readUInts(intVal(prim.get("indices")));
+        Object idxRef = prim.get("indices");
+        if (idxRef == null) {
+            throw new IllegalStateException(where + ": non-indexed primitive (no 'indices'); " +
+                "export with indexed geometry");
+        }
+        int[] idx = readIndices(intVal(idxRef), where + " indices");
         for (int i : idx) {
             tdef.indices.add(i);
         }
         tdef.tcoords = hasTc;
+    }
+
+    /** Resolves a required primitive attribute to its accessor index, or fails naming the mesh
+     * and the missing attribute. */
+    protected static int requireAttr (Map<String,Object> attrs, String name, String where)
+    {
+        Object ref = attrs.get(name);
+        if (ref == null) {
+            throw new IllegalStateException(where + " primitive has no " + name + " attribute");
+        }
+        return intVal(ref);
     }
 
     // ================================================================================
@@ -253,30 +363,40 @@ public class GltfToModelDef
     @SuppressWarnings("unchecked")
     protected AnimationDef readAnimation (Map<String,Object> anim)
     {
-        Map<String,Object> extras = (Map<String,Object>)anim.get("extras");
+        String name = (String)anim.get("name");
         AnimationDef adef = new AnimationDef();
-        adef.frameRate = intVal(extras.get(MxmlGltfConventions.EXTRA_FRAME_RATE));
-        int frameCount = intVal(extras.get("frameCount"));
 
         // per animated node: its translation/rotation/scale output accessors, in channel
-        // first-appearance order
+        // first-appearance order (plus the node index, for the static-TRS fallback below)
         List<String> order = new ArrayList<>();
         Map<String,int[]> accByNode = new LinkedHashMap<>(); // [T,R,S] accessor indices
+        Map<String,Integer> nodeByName = new LinkedHashMap<>();
         List<Object> channels = (List<Object>)anim.get("channels");
         List<Object> samplers = (List<Object>)anim.get("samplers");
+        int firstInput = -1;
         if (channels != null) {
             for (Object c : channels) {
                 Map<String,Object> ch = (Map<String,Object>)c;
                 Map<String,Object> target = (Map<String,Object>)ch.get("target");
-                String nodeName = (String)node(intVal(target.get("node"))).get("name");
+                int nodeIdx = intVal(target.get("node"));
+                String nodeName = (String)node(nodeIdx).get("name");
                 String path = (String)target.get("path");
                 Map<String,Object> sampler = (Map<String,Object>)samplers.get(
                     intVal(ch.get("sampler")));
+                if ("CUBICSPLINE".equals(sampler.get("interpolation"))) {
+                    throw new IllegalStateException("animation '" + name + "': CUBICSPLINE " +
+                        "sampler (node '" + nodeName + "', path '" + path + "') is not " +
+                        "supported; re-export with sampled LINEAR keyframes");
+                }
                 int outAcc = intVal(sampler.get("output"));
+                if (firstInput < 0) {
+                    firstInput = intVal(sampler.get("input"));
+                }
                 int[] trs = accByNode.get(nodeName);
                 if (trs == null) {
                     trs = new int[] { -1, -1, -1 };
                     accByNode.put(nodeName, trs);
+                    nodeByName.put(nodeName, nodeIdx);
                     order.add(nodeName);
                 }
                 switch (path) {
@@ -288,22 +408,50 @@ public class GltfToModelDef
             }
         }
 
-        // read all output data
+        // frame grid: our writer records the exact mxml frameRate/frameCount in the animation
+        // extras; Blender's importer drops them, so for a re-export derive both from the (dense)
+        // sampler input — key count and 1/spacing (Blender resamples on exactly that grid)
+        Map<String,Object> extras = (Map<String,Object>)anim.get("extras");
+        int frameCount;
+        if (extras != null && extras.get(MxmlGltfConventions.EXTRA_FRAME_RATE) != null) {
+            adef.frameRate = intVal(extras.get(MxmlGltfConventions.EXTRA_FRAME_RATE));
+            frameCount = intVal(extras.get("frameCount"));
+        } else if (firstInput >= 0) {
+            float[] times = readFloats(firstInput, "animation '" + name + "' sampler input");
+            frameCount = times.length;
+            adef.frameRate = deriveFrameRate(times);
+        } else {
+            throw new IllegalStateException("animation '" + name + "' has no frameRate/" +
+                "frameCount extras and no channels to derive them from");
+        }
+
+        // read all output data; a node whose channel for some path was omitted (producers may
+        // drop constant tracks) holds its static (rest) value on that path for every frame
         Map<String,float[]> tData = new LinkedHashMap<>(), rData = new LinkedHashMap<>(),
             sData = new LinkedHashMap<>();
-        for (String name : order) {
-            int[] trs = accByNode.get(name);
-            tData.put(name, readFloats(trs[0]));
-            rData.put(name, readFloats(trs[1]));
-            sData.put(name, readFloats(trs[2]));
+        for (String nn : order) {
+            int[] trs = accByNode.get(nn);
+            Map<String,Object> node = node(nodeByName.get(nn));
+            tData.put(nn, trs[0] >= 0
+                ? readFloats(trs[0], "animation '" + name + "' node '" + nn + "' translation")
+                : repeatStatic(readTrs(node.get("translation"), 0f, 0f, 0f), frameCount));
+            rData.put(nn, trs[1] >= 0
+                ? readFloats(trs[1], "animation '" + name + "' node '" + nn + "' rotation")
+                : repeatStatic(readTrs(node.get("rotation"), 0f, 0f, 0f, 1f), frameCount));
+            sData.put(nn, trs[2] >= 0
+                ? readFloats(trs[2], "animation '" + name + "' node '" + nn + "' scale")
+                : repeatStatic(readTrs(node.get("scale"), 1f, 1f, 1f), frameCount));
+            checkTrack(name, nn, "translation", tData.get(nn), frameCount, 3);
+            checkTrack(name, nn, "rotation", rData.get(nn), frameCount, 4);
+            checkTrack(name, nn, "scale", sData.get(nn), frameCount, 3);
         }
 
         for (int ff = 0; ff < frameCount; ff++) {
             FrameDef frame = new FrameDef();
-            for (String name : order) {
+            for (String nn : order) {
                 TransformDef td = new TransformDef();
-                td.name = name;
-                float[] t = tData.get(name), r = rData.get(name), s = sData.get(name);
+                td.name = nn;
+                float[] t = tData.get(nn), r = rData.get(nn), s = sData.get(nn);
                 td.translation = new float[] { t[ff * 3], t[ff * 3 + 1], t[ff * 3 + 2] };
                 td.rotation = new float[] { r[ff * 4], r[ff * 4 + 1], r[ff * 4 + 2], r[ff * 4 + 3] };
                 td.scale = new float[] { s[ff * 3], s[ff * 3 + 1], s[ff * 3 + 2] };
@@ -314,58 +462,170 @@ public class GltfToModelDef
         return adef;
     }
 
+    /** Derives an integer frames-per-second from dense sampler input times (the mean key
+     * spacing): the fallback when a producer (Blender) dropped our frameRate extras. */
+    protected static int deriveFrameRate (float[] times)
+    {
+        if (times.length < 2) {
+            return com.threerings.jme.model.ModelMetadata.DEFAULT_FRAME_RATE;
+        }
+        double spacing = (double)(times[times.length - 1] - times[0]) / (times.length - 1);
+        return (spacing > 0) ? Math.max(1, (int)Math.round(1 / spacing))
+            : com.threerings.jme.model.ModelMetadata.DEFAULT_FRAME_RATE;
+    }
+
+    /** Expands one static TRS value to a dense per-frame track (for a channel a producer omitted
+     * because it was constant: the node holds its rest value). */
+    protected static float[] repeatStatic (float[] value, int frames)
+    {
+        float[] out = new float[value.length * frames];
+        for (int ff = 0; ff < frames; ff++) {
+            System.arraycopy(value, 0, out, ff * value.length, value.length);
+        }
+        return out;
+    }
+
+    protected static void checkTrack (
+        String anim, String node, String path, float[] data, int frames, int comps)
+    {
+        if (data.length != frames * comps) {
+            throw new IllegalStateException("animation '" + anim + "' node '" + node + "' " +
+                path + " track has " + (data.length / comps) + " keys; expected " + frames +
+                " (all channels must share the animation's dense frame grid)");
+        }
+    }
+
     // ================================================================================
     // accessor reading (from model.bin)
     // ================================================================================
 
-    @SuppressWarnings("unchecked")
-    protected float[] readFloats (int accIdx)
+    // glTF componentType codes
+    protected static final int COMP_UNSIGNED_BYTE = 5121;
+    protected static final int COMP_UNSIGNED_SHORT = 5123;
+    protected static final int COMP_UNSIGNED_INT = 5125;
+    protected static final int COMP_FLOAT = 5126;
+
+    /**
+     * The resolved byte layout of one accessor: where element 0 lives in {@code model.bin} and
+     * how far apart consecutive elements sit. Generalised beyond {@link MxmlToGltf}'s own output
+     * (tightly-packed, one accessor per bufferView, no offsets) to the layouts other producers —
+     * Blender's exporter in particular — emit: an accessor-level {@code byteOffset}, a
+     * bufferView-level {@code byteOffset}, and interleaved vertex attributes via
+     * {@code bufferView.byteStride}. All bounds are validated up front so a malformed or
+     * truncated file fails with a message naming the accessor and bufferView instead of a bare
+     * {@code BufferUnderflowException}.
+     */
+    protected class Layout
     {
-        Map<String,Object> acc = (Map<String,Object>)_accessors.get(accIdx);
-        int comps = compsOf((String)acc.get("type"));
-        int count = intVal(acc.get("count"));
-        ByteBuffer bb = bufferFor(acc);
-        float[] out = new float[count * comps];
-        for (int ii = 0; ii < out.length; ii++) {
-            out[ii] = bb.getFloat();
+        final ByteBuffer bb;    // all of model.bin, little-endian (absolute reads only)
+        final int comps;        // components per element (VEC3 -> 3, ...)
+        final int count;        // element count
+        final int componentType;
+        final int base;         // absolute byte offset of element 0
+        final int stride;       // bytes between consecutive elements
+
+        @SuppressWarnings("unchecked")
+        Layout (int accIdx, String use, int... allowedComponentTypes)
+        {
+            if (accIdx < 0 || accIdx >= _accessors.size()) {
+                throw new IllegalStateException(use + ": accessor index " + accIdx +
+                    " out of range (file has " + _accessors.size() + " accessors)");
+            }
+            Map<String,Object> acc = (Map<String,Object>)_accessors.get(accIdx);
+            comps = compsOf((String)acc.get("type"));
+            count = intVal(acc.get("count"));
+            componentType = intVal(acc.get("componentType"));
+            boolean allowed = false;
+            for (int ct : allowedComponentTypes) {
+                allowed |= (ct == componentType);
+            }
+            if (!allowed) {
+                StringBuilder names = new StringBuilder();
+                for (int ct : allowedComponentTypes) {
+                    if (names.length() > 0) names.append('/');
+                    names.append(componentTypeName(ct));
+                }
+                throw new IllegalStateException(use + ": accessor " + accIdx +
+                    " has unsupported componentType " + componentTypeName(componentType) +
+                    "; expected " + names);
+            }
+            Object bvRef = acc.get("bufferView");
+            if (bvRef == null) {
+                throw new IllegalStateException(use + ": accessor " + accIdx +
+                    " has no bufferView (sparse/zero-filled accessors are not supported)");
+            }
+            int bvIdx = intVal(bvRef);
+            Map<String,Object> bv = (Map<String,Object>)_bufferViews.get(bvIdx);
+            int bvOff = bv.containsKey("byteOffset") ? intVal(bv.get("byteOffset")) : 0;
+            int bvLen = intVal(bv.get("byteLength"));
+            int accOff = acc.containsKey("byteOffset") ? intVal(acc.get("byteOffset")) : 0;
+            int elemSize = comps * componentSize(componentType);
+            stride = bv.containsKey("byteStride") ? intVal(bv.get("byteStride")) : elemSize;
+            base = bvOff + accOff;
+            int end = (count == 0) ? accOff : accOff + (count - 1) * stride + elemSize;
+            if (stride < elemSize || end > bvLen || bvOff + bvLen > _bin.length) {
+                throw new IllegalStateException(use + ": accessor " + accIdx + " (" +
+                    acc.get("type") + " x" + count + " of " +
+                    componentTypeName(componentType) + ") overruns bufferView " + bvIdx +
+                    " (byteOffset=" + bvOff + ", byteLength=" + bvLen + ", byteStride=" +
+                    (bv.containsKey("byteStride") ? String.valueOf(stride) : "none") +
+                    ", accessor byteOffset=" + accOff + ", bin=" + _bin.length + " bytes)");
+            }
+            bb = ByteBuffer.wrap(_bin).order(ByteOrder.LITTLE_ENDIAN);
+        }
+    }
+
+    /** Reads a FLOAT accessor (vertex attributes, weights, animation data) into a flat
+     * {@code float[count * comps]}, honoring interleaving/offsets via {@link Layout}. */
+    protected float[] readFloats (int accIdx, String use)
+    {
+        Layout l = new Layout(accIdx, use, COMP_FLOAT);
+        float[] out = new float[l.count * l.comps];
+        for (int e = 0; e < l.count; e++) {
+            int p = l.base + e * l.stride;
+            for (int c = 0; c < l.comps; c++) {
+                out[e * l.comps + c] = l.bb.getFloat(p + c * 4);
+            }
         }
         return out;
     }
 
-    @SuppressWarnings("unchecked")
-    protected int[] readUShorts (int accIdx)
+    /** Reads a JOINTS_n accessor: UNSIGNED_SHORT (our writer) or UNSIGNED_BYTE (Blender for
+     * &le;255 joints). */
+    protected int[] readJoints (int accIdx, String use)
     {
-        Map<String,Object> acc = (Map<String,Object>)_accessors.get(accIdx);
-        int comps = compsOf((String)acc.get("type"));
-        int count = intVal(acc.get("count"));
-        ByteBuffer bb = bufferFor(acc);
-        int[] out = new int[count * comps];
-        for (int ii = 0; ii < out.length; ii++) {
-            out[ii] = bb.getShort() & 0xFFFF;
+        Layout l = new Layout(accIdx, use, COMP_UNSIGNED_BYTE, COMP_UNSIGNED_SHORT);
+        int[] out = new int[l.count * l.comps];
+        boolean bytes = (l.componentType == COMP_UNSIGNED_BYTE);
+        for (int e = 0; e < l.count; e++) {
+            int p = l.base + e * l.stride;
+            for (int c = 0; c < l.comps; c++) {
+                out[e * l.comps + c] = bytes
+                    ? (l.bb.get(p + c) & 0xFF) : (l.bb.getShort(p + c * 2) & 0xFFFF);
+            }
         }
         return out;
     }
 
-    @SuppressWarnings("unchecked")
-    protected int[] readUInts (int accIdx)
+    /** Reads an index accessor: UNSIGNED_INT (our writer) or UNSIGNED_SHORT/UNSIGNED_BYTE
+     * (Blender sizes indices to the vertex count). */
+    protected int[] readIndices (int accIdx, String use)
     {
-        Map<String,Object> acc = (Map<String,Object>)_accessors.get(accIdx);
-        int count = intVal(acc.get("count"));
-        ByteBuffer bb = bufferFor(acc);
-        int[] out = new int[count];
-        for (int ii = 0; ii < out.length; ii++) {
-            out[ii] = bb.getInt();
+        Layout l = new Layout(
+            accIdx, use, COMP_UNSIGNED_BYTE, COMP_UNSIGNED_SHORT, COMP_UNSIGNED_INT);
+        int[] out = new int[l.count * l.comps];
+        for (int e = 0; e < l.count; e++) {
+            int p = l.base + e * l.stride;
+            for (int c = 0; c < l.comps; c++) {
+                switch (l.componentType) {
+                    case COMP_UNSIGNED_BYTE: out[e * l.comps + c] = l.bb.get(p + c) & 0xFF; break;
+                    case COMP_UNSIGNED_SHORT:
+                        out[e * l.comps + c] = l.bb.getShort(p + c * 2) & 0xFFFF; break;
+                    default: out[e * l.comps + c] = l.bb.getInt(p + c * 4); break;
+                }
+            }
         }
         return out;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected ByteBuffer bufferFor (Map<String,Object> acc)
-    {
-        Map<String,Object> bv = (Map<String,Object>)_bufferViews.get(intVal(acc.get("bufferView")));
-        int off = bv.containsKey("byteOffset") ? intVal(bv.get("byteOffset")) : 0;
-        int len = intVal(bv.get("byteLength"));
-        return ByteBuffer.wrap(_bin, off, len).order(ByteOrder.LITTLE_ENDIAN);
     }
 
     protected static int compsOf (String type)
@@ -377,6 +637,28 @@ public class GltfToModelDef
             case "VEC4": return 4;
             case "MAT4": return 16;
             default: throw new IllegalArgumentException("unhandled accessor type " + type);
+        }
+    }
+
+    protected static int componentSize (int componentType)
+    {
+        switch (componentType) {
+            case COMP_UNSIGNED_BYTE: return 1;
+            case COMP_UNSIGNED_SHORT: return 2;
+            case COMP_UNSIGNED_INT: case COMP_FLOAT: return 4;
+            default:
+                throw new IllegalArgumentException("unhandled componentType " + componentType);
+        }
+    }
+
+    protected static String componentTypeName (int componentType)
+    {
+        switch (componentType) {
+            case COMP_UNSIGNED_BYTE: return "5121/UNSIGNED_BYTE";
+            case COMP_UNSIGNED_SHORT: return "5123/UNSIGNED_SHORT";
+            case COMP_UNSIGNED_INT: return "5125/UNSIGNED_INT";
+            case COMP_FLOAT: return "5126/FLOAT";
+            default: return String.valueOf(componentType);
         }
     }
 
