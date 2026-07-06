@@ -154,6 +154,11 @@ tasks.register("mxmlGltfParity", JavaExec) {
     // arbitrary pre-existing glTF tree (<root>/<type>/model.gltf), e.g. Blender re-exports
     cmd += "--gltfRoot=${new File(project.property('gltfRoot').toString()).absolutePath}"
   }
+  if (project.hasProperty("renderOnly")) {
+    // Blender-edited re-exports: structural parity is impossible (Blender re-splits vertices);
+    // the render diff (meanDiff <= tolerance) alone is the gate
+    cmd += "--renderOnly"
+  }
   args = cmd
 }
 

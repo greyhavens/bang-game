@@ -41,7 +41,7 @@ import com.threerings.jme.model.ModelTextureResolver;
  * <p>Usage (mirrors {@code mxmlParity}):
  * <pre>
  * MxmlGltfParity &lt;src rsrc root&gt; &lt;oracle rsrc root&gt; &lt;work dir&gt;
- *                [--render] [--renders=bind|mid|both] [--tolerance=0.005] [--all]
+ *                [--render] [--renderOnly] [--renders=bind|mid|both] [--tolerance=0.005] [--all]
  *                [--gltfRoot=&lt;committed glTF rsrc root&gt;] [modelType ...]
  * </pre>
  *
@@ -49,6 +49,12 @@ import com.threerings.jme.model.ModelTextureResolver;
  * pre-existing {@code model.gltf} tree (normally the committed source tree itself) — the Phase-4
  * mode, verifying <em>committed glTF</em> &rarr; {@code .j3o} against the oracle, which is what
  * the {@link GltfToJ3o} build path actually bakes.
+ *
+ * <p>With {@code --renderOnly} (implies {@code --render}) a structural mismatch is reported but
+ * does not fail the model or block the render step — the render diff alone is the gate. This is
+ * the Phase-4 mode for <em>Blender-edited</em> re-exports: Blender re-splits/reorders vertices,
+ * so structural parity is impossible by construction and the epic's acceptance metric for edited
+ * models is render meanDiff &le; 0.005 (see {@code docs/} Epic 4 Phase 4).
  */
 public class MxmlGltfParity
 {
@@ -57,13 +63,18 @@ public class MxmlGltfParity
     {
         List<String> types = new ArrayList<>();
         File srcRoot = null, oracleRoot = null, workDir = null, gltfRootArg = null;
-        boolean render = false, all = false;
+        boolean render = false, renderOnly = false, all = false;
         String renders = "both";
         double tolerance = 0.005;
         int positional = 0;
         for (String arg : args) {
             if (arg.equals("--render")) {
                 render = true;
+            } else if (arg.equals("--renderOnly")) {
+                // Blender-edited re-exports: structural parity is impossible (Blender re-splits
+                // vertices), the render diff is the gate — report structure informationally only
+                render = true;
+                renderOnly = true;
             } else if (arg.startsWith("--renders=")) {
                 renders = arg.substring("--renders=".length());
             } else if (arg.startsWith("--tolerance=")) {
@@ -88,8 +99,9 @@ public class MxmlGltfParity
         if (srcRoot == null || oracleRoot == null || workDir == null ||
             (types.isEmpty() && !all)) {
             System.err.println("Usage: MxmlGltfParity <src rsrc root> <oracle rsrc root> " +
-                "<work dir> [--render] [--renders=bind|mid|both] [--tolerance=0.005] [--all] " +
-                "[--gltfRoot=<committed glTF rsrc root>] [modelType ...]");
+                "<work dir> [--render] [--renderOnly] [--renders=bind|mid|both] " +
+                "[--tolerance=0.005] [--all] [--gltfRoot=<committed glTF rsrc root>] " +
+                "[modelType ...]");
             System.exit(2);
         }
         if (all) {
@@ -201,6 +213,12 @@ public class MxmlGltfParity
             List<String> problems = MxmlParity.compare(oracle, nativ);
             if (problems.isEmpty()) {
                 System.out.println("  STRUCT OK: " + nativ.summary());
+            } else if (renderOnly) {
+                System.out.println("  STRUCT MISMATCH (" + problems.size() +
+                    ") [informational; --renderOnly gates on the render diff]:");
+                for (String p : problems) {
+                    System.out.println("    " + p);
+                }
             } else {
                 System.out.println("  STRUCT MISMATCH (" + problems.size() + "):");
                 for (String p : problems) {
