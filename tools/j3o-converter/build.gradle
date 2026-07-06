@@ -150,6 +150,9 @@ tasks.register("mxmlGltfParity", JavaExec) {
   }
   if (project.hasProperty("committedGltf")) {
     cmd += "--gltfRoot=${rootProject.file('assets/rsrc').absolutePath}"
+  } else if (project.hasProperty("gltfRoot")) {
+    // arbitrary pre-existing glTF tree (<root>/<type>/model.gltf), e.g. Blender re-exports
+    cmd += "--gltfRoot=${new File(project.property('gltfRoot').toString()).absolutePath}"
   }
   args = cmd
 }
