@@ -33,6 +33,7 @@
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 177,
         "texture": "artillery_dead.png",
         "offsetTranslation": [76.9575, -50.8895, -76.323]
       },
@@ -48,9 +49,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -100,6 +102,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 177,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 351,
       "type": "SCALAR"
@@ -133,13 +141,19 @@
     {
       "buffer": 0,
       "byteOffset": 7788,
+      "byteLength": 1416,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9204,
       "byteLength": 1404,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 9192,
+      "byteLength": 10608,
       "uri": "model.bin"
     }
   ]

@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 74,
         "texture": "nut_and_bolt.png",
         "offsetTranslation": [0.0, -12.5942, 0.0]
       },
@@ -48,9 +49,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -120,6 +122,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 74,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 144,
       "type": "SCALAR"
@@ -153,13 +161,19 @@
     {
       "buffer": 0,
       "byteOffset": 3256,
+      "byteLength": 592,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3848,
       "byteLength": 576,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 3832,
+      "byteLength": 4424,
       "uri": "model.bin"
     }
   ]

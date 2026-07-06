@@ -32,7 +32,8 @@
         "mxmlType": "triMesh",
         "solid": true,
         "transparent": false,
-        "hasTcoords": true
+        "hasTcoords": true,
+        "vertexCount": 1
       },
       "mesh": 0
     }
@@ -46,9 +47,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -98,6 +100,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 1,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 3,
       "type": "SCALAR"
@@ -131,13 +139,19 @@
     {
       "buffer": 0,
       "byteOffset": 44,
+      "byteLength": 8,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 52,
       "byteLength": 12,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 56,
+      "byteLength": 64,
       "uri": "model.bin"
     }
   ]

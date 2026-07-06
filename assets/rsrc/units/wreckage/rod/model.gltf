@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 68,
         "texture": "steamgunman_dead.png",
         "offsetTranslation": [93.7261, -13.191, -113.322]
       },
@@ -48,9 +49,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -100,6 +102,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 68,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 120,
       "type": "SCALAR"
@@ -133,13 +141,19 @@
     {
       "buffer": 0,
       "byteOffset": 2992,
+      "byteLength": 544,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3536,
       "byteLength": 480,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 3472,
+      "byteLength": 4016,
       "uri": "model.bin"
     }
   ]

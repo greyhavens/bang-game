@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 465,
         "texture": "rocky.png"
       },
       "mesh": 0
@@ -47,9 +48,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -99,6 +101,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 465,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 750,
       "type": "SCALAR"
@@ -132,13 +140,19 @@
     {
       "buffer": 0,
       "byteOffset": 20460,
+      "byteLength": 3720,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 24180,
       "byteLength": 3000,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 23460,
+      "byteLength": 27180,
       "uri": "model.bin"
     }
   ]

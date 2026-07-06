@@ -118,6 +118,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 265,
         "texture": "bomb.png"
       },
       "mesh": 0
@@ -132,9 +133,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -204,6 +206,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 265,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 672,
       "type": "SCALAR"
@@ -237,13 +245,19 @@
     {
       "buffer": 0,
       "byteOffset": 11660,
+      "byteLength": 2120,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 13780,
       "byteLength": 2688,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 14348,
+      "byteLength": 16468,
       "uri": "model.bin"
     }
   ]

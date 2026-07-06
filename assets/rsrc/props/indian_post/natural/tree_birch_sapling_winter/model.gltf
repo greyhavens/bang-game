@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 31,
         "texture": "birch_bark.png"
       },
       "mesh": 0
@@ -47,6 +48,7 @@
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
+        "vertexCount": 36,
         "texture": "sapling_branch.png"
       },
       "mesh": 1
@@ -61,9 +63,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -74,12 +77,13 @@
       "primitives": [
         {
           "attributes": {
-            "POSITION": 5,
-            "NORMAL": 6,
-            "_MXMLNORMAL": 7,
-            "TEXCOORD_0": 8
+            "POSITION": 6,
+            "NORMAL": 7,
+            "_MXMLNORMAL": 8,
+            "TEXCOORD_0": 9,
+            "_MXMLTEXCOORD": 10
           },
-          "indices": 9,
+          "indices": 11,
           "mode": 4,
           "material": 1
         }
@@ -171,23 +175,23 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 31,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 126,
       "type": "SCALAR"
     },
     {
-      "bufferView": 5,
+      "bufferView": 6,
       "componentType": 5126,
       "count": 36,
       "type": "VEC3",
       "min": [-63.3311, -85.3363, -41.021],
       "max": [37.7611, 73.4229, 81.8657]
-    },
-    {
-      "bufferView": 6,
-      "componentType": 5126,
-      "count": 36,
-      "type": "VEC3"
     },
     {
       "bufferView": 7,
@@ -199,10 +203,22 @@
       "bufferView": 8,
       "componentType": 5126,
       "count": 36,
-      "type": "VEC2"
+      "type": "VEC3"
     },
     {
       "bufferView": 9,
+      "componentType": 5126,
+      "count": 36,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5126,
+      "count": 36,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 11,
       "componentType": 5125,
       "count": 96,
       "type": "SCALAR"
@@ -236,43 +252,55 @@
     {
       "buffer": 0,
       "byteOffset": 1364,
+      "byteLength": 248,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1612,
       "byteLength": 504,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteOffset": 1868,
+      "byteOffset": 2116,
       "byteLength": 432,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 2300,
+      "byteOffset": 2548,
       "byteLength": 432,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 2732,
+      "byteOffset": 2980,
       "byteLength": 432,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 3164,
+      "byteOffset": 3412,
       "byteLength": 288,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 3452,
+      "byteOffset": 3700,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3988,
       "byteLength": 384,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 3836,
+      "byteLength": 4372,
       "uri": "model.bin"
     }
   ]

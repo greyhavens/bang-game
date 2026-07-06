@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 550,
         "texture": "skin.png",
         "offsetTranslation": [0.0, 0.0, 8532.09]
       },
@@ -48,9 +49,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -120,6 +122,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 550,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 861,
       "type": "SCALAR"
@@ -153,13 +161,19 @@
     {
       "buffer": 0,
       "byteOffset": 24200,
+      "byteLength": 4400,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 28600,
       "byteLength": 3444,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 27644,
+      "byteLength": 32044,
       "uri": "model.bin"
     }
   ]

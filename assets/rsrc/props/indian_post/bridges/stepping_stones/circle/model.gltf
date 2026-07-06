@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 182,
         "texture": "stone.png"
       },
       "mesh": 0
@@ -47,9 +48,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -99,6 +101,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 182,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 378,
       "type": "SCALAR"
@@ -132,13 +140,19 @@
     {
       "buffer": 0,
       "byteOffset": 8008,
+      "byteLength": 1456,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9464,
       "byteLength": 1512,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 9520,
+      "byteLength": 10976,
       "uri": "model.bin"
     }
   ]

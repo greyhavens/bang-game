@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
+        "vertexCount": 88,
         "texture": "ice_effect.png",
         "offsetTranslation": [0.0, 0.0, 1420.24]
       },
@@ -48,9 +49,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -120,6 +122,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 88,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 108,
       "type": "SCALAR"
@@ -153,13 +161,19 @@
     {
       "buffer": 0,
       "byteOffset": 3872,
+      "byteLength": 704,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4576,
       "byteLength": 432,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 4304,
+      "byteLength": 5008,
       "uri": "model.bin"
     }
   ]

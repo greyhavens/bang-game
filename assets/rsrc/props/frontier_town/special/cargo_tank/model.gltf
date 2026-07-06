@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 760,
         "texture": "cargo_tank.png",
         "offsetTranslation": [0.850963, 0.0, 0.0]
       },
@@ -48,9 +49,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -120,6 +122,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 760,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 1680,
       "type": "SCALAR"
@@ -153,13 +161,19 @@
     {
       "buffer": 0,
       "byteOffset": 33440,
+      "byteLength": 6080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 39520,
       "byteLength": 6720,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 40160,
+      "byteLength": 46240,
       "uri": "model.bin"
     }
   ]

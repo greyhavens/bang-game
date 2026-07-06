@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 248,
         "texture": "frog_totem_ancient.png",
         "offsetTranslation": [0.0, -1.42988E-7, 3.27118]
       },
@@ -48,9 +49,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -120,6 +122,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 248,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 738,
       "type": "SCALAR"
@@ -153,13 +161,19 @@
     {
       "buffer": 0,
       "byteOffset": 10912,
+      "byteLength": 1984,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 12896,
       "byteLength": 2952,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 13864,
+      "byteLength": 15848,
       "uri": "model.bin"
     }
   ]

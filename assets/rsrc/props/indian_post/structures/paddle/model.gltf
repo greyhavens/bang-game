@@ -42,6 +42,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 44,
         "texture": "canoe.png"
       },
       "mesh": 0
@@ -56,9 +57,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -108,6 +110,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 44,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 126,
       "type": "SCALAR"
@@ -141,13 +149,19 @@
     {
       "buffer": 0,
       "byteOffset": 1936,
+      "byteLength": 352,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2288,
       "byteLength": 504,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 2440,
+      "byteLength": 2792,
       "uri": "model.bin"
     }
   ]

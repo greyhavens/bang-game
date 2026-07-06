@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 149,
         "texture": "slats.png"
       },
       "mesh": 0
@@ -47,9 +48,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -119,6 +121,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 149,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 636,
       "type": "SCALAR"
@@ -152,13 +160,19 @@
     {
       "buffer": 0,
       "byteOffset": 6556,
+      "byteLength": 1192,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 7748,
       "byteLength": 2544,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 9100,
+      "byteLength": 10292,
       "uri": "model.bin"
     }
   ]

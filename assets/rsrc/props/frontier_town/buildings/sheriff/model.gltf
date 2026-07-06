@@ -33,6 +33,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 790,
         "texture": "main.png"
       },
       "mesh": 0
@@ -47,6 +48,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 537,
         "texture": "parts.png"
       },
       "mesh": 1
@@ -61,9 +63,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -74,12 +77,13 @@
       "primitives": [
         {
           "attributes": {
-            "POSITION": 5,
-            "NORMAL": 6,
-            "_MXMLNORMAL": 7,
-            "TEXCOORD_0": 8
+            "POSITION": 6,
+            "NORMAL": 7,
+            "_MXMLNORMAL": 8,
+            "TEXCOORD_0": 9,
+            "_MXMLTEXCOORD": 10
           },
-          "indices": 9,
+          "indices": 11,
           "mode": 4,
           "material": 1
         }
@@ -171,23 +175,23 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 790,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 1371,
       "type": "SCALAR"
     },
     {
-      "bufferView": 5,
+      "bufferView": 6,
       "componentType": 5126,
       "count": 537,
       "type": "VEC3",
       "min": [-151.394, 60.83, -349.356],
       "max": [188.344, 436.096, 282.313]
-    },
-    {
-      "bufferView": 6,
-      "componentType": 5126,
-      "count": 537,
-      "type": "VEC3"
     },
     {
       "bufferView": 7,
@@ -199,10 +203,22 @@
       "bufferView": 8,
       "componentType": 5126,
       "count": 537,
-      "type": "VEC2"
+      "type": "VEC3"
     },
     {
       "bufferView": 9,
+      "componentType": 5126,
+      "count": 537,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5126,
+      "count": 537,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 11,
       "componentType": 5125,
       "count": 954,
       "type": "SCALAR"
@@ -236,43 +252,55 @@
     {
       "buffer": 0,
       "byteOffset": 34760,
+      "byteLength": 6320,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 41080,
       "byteLength": 5484,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteOffset": 40244,
+      "byteOffset": 46564,
       "byteLength": 6444,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 46688,
+      "byteOffset": 53008,
       "byteLength": 6444,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 53132,
+      "byteOffset": 59452,
       "byteLength": 6444,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 59576,
+      "byteOffset": 65896,
       "byteLength": 4296,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 63872,
+      "byteOffset": 70192,
+      "byteLength": 4296,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 74488,
       "byteLength": 3816,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 67688,
+      "byteLength": 78304,
       "uri": "model.bin"
     }
   ]

@@ -118,6 +118,7 @@
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
+        "vertexCount": 207,
         "texture": "fox.png"
       },
       "mesh": 0
@@ -132,9 +133,10 @@
             "POSITION": 0,
             "NORMAL": 1,
             "_MXMLNORMAL": 2,
-            "TEXCOORD_0": 3
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
           },
-          "indices": 4,
+          "indices": 5,
           "mode": 4,
           "material": 0
         }
@@ -204,6 +206,12 @@
     },
     {
       "bufferView": 4,
+      "componentType": 5126,
+      "count": 207,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 5,
       "componentType": 5125,
       "count": 828,
       "type": "SCALAR"
@@ -237,13 +245,19 @@
     {
       "buffer": 0,
       "byteOffset": 9108,
+      "byteLength": 1656,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 10764,
       "byteLength": 3312,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 12420,
+      "byteLength": 14076,
       "uri": "model.bin"
     }
   ]
