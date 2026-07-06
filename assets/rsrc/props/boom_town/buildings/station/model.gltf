@@ -1,0 +1,165 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1]
+    },
+    {
+      "name": "objpolySurface53",
+      "translation": [55.0269, 9.82971, 176.411],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": true,
+        "hasTcoords": true,
+        "texture": "Station.png"
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "objpolySurface53",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "objpolySurface53-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND",
+      "doubleSided": true
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "Station.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 803,
+      "type": "VEC3",
+      "min": [-351.041, -186.97, -176.448],
+      "max": [342.035, 265.065, 298.6]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 803,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 803,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 803,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 1611,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 9636,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9636,
+      "byteLength": 9636,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 19272,
+      "byteLength": 9636,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 28908,
+      "byteLength": 6424,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 35332,
+      "byteLength": 6444,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 41776,
+      "uri": "model.bin"
+    }
+  ]
+}

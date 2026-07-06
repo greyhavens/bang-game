@@ -1,0 +1,201 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "ButterFly01_Bone_02",
+      "translation": [-27.4049, 24.2031, -312.777],
+      "rotation": [0.00792074, -0.296582, 0.910997, 0.286464],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "ButterFly01_Bone_03",
+      "translation": [-27.4049, 24.2031, -312.777],
+      "rotation": [0.296582, 0.00792077, -0.286464, 0.910997],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "ButterFly02_Bone_02",
+      "translation": [9.29997, -9.60308, -292.539],
+      "rotation": [-0.498404, 0.664239, -0.176476, 0.528427],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "ButterFly02_Bone_03",
+      "translation": [9.29997, -9.60308, -292.539],
+      "rotation": [0.664239, 0.498404, 0.528427, 0.176476],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Dead_Stump_Small",
+      "translation": [0.0, 0.0, 2.84282],
+      "rotation": [0.0, 0.0, -0.34202, 0.939693],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "skin.png"
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Dead_Stump_Small",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dead_Stump_Small-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "skin.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 21,
+      "type": "VEC3",
+      "min": [-49.102, -33.6508, -4.68032],
+      "max": [31.131, 27.5229, 52.1645]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 21,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 21,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 21,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 54,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 252,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 252,
+      "byteLength": 252,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 504,
+      "byteLength": 252,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 756,
+      "byteLength": 168,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 924,
+      "byteLength": 216,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1140,
+      "uri": "model.bin"
+    }
+  ]
+}

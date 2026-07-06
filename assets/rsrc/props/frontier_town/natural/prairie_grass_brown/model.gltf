@@ -1,0 +1,165 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1]
+    },
+    {
+      "name": "grass",
+      "translation": [1.29996, -1.10311, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": true,
+        "hasTcoords": true,
+        "texture": "prairie_grass_brown.png"
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "grass",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "grass-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND",
+      "doubleSided": true
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "prairie_grass_brown.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 54,
+      "type": "VEC3",
+      "min": [-65.2948, -69.4271, -12.5642],
+      "max": [63.6577, 65.5852, 66.587]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 54,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 54,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 54,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 108,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 648,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 648,
+      "byteLength": 648,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1296,
+      "byteLength": 648,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1944,
+      "byteLength": 432,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2376,
+      "byteLength": 432,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 2808,
+      "uri": "model.bin"
+    }
+  ]
+}

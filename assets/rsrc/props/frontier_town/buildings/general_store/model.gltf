@@ -1,0 +1,885 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    },
+    {
+      "name": "Plane01",
+      "translation": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Camera01.Target",
+      "translation": [20.2857, -57.4256, 99.9108],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Camera01",
+      "translation": [378.579, -44.9136, 206.975],
+      "rotation": [0.415012, 0.429757, 0.576852, 0.55706],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Illustrate! Art Materials",
+      "translation": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "structure",
+      "translation": [0.71124, 50.0894, 26.8578],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "wall.png"
+      },
+      "mesh": 0
+    },
+    {
+      "name": "roof",
+      "translation": [0.711242, -0.508988, 196.156],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "roof.png"
+      },
+      "mesh": 1
+    },
+    {
+      "name": "deck",
+      "translation": [-173.625, -178.664, 26.6821],
+      "rotation": [0.0174524, 0.0, 0.0, 0.999848],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "decking.png"
+      },
+      "mesh": 2
+    },
+    {
+      "name": "chimney",
+      "translation": [45.8027, 101.19, 232.381],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "chimney.png"
+      },
+      "mesh": 3
+    },
+    {
+      "name": "windows",
+      "translation": [0.71124, 50.0894, 26.8578],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "windows.png"
+      },
+      "mesh": 4
+    },
+    {
+      "name": "risers",
+      "translation": [0.711242, -0.50898, 2.53639E-7],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": true,
+        "hasTcoords": true,
+        "texture": "risers.png"
+      },
+      "mesh": 5
+    },
+    {
+      "name": "doorsandsign",
+      "translation": [0.71124, 50.0894, 26.8578],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "doorsandsign.png"
+      },
+      "mesh": 6
+    }
+  ],
+  "meshes": [
+    {
+      "name": "structure",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "roof",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    },
+    {
+      "name": "deck",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 10,
+            "NORMAL": 11,
+            "_MXMLNORMAL": 12,
+            "TEXCOORD_0": 13
+          },
+          "indices": 14,
+          "mode": 4,
+          "material": 2
+        }
+      ]
+    },
+    {
+      "name": "chimney",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 15,
+            "NORMAL": 16,
+            "_MXMLNORMAL": 17,
+            "TEXCOORD_0": 18
+          },
+          "indices": 19,
+          "mode": 4,
+          "material": 3
+        }
+      ]
+    },
+    {
+      "name": "windows",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 20,
+            "NORMAL": 21,
+            "_MXMLNORMAL": 22,
+            "TEXCOORD_0": 23
+          },
+          "indices": 24,
+          "mode": 4,
+          "material": 4
+        }
+      ]
+    },
+    {
+      "name": "risers",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 25,
+            "NORMAL": 26,
+            "_MXMLNORMAL": 27,
+            "TEXCOORD_0": 28
+          },
+          "indices": 29,
+          "mode": 4,
+          "material": 5
+        }
+      ]
+    },
+    {
+      "name": "doorsandsign",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 30,
+            "NORMAL": 31,
+            "_MXMLNORMAL": 32,
+            "TEXCOORD_0": 33
+          },
+          "indices": 34,
+          "mode": 4,
+          "material": 6
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "structure-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "roof-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 1
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "deck-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 2
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "chimney-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 3
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "windows-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 4
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "risers-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 5
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND",
+      "doubleSided": false
+    },
+    {
+      "name": "doorsandsign-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 6
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    },
+    {
+      "source": 1,
+      "sampler": 0
+    },
+    {
+      "source": 2,
+      "sampler": 0
+    },
+    {
+      "source": 3,
+      "sampler": 0
+    },
+    {
+      "source": 4,
+      "sampler": 0
+    },
+    {
+      "source": 5,
+      "sampler": 0
+    },
+    {
+      "source": 6,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "wall.png"
+    },
+    {
+      "uri": "roof.png"
+    },
+    {
+      "uri": "decking.png"
+    },
+    {
+      "uri": "chimney.png"
+    },
+    {
+      "uri": "windows.png"
+    },
+    {
+      "uri": "risers.png"
+    },
+    {
+      "uri": "doorsandsign.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 110,
+      "type": "VEC3",
+      "min": [-202.844, -255.538, -6.59405E-6],
+      "max": [202.844, 160.995, 279.773]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 110,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 110,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 110,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 288,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 32,
+      "type": "VEC3",
+      "min": [-204.852, -204.94, -53.8692],
+      "max": [204.852, 212.478, 81.9714]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 32,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 32,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 32,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 72,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5126,
+      "count": 159,
+      "type": "VEC3",
+      "min": [-20.7062, -47.3754, -65.6921],
+      "max": [369.378, 401.669, 167.013]
+    },
+    {
+      "bufferView": 11,
+      "componentType": 5126,
+      "count": 159,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 12,
+      "componentType": 5126,
+      "count": 159,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 13,
+      "componentType": 5126,
+      "count": 159,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 14,
+      "componentType": 5125,
+      "count": 285,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 15,
+      "componentType": 5126,
+      "count": 46,
+      "type": "VEC3",
+      "min": [-22.2519, -22.1747, 2.10627E-7],
+      "max": [22.2519, 27.5407, 96.9814]
+    },
+    {
+      "bufferView": 16,
+      "componentType": 5126,
+      "count": 46,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 17,
+      "componentType": 5126,
+      "count": 46,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 18,
+      "componentType": 5126,
+      "count": 46,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 19,
+      "componentType": 5125,
+      "count": 84,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 20,
+      "componentType": 5126,
+      "count": 103,
+      "type": "VEC3",
+      "min": [-204.839, -144.671, -0.0585104],
+      "max": [204.826, 141.809, 306.672]
+    },
+    {
+      "bufferView": 21,
+      "componentType": 5126,
+      "count": 103,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 22,
+      "componentType": 5126,
+      "count": 103,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 23,
+      "componentType": 5126,
+      "count": 103,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 24,
+      "componentType": 5125,
+      "count": 222,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 25,
+      "componentType": 5126,
+      "count": 65,
+      "type": "VEC3",
+      "min": [-195.042, -222.542, -40.6572],
+      "max": [195.042, 224.088, 26.7705]
+    },
+    {
+      "bufferView": 26,
+      "componentType": 5126,
+      "count": 65,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 27,
+      "componentType": 5126,
+      "count": 65,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 28,
+      "componentType": 5126,
+      "count": 65,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 29,
+      "componentType": 5125,
+      "count": 99,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 30,
+      "componentType": 5126,
+      "count": 42,
+      "type": "VEC3",
+      "min": [-135.163, -148.372, -1.12792],
+      "max": [132.959, 141.785, 270.428]
+    },
+    {
+      "bufferView": 31,
+      "componentType": 5126,
+      "count": 42,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 32,
+      "componentType": 5126,
+      "count": 42,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 33,
+      "componentType": 5126,
+      "count": 42,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 34,
+      "componentType": 5125,
+      "count": 66,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 1320,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1320,
+      "byteLength": 1320,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2640,
+      "byteLength": 1320,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3960,
+      "byteLength": 880,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4840,
+      "byteLength": 1152,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 5992,
+      "byteLength": 384,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 6376,
+      "byteLength": 384,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 6760,
+      "byteLength": 384,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 7144,
+      "byteLength": 256,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 7400,
+      "byteLength": 288,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 7688,
+      "byteLength": 1908,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9596,
+      "byteLength": 1908,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 11504,
+      "byteLength": 1908,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 13412,
+      "byteLength": 1272,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 14684,
+      "byteLength": 1140,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 15824,
+      "byteLength": 552,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 16376,
+      "byteLength": 552,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 16928,
+      "byteLength": 552,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 17480,
+      "byteLength": 368,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 17848,
+      "byteLength": 336,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 18184,
+      "byteLength": 1236,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 19420,
+      "byteLength": 1236,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 20656,
+      "byteLength": 1236,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 21892,
+      "byteLength": 824,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 22716,
+      "byteLength": 888,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 23604,
+      "byteLength": 780,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 24384,
+      "byteLength": 780,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 25164,
+      "byteLength": 780,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 25944,
+      "byteLength": 520,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 26464,
+      "byteLength": 396,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 26860,
+      "byteLength": 504,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 27364,
+      "byteLength": 504,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 27868,
+      "byteLength": 504,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 28372,
+      "byteLength": 336,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 28708,
+      "byteLength": 264,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 28972,
+      "uri": "model.bin"
+    }
+  ]
+}

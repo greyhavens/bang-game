@@ -1,0 +1,279 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 2]
+    },
+    {
+      "name": "tomb_stone",
+      "translation": [2.58168, 107.314, 70.0808],
+      "rotation": [0.608761, 0.0, 0.0, 0.793353],
+      "scale": [5.09934, 5.09934, 5.09934],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "tombstone_skull.png"
+      },
+      "mesh": 0
+    },
+    {
+      "name": "soil",
+      "translation": [-1.19456, 58.5984, -2.79056],
+      "rotation": [0.688355, 0.0, 0.0, 0.725374],
+      "scale": [4.90322, 4.90322, 4.90322],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "grave_earth.png"
+      },
+      "mesh": 1
+    }
+  ],
+  "meshes": [
+    {
+      "name": "tomb_stone",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "soil",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "tomb_stone-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "soil-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 1
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    },
+    {
+      "source": 1,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "tombstone_skull.png"
+    },
+    {
+      "uri": "grave_earth.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 30,
+      "type": "VEC3",
+      "min": [-6.60343, -15.5275, 0.0],
+      "max": [6.60343, 6.07559, 2.97453]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 30,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 30,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 30,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 72,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 17,
+      "type": "VEC3",
+      "min": [-10.173, -1.33854, -4.59528],
+      "max": [10.173, 6.77903, 32.1268]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 17,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 17,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 17,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 72,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 360,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 360,
+      "byteLength": 360,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 720,
+      "byteLength": 360,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1080,
+      "byteLength": 240,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1320,
+      "byteLength": 288,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1608,
+      "byteLength": 204,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1812,
+      "byteLength": 204,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2016,
+      "byteLength": 204,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2220,
+      "byteLength": 136,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2356,
+      "byteLength": 288,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 2644,
+      "uri": "model.bin"
+    }
+  ]
+}

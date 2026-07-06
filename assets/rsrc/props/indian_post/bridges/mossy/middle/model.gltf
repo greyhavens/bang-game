@@ -1,0 +1,279 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 2]
+    },
+    {
+      "name": "objmid",
+      "translation": [0.0, 0.0, 300.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "rock_face.png"
+      },
+      "mesh": 0
+    },
+    {
+      "name": "objMid",
+      "translation": [0.0, 0.0, 300.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": true,
+        "hasTcoords": true,
+        "texture": "green_grass_alpha.png"
+      },
+      "mesh": 1
+    }
+  ],
+  "meshes": [
+    {
+      "name": "objmid",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "objMid",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "objmid-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "objMid-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 1
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    },
+    {
+      "source": 1,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "rock_face.png"
+    },
+    {
+      "uri": "green_grass_alpha.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 183,
+      "type": "VEC3",
+      "min": [-124.171, -112.324, -144.696],
+      "max": [126.975, 107.097, 3.92168]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 183,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 183,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 183,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 342,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 50,
+      "type": "VEC3",
+      "min": [-124.171, -100.0, -114.156],
+      "max": [132.878, 100.0, 8.40214]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 50,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 50,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 50,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 168,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 2196,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2196,
+      "byteLength": 2196,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4392,
+      "byteLength": 2196,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 6588,
+      "byteLength": 1464,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 8052,
+      "byteLength": 1368,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9420,
+      "byteLength": 600,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 10020,
+      "byteLength": 600,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 10620,
+      "byteLength": 600,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 11220,
+      "byteLength": 400,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 11620,
+      "byteLength": 672,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 12292,
+      "uri": "model.bin"
+    }
+  ]
+}

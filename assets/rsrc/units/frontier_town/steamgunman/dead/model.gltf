@@ -1,0 +1,1042 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 5, 6, 7, 8, 9, 19, 20, 21, 22, 23, 24, 25]
+    },
+    {
+      "name": "Camera01.Target",
+      "translation": [-20.1172, -12.9119, 72.923],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot03",
+      "translation": [-658.67, 440.929, -2183.11],
+      "rotation": [-0.0244912, 0.977522, 0.120078, -0.17156],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "Camera01"
+      }
+    },
+    {
+      "name": "Spot02",
+      "translation": [-1603.97, 630.946, 52.0416],
+      "rotation": [-0.0576514, -0.61787, -0.218868, 0.753],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "Camera01"
+      }
+    },
+    {
+      "name": "Spot01",
+      "translation": [340.527, 138.913, 1386.32],
+      "rotation": [-0.0397337, 0.0906986, 0.0284494, 0.994679],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "Camera01"
+      }
+    },
+    {
+      "name": "Camera01",
+      "translation": [239.064, -250.407, 167.956],
+      "rotation": [0.556398, 0.244821, 0.319793, 0.726785],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      },
+      "children": [2, 3, 4]
+    },
+    {
+      "name": "Illustrate! Art Materials",
+      "translation": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot03.Target",
+      "translation": [-0.195511, -2.75257E-6, 62.9716],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot02.Target",
+      "translation": [-0.195511, -2.75257E-6, 62.9716],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot01.Target",
+      "translation": [-0.195511, -2.75257E-6, 62.9716],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "bone thumb far",
+      "translation": [3.15026, 9.44627, -6.76478],
+      "rotation": [-0.23307, 0.0407814, 0.0393821, 0.970806],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "bone thumb near"
+      }
+    },
+    {
+      "name": "bone thumb near",
+      "translation": [3.42893, 12.6541, -6.51465],
+      "rotation": [-0.439858, -0.675774, -0.0423616, 0.589966],
+      "scale": [0.999999, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "bone palm"
+      },
+      "children": [10]
+    },
+    {
+      "name": "bone fingers far",
+      "translation": [7.75437, 0.0803322, 0.369002],
+      "rotation": [0.0, 0.313164, 0.0, 0.949699],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "bone fingers near"
+      }
+    },
+    {
+      "name": "bone fingers near",
+      "translation": [15.6953, -3.15344, -0.461251],
+      "rotation": [0.0124573, 0.31706, -0.037231, 0.947593],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "bone palm"
+      },
+      "children": [12]
+    },
+    {
+      "name": "bone index far",
+      "translation": [8.59015, -0.0543614, 0.368998],
+      "rotation": [0.0, 0.434445, 0.0, 0.900698],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "bone index near"
+      }
+    },
+    {
+      "name": "bone index near",
+      "translation": [15.6146, 7.40757, -0.184498],
+      "rotation": [-0.057841, 0.208568, 0.260904, 0.940789],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "bone palm"
+      },
+      "children": [14]
+    },
+    {
+      "name": "bone palm",
+      "translation": [29.003, 1.40791, -0.025735],
+      "rotation": [0.0094368, -0.127781, 0.0373561, 0.991054],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "bone forearm"
+      },
+      "children": [11, 13, 15]
+    },
+    {
+      "name": "bone forearm",
+      "translation": [29.736, 3.76905E-6, 2.72002E-7],
+      "rotation": [0.0, 0.0, 0.34202, 0.939693],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "bone upper arm"
+      },
+      "children": [16]
+    },
+    {
+      "name": "bone upper arm",
+      "translation": [-16.7293, -73.0812, 2.47705],
+      "rotation": [0.352384, 0.548559, 0.653828, -0.383949],
+      "scale": [1.14, 1.14, 1.14],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "body"
+      },
+      "children": [17]
+    },
+    {
+      "name": "body",
+      "translation": [-1.10042, 2.4689, 66.7586],
+      "rotation": [0.367851, -0.535227, -0.551579, 0.523429],
+      "scale": [0.877193, 0.877193, 0.877193],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "steamgunman_dead.png",
+        "offsetTranslation": [-7.52324E-7, 0.0, -25.2438]
+      },
+      "children": [18],
+      "mesh": 0
+    },
+    {
+      "name": "arm",
+      "translation": [-35.8657, -46.0059, 69.4658],
+      "rotation": [-0.686567, -0.15112, 0.488478, 0.516892],
+      "scale": [1.14, 1.14, 1.14],
+      "extras": {
+        "mxmlType": "skinMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "steamgunman_dead.png",
+        "offsetTranslation": [116.285, -26.4881, -95.524]
+      },
+      "mesh": 1,
+      "skin": 0
+    },
+    {
+      "name": "head",
+      "translation": [0.678433, 0.353265, 72.8035],
+      "rotation": [-0.553159, 0.497744, 0.576455, -0.337588],
+      "scale": [0.877193, 0.877193, 0.877193],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "steamgunman_dead.png",
+        "offsetTranslation": [0.961296, -14.3081, -24.6337]
+      },
+      "mesh": 2
+    },
+    {
+      "name": "left wheel",
+      "translation": [33.0153, -36.7057, 5.86905],
+      "rotation": [-0.582461, 0.71928, 0.294265, -0.238291],
+      "scale": [0.877193, 0.877193, 0.877193],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "steamgunman_dead.png",
+        "offsetTranslation": [-33.4586, 44.9819, -2.75121],
+        "offsetRotation": [0.0305385, 0.0, 0.0, 0.999534]
+      },
+      "mesh": 3
+    },
+    {
+      "name": "right wheel",
+      "translation": [-31.6929, -22.9515, 33.895],
+      "rotation": [0.488006, -0.481657, -0.517877, 0.511528],
+      "scale": [0.877193, 0.877193, 0.877193],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "steamgunman_dead.png",
+        "offsetTranslation": [-33.4586, 47.7183, -50.9684],
+        "offsetRotation": [-0.0305385, 0.0, 0.0, 0.999534]
+      },
+      "mesh": 4
+    },
+    {
+      "name": "back wheel",
+      "translation": [13.7518, 78.5016, 5.87312],
+      "rotation": [0.0493759, -0.0609742, -0.77475, 0.62738],
+      "scale": [0.877193, 0.877193, 0.877193],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "steamgunman_dead.png",
+        "offsetTranslation": [73.0697, 59.5616, -23.4655]
+      },
+      "mesh": 5
+    },
+    {
+      "name": "steering",
+      "translation": [7.68509, 59.4459, 29.8027],
+      "rotation": [-0.59303, 0.385118, 0.660141, -0.253404],
+      "scale": [0.877193, 0.877193, 0.877193],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "steamgunman_dead.png",
+        "offsetTranslation": [69.1031, 34.7242, -24.2363]
+      },
+      "mesh": 6
+    }
+  ],
+  "meshes": [
+    {
+      "name": "body",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "arm",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8,
+            "JOINTS_0": 10,
+            "WEIGHTS_0": 11
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    },
+    {
+      "name": "head",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 13,
+            "NORMAL": 14,
+            "_MXMLNORMAL": 15,
+            "TEXCOORD_0": 16
+          },
+          "indices": 17,
+          "mode": 4,
+          "material": 2
+        }
+      ]
+    },
+    {
+      "name": "left wheel",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 18,
+            "NORMAL": 19,
+            "_MXMLNORMAL": 20,
+            "TEXCOORD_0": 21
+          },
+          "indices": 22,
+          "mode": 4,
+          "material": 3
+        }
+      ]
+    },
+    {
+      "name": "right wheel",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 23,
+            "NORMAL": 24,
+            "_MXMLNORMAL": 25,
+            "TEXCOORD_0": 26
+          },
+          "indices": 27,
+          "mode": 4,
+          "material": 4
+        }
+      ]
+    },
+    {
+      "name": "back wheel",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 28,
+            "NORMAL": 29,
+            "_MXMLNORMAL": 30,
+            "TEXCOORD_0": 31
+          },
+          "indices": 32,
+          "mode": 4,
+          "material": 5
+        }
+      ]
+    },
+    {
+      "name": "steering",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 33,
+            "NORMAL": 34,
+            "_MXMLNORMAL": 35,
+            "TEXCOORD_0": 36
+          },
+          "indices": 37,
+          "mode": 4,
+          "material": 6
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "body-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "arm-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "head-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "left wheel-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "right wheel-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "back wheel-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "steering-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "steamgunman_dead.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "skins": [
+    {
+      "inverseBindMatrices": 12,
+      "joints": [17, 18, 19, 16, 11, 13, 15, 14, 10, 12]
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 570,
+      "type": "VEC3",
+      "min": [-95.2942, -80.3128, -44.7737],
+      "max": [109.851, 129.805, 68.4893]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 570,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 570,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 570,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 1488,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC3",
+      "min": [-77.8611, 42.2665, 97.2756],
+      "max": [-29.8013, 75.2511, 173.55]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 558,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5123,
+      "count": 206,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 11,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 12,
+      "componentType": 5126,
+      "count": 10,
+      "type": "MAT4"
+    },
+    {
+      "bufferView": 13,
+      "componentType": 5126,
+      "count": 142,
+      "type": "VEC3",
+      "min": [-46.8688, 8.82066, -9.20177],
+      "max": [39.0891, 85.8934, 64.5272]
+    },
+    {
+      "bufferView": 14,
+      "componentType": 5126,
+      "count": 142,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 15,
+      "componentType": 5126,
+      "count": 142,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 16,
+      "componentType": 5126,
+      "count": 142,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 17,
+      "componentType": 5125,
+      "count": 444,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 18,
+      "componentType": 5126,
+      "count": 176,
+      "type": "VEC3",
+      "min": [-8.7088, -84.7702, -48.8396],
+      "max": [75.5154, 0.588155, 2.83769]
+    },
+    {
+      "bufferView": 19,
+      "componentType": 5126,
+      "count": 176,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 20,
+      "componentType": 5126,
+      "count": 176,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 21,
+      "componentType": 5126,
+      "count": 176,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 22,
+      "componentType": 5125,
+      "count": 510,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 23,
+      "componentType": 5126,
+      "count": 157,
+      "type": "VEC3",
+      "min": [-8.74774, -84.7702, 45.2477],
+      "max": [75.5154, -1.97079, 96.9434]
+    },
+    {
+      "bufferView": 24,
+      "componentType": 5126,
+      "count": 157,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 25,
+      "componentType": 5126,
+      "count": 157,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 26,
+      "componentType": 5126,
+      "count": 157,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 27,
+      "componentType": 5125,
+      "count": 432,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 28,
+      "componentType": 5126,
+      "count": 116,
+      "type": "VEC3",
+      "min": [-95.5627, -82.7096, 18.9746],
+      "max": [-49.9323, -37.0792, 28.0952]
+    },
+    {
+      "bufferView": 29,
+      "componentType": 5126,
+      "count": 116,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 30,
+      "componentType": 5126,
+      "count": 116,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 31,
+      "componentType": 5126,
+      "count": 116,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 32,
+      "componentType": 5125,
+      "count": 264,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 33,
+      "componentType": 5126,
+      "count": 100,
+      "type": "VEC3",
+      "min": [-79.69, -67.7095, 15.1829],
+      "max": [-64.2542, -31.1724, 32.2197]
+    },
+    {
+      "bufferView": 34,
+      "componentType": 5126,
+      "count": 100,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 35,
+      "componentType": 5126,
+      "count": 100,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 36,
+      "componentType": 5126,
+      "count": 100,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 37,
+      "componentType": 5125,
+      "count": 174,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 6840,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 6840,
+      "byteLength": 6840,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 13680,
+      "byteLength": 6840,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 20520,
+      "byteLength": 4560,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 25080,
+      "byteLength": 5952,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 31032,
+      "byteLength": 2472,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 33504,
+      "byteLength": 2472,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 35976,
+      "byteLength": 2472,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 38448,
+      "byteLength": 1648,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 40096,
+      "byteLength": 2232,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 42328,
+      "byteLength": 1648,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 43976,
+      "byteLength": 3296,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 47272,
+      "byteLength": 640
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 47912,
+      "byteLength": 1704,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 49616,
+      "byteLength": 1704,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 51320,
+      "byteLength": 1704,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 53024,
+      "byteLength": 1136,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 54160,
+      "byteLength": 1776,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 55936,
+      "byteLength": 2112,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 58048,
+      "byteLength": 2112,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 60160,
+      "byteLength": 2112,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 62272,
+      "byteLength": 1408,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 63680,
+      "byteLength": 2040,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 65720,
+      "byteLength": 1884,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 67604,
+      "byteLength": 1884,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 69488,
+      "byteLength": 1884,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 71372,
+      "byteLength": 1256,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 72628,
+      "byteLength": 1728,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 74356,
+      "byteLength": 1392,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 75748,
+      "byteLength": 1392,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 77140,
+      "byteLength": 1392,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 78532,
+      "byteLength": 928,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 79460,
+      "byteLength": 1056,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 80516,
+      "byteLength": 1200,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 81716,
+      "byteLength": 1200,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 82916,
+      "byteLength": 1200,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 84116,
+      "byteLength": 800,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 84916,
+      "byteLength": 696,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 85612,
+      "uri": "model.bin"
+    }
+  ]
+}

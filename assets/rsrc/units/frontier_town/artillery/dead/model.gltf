@@ -1,0 +1,821 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 2, 3, 4, 5, 6, 7]
+    },
+    {
+      "name": "artillery_backwheel",
+      "translation": [16.6355, 42.6942, 35.1211],
+      "rotation": [0.701854, -0.528885, -0.209173, 0.428868],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "artillery_dead.png"
+      },
+      "mesh": 0
+    },
+    {
+      "name": "artillery_R_wheel",
+      "translation": [-51.7142, 36.8296, -26.4088],
+      "rotation": [-0.0608863, -0.0112338, -0.451669, 0.890035],
+      "scale": [0.332226, 0.332226, 0.332226],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "artillery_dead.png"
+      },
+      "mesh": 1
+    },
+    {
+      "name": "head",
+      "translation": [1.05385, -22.1135, 62.9622],
+      "rotation": [0.26976, 0.00577421, -0.254008, 0.928804],
+      "scale": [0.890076, 0.952381, 0.952381],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "head_dead.png"
+      },
+      "mesh": 2
+    },
+    {
+      "name": "artillery_L_wheel",
+      "translation": [34.2408, 4.86235, 44.175],
+      "rotation": [-0.384604, 0.59323, 0.513368, -0.486428],
+      "scale": [0.332226, 0.332226, 0.332226],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "artillery_dead.png"
+      },
+      "mesh": 3
+    },
+    {
+      "name": "artillery_FR_wheel",
+      "translation": [-30.1576, -26.1715, 19.7143],
+      "rotation": [-0.117944, -0.481996, 0.764788, 0.410935],
+      "scale": [0.332226, 0.332226, 0.332226],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "artillery_dead.png"
+      },
+      "mesh": 4
+    },
+    {
+      "name": "gun",
+      "translation": [-4.6247E-6, 38.5119, 77.5719],
+      "rotation": [0.216439, 0.0, 0.0, 0.976296],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "gun_dead.png"
+      },
+      "mesh": 5
+    },
+    {
+      "name": "artillery_body",
+      "translation": [0.272368, -30.0798, 40.8349],
+      "rotation": [-0.739337, 0.096749, 0.075323, 0.662077],
+      "scale": [0.332226, 0.332226, 0.332226],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "artillery_dead.png"
+      },
+      "mesh": 6
+    }
+  ],
+  "meshes": [
+    {
+      "name": "artillery_backwheel",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "artillery_R_wheel",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    },
+    {
+      "name": "head",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 10,
+            "NORMAL": 11,
+            "_MXMLNORMAL": 12,
+            "TEXCOORD_0": 13
+          },
+          "indices": 14,
+          "mode": 4,
+          "material": 2
+        }
+      ]
+    },
+    {
+      "name": "artillery_L_wheel",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 15,
+            "NORMAL": 16,
+            "_MXMLNORMAL": 17,
+            "TEXCOORD_0": 18
+          },
+          "indices": 19,
+          "mode": 4,
+          "material": 3
+        }
+      ]
+    },
+    {
+      "name": "artillery_FR_wheel",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 20,
+            "NORMAL": 21,
+            "_MXMLNORMAL": 22,
+            "TEXCOORD_0": 23
+          },
+          "indices": 24,
+          "mode": 4,
+          "material": 4
+        }
+      ]
+    },
+    {
+      "name": "gun",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 25,
+            "NORMAL": 26,
+            "_MXMLNORMAL": 27,
+            "TEXCOORD_0": 28
+          },
+          "indices": 29,
+          "mode": 4,
+          "material": 5
+        }
+      ]
+    },
+    {
+      "name": "artillery_body",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 30,
+            "NORMAL": 31,
+            "_MXMLNORMAL": 32,
+            "TEXCOORD_0": 33
+          },
+          "indices": 34,
+          "mode": 4,
+          "material": 6
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "artillery_backwheel-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": true
+    },
+    {
+      "name": "artillery_R_wheel-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": true
+    },
+    {
+      "name": "head-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 1
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "artillery_L_wheel-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": true
+    },
+    {
+      "name": "artillery_FR_wheel-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": true
+    },
+    {
+      "name": "gun-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 2
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": true
+    },
+    {
+      "name": "artillery_body-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    },
+    {
+      "source": 1,
+      "sampler": 0
+    },
+    {
+      "source": 2,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "artillery_dead.png"
+    },
+    {
+      "uri": "head_dead.png"
+    },
+    {
+      "uri": "gun_dead.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 84,
+      "type": "VEC3",
+      "min": [-55.6395, -30.3269, -6.42697],
+      "max": [-6.72284, 27.0893, 26.2123]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 84,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 84,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 84,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 156,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 182,
+      "type": "VEC3",
+      "min": [-112.776, -116.132, 77.8735],
+      "max": [129.633, 134.815, 139.375]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 182,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 182,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 182,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 345,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5126,
+      "count": 108,
+      "type": "VEC3",
+      "min": [-27.1896, -30.2717, -3.18667],
+      "max": [27.1559, 27.3592, 46.8922]
+    },
+    {
+      "bufferView": 11,
+      "componentType": 5126,
+      "count": 108,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 12,
+      "componentType": 5126,
+      "count": 108,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 13,
+      "componentType": 5126,
+      "count": 108,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 14,
+      "componentType": 5125,
+      "count": 402,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 15,
+      "componentType": 5126,
+      "count": 207,
+      "type": "VEC3",
+      "min": [-122.452, -117.034, 26.4619],
+      "max": [131.106, 127.183, 174.971]
+    },
+    {
+      "bufferView": 16,
+      "componentType": 5126,
+      "count": 207,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 17,
+      "componentType": 5126,
+      "count": 207,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 18,
+      "componentType": 5126,
+      "count": 207,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 19,
+      "componentType": 5125,
+      "count": 402,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 20,
+      "componentType": 5126,
+      "count": 177,
+      "type": "VEC3",
+      "min": [-131.967, -19.7021, 30.7932],
+      "max": [-5.98633, 114.692, 106.007]
+    },
+    {
+      "bufferView": 21,
+      "componentType": 5126,
+      "count": 177,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 22,
+      "componentType": 5126,
+      "count": 177,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 23,
+      "componentType": 5126,
+      "count": 177,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 24,
+      "componentType": 5125,
+      "count": 333,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 25,
+      "componentType": 5126,
+      "count": 196,
+      "type": "VEC3",
+      "min": [-58.1771, -48.9468, -12.7019],
+      "max": [37.4538, 34.1053, 78.2539]
+    },
+    {
+      "bufferView": 26,
+      "componentType": 5126,
+      "count": 196,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 27,
+      "componentType": 5126,
+      "count": 196,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 28,
+      "componentType": 5126,
+      "count": 196,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 29,
+      "componentType": 5125,
+      "count": 600,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 30,
+      "componentType": 5126,
+      "count": 253,
+      "type": "VEC3",
+      "min": [-174.845, -266.845, -179.281],
+      "max": [140.104, 159.493, 346.156]
+    },
+    {
+      "bufferView": 31,
+      "componentType": 5126,
+      "count": 253,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 32,
+      "componentType": 5126,
+      "count": 253,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 33,
+      "componentType": 5126,
+      "count": 253,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 34,
+      "componentType": 5125,
+      "count": 465,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 1008,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1008,
+      "byteLength": 1008,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2016,
+      "byteLength": 1008,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3024,
+      "byteLength": 672,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3696,
+      "byteLength": 624,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4320,
+      "byteLength": 2184,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 6504,
+      "byteLength": 2184,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 8688,
+      "byteLength": 2184,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 10872,
+      "byteLength": 1456,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 12328,
+      "byteLength": 1380,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 13708,
+      "byteLength": 1296,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 15004,
+      "byteLength": 1296,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 16300,
+      "byteLength": 1296,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 17596,
+      "byteLength": 864,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 18460,
+      "byteLength": 1608,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 20068,
+      "byteLength": 2484,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 22552,
+      "byteLength": 2484,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 25036,
+      "byteLength": 2484,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 27520,
+      "byteLength": 1656,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 29176,
+      "byteLength": 1608,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 30784,
+      "byteLength": 2124,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 32908,
+      "byteLength": 2124,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 35032,
+      "byteLength": 2124,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 37156,
+      "byteLength": 1416,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 38572,
+      "byteLength": 1332,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 39904,
+      "byteLength": 2352,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 42256,
+      "byteLength": 2352,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 44608,
+      "byteLength": 2352,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 46960,
+      "byteLength": 1568,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 48528,
+      "byteLength": 2400,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 50928,
+      "byteLength": 3036,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 53964,
+      "byteLength": 3036,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 57000,
+      "byteLength": 3036,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 60036,
+      "byteLength": 2024,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 62060,
+      "byteLength": 1860,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 63920,
+      "uri": "model.bin"
+    }
+  ]
+}

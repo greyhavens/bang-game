@@ -1,0 +1,281 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1]
+    },
+    {
+      "name": "Solid",
+      "translation": [4.23416, -11.1493, 63.1491],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "skin.png"
+      },
+      "children": [2],
+      "mesh": 0
+    },
+    {
+      "name": "alpha",
+      "translation": [0.942081, 5.58845, 89.7231],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "parent": "Solid",
+        "solid": true,
+        "transparent": true,
+        "hasTcoords": true,
+        "texture": "alpha_dead.png"
+      },
+      "mesh": 1
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Solid",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "alpha",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Solid-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "alpha-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 1
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    },
+    {
+      "source": 1,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "skin.png"
+    },
+    {
+      "uri": "alpha_dead.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 255,
+      "type": "VEC3",
+      "min": [-169.22, -66.2888, 37.7487],
+      "max": [88.9156, 102.765, 403.399]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 255,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 255,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 255,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 939,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 252,
+      "type": "VEC3",
+      "min": [-221.652, -171.361, -64.3261],
+      "max": [167.941, 246.128, 385.921]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 252,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 252,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 252,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 618,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 3060,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3060,
+      "byteLength": 3060,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 6120,
+      "byteLength": 3060,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9180,
+      "byteLength": 2040,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 11220,
+      "byteLength": 3756,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 14976,
+      "byteLength": 3024,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 18000,
+      "byteLength": 3024,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 21024,
+      "byteLength": 3024,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 24048,
+      "byteLength": 2016,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 26064,
+      "byteLength": 2472,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 28536,
+      "uri": "model.bin"
+    }
+  ]
+}

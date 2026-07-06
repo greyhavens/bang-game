@@ -1,0 +1,272 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 2]
+    },
+    {
+      "name": "polySurface3",
+      "translation": [0.0, -1.77754E-6, 80.4539],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [2.0, 2.0, 2.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "totem_spawn.png"
+      },
+      "mesh": 0
+    },
+    {
+      "name": "polySurface4",
+      "translation": [0.768211, 2.6082, 12.7593],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [2.0, 2.0, 2.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "totem_spawn.png"
+      },
+      "mesh": 1
+    }
+  ],
+  "meshes": [
+    {
+      "name": "polySurface3",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "polySurface4",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "polySurface3-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "polySurface4-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "totem_spawn.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC3",
+      "min": [-27.7241, -14.7737, -40.1502],
+      "max": [27.7241, 14.7737, 40.1502]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 206,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 762,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 70,
+      "type": "VEC3",
+      "min": [-43.0388, -38.1877, -8.06162],
+      "max": [43.0388, 38.1877, 8.06162]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 70,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 70,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 70,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 261,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 2472,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2472,
+      "byteLength": 2472,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4944,
+      "byteLength": 2472,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 7416,
+      "byteLength": 1648,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9064,
+      "byteLength": 3048,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 12112,
+      "byteLength": 840,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 12952,
+      "byteLength": 840,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 13792,
+      "byteLength": 840,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 14632,
+      "byteLength": 560,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 15192,
+      "byteLength": 1044,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 16236,
+      "uri": "model.bin"
+    }
+  ]
+}

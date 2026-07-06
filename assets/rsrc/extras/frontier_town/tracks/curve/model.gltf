@@ -1,0 +1,267 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 2, 3, 4]
+    },
+    {
+      "name": "Plane01",
+      "translation": [-0.00325871, 0.0156593, 0.0],
+      "rotation": [0.0, 0.0, 0.707107, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Plane03",
+      "translation": [-0.00490892, 0.0163574, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "rails",
+      "translation": [0.0130987, 0.0205679, 0.0],
+      "rotation": [0.0, 0.0, 0.707107, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "metal_tracks.png"
+      },
+      "mesh": 0
+    },
+    {
+      "name": "timbers",
+      "translation": [0.0130987, 0.0205679, 0.0],
+      "rotation": [0.0, 0.0, 0.707107, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": false,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "wood.png"
+      },
+      "mesh": 1
+    }
+  ],
+  "meshes": [
+    {
+      "name": "rails",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "timbers",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "rails-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": true
+    },
+    {
+      "name": "timbers-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": true
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 120,
+      "type": "VEC3",
+      "min": [-100.587, -100.973, 2.5384],
+      "max": [46.0263, 46.3292, 14.4875]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 120,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 120,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 120,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 276,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 100,
+      "type": "VEC3",
+      "min": [-89.6872, -90.7159, -11.9156],
+      "max": [62.7846, 61.1081, 8.1717]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 100,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 100,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 100,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 150,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 1440,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1440,
+      "byteLength": 1440,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2880,
+      "byteLength": 1440,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4320,
+      "byteLength": 960,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 5280,
+      "byteLength": 1104,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 6384,
+      "byteLength": 1200,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 7584,
+      "byteLength": 1200,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 8784,
+      "byteLength": 1200,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9984,
+      "byteLength": 800,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 10784,
+      "byteLength": 600,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 11384,
+      "uri": "model.bin"
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1]
+    },
+    {
+      "name": "hideout",
+      "translation": [3.92623, 59.1901, 125.062],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [0.0782339, 0.0782339, 0.0782339],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": true,
+        "hasTcoords": true,
+        "texture": "skin.png"
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "hideout",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "hideout-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "skin.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 1055,
+      "type": "VEC3",
+      "min": [-2069.3, -3330.54, -1617.54],
+      "max": [2069.3, 2027.98, 3474.47]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1055,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 1055,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 1055,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 1374,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 12660,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 12660,
+      "byteLength": 12660,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 25320,
+      "byteLength": 12660,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 37980,
+      "byteLength": 8440,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 46420,
+      "byteLength": 5496,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 51916,
+      "uri": "model.bin"
+    }
+  ]
+}

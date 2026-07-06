@@ -1,0 +1,678 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        51,
+        52
+      ]
+    },
+    {
+      "name": "Spot17",
+      "translation": [-135.345, -904.35, 911.059],
+      "rotation": [0.322031, -0.214321, 0.365873, 0.846463],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot16-blu",
+      "translation": [328.996, 933.8, 910.848],
+      "rotation": [0.240009, 0.340979, 0.866658, -0.273921],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot15",
+      "translation": [903.264, 487.799, 910.848],
+      "rotation": [0.347519, 0.234237, 0.906292, 0.0547629],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot14",
+      "translation": [998.41, -211.507, 910.848],
+      "rotation": [0.401907, 0.0923939, 0.836001, 0.361988],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot13",
+      "translation": [483.392, -842.887, 910.848],
+      "rotation": [0.388258, -0.0896327, 0.620506, 0.675422],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot12",
+      "translation": [-175.61, -900.613, 910.848],
+      "rotation": [0.31844, -0.221726, 0.345111, 0.854595],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot11",
+      "translation": [-742.518, -473.671, 910.848],
+      "rotation": [0.202136, -0.328883, -0.0249079, 0.922148],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot10",
+      "translation": [-867.266, 287.433, 910.848],
+      "rotation": [0.0547384, -0.397706, -0.423447, 0.812112],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot01",
+      "translation": [-899.141, -103.651, 910.848],
+      "rotation": [0.132747, -0.373522, -0.238812, 0.886469],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot08",
+      "translation": [646.603, 778.467, 910.848],
+      "rotation": [0.296544, 0.296166, 0.900315, -0.117391],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot07",
+      "translation": [800.02, -595.61, 910.848],
+      "rotation": [0.405039, -0.00239973, 0.743007, 0.532802],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot06-tan",
+      "translation": [-483.959, -767.877, 910.848],
+      "rotation": [0.272009, -0.277596, 0.176652, 0.904293],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot05-blu",
+      "translation": [-697.567, 607.35, 910.848],
+      "rotation": [-0.0198886, -0.405095, -0.572091, 0.712892],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot04-blu",
+      "translation": [-22.3845, 957.963, 910.848],
+      "rotation": [0.176363, 0.372324, 0.804811, -0.42726],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot03-tan",
+      "translation": [166.472, -934.99, 910.848],
+      "rotation": [0.361175, -0.157381, 0.494879, 0.774518],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot02",
+      "translation": [1015.94, 149.009, 910.848],
+      "rotation": [0.381385, 0.166829, 0.88472, 0.209722],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot09-blu",
+      "translation": [-396.943, 853.953, 910.848],
+      "rotation": [-0.099748, -0.397224, -0.704286, 0.579867],
+      "scale": [1.61422, 1.61422, 1.5335],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot17.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot16-blu.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot15.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot14.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot13.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot12.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot11.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot10.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot09-blu.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot08.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot07.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot06-tan.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot05-blu.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot04-blu.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot03-tan.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot02.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot01.Target",
+      "translation": [22.8306, -31.2943, 39.5933],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [18.22, 18.22, 18.22],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line12",
+      "translation": [-0.992585, 0.42068, 4.01316],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line11",
+      "translation": [0.972857, -0.0676553, 3.54121],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line10",
+      "translation": [0.767114, 0.245437, 3.42761],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line09",
+      "translation": [-0.255171, -0.0855138, 2.57474],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line07",
+      "translation": [1.24971, 0.207445, 4.4089],
+      "rotation": [0.5, 0.5, 0.5, 0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line06",
+      "translation": [-0.165749, -0.436656, 4.01283],
+      "rotation": [0.5, 0.5, 0.5, 0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line05",
+      "translation": [-0.0867751, -0.0879452, 4.35908],
+      "rotation": [0.5, 0.5, 0.5, 0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line04",
+      "translation": [-1.64733, 0.581401, 3.72353],
+      "rotation": [0.5, 0.5, 0.5, 0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line03",
+      "translation": [1.2295, -1.08468, 3.37741],
+      "rotation": [0.5, 0.5, 0.5, 0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line02",
+      "translation": [0.293919, 0.361914, 2.10388],
+      "rotation": [0.5, 0.5, 0.5, 0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Line01",
+      "translation": [-0.150958, -0.694235, 2.45467],
+      "rotation": [0.5, 0.5, 0.5, 0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Circle02",
+      "translation": [8.72451, -2.54303E-7, 5.81778],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Circle01",
+      "translation": [7.32348, -2.54303E-7, 5.81778],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Illustrate! Art Materials",
+      "translation": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "48.6deg camera",
+      "translation": [29.96, -29.9404, 81.4284],
+      "rotation": [0.323416, 0.13401, 0.358573, 0.865372],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "Dummy01"
+      }
+    },
+    {
+      "name": "48.6deg camera.Target",
+      "translation": [-9.80465, 9.80468, 16.7173],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "Dummy01"
+      }
+    },
+    {
+      "name": "Dummy01",
+      "translation": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      },
+      "children": [49, 50]
+    },
+    {
+      "name": "Sphere34",
+      "translation": [-49.8775, 1.90723, 6.01452],
+      "rotation": [0.891677, -0.441674, -0.0249022, 0.095999],
+      "scale": [7.30567, 5.58639, 6.01722],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "cactus.png"
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Sphere34",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Sphere34-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "cactus.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 97,
+      "type": "VEC3",
+      "min": [1.76297, -10.4275, -26.1483],
+      "max": [9.1415, 5.79531, 1.69948]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 97,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 97,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 97,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 411,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 1164,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1164,
+      "byteLength": 1164,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2328,
+      "byteLength": 1164,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3492,
+      "byteLength": 776,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4268,
+      "byteLength": 1644,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 5912,
+      "uri": "model.bin"
+    }
+  ]
+}

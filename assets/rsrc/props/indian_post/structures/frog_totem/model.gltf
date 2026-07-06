@@ -1,0 +1,165 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1]
+    },
+    {
+      "name": "frog_totem",
+      "translation": [0.0, 0.0, 40.0504],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [11.9585, 11.9585, 11.9585],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "frog_totem.png"
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "frog_totem",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "frog_totem-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "frog_totem.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 212,
+      "type": "VEC3",
+      "min": [-3.67812, -4.05877, -3.40848],
+      "max": [3.54013, 4.04798, 11.5133]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 212,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 212,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 212,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 666,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 2544,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2544,
+      "byteLength": 2544,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 5088,
+      "byteLength": 2544,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 7632,
+      "byteLength": 1696,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 9328,
+      "byteLength": 2664,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 11992,
+      "uri": "model.bin"
+    }
+  ]
+}

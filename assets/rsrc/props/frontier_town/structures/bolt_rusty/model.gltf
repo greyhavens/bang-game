@@ -1,0 +1,166 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1]
+    },
+    {
+      "name": "rusty_bolt",
+      "translation": [-0.525292, 33.4279, 5.50928],
+      "rotation": [0.612217, 0.0, 0.0, 0.79069],
+      "scale": [4.97908, 4.97908, 3.27571],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "nut_and_bolt_rusty.png",
+        "offsetTranslation": [0.0, -12.5942, 0.0]
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "rusty_bolt",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "rusty_bolt-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "nut_and_bolt_rusty.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 74,
+      "type": "VEC3",
+      "min": [-3.96778, 9.40131, 1.59036],
+      "max": [4.17129, 16.45, 17.3549]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 74,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 74,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 74,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 144,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 888,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 888,
+      "byteLength": 888,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1776,
+      "byteLength": 888,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2664,
+      "byteLength": 592,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3256,
+      "byteLength": 576,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 3832,
+      "uri": "model.bin"
+    }
+  ]
+}

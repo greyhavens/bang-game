@@ -1,0 +1,272 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 2]
+    },
+    {
+      "name": "objShoe",
+      "translation": [-13.4372, -3.96249, 1.02034],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [74.9116, 74.9116, 74.9116],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "slipper.png"
+      },
+      "mesh": 0
+    },
+    {
+      "name": "objShoe1",
+      "translation": [-13.4372, -3.96249, 1.02034],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [74.9116, 74.9116, 74.9116],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "slipper.png"
+      },
+      "mesh": 1
+    }
+  ],
+  "meshes": [
+    {
+      "name": "objShoe",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "objShoe1",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "_MXMLNORMAL": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "objShoe-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "objShoe1-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "uri": "slipper.png"
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 129,
+      "type": "VEC3",
+      "min": [-0.766194, -1.20086, 0.138242],
+      "max": [1.0428, 0.091061, 1.60498]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 129,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 129,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 129,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 438,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 129,
+      "type": "VEC3",
+      "min": [-0.572821, -0.189084, 0.094135],
+      "max": [1.30715, 1.2145, 1.01766]
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 129,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 129,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 129,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5125,
+      "count": 438,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 1548,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1548,
+      "byteLength": 1548,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3096,
+      "byteLength": 1548,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4644,
+      "byteLength": 1032,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 5676,
+      "byteLength": 1752,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 7428,
+      "byteLength": 1548,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 8976,
+      "byteLength": 1548,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 10524,
+      "byteLength": 1548,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 12072,
+      "byteLength": 1032,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 13104,
+      "byteLength": 1752,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 14856,
+      "uri": "model.bin"
+    }
+  ]
+}

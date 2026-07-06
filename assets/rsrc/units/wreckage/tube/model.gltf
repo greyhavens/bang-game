@@ -1,0 +1,146 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1]
+    },
+    {
+      "name": "tube",
+      "translation": [-1.16632, -0.115124, 0.775043],
+      "rotation": [-0.5, 0.5, 0.5, -0.5],
+      "scale": [0.877193, 0.877193, 0.877193],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "steamgunman_dead.png",
+        "offsetTranslation": [18.3044, 5.45513E-7, 23.9362]
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "tube",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "tube-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 79,
+      "type": "VEC3",
+      "min": [-36.6593, -38.2757, -41.148],
+      "max": [-1.66867, 40.3705, -12.8755]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 79,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 79,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 79,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 147,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 948,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 948,
+      "byteLength": 948,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1896,
+      "byteLength": 948,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2844,
+      "byteLength": 632,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3476,
+      "byteLength": 588,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 4064,
+      "uri": "model.bin"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1]
+    },
+    {
+      "name": "Cylinder01",
+      "translation": [0.0304499, 0.133945, 172.359],
+      "rotation": [0.0, 1.0, 0.0, 6.39758E-7],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "texture": "star.png"
+      },
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Cylinder01",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Cylinder01-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 66,
+      "type": "VEC3",
+      "min": [-43.1256, -12.584, 30.8752],
+      "max": [43.202, 12.584, 131.505]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 66,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 66,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 66,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 216,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 792,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 792,
+      "byteLength": 792,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1584,
+      "byteLength": 792,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2376,
+      "byteLength": 528,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2904,
+      "byteLength": 864,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 3768,
+      "uri": "model.bin"
+    }
+  ]
+}
