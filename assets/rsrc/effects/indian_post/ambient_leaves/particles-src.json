@@ -1,0 +1,271 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/ambient_leaves",
+  "effectScale": 0.2,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "wander",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 22,
+        "particlesPerSec": 12.571428,
+        "lowLife": 1.5,
+        "highLife": 2.0,
+        "startSize": 0.6,
+        "endSize": 0.6,
+        "startColor": [1.0, 1.0, 1.0, 0.0],
+        "endColor": [1.0, 1.0, 1.0, 1.0],
+        "gravity": [0.0, 0.0, 199.99998],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": true,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 0.8777773,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 6.0
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "frustum",
+          "particleType": "triangle",
+          "numParticles": 22,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": false,
+            "releaseVariance": 0.0,
+            "speed": 0.45,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 600,
+          "minimumLifeTime": 1500.0,
+          "maximumLifeTime": 2000.0,
+          "startSize": 3.0,
+          "endSize": 3.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.3788093,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": true,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "frustum": {
+            "location": [0.0, 850.0, -850.0],
+            "leftVec": [1.0, 0.0, 0.0],
+            "upVec": [0.0, 0.7071, 0.7071],
+            "direction": [0.0, -0.7071, 0.7071],
+            "near": 95.0,
+            "far": 900.0,
+            "left": -47.500458,
+            "right": 47.500458,
+            "top": 47.5,
+            "bottom": -47.5,
+            "solid": true
+          },
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -1.0, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 6.0
+            },
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/falling_leaves/leaf.png",
+            "assetPath": "effects/indian_post/falling_leaves/leaf.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      },
+      {
+        "name": "spinning straight fall",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 22,
+        "particlesPerSec": 12.571428,
+        "lowLife": 1.5,
+        "highLife": 2.0,
+        "startSize": 0.6,
+        "endSize": 0.6,
+        "startColor": [1.0, 1.0, 1.0, 0.0],
+        "endColor": [0.0, 0.0, 0.0, 1.0],
+        "gravity": [0.0, 0.0, 199.99998],
+        "rotateSpeed": 4.0,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 1.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 6.0
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "frustum",
+          "particleType": "triangle",
+          "numParticles": 22,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": false,
+            "releaseVariance": 0.0,
+            "speed": 0.43,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 600,
+          "minimumLifeTime": 1500.0,
+          "maximumLifeTime": 2000.0,
+          "startSize": 3.0,
+          "endSize": 3.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.0,
+          "maximumAngle": 3.1415927,
+          "particleSpinSpeed": 4.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "frustum": {
+            "location": [0.0, 850.0, -850.0],
+            "leftVec": [1.0, 0.0, 0.0],
+            "upVec": [0.0, 0.7071, 0.7071],
+            "direction": [0.0, -0.7071, 0.7071],
+            "near": 95.0,
+            "far": 1061.0,
+            "left": -47.500458,
+            "right": 47.500458,
+            "top": 47.5,
+            "bottom": -47.5,
+            "solid": true
+          },
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -1.0, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 6.0
+            },
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/falling_leaves/leaf.png",
+            "assetPath": "effects/indian_post/falling_leaves/leaf.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      }
+    ]
+  }
+}

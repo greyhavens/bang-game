@@ -1,0 +1,100 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/heal_hero/travel",
+  "effectScale": 0.05,
+  "root": {
+    "name": "energy form",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 50,
+    "particlesPerSec": 20.0,
+    "lowLife": 2.0,
+    "highLife": 3.0,
+    "startSize": 20.0,
+    "endSize": 50.0,
+    "startColor": [0.7490196, 0.0, 0.0, 1.0],
+    "endColor": [0.9607843, 0.16862746, 0.16862746, 0.078431375],
+    "gravity": [0.0, 0.0, 0.0],
+    "rotateSpeed": 4.1,
+    "randomAngle": true,
+    "facingVelocity": false,
+    "inWorldSpace": false,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [7.152557E-5, 599.99994, 0.0],
+    "velocityVariation": 0.6333332,
+    "shape": {
+      "kind": "point",
+      "point": [0.0, 0.0, 0.0]
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Additive",
+      "texture": "<embedded RGBA, keyless>"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "point",
+      "particleType": "triangle",
+      "numParticles": 50,
+      "controller": {
+        "repeatType": "wrap",
+        "controlFlow": false,
+        "releaseVariance": 0.0,
+        "speed": 0.62,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 122,
+      "minimumLifeTime": 2000.0,
+      "maximumLifeTime": 3000.0,
+      "startSize": 20.0,
+      "endSize": 50.0,
+      "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+      "initialVelocity": 0.59999996,
+      "minimumAngle": 0.0,
+      "maximumAngle": 0.99483746,
+      "particleSpinSpeed": 4.1,
+      "velocityAligned": false,
+      "transformParticles": true,
+      "rotateWithScene": true,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "influences": [
+        {
+          "class": "SwarmInfluence",
+          "enabled": true,
+          "swarmOffset": [0.0, 0.0, 0.0],
+          "swarmRange": 5.0,
+          "deviance": 0.9599308,
+          "turnSpeed": 40.0,
+          "speedBump": 0.4,
+          "maxSpeed": 4.0
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE"
+      },
+      "texture": {
+        "location": "rsrc/effects/frontier_town/resurrection/spark.png",
+        "assetPath": "effects/frontier_town/resurrection/spark.png",
+        "exists": true,
+        "embeddedInJ3o": true
+      }
+    }
+  }
+}

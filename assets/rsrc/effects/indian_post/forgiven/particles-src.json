@@ -1,0 +1,214 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/forgiven",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "spark",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 250,
+        "particlesPerSec": 0.0,
+        "lowLife": 2.0,
+        "highLife": 3.0,
+        "startSize": 0.0,
+        "endSize": 0.5,
+        "startColor": [1.0, 1.0, 0.6, 1.0],
+        "endColor": [1.0, 1.0, 0.8, 0.0],
+        "gravity": [0.0, 0.1, 0.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 0.14444439,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "frustum",
+          "particleType": "triangle",
+          "numParticles": 250,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.31,
+            "speed": 2.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 50,
+          "minimumLifeTime": 2000.0,
+          "maximumLifeTime": 3000.0,
+          "startSize": 0.0,
+          "endSize": 10.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.22689272,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "frustum": {
+            "location": [571.55804, 353.88895, -3140.9658],
+            "leftVec": [0.98384374, 6.4028027E-9, 0.1790295],
+            "upVec": [-0.019724308, 0.99391234, 0.10839375],
+            "direction": [-0.17793977, -0.110173546, 0.9778545],
+            "near": 450.0,
+            "far": 2000.0,
+            "left": -258.39218,
+            "right": 258.39218,
+            "top": 224.99997,
+            "bottom": -224.99997,
+            "solid": true
+          },
+          "influences": [],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/resurrection/spark.png",
+            "assetPath": "effects/frontier_town/resurrection/spark.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      },
+      {
+        "name": "sphere",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 400,
+        "particlesPerSec": 0.0,
+        "lowLife": 2.0,
+        "highLife": 3.0,
+        "startSize": 0.0,
+        "endSize": 0.35,
+        "startColor": [1.0, 1.0, 0.6, 1.0],
+        "endColor": [1.0, 1.0, 0.8, 0.0],
+        "gravity": [0.0, 0.0, -4.9999995],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 0.14444439,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/resurrection/sphere.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "frustum",
+          "particleType": "triangle",
+          "numParticles": 400,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 2.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 100,
+          "minimumLifeTime": 2000.0,
+          "maximumLifeTime": 3000.0,
+          "startSize": 0.0,
+          "endSize": 7.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.22689272,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "frustum": {
+            "location": [571.55804, 353.88895, -3140.9658],
+            "leftVec": [0.98384374, 6.4028027E-9, 0.1790295],
+            "upVec": [-0.019724308, 0.99391234, 0.10839375],
+            "direction": [-0.17793977, -0.110173546, 0.9778545],
+            "near": 300.0,
+            "far": 2000.0,
+            "left": -172.26146,
+            "right": 172.26146,
+            "top": 149.99998,
+            "bottom": -149.99998,
+            "solid": true
+          },
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.1, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/resurrection/sphere.png",
+            "assetPath": "effects/frontier_town/resurrection/sphere.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

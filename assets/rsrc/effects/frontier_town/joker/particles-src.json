@@ -1,0 +1,598 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "frontier_town/joker",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "explosion",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 15,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.11,
+        "highLife": 1.67,
+        "startSize": 0.90000004,
+        "endSize": 1.65,
+        "startColor": [1.0, 1.0, 0.4, 1.0],
+        "endColor": [1.0, 0.4, 0.2, 0.0],
+        "gravity": [0.0, 0.0, 29.999996],
+        "rotateSpeed": 3.6000001,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [3.33786E-6, 28.0, 0.0],
+        "velocityVariation": 0.36666667,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "effects/frontier_town/joker/confetti.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 1.0
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 15,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.39999998,
+            "speed": 0.95,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 46,
+          "minimumLifeTime": 1110.0,
+          "maximumLifeTime": 1670.0,
+          "startSize": 18.0,
+          "endSize": 33.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.56,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.57595867,
+          "particleSpinSpeed": 3.6000001,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.59999996, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 1.0
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/joker/confetti.png",
+            "assetPath": "effects/frontier_town/joker/confetti.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "explosion",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 15,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.11,
+        "highLife": 1.67,
+        "startSize": 0.90000004,
+        "endSize": 1.65,
+        "startColor": [0.4, 1.0, 1.0, 1.0],
+        "endColor": [0.0, 0.8, 0.6, 0.0],
+        "gravity": [0.0, 0.0, 29.999996],
+        "rotateSpeed": 3.6000001,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [3.33786E-6, 28.0, 0.0],
+        "velocityVariation": 0.36666667,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "effects/frontier_town/joker/confetti.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 1.0
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 15,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.39999998,
+            "speed": 0.95,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 34,
+          "minimumLifeTime": 1110.0,
+          "maximumLifeTime": 1670.0,
+          "startSize": 18.0,
+          "endSize": 33.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.56,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.57595867,
+          "particleSpinSpeed": 3.6000001,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.59999996, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 1.0
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/joker/confetti.png",
+            "assetPath": "effects/frontier_town/joker/confetti.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "explosion",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 15,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.11,
+        "highLife": 1.67,
+        "startSize": 0.90000004,
+        "endSize": 1.65,
+        "startColor": [0.6, 0.95686275, 0.2, 1.0],
+        "endColor": [1.0, 1.0, 0.2, 0.0],
+        "gravity": [0.0, 0.0, 29.999996],
+        "rotateSpeed": 3.6000001,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [3.33786E-6, 28.0, 0.0],
+        "velocityVariation": 0.36666667,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "effects/frontier_town/joker/confetti.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 1.0
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 15,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.39999998,
+            "speed": 0.95,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 37,
+          "minimumLifeTime": 1110.0,
+          "maximumLifeTime": 1670.0,
+          "startSize": 18.0,
+          "endSize": 33.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.56,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.57595867,
+          "particleSpinSpeed": 3.6000001,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.59999996, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 1.0
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/joker/confetti.png",
+            "assetPath": "effects/frontier_town/joker/confetti.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "explosion",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 15,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.11,
+        "highLife": 1.67,
+        "startSize": 0.90000004,
+        "endSize": 1.65,
+        "startColor": [1.0, 0.6, 1.0, 1.0],
+        "endColor": [1.0, 0.2, 0.6, 0.0],
+        "gravity": [0.0, 0.0, 29.999996],
+        "rotateSpeed": 3.6000001,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [3.33786E-6, 28.0, 0.0],
+        "velocityVariation": 0.36666667,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "effects/frontier_town/joker/confetti.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 1.0
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 15,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.39999998,
+            "speed": 0.95,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 28,
+          "minimumLifeTime": 1110.0,
+          "maximumLifeTime": 1670.0,
+          "startSize": 18.0,
+          "endSize": 33.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.56,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.57595867,
+          "particleSpinSpeed": 3.6000001,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.59999996, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 1.0
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/joker/confetti.png",
+            "assetPath": "effects/frontier_town/joker/confetti.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "stars",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 15,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.11,
+        "highLife": 1.67,
+        "startSize": 0.5,
+        "endSize": 0.2,
+        "startColor": [1.0, 1.0, 0.4, 1.0],
+        "endColor": [1.0, 0.4, 0.2, 0.0],
+        "gravity": [0.0, 0.0, 29.999996],
+        "rotateSpeed": 3.6000001,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [3.33786E-6, 28.0, 0.0],
+        "velocityVariation": 0.36666667,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 1.0
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 15,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.39999998,
+            "speed": 0.95,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 46,
+          "minimumLifeTime": 1110.0,
+          "maximumLifeTime": 1670.0,
+          "startSize": 10.0,
+          "endSize": 4.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.56,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.57595867,
+          "particleSpinSpeed": 3.6000001,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.59999996, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 1.0
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/lasso/tiny_star.png",
+            "assetPath": "effects/frontier_town/lasso/tiny_star.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      },
+      {
+        "name": "red clouds",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 17,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.385,
+        "highLife": 0.598,
+        "startSize": 1.9250001,
+        "endSize": 3.3,
+        "startColor": [1.0, 1.0, 1.0, 1.0],
+        "endColor": [1.0, 1.0, 1.0, 0.0],
+        "gravity": [0.0, 0.1, 0.0],
+        "rotateSpeed": 0.1,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [4.7683716E-7, 4.0, 0.0],
+        "velocityVariation": 1.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/explosion/explosion.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "quad",
+          "numParticles": 17,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 1.56,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 32,
+          "minimumLifeTime": 385.0,
+          "maximumLifeTime": 598.0,
+          "startSize": 38.5,
+          "endSize": 66.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.08,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.7627825,
+          "particleSpinSpeed": 0.1,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/explosion/explosion.png",
+            "assetPath": "effects/frontier_town/explosion/explosion.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

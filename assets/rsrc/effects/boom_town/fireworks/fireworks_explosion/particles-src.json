@@ -1,0 +1,285 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "boom_town/fireworks/fireworks_explosion",
+  "effectScale": 0.025,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "busrt",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 3,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.3,
+        "highLife": 1.5,
+        "startSize": 1.875,
+        "endSize": 5.0,
+        "startColor": [1.0, 0.8, 0.0, 1.0],
+        "endColor": [1.0, 0.2, 0.0, 0.0],
+        "gravity": [0.0, 0.0, 5.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [4.4703486E-7, 3.7500002, 0.0],
+        "velocityVariation": 0.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 3,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": false,
+            "releaseVariance": 0.0,
+            "speed": 1.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 1300.0,
+          "maximumLifeTime": 1500.0,
+          "startSize": 75.0,
+          "endSize": 200.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.15,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.0,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.20000002, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png",
+            "assetPath": "effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "busrt",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 3,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.5,
+        "highLife": 1.7,
+        "startSize": 3.75,
+        "endSize": 6.25,
+        "startColor": [1.0, 0.4, 1.0, 1.0],
+        "endColor": [0.4, 0.0, 0.8, 0.0],
+        "gravity": [0.0, 0.0, 5.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [5.9604645E-7, 5.0, 0.0],
+        "velocityVariation": 0.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 3,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": false,
+            "releaseVariance": 0.0,
+            "speed": 1.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 1500.0,
+          "maximumLifeTime": 1700.0,
+          "startSize": 150.0,
+          "endSize": 250.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.2,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.0,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.20000002, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png",
+            "assetPath": "effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "busrt",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 3,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.2,
+        "highLife": 0.4,
+        "startSize": 5.0,
+        "endSize": 8.75,
+        "startColor": [1.0, 0.6, 0.2, 1.0],
+        "endColor": [0.8, 0.0, 1.0, 0.0],
+        "gravity": [0.0, 0.0, 5.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [6.556511E-7, 5.5, 0.0],
+        "velocityVariation": 0.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 3,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": false,
+            "releaseVariance": 0.0,
+            "speed": 1.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 200.0,
+          "maximumLifeTime": 400.0,
+          "startSize": 200.0,
+          "endSize": 350.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.22,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.0,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.20000002, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png",
+            "assetPath": "effects/boom_town/fireworks/fireworks_explosion/fireworks_burst.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

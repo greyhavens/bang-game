@@ -1,0 +1,104 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "frontier_town/dust",
+  "effectScale": 0.05,
+  "root": {
+    "name": "dust",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 100,
+    "particlesPerSec": 88.10573,
+    "lowLife": 0.96,
+    "highLife": 1.31,
+    "startSize": 1.0500001,
+    "endSize": 8.650001,
+    "startColor": [0.6, 0.6, 0.6, 0.24705882],
+    "endColor": [1.0, 1.0, 1.0, 0.0],
+    "gravity": [-99.99999, 0.0, -9.999999],
+    "rotateSpeed": 10.0,
+    "randomAngle": true,
+    "facingVelocity": false,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [20.5, 0.0, 0.0],
+    "velocityVariation": 0.36666667,
+    "shape": {
+      "kind": "point",
+      "point": [0.0, 0.0, 0.0]
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Alpha",
+      "texture": "effects/frontier_town/dust/dust.png"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "point",
+      "particleType": "triangle",
+      "numParticles": 100,
+      "controller": {
+        "repeatType": "wrap",
+        "controlFlow": true,
+        "releaseVariance": 0.47,
+        "speed": 0.39000002,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 121,
+      "minimumLifeTime": 960.0,
+      "maximumLifeTime": 1310.0,
+      "startSize": 21.0,
+      "endSize": 173.0,
+      "emissionDirection": [1.0, 0.0, 0.0],
+      "initialVelocity": 0.41,
+      "minimumAngle": 0.36651915,
+      "maximumAngle": 0.57595867,
+      "particleSpinSpeed": 10.0,
+      "velocityAligned": false,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "influences": [
+        {
+          "class": "BasicGravity",
+          "enabled": true,
+          "gravityForce": [0.0, 0.2, 0.0],
+          "rotateWithScene": true
+        },
+        {
+          "class": "BasicWind",
+          "enabled": true,
+          "windDirection": [1.0, 0.0, 0.0],
+          "strength": 2.0,
+          "random": true,
+          "rotateWithScene": true
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE_MINUS_SRC_ALPHA"
+      },
+      "texture": {
+        "location": "rsrc/effects/frontier_town/dust/dust.png",
+        "assetPath": "effects/frontier_town/dust/dust.png",
+        "exists": true,
+        "embeddedInJ3o": false
+      }
+    }
+  }
+}

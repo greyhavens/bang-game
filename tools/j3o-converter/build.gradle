@@ -215,6 +215,27 @@ tasks.register("bakeParticles", JavaExec) {
   args = cmd
 }
 
+// Epic 4 Phase 4½a: the one-time fork-classpath ENRICHMENT extractor (must run before the Phase-5
+// fork deletion — risk R1 of the particles re-authoring plan). Reads every COMMITTED fork-binary
+// assets/rsrc/effects/<key>/particles.jme through the same fork BinaryImporter + ParticleConverter
+// path bakeParticles used, and writes a committed sibling particles-src.json: the full converted
+// jME3 parameter set (== the frozen particles.j3o) PLUS per-emitter forkExtras (raw fork params,
+// dropped BasicVortex/SwarmInfluence params, minimumAngle/releaseVariance/alphaFalloff, raw blend
+// state, and the embedded palette+tRNS texture SOURCE paths that the keyless .j3o textures cannot
+// reveal). Re-runnable while the fork exists; after Phase 5 the committed JSONs are the only copy.
+//   ./gradlew :tools:j3o-converter:extractParticleSources [-Peffect=<town>/<effect>]
+tasks.register("extractParticleSources", JavaExec) {
+  group = "build"
+  description = "Phase 4½a enrichment: dump committed particles.jme to particles-src.json (fork classpath)."
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = "com.threerings.bang.tools.particles.ExtractParticleSources"
+  def cmd = [ rootProject.file("assets/rsrc").absolutePath ]
+  if (project.hasProperty("effect")) {
+    cmd += project.property("effect").toString()
+  }
+  args = cmd
+}
+
 // Phase 6a: render a baked particles.j3o to a PNG offscreen, stepping the emitter a few frames so
 // particles are alive before the snapshot (ParticleEmitters are time-based). Stays on the isolated
 // jME3 + LWJGL3 classpath (no fork/gdx), so no org.lwjgl sealing clash.

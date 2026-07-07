@@ -1,0 +1,285 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "frontier_town/fire",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "flames large",
+        "translation": [0.0, 15.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [2.5, 2.5, 2.5],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 300,
+        "particlesPerSec": 300.0,
+        "lowLife": 0.2,
+        "highLife": 0.2,
+        "startSize": 1.2,
+        "endSize": 0.8,
+        "startColor": [1.0, 1.0, 1.0, 0.39215687],
+        "endColor": [1.0, 0.4, 0.2, 0.0],
+        "gravity": [0.0, 0.1, 0.0],
+        "rotateSpeed": 1.8,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [1.7881395E-6, 15.000001, 0.0],
+        "velocityVariation": 0.088888854,
+        "shape": {
+          "kind": "sphere",
+          "center": [0.0, 0.0, 0.0],
+          "radius": 13.0
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/fire/small_flame.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "ring",
+          "particleType": "triangle",
+          "numParticles": 300,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.27,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 200.0,
+          "maximumLifeTime": 200.0,
+          "startSize": 24.0,
+          "endSize": 16.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.3,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.1396263,
+          "particleSpinSpeed": 1.8,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "ring": {
+            "center": [0.0, 0.0, 0.0],
+            "up": [0.0, 1.0, 0.0],
+            "innerRadius": 0.0,
+            "outerRadius": 13.0
+          },
+          "influences": [],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/fire/small_flame.png",
+            "assetPath": "effects/frontier_town/fire/small_flame.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "cinders",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [2.5, 2.5, 2.5],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 20,
+        "particlesPerSec": 25.806452,
+        "lowLife": 0.7,
+        "highLife": 0.85,
+        "startSize": 0.115,
+        "endSize": 0.0,
+        "startColor": [1.0, 0.4, 0.0, 1.0],
+        "endColor": [1.0, 0.6, 0.0, 0.0],
+        "gravity": [0.0, 0.0, -19.999998],
+        "rotateSpeed": 0.25,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [4.7683716E-7, 4.0, 0.0],
+        "velocityVariation": 0.33333334,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/resurrection/sphere.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 20,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.21,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 40,
+          "minimumLifeTime": 700.0,
+          "maximumLifeTime": 850.0,
+          "startSize": 2.3,
+          "endSize": 0.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.08,
+          "minimumAngle": 0.20943952,
+          "maximumAngle": 0.5235988,
+          "particleSpinSpeed": 0.25,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.4, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/resurrection/sphere.png",
+            "assetPath": "effects/frontier_town/resurrection/sphere.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "flames tongues",
+        "translation": [0.0, 15.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [2.5, 2.5, 2.5],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 50,
+        "particlesPerSec": 155.0,
+        "lowLife": 0.2,
+        "highLife": 0.245,
+        "startSize": 0.95,
+        "endSize": 0.25,
+        "startColor": [1.0, 1.0, 1.0, 0.5921569],
+        "endColor": [1.0, 0.4, 0.2, 0.0],
+        "gravity": [0.0, 0.1, 0.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [2.0861626E-6, 17.5, 0.0],
+        "velocityVariation": 0.088888854,
+        "shape": {
+          "kind": "sphere",
+          "center": [0.0, 0.0, 0.0],
+          "radius": 13.0
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/fire/flame_tongue.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "ring",
+          "particleType": "triangle",
+          "numParticles": 50,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.27,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 155,
+          "minimumLifeTime": 200.0,
+          "maximumLifeTime": 245.0,
+          "startSize": 19.0,
+          "endSize": 5.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.35,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.1396263,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "ring": {
+            "center": [0.0, 0.0, 0.0],
+            "up": [0.0, 1.0, 0.0],
+            "innerRadius": 0.0,
+            "outerRadius": 13.0
+          },
+          "influences": [],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/fire/flame_tongue.png",
+            "assetPath": "effects/frontier_town/fire/flame_tongue.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

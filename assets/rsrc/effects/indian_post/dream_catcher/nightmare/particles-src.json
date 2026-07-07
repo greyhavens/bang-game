@@ -1,0 +1,225 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/dream_catcher/nightmare",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "skulls",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 6,
+        "particlesPerSec": 8.921933,
+        "lowLife": 0.538,
+        "highLife": 0.807,
+        "startSize": 44.0,
+        "endSize": 44.0,
+        "startColor": [1.0, 0.0, 0.2, 1.0],
+        "endColor": [1.0, 0.2, 0.8, 0.0],
+        "gravity": [-1.0, -101.0, 0.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": false,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 0.67777777,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "quad",
+          "numParticles": 6,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": false,
+            "releaseVariance": 0.91999996,
+            "speed": 0.39999998,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 120,
+          "minimumLifeTime": 538.0,
+          "maximumLifeTime": 807.0,
+          "startSize": 44.0,
+          "endSize": 44.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.47123864,
+          "maximumAngle": 1.0646509,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": true,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.001, 0.101, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/dream_catcher/nightmare/skull.png",
+            "assetPath": "effects/indian_post/dream_catcher/nightmare/skull.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      },
+      {
+        "name": "cloud",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 33,
+        "particlesPerSec": 49.07063,
+        "lowLife": 0.538,
+        "highLife": 0.807,
+        "startSize": 58.0,
+        "endSize": 88.0,
+        "startColor": [0.4, 1.0, 0.4, 0.12941177],
+        "endColor": [1.0, 0.2, 0.8, 0.0],
+        "gravity": [-1.0, -101.0, 0.0],
+        "rotateSpeed": 4.3,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": false,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [1.1920929E-5, 100.0, 0.0],
+        "velocityVariation": 0.67777777,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "effects/frontier_town/dust/dust.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 33,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": true,
+            "releaseVariance": 0.91999996,
+            "speed": 0.39999998,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 120,
+          "minimumLifeTime": 538.0,
+          "maximumLifeTime": 807.0,
+          "startSize": 58.0,
+          "endSize": 88.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.1,
+          "minimumAngle": 0.47123864,
+          "maximumAngle": 1.0646509,
+          "particleSpinSpeed": 4.3,
+          "velocityAligned": false,
+          "transformParticles": true,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.001, 0.101, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/dust/dust.png",
+            "assetPath": "effects/frontier_town/dust/dust.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

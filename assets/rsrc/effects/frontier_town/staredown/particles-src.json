@@ -1,0 +1,105 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "frontier_town/staredown",
+  "effectScale": 0.05,
+  "root": {
+    "name": "explosion",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 55,
+    "particlesPerSec": 0.0,
+    "lowLife": 0.411,
+    "highLife": 0.66,
+    "startSize": 2.2250001,
+    "endSize": 0.52500004,
+    "startColor": [1.0, 1.0, 1.0, 1.0],
+    "endColor": [0.4, 0.4, 1.0, 0.0],
+    "gravity": [0.0, 0.0, 0.0],
+    "rotateSpeed": 0.0,
+    "randomAngle": false,
+    "facingVelocity": false,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [3.33786E-6, 28.0, 0.0],
+    "velocityVariation": 1.0,
+    "shape": {
+      "kind": "point",
+      "point": [0.0, 0.0, 0.0]
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Alpha",
+      "texture": "effects/frontier_town/staredown/black_sphere.png"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "point",
+      "particleType": "triangle",
+      "numParticles": 55,
+      "controller": {
+        "repeatType": "clamp",
+        "controlFlow": true,
+        "releaseVariance": 0.0,
+        "speed": 0.83,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 300,
+      "minimumLifeTime": 411.0,
+      "maximumLifeTime": 660.0,
+      "startSize": 44.5,
+      "endSize": 10.5,
+      "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+      "initialVelocity": 0.56,
+      "minimumAngle": 0.0,
+      "maximumAngle": 1.710422,
+      "particleSpinSpeed": 0.0,
+      "velocityAligned": false,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "influences": [
+        {
+          "class": "BasicVortex",
+          "enabled": true,
+          "type": "cylinder",
+          "strength": 9.1,
+          "divergence": -1.1693705,
+          "axis": {
+            "origin": [0.0, 0.0, 0.0],
+            "direction": [1.1920929E-7, 1.0, 0.0]
+          },
+          "height": 0.0,
+          "radius": 1.0,
+          "random": true,
+          "transformWithScene": true
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE_MINUS_SRC_ALPHA"
+      },
+      "texture": {
+        "location": "rsrc/effects/frontier_town/staredown/black_sphere.png",
+        "assetPath": "effects/frontier_town/staredown/black_sphere.png",
+        "exists": true,
+        "embeddedInJ3o": false
+      }
+    }
+  }
+}

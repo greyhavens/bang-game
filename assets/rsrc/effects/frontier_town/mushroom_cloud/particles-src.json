@@ -1,0 +1,390 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "frontier_town/mushroom_cloud",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "cap",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 100,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.983,
+        "highLife": 1.325,
+        "startSize": 1.475,
+        "endSize": 4.0,
+        "startColor": [1.0, 0.6, 0.0, 1.0],
+        "endColor": [0.6, 0.2, 0.0, 0.0],
+        "gravity": [0.0, 0.0, -30.0],
+        "rotateSpeed": 6.6,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [1.66893E-6, 14.0, 0.0],
+        "velocityVariation": 0.85555553,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/explosion/explosion.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "quad",
+          "numParticles": 100,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": false,
+            "releaseVariance": 0.57,
+            "speed": 0.59,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 110,
+          "minimumLifeTime": 983.0,
+          "maximumLifeTime": 1325.0,
+          "startSize": 29.5,
+          "endSize": 80.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.28,
+          "minimumAngle": 0.20943952,
+          "maximumAngle": 1.3439035,
+          "particleSpinSpeed": 6.6,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.6, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/explosion/explosion.png",
+            "assetPath": "effects/frontier_town/explosion/explosion.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "ring",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 66,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.684,
+        "highLife": 0.94,
+        "startSize": 0.98999995,
+        "endSize": 2.3500001,
+        "startColor": [1.0, 0.0, 0.0, 1.0],
+        "endColor": [0.6, 0.2, 0.0, 0.0],
+        "gravity": [0.0, 0.0, -15.0],
+        "rotateSpeed": 8.0,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [7.1525574E-7, 6.0, 0.0],
+        "velocityVariation": 0.33333334,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/explosion/explosion.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 66,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": false,
+            "releaseVariance": 0.57,
+            "speed": 0.42000002,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 110,
+          "minimumLifeTime": 684.0,
+          "maximumLifeTime": 940.0,
+          "startSize": 19.8,
+          "endSize": 47.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.12,
+          "minimumAngle": 0.41887903,
+          "maximumAngle": 0.5235988,
+          "particleSpinSpeed": 8.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicVortex",
+              "enabled": true,
+              "type": "cylinder",
+              "strength": 1.0,
+              "divergence": 1.5707964,
+              "axis": {
+                "origin": [0.0, 0.0, 0.0],
+                "direction": [1.1920929E-7, 1.0, 0.0]
+              },
+              "height": 0.0,
+              "radius": 1.0,
+              "random": true,
+              "transformWithScene": true
+            },
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.3, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/explosion/explosion.png",
+            "assetPath": "effects/frontier_town/explosion/explosion.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "shaft",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 44,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.684,
+        "highLife": 1.068,
+        "startSize": 1.4,
+        "endSize": 1.65,
+        "startColor": [1.0, 0.2, 0.0, 0.43529412],
+        "endColor": [0.6, 0.2, 0.0, 0.0],
+        "gravity": [0.0, 0.0, -19.999998],
+        "rotateSpeed": 4.2999997,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [1.4305115E-6, 12.0, 0.0],
+        "velocityVariation": 0.1,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/explosion/explosion.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 44,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.57,
+            "speed": 0.57,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 44,
+          "minimumLifeTime": 684.0,
+          "maximumLifeTime": 1068.0,
+          "startSize": 28.0,
+          "endSize": 33.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.24,
+          "minimumAngle": 0.15707964,
+          "maximumAngle": 0.15707964,
+          "particleSpinSpeed": 4.2999997,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.4, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/explosion/explosion.png",
+            "assetPath": "effects/frontier_town/explosion/explosion.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "explosion",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 100,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.47,
+        "highLife": 1.111,
+        "startSize": 1.75,
+        "endSize": 0.6,
+        "startColor": [1.0, 0.8, 0.0, 1.0],
+        "endColor": [1.0, 0.2, 0.0, 0.0],
+        "gravity": [0.0, 0.0, 4.9999995],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [3.33786E-6, 28.0, 0.0],
+        "velocityVariation": 0.8777773,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/resurrection/sphere.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 100,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": false,
+            "releaseVariance": 0.0,
+            "speed": 1.54,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 470.0,
+          "maximumLifeTime": 1111.0,
+          "startSize": 35.0,
+          "endSize": 12.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.56,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.3788093,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.1, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/resurrection/sphere.png",
+            "assetPath": "effects/frontier_town/resurrection/sphere.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}
