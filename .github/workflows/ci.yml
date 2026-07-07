@@ -49,7 +49,9 @@ jobs:
           # this repo's GitHub Packages); the Actions GITHUB_TOKEN has packages:read here.
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew build --no-daemon --stacktrace
+        # verifyDependencyPins gates the fork-stack version pins (2026-07-06 vilya/narya
+        # mavenLocal-poisoning incident) — see the root build.gradle
+        run: ./gradlew build verifyDependencyPins --no-daemon --stacktrace
 
       - name: Upload test reports
         if: always()

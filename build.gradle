@@ -24,6 +24,22 @@ allprojects {
     // (netscape.javascript.JSObject / source 1.5); modern getdown dropped applets and split into
     // getdown-core/launcher/ant — Bang only needs getdown-core (LaunchUtil).
     getdownVersion = "1.8.10"
+    // The authoritative module→version pin map for the fork-owned stack, derived from the
+    // versions above. Consumed twice: force()d onto every configuration below (so transitive
+    // poms can never hoist past a pin) and checked by the root `verifyDependencyPins` task
+    // (CI + deploy gate). Tools artifacts intentionally share their lib's version.
+    forkPins = [
+      "com.threerings:narya"               : naryaVersion,
+      "com.threerings:narya-tools"         : naryaVersion,
+      "com.threerings:nenya"               : nenyaVersion,
+      "com.threerings:nenya-tools"         : nenyaVersion,
+      "com.threerings:vilya"               : vilyaVersion,
+      "com.threerings:ooo-util"            : oooUtilVersion,
+      "com.threerings:ooo-user"            : oooUserVersion,
+      "com.samskivert:samskivert"          : samskivertVersion,
+      "com.samskivert:depot"               : depotVersion,
+      "com.threerings.getdown:getdown-core": getdownVersion,
+    ]
     // Flyway schema migrations (Epic 3 Phase 7) — core + the MySQL dialect module (split out
     // of core since Flyway 10)
     flywayVersion = "11.8.2"
@@ -62,6 +78,12 @@ allprojects {
   // beanutils via commons-digester 2.1) and :tools (which pulls protobuf-java via project(":server")).
   configurations.all {
     resolutionStrategy {
+      // Fork-stack pins are FORCED, not just requested (2026-07-06 incident: an in-place vilya
+      // 1.7.1 republish to the shared mavenLocal carried a pom depending on narya 1.22, which
+      // highest-version-wins resolution silently hoisted past the pin — narya 1.22's codegen'd
+      // BodyObject.writeObject nulled every PlayerObject field over the wire). force() makes the
+      // ext-block pin authoritative regardless of what any transitive pom asks for.
+      forkPins.each { module, pinned -> force "${module}:${pinned}" }
       // digester 2.1 would pull commons-beanutils 1.8.3; 1.11.0 clears CVE-2014-0114 + CVE-2019-10086
       // + CVE-2025-48734 (BeanIntrospector suppression bypass via declaredClass, fixed in 1.11.0)
       force "commons-beanutils:commons-beanutils:1.11.0"
@@ -100,6 +122,69 @@ allprojects {
     }
     mavenCentral()
   }
+}
+
+// Pin gate (2026-07-06 vilya/narya incident hardening): resolve the two deployable classpaths and
+// fail if ANY com.threerings/com.samskivert artifact resolved to a version other than its forkPins
+// pin (or isn't pinned at all). With the force() above in place this should never trip — it is the
+// backstop for the day the force is edited, bypassed, or a new fork coordinate appears unpinned.
+// Runs in CI's build job and gates every local `deploy` (below), so a poisoned mavenLocal can
+// never ship a dev build again. Graph-only resolution, so it costs almost nothing.
+// Resolution providers are captured lazily at configuration time (Task.project at execution time
+// is deprecated); rootComponent is graph-only, so querying it never downloads artifacts.
+def pinnedVersions = forkPins
+def pinCheckedGraphs = [":server", ":client:shared"].collectEntries { path ->
+  [(path): project(path).configurations.named("runtimeClasspath")
+      .flatMap { it.incoming.resolutionResult.rootComponent }]
+}
+tasks.register("verifyDependencyPins") {
+  group = "verification"
+  description = "Fails if any fork-stack (com.threerings/com.samskivert) artifact resolves off its pin."
+  doLast {
+    def problems = []
+    pinCheckedGraphs.each { path, rootComponent ->
+      def seen = [] as Set
+      def stack = [rootComponent.get()]
+      while (!stack.empty) {
+        def comp = stack.pop()
+        def id = comp.id
+        if (!seen.add(id)) continue
+        comp.dependencies.each { dep ->
+          if (dep instanceof org.gradle.api.artifacts.result.ResolvedDependencyResult) {
+            stack << dep.selected
+          }
+        }
+        if (!(id instanceof org.gradle.api.artifacts.component.ModuleComponentIdentifier)) continue
+        def watched = ["com.threerings", "com.samskivert"].any {
+          id.group == it || id.group.startsWith(it + ".")
+        }
+        if (!watched) continue
+        def key = "${id.group}:${id.module}".toString()
+        def pinned = pinnedVersions[key]
+        if (pinned == null) {
+          problems << "${path} runtimeClasspath: ${key}:${id.version} is not in forkPins — add a pin if intentional"
+        } else if (id.version != pinned) {
+          problems << "${path} runtimeClasspath: ${key} resolved to ${id.version} but is pinned to ${pinned}"
+        }
+      }
+    }
+    if (!problems.empty) {
+      throw new GradleException(
+        "Dependency pin verification FAILED — resolved fork-stack versions disagree with the pins in build.gradle:\n  " +
+        problems.join("\n  ") +
+        "\nLikely cause: a stale or in-place-republished artifact in mavenLocal (~/.m2) whose pom hoists a " +
+        "transitive version past its pin (see the 2026-07-06 vilya→narya incident). Inspect with:\n" +
+        "  ./gradlew :server:dependencies --configuration runtimeClasspath")
+    }
+  }
+}
+
+// Every module's `deploy` passes the pin gate first — local deploys resolve mavenLocal-first, which
+// is exactly the surface the 2026-07-06 incident poisoned (CI was unaffected; it resolves from
+// GitHub Packages).
+def pinGate = tasks.named("verifyDependencyPins")
+subprojects {
+  tasks.configureEach { if (name == "deploy") dependsOn pinGate }
 }
 
 // OWASP dependency-check scan config (root-level; dependencyCheckAggregate spans all modules).
