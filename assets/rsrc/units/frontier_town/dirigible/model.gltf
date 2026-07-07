@@ -30,6 +30,9 @@
       "scale": [0.934579, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-0.377369, -3.56157, 66.0646],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.934579, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -48,6 +51,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "body",
+        "restTranslation": [0.394833, 20.4786, -93.4946],
+        "restRotation": [1.26563E-7, 0.0, 5.7195E-4, 1.0],
+        "restScale": [0.953267, 1.04902, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -65,6 +71,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "body",
+        "restTranslation": [-8.19E-7, 19.7332, -93.4946],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -81,6 +90,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "body",
+        "restTranslation": [-8.19E-7, 19.7332, -93.4946],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -97,6 +109,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "body",
+        "restTranslation": [73.5762, 7.43594, 18.9028],
+        "restRotation": [0.5, 0.0, -1.7321E-7, 0.866025],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -115,6 +130,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "port cannon",
+        "restTranslation": [0.516398, 1.6978, 24.8484],
+        "restRotation": [-0.0174531, 0.00363828, -3.1745E-5, 0.999841],
+        "restScale": [1.07, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": false,
@@ -130,6 +148,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "body",
+        "restTranslation": [-73.7077, 7.43594, 18.9028],
+        "restRotation": [0.5, 0.0, -1.76901E-7, 0.866025],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -148,6 +169,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "starboard cannon",
+        "restTranslation": [0.451767, 0.177534, 24.9088],
+        "restRotation": [0.0130895, 1.41223E-7, 0.0, 0.999914],
+        "restScale": [1.07, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": false,
@@ -163,6 +187,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "body",
+        "restTranslation": [0.537499, 75.5247, 57.9011],
+        "restRotation": [-0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [1.07, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": false,

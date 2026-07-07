@@ -30,6 +30,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-37.9672, -27.9868, 27.828],
+        "restRotation": [-0.5, 0.5, 0.5, -0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -45,6 +48,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-37.9672, -61.8549, 27.828],
+        "restRotation": [-0.5, 0.5, 0.5, -0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -60,6 +66,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [38.0427, -61.8549, 27.828],
+        "restRotation": [0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -75,6 +84,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [38.0427, -27.9868, 27.828],
+        "restRotation": [0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -90,6 +102,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-37.9672, 30.468, 27.828],
+        "restRotation": [-0.5, 0.5, 0.5, -0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -105,6 +120,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [38.0427, 30.468, 27.828],
+        "restRotation": [0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -120,6 +138,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [38.0427, 64.3361, 27.828],
+        "restRotation": [0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -135,6 +156,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-37.9672, 64.3361, 27.828],
+        "restRotation": [-0.5, 0.5, 0.5, -0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -150,6 +174,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [44.8428, -44.7384, 40.9938],
+        "restRotation": [0.5, -0.5, 0.5, -0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -165,6 +192,9 @@
       "scale": [0.813272, 0.813272, 0.813272],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [0.129177, 0.096489, 35.5103],
+        "restRotation": [0.5, -0.5, 0.5, 0.5],
+        "restScale": [0.813272, 0.813272, 0.813272],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -183,6 +213,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "engine2",
+        "restTranslation": [16.8915, -3.35368E-5, 105.769],
+        "restRotation": [1.0, 0.0, 1.78375E-7, 0.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -200,6 +233,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "engine2",
+        "restTranslation": [13.7482, -0.343699, -0.804474],
+        "restRotation": [0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.16, 1.16, 1.16],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -216,6 +252,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "engine2",
+        "restTranslation": [16.8915, 1.71587E-5, -108.395],
+        "restRotation": [-1.41628E-7, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -232,6 +271,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-44.9889, -44.7384, 40.9938],
+        "restRotation": [-0.5, -0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -247,6 +289,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [44.8428, 47.1204, 40.9938],
+        "restRotation": [0.5, -0.5, 0.5, -0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -262,6 +307,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-44.9889, 47.1203, 40.9938],
+        "restRotation": [-0.5, -0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,

@@ -30,6 +30,9 @@
       "scale": [0.813273, 0.813272, 0.813272],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [0.129194, 41.8225, 90.0769],
+        "restRotation": [0.5, -0.5, 0.5, 0.5],
+        "restScale": [0.813273, 0.813272, 0.813272],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -48,6 +51,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-64.5334, 45.932, -38.3482],
+        "restRotation": [0.5, 0.5, 0.5, -0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -64,6 +70,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-64.5334, 45.9319, 22.5418],
+        "restRotation": [0.5, 0.5, 0.5, -0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -80,6 +89,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-76.5413, 46.8433, 132.593],
+        "restRotation": [-0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -96,6 +108,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-76.5413, -46.6185, 132.593],
+        "restRotation": [-0.5, 0.5, -0.5, -0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -112,6 +127,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-76.5413, -46.6185, 90.9486],
+        "restRotation": [-0.5, 0.5, -0.5, -0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -128,6 +146,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-64.5334, -46.2368, 22.5418],
+        "restRotation": [0.5, 0.5, -0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -144,6 +165,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-64.5334, -46.2368, -38.3483],
+        "restRotation": [0.5, 0.5, -0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -160,6 +184,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-76.5413, 46.8433, 90.9486],
+        "restRotation": [-0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -176,6 +203,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-84.1377, 66.3287, -14.8476],
+        "restRotation": [-0.5, -0.5, -0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -192,6 +222,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-51.9185, 66.3287, 84.7541],
+        "restRotation": [-0.5, -0.5, -0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -208,6 +241,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-80.31, -63.4634, -7.8649],
+        "restRotation": [0.5, 0.5, -0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -224,6 +260,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-48.1965, -62.3935, 88.0216],
+        "restRotation": [0.5, 0.5, -0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -240,6 +279,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-64.0138, -61.4266, 42.2039],
+        "restRotation": [-0.290422, 0.644713, 0.644713, 0.290422],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -256,6 +298,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [-79.5023, 66.3287, 24.4869],
+        "restRotation": [-0.644713, -0.290422, -0.290422, 0.644713],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -273,6 +318,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "locomotive",
+        "restTranslation": [112.388, 2.19567, 128.722],
+        "restRotation": [-0.5, 0.5, -0.5, 0.5],
+        "restScale": [1.2296, 1.2296, 1.2296],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -289,6 +337,9 @@
       "scale": [0.799488, 0.799488, 0.799488],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-1.49455, -60.7084, 119.682],
+        "restRotation": [0.0, 0.0, 1.0, 0.0],
+        "restScale": [0.799488, 0.799488, 0.799488],
         "solid": true,
         "transparent": false,
         "hasTcoords": false,

@@ -30,7 +30,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Flag_Bone03"
+        "parent": "Flag_Bone03",
+        "restTranslation": [23.436, 4.64069E-5, 0.0],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -40,7 +43,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Flag_Bone02"
+        "parent": "Flag_Bone02",
+        "restTranslation": [27.4444, -1.56618E-5, -1.62721E-6],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [1]
     },
@@ -51,7 +57,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Flag_Bone01"
+        "parent": "Flag_Bone01",
+        "restTranslation": [38.781, -0.0161951, 1.74308E-6],
+        "restRotation": [-4.98526E-7, -5.13128E-7, -0.712139, 0.702038],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [2]
     },
@@ -62,7 +71,10 @@
       "scale": [1.0, 1.52335, 1.52335],
       "extras": {
         "mxmlType": "node",
-        "parent": "Homestead"
+        "parent": "Homestead",
+        "restTranslation": [38.1812, 140.902, -6.74884],
+        "restRotation": [5.01695E-7, 5.71177E-7, 0.712139, 0.702038],
+        "restScale": [1.0, 1.52335, 1.52335]
       },
       "children": [3]
     },
@@ -72,7 +84,10 @@
       "rotation": [0.0, 0.0, 0.0, 1.0],
       "scale": [1.0, 1.0, 1.0],
       "extras": {
-        "mxmlType": "node"
+        "mxmlType": "node",
+        "restTranslation": [0.0, 0.0, 0.0],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -82,6 +97,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [0.0, 0.0, 0.0],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -96,6 +114,9 @@
       "scale": [0.656448, 0.65645, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-0.364465, 43.3419, 7.32092],
+        "restRotation": [-0.541675, 0.541675, -0.45452, 0.45452],
+        "restScale": [0.656448, 0.65645, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -111,6 +132,9 @@
       "scale": [0.656448, 0.656448, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-0.710437, 1.56565, -14.4649],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [0.656448, 0.656448, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -126,6 +150,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [55.2537, -52.2028, 9.84644],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -141,6 +168,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-29.9938, -55.8931, 9.84644],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -156,6 +186,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-6.72822, -5.01633, 9.84644],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -171,6 +204,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-16.3183, 19.8072, 162.635],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -186,6 +222,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [17.7638, 0.802382, 166.203],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -203,6 +242,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Pipe",
+        "restTranslation": [-32.3516, 233.171, -68.148],
+        "restRotation": [-0.0646205, 3.79587E-4, 0.00585988, 0.997893],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -219,6 +261,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Pipe",
+        "restTranslation": [-46.641, 278.995, -71.9974],
+        "restRotation": [-0.117977, 6.75749E-4, 0.0622792, 0.991061],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -236,6 +281,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Exhaust",
+        "restTranslation": [-3.16136, 93.0565, -2.88685],
+        "restRotation": [0.103922, -0.189814, -0.083651, 0.972715],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -250,6 +298,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-6.48886, 10.781, 166.203],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -267,6 +318,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Pole",
+        "restTranslation": [-1.32269E-7, 163.765, 0.0],
+        "restRotation": [0.0, -1.50996E-7, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -283,6 +337,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Pole",
+        "restTranslation": [-1.32269E-7, 143.313, 0.0],
+        "restRotation": [0.0, -3.01992E-7, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -298,6 +355,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [52.9583, 25.8721, 9.84644],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -313,6 +373,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [14.1381, -61.2478, 19.9527],
+        "restRotation": [0.692191, 0.0, 0.0, 0.721714],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -328,6 +391,9 @@
       "scale": [0.656448, 1.0, 0.656448],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [14.9401, -11.6185, 385.995],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [0.656448, 1.0, 0.656448],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -345,6 +411,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Homestead",
+        "restTranslation": [58.4278, 61.2962, 8.89243],
+        "restRotation": [0.0993191, -0.113962, -0.771482, 0.618032],
+        "restScale": [1.00032, 0.999677, 1.00032],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -362,6 +431,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Gun1",
+        "restTranslation": [-2.14048, 54.8354, -12.421],
+        "restRotation": [-0.0154592, 0.721156, 0.69185, -0.0322258],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -377,6 +449,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Gun1",
+        "restTranslation": [-1.78654, 55.642, 6.36089],
+        "restRotation": [-4.78479E-4, 0.691218, 0.721255, -0.0448194],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -392,6 +467,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Homestead",
+        "restTranslation": [-60.3867, 57.9848, 14.9077],
+        "restRotation": [0.726809, -0.680135, -0.0390026, 0.087428],
+        "restScale": [1.00032, 0.999678, 1.00032],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -409,6 +487,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Gun2",
+        "restTranslation": [-0.611588, 64.2677, 7.64704],
+        "restRotation": [2.93138E-4, 0.688466, 0.725267, 0.00154587],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -424,6 +505,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Gun2",
+        "restTranslation": [-0.443008, 64.386, -11.9169],
+        "restRotation": [2.93138E-4, 0.688466, 0.725267, 0.00154587],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -438,6 +522,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "skinMesh",
+        "restTranslation": [42.6815, -7.45502, 565.518],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,

@@ -30,6 +30,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [-0.45281, 0.369224, 56.6452],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -47,6 +50,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "artillery",
+        "restTranslation": [-23.6556, -56.0439, -34.3906],
+        "restRotation": [-0.432903, -0.559102, 0.432903, 0.559102],
+        "restScale": [0.332226, 0.332226, 0.332226],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,
@@ -64,6 +70,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "artillery",
+        "restTranslation": [24.2467, -56.1649, -34.3356],
+        "restRotation": [0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -80,6 +89,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "artillery",
+        "restTranslation": [40.883, 3.16651, -15.691],
+        "restRotation": [0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -96,6 +108,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "artillery",
+        "restTranslation": [-40.6069, 3.16651, -15.691],
+        "restRotation": [-0.5, 0.5, 0.5, -0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -112,6 +127,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "artillery",
+        "restTranslation": [0.452807, 70.9912, -32.6054],
+        "restRotation": [0.5, 0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -128,6 +146,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "artillery",
+        "restTranslation": [1.50666, -22.4827, 23.1275],
+        "restRotation": [-2.93812E-7, -0.0174523, 0.0, 0.999848],
+        "restScale": [0.890076, 0.952381, 0.952381],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -144,6 +165,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "artillery",
+        "restTranslation": [0.452805, 41.6982, 62.5516],
+        "restRotation": [0.216439, 0.0, 0.0, 0.976296],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": false,
         "hasTcoords": true,

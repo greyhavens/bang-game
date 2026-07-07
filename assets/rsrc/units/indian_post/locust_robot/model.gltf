@@ -30,7 +30,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "bone_body"
+        "parent": "bone_body",
+        "restTranslation": [38.9638, 0.437965, 55.4816],
+        "restRotation": [0.76689, -0.00611088, 0.641708, -0.00730304],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -40,7 +43,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "bone_body"
+        "parent": "bone_body",
+        "restTranslation": [72.6277, 0.111559, 24.7808],
+        "restRotation": [-2.54219E-4, 0.0775683, -0.00327961, 0.996982],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [16]
     },
@@ -51,7 +57,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "leg_FR"
+        "parent": "leg_FR",
+        "restTranslation": [18.9356, -39.7858, 4.07356],
+        "restRotation": [-0.707073, -0.00687034, -0.00687034, 0.707073],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -61,7 +70,10 @@
       "scale": [0.954693, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "bone_body"
+        "parent": "bone_body",
+        "restTranslation": [-0.303653, 13.1851, 7.98158],
+        "restRotation": [0.687726, 0.303499, 0.527711, 0.395527],
+        "restScale": [0.954693, 1.0, 1.0]
       },
       "children": [15]
     },
@@ -72,7 +84,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "leg_BR"
+        "parent": "leg_BR",
+        "restTranslation": [30.4835, -62.1632, 4.09815],
+        "restRotation": [-0.70065, 0.0953428, -0.0892472, 0.701452],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -82,7 +97,10 @@
       "scale": [1.20426, 0.999999, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "bone_body"
+        "parent": "bone_body",
+        "restTranslation": [-0.813224, 14.9624, -8.66646],
+        "restRotation": [0.34234, 0.459276, 0.19765, 0.79549],
+        "restScale": [1.20426, 0.999999, 1.0]
       },
       "children": [14]
     },
@@ -93,7 +111,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "leg_BL"
+        "parent": "leg_BL",
+        "restTranslation": [31.3133, -62.3855, 3.84626],
+        "restRotation": [-0.702183, 0.0833026, -0.101274, 0.699817],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -103,7 +124,10 @@
       "scale": [1.13139, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "bone_body"
+        "parent": "bone_body",
+        "restTranslation": [-0.564949, -15.0027, -8.68313],
+        "restRotation": [-0.336886, 0.460618, -0.194501, 0.797814],
+        "restScale": [1.13139, 1.0, 1.0]
       },
       "children": [13]
     },
@@ -114,7 +138,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "leg_FL"
+        "parent": "leg_FL",
+        "restTranslation": [18.9537, -39.7858, 4.89561],
+        "restRotation": [-0.707106, 6.99989E-4, 7.00326E-4, 0.707107],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -124,7 +151,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "bone_body"
+        "parent": "bone_body",
+        "restTranslation": [-0.303656, -13.2085, 8.04724],
+        "restRotation": [0.686784, -0.304752, 0.526988, -0.397161],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [12]
     },
@@ -134,7 +164,10 @@
       "rotation": [0.5, -0.5, 0.5, 0.5],
       "scale": [1.0, 1.0, 1.0],
       "extras": {
-        "mxmlType": "node"
+        "mxmlType": "node",
+        "restTranslation": [0.0332222, -16.0352, 42.0289],
+        "restRotation": [0.5, -0.5, 0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [1, 2, 4, 6, 8, 10, 17, 20, 23, 24, 25, 26]
     },
@@ -146,6 +179,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_leg_FL",
+        "restTranslation": [50.7397, 4.40461, -0.509647],
+        "restRotation": [0.700992, 0.0918019, -0.0927903, 0.701122],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -163,6 +199,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_leg_BL",
+        "restTranslation": [44.7873, 5.14651, -0.0748424],
+        "restRotation": [0.702894, 0.0967682, -0.0878198, 0.699188],
+        "restScale": [0.883872, 1.0, 1.0],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -180,6 +219,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_leg_BR",
+        "restTranslation": [42.5111, 3.809, -0.0899111],
+        "restRotation": [0.697286, 0.083341, -0.101234, 0.704697],
+        "restScale": [0.830386, 0.999999, 1.0],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -197,6 +239,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_leg_FR",
+        "restTranslation": [53.1713, 4.74797, -0.515695],
+        "restRotation": [0.700902, 0.0911235, -0.0934681, 0.701211],
+        "restScale": [1.04746, 1.0, 1.0],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -214,6 +259,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_stack",
+        "restTranslation": [23.1335, 0.151455, -0.864841],
+        "restRotation": [-0.499783, 0.496505, -0.500194, 0.503494],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -229,6 +277,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_body",
+        "restTranslation": [38.8561, 38.4832, 23.2606],
+        "restRotation": [0.5, 0.5, -0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -246,6 +297,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "wing R",
+        "restTranslation": [81.3066, 38.8537, 12.2913],
+        "restRotation": [0.588822, -0.391521, -0.530579, -0.467425],
+        "restScale": [0.973926, 0.973926, 0.810867],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -262,6 +316,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "wing R",
+        "restTranslation": [136.412, 47.072, 18.957],
+        "restRotation": [0.562622, -0.373581, -0.553687, -0.48716],
+        "restScale": [0.803006, 0.803006, 0.668563],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -278,6 +335,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_body",
+        "restTranslation": [38.8561, -37.2203, 23.2606],
+        "restRotation": [0.5, 0.5, -0.5, 0.5],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -295,6 +355,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "wing L",
+        "restTranslation": [135.4, 46.801, -18.0167],
+        "restRotation": [-0.48487, -0.555409, -0.376604, 0.560885],
+        "restScale": [0.803006, 0.803006, 0.668563],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -311,6 +374,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "wing L",
+        "restTranslation": [80.295, 38.5826, -11.6287],
+        "restRotation": [-0.465028, -0.532681, -0.394172, 0.587051],
+        "restScale": [0.973926, 0.973926, 0.810867],
         "solid": false,
         "transparent": true,
         "hasTcoords": true,
@@ -327,6 +393,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_body",
+        "restTranslation": [44.8915, 0.110809, -118.115],
+        "restRotation": [0.707096, 0.707096, -0.00384178, -0.00384178],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -342,6 +411,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_body",
+        "restTranslation": [77.0051, 0.110818, -3.26468],
+        "restRotation": [-0.535573, 0.535573, -0.461694, 0.461694],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -357,6 +429,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_body",
+        "restTranslation": [39.7131, -36.0902, 23.7509],
+        "restRotation": [-0.461694, -0.535573, 0.535573, -0.461694],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -372,6 +447,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "bone_body",
+        "restTranslation": [39.7131, 36.4007, 23.7509],
+        "restRotation": [-0.535573, -0.461694, -0.461694, 0.535573],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -386,6 +464,9 @@
       "scale": [1.21285, 1.21285, 1.21285],
       "extras": {
         "mxmlType": "skinMesh",
+        "restTranslation": [0.00325775, 69.7013, 81.8888],
+        "restRotation": [0.707107, 0.0, 0.0, 0.707107],
+        "restScale": [1.21285, 1.21285, 1.21285],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,

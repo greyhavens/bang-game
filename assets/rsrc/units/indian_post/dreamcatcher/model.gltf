@@ -30,7 +30,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 R Toe0"
+        "parent": "Bip01 R Toe0",
+        "restTranslation": [24.034, 0.0, -2.48866E-7],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -40,7 +43,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 R Foot"
+        "parent": "Bip01 R Foot",
+        "restTranslation": [12.05, 15.6695, 1.13152E-6],
+        "restRotation": [0.0, 0.0, 0.707107, 0.707107],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [1]
     },
@@ -51,7 +57,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 R Calf"
+        "parent": "Bip01 R Calf",
+        "restTranslation": [35.6259, 2.04897E-6, -8.74564E-7],
+        "restRotation": [-0.00148262, 0.00410369, 0.339798, 0.940488],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [2]
     },
@@ -62,7 +71,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 R Thigh"
+        "parent": "Bip01 R Thigh",
+        "restTranslation": [43.6861, -1.44264E-6, 1.52222E-6],
+        "restRotation": [0.0, 0.0, -0.795786, 0.605578],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [3]
     },
@@ -73,7 +85,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Spine"
+        "parent": "Bip01 Spine",
+        "restTranslation": [-11.261, 6.26673, -20.1757],
+        "restRotation": [0.735951, 0.677035, 9.80403E-7, -1.03437E-6],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [4]
     },
@@ -84,7 +99,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 L Toe0"
+        "parent": "Bip01 L Toe0",
+        "restTranslation": [24.034, 0.0, -1.64152E-7],
+        "restRotation": [0.0, 0.0, 1.0, 0.0],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -94,7 +112,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 L Foot"
+        "parent": "Bip01 L Foot",
+        "restTranslation": [12.0499, 15.6695, 1.21622E-6],
+        "restRotation": [0.0, 0.0, 0.707107, 0.707107],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [6]
     },
@@ -105,7 +126,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 L Calf"
+        "parent": "Bip01 L Calf",
+        "restTranslation": [35.6259, 1.96912E-6, 0.0],
+        "restRotation": [0.0, 0.0, 0.339802, 0.940497],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [7]
     },
@@ -116,7 +140,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 L Thigh"
+        "parent": "Bip01 L Thigh",
+        "restTranslation": [43.6861, 0.0, 5.26549E-7],
+        "restRotation": [0.0, 0.0, -0.795786, 0.605578],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [8]
     },
@@ -127,7 +154,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Spine"
+        "parent": "Bip01 Spine",
+        "restTranslation": [-11.261, 6.26662, 20.1757],
+        "restRotation": [0.735951, 0.677035, 9.80403E-7, -1.03437E-6],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [9]
     },
@@ -138,7 +168,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 R UpperArm"
+        "parent": "Bip01 R UpperArm",
+        "restTranslation": [22.7704, -2.18824, -0.220419],
+        "restRotation": [0.600803, 0.490914, 0.450175, 0.442021],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -148,7 +181,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 R Forearm"
+        "parent": "Bip01 R Forearm",
+        "restTranslation": [31.5972, 0.0, 2.79624E-6],
+        "restRotation": [0.825294, -0.0125306, 0.160026, 0.54141],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -158,7 +194,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 R UpperArm"
+        "parent": "Bip01 R UpperArm",
+        "restTranslation": [34.3445, 1.41183E-6, -5.84798E-6],
+        "restRotation": [0.0, 0.0, -0.457557, 0.88918],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [12]
     },
@@ -169,7 +208,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 R Clavicle"
+        "parent": "Bip01 R Clavicle",
+        "restTranslation": [24.6266, 3.79392E-6, 8.88481E-7],
+        "restRotation": [0.580798, 0.173349, -0.519364, 0.602399],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [11, 13]
     },
@@ -180,7 +222,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Neck"
+        "parent": "Bip01 Neck",
+        "restTranslation": [2.37073E-6, 0.00662963, -5.50106],
+        "restRotation": [-0.511427, 0.00518888, 0.84061, 0.1783],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [14]
     },
@@ -191,7 +236,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 L UpperArm"
+        "parent": "Bip01 L UpperArm",
+        "restTranslation": [22.3709, -2.39781, -0.388043],
+        "restRotation": [0.586059, 0.508598, -0.429597, -0.461855],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -201,7 +249,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 L Forearm"
+        "parent": "Bip01 L Forearm",
+        "restTranslation": [31.7056, 9.64005E-7, 7.89119E-7],
+        "restRotation": [-0.738654, 0.0175987, 0.149913, 0.656967],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -211,7 +262,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 L UpperArm"
+        "parent": "Bip01 L UpperArm",
+        "restTranslation": [34.3445, 0.0, 3.4536E-6],
+        "restRotation": [0.0, 0.0, -0.430189, 0.902739],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [17]
     },
@@ -222,7 +276,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 L Clavicle"
+        "parent": "Bip01 L Clavicle",
+        "restTranslation": [24.0121, 4.74409E-6, 7.34662E-7],
+        "restRotation": [-0.593743, -0.160679, -0.533589, 0.58046],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [16, 18]
     },
@@ -233,7 +290,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Neck"
+        "parent": "Bip01 Neck",
+        "restTranslation": [1.05013E-6, 0.00659947, 5.50106],
+        "restRotation": [0.504073, -0.00363509, 0.845041, 0.178337],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [19]
     },
@@ -244,7 +304,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Head"
+        "parent": "Bip01 Head",
+        "restTranslation": [17.6997, 5.80907, -0.559755],
+        "restRotation": [0.926651, 0.375923, 0.0, -6.93405E-7],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -254,7 +317,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Head"
+        "parent": "Bip01 Head",
+        "restTranslation": [5.87145, 26.1462, -0.559723],
+        "restRotation": [0.783492, -0.621402, -6.0135E-7, -3.70408E-7],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -264,7 +330,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Ponytail23"
+        "parent": "Bip01 Ponytail23",
+        "restTranslation": [6.52379, -2.26884E-6, 7.23755E-7],
+        "restRotation": [0.707388, 0.706825, 9.81051E-7, -9.78011E-7],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -274,7 +343,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Ponytail22"
+        "parent": "Bip01 Ponytail22",
+        "restTranslation": [11.4299, -0.00518724, -2.31198E-6],
+        "restRotation": [6.24583E-4, -0.0305322, 0.0212384, 0.999308],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [23]
     },
@@ -285,7 +357,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Ponytail21"
+        "parent": "Bip01 Ponytail21",
+        "restTranslation": [16.991, -0.00858324, 2.69301E-7],
+        "restRotation": [0.0, -4.66804E-7, 0.168791, 0.985652],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [24]
     },
@@ -296,7 +371,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Ponytail2"
+        "parent": "Bip01 Ponytail2",
+        "restTranslation": [18.8724, -0.0123176, 1.97954E-6],
+        "restRotation": [0.0256956, -0.11913, 0.210046, 0.970066],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [25]
     },
@@ -307,7 +385,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Head"
+        "parent": "Bip01 Head",
+        "restTranslation": [8.13952, -2.93217, 17.4627],
+        "restRotation": [-0.0679334, 0.0296137, 0.914472, 0.397806],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [26]
     },
@@ -318,7 +399,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Ponytail13"
+        "parent": "Bip01 Ponytail13",
+        "restTranslation": [6.52379, -1.71233E-6, -6.83625E-7],
+        "restRotation": [0.707388, 0.706825, 9.8267E-7, -9.82276E-7],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -328,7 +412,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Ponytail12"
+        "parent": "Bip01 Ponytail12",
+        "restTranslation": [11.4299, -0.00518599, -1.17544E-6],
+        "restRotation": [-1.78479E-4, 0.00872466, 0.0212476, 0.999736],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [28]
     },
@@ -339,7 +426,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Ponytail11"
+        "parent": "Bip01 Ponytail11",
+        "restTranslation": [16.991, -0.00858514, 2.20197E-6],
+        "restRotation": [-0.00879276, 0.0515916, 0.16856, 0.984301],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [29]
     },
@@ -350,7 +440,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Ponytail1"
+        "parent": "Bip01 Ponytail1",
+        "restTranslation": [18.8724, -0.012322, -1.34294E-6],
+        "restRotation": [-0.0147079, 0.0681877, 0.211109, 0.97497],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [30]
     },
@@ -361,7 +454,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Head"
+        "parent": "Bip01 Head",
+        "restTranslation": [8.13951, -2.93213, -16.529],
+        "restRotation": [0.0359885, -0.0156921, 0.916286, 0.398595],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [31]
     },
@@ -372,7 +468,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Head"
+        "parent": "Bip01 Head",
+        "restTranslation": [31.9409, -8.63637E-7, 0.0],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -382,7 +481,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Neck"
+        "parent": "Bip01 Neck",
+        "restTranslation": [8.31031, -1.09411E-6, 0.0],
+        "restRotation": [0.0, 1.8924E-6, -0.68229, 0.731081],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [21, 22, 27, 32, 33]
     },
@@ -393,7 +495,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Spine2"
+        "parent": "Bip01 Spine2",
+        "restTranslation": [18.4461, -0.00629074, 0.0],
+        "restRotation": [0.0, -4.33887E-7, 0.156434, 0.987688],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [15, 20, 34]
     },
@@ -404,7 +509,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Spine1"
+        "parent": "Bip01 Spine1",
+        "restTranslation": [16.1861, -0.0128441, 0.0],
+        "restRotation": [0.0, -6.94454E-7, 0.25038, 0.968148],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [35]
     },
@@ -415,7 +523,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Spine"
+        "parent": "Bip01 Spine",
+        "restTranslation": [16.1853, -0.0112714, 0.0],
+        "restRotation": [0.0, -6.94454E-7, 0.25038, 0.968148],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [36, 42, 43, 44]
     },
@@ -426,7 +537,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01 Pelvis"
+        "parent": "Bip01 Pelvis",
+        "restTranslation": [12.8872, -0.0112612, 1.78802E-5],
+        "restRotation": [-2.18761E-6, -8.45125E-7, 0.250766, 0.968048],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [5, 10, 37]
     },
@@ -437,7 +551,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01"
+        "parent": "Bip01",
+        "restTranslation": [16.1912, 0.0, 0.0],
+        "restRotation": [-0.499999, -0.5, -0.5, 0.500001],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [38]
     },
@@ -448,7 +565,10 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "node",
-        "parent": "Bip01"
+        "parent": "Bip01",
+        "restTranslation": [0.0, 0.0, -57.4057],
+        "restRotation": [0.0, 0.0, 0.707106, 0.707107],
+        "restScale": [1.0, 1.0, 1.0]
       }
     },
     {
@@ -457,7 +577,10 @@
       "rotation": [0.0, 0.0, -0.707106, 0.707107],
       "scale": [1.0, 1.0, 1.0],
       "extras": {
-        "mxmlType": "node"
+        "mxmlType": "node",
+        "restTranslation": [-0.0681138, 36.3072, 57.2991],
+        "restRotation": [0.0, 0.0, -0.707106, 0.707107],
+        "restScale": [1.0, 1.0, 1.0]
       },
       "children": [39, 40]
     },
@@ -469,6 +592,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Bip01 Spine1",
+        "restTranslation": [-7.3184, -18.1733, -0.336048],
+        "restRotation": [0.618314, -0.343059, 0.618312, 0.343058],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
@@ -486,6 +612,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Bip01 Spine1",
+        "restTranslation": [1.14726, -15.9973, -17.8798],
+        "restRotation": [0.618314, -0.343059, 0.618312, 0.343058],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
@@ -503,6 +632,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Bip01 Spine1",
+        "restTranslation": [1.07244, -15.7574, 16.8781],
+        "restRotation": [0.618314, -0.343059, 0.618312, 0.343058],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
@@ -519,6 +651,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "skinMesh",
+        "restTranslation": [0.0, -0.303972, -0.115899],
+        "restRotation": [0.0, 0.0, -0.00872654, 0.999962],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -536,6 +671,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "triMesh",
+        "restTranslation": [89.7183, -73.27, 80.9079],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
@@ -554,6 +692,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Staff",
+        "restTranslation": [1.39693, 53.0394, 84.7415],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
@@ -571,6 +712,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Staff",
+        "restTranslation": [0.971169, 33.0996, 73.09],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
@@ -588,6 +732,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Staff",
+        "restTranslation": [0.33844, 2.76435, 80.5959],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
@@ -605,6 +752,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Staff",
+        "restTranslation": [0.338432, -6.12538, 92.8118],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
@@ -622,6 +772,9 @@
       "extras": {
         "mxmlType": "triMesh",
         "parent": "Staff",
+        "restTranslation": [0.338432, 26.2436, 101.333],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": true,
         "hasTcoords": true,
@@ -638,6 +791,9 @@
       "scale": [1.0, 1.0, 1.0],
       "extras": {
         "mxmlType": "skinMesh",
+        "restTranslation": [0.0, 0.0, 0.0],
+        "restRotation": [0.0, 0.0, 0.0, 1.0],
+        "restScale": [1.0, 1.0, 1.0],
         "solid": true,
         "transparent": false,
         "hasTcoords": true,
