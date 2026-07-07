@@ -542,15 +542,28 @@ public class GltfToModelDef
         for (String nn : order) {
             int[] trs = accByNode.get(nn);
             Map<String,Object> node = node(nodeByName.get(nn));
+            // the static fallback must prefer the authored rest extras over the node TRS, exactly
+            // as readSpatial does: for Blender re-exports an animated node's TRS is clobbered with
+            // a pose evaluation (possibly of a DIFFERENT clip), which would silently bake a wrong
+            // "constant" value here (#50 review finding). Our own writer emits dense T/R/S
+            // channels for every targeted node, so this fallback never fires on its files.
+            @SuppressWarnings("unchecked")
+            Map<String,Object> nx = (Map<String,Object>)node.get("extras");
+            Object restT = nx == null ? null : nx.get(MxmlGltfConventions.EXTRA_REST_TRANSLATION);
+            Object restR = nx == null ? null : nx.get(MxmlGltfConventions.EXTRA_REST_ROTATION);
+            Object restS = nx == null ? null : nx.get(MxmlGltfConventions.EXTRA_REST_SCALE);
             tData.put(nn, trs[0] >= 0
                 ? readFloats(trs[0], "animation '" + name + "' node '" + nn + "' translation")
-                : repeatStatic(readTrs(node.get("translation"), 0f, 0f, 0f), frameCount));
+                : repeatStatic(readTrs(restT != null ? restT : node.get("translation"),
+                    0f, 0f, 0f), frameCount));
             rData.put(nn, trs[1] >= 0
                 ? readFloats(trs[1], "animation '" + name + "' node '" + nn + "' rotation")
-                : repeatStatic(readTrs(node.get("rotation"), 0f, 0f, 0f, 1f), frameCount));
+                : repeatStatic(readTrs(restR != null ? restR : node.get("rotation"),
+                    0f, 0f, 0f, 1f), frameCount));
             sData.put(nn, trs[2] >= 0
                 ? readFloats(trs[2], "animation '" + name + "' node '" + nn + "' scale")
-                : repeatStatic(readTrs(node.get("scale"), 1f, 1f, 1f), frameCount));
+                : repeatStatic(readTrs(restS != null ? restS : node.get("scale"),
+                    1f, 1f, 1f), frameCount));
             checkTrack(name, nn, "translation", tData.get(nn), frameCount, 3);
             checkTrack(name, nn, "rotation", rData.get(nn), frameCount, 4);
             checkTrack(name, nn, "scale", sData.get(nn), frameCount, 3);
@@ -665,7 +678,19 @@ public class GltfToModelDef
                     " has no bufferView (sparse/zero-filled accessors are not supported)");
             }
             int bvIdx = intVal(bvRef);
+            if (bvIdx < 0 || bvIdx >= _bufferViews.size()) {
+                throw new IllegalStateException(use + ": accessor " + accIdx +
+                    " references bufferView " + bvIdx + " but the file has " +
+                    _bufferViews.size());
+            }
             Map<String,Object> bv = (Map<String,Object>)_bufferViews.get(bvIdx);
+            // only buffers[0] is loaded into _bin (both supported producers emit a single
+            // buffer); a multi-buffer file must fail loudly, not silently read buffer 0
+            int bufIdx = bv.containsKey("buffer") ? intVal(bv.get("buffer")) : 0;
+            if (bufIdx != 0) {
+                throw new IllegalStateException(use + ": bufferView " + bvIdx +
+                    " references buffer " + bufIdx + " — only single-buffer glTF is supported");
+            }
             int bvOff = bv.containsKey("byteOffset") ? intVal(bv.get("byteOffset")) : 0;
             int bvLen = intVal(bv.get("byteLength"));
             int accOff = acc.containsKey("byteOffset") ? intVal(acc.get("byteOffset")) : 0;

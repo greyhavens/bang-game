@@ -57,8 +57,9 @@ import com.threerings.bang.jme3.mxml.ModelDef.Vertex;
  *       {@code TEXCOORD_0}, v&nbsp;flipped) plus the raw mxml values as custom
  *       {@code _MXMLNORMAL}/{@code _MXMLTEXCOORD} attributes the round-trip reads back — the
  *       bake's vertex dedup keys on the exact raw values (see {@link MxmlGltfConventions}).
- *   <li><b>Skinning:</b> the corpus has up to <b>12</b> bone influences per vertex (cavalry), so
- *       the full influence set is preserved across as many JOINTS_n/WEIGHTS_n sets as needed
+ *   <li><b>Skinning:</b> the corpus needs up to <b>two</b> JOINTS_n/WEIGHTS_n sets (&le;8
+ *       influences per vertex; an early probe note said 12 — refuted, no committed model carries
+ *       a JOINTS_2), and the full influence set is preserved across as many sets as needed
  *       (ceil(max/4)); pre-capping to glTF's 4-per-set limit would shrink {@link MxmlToJ3o}'s
  *       armature and break structural parity. {@link MxmlToJ3o} does the 4-influence cap itself,
  *       at bake time, exactly as the oracle does.
@@ -522,7 +523,7 @@ public class MxmlToGltf
         }
     }
 
-    /** Emits JOINTS_n/WEIGHTS_n covering EVERY influence of every vertex (up to 12 in the corpus),
+    /** Emits JOINTS_n/WEIGHTS_n covering EVERY influence of every vertex (&le;8 in the corpus),
      * in ceil(maxInfluences/4) sets. Returns the number of sets. The joint indices are into this
      * mesh's skin.joints, resolved in {@link #buildSkin}. */
     protected int addSkinAttributes (
