@@ -1,194 +1,38 @@
-// Phase 5 prototype: converts compiled Bang model.dat files (vendored jME fork binary
-// format) into jMonkeyEngine 3 .j3o files. Deliberately isolated: this is the only
-// module with jME3 dependencies, and nothing else depends on it.
+// The native (fork-free) model bake + offscreen render/visual-regression harnesses.
+// Deliberately isolated: this module owns its own jME3 + LWJGL3 runtime and nothing in the
+// shipped game depends on it. Since the Epic 4 Phase 5 fork deletion (2026-07-07) it holds
+// ONLY living code: GltfToModelDef -> MxmlToJ3o (the committed-glTF -> model.j3o bake the
+// assets build runs) and the RenderToPng/SnapshotDiff/VerifyVisuals golden harnesses. The
+// fork-oracle generators (ModelConverter/BangModelLoader/ModelToJ3o/BakeModels/VerifyCorpus),
+// the particle bakers (ParticleConverter/ParticlesToJ3o/ExtractParticleSources — outputs
+// frozen as committed particles.j3o + particles-src.json), the .mxml parsers and the
+// mxml/glTF parity harnesses that proved the cutover are deleted (git history keeps them).
 
 plugins {
   id "application"
 }
 
 dependencies {
-  // the fork-free app facade (ModelTextureResolver) + the game-sprite emission controller
-  // classes that 61 model.dat files reference by class name during deserialization
+  // the fork-free app facade (Model/ModelTextureResolver, via client:shared) + the game-sprite
+  // emission/particle controller classes referenced by class name in baked .j3o user data
   implementation project(":client:shared")
 
-  // the fork-coupled build-time model classes (com.threerings.jme.tools.model.{Model,ModelMesh,
-  // SkinMesh,ModelNode,...}) live in app's `modeltool` source set; the converter READS fork
-  // model.dat through them via the fork BinaryImporter. Pull the modeltool runtime classpath
-  // (which transitively carries the fork `jme` module + the fork model.dat format).
-  implementation project(":app").sourceSets.modeltool.output
-  implementation project(":app").sourceSets.modeltool.runtimeClasspath
-
   implementation "org.jmonkeyengine:jme3-core:${jme3Version}"
-  // AWTLoader, for loading the .png textures referenced by converted materials
+  // AWTLoader, for loading the .png textures referenced by baked materials
   implementation "org.jmonkeyengine:jme3-desktop:${jme3Version}"
 
-  // Epic 4 Phase 2a: the native .mxml parsers (com.threerings.bang.jme3.mxml) — ported off the
-  // fork onto jME3 math types. They need only digester + samskivert's SetPropertyFieldsRule
-  // (same coordinates as the rest of the repo); NO fork/LWJGL2 dependency.
-  implementation "commons-digester:commons-digester:2.1"
+  // StringUtil/PropertiesUtil for model.properties handling in the bake pipeline
   implementation "com.samskivert:samskivert:${samskivertVersion}"
 }
 
 application {
-  mainClass = "com.threerings.bang.tools.j3o.ModelToJ3o"
-}
-
-// full-corpus parity + coverage harness (see VerifyCorpus). Run:
-//   ./gradlew :tools:j3o-converter:verifyCorpus
-// pointed at the staged resource tree the untouched compileModels step produces.
-tasks.register("verifyCorpus", JavaExec) {
-  group = "verification"
-  classpath = sourceSets.main.runtimeClasspath
-  mainClass = "com.threerings.bang.tools.j3o.VerifyCorpus"
-  args = [ rootProject.file("assets/build/staging/rsrc").absolutePath ]
-}
-
-// Epic 4 Phase 2a: run the ported fork-free .mxml parsers over the whole committed corpus
-// (every model.properties under assets/rsrc: sibling model.mxml + every sibling animation
-// .mxml), printing per-model mesh/vertex/index/bone stats, per-animation frame counts, and a
-// final "PARSED <n> models, <m> animations, <k> failures" line (non-zero exit on any failure).
-//   ./gradlew :tools:j3o-converter:mxmlProbe            [-Proot=<dir>]
-// Runs on a deliberately ISOLATED classpath (like renderToPng below): jme3-core + digester +
-// samskivert only — proving the parsers need no fork/modeltool classes at runtime (and keeping
-// the fork's LWJGL2 jars off the classpath per this module's sealing notes).
-configurations {
-  mxmlProbeRuntime
-}
-dependencies {
-  mxmlProbeRuntime "org.jmonkeyengine:jme3-core:${jme3Version}"
-  mxmlProbeRuntime "commons-digester:commons-digester:2.1"
-  mxmlProbeRuntime "com.samskivert:samskivert:${samskivertVersion}"
-}
-tasks.register("mxmlProbe", JavaExec) {
-  group = "verification"
-  description = "Parse every committed .mxml with the ported (fork-free) Epic 4 Phase 2a parsers."
-  classpath = sourceSets.main.output + configurations.mxmlProbeRuntime
-  mainClass = "com.threerings.bang.jme3.mxml.MxmlProbe"
-  def root = project.hasProperty("root") ? project.property("root").toString() :
-      rootProject.file("assets/rsrc").absolutePath
-  args = [ root ]
-}
-
-// Epic 4 Phase 2b: bake native .j3o straight from the committed .mxml (MxmlToJ3o, no fork input)
-// and compare against the fork-wrapper oracle .j3o in assets/build/staging (structural multiset
-// compare + optional forked-JVM render diff via RenderModelToPng/SnapshotDiff's metric).
-//   ./gradlew :tools:j3o-converter:mxmlParity -Pmodels=units/frontier_town/shotgunner,...
-//   ./gradlew :tools:j3o-converter:mxmlParity -PallModels [-Prender=false] [-Ptolerance=0.005]
-//       [-Prenders=bind|mid|both]
-// Runs on the full main runtime classpath (like verifyCorpus; the bake itself touches no fork
-// classes), forking renders on the isolated renderToPngRuntime classpath. Needs the staged
-// oracle tree (./gradlew assets:deploy — do NOT clean it, it is the parity reference).
-tasks.register("mxmlParity", JavaExec) {
-  group = "verification"
-  description = "Epic 4 Phase 2b: native .mxml->.j3o bake vs fork-wrapper oracle parity."
-  classpath = sourceSets.main.runtimeClasspath
-  mainClass = "com.threerings.bang.jme3.mxml.MxmlParity"
-  doFirst {
-    // the same isolated render classpath verifyVisuals forks with (defined below)
-    systemProperty "mxml.forkClasspath",
-        (sourceSets.main.output + configurations.renderToPngRuntime).asPath
-  }
-  def cmd = [
-    rootProject.file("assets/rsrc").absolutePath,
-    rootProject.file("assets/build/staging/rsrc").absolutePath,
-    "${project.layout.buildDirectory.get().asFile}/mxml-parity"
-  ]
-  if (!project.hasProperty("render") || project.property("render").toString() != "false") {
-    cmd += "--render"
-  }
-  if (project.hasProperty("renders")) {
-    cmd += "--renders=${project.property('renders')}"
-  }
-  if (project.hasProperty("tolerance")) {
-    cmd += "--tolerance=${project.property('tolerance')}"
-  }
-  if (project.hasProperty("allModels")) {
-    cmd += "--all"
-  } else if (project.hasProperty("models")) {
-    project.property("models").toString().split(",").each { cmd += it.trim() }
-  }
-  args = cmd
-}
-
-// Epic 4 Phase 2b-ii: round-trip the committed .mxml through the glTF writer + mirror reader
-// (MxmlToGltf -> model.gltf/model.bin -> GltfToModelDef -> ModelDef') then bake native .j3o via
-// MxmlToJ3o and diff against the fork-wrapper oracle with MxmlParity's structural + render metric.
-//   ./gradlew :tools:j3o-converter:mxmlGltfParity -Pmodels=units/frontier_town/shotgunner,...
-//   ./gradlew :tools:j3o-converter:mxmlGltfParity -PallModels [-Prender=false] [-Ptolerance=0.005]
-//       [-Prenders=bind|mid|both]
-// Same isolated-fork render classpath as mxmlParity; needs the staged oracle tree
-// (./gradlew assets:deploy — do NOT clean it, it is the parity reference).
-// Phase 4: add -PcommittedGltf to verify the COMMITTED assets/rsrc model.gltf tree (what the
-// GltfToJ3o build path bakes) instead of writing fresh round-trip intermediates.
-tasks.register("mxmlGltfParity", JavaExec) {
-  group = "verification"
-  description = "Epic 4 Phase 2b-ii: .mxml->glTF->.mxml round-trip bake vs fork-wrapper oracle."
-  classpath = sourceSets.main.runtimeClasspath
-  mainClass = "com.threerings.bang.jme3.mxml.MxmlGltfParity"
-  doFirst {
-    systemProperty "mxml.forkClasspath",
-        (sourceSets.main.output + configurations.renderToPngRuntime).asPath
-  }
-  def cmd = [
-    rootProject.file("assets/rsrc").absolutePath,
-    rootProject.file("assets/build/staging/rsrc").absolutePath,
-    "${project.layout.buildDirectory.get().asFile}/mxml-gltf-parity"
-  ]
-  if (!project.hasProperty("render") || project.property("render").toString() != "false") {
-    cmd += "--render"
-  }
-  if (project.hasProperty("renders")) {
-    cmd += "--renders=${project.property('renders')}"
-  }
-  if (project.hasProperty("tolerance")) {
-    cmd += "--tolerance=${project.property('tolerance')}"
-  }
-  if (project.hasProperty("allModels")) {
-    cmd += "--all"
-  } else if (project.hasProperty("models")) {
-    project.property("models").toString().split(",").each { cmd += it.trim() }
-  }
-  if (project.hasProperty("committedGltf")) {
-    cmd += "--gltfRoot=${rootProject.file('assets/rsrc').absolutePath}"
-  } else if (project.hasProperty("gltfRoot")) {
-    // arbitrary pre-existing glTF tree (<root>/<type>/model.gltf), e.g. Blender re-exports
-    cmd += "--gltfRoot=${new File(project.property('gltfRoot').toString()).absolutePath}"
-  }
-  if (project.hasProperty("renderOnly")) {
-    // Blender-edited re-exports: structural parity is impossible (Blender re-splits vertices);
-    // the render diff (meanDiff <= tolerance) alone is the gate
-    cmd += "--renderOnly"
-  }
-  args = cmd
-}
-
-// Epic 4 Phase 2b-ii: write a single model's glTF (model.gltf + model.bin) from its .mxml, for
-// eyeballing / Blender import.  ./gradlew :tools:j3o-converter:mxmlToGltf -PmodelType=... [-Pout=]
-tasks.register("mxmlToGltf", JavaExec) {
-  classpath = sourceSets.main.runtimeClasspath
-  mainClass = "com.threerings.bang.jme3.mxml.MxmlToGltf"
-  def rsrc = rootProject.file("assets/rsrc").absolutePath
-  def modelType = project.hasProperty("allModels") ? "--all" :
-      (project.hasProperty("modelType") ?
-          project.property("modelType").toString() : "units/frontier_town/shotgunner")
-  def out = project.hasProperty("out") ? project.property("out").toString() :
-      "${project.layout.buildDirectory.get().asFile}/mxml-gltf-out"
-  args = [ rsrc, modelType, out ]
-}
-
-// Phase 3: bake every staged model.dat to a sibling model.j3o that the runtime client loads
-// natively through the jME3 AssetManager (ModelCache). The assets module invokes this after
-// compileModels (see assets/build.gradle).
-tasks.register("bakeModels", JavaExec) {
-  classpath = sourceSets.main.runtimeClasspath
-  mainClass = "com.threerings.bang.tools.j3o.BakeModels"
-  args = [ rootProject.file("assets/build/staging/rsrc").absolutePath ]
+  mainClass = "com.threerings.bang.jme3.mxml.GltfToJ3o"
 }
 
 // Epic 4 Phase 4: bake every COMMITTED model.gltf straight to a staged model.j3o
 // (GltfToModelDef -> MxmlToJ3o, the parity-verified round-trip pipeline) — the fork-free
-// replacement for BOTH CompileModelTask (.mxml -> model.dat) and bakeModels (.dat -> .j3o).
-// The assets module invokes this instead of the legacy pair when -PmodelSource=gltf
+// replacement for the deleted legacy pair (CompileModelTask .mxml -> model.dat, then
+// bakeModels .dat -> .j3o). The assets module wires this as compileModels' finalizer
 // (see assets/build.gradle). -Pout= overrides the staging root for out-of-tree verification.
 tasks.register("bakeModelsGltf", JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
@@ -196,44 +40,6 @@ tasks.register("bakeModelsGltf", JavaExec) {
   def out = project.hasProperty("out") ? project.property("out").toString() :
       rootProject.file("assets/build/staging/rsrc").absolutePath
   args = [ rootProject.file("assets/rsrc").absolutePath, out ]
-}
-
-// Phase 6a: bake each staged fork-format effects/<key>/particles.jme into a sibling
-// particles.j3o (a jME3 ParticleEmitter tree) that the runtime client loads natively through the
-// jME3 AssetManager (ParticleCache). The baker (ParticlesToJ3o) reads the fork particles.jme via
-// the retained fork BinaryImporter and writes pure-jME3 .j3o, so no fork dependency reaches the
-// runtime. It must run after compileModels has staged the rsrc tree (the .jme + textures).
-//   ./gradlew :tools:j3o-converter:bakeParticles
-// Pass -Peffect=<town>/<effect> to bake (and verbosely report) a single effect.
-tasks.register("bakeParticles", JavaExec) {
-  classpath = sourceSets.main.runtimeClasspath
-  mainClass = "com.threerings.bang.tools.j3o.ParticlesToJ3o"
-  def cmd = [ rootProject.file("assets/build/staging/rsrc").absolutePath ]
-  if (project.hasProperty("effect")) {
-    cmd += project.property("effect").toString()
-  }
-  args = cmd
-}
-
-// Epic 4 Phase 4½a: the one-time fork-classpath ENRICHMENT extractor (must run before the Phase-5
-// fork deletion — risk R1 of the particles re-authoring plan). Reads every COMMITTED fork-binary
-// assets/rsrc/effects/<key>/particles.jme through the same fork BinaryImporter + ParticleConverter
-// path bakeParticles used, and writes a committed sibling particles-src.json: the full converted
-// jME3 parameter set (== the frozen particles.j3o) PLUS per-emitter forkExtras (raw fork params,
-// dropped BasicVortex/SwarmInfluence params, minimumAngle/releaseVariance/alphaFalloff, raw blend
-// state, and the embedded palette+tRNS texture SOURCE paths that the keyless .j3o textures cannot
-// reveal). Re-runnable while the fork exists; after Phase 5 the committed JSONs are the only copy.
-//   ./gradlew :tools:j3o-converter:extractParticleSources [-Peffect=<town>/<effect>]
-tasks.register("extractParticleSources", JavaExec) {
-  group = "build"
-  description = "Phase 4½a enrichment: dump committed particles.jme to particles-src.json (fork classpath)."
-  classpath = sourceSets.main.runtimeClasspath
-  mainClass = "com.threerings.bang.tools.particles.ExtractParticleSources"
-  def cmd = [ rootProject.file("assets/rsrc").absolutePath ]
-  if (project.hasProperty("effect")) {
-    cmd += project.property("effect").toString()
-  }
-  args = cmd
 }
 
 // Phase 6a: render a baked particles.j3o to a PNG offscreen, stepping the emitter a few frames so

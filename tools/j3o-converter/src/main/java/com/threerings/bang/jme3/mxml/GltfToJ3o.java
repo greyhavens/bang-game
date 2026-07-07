@@ -23,7 +23,7 @@ import com.threerings.jme.model.ModelTextureResolver;
  * Build-time batch baker for the Phase-4 glTF source path: walks a source rsrc root, converts
  * every committed {@code model.gltf} (+{@code model.bin}) to a staged {@code model.j3o} via
  * {@link GltfToModelDef} feeding {@link MxmlToJ3o} — the exact round-trip pipeline
- * {@link MxmlGltfParity} verified at 310/310 against the fork-wrapper oracle. This replaces
+ * {@code MxmlGltfParity} verified at 310/310 against the fork-wrapper oracle. This replaces
  * BOTH legacy steps ({@code CompileModelTask}'s {@code .mxml}&rarr;{@code model.dat} compile and
  * {@code BakeModels}' {@code .dat}&rarr;{@code .j3o} bake) with a single fork-free one.
  *

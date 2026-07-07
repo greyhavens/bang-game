@@ -10,7 +10,7 @@ import com.jme3.math.Vector3f;
 /**
  * The ONE place for the Epic 4 Phase 2b-ii <code>.mxml</code>&harr;glTF conventions: the axis
  * convention constant + its exact inverse, and every <code>extras</code> / marker key name the
- * writer ({@link MxmlToGltf}) and the mirror reader ({@link GltfToModelDef}) share.
+ * writer ({@code MxmlToGltf}) and the mirror reader ({@link GltfToModelDef}) share.
  *
  * <h3>Axis convention</h3>
  * <code>.mxml</code> geometry is authored in 3ds&nbsp;Max <b>Z-up right-handed</b>; glTF mandates
@@ -63,7 +63,7 @@ public final class MxmlGltfConventions
     public static final String EXTRA_PARENT = "parent";
 
     /** Node extras keys: the AUTHORED rest (bind-pose) TRS of an <b>animated</b> node, pinned so it
-     * survives a Blender round-trip. Written by {@link MxmlToGltf} ONLY for nodes some animation
+     * survives a Blender round-trip. Written by {@code MxmlToGltf} ONLY for nodes some animation
      * targets, and preferred over the node's own TRS by {@link GltfToModelDef} when present.
      *
      * <p><b>Why this exists.</b> Blender's glTF importer does not keep an animated node's authored

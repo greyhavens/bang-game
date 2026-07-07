@@ -28,7 +28,7 @@ import com.jme3.math.Vector3f;
 
 /**
  * The neutral parsed representation of a Bang! Howdy animation <code>.mxml</code> (Epic 4
- * Phase 2a): sampled per-frame TRS keyframes for named bones/nodes, as {@link AnimationParser}
+ * Phase 2a): sampled per-frame TRS keyframes for named bones/nodes, as {@code AnimationParser}
  * populates it straight from the XML. Ported from the fork's
  * <code>com.threerings.jme.tools.AnimationDef</code> onto jME3 math types; the jME3
  * <code>.j3o</code> and glTF writers (Phase 2b) consume it.

@@ -43,7 +43,7 @@ import com.samskivert.util.StringUtil;
 
 /**
  * The neutral parsed representation of a Bang! Howdy <code>.mxml</code> model (Epic 4
- * Phase 2a): the data structure {@link ModelParser} populates straight from the XML, ported
+ * Phase 2a): the data structure {@code ModelParser} populates straight from the XML, ported
  * from the fork's <code>com.threerings.jme.tools.ModelDef</code> onto jME3 math types
  * (<code>com.jme3.math.*</code>). The jME3 <code>.j3o</code> and glTF writers (Phase 2b)
  * consume this representation.
