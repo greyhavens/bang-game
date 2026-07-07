@@ -92,6 +92,19 @@
           "particleOrientation": 0.0,
           "cameraFacing": true,
           "originOffset": [0.0, 0.0, 0.0],
+          "frustum": {
+            "location": [0.0, 850.0, -850.0],
+            "leftVec": [1.0, 0.0, 0.0],
+            "upVec": [0.0, 0.7071, 0.7071],
+            "direction": [0.0, -0.7071, 0.7071],
+            "near": 95.0,
+            "far": 900.0,
+            "left": -47.500458,
+            "right": 47.500458,
+            "top": 47.5,
+            "bottom": -47.5,
+            "solid": true
+          },
           "influences": [
             {
               "class": "BasicGravity",
@@ -207,6 +220,19 @@
           "particleOrientation": 0.0,
           "cameraFacing": true,
           "originOffset": [0.0, 0.0, 0.0],
+          "frustum": {
+            "location": [0.0, 850.0, -850.0],
+            "leftVec": [1.0, 0.0, 0.0],
+            "upVec": [0.0, 0.7071, 0.7071],
+            "direction": [0.0, -0.7071, 0.7071],
+            "near": 95.0,
+            "far": 1061.0,
+            "left": -47.500458,
+            "right": 47.500458,
+            "top": 47.5,
+            "bottom": -47.5,
+            "solid": true
+          },
           "influences": [
             {
               "class": "BasicGravity",

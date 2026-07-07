@@ -65,7 +65,9 @@ import com.threerings.bang.util.ParticleInfluenceControl;
  *       provide: the raw pre-conversion parameters (pre-scale sizes, per-ms velocities, ms
  *       lifetimes, annular emission cone incl. the converter-ignored {@code minimumAngle}, signed
  *       spin, {@code releaseVariance}, {@code alphaFalloff}, raw emit-shape geometry incl. the
- *       ring's converter-dropped inner radius/up axis), the FULL parameter set of every fork
+ *       ring's converter-dropped inner radius/up axis and the FRUSTUM emission volume the
+ *       converter collapses to a point — 12 emitters across 7 effects), the FULL parameter set
+ *       of every fork
  *       influence including the dropped {@code BasicVortex}/{@code SwarmInfluence} (E15-17 bounded
  *       remainder), the raw {@code AlphaState} blend functions, and the <b>texture source path</b>
  *       (raw stored location + resolved rsrc asset path + existence) — critical for the 22 effects
@@ -344,8 +346,10 @@ public class ExtractParticleSources extends ParticlesToJ3o
         fx.put("particleOrientation", geom.getParticleOrientation());
         fx.put("cameraFacing", geom.isCameraFacing());
 
-        // raw emit-shape geometry (the converter's box/sphere mappings lose the ring's inner
-        // radius + up axis and the line's direction form)
+        // raw emit-shape geometry: the converter's box/sphere mappings lose the ring's inner
+        // radius + up axis and the line's direction form, and it drops the FRUSTUM volume
+        // entirely (collapses to a point). Every ET_* constant is either captured below or
+        // fails the extraction loudly (ET_GEOMBATCH, corpus-unused).
         fx.put("originOffset", vec(geom.getOriginOffset()));
         switch (geom.getEmitType()) {
         case ParticleGeometry.ET_RING: {
@@ -381,6 +385,41 @@ public class ExtractParticleSources extends ParticlesToJ3o
             }
             break;
         }
+        case ParticleGeometry.ET_FRUSTUM: {
+            // the converter has NO frustum mapping at all — its shapeFor falls through to a
+            // POINT shape at the originOffset, discarding the whole pyramidal emission volume
+            // (12 emitters across 7 effects: ambient_drizzle, ambient_leaves, ambient_snow,
+            // forgiven, rain, tumbleweed_wind, wendigo/snow_storm). This block is therefore the
+            // ONLY surviving copy of that geometry after the Phase-5 fork deletion. Capture
+            // every persisted field of the fork com.jme.math.Frustum: random() emits from the
+            // volume spanned by left/right/top/bottom between the near and far planes, oriented
+            // by leftVec/upVec/direction from location; solid fills the volume (vs shell-only).
+            com.jme.math.Frustum fr = geom.getFrustum();
+            if (fr != null) {
+                Map<String, Object> f = new LinkedHashMap<>();
+                f.put("location", vec((com.jme.math.Vector3f)reflect(fr, "location")));
+                f.put("leftVec", vec((com.jme.math.Vector3f)reflect(fr, "leftVec")));
+                f.put("upVec", vec((com.jme.math.Vector3f)reflect(fr, "upVec")));
+                f.put("direction", vec((com.jme.math.Vector3f)reflect(fr, "direction")));
+                f.put("near", fr.getNear());
+                f.put("far", fr.getFar());
+                f.put("left", (Float)reflect(fr, "left"));
+                f.put("right", (Float)reflect(fr, "right"));
+                f.put("top", (Float)reflect(fr, "top"));
+                f.put("bottom", (Float)reflect(fr, "bottom"));
+                f.put("solid", fr.isSolid());
+                fx.put("frustum", f);
+            }
+            break;
+        }
+        case ParticleGeometry.ET_GEOMBATCH:
+            // emits from a live scene GeomBatch's vertices — not meaningfully serializable here,
+            // and unused across the corpus (0 of 113 emitters; every other ET_* is captured
+            // above). Fail LOUDLY rather than silently dropping emission geometry — silent
+            // fall-through is the exact bug class the ET_FRUSTUM case above fixes.
+            throw new IllegalStateException(
+                "ET_GEOMBATCH emit shape not supported by the enrichment extractor: " +
+                geom.getName());
         default:
             break;
         }
@@ -554,6 +593,7 @@ public class ExtractParticleSources extends ParticlesToJ3o
         case ParticleGeometry.ET_POINT: return "point";
         case ParticleGeometry.ET_LINE: return "line";
         case ParticleGeometry.ET_RECTANGLE: return "rectangle";
+        case ParticleGeometry.ET_GEOMBATCH: return "geombatch";
         case ParticleGeometry.ET_RING: return "ring";
         case ParticleGeometry.ET_FRUSTUM: return "frustum";
         default: return "unknown(" + et + ")";

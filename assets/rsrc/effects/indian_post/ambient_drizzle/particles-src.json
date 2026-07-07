@@ -71,6 +71,19 @@
       "particleOrientation": 0.0,
       "cameraFacing": true,
       "originOffset": [0.0, 0.0, 0.0],
+      "frustum": {
+        "location": [419.66574, 426.14426, -2846.1956],
+        "leftVec": [0.9909016, 5.82073E-10, 0.13458814],
+        "upVec": [-0.028767228, 0.9768913, 0.21179199],
+        "direction": [-0.13147981, -0.21373466, 0.9680034],
+        "near": 292.0,
+        "far": 1036.0,
+        "left": -159.5364,
+        "right": 159.5364,
+        "top": 145.99998,
+        "bottom": -145.99998,
+        "solid": true
+      },
       "influences": [
         {
           "class": "BasicGravity",

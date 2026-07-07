@@ -79,6 +79,19 @@
           "particleOrientation": 0.0,
           "cameraFacing": true,
           "originOffset": [0.0, 0.0, 0.0],
+          "frustum": {
+            "location": [-740.5706, 599.3223, -1680.8644],
+            "leftVec": [0.91511637, 2.5610882E-9, -0.40318993],
+            "upVec": [0.1250674, 0.9506729, 0.28386462],
+            "direction": [0.3833018, -0.3101946, 0.86997646],
+            "near": 355.0,
+            "far": 777.0,
+            "left": -188.37527,
+            "right": 188.37527,
+            "top": 177.5,
+            "bottom": -177.5,
+            "solid": true
+          },
           "influences": [
             {
               "class": "BasicWind",
@@ -177,6 +190,19 @@
           "particleOrientation": 0.0,
           "cameraFacing": true,
           "originOffset": [0.0, 0.0, 0.0],
+          "frustum": {
+            "location": [-740.5706, 599.3223, -1680.8644],
+            "leftVec": [0.91511637, 2.5610882E-9, -0.40318993],
+            "upVec": [0.1250674, 0.9506729, 0.28386462],
+            "direction": [0.3833018, -0.3101946, 0.86997646],
+            "near": 222.0,
+            "far": 444.0,
+            "left": -117.80088,
+            "right": 117.80088,
+            "top": 111.0,
+            "bottom": -111.0,
+            "solid": true
+          },
           "influences": [
             {
               "class": "BasicWind",
