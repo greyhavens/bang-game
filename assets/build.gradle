@@ -41,7 +41,7 @@ tasks.register("copyTownBits", Copy) {
   include "rsrc/effects/**/*.png"
   include "rsrc/effects/**/icon.properties"
   include "rsrc/effects/**/icons.txt"
-  include "rsrc/effects/**/particles.jme"
+  include "rsrc/effects/**/particles.j3o"
   include "rsrc/effects/**/particles.properties"
   include "rsrc/effects/**/particles.txt"
   include "rsrc/extras/**/*.png"
@@ -210,16 +210,14 @@ bakeModelsTask.configure { mustRunAfter ":assets:compileModels" }
 tasks.named("compileModels").configure { finalizedBy bakeModelsTask }
 processResources.dependsOn bakeModelsTask
 
-// Phase 6a: re-author each staged fork-format effects/<key>/particles.jme into a sibling
-// particles.j3o (a jME3 ParticleEmitter tree) that the runtime client loads natively through the
-// jME3 AssetManager (ParticleCache). The baker (tools:j3o-converter:bakeParticles) reads the fork
-// particles.jme via the retained fork BinaryImporter and writes pure-jME3 .j3o, so no fork
-// dependency reaches the runtime. It must run after copyTownBits has staged the effects tree
-// (the .jme + textures the converter reads).
-def bakeParticlesTask = project(":tools:j3o-converter").tasks.named("bakeParticles")
-bakeParticlesTask.configure { mustRunAfter ":assets:copyTownBits" }
-tasks.named("copyTownBits").configure { finalizedBy bakeParticlesTask }
-processResources.dependsOn bakeParticlesTask
+// Epic 4 Phase 4½a FREEZE (2026-07-07): particle effects are committed rsrc/effects/**/
+// particles.j3o (the final verified Phase-6a bakeParticles output, frozen as source — see
+// docs/epic4-native-model-toolchain.md Phase 4½), staged by copyTownBits like any other
+// resource. The fork-binary particles.jme sources were deleted (git history preserves them;
+// the committed particles-src.json enrichment dumps carry everything re-authoring needs) and
+// NOTHING in the build invokes the fork bakeParticles path anymore — the fork's build role is
+// zero, unblocking the Phase-5 fork deletion. Re-authoring each frozen .j3o as an editable
+// jME3 emitter source proceeds effect-by-effect post-Phase-5.
 
 // generates lists of props, units, etc.
 tasks.register("updateLists", Exec) {
