@@ -1,9 +1,13 @@
 # Epic 4 — Native model toolchain + Blender authoring (fork eradication)
 
+**EPIC COMPLETE 2026-07-07: the vendored `jme` fork module is DELETED (Phase 5 executed — see
+the Phase 5 record below).** The particles re-authoring follow-up (Phase 4½ plan) continues
+incrementally and involves no fork code.
+
 Epic 1 moved the **running game** entirely off the vendored 2005-era jME fork (the client/editor
 ship and load zero fork code — confirmed: no `com.jme.*`/fork-`com.jmex.*` imports in any runtime/main
-source). But the fork is **not gone** — it survives as the **build-time asset compiler**. This epic
-replaces it with a jME3-native toolchain so the `jme` module can be deleted outright.
+source). But the fork was **not gone** — it survived as the **build-time asset compiler**. This epic
+replaced it with a jME3-native toolchain and then deleted the `jme` module outright.
 
 **Scope extension (decided 2026-07-05):** the Blender content pipeline is folded into this epic
 (not a standalone "Epic 6"), and the requirement is that the **legacy 310 models become editable in
@@ -456,7 +460,35 @@ deletion (Phase 5) needs `particles.jme` (fork binary) off the build path too.
   effect by effect, but shouldn't gate fork deletion.
 
 ### Phase 5 — Delete the fork (checklist)
-Only after Phase 3 full-corpus sign-off + Phase 4 cutover + a particles decision:
+**EXECUTED 2026-07-07 (the epic's payoff — the vendored 2005 jME fork module is gone):**
+- **Deleted:** the whole `jme/` module (343 files; `settings.gradle` include dropped) after
+  archiving the 3ds Max exporters `TRModelExporter.mcr` + `TRAnimationExporter.mcr` (the
+  historical `.mxml` model+animation format spec) to `docs/legacy/`; `app/src/modeltool/`
+  (27 files: `CompileModelTask`, `UpdatePropHeightTask`, the fork Model/ModelMesh/SkinMesh
+  classes) + its source-set/dependency wiring; the `assets` legacy model path (the
+  `-PmodelSource=mxml` escape hatch, fork ant taskdefs, and the staged-`model.dat` check —
+  `compileModels` is now just the anchor finalized by `bakeModelsGltf`); 16 `tools/j3o-converter`
+  classes (fork-oracle generators `ModelConverter`/`BangModelLoader`/`ModelToJ3o`/`BakeModels`/
+  `VerifyCorpus`; particle bakers `ParticleConverter`/`ParticlesToJ3o`/`ExtractParticleSources`;
+  `.mxml` parsers `ModelParser`/`AnimationParser`; parity harnesses `MxmlProbe`/`MxmlParity`/
+  `MxmlGltfParity`/`MxmlToGltf`; modeltool accessors `ModelAnimAccess`/`ModelMeshAccess`) plus
+  their eight task registrations, the modeltool/digester dependencies, and — a sweep find beyond
+  the checklist — `projects/pseditor` (the dead fork-era Swing particle editor, never in the
+  gradle build).
+- **Kept (the living toolchain):** `GltfToModelDef` → `MxmlToJ3o` (now purely the def-driven bake
+  engine; its `.mxml`-file entry points went with the parsers) → `GltfToJ3o` (`bakeModelsGltf`),
+  `ModelDef`/`AnimationDef`, `MxmlGltfConventions`, and the goldens harness
+  (`RenderModelToPng`/`SnapshotDiff`/`verifyVisuals` + the render tasks) on the fork-free
+  `renderToPngRuntime` classpath. No shared helpers needed relocation — every retained→deleted
+  reference was javadoc prose.
+- **Acceptance met:** `grep -rI 'com\.jme\.'` across all remaining source hits ZERO code — the
+  residuals are `docs/` prose, `docs/legacy/`, and historical jME3-cutover javadoc in 15
+  client/shared files + 2 retained tool files (inert `{@code}` references documenting what the
+  fork used to do). Gates: full `./gradlew build` + `deploy` green (310 staged `model.j3o` +
+  60 staged `particles.j3o`), `bakeModelsGltf` 310/310 to a scratch root, `verifyVisuals` 22/23
+  (`ip_fx_fireflies` pre-existing, #66), fresh-clone build green.
+
+Original checklist, only after Phase 3 full-corpus sign-off + Phase 4 cutover + a particles decision:
 - `settings.gradle`: remove `jme`; delete the `jme/` directory (the MaxScript exporter
   `TRModelExporter.mcr` moves to `docs/legacy/` first — it's the historical format spec).
 - `app/build.gradle`: delete the `modeltool` source set + `CompileModelTask` wiring; delete
@@ -497,6 +529,9 @@ Only after Phase 3 full-corpus sign-off + Phase 4 cutover + a particles decision
   alternative path re-deriving transforms will diverge on the train models.
 
 ## Acceptance
+**MET 2026-07-07 (Phase 5 executed; particles land as the committed frozen `.j3o` per the
+Phase-4½a decision, with re-authoring as the incremental follow-up).**
+
 A full `./gradlew deploy` compiles every **model from committed glTF source** — and every particle
 effect from its own fork-free source (glTF carries no particle-system semantics, so particles land
 as re-authored committed jME3 emitters or a native `particles.jme` reader per Phase 2a; Blender

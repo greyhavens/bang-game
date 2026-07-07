@@ -7,10 +7,11 @@ This fork modernizes the game to run on current tooling: it builds with **Gradle
 **JDK 21** toolchain and runs against **MySQL 8** (Connector/J 8, with the legacy schema migrations
 fixed up for MySQL 8's reserved words). The rendering has been cut over from the vendored 2005-era
 jMonkeyEngine fork (LWJGL 2.9 + [libGDX]) to stock [jMonkeyEngine 3.9] on LWJGL3 — the running
-client, server, and editor ship and load **zero fork code**. (The old `jme` fork module survives
-only as a build-time model/particle asset compiler, whose removal is deferred to a later epic.)
-See `docs/epics.md` and `docs/jme3-cutover-plan.md` for the cutover plan and status. The in-game
-board/map editor has also been fixed up and runs again.
+client, server, and editor ship and load **zero fork code**, and the vendored fork module itself
+was **deleted** in Epic 4 (2026-07-07): 3D models are committed glTF (editable in Blender, see
+`docs/blender-authoring.md`) baked natively to `.j3o` at build time, and particle effects are
+committed `.j3o`. See `docs/epics.md` and `docs/jme3-cutover-plan.md` for the cutover plan and
+status. The in-game board/map editor has also been fixed up and runs again.
 
 The client, server, and editor all build and run locally. Here's how.
 

@@ -7,12 +7,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The source code and media for Bang! Howdy, a western-themed multiplayer tactics MMO created
 by Three Rings Design in 2004. Rendering runs on **stock jMonkeyEngine 3.9 + LWJGL3** (the
 Epic-1 cutover off the vendored 2005-era jME fork + LWJGL2 + libGDX — see `docs/epics.md` and
-`docs/jme3-cutover-plan.md`). The running client/editor ship and load **zero fork code**, and
-since the Epic 4 Phase 4½a particles freeze the old `jme` fork module has **zero build-time
-role** too — nothing in the build invokes it (models cut over to committed glTF source in Epic
-4 Phase 4; particles froze to committed `particles.j3o`; the module's deletion lands with Epic
-4 Phase 5). Code is BSD-licensed; media (everything under
-`assets/rsrc/`) is CC Attribution-NonCommercial.
+`docs/jme3-cutover-plan.md`). The vendored fork was **DELETED** in Epic 4 Phase 5 (2026-07-07)
+— Epic 4 complete: zero fork code anywhere, runtime or build. Models are committed glTF source
+(Epic 4 Phase 4 cutover; editable in Blender per `docs/blender-authoring.md`) baked natively to
+`.j3o`; particle effects are committed `particles.j3o` (Phase 4½a freeze, re-authoring
+effect-by-effect from `particles-src.json` is the remaining follow-up). Code is BSD-licensed;
+media (everything under `assets/rsrc/`) is CC Attribution-NonCommercial.
 
 ## Build and run
 
@@ -105,15 +105,9 @@ and `-Dplayers=` are also honored.) This is the deterministic way to self-verify
 
 Gradle modules (see `settings.gradle`), in dependency order:
 
-- `jme` — the **vendored 2005-era jMonkeyEngine fork** (LWJGL 2.9; its libGDX backend was excised
-  in Epic 3 Phase 8 — the repo is now gdx-free). **Zero build role since the Phase 4½a particles
-  freeze**: not on any runtime/main classpath, and no task in the default build pipeline runs
-  fork code anymore — every shipped asset bakes fork-free (it still *compiles*, as a classpath
-  dependency of the retained converter tooling: the legacy `-PmodelSource=mxml` escape hatch and
-  the uninvoked `bakeParticles`/`extractParticleSources` tasks). Epic 4 Phase 5 deletes it.
-- `app` — `com.threerings.jme.*`: scenegraph/sprite/model/camera framework, now on **jME3** (a thin
-  `Model` facade over baked `.j3o`); its fork-coupled model *compiler* lives in a separate
-  `modeltool` source set (the only `app` code that still sees the `jme` fork).
+- `app` — `com.threerings.jme.*`: scenegraph/sprite/model/camera framework, on **jME3** (a thin
+  `Model` facade over baked `.j3o`). (The package name is a fork-era legacy; the vendored `jme`
+  fork module itself was deleted in Epic 4 Phase 5, 2026-07-07.)
 - `bui` — BUI, the in-game UI toolkit, on **jME3** (`Jme3RenderBackend`/`Jme3RootNode`; input via the
   jME3 `InputManager`, keycodes are jME3 `KeyInput` — the old gdx keycode source is gone)
 - `client/shared` — the bulk of all game code (`com.threerings.bang.*`), client AND server logic
@@ -126,14 +120,13 @@ Gradle modules (see `settings.gradle`), in dependency order:
   cutover, editable in Blender per `docs/blender-authoring.md` — avatar component bundles, XML
   config compilation) run as part of `processResources`. Particle effects are **committed
   `rsrc/effects/**/particles.j3o`** (Epic 4 Phase 4½a freeze, 2026-07-07: the final verified
-  fork bake, staged by copy like any other resource; the fork-binary `particles.jme` are
-  deleted). They are frozen binaries for now — re-authoring as editable jME3 emitter sources
-  proceeds effect-by-effect post-Phase-5, fed by the committed per-effect
-  `particles-src.json` enrichment dumps (see `docs/epic4-native-model-toolchain.md` Phase 4½).
-  With this freeze the `jme` fork's build-time role dropped to ZERO — no shipped asset bakes
-  through fork code anymore (module deletion = Epic 4 Phase 5).
-- `tools` — build-time ant tasks; `tools/j3o-converter` hosts the fork→jME3 asset bake + the
-  offscreen render harnesses (`RenderModelToPng`/`SnapshotDiff`/`verifyVisuals`)
+  fork bake, staged by copy like any other resource). They are frozen binaries for now —
+  re-authoring as editable jME3 emitter sources proceeds effect-by-effect, fed by the committed
+  per-effect `particles-src.json` enrichment dumps (see `docs/epic4-native-model-toolchain.md`
+  Phase 4½).
+- `tools` — build-time ant tasks; `tools/j3o-converter` hosts the native `model.gltf`→`model.j3o`
+  bake (`GltfToJ3o`) + the offscreen render harnesses
+  (`RenderModelToPng`/`SnapshotDiff`/`verifyVisuals`)
 
 For non-obvious engine internals — the jME3/LWJGL3 GL-context coupling, threading rules,
 model/board pipelines, and narya wire-protocol gotchas — read `docs/engine-notes.md` before
