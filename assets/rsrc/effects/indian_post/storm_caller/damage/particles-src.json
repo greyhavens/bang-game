@@ -1,0 +1,213 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/storm_caller/damage",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "lightning1",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 11,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.385,
+        "highLife": 0.598,
+        "startSize": 2.75,
+        "endSize": 4.4,
+        "startColor": [0.4, 1.0, 1.0, 1.0],
+        "endColor": [0.8, 1.0, 1.0, 1.0],
+        "gravity": [0.0, 0.0, 0.0],
+        "rotateSpeed": 27.0,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [5.364418E-7, 4.5, 0.0],
+        "velocityVariation": 1.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/indian_post/storm_caller/damage/ball_lightning.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 11,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 12.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 1,
+          "minimumLifeTime": 385.0,
+          "maximumLifeTime": 598.0,
+          "startSize": 55.0,
+          "endSize": 88.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.09,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.7453293,
+          "particleSpinSpeed": 27.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/storm_caller/damage/ball_lightning.png",
+            "assetPath": "effects/indian_post/storm_caller/damage/ball_lightning.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "lightning2",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 11,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.385,
+        "highLife": 0.598,
+        "startSize": 4.4,
+        "endSize": 5.55,
+        "startColor": [0.4, 1.0, 1.0, 1.0],
+        "endColor": [0.8, 1.0, 1.0, 1.0],
+        "gravity": [0.0, 0.0, 0.0],
+        "rotateSpeed": 99.0,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [5.364418E-7, 4.5, 0.0],
+        "velocityVariation": 1.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/indian_post/storm_caller/damage/ball_lightning.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 11,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 12.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 1,
+          "minimumLifeTime": 385.0,
+          "maximumLifeTime": 598.0,
+          "startSize": 88.0,
+          "endSize": 111.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.09,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.7453293,
+          "particleSpinSpeed": 99.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/storm_caller/damage/ball_lightning.png",
+            "assetPath": "effects/indian_post/storm_caller/damage/ball_lightning.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

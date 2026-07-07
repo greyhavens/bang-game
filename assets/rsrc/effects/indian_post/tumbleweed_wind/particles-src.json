@@ -1,0 +1,211 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/tumbleweed_wind",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "dust",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 200,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.5,
+        "highLife": 2.0,
+        "startSize": 2.75,
+        "endSize": 6.1,
+        "startColor": [1.0, 1.0, 1.0, 0.0],
+        "endColor": [1.0, 1.0, 1.0, 0.5882353],
+        "gravity": [-299.99997, 0.0, -15.0],
+        "rotateSpeed": 11.100001,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 0.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "effects/frontier_town/dust/dust.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "frustum",
+          "particleType": "triangle",
+          "numParticles": 200,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.43,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 200,
+          "minimumLifeTime": 1500.0,
+          "maximumLifeTime": 2000.0,
+          "startSize": 55.0,
+          "endSize": 122.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.0,
+          "particleSpinSpeed": 11.100001,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicWind",
+              "enabled": true,
+              "windDirection": [1.0, 0.0, 0.0],
+              "strength": 6.0,
+              "random": true,
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.3, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/dust/dust.png",
+            "assetPath": "effects/frontier_town/dust/dust.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "leaves",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 22,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.5,
+        "highLife": 2.0,
+        "startSize": 0.6,
+        "endSize": 0.6,
+        "startColor": [1.0, 1.0, 1.0, 0.0],
+        "endColor": [1.0, 1.0, 1.0, 1.0],
+        "gravity": [-299.99997, 0.0, -15.0],
+        "rotateSpeed": 11.100001,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 0.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "frustum",
+          "particleType": "triangle",
+          "numParticles": 22,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.43,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 22,
+          "minimumLifeTime": 1500.0,
+          "maximumLifeTime": 2000.0,
+          "startSize": 12.0,
+          "endSize": 12.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.0,
+          "particleSpinSpeed": 11.100001,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicWind",
+              "enabled": true,
+              "windDirection": [1.0, 0.0, 0.0],
+              "strength": 6.0,
+              "random": true,
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.3, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/falling_leaves/leaf.png",
+            "assetPath": "effects/indian_post/falling_leaves/leaf.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      }
+    ]
+  }
+}

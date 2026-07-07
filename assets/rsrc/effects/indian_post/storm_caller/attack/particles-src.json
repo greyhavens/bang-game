@@ -1,0 +1,461 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/storm_caller/attack",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "explosion clouds",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 17,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.385,
+        "highLife": 0.598,
+        "startSize": 1.9250001,
+        "endSize": 3.3,
+        "startColor": [1.0, 0.5137255, 0.20392157, 1.0],
+        "endColor": [0.53333336, 1.0, 0.95686275, 0.0],
+        "gravity": [0.0, 0.1, 0.0],
+        "rotateSpeed": 0.1,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [4.7683716E-7, 4.0, 0.0],
+        "velocityVariation": 1.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/indian_post/storm_caller/attack/white_explosion.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "quad",
+          "numParticles": 17,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 1.56,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 32,
+          "minimumLifeTime": 385.0,
+          "maximumLifeTime": 598.0,
+          "startSize": 38.5,
+          "endSize": 66.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.08,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.7627825,
+          "particleSpinSpeed": 0.1,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/storm_caller/attack/white_explosion.png",
+            "assetPath": "effects/indian_post/storm_caller/attack/white_explosion.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "explosion",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 75,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.361,
+        "highLife": 0.52,
+        "startSize": 1.125,
+        "endSize": 0.22500001,
+        "startColor": [1.0, 0.7921569, 0.25490198, 1.0],
+        "endColor": [0.61960787, 0.9411765, 1.0, 0.0],
+        "gravity": [0.0, 0.0, 0.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [3.33786E-6, 28.0, 0.0],
+        "velocityVariation": 1.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/resurrection/sphere.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 75,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": false,
+            "releaseVariance": 0.0,
+            "speed": 1.3,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 361.0,
+          "maximumLifeTime": 520.0,
+          "startSize": 22.5,
+          "endSize": 4.5,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.56,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.710422,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.0, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/resurrection/sphere.png",
+            "assetPath": "effects/frontier_town/resurrection/sphere.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "smoke",
+        "translation": [0.0, 55.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 44,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.47,
+        "highLife": 1.068,
+        "startSize": 0.24000001,
+        "endSize": 2.3,
+        "startColor": [0.05490196, 0.050980393, 0.050980393, 1.0],
+        "endColor": [0.15686275, 0.15294118, 0.15294118, 0.47843137],
+        "gravity": [0.0, 0.0, -15.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [4.7683716E-7, 4.0, 0.0],
+        "velocityVariation": 0.4777776,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/explosion/smoke.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 44,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.64,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 110,
+          "minimumLifeTime": 470.0,
+          "maximumLifeTime": 1068.0,
+          "startSize": 4.8,
+          "endSize": 46.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.08,
+          "minimumAngle": 0.29670584,
+          "maximumAngle": 0.7504913,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 0.3, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/explosion/smoke.png",
+            "assetPath": "effects/frontier_town/explosion/smoke.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "sparks",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 50,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.915,
+        "highLife": 1.338,
+        "startSize": 0.3,
+        "endSize": 0.22500001,
+        "startColor": [1.0, 0.49803922, 0.13333334, 1.0],
+        "endColor": [0.99215686, 1.0, 0.654902, 0.0],
+        "gravity": [0.0, 0.0, 35.0],
+        "rotateSpeed": 5.0,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [3.33786E-6, 28.0, 0.0],
+        "velocityVariation": 0.36666667,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/resurrection/sphere.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 1.5
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 50,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.90999997,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 273,
+          "minimumLifeTime": 915.0,
+          "maximumLifeTime": 1338.0,
+          "startSize": 6.0,
+          "endSize": 4.5,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.56,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.57595867,
+          "particleSpinSpeed": 5.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.70000005, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 1.5
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/resurrection/sphere.png",
+            "assetPath": "effects/frontier_town/resurrection/sphere.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "blue_bolt",
+        "translation": [0.0, 300.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 3,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.5,
+        "highLife": 0.5,
+        "startSize": 15.0,
+        "endSize": 15.0,
+        "startColor": [1.0, 1.0, 1.0, 1.0],
+        "endColor": [1.0, 1.0, 1.0, 0.0],
+        "gravity": [0.0, 0.0, 0.0],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": true,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [5.9604645E-8, 0.5, 0.0],
+        "velocityVariation": 0.0,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/indian_post/storm_caller/attack/blue_bolt.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "quad",
+          "numParticles": 3,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 1.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 12,
+          "minimumLifeTime": 500.0,
+          "maximumLifeTime": 500.0,
+          "startSize": 300.0,
+          "endSize": 300.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.01,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.0,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": true,
+          "transformParticles": false,
+          "rotateWithScene": true,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/storm_caller/attack/blue_bolt.png",
+            "assetPath": "effects/indian_post/storm_caller/attack/blue_bolt.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

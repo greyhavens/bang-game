@@ -1,0 +1,103 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "frontier_town/lucky",
+  "effectScale": 0.1,
+  "root": {
+    "name": "clovers",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 5,
+    "particlesPerSec": 12.0,
+    "lowLife": 0.342,
+    "highLife": 0.385,
+    "startSize": 0.88000005,
+    "endSize": 0.45000002,
+    "startColor": [1.0, 1.0, 1.0, 1.0],
+    "endColor": [1.0, 1.0, 1.0, 0.0],
+    "gravity": [0.0, 0.0, 0.0],
+    "rotateSpeed": 7.39,
+    "randomAngle": true,
+    "facingVelocity": false,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [1.9073486E-6, 16.0, 0.0],
+    "velocityVariation": 0.077777766,
+    "shape": {
+      "kind": "sphere",
+      "center": [0.0, 0.0, 0.0],
+      "radius": 25.4
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Alpha",
+      "texture": "<embedded RGBA, keyless>"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "ring",
+      "particleType": "triangle",
+      "numParticles": 5,
+      "controller": {
+        "repeatType": "wrap",
+        "controlFlow": true,
+        "releaseVariance": 0.0,
+        "speed": 0.35,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 12,
+      "minimumLifeTime": 342.0,
+      "maximumLifeTime": 385.0,
+      "startSize": 8.8,
+      "endSize": 4.5,
+      "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+      "initialVelocity": 0.16,
+      "minimumAngle": 0.10471976,
+      "maximumAngle": 0.12217303,
+      "particleSpinSpeed": 7.39,
+      "velocityAligned": false,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "ring": {
+        "center": [0.0, 0.0, 0.0],
+        "up": [0.0, 1.0, 0.0],
+        "innerRadius": 14.3,
+        "outerRadius": 25.4
+      },
+      "influences": [
+        {
+          "class": "BasicGravity",
+          "enabled": true,
+          "gravityForce": [0.0, 0.0, 0.0],
+          "rotateWithScene": true
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE_MINUS_SRC_ALPHA"
+      },
+      "texture": {
+        "location": "rsrc/effects/frontier_town/lucky/clover.png",
+        "assetPath": "effects/frontier_town/lucky/clover.png",
+        "exists": true,
+        "embeddedInJ3o": true
+      }
+    }
+  }
+}

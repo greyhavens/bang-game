@@ -1,0 +1,96 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "frontier_town/shotgunner_shells",
+  "effectScale": 0.025,
+  "root": {
+    "name": "shotgun_shells",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 2,
+    "particlesPerSec": 0.0,
+    "lowLife": 1.935,
+    "highLife": 2.902,
+    "startSize": 0.5,
+    "endSize": 0.5,
+    "startColor": [1.0, 1.0, 1.0, 1.0],
+    "endColor": [1.0, 1.0, 1.0, 1.0],
+    "gravity": [0.0, 0.0, 37.499996],
+    "rotateSpeed": 3.78,
+    "randomAngle": true,
+    "facingVelocity": false,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [2.9802322E-6, 25.0, 0.0],
+    "velocityVariation": 0.13333334,
+    "shape": {
+      "kind": "point",
+      "point": [0.0, 0.0, 0.0]
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Alpha",
+      "texture": "<embedded RGBA, keyless>"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "point",
+      "particleType": "quad",
+      "numParticles": 2,
+      "controller": {
+        "repeatType": "clamp",
+        "controlFlow": true,
+        "releaseVariance": 0.65999997,
+        "speed": 1.0,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 2,
+      "minimumLifeTime": 1935.0,
+      "maximumLifeTime": 2902.0,
+      "startSize": 20.0,
+      "endSize": 20.0,
+      "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+      "initialVelocity": 1.0,
+      "minimumAngle": 0.15707964,
+      "maximumAngle": 0.20943952,
+      "particleSpinSpeed": 3.78,
+      "velocityAligned": false,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "influences": [
+        {
+          "class": "BasicGravity",
+          "enabled": true,
+          "gravityForce": [0.0, -1.5, 0.0],
+          "rotateWithScene": true
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE_MINUS_SRC_ALPHA"
+      },
+      "texture": {
+        "location": "rsrc/effects/frontier_town/shotgunner_shells/shotgun_shell.png",
+        "assetPath": "effects/frontier_town/shotgunner_shells/shotgun_shell.png",
+        "exists": true,
+        "embeddedInJ3o": true
+      }
+    }
+  }
+}

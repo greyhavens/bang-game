@@ -1,0 +1,318 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/revolutionary/death",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "petals",
+        "translation": [0.0, 555.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 55,
+        "particlesPerSec": 0.0,
+        "lowLife": 1.2,
+        "highLife": 1.5,
+        "startSize": 0.4,
+        "endSize": 0.4,
+        "startColor": [1.0, 1.0, 1.0, 0.0],
+        "endColor": [1.0, 1.0, 1.0, 1.0],
+        "gravity": [0.0, 0.0, 30.0],
+        "rotateSpeed": 7.6,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 0.0,
+        "shape": {
+          "kind": "sphere",
+          "center": [0.0, 0.0, 0.0],
+          "radius": 66.0
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "ring",
+          "particleType": "triangle",
+          "numParticles": 55,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.56,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 66,
+          "minimumLifeTime": 1200.0,
+          "maximumLifeTime": 1500.0,
+          "startSize": 8.0,
+          "endSize": 8.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.0,
+          "particleSpinSpeed": 7.6,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "ring": {
+            "center": [0.0, 0.0, 0.0],
+            "up": [0.0, 1.0, 0.0],
+            "innerRadius": 40.0,
+            "outerRadius": 66.0
+          },
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -0.6, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/revolutionary/death/petal.png",
+            "assetPath": "effects/indian_post/revolutionary/death/petal.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      },
+      {
+        "name": "ground effect",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 77,
+        "particlesPerSec": 0.0,
+        "lowLife": 2.0,
+        "highLife": 3.0,
+        "startSize": 1.165,
+        "endSize": 0.46,
+        "startColor": [1.0, 0.8, 0.0, 1.0],
+        "endColor": [1.0, 1.0, 0.8, 0.0],
+        "gravity": [0.0, 0.0, -0.0049999994],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [0.0, 0.0, 0.0],
+        "velocityVariation": 0.13333334,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/resurrection/sphere.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 77,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 1.87,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 2000.0,
+          "maximumLifeTime": 3000.0,
+          "startSize": 23.3,
+          "endSize": 9.2,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.0,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.20943952,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicVortex",
+              "enabled": true,
+              "type": "cylinder",
+              "strength": 1.0,
+              "divergence": -0.9075712,
+              "axis": {
+                "origin": [0.0, 0.0, 0.0],
+                "direction": [1.1920929E-7, 1.0, 0.0]
+              },
+              "height": 0.0,
+              "radius": 1.0,
+              "random": true,
+              "transformWithScene": true
+            },
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, 1.0E-4, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/resurrection/sphere.png",
+            "assetPath": "effects/frontier_town/resurrection/sphere.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "roses",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 12,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.92,
+        "highLife": 0.95,
+        "startSize": 1.15,
+        "endSize": 1.15,
+        "startColor": [1.0, 1.0, 1.0, 0.25882354],
+        "endColor": [1.0, 1.0, 1.0, 1.0],
+        "gravity": [0.0, 0.0, 0.0],
+        "rotateSpeed": 6.6,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [2.9802322E-6, 25.0, 0.0],
+        "velocityVariation": 0.0,
+        "shape": {
+          "kind": "sphere",
+          "center": [0.0, 0.0, 0.0],
+          "radius": 250.0
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "ring",
+          "particleType": "triangle",
+          "numParticles": 12,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 0.54,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 12,
+          "minimumLifeTime": 920.0,
+          "maximumLifeTime": 950.0,
+          "startSize": 23.0,
+          "endSize": 23.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.5,
+          "minimumAngle": 0.0,
+          "maximumAngle": 0.0,
+          "particleSpinSpeed": 6.6,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "ring": {
+            "center": [0.0, 0.0, 0.0],
+            "up": [0.0, 1.0, 0.0],
+            "innerRadius": 250.0,
+            "outerRadius": 250.0
+          },
+          "influences": [
+            {
+              "class": "SwarmInfluence",
+              "enabled": true,
+              "swarmOffset": [0.0, 0.0, 0.0],
+              "swarmRange": 0.1,
+              "deviance": 0.2617994,
+              "turnSpeed": 3.8,
+              "speedBump": 0.0,
+              "maxSpeed": 0.2
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/revolutionary/death/rose.png",
+            "assetPath": "effects/indian_post/revolutionary/death/rose.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      }
+    ]
+  }
+}

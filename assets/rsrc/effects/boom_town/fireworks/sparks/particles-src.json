@@ -1,0 +1,303 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "boom_town/fireworks/sparks",
+  "effectScale": 0.025,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "burst 1",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 5,
+        "particlesPerSec": 16.666666,
+        "lowLife": 0.2,
+        "highLife": 0.4,
+        "startSize": 1.0,
+        "endSize": 1.5,
+        "startColor": [0.9019608, 0.5176471, 0.3529412, 1.0],
+        "endColor": [1.0, 0.4, 0.0, 1.0],
+        "gravity": [0.0, 0.0, 0.0],
+        "rotateSpeed": 9.0,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [2.682209E-8, 0.225, 0.0],
+        "velocityVariation": 0.73333335,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/hit_flash/burst_1.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 5,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 4.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 200.0,
+          "maximumLifeTime": 400.0,
+          "startSize": 40.0,
+          "endSize": 60.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.009,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.1519173,
+          "particleSpinSpeed": 9.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/hit_flash/burst_1.png",
+            "assetPath": "effects/frontier_town/hit_flash/burst_1.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "burst 2",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 5,
+        "particlesPerSec": 16.666666,
+        "lowLife": 0.2,
+        "highLife": 0.4,
+        "startSize": 1.0,
+        "endSize": 2.125,
+        "startColor": [1.0, 1.0, 0.6, 1.0],
+        "endColor": [1.0, 0.6, 0.0, 1.0],
+        "gravity": [0.0, 0.0, 0.0],
+        "rotateSpeed": 6.0,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [2.9802323E-9, 0.025, 0.0],
+        "velocityVariation": 0.73333335,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/hit_flash/burst_2.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 5,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 6.0,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 300,
+          "minimumLifeTime": 200.0,
+          "maximumLifeTime": 400.0,
+          "startSize": 40.0,
+          "endSize": 85.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.001,
+          "minimumAngle": 0.0,
+          "maximumAngle": 1.1519173,
+          "particleSpinSpeed": 6.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/hit_flash/burst_2.png",
+            "assetPath": "effects/frontier_town/hit_flash/burst_2.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      },
+      {
+        "name": "Sparks",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 17,
+        "particlesPerSec": 24.113474,
+        "lowLife": 0.513,
+        "highLife": 0.897,
+        "startSize": 0.2,
+        "endSize": 0.05,
+        "startColor": [1.0, 1.0, 0.4, 1.0],
+        "endColor": [1.0, 0.6509804, 0.0, 0.0],
+        "gravity": [0.0, 0.0, 74.99999],
+        "rotateSpeed": 0.0,
+        "randomAngle": false,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [2.7418134E-6, 22.999998, 0.0],
+        "velocityVariation": 0.29999983,
+        "shape": {
+          "kind": "point",
+          "point": [0.0, 0.0, 0.0]
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Additive",
+          "texture": "effects/frontier_town/resurrection/sphere.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "point",
+          "particleType": "triangle",
+          "numParticles": 17,
+          "controller": {
+            "repeatType": "wrap",
+            "controlFlow": false,
+            "releaseVariance": 0.0,
+            "speed": 0.64,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 110,
+          "minimumLifeTime": 513.0,
+          "maximumLifeTime": 897.0,
+          "startSize": 8.0,
+          "endSize": 2.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.91999996,
+          "minimumAngle": 0.15707964,
+          "maximumAngle": 0.47123864,
+          "particleSpinSpeed": 0.0,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -3.0, 0.0],
+              "rotateWithScene": true
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/resurrection/sphere.png",
+            "assetPath": "effects/frontier_town/resurrection/sphere.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

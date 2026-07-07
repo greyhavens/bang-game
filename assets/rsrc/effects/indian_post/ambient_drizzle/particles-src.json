@@ -1,0 +1,90 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/ambient_drizzle",
+  "effectScale": 0.2,
+  "root": {
+    "name": "Layer #0",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 55,
+    "particlesPerSec": 550.0,
+    "lowLife": 0.05,
+    "highLife": 0.15,
+    "startSize": 2.6000001,
+    "endSize": 0.4,
+    "startColor": [0.40784314, 0.6431373, 0.72156864, 0.0],
+    "endColor": [0.32941177, 0.36078432, 0.36078432, 1.0],
+    "gravity": [0.0, 0.0, 2680.0027],
+    "rotateSpeed": 0.0,
+    "randomAngle": false,
+    "facingVelocity": true,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [0.0, 0.0, 0.0],
+    "velocityVariation": 0.14444439,
+    "shape": {
+      "kind": "point",
+      "point": [0.0, 0.0, 0.0]
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Additive"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "frustum",
+      "particleType": "line",
+      "numParticles": 55,
+      "controller": {
+        "repeatType": "wrap",
+        "controlFlow": false,
+        "releaseVariance": 0.0,
+        "speed": 1.0,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 1358,
+      "minimumLifeTime": 50.0,
+      "maximumLifeTime": 150.0,
+      "startSize": 13.0,
+      "endSize": 2.0,
+      "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+      "initialVelocity": 0.0,
+      "minimumAngle": 0.0,
+      "maximumAngle": 0.22689272,
+      "particleSpinSpeed": 0.0,
+      "velocityAligned": true,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "influences": [
+        {
+          "class": "BasicGravity",
+          "enabled": true,
+          "gravityForce": [0.0, -13.400015, 0.0],
+          "rotateWithScene": true
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE"
+      },
+      "texture": null
+    }
+  }
+}

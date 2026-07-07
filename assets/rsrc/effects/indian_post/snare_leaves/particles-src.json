@@ -1,0 +1,227 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/snare_leaves",
+  "effectScale": 0.05,
+  "root": {
+    "name": "particles",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "node",
+    "children": [
+      {
+        "name": "leaves",
+        "translation": [0.0, 10.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 12,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.5,
+        "highLife": 1.0,
+        "startSize": 0.75,
+        "endSize": 0.75,
+        "startColor": [0.2, 0.6, 0.0, 1.0],
+        "endColor": [0.2, 0.6, 0.0, 0.0],
+        "gravity": [0.0, 0.0, 499.99997],
+        "rotateSpeed": 13.200001,
+        "randomAngle": true,
+        "facingVelocity": true,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [2.9802322E-5, 250.0, 0.0],
+        "velocityVariation": 0.22222215,
+        "shape": {
+          "kind": "sphere",
+          "center": [0.0, 0.0, 0.0],
+          "radius": 100.0
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "<embedded RGBA, keyless>"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "DRAG",
+            "dragCoefficient": 20.0
+          },
+          {
+            "class": "ParticleInfluenceControl",
+            "type": "WANDER",
+            "wanderRadius": 0.03,
+            "wanderDistance": 0.2,
+            "wanderJitter": 0.005,
+            "emissionDirection": [1.1920929E-7, 1.0, 0.0]
+          }
+        ],
+        "forkExtras": {
+          "emitType": "ring",
+          "particleType": "triangle",
+          "numParticles": 12,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": false,
+            "releaseVariance": 0.47,
+            "speed": 0.38,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 9,
+          "minimumLifeTime": 500.0,
+          "maximumLifeTime": 1000.0,
+          "startSize": 15.0,
+          "endSize": 15.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 5.0,
+          "minimumAngle": 0.08726644,
+          "maximumAngle": 0.34906575,
+          "particleSpinSpeed": 13.200001,
+          "velocityAligned": true,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "ring": {
+            "center": [0.0, 0.0, 0.0],
+            "up": [0.0, 1.0, 0.0],
+            "innerRadius": 10.0,
+            "outerRadius": 100.0
+          },
+          "influences": [
+            {
+              "class": "BasicGravity",
+              "enabled": true,
+              "gravityForce": [0.0, -10.0, 0.0],
+              "rotateWithScene": true
+            },
+            {
+              "class": "BasicDrag",
+              "enabled": true,
+              "dragCoefficient": 20.0
+            },
+            {
+              "class": "WanderInfluence",
+              "enabled": true,
+              "wanderRadius": 0.03,
+              "wanderDistance": 0.2,
+              "wanderJitter": 0.005
+            }
+          ],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/indian_post/falling_leaves/leaf.png",
+            "assetPath": "effects/indian_post/falling_leaves/leaf.png",
+            "exists": true,
+            "embeddedInJ3o": true
+          }
+        }
+      },
+      {
+        "name": "ground effect",
+        "translation": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0],
+        "type": "emitter",
+        "meshType": "Triangle",
+        "numParticles": 30,
+        "particlesPerSec": 0.0,
+        "lowLife": 0.5,
+        "highLife": 1.0,
+        "startSize": 0.6,
+        "endSize": 5.0,
+        "startColor": [1.0, 1.0, 1.0, 0.09803922],
+        "endColor": [1.0, 1.0, 1.0, 0.0],
+        "gravity": [0.0, 0.0, 0.0],
+        "rotateSpeed": 1.1999999,
+        "randomAngle": true,
+        "facingVelocity": false,
+        "inWorldSpace": true,
+        "imagesX": 1,
+        "imagesY": 1,
+        "initialVelocity": [2.9802322E-7, 2.5, 0.0],
+        "velocityVariation": 0.22222221,
+        "shape": {
+          "kind": "sphere",
+          "center": [0.0, 0.0, 0.0],
+          "radius": 50.0
+        },
+        "material": {
+          "def": "Common/MatDefs/Misc/Particle.j3md",
+          "blend": "Alpha",
+          "texture": "effects/frontier_town/dust/dust.png"
+        },
+        "controls": [
+          {
+            "class": "ParticleEmitterControl"
+          }
+        ],
+        "forkExtras": {
+          "emitType": "ring",
+          "particleType": "triangle",
+          "numParticles": 30,
+          "controller": {
+            "repeatType": "clamp",
+            "controlFlow": true,
+            "releaseVariance": 0.0,
+            "speed": 2.4,
+            "minTime": 0.0,
+            "maxTime": 3.4028235E38,
+            "precision": 0.01,
+            "iterations": 0
+          },
+          "releaseRate": 122,
+          "minimumLifeTime": 500.0,
+          "maximumLifeTime": 1000.0,
+          "startSize": 12.0,
+          "endSize": 100.0,
+          "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+          "initialVelocity": 0.05,
+          "minimumAngle": 0.17453292,
+          "maximumAngle": 0.34906584,
+          "particleSpinSpeed": 1.1999999,
+          "velocityAligned": false,
+          "transformParticles": false,
+          "rotateWithScene": false,
+          "alphaFalloff": 0.0,
+          "particleOrientation": 0.0,
+          "cameraFacing": true,
+          "originOffset": [0.0, 0.0, 0.0],
+          "ring": {
+            "center": [0.0, 0.0, 0.0],
+            "up": [0.0, 1.0, 0.0],
+            "innerRadius": 20.0,
+            "outerRadius": 50.0
+          },
+          "influences": [],
+          "alphaState": {
+            "blendEnabled": true,
+            "srcFunction": "SRC_ALPHA",
+            "dstFunction": "ONE_MINUS_SRC_ALPHA"
+          },
+          "texture": {
+            "location": "rsrc/effects/frontier_town/dust/dust.png",
+            "assetPath": "effects/frontier_town/dust/dust.png",
+            "exists": true,
+            "embeddedInJ3o": false
+          }
+        }
+      }
+    ]
+  }
+}

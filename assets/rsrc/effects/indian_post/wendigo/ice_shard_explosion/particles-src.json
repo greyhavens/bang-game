@@ -1,0 +1,96 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/wendigo/ice_shard_explosion",
+  "effectScale": 0.05,
+  "root": {
+    "name": "explosion",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 66,
+    "particlesPerSec": 0.0,
+    "lowLife": 0.361,
+    "highLife": 0.52,
+    "startSize": 3.8500001,
+    "endSize": 1.6,
+    "startColor": [0.2, 0.8, 1.0, 1.0],
+    "endColor": [0.8, 1.0, 1.0, 0.0],
+    "gravity": [0.0, 0.0, 0.0],
+    "rotateSpeed": 8.6,
+    "randomAngle": true,
+    "facingVelocity": false,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [3.33786E-6, 28.0, 0.0],
+    "velocityVariation": 1.0,
+    "shape": {
+      "kind": "point",
+      "point": [0.0, 0.0, 0.0]
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Additive",
+      "texture": "effects/indian_post/wendigo/snow_storm/snow_cluster.png"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "point",
+      "particleType": "triangle",
+      "numParticles": 66,
+      "controller": {
+        "repeatType": "clamp",
+        "controlFlow": false,
+        "releaseVariance": 0.0,
+        "speed": 0.97999996,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 300,
+      "minimumLifeTime": 361.0,
+      "maximumLifeTime": 520.0,
+      "startSize": 77.0,
+      "endSize": 32.0,
+      "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+      "initialVelocity": 0.56,
+      "minimumAngle": 0.0,
+      "maximumAngle": 1.710422,
+      "particleSpinSpeed": 8.6,
+      "velocityAligned": false,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "influences": [
+        {
+          "class": "BasicGravity",
+          "enabled": true,
+          "gravityForce": [0.0, 0.0, 0.0],
+          "rotateWithScene": true
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE"
+      },
+      "texture": {
+        "location": "rsrc/effects/indian_post/wendigo/snow_storm/snow_cluster.png",
+        "assetPath": "effects/indian_post/wendigo/snow_storm/snow_cluster.png",
+        "exists": true,
+        "embeddedInJ3o": false
+      }
+    }
+  }
+}

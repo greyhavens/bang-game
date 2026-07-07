@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/thunderbird/get_hit",
+  "effectScale": 0.05,
+  "root": {
+    "name": "feathers",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 1,
+    "particlesPerSec": 0.0,
+    "lowLife": 2.0,
+    "highLife": 2.0,
+    "startSize": 4.25,
+    "endSize": 5.1,
+    "startColor": [1.0, 1.0, 1.0, 1.0],
+    "endColor": [1.0, 1.0, 1.0, 0.0],
+    "gravity": [0.0, 0.0, 0.0],
+    "rotateSpeed": 0.0,
+    "randomAngle": false,
+    "facingVelocity": false,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [0.0, 0.0, 0.0],
+    "velocityVariation": 0.4,
+    "shape": {
+      "kind": "point",
+      "point": [0.0, 0.0, 0.0]
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Alpha",
+      "texture": "effects/indian_post/thunderbird/get_hit/tbird_feather_burst.png"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "point",
+      "particleType": "quad",
+      "numParticles": 1,
+      "controller": {
+        "repeatType": "clamp",
+        "controlFlow": false,
+        "releaseVariance": 0.0,
+        "speed": 2.69,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 5,
+      "minimumLifeTime": 2000.0,
+      "maximumLifeTime": 2000.0,
+      "startSize": 85.0,
+      "endSize": 102.0,
+      "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+      "initialVelocity": 0.0,
+      "minimumAngle": 0.0,
+      "maximumAngle": 0.62831855,
+      "particleSpinSpeed": 0.0,
+      "velocityAligned": false,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "influences": [],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE_MINUS_SRC_ALPHA"
+      },
+      "texture": {
+        "location": "rsrc/effects/indian_post/thunderbird/get_hit/tbird_feather_burst.png",
+        "assetPath": "effects/indian_post/thunderbird/get_hit/tbird_feather_burst.png",
+        "exists": true,
+        "embeddedInJ3o": false
+      }
+    }
+  }
+}

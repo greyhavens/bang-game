@@ -1,0 +1,111 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "indian_post/falling_leaves",
+  "effectScale": 0.05,
+  "root": {
+    "name": "leaves",
+    "translation": [0.0, 475.0, 0.0],
+    "rotation": [0.0, 0.0, 0.0, 1.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 6,
+    "particlesPerSec": 2.6845636,
+    "lowLife": 1.97,
+    "highLife": 2.5,
+    "startSize": 0.75,
+    "endSize": 0.75,
+    "startColor": [1.0, 1.0, 1.0, 1.0],
+    "endColor": [1.0, 1.0, 1.0, 0.0],
+    "gravity": [0.0, 0.0, 30.0],
+    "rotateSpeed": 13.200001,
+    "randomAngle": true,
+    "facingVelocity": true,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [2.4437904E-6, 3.9452267, 20.116789],
+    "velocityVariation": 0.36666667,
+    "shape": {
+      "kind": "point",
+      "point": [0.0, 0.0, 0.0]
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Alpha",
+      "texture": "<embedded RGBA, keyless>"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      },
+      {
+        "class": "ParticleInfluenceControl",
+        "type": "WANDER",
+        "wanderRadius": 0.03,
+        "wanderDistance": 0.2,
+        "wanderJitter": 0.005,
+        "emissionDirection": [1.1920929E-7, 0.19245008, 0.9813068]
+      }
+    ],
+    "forkExtras": {
+      "emitType": "point",
+      "particleType": "triangle",
+      "numParticles": 6,
+      "controller": {
+        "repeatType": "wrap",
+        "controlFlow": true,
+        "releaseVariance": 0.47,
+        "speed": 0.38,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 9,
+      "minimumLifeTime": 1970.0,
+      "maximumLifeTime": 2500.0,
+      "startSize": 15.0,
+      "endSize": 15.0,
+      "emissionDirection": [1.1920929E-7, 0.19245008, 0.9813068],
+      "initialVelocity": 0.41,
+      "minimumAngle": 0.36651915,
+      "maximumAngle": 0.57595867,
+      "particleSpinSpeed": 13.200001,
+      "velocityAligned": true,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "influences": [
+        {
+          "class": "BasicGravity",
+          "enabled": true,
+          "gravityForce": [0.0, -0.6, 0.0],
+          "rotateWithScene": true
+        },
+        {
+          "class": "WanderInfluence",
+          "enabled": true,
+          "wanderRadius": 0.03,
+          "wanderDistance": 0.2,
+          "wanderJitter": 0.005
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE_MINUS_SRC_ALPHA"
+      },
+      "texture": {
+        "location": "rsrc/effects/indian_post/falling_leaves/leaf.png",
+        "assetPath": "effects/indian_post/falling_leaves/leaf.png",
+        "exists": true,
+        "embeddedInJ3o": true
+      }
+    }
+  }
+}

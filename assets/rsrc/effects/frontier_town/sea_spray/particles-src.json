@@ -1,0 +1,103 @@
+{
+  "format": 1,
+  "generator": "ExtractParticleSources (Epic 4 Phase 4½a fork-classpath enrichment)",
+  "effect": "frontier_town/sea_spray",
+  "effectScale": 0.05,
+  "root": {
+    "name": "Layer #0",
+    "translation": [0.0, 0.0, 0.0],
+    "rotation": [0.0, 1.0, 0.0, 0.0],
+    "scale": [1.0, 1.0, 1.0],
+    "type": "emitter",
+    "meshType": "Triangle",
+    "numParticles": 4,
+    "particlesPerSec": 2.4615386,
+    "lowLife": 1.29,
+    "highLife": 1.96,
+    "startSize": 2.75,
+    "endSize": 12.75,
+    "startColor": [1.0, 1.0, 1.0, 1.0],
+    "endColor": [0.53333336, 0.6392157, 0.74509805, 0.0],
+    "gravity": [0.0, 0.0, 19.999998],
+    "rotateSpeed": 0.4,
+    "randomAngle": true,
+    "facingVelocity": false,
+    "inWorldSpace": true,
+    "imagesX": 1,
+    "imagesY": 1,
+    "initialVelocity": [2.3841858E-6, 20.0, 0.0],
+    "velocityVariation": 0.21111108,
+    "shape": {
+      "kind": "sphere",
+      "center": [0.0, 0.0, 0.0],
+      "radius": 22.0
+    },
+    "material": {
+      "def": "Common/MatDefs/Misc/Particle.j3md",
+      "blend": "Alpha",
+      "texture": "effects/frontier_town/sea_spray/white_water.png"
+    },
+    "controls": [
+      {
+        "class": "ParticleEmitterControl"
+      }
+    ],
+    "forkExtras": {
+      "emitType": "ring",
+      "particleType": "triangle",
+      "numParticles": 4,
+      "controller": {
+        "repeatType": "wrap",
+        "controlFlow": true,
+        "releaseVariance": 0.6,
+        "speed": 0.8,
+        "minTime": 0.0,
+        "maxTime": 3.4028235E38,
+        "precision": 0.01,
+        "iterations": 0
+      },
+      "releaseRate": 8,
+      "minimumLifeTime": 1290.0,
+      "maximumLifeTime": 1960.0,
+      "startSize": 55.0,
+      "endSize": 255.0,
+      "emissionDirection": [1.1920929E-7, 1.0, 0.0],
+      "initialVelocity": 0.4,
+      "minimumAngle": 0.0,
+      "maximumAngle": 0.33161253,
+      "particleSpinSpeed": 0.4,
+      "velocityAligned": false,
+      "transformParticles": false,
+      "rotateWithScene": false,
+      "alphaFalloff": 0.0,
+      "particleOrientation": 0.0,
+      "cameraFacing": true,
+      "originOffset": [0.0, 0.0, 0.0],
+      "ring": {
+        "center": [0.0, 0.0, 0.0],
+        "up": [0.0, 1.0, 0.0],
+        "innerRadius": 6.0,
+        "outerRadius": 22.0
+      },
+      "influences": [
+        {
+          "class": "BasicGravity",
+          "enabled": true,
+          "gravityForce": [0.0, -0.4, 0.0],
+          "rotateWithScene": true
+        }
+      ],
+      "alphaState": {
+        "blendEnabled": true,
+        "srcFunction": "SRC_ALPHA",
+        "dstFunction": "ONE_MINUS_SRC_ALPHA"
+      },
+      "texture": {
+        "location": "rsrc/effects/frontier_town/sea_spray/white_water.png",
+        "assetPath": "effects/frontier_town/sea_spray/white_water.png",
+        "exists": true,
+        "embeddedInJ3o": false
+      }
+    }
+  }
+}
