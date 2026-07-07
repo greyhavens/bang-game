@@ -51,60 +51,21 @@ jobs:
 
   gltf-validate:
     name: glTF validity (Khronos validator)
-    # The round-trip parity harness proves the Epic-4 glTF writer is a LOSSLESS container (its own
-    # reader mirrors its writer) but cannot catch spec violations a viewer/Blender would reject —
-    # three such (raw texture path, empty-channel animation, unencoded URI) were caught by hand in
-    # #48 review. This job automates that: check the COMMITTED glTF corpus is fresh (matches a
-    # deterministic regeneration from the .mxml, while those still exist), then run the official
-    # Khronos validator over it, failing on any Error-severity issue.
+    # The committed glTF corpus under assets/rsrc IS the canonical model source (Epic 4 Phase 4
+    # cutover). Round-trip parity proved the toolchain lossless, but parity-style checks cannot
+    # catch spec violations a viewer/Blender would reject — several were caught by hand/validator
+    # during the epic (raw texture path, empty-channel animation, unencoded URI, non-unit normals,
+    # UV V-flip). This job runs the official Khronos validator over the committed corpus, failing
+    # on any Error-severity issue. (The .mxml-regeneration freshness gate retired with the .mxml
+    # at the cutover.)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '21'
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v6
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      # Phase 4 staging: the glTF corpus is now COMMITTED in assets/rsrc as the future canonical
-      # source. While the .mxml sources still exist (the cutover merge deletes them), regenerate
-      # from them and byte-compare against the committed tree — the writer is deterministic, so
-      # any diff means a .mxml was edited without re-running mxmlToGltf, or a committed .gltf was
-      # edited by hand. This freshness step retires with the .mxml at the cutover.
-      - name: Freshness — regenerated glTF must match the committed corpus
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          ./gradlew :tools:j3o-converter:mxmlToGltf -PallModels \
-            -Pout="$GITHUB_WORKSPACE/gltf-out" --no-daemon --stacktrace
-          # set compare BOTH ways first: a committed .gltf/.bin with no regenerated counterpart
-          # (orphan left behind by a .mxml delete/rename) is drift just as much as a stale byte
-          # diff is (review finding on #50). mxmlToGltf --all already exits non-zero on any
-          # per-model failure, so a short regeneration cannot sneak past this as "equal sets".
-          lsgltf() { (cd "$1" && find . -type f \( -name '*.gltf' -o -name '*.bin' \) | sed 's|^\./||' | sort); }
-          if ! diff -u <(lsgltf "$GITHUB_WORKSPACE/gltf-out") <(lsgltf "$GITHUB_WORKSPACE/assets/rsrc"); then
-            echo "::error::committed glTF file set differs from the .mxml regeneration (orphaned or missing files above; < regenerated, > committed)"
-            exit 1
-          fi
-          cd "$GITHUB_WORKSPACE/gltf-out"
-          fail=0
-          while IFS= read -r f; do
-            if ! cmp -s "$f" "$GITHUB_WORKSPACE/assets/rsrc/$f"; then
-              echo "::error::stale committed glTF (differs from .mxml regeneration): assets/rsrc/$f"
-              fail=1
-            fi
-          done < <(find . -type f \( -name '*.gltf' -o -name '*.bin' \) | sed 's|^\./||')
-          exit $fail
 
       - name: Install the Khronos glTF-Validator
         run: npm install --prefix deploy/ci/gltf-validate

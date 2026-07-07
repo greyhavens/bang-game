@@ -137,7 +137,10 @@ processResources.dependsOn "genBundles"
 // prop.properties and is newer — CompileModelTask stages .dat elsewhere, so committed heights
 // are frozen); the staged-model.dat completeness check is superseded by GltfToJ3o's own
 // model.properties-vs-model.gltf completeness check (it fails the build on a partial migration).
-def modelSource = (findProperty("modelSource") ?: "mxml").toString()
+// CUTOVER 2026-07-07 (Epic 4 Phase 4): glTF is the canonical committed model source; the .mxml
+// were deleted in the same commit. -PmodelSource=mxml remains as an escape hatch only for
+// checkouts predating the cutover; the legacy path is deleted with the fork in Phase 5.
+def modelSource = (findProperty("modelSource") ?: "gltf").toString()
 if (!["mxml", "gltf"].contains(modelSource)) {
   throw new GradleException("-PmodelSource must be 'mxml' or 'gltf', got '${modelSource}'")
 }

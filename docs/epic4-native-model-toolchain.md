@@ -370,15 +370,18 @@ Keep the fork wrapper as the live oracle **throughout** — retire it only once 
 matches across the full corpus. Never a blind swap.
 
 ### Phase 4 — glTF becomes the source (the Blender cutover)
-**STAGING IN PROGRESS (PR #50, draft, 2026-07-06):** the glTF corpus is committed in-place next
-to the `.mxml` (310/310), the fork-free `GltfToJ3o` bake path sits behind `-PmodelSource=gltf`
-(default still `mxml`), `MxmlGltfParity -PcommittedGltf` verifies the committed tree against the
-oracle (310/310 structural, spot renders pixel-exact), and CI byte-checks committed-glTF
-freshness against a `.mxml` regeneration + runs the Khronos validator over the committed corpus.
-The flip (default→gltf) + `.mxml` delete land on that branch only after the human Blender
-edit-test; runtime-composited textures stay **plain mesh** in the committed glTF (Tim,
-2026-07-06 — no baked composites; the raw name stays in `EXTRA_TEXTURE`, per-model baking
-remains a later authoring option).
+**CUTOVER EXECUTED 2026-07-07 (PR #50):** glTF is the canonical committed model source; the 512
+`.mxml` are deleted (git history preserves them); `assets` builds bake committed
+`model.gltf`→`model.j3o` via `GltfToJ3o` by default (`-PmodelSource=mxml` escape hatch remains
+until Phase 5 deletes the legacy path). Gates passed before the flip: 310/310 committed-corpus
+parity (×4 corpus regens), render spot sets pixel-exact, Khronos validator green, Blender 4.5 +
+5.1 validated (imports, preservation matrix, rebake proofs incl. the rest-TRS fix for
+animated-rigid models), and the human edit-test (Tim, Windows Blender 5.1: unedited export
+rebaked at meanDiff 0.000000; sign edit survived to an engine render). The fork-baked oracle
+`.j3o` tree is banked at `~/Repos/session-artifacts-2026-07-06/oracle-j3o-fork-baked.tar.gz`;
+the parity harnesses are dormant post-cutover (no `.mxml` to regenerate from) and retire with
+the fork in Phase 5. Runtime-composited textures stay **plain mesh** (Tim, 2026-07-06 — no baked
+composites; raw name in `EXTRA_TEXTURE`, per-model baking remains a later authoring option).
 
 With Phase 3 proving the writers correct, run the one-time migration:
 - **Design decision (2026-07-05): the build-side glTF reader is OUR `GltfToModelDef`** (the exact
