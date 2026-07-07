@@ -52,7 +52,10 @@ build is a **two-stage compile-then-bake** (both run by `processResources`/`comp
 2. `ModelToJ3o`/`BakeModels` (in `tools/j3o-converter`) reads each `model.dat` *via the fork's*
    `com.jme.util.export.binary.BinaryImporter`, translates the fork objects to jME3 (`ModelConverter`),
    and writes a jME3-native `model.j3o` with **jME3's** `com.jme3.export.binary.BinaryExporter`.
-   (Particles are the analogue: `particles.jme` → `ParticleConverter` → `ParticleEmitter` `.j3o`.)
+   (Particles were the analogue: `particles.jme` → `ParticleConverter` → `ParticleEmitter` `.j3o` —
+   until the Epic 4 Phase 4½a freeze, 2026-07-07: the final verified bake is now COMMITTED as
+   `rsrc/effects/**/particles.j3o` and staged by copy, the `.jme` are deleted, and no build task
+   runs the fork particle path anymore.)
 
 Staged at `assets/build/staging/rsrc/<same path as source>/model.j3o` (**note the `rsrc/` prefix** —
 it has caused real bugs; anything verifying staged outputs must include it). At **runtime** models

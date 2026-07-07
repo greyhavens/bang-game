@@ -13,7 +13,9 @@ drift vs the 4.5 baseline; an **export-settings API audit** confirmed the settin
 TL;DR export call below) is valid verbatim on 5.1 — every kwarg exists with the same
 name/default/enum items as 4.5, so nothing there changed; the
 **re-export preservation matrix** shows no regressions vs 4.5 (`_MXMLNORMAL`/`_MXMLTEXCOORD` and
-all extras preserved value-exact); and **rebake proofs** against the render oracle: a 5.1 Blender
+all extras preserved value-exact); and **rebake proofs** against the render reference (at
+validation time still the pre-cutover fork-wrapper oracle; see step 4 for what the reference is
+today): a 5.1 Blender
 re-export of the static **saloon** bakes to **meanDiff 0.000000** (re-collapsing to structural
 parity), and — after the rest-extras fix — so does the animated-rigid **caboose** on both
 animation frames (0.0070/0.0108 → 0.000000; locomotive likewise). See "Rest TRS of animated
@@ -59,16 +61,28 @@ nodes" below for what that fix changed.
    )
    ```
 
-4. Rebake + verify against the render oracle:
+4. Rebake + verify **against the current game state**:
 
    ```sh
    ./gradlew :tools:j3o-converter:mxmlGltfParity \
        -Pmodels=<type/path/of/model> -PgltfRoot=<dir containing <type>/model.gltf> -PrenderOnly
    ```
 
-   For an **edited** model the gate is the **render diff** (≤ 0.005 mean vs the golden):
-   `-PrenderOnly` reports structural differences informationally without failing on them,
-   because Blender re-splits vertices on export (e.g. saloon 669→703) so counts can
+   **What the comparison reference is (post-cutover):** the harness diffs your re-export's bake
+   against the staged `model.j3o` in `assets/build/staging/rsrc` — and since the Phase-4 glTF
+   cutover that staging tree is itself baked from the **committed glTF** (refresh it with
+   `./gradlew deploy` before verifying). So the diff answers "how does my edit change the model
+   **vs the game as it currently ships**" — which is exactly the question an edit needs
+   answered. You are NOT comparing against the old fork pipeline: the historical fork-wrapper
+   oracle's job ended with the migration sign-off (its reference renders are banked off-repo,
+   per the Phase-4 cutover record), and the permanent `verifyVisuals` goldens are likewise
+   renders of the current glTF-baked state.
+
+   For an **edited** model the gate is the **render diff** (≤ 0.005 mean vs that current-state
+   render — for a deliberate visual edit, a diff is the point; eyeball the rendered PNGs the
+   harness leaves in `tools/j3o-converter/build/mxml-gltf-parity/png/` instead of chasing the
+   number): `-PrenderOnly` reports structural differences informationally without failing on
+   them, because Blender re-splits vertices on export (e.g. saloon 669→703) so counts can
    legitimately change. (For *unedited* rigid models the bake's vertex dedup usually
    re-collapses the split and structural parity passes anyway — a nice extra signal, not the
    gate.) When satisfied, copy the re-exported `model.gltf`+`model.bin` over the committed

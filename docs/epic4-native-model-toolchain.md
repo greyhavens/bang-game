@@ -410,7 +410,37 @@ incremental follow-up that does NOT gate the Phase-5 fork deletion.** The bridge
 the verified baked `particles.j3o` at cutover (taking `particles.jme` + the fork BinaryImporter
 off the build path), then re-author effect-by-effect against the same render goldens, retiring
 each frozen `.j3o` as its editable source lands. Groundwork (inventory, parameter-space audit,
-editable-source-format proposal, mechanized-migration design) is in progress.
+editable-source-format proposal, mechanized-migration design) is done — the draft plan lives in
+the 2026-07-06 session artifacts (`particles-plan/epic4.5-particles-reauthoring-draft.md`).
+
+**Phase 4½a EXECUTED 2026-07-07 (the freeze bridge + the hard-deadline enrichment dump):**
+- **Enrichment dump committed (60/60):** `ExtractParticleSources` (tools/j3o-converter, package
+  `com.threerings.bang.tools.particles`; `./gradlew :tools:j3o-converter:extractParticleSources`)
+  read every fork-binary `particles.jme` through the same fork BinaryImporter + ParticleConverter
+  path the bake used and wrote a committed sibling
+  **`assets/rsrc/effects/<key>/particles-src.json`** — the self-sufficient re-authoring source:
+  the full converted jME3 parameter set (== the frozen `.j3o`) plus per-emitter `forkExtras`
+  (embedded palette+tRNS texture SOURCE paths for the 22 keyless-texture effects — all verified
+  on disk; full BasicVortex ×18 / SwarmInfluence ×5 params; `minimumAngle` ×20 /
+  `releaseVariance` ×15 / `alphaFalloff` ×2; signed spin; raw shapes incl. ring inner radius;
+  raw AlphaState; raw pre-scale/per-ms values). Two finds beyond the groundwork audit: the fork
+  controller **`speed`** (simulation-clock multiplier, converter-dropped) is non-default on
+  **52 of 60 effects** (0.21–12.0 — the original fork pacing, now preserved), and
+  `boom_town/buggy_logic` references a nonexistent `boom_town/resurrection/spark.png` (2005
+  asset-move artifact; that emitter ships untextured — recorded as `exists: false`).
+- **Freeze executed:** the final verified bake was committed as
+  `assets/rsrc/effects/<key>/particles.j3o` (60/60 byte-identical staged==committed==baked, and
+  an independent rebake from the git-preserved `.jme` reproduced all 60 hash-exact —
+  deterministic); `copyTownBits` stages them like any other resource; the `bakeParticles`
+  finalizer wiring was removed from assets/build.gradle (**the fork's build-time role is now
+  zero**); all 60 `particles.jme` deleted (git history preserves them).
+- **Re-authoring proceeds effect-by-effect post-Phase-5** per the groundwork plan (P2 builder +
+  parity, P3 flip-in-waves, P4 cleanup), consuming `particles-src.json`; each frozen `.j3o`
+  retires as its editable source lands. Note `verifyVisuals`' `ip_fx_fireflies` golden (#66)
+  fails because the isolated `renderToPngRuntime` classpath lacks client/shared's
+  `ParticleInfluenceControl` (ClassNotFound → null control → NPE → blank frame) — this hits ANY
+  control-bearing effect in the render harness (17 effects), so fix that classpath before
+  capturing new particle goldens for the re-authoring waves.
 
 The original options, for the record: glTF carries no particle-system semantics, and fork
 deletion (Phase 5) needs `particles.jme` (fork binary) off the build path too.
@@ -435,7 +465,11 @@ Only after Phase 3 full-corpus sign-off + Phase 4 cutover + a particles decision
   intermediate stage entirely.
 - `tools/j3o-converter`: remove fork deps + retire `ModelConverter`/`BangModelLoader`/
   `ParticleConverter`/`ModelToJ3o` (they are the ORACLE generators — retire only after Phase 3
-  sign-off, and note the oracle renders themselves are kept as goldens).
+  sign-off, and note the oracle renders themselves are kept as goldens). Also delete the
+  fork-coupled particle classes `ParticlesToJ3o` + `ExtractParticleSources` (Phase 4½a: their
+  outputs — the frozen `particles.j3o` and the `particles-src.json` enrichment dumps — are
+  committed; neither class compiles without the fork) and the now-uninvoked `bakeParticles` +
+  `extractParticleSources` task registrations in tools/j3o-converter/build.gradle.
 - Docs: CLAUDE.md module list + build notes, engine-notes.md pipeline section, epics.md Epic 1/4
   status lines.
 - Final verification: full `./gradlew deploy` from clean, corpus parity harness green,
