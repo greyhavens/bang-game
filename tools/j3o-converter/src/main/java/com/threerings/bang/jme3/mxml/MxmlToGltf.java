@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import com.jme3.math.Matrix4f;
 import com.jme3.math.Quaternion;
@@ -218,6 +219,25 @@ public class MxmlToGltf
         }
         _pendingNodeIndex = nameToIndex;
 
+        // the set of node names any animation drives (a TransformDef.name over all adefs/frames).
+        // Blender's glTF importer overwrites an animated node's rest TRS with an anim-pose
+        // evaluation, so for exactly these nodes we ALSO pin the authored rest into the node extras
+        // (Blender preserves extras value-exact) — the reader prefers it, keeping the mesh-merge
+        // pipeline's rest-keyed decisions intact after a round-trip. Scoped to animated nodes only:
+        // pinning a static node would discard Blender transform edits to it (see MxmlGltfConventions
+        // EXTRA_REST_*). Phantom targets (names absent from the model) simply never match a spatial.
+        Set<String> animatedNodeNames = new LinkedHashSet<>();
+        for (AnimationDef adef : adefs) {
+            if (adef == null) {
+                continue;
+            }
+            for (AnimationDef.FrameDef frame : adef.frames) {
+                for (AnimationDef.TransformDef t : frame.transforms) {
+                    animatedNodeNames.add(t.name);
+                }
+            }
+        }
+
         for (int ii = 0; ii < mdef.spatials.size(); ii++) {
             SpatialDef s = mdef.spatials.get(ii);
             Map<String,Object> node = new LinkedHashMap<>();
@@ -229,6 +249,12 @@ public class MxmlToGltf
             extras.put(MxmlGltfConventions.EXTRA_MXML_TYPE, typeOf(s));
             if (s.parent != null) {
                 extras.put(MxmlGltfConventions.EXTRA_PARENT, s.parent);
+            }
+            // pin the authored rest for animated nodes (Blender clobbers it — see above)
+            if (animatedNodeNames.contains(s.name)) {
+                extras.put(MxmlGltfConventions.EXTRA_REST_TRANSLATION, floatArray(s.translation));
+                extras.put(MxmlGltfConventions.EXTRA_REST_ROTATION, floatArray(s.rotation));
+                extras.put(MxmlGltfConventions.EXTRA_REST_SCALE, floatArray(s.scale));
             }
             // mesh metadata rides on the NODE extras (not the glTF mesh) so it survives even for
             // the 5 empty triMeshes that carry no glTF mesh — two of which live in the

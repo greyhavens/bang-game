@@ -197,9 +197,18 @@ public class GltfToModelDef
         // parent comes from the explicit extras string (names are not unique — see the writer),
         // not the glTF hierarchy
         sdef.parent = (String)extras.get(MxmlGltfConventions.EXTRA_PARENT);
-        sdef.translation = readTrs(node.get("translation"), 0f, 0f, 0f);
-        sdef.rotation = readTrs(node.get("rotation"), 0f, 0f, 0f, 1f);
-        sdef.scale = readTrs(node.get("scale"), 1f, 1f, 1f);
+        // an animated node carries its AUTHORED rest TRS in extras (the writer pins it there because
+        // Blender's importer overwrites an animated node's node TRS with an anim-pose evaluation —
+        // see MxmlGltfConventions EXTRA_REST_*). Prefer it over the node TRS when present so the
+        // mesh-merge pipeline sees the true rest after a Blender round-trip; static nodes (no rest
+        // extras) fall through to their node TRS, which stays Blender-editable. Mirrors the
+        // offsetTranslation-style extras handling; readTrs reads the same JSON float-list form.
+        Object restT = extras.get(MxmlGltfConventions.EXTRA_REST_TRANSLATION);
+        Object restR = extras.get(MxmlGltfConventions.EXTRA_REST_ROTATION);
+        Object restS = extras.get(MxmlGltfConventions.EXTRA_REST_SCALE);
+        sdef.translation = readTrs(restT != null ? restT : node.get("translation"), 0f, 0f, 0f);
+        sdef.rotation = readTrs(restR != null ? restR : node.get("rotation"), 0f, 0f, 0f, 1f);
+        sdef.scale = readTrs(restS != null ? restS : node.get("scale"), 1f, 1f, 1f);
 
         if (sdef instanceof TriMeshDef tdef) {
             tdef.solid = Boolean.TRUE.equals(extras.get(MxmlGltfConventions.EXTRA_SOLID));

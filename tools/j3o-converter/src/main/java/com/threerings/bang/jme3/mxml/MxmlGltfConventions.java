@@ -62,6 +62,33 @@ public final class MxmlGltfConventions
      * reads this verbatim to reproduce {@link ModelDef.SpatialDef#parent}. */
     public static final String EXTRA_PARENT = "parent";
 
+    /** Node extras keys: the AUTHORED rest (bind-pose) TRS of an <b>animated</b> node, pinned so it
+     * survives a Blender round-trip. Written by {@link MxmlToGltf} ONLY for nodes some animation
+     * targets, and preferred over the node's own TRS by {@link GltfToModelDef} when present.
+     *
+     * <p><b>Why this exists.</b> Blender's glTF importer does not keep an animated node's authored
+     * rest transform: it overwrites the node/bone TRS with an evaluation of the animation pose (so
+     * the object sits at its frame-0 pose in the viewport). A plain re-export therefore ships the
+     * anim-pose where the rest used to be. That is invisible/harmless for a viewer and for SKINNED
+     * models (the bake recomputes skinning from the armature), but the mesh-merge pipeline
+     * ({@code ModelDef.createTransformTree}/{@code cullDivergentTransforms}/{@code mergeSpatials})
+     * keys its merge and baked-relative-transform decisions on the AUTHORED rest pose of every
+     * spatial — so for an animated <em>rigid</em> model (all five frontier_town train models are of
+     * this class, e.g. the caboose) a rest clobbered to the anim pose changes those decisions and
+     * the rebake drifts off the oracle (caboose was 0.0070/0.0108 vs a 0.005 tolerance; 4.5 was
+     * worse at 0.0446 — a pre-existing round-trip data loss, not a 5.1 regression).
+     *
+     * <p>Blender preserves node {@code extras} value-exact (proven for the {@code offsetTranslation}
+     * float arrays), so parking the authored rest here lets the reader recover it after any
+     * round-trip. <b>Scoped to animated nodes only</b> on purpose: a static node stays
+     * Blender-editable through its node TRS (pinning stale rest extras on it would silently discard a
+     * Blender transform edit), while an animated node's rest is not visible or editable in Blender
+     * anyway (it shows the anim pose) — so pinning it costs nothing and the authoring workflow edits
+     * animations through the toolchain, not by moving an animated node's rest in Blender. */
+    public static final String EXTRA_REST_TRANSLATION = "restTranslation";
+    public static final String EXTRA_REST_ROTATION = "restRotation";
+    public static final String EXTRA_REST_SCALE = "restScale";
+
     public static final String TYPE_NODE = "node";
     public static final String TYPE_TRIMESH = "triMesh";
     public static final String TYPE_SKINMESH = "skinMesh";
