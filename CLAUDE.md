@@ -8,8 +8,8 @@ The source code and media for Bang! Howdy, a western-themed multiplayer tactics 
 by Three Rings Design in 2004. Rendering runs on **stock jMonkeyEngine 3.9 + LWJGL3** (the
 Epic-1 cutover off the vendored 2005-era jME fork + LWJGL2 + libGDX — see `docs/epics.md` and
 `docs/jme3-cutover-plan.md`). The running client/editor ship and load **zero fork code**; the
-old `jme` fork module survives only as a **build-time** model/particle asset compiler (deleting
-it entirely is deferred to Epic 4). Code is BSD-licensed; media (everything under
+old `jme` fork module survives only as the **build-time particle asset compiler** (models cut
+over to committed glTF source in Epic 4 Phase 4; full fork deletion lands with Epic 4 Phase 5). Code is BSD-licensed; media (everything under
 `assets/rsrc/`) is CC Attribution-NonCommercial.
 
 ## Build and run
@@ -117,9 +117,10 @@ Gradle modules (see `settings.gradle`), in dependency order:
   on a jME3 AWT canvas via `org.lwjglx:lwjgl3-awt`)
 - `client/getdown` — Getdown auto-updater installer stub
 - `server` — `BangServer` entry point plus persistence (`server/persist`, Depot ORM, MySQL)
-- `assets` — all media under `rsrc/`, plus heavyweight resource-processing tasks (model
-  compilation → `model.dat`, the `model.dat`/`particles.jme` → `.j3o` bake, avatar component bundles,
-  XML config compilation) run as part of `processResources`
+- `assets` — all media under `rsrc/`, plus heavyweight resource-processing tasks (the committed
+  `model.gltf`→`model.j3o` bake — glTF is the canonical model source since the Epic 4 Phase 4
+  cutover, editable in Blender per `docs/blender-authoring.md` — the fork `particles.jme`→`.j3o`
+  bake, avatar component bundles, XML config compilation) run as part of `processResources`
 - `tools` — build-time ant tasks; `tools/j3o-converter` hosts the fork→jME3 asset bake + the
   offscreen render harnesses (`RenderModelToPng`/`SnapshotDiff`/`verifyVisuals`)
 

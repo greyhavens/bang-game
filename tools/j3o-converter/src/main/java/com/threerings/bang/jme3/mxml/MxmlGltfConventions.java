@@ -62,6 +62,33 @@ public final class MxmlGltfConventions
      * reads this verbatim to reproduce {@link ModelDef.SpatialDef#parent}. */
     public static final String EXTRA_PARENT = "parent";
 
+    /** Node extras keys: the AUTHORED rest (bind-pose) TRS of an <b>animated</b> node, pinned so it
+     * survives a Blender round-trip. Written by {@link MxmlToGltf} ONLY for nodes some animation
+     * targets, and preferred over the node's own TRS by {@link GltfToModelDef} when present.
+     *
+     * <p><b>Why this exists.</b> Blender's glTF importer does not keep an animated node's authored
+     * rest transform: it overwrites the node/bone TRS with an evaluation of the animation pose (so
+     * the object sits at its frame-0 pose in the viewport). A plain re-export therefore ships the
+     * anim-pose where the rest used to be. That is invisible/harmless for a viewer and for SKINNED
+     * models (the bake recomputes skinning from the armature), but the mesh-merge pipeline
+     * ({@code ModelDef.createTransformTree}/{@code cullDivergentTransforms}/{@code mergeSpatials})
+     * keys its merge and baked-relative-transform decisions on the AUTHORED rest pose of every
+     * spatial — so for an animated <em>rigid</em> model (all five frontier_town train models are of
+     * this class, e.g. the caboose) a rest clobbered to the anim pose changes those decisions and
+     * the rebake drifts off the oracle (caboose was 0.0070/0.0108 vs a 0.005 tolerance; 4.5 was
+     * worse at 0.0446 — a pre-existing round-trip data loss, not a 5.1 regression).
+     *
+     * <p>Blender preserves node {@code extras} value-exact (proven for the {@code offsetTranslation}
+     * float arrays), so parking the authored rest here lets the reader recover it after any
+     * round-trip. <b>Scoped to animated nodes only</b> on purpose: a static node stays
+     * Blender-editable through its node TRS (pinning stale rest extras on it would silently discard a
+     * Blender transform edit), while an animated node's rest is not visible or editable in Blender
+     * anyway (it shows the anim pose) — so pinning it costs nothing and the authoring workflow edits
+     * animations through the toolchain, not by moving an animated node's rest in Blender. */
+    public static final String EXTRA_REST_TRANSLATION = "restTranslation";
+    public static final String EXTRA_REST_ROTATION = "restRotation";
+    public static final String EXTRA_REST_SCALE = "restScale";
+
     public static final String TYPE_NODE = "node";
     public static final String TYPE_TRIMESH = "triMesh";
     public static final String TYPE_SKINMESH = "skinMesh";
@@ -81,11 +108,39 @@ public final class MxmlGltfConventions
      * {@code TriMeshDef.tcoords} flag). Distinguishes an absent tcoord from a (0,0) one. */
     public static final String EXTRA_HAS_TCOORDS = "hasTcoords";
 
+    /** Mesh extras key: the mxml mesh's vertex count (0 for the legitimately-empty triMeshes).
+     * Lets the reader detect a mesh whose geometry an authoring tool silently dropped — Blender's
+     * exporter cannot write loose points, so a 1-vertex particle-emitter mesh vanishes on export
+     * — including the tcoord-less ones the older {@link #EXTRA_HAS_TCOORDS}-based diagnostic is
+     * blind to (that check stays as the fallback for files written before this key existed). */
+    public static final String EXTRA_VERTEX_COUNT = "vertexCount";
+
     /** Custom vertex-attribute name carrying the RAW (non-unit) mxml normals: the standard
      * {@code NORMAL} is a normalised copy for viewers, this is what {@code GltfToModelDef} reads
      * back so the bake's normal-keyed vertex dedup is bit-exact. (Blender ignores {@code _}
      * attributes; the validator applies no unit check to them.) */
     public static final String MXML_NORMAL_ATTR = "_MXMLNORMAL";
+
+    /** Custom vertex-attribute name carrying the RAW mxml texture coordinates: the standard
+     * {@code TEXCOORD_0} is a viewer-facing copy flipped to glTF's mandated top-left UV origin
+     * (u unchanged, v&prime;&nbsp;=&nbsp;1&minus;v — mxml UVs are bottom-left, the game's GL
+     * convention), and this is what {@code GltfToModelDef} prefers on read: 1&minus;v is NOT
+     * bit-exact-invertible in float, and {@link ModelDef.Vertex} dedup identity keys on
+     * location+normal+tcoords, so a lossy flip would corrupt the bake's vertex dedup / mesh merge
+     * and break structural parity. When absent (a Blender re-export that lost it, or third-party
+     * glTF) the reader falls back to 1&minus;TEXCOORD_0; when both are present but disagree
+     * beyond float-flip noise, TEXCOORD_0 was edited in a viewer and wins wholesale (so Blender
+     * UV edits take effect on rebake). Same dual-attribute pattern as {@link #MXML_NORMAL_ATTR}.
+     *
+     * <p>Written as <b>VEC3</b> — (u,&nbsp;v,&nbsp;0) — not the natural VEC2, so every custom
+     * attribute in a primitive shares one width/dtype (float32 VEC3, matching
+     * {@link #MXML_NORMAL_ATTR}): Blender 5.1.0&ndash;5.1.2's glTF importer
+     * ({@code io_scene_gltf2 blender/imp/mesh.py}, {@code do_primitives}) collects
+     * custom-attribute data arrays in a list but consumes them by enumerating a set, so
+     * mixed-width custom attributes misalign and the import fails with a numpy concatenation
+     * ValueError. The reader accepts both VEC2 (historical files / Blender re-exports) and VEC3,
+     * using only the first two components. */
+    public static final String MXML_TEXCOORD_ATTR = "_MXMLTEXCOORD";
 
     /** Mesh extras keys: the geometry offset transform, present only when non-identity. */
     public static final String EXTRA_OFFSET_TRANSLATION = "offsetTranslation";

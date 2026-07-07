@@ -61,45 +61,28 @@ jobs:
 
   gltf-validate:
     name: glTF validity (Khronos validator)
-    # The round-trip parity harness proves the Epic-4 glTF writer is a LOSSLESS container (its own
-    # reader mirrors its writer) but cannot catch spec violations a viewer/Blender would reject —
-    # three such (raw texture path, empty-channel animation, unencoded URI) were caught by hand in
-    # #48 review. This job automates that: generate every model's glTF, then run the official
-    # Khronos validator, failing on any Error-severity issue.
+    # The committed glTF corpus under assets/rsrc IS the canonical model source (Epic 4 Phase 4
+    # cutover). Round-trip parity proved the toolchain lossless, but parity-style checks cannot
+    # catch spec violations a viewer/Blender would reject — several were caught by hand/validator
+    # during the epic (raw texture path, empty-channel animation, unencoded URI, non-unit normals,
+    # UV V-flip). This job runs the official Khronos validator over the committed corpus, failing
+    # on any Error-severity issue. (The .mxml-regeneration freshness gate retired with the .mxml
+    # at the cutover.)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '21'
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v6
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Generate glTF for the whole corpus
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew :tools:j3o-converter:mxmlToGltf -PallModels
-          -Pout="$GITHUB_WORKSPACE/gltf-out" --no-daemon --stacktrace
-
-      - name: Co-locate texture PNGs so image URIs resolve
-        run: rsync -a --include='*/' --include='*.png' --exclude='*'
-          assets/rsrc/ "$GITHUB_WORKSPACE/gltf-out/"
-
       - name: Install the Khronos glTF-Validator
         run: npm install --prefix deploy/ci/gltf-validate
 
-      - name: Validate every emitted glTF
-        run: node deploy/ci/gltf-validate/validate.js "$GITHUB_WORKSPACE/gltf-out"
+      - name: Validate the committed glTF corpus
+        # texture PNGs are already co-located in the source tree, so image URIs resolve in place
+        run: node deploy/ci/gltf-validate/validate.js "$GITHUB_WORKSPACE/assets/rsrc"
 
   integration:
     name: Integration smoke (bot vs AI game)

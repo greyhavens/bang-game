@@ -1,0 +1,480 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "bang-mxml-to-gltf (Epic 4 Phase 2b-ii)",
+    "extras": {
+      "units": "raw mxml (3ds Max) units; model.properties scale= is NOT baked (game-side config)",
+      "axis": "source is Z-up right-handed; a synthetic wrapper root applies -90deg about X to reach glTF Y-up. mxml node transforms are stored verbatim under the wrapper."
+    }
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mxml-root",
+      "rotation": [-0.70710677, -0.0, -0.0, 0.70710677],
+      "extras": {
+        "mxmlWrapper": true
+      },
+      "children": [1, 5, 6, 7, 8, 9, 10, 11, 12]
+    },
+    {
+      "name": "Camera01.Target",
+      "translation": [20.2857, -57.4256, 99.9108],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot03",
+      "translation": [-658.67, 440.929, -2183.11],
+      "rotation": [-0.0293747, 0.974477, 0.127775, -0.182223],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "Camera01"
+      }
+    },
+    {
+      "name": "Spot02",
+      "translation": [-1603.97, 630.946, 52.0416],
+      "rotation": [-0.0515549, -0.611734, -0.229105, 0.755404],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "Camera01"
+      }
+    },
+    {
+      "name": "Spot01",
+      "translation": [340.527, 138.913, 1386.32],
+      "rotation": [-0.0444834, 0.0792251, 0.0275675, 0.995482],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node",
+        "parent": "Camera01"
+      }
+    },
+    {
+      "name": "Camera01",
+      "translation": [378.579, -44.9136, 206.975],
+      "rotation": [0.415012, 0.429757, 0.576852, 0.55706],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      },
+      "children": [2, 3, 4]
+    },
+    {
+      "name": "Illustrate! Art Materials",
+      "translation": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot03.Target",
+      "translation": [-0.195511, -2.75257E-6, 62.9716],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot02.Target",
+      "translation": [-0.195511, -2.75257E-6, 62.9716],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "Spot01.Target",
+      "translation": [-0.195511, -2.75257E-6, 62.9716],
+      "rotation": [0.707107, 0.0, 0.0, 0.707107],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "node"
+      }
+    },
+    {
+      "name": "skull",
+      "translation": [0.00480498, 0.60916, 149.118],
+      "rotation": [-0.116706, -0.116706, -0.697409, 0.697409],
+      "scale": [42.368, 42.3679, 42.368],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "vertexCount": 343,
+        "texture": "pistol.png"
+      },
+      "mesh": 0
+    },
+    {
+      "name": "skull_pR",
+      "translation": [-44.4166, -23.7555, 75.2667],
+      "rotation": [0.440039, 0.120659, 0.888751, 0.0439261],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "vertexCount": 90,
+        "texture": "pistol.png"
+      },
+      "mesh": 1
+    },
+    {
+      "name": "skull_pL",
+      "translation": [42.3034, -23.7555, 73.6995],
+      "rotation": [-0.137335, -0.427326, 0.0613243, 0.891499],
+      "scale": [1.0, 1.0, 1.0],
+      "extras": {
+        "mxmlType": "triMesh",
+        "solid": true,
+        "transparent": false,
+        "hasTcoords": true,
+        "vertexCount": 90,
+        "texture": "pistol.png"
+      },
+      "mesh": 2
+    }
+  ],
+  "meshes": [
+    {
+      "name": "skull",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "_MXMLNORMAL": 2,
+            "TEXCOORD_0": 3,
+            "_MXMLTEXCOORD": 4
+          },
+          "indices": 5,
+          "mode": 4,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "skull_pR",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 6,
+            "NORMAL": 7,
+            "_MXMLNORMAL": 8,
+            "TEXCOORD_0": 9,
+            "_MXMLTEXCOORD": 10
+          },
+          "indices": 11,
+          "mode": 4,
+          "material": 1
+        }
+      ]
+    },
+    {
+      "name": "skull_pL",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 12,
+            "NORMAL": 13,
+            "_MXMLNORMAL": 14,
+            "TEXCOORD_0": 15,
+            "_MXMLTEXCOORD": 16
+          },
+          "indices": 17,
+          "mode": 4,
+          "material": 2
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "skull-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "skull_pR-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    },
+    {
+      "name": "skull_pL-mat",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 343,
+      "type": "VEC3",
+      "min": [-1.19238, -1.05176, -1.15638],
+      "max": [1.13563, 1.05371, 1.3379]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 343,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 343,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 343,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 343,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5125,
+      "count": 1758,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC3",
+      "min": [-48.9553, -14.1097, -27.1942],
+      "max": [79.6992, 13.6624, 37.5503]
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 11,
+      "componentType": 5125,
+      "count": 228,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 12,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC3",
+      "min": [-48.9553, -14.1097, -27.1942],
+      "max": [79.6992, 13.6624, 37.5503]
+    },
+    {
+      "bufferView": 13,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 14,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 15,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 16,
+      "componentType": 5126,
+      "count": 90,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 17,
+      "componentType": 5125,
+      "count": 228,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 4116,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4116,
+      "byteLength": 4116,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 8232,
+      "byteLength": 4116,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 12348,
+      "byteLength": 2744,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 15092,
+      "byteLength": 4116,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 19208,
+      "byteLength": 7032,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 26240,
+      "byteLength": 1080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 27320,
+      "byteLength": 1080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 28400,
+      "byteLength": 1080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 29480,
+      "byteLength": 720,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 30200,
+      "byteLength": 1080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 31280,
+      "byteLength": 912,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 32192,
+      "byteLength": 1080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 33272,
+      "byteLength": 1080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 34352,
+      "byteLength": 1080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 35432,
+      "byteLength": 720,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 36152,
+      "byteLength": 1080,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 37232,
+      "byteLength": 912,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 38144,
+      "uri": "model.bin"
+    }
+  ]
+}

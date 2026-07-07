@@ -299,8 +299,10 @@ MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf
   inverse **losslessly** — a numeric rotate-then-unrotate of the irrational-component quaternion was
   rejected precisely because it could drift the train-model merge decisions). Scale is raw mxml
   units; `model.properties scale=` is deliberately NOT baked (recorded in `asset.extras`).
-- **Skinning — the sharp edge:** the corpus goes up to **12 bone influences per vertex** (cavalry;
-  probe added), well past glTF's 4-per-set cap. Pre-capping to 4 in the glTF would shrink
+- **Skinning — the sharp edge:** the corpus exceeds glTF's 4-influences-per-set cap (cavalry
+  et al; probe added) — the committed corpus carries **two JOINTS_n/WEIGHTS_n sets** and no
+  model needs a third (corrected 2026-07-06: an early probe note said "12 influences per
+  vertex", but no committed model has a JOINTS_2, so ≤8 is the corpus ground truth). Pre-capping to 4 in the glTF would shrink
   `MxmlToJ3o`'s armature (fewer weight-referenced bones ⇒ fewer joints) and break structural
   parity, so the writer preserves the **full** influence set across `ceil(max/4)` JOINTS_n/WEIGHTS_n
   sets; `MxmlToJ3o` still does the top-4 cap+renormalise itself at bake time, exactly as the oracle.
@@ -330,6 +332,23 @@ MxmlGltfParity}` in `tools/j3o-converter`, plus the `mxmlGltfParity`/`mxmlToGltf
   violations only a validator/Blender rejects — three such (raw texture path, empty-channel
   animation, unencoded URI) were caught by hand during #48 review, which is exactly why this gate
   exists. It cannot run on the dev box (no Node) — the CI runners have it.
+- **UV V-origin — the fourth spec deviation, caught by the human edit test (2026-07-06) and
+  invisible to every automated gate.** glTF mandates a **top-left** UV origin; mxml UVs are
+  bottom-left (the game's GL convention), and the writer stored them verbatim in `TEXCOORD_0` — so
+  every conformant viewer showed textures V-mirrored (the saloon's SALOON sign upside-down in
+  Blender) while all gates stayed green: round-trip parity uses our own mirror reader, the
+  validator has no semantic UV check, and the render oracle renders through the game pipeline.
+  Fixed with the same dual-attribute pattern as the normals: `TEXCOORD_0` is now the viewer-facing
+  flipped copy (u, 1−v) and the raw mxml UVs ride a custom **`_MXMLTEXCOORD`** the reader prefers —
+  1−v is not bit-exact-invertible in float, and the bake's `Vertex` dedup identity keys on
+  location+normal+tcoords, so a lossy flip would corrupt the dedup and break structural parity.
+  Plus **stale detection**: when both attributes are present but disagree beyond 1e-6 (measured
+  flip-cycle float noise across the corpus: ≤2.4e-7; smallest meaningful edit ≈1e-3), the UVs were
+  edited in a viewer (which rewrites only `TEXCOORD_0`) and the edited values win wholesale — so
+  Blender UV edits actually take effect on rebake instead of being silently ignored. Corpus
+  regenerated in place; 310/310 structural parity, spot renders 0.000000, and the Blender
+  round-trip re-verified (sign right-side-up, `_MXMLTEXCOORD` survives re-export at 1-ULP
+  deviation).
 - **Blender headless smoke — still a Phase-4 gate.** A `blender --background --python` import test
   (mesh/bone/animation counts, and the real "does it edit + re-export" cycle) needs Blender, which
   isn't on the dev box or the CI runners; it lands with the Phase-4 cutover. (`inverseBindMatrices`
@@ -351,6 +370,19 @@ Keep the fork wrapper as the live oracle **throughout** — retire it only once 
 matches across the full corpus. Never a blind swap.
 
 ### Phase 4 — glTF becomes the source (the Blender cutover)
+**CUTOVER EXECUTED 2026-07-07 (PR #50):** glTF is the canonical committed model source; the 512
+`.mxml` are deleted (git history preserves them); `assets` builds bake committed
+`model.gltf`→`model.j3o` via `GltfToJ3o` by default (`-PmodelSource=mxml` escape hatch remains
+until Phase 5 deletes the legacy path). Gates passed before the flip: 310/310 committed-corpus
+parity (×4 corpus regens), render spot sets pixel-exact, Khronos validator green, Blender 4.5 +
+5.1 validated (imports, preservation matrix, rebake proofs incl. the rest-TRS fix for
+animated-rigid models), and the human edit-test (Tim, Windows Blender 5.1: unedited export
+rebaked at meanDiff 0.000000; sign edit survived to an engine render). The fork-baked oracle
+`.j3o` tree is banked at `~/Repos/session-artifacts-2026-07-06/oracle-j3o-fork-baked.tar.gz`;
+the parity harnesses are dormant post-cutover (no `.mxml` to regenerate from) and retire with
+the fork in Phase 5. Runtime-composited textures stay **plain mesh** (Tim, 2026-07-06 — no baked
+composites; raw name in `EXTRA_TEXTURE`, per-model baking remains a later authoring option).
+
 With Phase 3 proving the writers correct, run the one-time migration:
 - **Design decision (2026-07-05): the build-side glTF reader is OUR `GltfToModelDef`** (the exact
   mirror of the 2b-ii writer) feeding the SAME `MxmlToJ3o` — so an *unedited* migrated model
@@ -372,9 +404,16 @@ With Phase 3 proving the writers correct, run the one-time migration:
   and the don'ts (don't rename emitter/attachment nodes — controllers bind to them by name;
   don't resample/retime animations unless you mean it).
 
-### Phase 4½ — particles end-state (decision needed from Tim)
-glTF carries no particle-system semantics, and fork deletion (Phase 5) needs `particles.jme`
-(fork binary) off the build path too. Options:
+### Phase 4½ — particles end-state (DECIDED 2026-07-06: re-author, via a freeze bridge)
+**Tim's decision (2026-07-06): (c) re-author as jME3 emitter definitions — executed as an
+incremental follow-up that does NOT gate the Phase-5 fork deletion.** The bridge is (a): freeze
+the verified baked `particles.j3o` at cutover (taking `particles.jme` + the fork BinaryImporter
+off the build path), then re-author effect-by-effect against the same render goldens, retiring
+each frozen `.j3o` as its editable source lands. Groundwork (inventory, parameter-space audit,
+editable-source-format proposal, mechanized-migration design) is in progress.
+
+The original options, for the record: glTF carries no particle-system semantics, and fork
+deletion (Phase 5) needs `particles.jme` (fork binary) off the build path too.
 - **(a) RECOMMENDED — freeze:** run the existing verified `ParticleConverter` bake one final time
   and commit the resulting 60 particle `.j3o` as source artifacts; delete `particles.jme`. Loses
   "editability" that in practice died with the fork's particle editor years ago; effects are

@@ -128,8 +128,29 @@ tasks.register("genBundles") {
 }
 processResources.dependsOn "genBundles"
 
-// compiles our model XML into binary form
+// Epic 4 Phase 4: -PmodelSource=gltf bakes the COMMITTED rsrc/**/model.gltf straight to staged
+// model.j3o via tools:j3o-converter:bakeModelsGltf (GltfToModelDef -> MxmlToJ3o, the
+// parity-verified round-trip pipeline), replacing BOTH the fork CompileModelTask (.mxml ->
+// model.dat) and bakeModels (.dat -> .j3o); no model.dat is staged at all. Notes on what the
+// legacy doLast does that the glTF path deliberately drops: UpdatePropHeightTask is a no-op in
+// this build (it only rewrites a prop height when a model.dat sits NEXT TO the source
+// prop.properties and is newer — CompileModelTask stages .dat elsewhere, so committed heights
+// are frozen); the staged-model.dat completeness check is superseded by GltfToJ3o's own
+// model.properties-vs-model.gltf completeness check (it fails the build on a partial migration).
+// CUTOVER 2026-07-07 (Epic 4 Phase 4): glTF is the canonical committed model source; the .mxml
+// were deleted in the same commit. -PmodelSource=mxml remains as an escape hatch only for
+// checkouts predating the cutover; the legacy path is deleted with the fork in Phase 5.
+def modelSource = (findProperty("modelSource") ?: "gltf").toString()
+if (!["mxml", "gltf"].contains(modelSource)) {
+  throw new GradleException("-PmodelSource must be 'mxml' or 'gltf', got '${modelSource}'")
+}
+def useGltfModels = (modelSource == "gltf")
+
+// compiles our model XML into binary form (legacy .mxml path; see modelSource above)
 tasks.register("compileModels") {
+  if (useGltfModels) {
+    return  // nothing to compile: bakeModelsGltf (wired as this task's finalizer below) does it all
+  }
   dependsOn configurations.tools
   // jME3 cutover (Phase 1): the fork-format model compiler (CompileModelTask + the fork
   // Model/ModelMesh/SkinMesh classes) moved out of app's fork-free `main` source set into app's
@@ -180,8 +201,11 @@ processResources.dependsOn "compileModels"
 // natively through the jME3 AssetManager (ModelCache). The baker (tools:j3o-converter:bakeModels)
 // reads the fork model.dat via the retained fork reader and writes pure-jME3 .j3o, so no fork
 // dependency reaches the runtime. It must run after compileModels has staged the .dat files.
+// Phase 4: with -PmodelSource=gltf the finalizer is bakeModelsGltf instead, which stages the
+// .j3o directly from the committed model.gltf (compileModels itself is then an empty anchor).
 evaluationDependsOn(":tools:j3o-converter")
-def bakeModelsTask = project(":tools:j3o-converter").tasks.named("bakeModels")
+def bakeModelsTask = project(":tools:j3o-converter").tasks.named(
+    useGltfModels ? "bakeModelsGltf" : "bakeModels")
 bakeModelsTask.configure { mustRunAfter ":assets:compileModels" }
 tasks.named("compileModels").configure { finalizedBy bakeModelsTask }
 processResources.dependsOn bakeModelsTask

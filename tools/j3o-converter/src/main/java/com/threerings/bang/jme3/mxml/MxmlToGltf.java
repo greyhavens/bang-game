@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import com.jme3.math.Matrix4f;
 import com.jme3.math.Quaternion;
@@ -51,9 +52,14 @@ import com.threerings.bang.jme3.mxml.ModelDef.Vertex;
  *       {@link MxmlGltfConventions#MXML_TO_GLTF} (the Z-up&rarr;Y-up convention — see that class).
  *   <li><b>Geometry:</b> POSITION/NORMAL/(TEXCOORD_0) + UNSIGNED_INT indices, straight from the
  *       already-de-duplicated {@link TriMeshDef} vertex/index lists, as float32 in {@code model.bin}
- *       (bit-exact by construction).
- *   <li><b>Skinning:</b> the corpus has up to <b>12</b> bone influences per vertex (cavalry), so
- *       the full influence set is preserved across as many JOINTS_n/WEIGHTS_n sets as needed
+ *       (bit-exact by construction). Normals and texture coordinates are each emitted <b>twice</b>:
+ *       a spec-conformant viewer-facing copy (unit-length {@code NORMAL}; top-left-origin
+ *       {@code TEXCOORD_0}, v&nbsp;flipped) plus the raw mxml values as custom
+ *       {@code _MXMLNORMAL}/{@code _MXMLTEXCOORD} attributes the round-trip reads back — the
+ *       bake's vertex dedup keys on the exact raw values (see {@link MxmlGltfConventions}).
+ *   <li><b>Skinning:</b> the corpus needs up to <b>two</b> JOINTS_n/WEIGHTS_n sets (&le;8
+ *       influences per vertex; an early probe note said 12 — refuted, no committed model carries
+ *       a JOINTS_2), and the full influence set is preserved across as many sets as needed
  *       (ceil(max/4)); pre-capping to glTF's 4-per-set limit would shrink {@link MxmlToJ3o}'s
  *       armature and break structural parity. {@link MxmlToJ3o} does the 4-influence cap itself,
  *       at bake time, exactly as the oracle does.
@@ -66,7 +72,8 @@ import com.threerings.bang.jme3.mxml.ModelDef.Vertex;
  *       (input = frame/frameRate).
  *   <li><b>{@code extras} (the losslessness valve):</b> per the {@link MxmlGltfConventions} keys —
  *       spatial subtype, {@code solid}/{@code transparent}, the raw {@code texture} string, the
- *       {@code hasTcoords} flag, the geometry offset transform (when non-identity), the animation
+ *       {@code hasTcoords} flag, the {@code vertexCount} (dropped-geometry tripwire), the
+ *       geometry offset transform (when non-identity), the animation
  *       {@code frameRate}/frame count, and the raw-units note in {@code asset.extras}. Everything
  *       else the fork bake drops lives in {@code model.properties}, which stays a committed source.
  * </ul>
@@ -213,6 +220,25 @@ public class MxmlToGltf
         }
         _pendingNodeIndex = nameToIndex;
 
+        // the set of node names any animation drives (a TransformDef.name over all adefs/frames).
+        // Blender's glTF importer overwrites an animated node's rest TRS with an anim-pose
+        // evaluation, so for exactly these nodes we ALSO pin the authored rest into the node extras
+        // (Blender preserves extras value-exact) — the reader prefers it, keeping the mesh-merge
+        // pipeline's rest-keyed decisions intact after a round-trip. Scoped to animated nodes only:
+        // pinning a static node would discard Blender transform edits to it (see MxmlGltfConventions
+        // EXTRA_REST_*). Phantom targets (names absent from the model) simply never match a spatial.
+        Set<String> animatedNodeNames = new LinkedHashSet<>();
+        for (AnimationDef adef : adefs) {
+            if (adef == null) {
+                continue;
+            }
+            for (AnimationDef.FrameDef frame : adef.frames) {
+                for (AnimationDef.TransformDef t : frame.transforms) {
+                    animatedNodeNames.add(t.name);
+                }
+            }
+        }
+
         for (int ii = 0; ii < mdef.spatials.size(); ii++) {
             SpatialDef s = mdef.spatials.get(ii);
             Map<String,Object> node = new LinkedHashMap<>();
@@ -224,6 +250,12 @@ public class MxmlToGltf
             extras.put(MxmlGltfConventions.EXTRA_MXML_TYPE, typeOf(s));
             if (s.parent != null) {
                 extras.put(MxmlGltfConventions.EXTRA_PARENT, s.parent);
+            }
+            // pin the authored rest for animated nodes (Blender clobbers it — see above)
+            if (animatedNodeNames.contains(s.name)) {
+                extras.put(MxmlGltfConventions.EXTRA_REST_TRANSLATION, floatArray(s.translation));
+                extras.put(MxmlGltfConventions.EXTRA_REST_ROTATION, floatArray(s.rotation));
+                extras.put(MxmlGltfConventions.EXTRA_REST_SCALE, floatArray(s.scale));
             }
             // mesh metadata rides on the NODE extras (not the glTF mesh) so it survives even for
             // the 5 empty triMeshes that carry no glTF mesh — two of which live in the
@@ -361,8 +393,9 @@ public class MxmlToGltf
                 if (p > max[k]) max[k] = p;
             }
             if (hasTc) {
-                // a vertex with no tcoords in a textured mesh (none exist in the corpus, but be
-                // faithful to setInBuffers, which writes (0,0)); reconstruction keys off hasTcoords
+                // the RAW mxml uv; a vertex with no tcoords in a textured mesh (none exist in the
+                // corpus, but be faithful to setInBuffers, which writes (0,0)); reconstruction
+                // keys off hasTcoords
                 tc[ii * 2] = (v.tcoords != null) ? v.tcoords[0] : 0f;
                 tc[ii * 2 + 1] = (v.tcoords != null) ? v.tcoords[1] : 0f;
             }
@@ -377,10 +410,54 @@ public class MxmlToGltf
         // unknown _-prefixed attributes; the validator applies no unit check to custom attributes.)
         float[] nrmUnit = nrm.clone();
         normalizeVec3(nrmUnit);
+        // glTF mandates a TOP-LEFT texture-coordinate origin, but the mxml UVs are bottom-left
+        // (the game's GL convention): written verbatim they display V-mirrored in every conformant
+        // viewer (the saloon's SALOON sign upside-down in Blender — found by the Phase-4 human
+        // edit test; invisible to parity/validator/render gates, which all use our own reader or
+        // the game pipeline). But v' = 1-v is NOT bit-exact-invertible in float, and the bake's
+        // Vertex identity (hashCode/equals) keys on location+normal+tcoords, so a lossy flip of
+        // the round-tripped values would corrupt the vertex dedup / mesh merge and break
+        // structural parity. So, exactly like NORMAL/_MXMLNORMAL above, emit BOTH: a flipped copy
+        // (u, 1-v) as the spec-correct TEXCOORD_0 that viewers/Blender read, and the raw mxml UVs
+        // as a custom _MXMLTEXCOORD that GltfToModelDef prefers on read (falling back to
+        // 1-TEXCOORD_0 when absent, with stale detection so viewer UV edits are honored — see the
+        // reader).
+        float[] tcFlipped = null;
+        if (hasTc) {
+            tcFlipped = tc.clone();
+            for (int ii = 1; ii < tcFlipped.length; ii += 2) {
+                tcFlipped[ii] = 1f - tcFlipped[ii];
+            }
+        }
+        // _MXMLTEXCOORD is deliberately padded to VEC3 — (u, v, 0) — NOT the natural VEC2, so
+        // that every custom ("_"-prefixed) attribute in the primitive shares one width/dtype
+        // (float32 VEC3, matching _MXMLNORMAL). Blender 5.1.0-5.1.2's glTF importer
+        // (io_scene_gltf2 blender/imp/mesh.py, do_primitives) appends custom-attribute data
+        // arrays to a LIST in discovery order but consumes them by enumerating a SET, so with
+        // custom attributes of MIXED widths (_MXMLNORMAL VEC3 + _MXMLTEXCOORD VEC2) the data
+        // arrays misalign and np.concatenate raises "ValueError: all the input array dimensions
+        // except for the concatenation axis must match exactly", failing the whole import. When
+        // all custom attributes share one width the misindexing is shape-compatible and
+        // self-consistent, so the import works. Do NOT "optimize" this back to VEC2 — the third
+        // component is the workaround. The reader (GltfToModelDef) accepts both widths and only
+        // ever uses (u, v).
+        float[] tcPadded = null;
+        if (hasTc) {
+            int ntc = tc.length / 2;
+            tcPadded = new float[ntc * 3];
+            for (int ii = 0; ii < ntc; ii++) {
+                tcPadded[ii * 3] = tc[ii * 2];
+                tcPadded[ii * 3 + 1] = tc[ii * 2 + 1];
+                // tcPadded[ii * 3 + 2] stays 0f
+            }
+        }
         int posAcc = addFloatAccessor(pos, 3, "VEC3", min, max, ARRAY_BUFFER);
         int nrmAcc = addFloatAccessor(nrmUnit, 3, "VEC3", null, null, ARRAY_BUFFER);
         int rawNrmAcc = addFloatAccessor(nrm, 3, "VEC3", null, null, ARRAY_BUFFER);
-        Integer tcAcc = hasTc ? addFloatAccessor(tc, 2, "VEC2", null, null, ARRAY_BUFFER) : null;
+        Integer tcAcc = hasTc
+            ? addFloatAccessor(tcFlipped, 2, "VEC2", null, null, ARRAY_BUFFER) : null;
+        Integer rawTcAcc = hasTc
+            ? addFloatAccessor(tcPadded, 3, "VEC3", null, null, ARRAY_BUFFER) : null;
 
         // indices
         int nidx = tdef.indices.size();
@@ -394,7 +471,10 @@ public class MxmlToGltf
         attributes.put("POSITION", posAcc);
         attributes.put("NORMAL", nrmAcc);
         attributes.put(MxmlGltfConventions.MXML_NORMAL_ATTR, rawNrmAcc);
-        if (tcAcc != null) attributes.put("TEXCOORD_0", tcAcc);
+        if (tcAcc != null) {
+            attributes.put("TEXCOORD_0", tcAcc);
+            attributes.put(MxmlGltfConventions.MXML_TEXCOORD_ATTR, rawTcAcc);
+        }
 
         // skinning attributes (may span multiple sets)
         if (tdef instanceof SkinMeshDef sdef) {
@@ -423,6 +503,11 @@ public class MxmlToGltf
         extras.put(MxmlGltfConventions.EXTRA_SOLID, tdef.solid);
         extras.put(MxmlGltfConventions.EXTRA_TRANSPARENT, tdef.transparent);
         extras.put(MxmlGltfConventions.EXTRA_HAS_TCOORDS, tdef.tcoords);
+        // the vertex count (0 for the legitimately-empty triMeshes) lets the reader detect a mesh
+        // an authoring tool dropped silently (Blender's exporter cannot write loose points, so a
+        // 1-vertex particle-emitter mesh vanishes) even when the mesh has no tcoords — the
+        // hasTcoords check alone is blind to those
+        extras.put(MxmlGltfConventions.EXTRA_VERTEX_COUNT, tdef.vertices.size());
         if (tdef.texture != null) {
             extras.put(MxmlGltfConventions.EXTRA_TEXTURE, tdef.texture);
         }
@@ -438,7 +523,7 @@ public class MxmlToGltf
         }
     }
 
-    /** Emits JOINTS_n/WEIGHTS_n covering EVERY influence of every vertex (up to 12 in the corpus),
+    /** Emits JOINTS_n/WEIGHTS_n covering EVERY influence of every vertex (&le;8 in the corpus),
      * in ceil(maxInfluences/4) sets. Returns the number of sets. The joint indices are into this
      * mesh's skin.joints, resolved in {@link #buildSkin}. */
     protected int addSkinAttributes (
