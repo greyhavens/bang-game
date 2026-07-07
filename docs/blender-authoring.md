@@ -2,14 +2,22 @@
 
 How to edit the committed models (`assets/rsrc/**/model.gltf` + `model.bin`) in Blender and get
 them back into the game. The corpus imports cleanly on **Blender 4.5 LTS** (Khronos glTF I/O
-v4.5.51; full-corpus headless smoke — all 310 models, zero warnings) and on **Blender 5.1+**:
-the toolchain pads `_MXMLTEXCOORD` to VEC3 — (u, v, 0) — so every custom vertex attribute
-shares one width, because Blender 5.1.0–5.1.2's glTF importer crashes on spec-valid files with
-mixed-width custom attributes (upstream bug in `io_scene_gltf2` `do_primitives`, list-vs-set
-misalignment; the corpus now sidesteps it). The full re-export preservation matrix below was
-validated on 4.5 — its re-validation on 5.1 is a tracked follow-up — plus a rebake proof: a
-Blender re-export of the saloon bakes to **meanDiff 0.000000** against the render oracle (and
-even re-collapses to structural parity — see Verification).
+v4.5.51; full-corpus headless smoke — all 310 models, zero warnings) and is **validated on
+Blender 5.1** (tested 5.1.2, glTF I/O v5.1.20): the toolchain pads `_MXMLTEXCOORD` to VEC3 —
+(u, v, 0) — so every custom vertex attribute shares one width, because Blender 5.1.0–5.1.2's
+glTF importer crashes on spec-valid files with mixed-width custom attributes (upstream bug in
+`io_scene_gltf2` `do_primitives`, list-vs-set misalignment; the corpus now sidesteps it).
+
+The 5.1 validation covers: **all 310 models import** headless with zero warnings and zero count
+drift vs the 4.5 baseline; an **export-settings API audit** confirmed the settings block (the
+TL;DR export call below) is valid verbatim on 5.1 — every kwarg exists with the same
+name/default/enum items as 4.5, so nothing there changed; the
+**re-export preservation matrix** shows no regressions vs 4.5 (`_MXMLNORMAL`/`_MXMLTEXCOORD` and
+all extras preserved value-exact); and **rebake proofs** against the render oracle: a 5.1 Blender
+re-export of the static **saloon** bakes to **meanDiff 0.000000** (re-collapsing to structural
+parity), and — after the rest-extras fix — so does the animated-rigid **caboose** on both
+animation frames (0.0070/0.0108 → 0.000000; locomotive likewise). See "Rest TRS of animated
+nodes" below for what that fix changed.
 
 ## What you can edit today
 
@@ -81,7 +89,8 @@ even re-collapses to structural parity — see Verification).
 
 Survives exactly (verified value-exact on the sensitive set):
 - All `extras` metadata — `mxmlType`, `parent`, `solid`, `transparent`, `texture`,
-  `hasTcoords`, offset transforms, the `mxmlWrapper` root marker. These are the
+  `hasTcoords`, offset transforms, the `restTranslation`/`restRotation`/`restScale` of animated
+  nodes (see "Rest TRS of animated nodes" below), the `mxmlWrapper` root marker. These are the
   **authoritative** render flags and hierarchy data; the glTF material (`doubleSided`,
   `alphaMode`) is just a viewer approximation of them. Don't edit extras unless you mean it.
 - `_MXMLNORMAL` and `_MXMLTEXCOORD` (the raw mxml normals and UVs, bit-exact per vertex) —
@@ -96,9 +105,21 @@ Survives exactly (verified value-exact on the sensitive set):
 Lost or changed no matter the settings — the reader/bake compensates, but know about them:
 - **Animation `frameRate`/`frameCount` extras**: dropped by Blender's importer (reader derives
   them, see above).
-- **Rest TRS of animated nodes**: Blender's importer overwrites a node's rest transform with
-  an animation-pose evaluation. Harmless for the bake (animations carry their own keys), but
-  don't trust "rest pose" in the viewport for animated nodes.
+- **Rest TRS of animated nodes**: Blender's importer overwrites an animated node's rest
+  transform with an animation-pose evaluation (it sits at frame 0 in the viewport). This is
+  harmless for a viewer and for **skinned** models (the bake recomputes skinning from the
+  armature), but it is **not** harmless for animated **rigid** models: the mesh-merge pipeline
+  keys its merge and baked-relative-transform decisions on the AUTHORED rest pose, so a clobbered
+  rest silently broke their rebake (caboose 0.0070/0.0108 against a 0.005 tolerance; the five
+  train models are the at-risk class — a pre-existing round-trip data loss, worse on 4.5 at
+  0.0446). Fixed by pinning the authored rest into the node extras
+  (`restTranslation`/`restRotation`/`restScale`) for every animation-targeted node — Blender
+  preserves extras value-exact, and the reader prefers them over the clobbered node TRS.
+  Consequence for editing: an animated node's rest is now carried in extras and is **not**
+  Blender-editable (moving such a node in the viewport only changes its display TRS, which the
+  reader ignores in favour of the rest extras). **Edit animations through the toolchain, not by
+  posing animated nodes in Blender.** Static nodes are unaffected — they carry no rest extras and
+  stay fully Blender-editable through their node TRS.
 - **Duplicate node names**: Blender renames to `name.001`. Controllers bind to emitter and
   attachment nodes **by name** — don't rename those nodes, and don't introduce name
   collisions that force Blender to.
