@@ -3,11 +3,12 @@
 The modernization is organized into **Epics**, each a self-contained campaign with its own ordered
 phases and acceptance bar.
 
-## Epic 1 — jME3 / LWJGL3 engine upgrade  *(in progress)*
+## Epic 1 — jME3 / LWJGL3 engine upgrade  *(complete)*
 Move the running game off the vendored 2005-era jMonkeyEngine fork + LWJGL2 + libGDX onto stock
 **jMonkeyEngine 3.9 + LWJGL3**. Plan + phase status: [`jme3-cutover-plan.md`](jme3-cutover-plan.md)
 (Phases 1–8). Predecessor groundwork (migration map, model loader, board converter, BUI seam) is
-already merged to master.
+already merged to master. Epic 1 parked the fork as a walled-off build-time compiler ("Option A");
+Epic 4 Phase 5 (2026-07-07) finished the job by deleting the fork module outright.
 
 ## Epic 2 — Three Rings code consolidation  *(planned)*
 Bring the Three Rings / samskivert dependency stack under our own control — fork every upstream lib
@@ -28,22 +29,19 @@ documented deploy. Plan + phases: [`epic3-production-hardening.md`](epic3-produc
 Additive to Epics 1 & 2 and mostly independent: CI (Phase 1) can land any time; the
 visual-regression gates build on the Epic-1 harnesses; CVE patching consumes Epic-2 ownership.
 
-## Epic 4 — Native model toolchain + Blender authoring (fork eradication)  *(planned)*
-Replace the build-time jME-fork asset compiler with a jME3-native one so the vendored `jme` fork
-module can be deleted entirely — **and make the model corpus editable in Blender** (decided
-2026-07-05: the Blender content pipeline is folded into this epic rather than standing alone, and
-the legacy 310 models must become editable, not just replaceable). Epic 1 got the fork off the
-**runtime** (the game ships/loads zero fork code), but the fork remains the **build-time**
-model/particle compiler (`.mxml`/`model.properties` → `model.dat` via the fork's
-`CompileModelTask`, then `model.dat` → `.j3o` via our `ModelConverter` which calls the fork's
-`BinaryImporter`). This epic writes a native `.mxml` reader feeding **two** writers — jME3 `.j3o`
-for the game and **glTF 2.0** for Blender — verifies a one-time `.mxml`→glTF migration against the
-current bake as oracle, then makes glTF the canonical committed source and deletes the fork.
-Plan + phases: [`epic4-native-model-toolchain.md`](epic4-native-model-toolchain.md).
-
-Strictly after Epic 1 (which keeps the fork as a walled-off build-time compiler — "Option A"). Its
-verification leans on the Epic-1 render harness (`RenderModelToPng` + `SnapshotDiff`): the
-current fork-wrapper `.j3o` are a verified-correct oracle to diff a native importer against.
+## Epic 4 — Native model toolchain + Blender authoring (fork eradication)  *(complete 2026-07-07)*
+**The vendored `jme` fork module is DELETED** (Phase 5, 2026-07-07). The epic replaced the
+build-time jME-fork asset compiler with a jME3-native one — **and made the model corpus editable
+in Blender** (decided 2026-07-05: the Blender content pipeline was folded into this epic, and the
+legacy 310 models had to become editable, not just replaceable). Epic 1 had gotten the fork off
+the **runtime**; this epic wrote a native `.mxml` reader feeding two writers — jME3 `.j3o` for
+the game and **glTF 2.0** for Blender — verified the one-time `.mxml`→glTF migration against the
+fork bake as oracle (310/310 parity + pixel-exact render spots + a human Blender edit test), made
+glTF the canonical committed source (Phase 4 cutover), froze the 60 particle effects as committed
+`particles.j3o` with `particles-src.json` re-authoring dumps (Phase 4½a), then deleted the fork
+(Phase 5). Plan + executed record: [`epic4-native-model-toolchain.md`](epic4-native-model-toolchain.md).
+Still open as an incremental follow-up: re-authoring the frozen particle effects as editable jME3
+emitter sources, effect by effect (the Phase-4½ plan; does not involve fork code).
 
 ## Epic 5 — Mobile platforms (Android port; iOS feasibility)  *(speculative — not planned)*
 Take the game to mobile. The desktop trio (Linux/Windows/macOS) is one easy tier only because it

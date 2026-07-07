@@ -4,7 +4,6 @@
 package com.threerings.bang.jme3.mxml;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
@@ -32,7 +31,6 @@ import com.jme3.anim.util.HasLocalTransform;
 import com.jme3.asset.DesktopAssetManager;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
-import com.jme3.export.binary.BinaryExporter;
 import com.jme3.material.plugins.J3MLoader;
 import com.jme3.math.Matrix4f;
 import com.jme3.math.Quaternion;
@@ -108,9 +106,11 @@ import com.threerings.bang.jme3.mxml.ModelDef.WeightGroupDef;
  *       stored (jME3 recomputes bounds from vertex data).</li>
  * </ul>
  *
- * <p>Usage: {@code MxmlToJ3o <src rsrc root> <model type path> <out rsrc root>} bakes
- * {@code <out>/<type>/model.j3o} from {@code <src>/<type>/model.properties}; textures resolve
- * against the src root. {@link MxmlParity} drives this in bulk and diffs against the oracle.
+ * <p>Since the Epic 4 Phase 4 glTF cutover this class is the shared bake ENGINE only: the
+ * {@code .mxml} file entry points (and the {@code ModelParser}/{@code AnimationParser} XML
+ * parsers, plus the {@code MxmlParity}/{@code MxmlGltfParity} oracle harnesses that drove them)
+ * retired with the fork in Phase 5 — {@link GltfToJ3o} feeds it {@link ModelDef}/
+ * {@link AnimationDef} trees produced by {@link GltfToModelDef} from the committed glTF.
  */
 public class MxmlToJ3o
 {
@@ -146,43 +146,6 @@ public class MxmlToJ3o
         public boolean clampedInfluences;
     }
 
-    public static void main (String[] args)
-        throws Exception
-    {
-        if (args.length != 3) {
-            System.err.println("Usage: MxmlToJ3o <src rsrc root> <model type path> <out rsrc root>");
-            System.exit(1);
-        }
-        File srcRoot = new File(args[0]).getAbsoluteFile();
-        String typePath = args[1];
-        File outRoot = new File(args[2]).getAbsoluteFile();
-        File modelDir = new File(srcRoot, typePath);
-        if (!new File(modelDir, "model.properties").isFile()) {
-            System.err.println("No model.properties in " + modelDir);
-            System.exit(1);
-        }
-
-        DesktopAssetManager am = createAssetManager(srcRoot);
-        MxmlToJ3o baker = new MxmlToJ3o(new ModelTextureResolver(am), typePath);
-        Result result = baker.bake(modelDir);
-
-        File outDir = new File(outRoot, typePath);
-        if (!outDir.isDirectory() && !outDir.mkdirs()) {
-            System.err.println("Unable to create " + outDir);
-            System.exit(1);
-        }
-        File j3o = new File(outDir, "model.j3o");
-        BinaryExporter.getInstance().save(result.root, j3o);
-        System.out.println("Wrote " + j3o + " (" + j3o.length() + " bytes): " +
-            result.geometries + " geometries, " + result.skinnedMeshes + " skinned, " +
-            result.armatureJoints + " joints, " + result.animations.size() + " animations (" +
-            result.animTracks + " tracks)" +
-            (result.droppedAnimations.isEmpty() ? "" :
-                ", dropped anims: " + result.droppedAnimations) +
-            (result.droppedControllers.isEmpty() ? "" :
-                ", uncompiled controllers: " + result.droppedControllers));
-    }
-
     /** A headless asset manager suitable for baking (materials + textures, no GL). */
     public static DesktopAssetManager createAssetManager (File... roots)
     {
@@ -208,31 +171,8 @@ public class MxmlToJ3o
         _typePath = typePath;
     }
 
-    /**
-     * Parses and bakes the model in the given directory. A baker instance is single-use: create
-     * a fresh one per model.
-     */
-    public Result bake (File modelDir)
-        throws Exception
-    {
-        Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream(new File(modelDir, "model.properties"))) {
-            props.load(in);
-        }
-        ModelDef mdef = new ModelParser().parseModel(
-            new File(modelDir, "model.mxml").getPath());
-
-        String[] animNames = StringUtil.parseStringArray(props.getProperty("animations", ""));
-        AnimationParser aparser = new AnimationParser();
-        AnimationDef[] adefs = new AnimationDef[animNames.length];
-        for (int ii = 0; ii < animNames.length; ii++) {
-            adefs[ii] = aparser.parseAnimation(
-                new File(modelDir, animNames[ii] + ".mxml").getPath());
-        }
-        return bake(props, mdef, animNames, adefs);
-    }
-
-    /** Bakes an already-parsed model (see {@link #bake(File)}). */
+    /** Bakes an already-parsed model. A baker instance is single-use: create a fresh one per
+     * model. */
     public Result bake (Properties props, ModelDef mdef, String[] animNames, AnimationDef[] adefs)
     {
         Result result = new Result();

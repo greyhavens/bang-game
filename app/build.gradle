@@ -1,26 +1,10 @@
-// jME3 cutover (Phase 1): app's runtime framework (`com.threerings.jme.*`, the `main` source
-// set) now sits on jME3 only; the vendored fork (`jme` module) is off main's compile path.
+// jME3 cutover (Phase 1): app's runtime framework (`com.threerings.jme.*`) sits on jME3 only.
 // jme3-core is `api` because app's public API threads jME3 type tokens (Spatial, Node, Camera,
-// AnimComposer) through its signatures, which client/shared consumes in Phase 2.
+// AnimComposer) through its signatures, which client/shared consumes.
 //
-// The fork-coupled BUILD-TIME model compiler (XML/model.properties -> fork-binary model.dat)
-// lives in the separate `modeltool` source set below, which DOES depend on the fork `jme`
-// module. It is NOT on main's compile/runtime classpath; it is invoked only by the assets
-// `compileModels` ant task. Its fork-format model.dat output is baked to jME3 .j3o by the
-// offline tools/j3o-converter (see docs/jme3-cutover-plan.md, the Phase 1 app decision).
-// It was relocated to package `com.threerings.jme.tools.model` so it does not clash with
-// main's new fork-free `com.threerings.jme.model` facade.
-
-sourceSets {
-  modeltool {
-    java {
-      srcDir "src/modeltool/java"
-    }
-    // the build-time compiler uses main's engine-neutral helpers (JmeUtil, SpatialVisitor,
-    // TimeFunction); compile it against main's output + classpath.
-    compileClasspath += sourceSets.main.output
-  }
-}
+// (Epic 4 Phase 5, 2026-07-07: the fork-coupled `modeltool` source set — the old
+// XML/model.properties -> fork-binary model.dat compiler — was deleted with the fork `jme`
+// module; models bake from committed glTF via tools/j3o-converter's GltfToJ3o instead.)
 
 dependencies {
   api project(":bui")
@@ -34,14 +18,6 @@ dependencies {
   // terrain heightmap generators (editor) + post-process effects (fog, etc.)
   api "org.jmonkeyengine:jme3-terrain:${jme3Version}"
   api "org.jmonkeyengine:jme3-effects:${jme3Version}"
-
-  // build-time model compiler source set: the fork engine + nenya-tools + ant + digester.
-  modeltoolImplementation project(":jme")
-  modeltoolImplementation "com.threerings:narya:${naryaVersion}"
-  modeltoolImplementation "com.threerings:nenya:${nenyaVersion}"
-  modeltoolImplementation "com.threerings:nenya-tools:${nenyaVersion}"
-  modeltoolImplementation "org.apache.ant:ant:1.7.1"
-  modeltoolImplementation "commons-digester:commons-digester:2.1"
 
   // jME3 cutover (Phase 3): GL11.glGetString for the perf-report GL driver identity (read on the
   // render thread by JmeApp.getGLRendererString). compileOnly — the natives reach runtime via the

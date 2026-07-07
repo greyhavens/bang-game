@@ -38,7 +38,7 @@
     private void readObject (java.io.ObjectInputStream);
 }
 
--keep class * implements com.jme.util.export.Savable
+-keep class * implements com.jme3.export.Savable
 
 -keep public class * extends com.threerings.presents.dobj.DObject {
     !static !transient <fields>;

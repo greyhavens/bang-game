@@ -31,12 +31,12 @@ import com.threerings.bang.jme3.mxml.ModelDef.Vertex;
  * supports <b>two producer profiles</b>:
  *
  * <ol>
- *   <li><b>Our own writer {@link MxmlToGltf} — bit-exact round-trip</b> (the Phase 2b-ii
+ *   <li><b>Our own writer {@code MxmlToGltf} — bit-exact round-trip</b> (the Phase 2b-ii
  *       contract, and the Phase-4 build path for unedited models). The reconstruction is
  *       bit-identical (for every field {@link MxmlToJ3o#bake} reads) to what
- *       {@link ModelParser}/{@link AnimationParser} produced, so the bake yields the same native
+ *       {@code ModelParser}/{@code AnimationParser} produced, so the bake yields the same native
  *       {@code .j3o} as the direct {@code .mxml} path — verified across the full corpus by
- *       {@link MxmlGltfParity}.</li>
+ *       {@code MxmlGltfParity}.</li>
  *   <li><b>Blender re-exports (Khronos glTF Blender I/O, Blender 4.5) — render-parity rebake</b>
  *       (the Phase-4 edit loop: human edits a model in Blender and re-exports). Blender preserves
  *       our node {@code extras} and the {@code _MXMLNORMAL}/{@code _MXMLTEXCOORD} attributes
@@ -46,7 +46,7 @@ import com.threerings.bang.jme3.mxml.ModelDef.Vertex;
  *       interleaving via {@code bufferView.byteStride}, UNSIGNED_BYTE/SHORT indices and joints)
  *       and drops our animation {@code extras} (the frame rate is then derived from the sampler
  *       input key spacing). Such files cannot reproduce the oracle {@code .j3o} structurally; the
- *       gate is {@link MxmlGltfParity} {@code --renderOnly} (render meanDiff &le; 0.005).
+ *       gate is {@code MxmlGltfParity} {@code --renderOnly} (render meanDiff &le; 0.005).
  *       <b>Not yet supported:</b> Blender's skinned-mesh restructure (the mesh moves to an
  *       extras-less {@code '&lt;name&gt;.001'} sibling of the extras-bearing empty, with POSITIONs
  *       rebased into armature space) and meshes Blender's importer drops entirely (1-vertex
@@ -630,7 +630,7 @@ public class GltfToModelDef
 
     /**
      * The resolved byte layout of one accessor: where element 0 lives in {@code model.bin} and
-     * how far apart consecutive elements sit. Generalised beyond {@link MxmlToGltf}'s own output
+     * how far apart consecutive elements sit. Generalised beyond {@code MxmlToGltf}'s own output
      * (tightly-packed, one accessor per bufferView, no offsets) to the layouts other producers —
      * Blender's exporter in particular — emit: an accessor-level {@code byteOffset}, a
      * bufferView-level {@code byteOffset}, and interleaved vertex attributes via

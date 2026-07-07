@@ -3,23 +3,16 @@
 // scene through it. See docs/jme3-bui-host.md.
 //
 // Deliberately isolated, like tools:j3o-converter: this module owns its own jME3 + LWJGL3
-// runtime and its own run task. The jME3/LWJGL3 natives MUST NOT reach the shipped game's
-// runtime classpath (the game runs on LWJGL2; mixing natives crashes). Nothing in the
-// shipped build depends on this module.
-//
-// Classpath note: this module reads `bui` (and so transitively the fork `jme` jar). At
-// COMPILE time both the fork jme and jme3-core are present -- BUI's public API still
-// threads fork type tokens (Renderer/ColorRGBA/com.jme.image.Image) through its signatures,
-// and BImage extends the fork's GL-free Quad. At RUNTIME only jME3's LWJGL3 display is ever
-// initialized; the fork's LWJGL2 display is never touched, so the two native sets never meet.
+// runtime and its own run task. Nothing in the shipped build depends on this module.
+// (Epic-1-era note about the fork `jme` jar riding along via bui is obsolete: bui sits on
+// jME3 and the fork module was deleted in Epic 4 Phase 5, 2026-07-07.)
 
 plugins {
   id "application"
 }
 
 dependencies {
-  // BUI itself (transitively the fork `jme` jar -- needed because BUI's public API still
-  // uses fork type tokens, and BImage extends the fork's GL-free Quad).
+  // BUI itself (jME3-based; Jme3RenderBackend and friends)
   implementation project(":bui")
 
   // The jME3 runtime that backs Jme3RenderBackend. jme3-lwjgl3 supplies the display/context.
