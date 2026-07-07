@@ -179,12 +179,13 @@ tasks.register("verifyDependencyPins") {
   }
 }
 
-// Every module's `deploy` passes the pin gate first — local deploys resolve mavenLocal-first, which
-// is exactly the surface the 2026-07-06 incident poisoned (CI was unaffected; it resolves from
-// GitHub Packages).
+// Every module's `deploy` AND `check` passes the pin gate first — local deploys resolve
+// mavenLocal-first, which is exactly the surface the 2026-07-06 incident poisoned (CI was
+// unaffected; it resolves from GitHub Packages). `check` too (#55 review) so a bare
+// `./gradlew build`/`test` surfaces drift the day it happens instead of silently force-masking it.
 def pinGate = tasks.named("verifyDependencyPins")
 subprojects {
-  tasks.configureEach { if (name == "deploy") dependsOn pinGate }
+  tasks.configureEach { if (name == "deploy" || name == "check") dependsOn pinGate }
 }
 
 // OWASP dependency-check scan config (root-level; dependencyCheckAggregate spans all modules).

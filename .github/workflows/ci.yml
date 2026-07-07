@@ -50,8 +50,9 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # verifyDependencyPins gates the fork-stack version pins (2026-07-06 vilya/narya
-        # mavenLocal-poisoning incident) — see the root build.gradle
-        run: ./gradlew build verifyDependencyPins --no-daemon --stacktrace
+        # mavenLocal-poisoning incident) — see the root build.gradle. It runs FIRST (~1s,
+        # graph-only) so a poisoned dependency fails fast instead of after the full build.
+        run: ./gradlew verifyDependencyPins build --no-daemon --stacktrace
 
       - name: Upload test reports
         if: always()
