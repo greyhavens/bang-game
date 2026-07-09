@@ -73,4 +73,20 @@ public class BuckleInfo extends BaseAvatarInfo
     {
         return (other instanceof BuckleInfo && super.equals(other));
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BaseAvatarInfo.class, "print", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BaseAvatarInfo.class, "image", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BaseAvatarInfo.class, "print", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BaseAvatarInfo.class, "image", this, out);
+    }
 }

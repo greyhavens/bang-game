@@ -76,4 +76,22 @@ public class GangInvite extends Notification
     {
         return new String[] { "m.invite_accept", "m.invite_reject" };
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangInvite.class, "inviter", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangInvite.class, "gang", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangInvite.class, "message", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangInvite.class, "inviter", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangInvite.class, "gang", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangInvite.class, "message", this, out);
+    }
 }

@@ -44,6 +44,26 @@ public class LightningEffect extends Effect
         public ChainDamage ()
         {
         }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.LightningEffect.ChainDamage.class, "pieceId", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.LightningEffect.ChainDamage.class, "newDamage", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.LightningEffect.ChainDamage.class, "step", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.LightningEffect.ChainDamage.class, "deathEffect", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.LightningEffect.ChainDamage.class, "pieceId", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.LightningEffect.ChainDamage.class, "newDamage", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.LightningEffect.ChainDamage.class, "step", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.LightningEffect.ChainDamage.class, "deathEffect", this, out);
+        }
     }
 
     /** The pieces being damaged. */
@@ -210,4 +230,20 @@ public class LightningEffect extends Effect
     /** Damage values for the different units. */
     protected static final int BASE_DAMAGE = 40;
     protected static final float DAMAGE_SCALE = 0.7f;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.LightningEffect.class, "chain", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.LightningEffect.class, "pieceId", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.LightningEffect.class, "chain", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.LightningEffect.class, "pieceId", this, out);
+    }
 }

@@ -59,4 +59,24 @@ public class TourneyListingEntry
     {
         return desc;
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.tourney.data.TourneyListingEntry.class, "desc", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.tourney.data.TourneyListingEntry.class, "startsIn", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.tourney.data.TourneyListingEntry.class, "oid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.tourney.data.TourneyListingEntry.class, "key", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.tourney.data.TourneyListingEntry.class, "desc", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.tourney.data.TourneyListingEntry.class, "startsIn", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.tourney.data.TourneyListingEntry.class, "oid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.tourney.data.TourneyListingEntry.class, "key", this, out);
+    }
 }

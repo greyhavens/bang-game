@@ -55,6 +55,24 @@ public class BountyConfig extends SimpleStreamableObject
         public boolean hasExtraReward () {
             return (articles != null) || (badge != null);
         }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Reward.class, "scrip", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Reward.class, "articles", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Reward.class, "badge", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Reward.class, "scrip", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Reward.class, "articles", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Reward.class, "badge", this, out);
+        }
     }
 
     /** Describes a particular opponent in a bounty game. */
@@ -71,6 +89,26 @@ public class BountyConfig extends SimpleStreamableObject
 
         /** The buckle for this opponent. */
         public BuckleInfo buckle = new BuckleInfo();
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Opponent.class, "name", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Opponent.class, "avatar", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Opponent.class, "gang", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Opponent.class, "buckle", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Opponent.class, "name", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Opponent.class, "avatar", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Opponent.class, "gang", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Opponent.class, "buckle", this, out);
+        }
     }
 
     /** Defines a speaker and text for a quote. */
@@ -85,6 +123,22 @@ public class BountyConfig extends SimpleStreamableObject
         /** Returns true if no required configuration is missing. */
         public boolean isValid () {
             return text != null; // blank is OK, it means we won't use it
+        }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Quote.class, "speaker", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.Quote.class, "text", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Quote.class, "speaker", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.Quote.class, "text", this, out);
         }
     }
 
@@ -128,6 +182,30 @@ public class BountyConfig extends SimpleStreamableObject
                 log.warning("Bounty game misconfigured", "bounty", which, "game", ident,
                             "missing", missing);
             }
+        }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "ident", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "name", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "opponents", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "preGameQuote", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "failedQuote", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "completedQuote", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "ident", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "name", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "opponents", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "preGameQuote", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "failedQuote", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.GameInfo.class, "completedQuote", this, out);
         }
     }
 
@@ -524,4 +602,44 @@ public class BountyConfig extends SimpleStreamableObject
 
     /** A cache of bounty ids by type + town. */
     protected static final HashMap<String,String[]> _idCache = new HashMap<String,String[]>();
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "townId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "type", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "ident", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "order", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "title", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "description", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "difficulty", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "inOrder", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "outlaw", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "gang", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "buckle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "showBars", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "games", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.BountyConfig.class, "reward", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "townId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "type", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "ident", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "order", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "title", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "description", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "difficulty", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "inOrder", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "outlaw", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "gang", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "buckle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "showBars", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "games", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.BountyConfig.class, "reward", this, out);
+    }
 }

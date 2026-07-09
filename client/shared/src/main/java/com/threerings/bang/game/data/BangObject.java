@@ -113,6 +113,30 @@ public class BangObject extends GameObject
 
         /** The readyness state of the player. */
         public int readyState;
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "playerId", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "avatar", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "victory", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "buckle", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "gang", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "readyState", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "playerId", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "avatar", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "victory", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "buckle", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "gang", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.PlayerInfo.class, "readyState", this, out);
+        }
     }
 
     // AUTO-GENERATED: FIELDS START
@@ -1593,4 +1617,72 @@ public class BangObject extends GameObject
     /** Maps encoded tile coordinates to teleporters on the board. */
     protected transient HashIntMap<Teleporter> _teleporters;
     protected transient byte[] _teleporterBoardHash;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "roundId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "playerInfo", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "teams", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "stats", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "critStats", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "service", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "townId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "scenario", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "marquee", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "bounty", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "bountyGameId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "boardHash", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "boardUpdates", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "startPositions", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "bigShots", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "tick", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "lastTick", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "duration", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "pieces", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "debugPieces", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "cards", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "effect", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "actionId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "points", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "perRoundPoints", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "perRoundRanks", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangObject.class, "awards", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "roundId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "playerInfo", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "teams", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "stats", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "critStats", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "service", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "townId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "scenario", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "marquee", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "bounty", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "bountyGameId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "boardHash", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "boardUpdates", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "startPositions", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "bigShots", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "tick", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "lastTick", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "duration", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "pieces", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "debugPieces", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "cards", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "effect", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "actionId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "points", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "perRoundPoints", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "perRoundRanks", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangObject.class, "awards", this, out);
+    }
 }

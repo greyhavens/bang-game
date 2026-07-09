@@ -111,4 +111,18 @@ public class HighNoonEffect extends Effect
 
     /** The duration of the effect in ticks. */
     protected static final int EFFECT_DURATION = 8;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.HighNoonEffect.class, "pieceIds", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.HighNoonEffect.class, "pieceIds", this, out);
+    }
 }

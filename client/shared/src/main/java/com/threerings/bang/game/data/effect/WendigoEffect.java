@@ -57,6 +57,24 @@ public class WendigoEffect extends Effect
     {
         public int nx, ny;
         public int pieceId;
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.Movement.class, "nx", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.Movement.class, "ny", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.Movement.class, "pieceId", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.Movement.class, "nx", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.Movement.class, "ny", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.Movement.class, "pieceId", this, out);
+        }
     }
 
     public static class Collision extends SimpleStreamableObject
@@ -94,6 +112,28 @@ public class WendigoEffect extends Effect
         public boolean isKill ()
         {
             return !(safe || talisman);
+        }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "step", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "targetId", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "safe", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "talisman", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "deathEffect", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "step", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "targetId", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "safe", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "talisman", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.Collision.class, "deathEffect", this, out);
         }
     }
 
@@ -257,5 +297,21 @@ public class WendigoEffect extends Effect
             }
         }
         collisions = colList.toArray(new Collision[colList.size()]);
+    }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.class, "moves", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.WendigoEffect.class, "collisions", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.class, "moves", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.WendigoEffect.class, "collisions", this, out);
     }
 }

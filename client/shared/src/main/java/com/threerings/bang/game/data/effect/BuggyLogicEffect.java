@@ -112,4 +112,22 @@ public class BuggyLogicEffect extends SetHindranceEffect
     /** The number of ticks it will take for the unit to recover if no order is
      * given. */
     protected static final int RECOVERY_TICKS = 4;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.BonusEffect.class, "bonusId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.BonusEffect.class, "pieceId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.BuggyLogicEffect.class, "player", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.BonusEffect.class, "bonusId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.BonusEffect.class, "pieceId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.BuggyLogicEffect.class, "player", this, out);
+    }
 }

@@ -59,4 +59,20 @@ public class PardnerInvite extends Notification
     {
         return new String[] { "m.pardner_accept", "m.pardner_reject" };
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PardnerInvite.class, "handle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PardnerInvite.class, "message", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PardnerInvite.class, "handle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PardnerInvite.class, "message", this, out);
+    }
 }

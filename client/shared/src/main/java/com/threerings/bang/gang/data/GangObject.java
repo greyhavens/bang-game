@@ -722,4 +722,58 @@ public class GangObject extends DObject
         this.articleRentMultiplier = value;
     }
     // AUTO-GENERATED: METHODS END
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.dobj.DObject.class, "_oid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "gangPeerService", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "speakService", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "gangId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "name", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "founded", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "statement", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "url", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "avatar", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "scrip", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "coins", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "aces", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "notoriety", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "buckle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "outfit", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "inventory", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "members", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "topRanked", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "tableOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "rentMultiplier", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangObject.class, "articleRentMultiplier", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.dobj.DObject.class, "_oid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "gangPeerService", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "speakService", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "gangId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "name", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "founded", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "statement", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "url", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "avatar", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "scrip", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "coins", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "aces", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "notoriety", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "buckle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "outfit", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "inventory", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "members", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "topRanked", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "tableOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "rentMultiplier", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangObject.class, "articleRentMultiplier", this, out);
+    }
 }

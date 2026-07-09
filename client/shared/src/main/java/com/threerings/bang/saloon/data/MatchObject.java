@@ -49,6 +49,24 @@ public class MatchObject extends DObject
             this.handle = handle;
             this.avatar = avatar;
         }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.MatchObject.PlayerInfo.class, "playerId", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.MatchObject.PlayerInfo.class, "handle", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.MatchObject.PlayerInfo.class, "avatar", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.MatchObject.PlayerInfo.class, "playerId", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.MatchObject.PlayerInfo.class, "handle", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.MatchObject.PlayerInfo.class, "avatar", this, out);
+        }
     }
 
     // AUTO-GENERATED: FIELDS START
@@ -147,5 +165,25 @@ public class MatchObject extends DObject
     public void applyToListeners (ListenerOp op)
     {
         // nothing doing
+    }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.dobj.DObject.class, "_oid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.MatchObject.class, "playerOids", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.MatchObject.class, "criterion", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.MatchObject.class, "starting", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.dobj.DObject.class, "_oid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.MatchObject.class, "playerOids", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.MatchObject.class, "criterion", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.MatchObject.class, "starting", this, out);
     }
 }

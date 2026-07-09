@@ -82,4 +82,18 @@ public class PracticeInfo extends ScenarioInfo
         PRACTICE_BOARDS.put(BangCodes.FRONTIER_TOWN, DEFAULT_BOARD);
         PRACTICE_BOARDS.put(BangCodes.INDIAN_POST, "Warrior's Trial");
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.scenario.PracticeInfo.class, "_townId", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.scenario.PracticeInfo.class, "_townId", this, out);
+    }
 }

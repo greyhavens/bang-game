@@ -45,4 +45,26 @@ public class BangCredentials extends UsernamePasswordCreds
         super.toString(buf);
         buf.append(", ident=").append(ident);
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.net.UsernamePasswordCreds.class, "_username", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.net.UsernamePasswordCreds.class, "_password", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangCredentials.class, "ident", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangCredentials.class, "anonymous", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangCredentials.class, "affiliate", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.net.UsernamePasswordCreds.class, "_username", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.net.UsernamePasswordCreds.class, "_password", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangCredentials.class, "ident", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangCredentials.class, "anonymous", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangCredentials.class, "affiliate", this, out);
+    }
 }

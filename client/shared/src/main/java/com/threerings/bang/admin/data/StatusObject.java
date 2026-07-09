@@ -50,6 +50,24 @@ public class StatusObject extends DObject
                 this.type = Enum.valueOf(GameType.class, type.toString());
             }
         }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.GameInfo.class, "gameOid", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.GameInfo.class, "type", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.GameInfo.class, "players", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.GameInfo.class, "gameOid", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.GameInfo.class, "type", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.GameInfo.class, "players", this, out);
+        }
     }
 
     /** Used to keep track of the population of players in different places. */
@@ -67,6 +85,22 @@ public class StatusObject extends DObject
         // documentation inherited from interface DSet.Entry
         public Comparable<?> getKey () {
             return ident;
+        }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.PlaceInfo.class, "ident", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.PlaceInfo.class, "occupants", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.PlaceInfo.class, "ident", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.PlaceInfo.class, "occupants", this, out);
         }
     }
 
@@ -348,4 +382,34 @@ public class StatusObject extends DObject
     // AUTO-GENERATED: METHODS END
 
     protected static final long PI_PUBLISH_INTERVAL = 1000L;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.dobj.DObject.class, "_oid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.class, "service", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.class, "serverStartTime", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.class, "serverRebootTime", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.class, "connStats", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.class, "playersOnline", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.class, "places", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.class, "pendingMatches", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.StatusObject.class, "games", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.dobj.DObject.class, "_oid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.class, "service", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.class, "serverStartTime", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.class, "serverRebootTime", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.class, "connStats", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.class, "playersOnline", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.class, "places", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.class, "pendingMatches", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.StatusObject.class, "games", this, out);
+    }
 }

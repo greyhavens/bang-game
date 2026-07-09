@@ -113,4 +113,44 @@ public class Viewpoint extends Piece
         // our orientation doesn't change with position
         return orientation;
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "x", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "y", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Viewpoint.class, "name", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Viewpoint.class, "fx", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Viewpoint.class, "fy", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Viewpoint.class, "forient", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Viewpoint.class, "pitch", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Viewpoint.class, "elevation", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "x", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "y", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Viewpoint.class, "name", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Viewpoint.class, "fx", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Viewpoint.class, "fy", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Viewpoint.class, "forient", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Viewpoint.class, "pitch", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Viewpoint.class, "elevation", this, out);
+    }
 }

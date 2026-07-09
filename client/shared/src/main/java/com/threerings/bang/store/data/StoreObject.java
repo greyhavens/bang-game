@@ -104,4 +104,22 @@ public class StoreObject extends PlaceObject
         this.goods = clone;
     }
     // AUTO-GENERATED: METHODS END
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.StoreObject.class, "service", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.StoreObject.class, "goods", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.StoreObject.class, "service", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.StoreObject.class, "goods", this, out);
+    }
 }

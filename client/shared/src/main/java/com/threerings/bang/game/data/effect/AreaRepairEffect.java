@@ -56,4 +56,28 @@ public class AreaRepairEffect extends AreaEffect
     {
         return super.isPieceAffected(piece) && (piece.damage > 0);
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.MultipleTargetEffect.class, "pieces", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.AreaEffect.class, "radius", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.AreaEffect.class, "x", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.AreaEffect.class, "y", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.AreaRepairEffect.class, "baseRepair", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.AreaRepairEffect.class, "newDamage", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.MultipleTargetEffect.class, "pieces", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.AreaEffect.class, "radius", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.AreaEffect.class, "x", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.AreaEffect.class, "y", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.AreaRepairEffect.class, "baseRepair", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.AreaRepairEffect.class, "newDamage", this, out);
+    }
 }

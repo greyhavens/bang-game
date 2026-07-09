@@ -45,4 +45,18 @@ public class ExpireInfluenceEffect extends Effect
         }
         return true;
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ExpireInfluenceEffect.class, "pieceId", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ExpireInfluenceEffect.class, "pieceId", this, out);
+    }
 }

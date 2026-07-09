@@ -383,4 +383,48 @@ public class ShotEffect extends Effect
         }
         return narray;
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "type", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "shooterId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "shooterLastActed", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "targetId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "newDamage", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "targetLastActed", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "xcoords", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "ycoords", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "deflectorIds", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "preShotEffects", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "baseDamage", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "attackIcons", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "defendIcons", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "pushx", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "pushy", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ShotEffect.class, "pushAnim", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "type", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "shooterId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "shooterLastActed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "targetId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "newDamage", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "targetLastActed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "xcoords", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "ycoords", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "deflectorIds", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "preShotEffects", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "baseDamage", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "attackIcons", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "defendIcons", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "pushx", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "pushy", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ShotEffect.class, "pushAnim", this, out);
+    }
 }

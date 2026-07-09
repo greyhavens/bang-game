@@ -143,4 +143,24 @@ public class OfficeObject extends PlaceObject
         this.service = value;
     }
     // AUTO-GENERATED: METHODS END
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.OfficeObject.class, "boards", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.OfficeObject.class, "completers", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.OfficeObject.class, "service", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.OfficeObject.class, "boards", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.OfficeObject.class, "completers", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.OfficeObject.class, "service", this, out);
+    }
 }

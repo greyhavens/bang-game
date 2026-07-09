@@ -115,6 +115,30 @@ public class BangConfig extends GameConfig
             return ObjectUtil.equals(bigShot, oplayer.bigShot) &&
                 Arrays.equals(units, oplayer.units) && Arrays.equals(cards, oplayer.cards);
         }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Player.class, "bigShot", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Player.class, "units", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Player.class, "cards", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Player.class, "startSpot", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Player.class, "teamIdx", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Player.class, "skill", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Player.class, "bigShot", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Player.class, "units", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Player.class, "cards", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Player.class, "startSpot", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Player.class, "teamIdx", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Player.class, "skill", this, out);
+        }
     }
 
     /**
@@ -147,6 +171,26 @@ public class BangConfig extends GameConfig
             return ObjectUtil.equals(scenario, oround.scenario) &&
                 ObjectUtil.equals(sdata, oround.sdata) && ObjectUtil.equals(board, oround.board) &&
                 Arrays.equals(bdata, oround.bdata);
+        }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Round.class, "scenario", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Round.class, "board", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Round.class, "bdata", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.Round.class, "sdata", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Round.class, "scenario", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Round.class, "board", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Round.class, "bdata", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.Round.class, "sdata", this, out);
         }
     }
 
@@ -312,5 +356,41 @@ public class BangConfig extends GameConfig
         return type == oconfig.type && duration == oconfig.duration && speed == oconfig.speed &&
             rounds.equals(oconfig.rounds) && plist.equals(oconfig.plist) &&
             criteria.equals(oconfig.criteria);
+    }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.parlor.game.data.GameConfig.class, "players", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.parlor.game.data.GameConfig.class, "rated", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.parlor.game.data.GameConfig.class, "ais", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "type", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "duration", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "speed", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "minWeight", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "respawnUnits", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "grantAces", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "rounds", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "plist", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangConfig.class, "criteria", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.parlor.game.data.GameConfig.class, "players", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.parlor.game.data.GameConfig.class, "rated", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.parlor.game.data.GameConfig.class, "ais", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "type", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "duration", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "speed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "minWeight", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "respawnUnits", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "grantAces", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "rounds", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "plist", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangConfig.class, "criteria", this, out);
     }
 }

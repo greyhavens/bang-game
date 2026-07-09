@@ -53,4 +53,30 @@ public class ParlorGameConfig extends SimpleStreamableObject
         }
         return count;
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "rounds", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "slots", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "teamSize", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "duration", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "speed", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "scenarios", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "mode", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "rounds", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "slots", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "teamSize", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "duration", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "speed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "scenarios", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorGameConfig.class, "mode", this, out);
+    }
 }

@@ -109,4 +109,22 @@ public class AdjustTickEffect extends Effect
         }
         return MessageBundle.compose("m.effect_staredown", piece.getName());
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.AdjustTickEffect.class, "pieceId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.AdjustTickEffect.class, "delta", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.AdjustTickEffect.class, "newLastActed", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.AdjustTickEffect.class, "pieceId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.AdjustTickEffect.class, "delta", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.AdjustTickEffect.class, "newLastActed", this, out);
+    }
 }

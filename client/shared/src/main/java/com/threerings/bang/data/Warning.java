@@ -70,4 +70,20 @@ public class Warning extends Notification
     }
 
     protected static final int BUTTON_DELAY = 30;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Warning.class, "type", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Warning.class, "message", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Warning.class, "type", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Warning.class, "message", this, out);
+    }
 }

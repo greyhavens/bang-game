@@ -41,4 +41,20 @@ public class HistoryEntry extends SimpleStreamableObject
     {
         return new Date(recorded);
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.HistoryEntry.class, "recorded", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.HistoryEntry.class, "description", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.HistoryEntry.class, "recorded", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.HistoryEntry.class, "description", this, out);
+    }
 }

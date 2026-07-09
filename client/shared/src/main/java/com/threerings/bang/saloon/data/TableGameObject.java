@@ -118,4 +118,26 @@ public class TableGameObject extends DObject
         this.starting = value;
     }
     // AUTO-GENERATED: METHODS END
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.dobj.DObject.class, "_oid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TableGameObject.class, "service", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TableGameObject.class, "game", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TableGameObject.class, "playerOids", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TableGameObject.class, "starting", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.dobj.DObject.class, "_oid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TableGameObject.class, "service", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TableGameObject.class, "game", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TableGameObject.class, "playerOids", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TableGameObject.class, "starting", this, out);
+    }
 }

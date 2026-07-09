@@ -46,4 +46,26 @@ public class TopRankedList extends SimpleStreamableObject
     {
         return criterion + period;
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TopRankedList.class, "criterion", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TopRankedList.class, "playerIds", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TopRankedList.class, "players", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TopRankedList.class, "topDogSnapshot", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.TopRankedList.class, "period", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TopRankedList.class, "criterion", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TopRankedList.class, "playerIds", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TopRankedList.class, "players", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TopRankedList.class, "topDogSnapshot", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.TopRankedList.class, "period", this, out);
+    }
 }

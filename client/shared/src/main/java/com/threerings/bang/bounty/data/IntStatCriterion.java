@@ -94,4 +94,22 @@ public class IntStatCriterion extends Criterion
     {
         return stat + " " + condition + " " + value;
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.IntStatCriterion.class, "stat", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.IntStatCriterion.class, "condition", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.bounty.data.IntStatCriterion.class, "value", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.IntStatCriterion.class, "stat", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.IntStatCriterion.class, "condition", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.bounty.data.IntStatCriterion.class, "value", this, out);
+    }
 }

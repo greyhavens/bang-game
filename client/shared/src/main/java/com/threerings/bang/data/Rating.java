@@ -251,4 +251,24 @@ public class Rating extends SimpleStreamableObject
     {
         return scenario.hashCode();
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Rating.class, "scenario", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Rating.class, "rating", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Rating.class, "experience", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Rating.class, "week", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Rating.class, "scenario", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Rating.class, "rating", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Rating.class, "experience", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Rating.class, "week", this, out);
+    }
 }

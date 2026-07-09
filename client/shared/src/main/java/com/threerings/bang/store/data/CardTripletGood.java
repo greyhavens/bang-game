@@ -98,4 +98,30 @@ public class CardTripletGood extends Good
     protected transient int _quantity;
 
     protected static final int CARD_TRIPLET_PRIORITY = 4;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.Good.class, "_type", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.Good.class, "_townId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.Good.class, "_scripCost", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.Good.class, "_coinCost", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.Good.class, "_priority", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.CardTripletGood.class, "_cardType", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.store.data.CardTripletGood.class, "_qualifier", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.Good.class, "_type", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.Good.class, "_townId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.Good.class, "_scripCost", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.Good.class, "_coinCost", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.Good.class, "_priority", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.CardTripletGood.class, "_cardType", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.store.data.CardTripletGood.class, "_qualifier", this, out);
+    }
 }

@@ -170,4 +170,28 @@ public class BangAI extends GameAI
     };
 
     protected static final String AI_BUCKLE = "ui/status/tin_cans_buckle.png";
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangAI.class, "isMale", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangAI.class, "avatar", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangAI.class, "handle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangAI.class, "buckle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangAI.class, "gang", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangAI.class, "isMale", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangAI.class, "avatar", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangAI.class, "handle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangAI.class, "buckle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangAI.class, "gang", this, out);
+    }
 }

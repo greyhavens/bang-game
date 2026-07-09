@@ -91,7 +91,26 @@ public class Prop extends BigPiece
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
     {
-        in.defaultReadObject();
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "x", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "y", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.BigPiece.class, "_width", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.BigPiece.class, "_length", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "fx", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "fy", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "forient", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "felev", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "pitch", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "roll", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "scalex", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "scaley", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "scalez", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Prop.class, "_type", this, in);
         // reject an unknown/crafted prop type: getConfig is a bare map lookup returning null, and
         // Prop.init dereferences config.type immediately (NPE during deserialization) — see
         // Piece.requireConfig
@@ -319,6 +338,32 @@ public class Prop extends BigPiece
             Byte.MAX_VALUE);
     }
 
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "x", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "y", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.BigPiece.class, "_width", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.BigPiece.class, "_length", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "fx", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "fy", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "forient", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "felev", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "pitch", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "roll", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "scalex", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "scaley", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "scalez", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Prop.class, "_type", this, out);
+    }
     @Override // documentation inherited
     public boolean intersects (Rectangle bounds)
     {

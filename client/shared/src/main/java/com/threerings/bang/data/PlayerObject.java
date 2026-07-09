@@ -1061,4 +1061,64 @@ public class PlayerObject extends BodyObject
         this.quitter = value;
     }
     // AUTO-GENERATED: METHODS END
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "playerId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "handle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "isMale", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "tokens", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "gangId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "gangOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "gangRank", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "gangTitle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "gangCommandOrder", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "inventory", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "townId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "scrip", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "coins", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "stats", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "poses", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "looks", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "pardners", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "notifications", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "friends", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "foes", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "lastScenId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "lastBoard", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PlayerObject.class, "quitter", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "playerId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "handle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "isMale", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "tokens", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "gangId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "gangOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "gangRank", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "gangTitle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "gangCommandOrder", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "inventory", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "townId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "scrip", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "coins", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "stats", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "poses", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "looks", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "pardners", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "notifications", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "friends", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "foes", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "lastScenId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "lastBoard", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PlayerObject.class, "quitter", this, out);
+    }
 }

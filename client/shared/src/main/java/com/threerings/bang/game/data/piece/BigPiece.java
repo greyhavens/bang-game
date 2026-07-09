@@ -103,7 +103,16 @@ public abstract class BigPiece extends Piece
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
     {
-        in.defaultReadObject();
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "x", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "y", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.BigPiece.class, "_width", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.BigPiece.class, "_length", this, in);
         recomputeBounds();
     }
 

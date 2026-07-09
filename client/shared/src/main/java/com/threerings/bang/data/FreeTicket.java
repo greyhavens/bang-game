@@ -162,4 +162,22 @@ public class FreeTicket extends Item
 
     /** Number of ranked games played to qualify for free ITP ticket. */
     protected static final int FREE_ITP_REQUIREMENT = 10;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.FreeTicket.class, "_townIndex", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.FreeTicket.class, "_activated", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.FreeTicket.class, "_townIndex", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.FreeTicket.class, "_activated", this, out);
+    }
 }

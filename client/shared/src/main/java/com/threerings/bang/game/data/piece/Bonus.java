@@ -230,7 +230,15 @@ public class Bonus extends Piece
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
     {
-        in.defaultReadObject();
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "x", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "y", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Bonus.class, "spot", this, in);
         // reject an unknown/crafted bonus type rather than storing a null config (deferred NPE) —
         // see Piece.requireConfig
         String type = in.readUTF();
@@ -241,7 +249,15 @@ public class Bonus extends Piece
     public void writeObject (ObjectOutputStream out)
         throws IOException
     {
-        out.defaultWriteObject();
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "x", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "y", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Bonus.class, "spot", this, out);
         out.writeUTF(_config.type);
     }
 

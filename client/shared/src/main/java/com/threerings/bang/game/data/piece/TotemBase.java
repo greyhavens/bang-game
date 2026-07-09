@@ -221,9 +221,43 @@ public class TotemBase extends Prop
             this.type = TotemBonus.TOTEM_LOOKUP.get(type);
             this.owner = owner;
         }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.TotemBase.PieceData.class, "owner", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.TotemBase.PieceData.class, "type", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.TotemBase.PieceData.class, "damage", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.TotemBase.PieceData.class, "owner", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.TotemBase.PieceData.class, "type", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.TotemBase.PieceData.class, "damage", this, out);
+        }
     }
 
     protected ArrayList<PieceData> _pieces = new ArrayList<PieceData>();
     protected transient int _destroyedOwner = -1;
     protected transient TotemBonus.Type _destroyedType;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.TotemBase.class, "_pieces", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.TotemBase.class, "_pieces", this, out);
+    }
 }

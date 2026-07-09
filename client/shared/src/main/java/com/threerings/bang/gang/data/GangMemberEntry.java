@@ -199,4 +199,46 @@ public class GangMemberEntry extends SimpleStreamableObject
         return (rank == GangCodes.LEADER_RANK &&
             (this.rank != GangCodes.LEADER_RANK || commandOrder < this.commandOrder));
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "handle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "playerId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "rank", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "commandOrder", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "leaderLevel", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "lastLeaderCommand", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "joined", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "notoriety", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "scripDonated", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "coinsDonated", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "title", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "townIdx", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "wasActive", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "needsReimbursement", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.gang.data.GangMemberEntry.class, "avatar", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "handle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "playerId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "rank", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "commandOrder", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "leaderLevel", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "lastLeaderCommand", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "joined", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "notoriety", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "scripDonated", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "coinsDonated", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "title", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "townIdx", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "wasActive", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "needsReimbursement", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.gang.data.GangMemberEntry.class, "avatar", this, out);
+    }
 }

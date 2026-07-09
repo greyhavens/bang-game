@@ -56,4 +56,42 @@ public class BangBootstrapData extends BootstrapData
         default: throw new IllegalArgumentException("ZOUNDS! I know not this " + shop + ".");
         }
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.net.BootstrapData.class, "connectionId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.net.BootstrapData.class, "clientOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.presents.net.BootstrapData.class, "services", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "statusOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "townOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "saloonOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "storeOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "ranchOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "barberOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "stationOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "hideoutOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "officeOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.BangBootstrapData.class, "tourniesOid", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.net.BootstrapData.class, "connectionId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.net.BootstrapData.class, "clientOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.presents.net.BootstrapData.class, "services", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "statusOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "townOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "saloonOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "storeOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "ranchOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "barberOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "stationOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "hideoutOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "officeOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.BangBootstrapData.class, "tourniesOid", this, out);
+    }
 }

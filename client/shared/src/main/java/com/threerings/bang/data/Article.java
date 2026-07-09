@@ -262,4 +262,28 @@ public class Article extends Item
     protected int[] _components;
     protected int _gangId;
     protected long _expires;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Article.class, "_slot", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Article.class, "_name", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Article.class, "_components", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Article.class, "_gangId", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.Article.class, "_expires", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Article.class, "_slot", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Article.class, "_name", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Article.class, "_components", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Article.class, "_gangId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.Article.class, "_expires", this, out);
+    }
 }

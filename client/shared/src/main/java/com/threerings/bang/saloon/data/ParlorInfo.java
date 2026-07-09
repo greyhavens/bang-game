@@ -59,4 +59,28 @@ public class ParlorInfo extends SimpleStreamableObject
         return user.handle.equals(creator) || user.tokens.isSupport() ||
             (type == Type.RECRUITING && user.gangId == gangId && user.canRecruit());
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorInfo.class, "creator", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorInfo.class, "type", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorInfo.class, "occupants", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorInfo.class, "matched", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorInfo.class, "server", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.ParlorInfo.class, "gangId", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorInfo.class, "creator", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorInfo.class, "type", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorInfo.class, "occupants", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorInfo.class, "matched", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorInfo.class, "server", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.ParlorInfo.class, "gangId", this, out);
+    }
 }

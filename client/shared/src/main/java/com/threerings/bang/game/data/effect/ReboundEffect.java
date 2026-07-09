@@ -119,4 +119,22 @@ public class ReboundEffect extends TrapEffect
 
     /** The amount of damage caused on landing. */
     protected static final int REBOUND_DAMAGE = 20;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ReboundEffect.class, "x", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.ReboundEffect.class, "y", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ReboundEffect.class, "x", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.ReboundEffect.class, "y", this, out);
+    }
 }

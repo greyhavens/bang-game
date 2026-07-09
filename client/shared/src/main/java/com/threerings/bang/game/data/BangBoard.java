@@ -1444,7 +1444,30 @@ public class BangBoard extends SimpleStreamableObject
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
     {
-        in.defaultReadObject();
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_width", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_height", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_teams", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_heightfield", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_elevationUnitsPerTile", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_terrain", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_shadows", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_shadowIntensity", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_waterLevel", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_waterColor", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_waterAmplitude", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_lightAzimuths", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_lightElevations", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_lightDiffuseColors", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_lightAmbientColors", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_skyHorizonColor", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_skyOverheadColor", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_skyFalloff", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_windDirection", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_windSpeed", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_fogColor", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_fogDensity", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_gridColor", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.BangBoard.class, "_patchMap", this, in);
         initTransientFields();
     }
 
@@ -1744,6 +1767,36 @@ public class BangBoard extends SimpleStreamableObject
     protected StreamableHashMap<String, byte[]> _patchMap;
 
     /** The dimensions of the heightfield and terrain arrays. */
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_width", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_height", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_teams", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_heightfield", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_elevationUnitsPerTile", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_terrain", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_shadows", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_shadowIntensity", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_waterLevel", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_waterColor", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_waterAmplitude", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_lightAzimuths", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_lightElevations", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_lightDiffuseColors", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_lightAmbientColors", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_skyHorizonColor", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_skyOverheadColor", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_skyFalloff", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_windDirection", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_windSpeed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_fogColor", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_fogDensity", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_gridColor", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.BangBoard.class, "_patchMap", this, out);
+    }
     protected transient int _hfwidth, _hfheight;
 
     /** The minimum height at the edge of the board, used for values beyond the

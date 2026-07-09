@@ -236,7 +236,16 @@ public class Unit extends Piece
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
     {
-        in.defaultReadObject();
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "x", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "y", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Unit.class, "originalOwner", this, in);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.piece.Unit.class, "holding", this, in);
         // reject an unknown/crafted unit type rather than init'ing a null-config Unit (see
         // Piece.requireConfig); getConfig only logs and returns null for a bad type
         String type = in.readUTF();
@@ -247,7 +256,16 @@ public class Unit extends Piece
     public void writeObject (ObjectOutputStream out)
         throws IOException
     {
-        out.defaultWriteObject();
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "pieceId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "owner", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "lastActed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "x", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "y", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "orientation", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "damage", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Piece.class, "scenId", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Unit.class, "originalOwner", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.piece.Unit.class, "holding", this, out);
         out.writeUTF(_config.type);
     }
 

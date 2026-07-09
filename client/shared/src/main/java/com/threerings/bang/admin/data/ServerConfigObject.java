@@ -419,4 +419,52 @@ public class ServerConfigObject extends ConfigObject
         this.articleRentMultiplier[index] = value;
     }
     // AUTO-GENERATED: METHODS END
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        super.readObject(ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "openToPublic", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "nonAdminsAllowed", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "allowNewGames", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "freeIndianPost", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "nearRankRange", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "looseRankRange", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "barberEnabled", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "hideoutEnabled", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "officeEnabled", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "ranchEnabled", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "saloonEnabled", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "stationEnabled", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "storeEnabled", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "anonymousAccessEnabled", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "selectPhaseTimeout", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "rentMultiplier", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.admin.data.ServerConfigObject.class, "articleRentMultiplier", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        super.writeObject(out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "openToPublic", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "nonAdminsAllowed", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "allowNewGames", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "freeIndianPost", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "nearRankRange", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "looseRankRange", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "barberEnabled", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "hideoutEnabled", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "officeEnabled", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "ranchEnabled", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "saloonEnabled", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "stationEnabled", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "storeEnabled", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "anonymousAccessEnabled", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "selectPhaseTimeout", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "rentMultiplier", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.admin.data.ServerConfigObject.class, "articleRentMultiplier", this, out);
+    }
 }

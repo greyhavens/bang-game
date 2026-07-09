@@ -71,6 +71,28 @@ public class StampedeEffect extends Effect
             this.y = (short)y;
             this.deathEffect = deathEffect;
         }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "step", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "targetId", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "x", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "y", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "deathEffect", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "step", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "targetId", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "x", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "y", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.StampedeEffect.Collision.class, "deathEffect", this, out);
+        }
     }
 
     /** The id of the player causing the damage or -1. */
@@ -349,4 +371,20 @@ public class StampedeEffect extends Effect
 
     /** The (maximum) length of the bison stampede in each direction. */
     protected static final int STAMPEDE_LENGTH = 4;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.StampedeEffect.class, "path", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.game.data.effect.StampedeEffect.class, "collisions", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.StampedeEffect.class, "path", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.game.data.effect.StampedeEffect.class, "collisions", this, out);
+    }
 }

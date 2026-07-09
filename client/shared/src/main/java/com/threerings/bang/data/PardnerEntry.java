@@ -172,4 +172,26 @@ public class PardnerEntry
 
     /** The number of milliseconds in a day. */
     protected static final long MILLISECONDS_PER_DAY = 24L * 60 * 60 * 1000;
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PardnerEntry.class, "handle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PardnerEntry.class, "avatar", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PardnerEntry.class, "status", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PardnerEntry.class, "gameOid", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PardnerEntry.class, "_lastSession", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PardnerEntry.class, "handle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PardnerEntry.class, "avatar", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PardnerEntry.class, "status", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PardnerEntry.class, "gameOid", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PardnerEntry.class, "_lastSession", this, out);
+    }
 }

@@ -197,4 +197,28 @@ public class Criterion extends SimpleStreamableObject
             return buf.toString();
         }
     }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.Criterion.class, "rounds", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.Criterion.class, "players", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.Criterion.class, "range", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.Criterion.class, "mode", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.Criterion.class, "gang", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.saloon.data.Criterion.class, "allowPreviousTowns", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.Criterion.class, "rounds", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.Criterion.class, "players", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.Criterion.class, "range", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.Criterion.class, "mode", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.Criterion.class, "gang", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.saloon.data.Criterion.class, "allowPreviousTowns", this, out);
+    }
 }

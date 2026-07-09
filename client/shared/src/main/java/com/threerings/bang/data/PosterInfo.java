@@ -28,6 +28,22 @@ public class PosterInfo extends SimpleStreamableObject
             this.week = week;
             this.rankings = rankings;
         }
+
+        // from interface Streamable
+        public void readObject (com.threerings.io.ObjectInputStream ins)
+            throws java.io.IOException, java.lang.ClassNotFoundException
+        {
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.RankGroup.class, "week", this, ins);
+            com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.RankGroup.class, "rankings", this, ins);
+        }
+
+        // from interface Streamable
+        public void writeObject (com.threerings.io.ObjectOutputStream out)
+            throws java.io.IOException
+        {
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.RankGroup.class, "week", this, out);
+            com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.RankGroup.class, "rankings", this, out);
+        }
     }
 
     /** The handle of this poster's player */
@@ -71,5 +87,35 @@ public class PosterInfo extends SimpleStreamableObject
     public Comparable<?> getKey ()
     {
         return handle;
+    }
+
+    // from interface Streamable
+    public void readObject (com.threerings.io.ObjectInputStream ins)
+        throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "handle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "gang", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "rank", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "title", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "buckle", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "avatar", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "statement", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "badgeIds", this, ins);
+        com.threerings.io.GenStreamUtil.readField(com.threerings.bang.data.PosterInfo.class, "rankGroups", this, ins);
+    }
+
+    // from interface Streamable
+    public void writeObject (com.threerings.io.ObjectOutputStream out)
+        throws java.io.IOException
+    {
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "handle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "gang", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "rank", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "title", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "buckle", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "avatar", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "statement", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "badgeIds", this, out);
+        com.threerings.io.GenStreamUtil.writeField(com.threerings.bang.data.PosterInfo.class, "rankGroups", this, out);
     }
 }
