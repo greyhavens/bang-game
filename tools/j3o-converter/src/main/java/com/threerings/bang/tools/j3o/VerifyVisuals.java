@@ -81,14 +81,21 @@ public class VerifyVisuals
             // render can exit 0 having written nothing — e.g. an uncaught exception on the jME3 main
             // thread while main() returns normally — so a stale PNG from a previous run must be
             // cleared first or it silently stands in for the new render (a false PASS in verify
-            // mode, a silently-kept stale golden in capture mode).
+            // mode, a silently-kept stale golden in capture mode). deleteIfExists THROWS if the
+            // stale file cannot be removed, so an undeletable leftover fails the gate loudly
+            // instead of quietly regressing to the masked-crash behavior.
             File target = new File(tmpDir, e.name + ".png");
-            target.delete();
+            java.nio.file.Files.deleteIfExists(target.toPath());
 
             int rc = render(forkCp, rsrc, e, target);
-            if (rc != 0 || !target.isFile()) {
-                System.out.printf("  %-22s RENDER-FAIL (%s)%n", e.name,
-                    rc != 0 ? "exit " + rc : "exit 0 but no output PNG");
+            // the same crash-with-exit-0 can also leave a truncated-but-present PNG (the render
+            // thread dying mid-write), so require the output to actually decode before accepting
+            // it — capture mode must never bless an unreadable render as a golden.
+            String bad = rc != 0 ? "exit " + rc
+                : !target.isFile() ? "exit 0 but no output PNG"
+                : !readableImage(target) ? "exit 0 but unreadable/truncated output PNG" : null;
+            if (bad != null) {
+                System.out.printf("  %-22s RENDER-FAIL (%s)%n", e.name, bad);
                 failures++;
                 continue;
             }
@@ -217,6 +224,16 @@ public class VerifyVisuals
         System.out.println("  ---- " + name + " render output (tail) ----");
         for (String line : s.split("\n")) System.out.println("    " + line);
         System.out.println("  ---- end " + name + " ----");
+    }
+
+    /** True when the rendered file is non-empty and decodes as an image. */
+    protected static boolean readableImage (File f)
+    {
+        try {
+            return f.length() > 0 && ImageIO.read(f) != null;
+        } catch (IOException ioe) {
+            return false;
+        }
     }
 
     /** SnapshotDiff metric (mean absolute per-channel diff in [0,1]) + a heat-map diff image. */
