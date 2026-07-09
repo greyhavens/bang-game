@@ -35,8 +35,9 @@ import javax.imageio.ImageIO;
  * than inline, because every render needs its own LWJGL3 {@code OffscreenSurface} GL context and a
  * clean teardown; forking guarantees the verify render is bit-identical to the capture render. The
  * fork classpath is supplied by Gradle via {@code -Dvisual.forkClasspath=...} (the isolated
- * {@code renderToPngRuntime} classpath — jme3 + app only, no fork/gdx, no {@code org.lwjgl} sealing
- * clash).
+ * {@code renderToPngRuntime} classpath — jme3 + app + client:shared, whose
+ * {@code ParticleInfluenceControl} the baked particle {@code .j3o}s reference by class name; no
+ * fork/gdx, no {@code org.lwjgl} sealing clash).
  *
  * <p>The diff metric is duplicated from {@link SnapshotDiff} (mean absolute per-channel difference,
  * normalised to {@code [0,1]}) so the gate stays GL-free and self-contained; {@code SnapshotDiff}
