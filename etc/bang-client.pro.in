@@ -17,7 +17,6 @@
 
 -dontwarn ca.beq.util.win32.registry.**
 -dontwarn com.google.inject.**
--dontwarn com.jmex.font2d.**
 -dontwarn com.samskivert.depot.**
 -dontwarn com.samskivert.jdbc.**
 -dontwarn com.threerings.**.persist.**
@@ -25,10 +24,8 @@
 -dontwarn com.threerings.presents.peer.**
 -dontwarn javax.annotation.**
 -dontwarn javax.mail.**
--dontwarn net.java.games.input.**
 -dontwarn org.aopalliance.intercept.MethodInterceptor
 -dontwarn org.apache.log4j.**
--dontwarn org.lwjgl.util.applet.LWJGLInstaller
 
 -keepnames class * implements java.io.Serializable
 -keepclassmembers class * implements java.io.Serializable {
@@ -58,10 +55,6 @@
 -keep public class com.threerings.media.tile.TrimmedTileSet
 
 -keep public class * extends com.samskivert.swing.Controller {
-    *;
-}
-
--keep public class * extends com.threerings.jme.model.ModelController {
     *;
 }
 
@@ -95,14 +88,6 @@
     *;
 }
 
--keep public class com.threerings.bang.viewer.ViewerApp {
-    public static void main (java.lang.String[]);
-}
-
--keep public class com.threerings.jme.tools.ModelViewer {
-    public static void main (java.lang.String[]);
-}
-
 -keep public class com.threerings.bang.data.Badge {
     static <fields>;
 }
@@ -111,15 +96,7 @@
     static <fields>;
 }
 
--keep public class com.threerings.jme.tools.*Def** {
-    public *;
-}
-
 -keep public class com.threerings.bang.game.data.TutorialConfig** {
-    public *;
-}
-
--keep public class com.threerings.jme.tools.xml.* {
     public *;
 }
 
