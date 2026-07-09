@@ -81,13 +81,14 @@ dependencies {
   // RenderToPng reproduces the live ModelCache load/resolve/clone path headlessly. app main is
   // jme3-only (no fork/gdx/LWJGL2), so it does not reintroduce the org.lwjgl sealing clash.
   renderToPngRuntime project(":app")
-  // the game classes referenced BY NAME from baked .j3o user data — most importantly
+  // the game classes referenced BY NAME from baked .j3o data — most importantly
   // com.threerings.bang.util.ParticleInfluenceControl, the per-frame drag/wander/wind velocity
-  // influence saved on 13 of the frozen effects/**/particles.j3o emitters. Without it on the fork
-  // classpath the jME3 importer drops the control at load and those effects render BLANK (the
-  // influence is what keeps their particles alive/moving in frame). client:shared is jME3-only
-  // since the Epic 4 fork deletion and its LWJGL3 deps are compileOnly, so this does not
-  // reintroduce the org.lwjgl sealing clash either.
+  // influence saved on 13 of the frozen effects/**/particles.j3o emitters. Without it on this
+  // classpath the jME3 importer nulls the unresolvable control at load and the render JVM dies
+  // in updateLogicalState ("Cannot invoke Control.update(float) because c is null"), exiting 0
+  // with no output PNG — verifyVisuals then scores the entry as a full diff (the long-red
+  // ip_fx_fireflies golden). client:shared is jME3-only since the Epic 4 fork deletion and its
+  // LWJGL3 deps are compileOnly, so this does not reintroduce the org.lwjgl sealing clash either.
   renderToPngRuntime project(":client:shared")
 }
 tasks.register("renderToPng", JavaExec) {
