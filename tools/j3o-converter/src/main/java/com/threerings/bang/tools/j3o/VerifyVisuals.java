@@ -77,15 +77,24 @@ public class VerifyVisuals
         int failures = 0;
         for (Entry e : entries) {
             File golden = new File(goldenDir, e.name + ".png");
-            File target = capture ? golden : new File(tmpDir, e.name + ".png");
+            // always render into the tmp dir (capture moves the result into place below). A crashed
+            // render can exit 0 having written nothing — e.g. an uncaught exception on the jME3 main
+            // thread while main() returns normally — so a stale PNG from a previous run must be
+            // cleared first or it silently stands in for the new render (a false PASS in verify
+            // mode, a silently-kept stale golden in capture mode).
+            File target = new File(tmpDir, e.name + ".png");
+            target.delete();
 
             int rc = render(forkCp, rsrc, e, target);
-            if (rc != 0) {
-                System.out.printf("  %-22s RENDER-FAIL (exit %d)%n", e.name, rc);
+            if (rc != 0 || !target.isFile()) {
+                System.out.printf("  %-22s RENDER-FAIL (%s)%n", e.name,
+                    rc != 0 ? "exit " + rc : "exit 0 but no output PNG");
                 failures++;
                 continue;
             }
             if (capture) {
+                java.nio.file.Files.move(target.toPath(), golden.toPath(),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 System.out.printf("  %-22s captured -> %s%n", e.name, golden.getName());
                 continue;
             }
