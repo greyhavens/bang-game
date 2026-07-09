@@ -35,8 +35,9 @@ import javax.imageio.ImageIO;
  * than inline, because every render needs its own LWJGL3 {@code OffscreenSurface} GL context and a
  * clean teardown; forking guarantees the verify render is bit-identical to the capture render. The
  * fork classpath is supplied by Gradle via {@code -Dvisual.forkClasspath=...} (the isolated
- * {@code renderToPngRuntime} classpath — jme3 + app only, no fork/gdx, no {@code org.lwjgl} sealing
- * clash).
+ * {@code renderToPngRuntime} classpath — jme3 + app + client:shared, whose
+ * {@code ParticleInfluenceControl} the baked particle {@code .j3o}s reference by class name; no
+ * fork/gdx, no {@code org.lwjgl} sealing clash).
  *
  * <p>The diff metric is duplicated from {@link SnapshotDiff} (mean absolute per-channel difference,
  * normalised to {@code [0,1]}) so the gate stays GL-free and self-contained; {@code SnapshotDiff}
@@ -76,15 +77,31 @@ public class VerifyVisuals
         int failures = 0;
         for (Entry e : entries) {
             File golden = new File(goldenDir, e.name + ".png");
-            File target = capture ? golden : new File(tmpDir, e.name + ".png");
+            // always render into the tmp dir (capture moves the result into place below). A crashed
+            // render can exit 0 having written nothing — e.g. an uncaught exception on the jME3 main
+            // thread while main() returns normally — so a stale PNG from a previous run must be
+            // cleared first or it silently stands in for the new render (a false PASS in verify
+            // mode, a silently-kept stale golden in capture mode). deleteIfExists THROWS if the
+            // stale file cannot be removed, so an undeletable leftover fails the gate loudly
+            // instead of quietly regressing to the masked-crash behavior.
+            File target = new File(tmpDir, e.name + ".png");
+            java.nio.file.Files.deleteIfExists(target.toPath());
 
             int rc = render(forkCp, rsrc, e, target);
-            if (rc != 0) {
-                System.out.printf("  %-22s RENDER-FAIL (exit %d)%n", e.name, rc);
+            // the same crash-with-exit-0 can also leave a truncated-but-present PNG (the render
+            // thread dying mid-write), so require the output to actually decode before accepting
+            // it — capture mode must never bless an unreadable render as a golden.
+            String bad = rc != 0 ? "exit " + rc
+                : !target.isFile() ? "exit 0 but no output PNG"
+                : !readableImage(target) ? "exit 0 but unreadable/truncated output PNG" : null;
+            if (bad != null) {
+                System.out.printf("  %-22s RENDER-FAIL (%s)%n", e.name, bad);
                 failures++;
                 continue;
             }
             if (capture) {
+                java.nio.file.Files.move(target.toPath(), golden.toPath(),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 System.out.printf("  %-22s captured -> %s%n", e.name, golden.getName());
                 continue;
             }
@@ -207,6 +224,16 @@ public class VerifyVisuals
         System.out.println("  ---- " + name + " render output (tail) ----");
         for (String line : s.split("\n")) System.out.println("    " + line);
         System.out.println("  ---- end " + name + " ----");
+    }
+
+    /** True when the rendered file is non-empty and decodes as an image. */
+    protected static boolean readableImage (File f)
+    {
+        try {
+            return f.length() > 0 && ImageIO.read(f) != null;
+        } catch (IOException ioe) {
+            return false;
+        }
     }
 
     /** SnapshotDiff metric (mean absolute per-channel diff in [0,1]) + a heat-map diff image. */
