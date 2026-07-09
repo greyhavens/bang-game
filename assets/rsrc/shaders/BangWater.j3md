@@ -16,8 +16,8 @@ MaterialDef Bang Water {
     }
 
     Technique {
-        VertexShader   GLSL100 GLSL150 : shaders/BangWater.vert
-        FragmentShader GLSL100 GLSL150 : shaders/BangWater.frag
+        VertexShader GLSL300 GLSL150 GLSL100 : shaders/BangWater.vert
+        FragmentShader GLSL300 GLSL150 GLSL100 : shaders/BangWater.frag
 
         WorldParameters {
             WorldViewProjectionMatrix

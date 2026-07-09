@@ -47,6 +47,10 @@ services:
       # (PlayerManager.createDownloadSymlink, a live client RPC) — writable volume over the ro mount
       - bang-downloads:/bang/data/downloads
       - ../../etc/test/server.properties:/bang/conf-src/server.properties:ro,z
+      # TLS material (bin/gen-tls-certs output) for transport-TLS runs: server.properties points
+      # server_tls_keystore at /bang/etc-test/tls-server.p12. Harmless when server_tls is off
+      # (the dir mounts empty-ish; nothing reads it).
+      - ../../etc/test:/bang/etc-test:ro,z
       - ./entrypoint.sh:/bang/entrypoint.sh:ro,z
     command: ["bash", "/bang/entrypoint.sh"]
     # liveness via the Phase-6 management endpoint: /health answers 200 only once BangServer.init

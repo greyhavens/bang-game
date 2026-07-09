@@ -248,10 +248,23 @@ public class SoundManager
         // initialize the OpenAL sound system
         if (alCreated()) {
             _sharingAL = true;
+        } else if (Boolean.getBoolean("bang.disable_openal")) {
+            // Android/headless (Epic A1): LWJGL3's org.lwjgl.openal.* backend is not on the
+            // classpath (it is compileOnly here, reaching the desktop runtime only via jme3-lwjgl3),
+            // so touching createAL() would raise a NoClassDefFoundError (a LinkageError the catch
+            // below would NOT swallow). Take the same degraded, silent path as a createAL() failure:
+            // leave _toLoad null so isInitialized() is false and every sound op no-ops (SoundGroup
+            // yields BlankSounds, preloadClip is a no-op). Desktop never sets this property.
+            log.info("OpenAL disabled (bang.disable_openal); running with no audio.");
+            return;
         } else {
             try {
                 createAL();
-            } catch (Exception e) {
+            } catch (Throwable e) {
+                // Throwable (not just Exception): on Android the LWJGL3 org.lwjgl.openal.* backend
+                // is off-classpath (compileOnly here), so createAL() raises a NoClassDefFoundError
+                // (a LinkageError, i.e. an Error). Swallow it and take the degraded silent path,
+                // same as any other audio-init failure. Desktop is unaffected (createAL succeeds).
                 log.warning("Failed to initialize sound system.", e);
                 // don't start the background loading thread
                 return;

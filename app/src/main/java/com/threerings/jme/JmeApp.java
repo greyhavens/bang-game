@@ -158,16 +158,24 @@ public class JmeApp extends SimpleApplication
         // "Sepia tone" slider). It runs on the composited world image, so it tints the ground, sky
         // dome, buildings and town backdrop uniformly while leaving the BUI overlay (rendered on the
         // separate GUI viewport) untouched. Intensity 0 (the default) is a pure pass-through.
-        _sepiaPost = new FilterPostProcessor(assetManager);
-        // board fog (E15-11): a depth-based haze into the horizon, driven from the active board's fog
-        // params (BoardView.refreshFog). Added BEFORE the warmth grade so the warm tint also grades
-        // the fogged result. Starts disabled; enabled only on boards whose fog density > 0.
-        _fogFilter = new com.jme3.post.filters.FogFilter();
-        _fogFilter.setEnabled(false);
-        _sepiaPost.addFilter(_fogFilter);
-        _sepiaFilter = new com.threerings.jme.post.SepiaFilter();
-        _sepiaPost.addFilter(_sepiaFilter);
-        viewPort.addProcessor(_sepiaPost);
+        //
+        // -Dbang.disablePostProcessing=true skips the whole FilterPostProcessor chain (Epic A1
+        // Phase 4): the GLES framebuffer/format path differs and the FilterPostProcessor's offscreen
+        // FB can misbehave on Android; the logon/menu screens don't need sepia/fog, so the Android
+        // host disables it (re-enable + validate on GLES is punch-listed for Epic A2). setSepiaIntensity
+        // / setBoardFog stay null-safe when the filters are absent. Desktop never sets this property.
+        if (!Boolean.getBoolean("bang.disablePostProcessing")) {
+            _sepiaPost = new FilterPostProcessor(assetManager);
+            // board fog (E15-11): a depth-based haze into the horizon, driven from the active board's
+            // fog params (BoardView.refreshFog). Added BEFORE the warmth grade so the warm tint also
+            // grades the fogged result. Starts disabled; enabled only on boards whose fog density > 0.
+            _fogFilter = new com.jme3.post.filters.FogFilter();
+            _fogFilter.setEnabled(false);
+            _sepiaPost.addFilter(_fogFilter);
+            _sepiaFilter = new com.threerings.jme.post.SepiaFilter();
+            _sepiaPost.addFilter(_sepiaFilter);
+            viewPort.addProcessor(_sepiaPost);
+        }
 
         // install the BUI render backend BEFORE building any widget (BImage chooses its backing
         // from BackendProvider.get() at construction time).

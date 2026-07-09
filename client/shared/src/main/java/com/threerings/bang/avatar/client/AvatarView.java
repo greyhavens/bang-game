@@ -5,6 +5,8 @@ package com.threerings.bang.avatar.client;
 
 import java.awt.image.BufferedImage;
 
+import com.threerings.jme.util.ImageCache;
+
 import com.jmex.bui.BImage;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.util.Dimension;
@@ -36,7 +38,7 @@ public class AvatarView extends BaseAvatarView
             public void requestCompleted (BufferedImage base) {
                 int sw = WIDTH/reduction, sh = FRAMED_HEIGHT/reduction;
                 receiver.requestCompleted(
-                    new BImage(base.getScaledInstance(sw, sh, BufferedImage.SCALE_SMOOTH)));
+                    new BImage(ImageCache.scaleSmooth(base, sw, sh)));
             }
             public void requestFailed (Exception cause) {
                 receiver.requestFailed(cause);

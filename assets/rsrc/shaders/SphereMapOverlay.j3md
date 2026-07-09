@@ -21,8 +21,8 @@ MaterialDef SphereMap Overlay {
     }
 
     Technique {
-        VertexShader   GLSL100 GLSL150 : shaders/SphereMapOverlay.vert
-        FragmentShader GLSL100 GLSL150 : shaders/SphereMapOverlay.frag
+        VertexShader GLSL300 GLSL150 GLSL100 : shaders/SphereMapOverlay.vert
+        FragmentShader GLSL300 GLSL150 GLSL100 : shaders/SphereMapOverlay.frag
 
         WorldParameters {
             WorldViewProjectionMatrix

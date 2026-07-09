@@ -76,7 +76,7 @@ public abstract class BaseAvatarView extends BLabel
                 int sw = (int)(avatar.getFramedWidth() * reduction),
                     sh = (int)(avatar.getFramedHeight() * reduction);
                 receiver.requestCompleted(
-                    new BImage(cropped.getScaledInstance(sw, sh, BufferedImage.SCALE_SMOOTH)));
+                    new BImage(ImageCache.scaleSmooth(cropped, sw, sh)));
             }
             public void requestFailed (Exception cause) {
                 receiver.requestFailed(cause);
@@ -93,7 +93,7 @@ public abstract class BaseAvatarView extends BLabel
     {
         getImage(ctx, avatar, new ResultListener<BufferedImage>() {
             public void requestCompleted (BufferedImage base) {
-                Image scaled = base.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
+                Image scaled = ImageCache.scaleSmooth(base, width, height);
                 // TODO(phase3-host): mirrored avatars flipped the BImage's texture coords
                 // left-to-right via the fork Quad's texture buffer (getTextureBuffer). BImage no
                 // longer extends Quad; the left-right flip belongs in the BUI jME3 render backend's

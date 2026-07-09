@@ -4,6 +4,8 @@
 package com.threerings.bang.game.client;
 
 import java.awt.image.BufferedImage;
+
+import com.threerings.jme.util.ImageCache;
 import java.text.NumberFormat;
 
 import com.jmex.bui.BContainer;
@@ -149,8 +151,7 @@ public class AwardView extends BContainer
                 label.setIcon(new BlankIcon(64, 64));
             } else {
                 BufferedImage pimg = ctx.getImageCache().getBufferedImage(purse.getIconPath());
-                BImage scaled = new BImage(
-                    pimg.getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH));
+                BImage scaled = new BImage(ImageCache.scaleSmooth(pimg, 64, 64));
                 label.setIcon(new ImageIcon(scaled));
             }
 

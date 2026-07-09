@@ -13,9 +13,11 @@ allprojects {
     // Three Rings / samskivert stack versions, centralised here (Epic 2 Phase 1) so any single lib
     // can be forked + locally republished + swapped via a one-line change. mavenLocal() is first in
     // `repositories`, so a locally-published `com.x:lib:<ver>-bang1` transparently wins.
-    naryaVersion = "1.20"  // forked TLS transport (Epic 3 Phase 4)
+    naryaVersion = "1.22"  // + GenStreamableTask flatten mode / GenStreamUtil for ART field-order (Epic A1 Phase 5)
     nenyaVersion = "1.7.2"
-    vilyaVersion = "1.7.1"
+    // 1.7.2-android1: regenerated flatten streamers + narya 1.22 dep (Epic A1 Phase 5). New
+    // coordinates, not a 1.7.1 republish — the 2026-07-06 poisoned-vilya incident rule.
+    vilyaVersion = "1.7.2-android1"
     depotVersion = "1.8"
     samskivertVersion = "1.11"
     oooUtilVersion = "1.5"

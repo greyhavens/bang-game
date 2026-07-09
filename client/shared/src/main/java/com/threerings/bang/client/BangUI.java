@@ -188,9 +188,14 @@ public class BangUI
         LOADING_FONT = _fonts.get("Dom Casual").deriveFont(Font.PLAIN, 24);
         DAMAGE_FONT = _fonts.get("Dom Casual").deriveFont(Font.PLAIN, 36);
 
-        // load up our HTML stylesheet
-        css = new BangStyleSheet();
+        // load up our HTML stylesheet. Wrap the whole thing (including the BangStyleSheet
+        // construction) in a Throwable guard: BangStyleSheet extends javax.swing.text.html.StyleSheet,
+        // which is absent on Android (the AWT-compat layer supplies java.awt/javax.imageio but not
+        // Swing) — creating it there raises a NoClassDefFoundError. HTML views (chat/tooltips) are not
+        // needed to reach the logon screen, so degrade gracefully (css stays null) rather than abort
+        // UI init. On desktop this is unchanged (the Swing classes are present).
         try {
+            css = new BangStyleSheet();
             InputStream is = _ctx.getResourceManager().getResource("ui/html_style.css");
             css.loadRules(new InputStreamReader(is), null);
         } catch (Throwable t) {
@@ -348,6 +353,14 @@ public class BangUI
                     nstyle = Font.ITALIC;
                 } else if (style.equals(BStyleSheet.BOLD_ITALIC)) {
                     nstyle = Font.ITALIC|Font.BOLD;
+                }
+                // Platform seam (Epic A1 Phase 4): on Android the AWT/Graphics2D font peer
+                // (Harmony/sfntly) does not render on ART, so a provider supplies an
+                // android.graphics-backed text factory instead. Font.style bits (PLAIN/BOLD/ITALIC)
+                // are passed through. Unset on desktop -> falls through to AWTTextFactory.
+                BTextFactory.Provider provider = BTextFactory.getProvider();
+                if (provider != null) {
+                    return provider.createTextFactory(family, nstyle, size);
                 }
                 Font font = _fonts.get(family);
                 if (font == null) {

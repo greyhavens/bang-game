@@ -35,3 +35,60 @@ tasks.register("genService") {
     }
   }
 }
+
+// Epic A1 Phase 5 (Android/ART): generate explicit, declaration-ordered read/writeObject methods
+// for every Streamable/DObject in the game so wire streaming is deterministic across HotSpot and
+// ART (whose Class.getDeclaredFields() order differs). "flatten" emits self-contained methods that
+// stream the full ClassUtil.getFields() field set (captured on HotSpot at build time) via
+// com.threerings.io.GenStreamUtil — byte-identical to the legacy reflective form on HotSpot, so
+// desktop/server and persisted data are unaffected. GenStreamableTask reflects on the *compiled*
+// classes, so the taskdef classpath must carry the compiled game classes + their full dependency
+// set (it loads target classes via its own classloader). Run once, commit the generated methods.
+tasks.register("genStreamable") {
+  dependsOn configurations.tools, tasks.named("compileJava")
+  doLast {
+    def cp = sourceSets.main.output.classesDirs.asPath + File.pathSeparator +
+             sourceSets.main.compileClasspath.asPath + File.pathSeparator +
+             configurations.tools.asPath
+    ant.taskdef(classpath: cp, resource: "com/threerings/presents/tools.properties")
+    ant.genstreamable(flatten: true) {
+      // *Marshaller.java is EXCLUDED deliberately: marshallers are field-free subclasses of
+      // InvocationMarshaller, whose hand-instrumented read/writeObject (narya 1.22) must stay
+      // inherited — it rebinds the transient _invdir from the ClientObjectInputStream, and a
+      // generated self-contained override in a subclass would silently drop that (the Phase 5(b)
+      // logon NPE). Their nested ListenerMarshaller subclasses are single-field (requestId), so
+      // reflective order is trivially stable there too.
+      fileset(dir: "src/main/java",
+              includes: "com/threerings/bang/**/*.java",
+              excludes: "com/threerings/bang/**/*Marshaller.java")
+    }
+  }
+}
+
+// Companion to genStreamable for the SIBLING library forks (dev-machine codegen, Epic A1
+// Phase 5): bang streams narya/vilya VALUE classes on the wire too — vilya's Stat subclasses
+// (PlayerObject/BangObject stat sets; reflective ART order corrupted the game-object subscribe:
+// "Stat._type ... got Place"), crowd's OccupantInfo/chat messages, parlor's Table. narya's
+// presents/{net,dobj,data} transport layer was instrumented back in narya 1.21/1.22. Writes
+// generated methods INTO ../narya and ../vilya — review the diffs there, `mvn install` each
+// fork (versions rebuilt in place), then ./gradlew deploy + rebuild the Android APK.
+tasks.register("genStreamableLibs") {
+  dependsOn configurations.tools, tasks.named("compileJava")
+  doLast {
+    def cp = sourceSets.main.output.classesDirs.asPath + File.pathSeparator +
+             sourceSets.main.compileClasspath.asPath + File.pathSeparator +
+             configurations.tools.asPath
+    ant.taskdef(classpath: cp, resource: "com/threerings/presents/tools.properties")
+    ant.genstreamable(flatten: true) {
+      // same marshaller rationale as genStreamable above
+      fileset(dir: "../../../narya/core/src/main/java",
+              includes: "com/threerings/crowd/**/data/**/*.java",
+              excludes: "com/threerings/**/*Marshaller.java")
+      fileset(dir: "../../../vilya/core/src/main/java",
+              includes: "com/threerings/stats/data/**/*.java," +
+                        "com/threerings/parlor/data/**/*.java," +
+                        "com/threerings/parlor/game/data/**/*.java",
+              excludes: "com/threerings/**/*Marshaller.java")
+    }
+  }
+}

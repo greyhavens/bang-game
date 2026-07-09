@@ -289,11 +289,33 @@ public class ImageCache
 
         // create and cache a new BUI image with the appropriate (scaled if necessary) data
         image = new BImage(scale == 1f ? bufimg :
-                           bufimg.getScaledInstance(Math.round(bufimg.getWidth()*scale),
-                                                    Math.round(bufimg.getHeight()*scale),
-                                                    BufferedImage.SCALE_SMOOTH), true);
+                           scaleSmooth(bufimg, Math.round(bufimg.getWidth()*scale),
+                                       Math.round(bufimg.getHeight()*scale)), true);
         _buicache.put(key, new WeakReference<BImage>(image));
         return image;
+    }
+
+    /**
+     * Scales a buffered image with bilinear filtering via an offscreen Graphics2D draw.
+     * Equivalent for our UI-image purposes to {@link java.awt.Image#getScaledInstance} with
+     * {@code SCALE_SMOOTH}, but synchronous and without the producer/consumer
+     * AreaAveragingScaleFilter pipeline — which is broken in the Harmony-derived java.awt on
+     * Android (ClassCastException int[]→byte[] in ComponentColorModel.getRGB; it aborted game
+     * round prep scaling the player-status avatar portraits, Epic A1 Phase 5). Use this instead
+     * of getScaledInstance everywhere client code scales images.
+     */
+    public static BufferedImage scaleSmooth (BufferedImage src, int width, int height)
+    {
+        BufferedImage dst = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D gfx = dst.createGraphics();
+        try {
+            gfx.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION,
+                                 java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            gfx.drawImage(src, 0, 0, width, height, null);
+        } finally {
+            gfx.dispose();
+        }
+        return dst;
     }
 
     /**

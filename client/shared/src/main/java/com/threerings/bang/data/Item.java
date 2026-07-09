@@ -262,7 +262,7 @@ public abstract class Item
             out.writeInt(getGangId());
             out.writeLong(_rentExpires);
         }
-        out.defaultWriteObject();
+
     }
 
     /**
@@ -278,7 +278,7 @@ public abstract class Item
             _gangId = in.readInt();
             _rentExpires = in.readLong();
         }
-        in.defaultReadObject();
+
     }
 
     /**
